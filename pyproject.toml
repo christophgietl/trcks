@@ -2,6 +2,11 @@
 build-backend = "flit_core.buildapi"
 requires = ["flit_core>=3.2,<4"]
 
+[dependency-groups]
+dev = [
+    "ruff>=0.9.7",
+]
+
 [project]
 dependencies = []
 description = "Add your description here"
@@ -9,3 +14,7 @@ name = "trcks"
 readme = "README.md"
 requires-python = ">=3.9"
 version = "0.1.0"
+
+[tool.ruff.lint]
+ignore = ["COM812", "D", "ISC001", "T20"]
+select = ["ALL"]
