@@ -1,11 +1,11 @@
+[build-system]
+build-backend = "flit_core.buildapi"
+requires = ["flit_core>=3.2,<4"]
+
 [project]
-name = "trcks"
-version = "0.1.0"
+dependencies = []
 description = "Add your description here"
+name = "trcks"
 readme = "README.md"
 requires-python = ">=3.9"
-dependencies = []
-
-[build-system]
-requires = ["flit_core>=3.2,<4"]
-build-backend = "flit_core.buildapi"
+version = "0.1.0"
