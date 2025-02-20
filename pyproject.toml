@@ -9,7 +9,9 @@ dev = [
 ]
 
 [project]
-dependencies = []
+dependencies = [
+    "typing-extensions>=4.12.2 ; python_full_version < '3.11'",
+]
 description = "Add your description here"
 name = "trcks"
 readme = "README.md"
