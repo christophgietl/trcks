@@ -25,9 +25,10 @@ disallow_any_explicit = true
 disallow_any_unimported = true
 files = "."
 strict = true
+strict_bytes = true  # will become the default in mypy 2.0
 warn_incomplete_stub = true
 warn_unreachable = true
 
 [tool.ruff.lint]
-ignore = ["COM812", "D", "ISC001", "T20"]
+ignore = ["COM812", "D", "ISC001"]
 select = ["ALL"]
