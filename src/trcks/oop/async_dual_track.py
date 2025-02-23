@@ -4,7 +4,7 @@ import dataclasses
 import sys
 from typing import TYPE_CHECKING, Literal, TypeVar
 
-from trcks.fp.monad import awaitable, awaitable_either, either
+from trcks.fp.monad import awaitable_either
 from trcks.oop import _track
 
 if TYPE_CHECKING:
@@ -26,8 +26,7 @@ _R_co = TypeVar("_R_co", covariant=True)
 class AsyncDualTrack(_track.Track[awaitable_either.AwaitableEither[_L_co, _R_co]]):
     @staticmethod
     def left(value: Awaitable[_L]) -> AsyncDualTrack[_L, Never]:
-        of_left_mapped = awaitable.map_(either.of_left)
-        return AsyncDualTrack(of_left_mapped(value))
+        return AsyncDualTrack(awaitable_either.from_awaitable_left(value))
 
     @staticmethod
     def left_from_sync(value: _L) -> AsyncDualTrack[_L, Never]:
@@ -57,8 +56,7 @@ class AsyncDualTrack(_track.Track[awaitable_either.AwaitableEither[_L_co, _R_co]
 
     @staticmethod
     def right(value: Awaitable[_R]) -> AsyncDualTrack[Never, _R]:
-        of_right_mapped = awaitable.map_(either.of_right)
-        return AsyncDualTrack(of_right_mapped(value))
+        return AsyncDualTrack(awaitable_either.from_awaitable_right(value))
 
     @property
     async def track(self) -> Literal["left", "right"]:

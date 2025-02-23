@@ -51,6 +51,10 @@ def flat_map_right(
     return mapped_f
 
 
+from_awaitable_left = awaitable.map_(either.of_left)
+from_awaitable_right = awaitable.map_(either.of_right)
+
+
 def map_left(
     f: Callable[[_L1], _L2],
 ) -> Callable[[AwaitableEither[_L1, _R1]], AwaitableEither[_L2, _R1]]:
