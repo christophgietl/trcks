@@ -56,8 +56,8 @@ class DualTrack(_track.Track[either.Either[_L_co, _R_co]]):
 
     @property
     def track(self) -> Literal["left", "right"]:
-        return self.core.track
+        return self.core[0]
 
     @property
     def value(self) -> _L_co | _R_co:
-        return self.core.value
+        return self.core[1]

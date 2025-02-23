@@ -11,7 +11,7 @@ else:
 def test_of_right() -> None:
     ethr: either.Either[str, int] = either.of_right(5)
     reveal_type(ethr)
-    if ethr.track == "left":
+    if ethr[0] == "left":
         reveal_type(ethr)
     else:
         reveal_type(ethr)

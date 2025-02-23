@@ -34,7 +34,7 @@ def flat_map_left(
         aw_ethr: AwaitableEither[_L1, _R1],
     ) -> either.Either[_L2, _R1 | _R2]:
         ethr = await aw_ethr
-        return await f(ethr.value) if ethr.track == "left" else ethr
+        return await f(ethr[1]) if ethr[0] == "left" else ethr
 
     return mapped_f
 
@@ -46,7 +46,7 @@ def flat_map_right(
         aw_ethr: AwaitableEither[_L1, _R1],
     ) -> either.Either[_L1 | _L2, _R2]:
         ethr = await aw_ethr
-        return await f(ethr.value) if ethr.track == "right" else ethr
+        return await f(ethr[1]) if ethr[0] == "right" else ethr
 
     return mapped_f
 

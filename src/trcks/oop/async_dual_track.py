@@ -60,8 +60,8 @@ class AsyncDualTrack(_track.Track[awaitable_either.AwaitableEither[_L_co, _R_co]
 
     @property
     async def track(self) -> Literal["left", "right"]:
-        return (await self.core).track
+        return (await self.core)[0]
 
     @property
     async def value(self) -> _L_co | _R_co:
-        return (await self.core).value
+        return (await self.core)[1]
