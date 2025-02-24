@@ -12,12 +12,12 @@ _Core_co = TypeVar("_Core_co", covariant=True)
 
 
 @dataclasses.dataclass(frozen=True)
-class Track(Generic[_Core_co]):
+class TrackHelper(Generic[_Core_co]):
     core: _Core_co
 
     @staticmethod
     def unwrap_return_value(
-        f: Callable[[_T], Track[_Core_co]],
+        f: Callable[[_T], TrackHelper[_Core_co]],
     ) -> Callable[[_T], _Core_co]:
         def f_unwrapped(value: _T) -> _Core_co:
             return f(value).core

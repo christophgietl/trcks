@@ -14,11 +14,11 @@ _T_co = TypeVar("_T_co", covariant=True)
 
 
 @dataclasses.dataclass(frozen=True)
-class SingleTrack(_track.Track[_T_co]):
-    def map(self, f: Callable[[_T_co], _T]) -> SingleTrack[_T]:
-        return SingleTrack(f(self.core))
+class SingleTrackHelper(_track.TrackHelper[_T_co]):
+    def map(self, f: Callable[[_T_co], _T]) -> SingleTrackHelper[_T]:
+        return SingleTrackHelper(f(self.core))
 
     def map_to_single_track(
-        self, f: Callable[[_T_co], SingleTrack[_T]]
-    ) -> SingleTrack[_T]:
+        self, f: Callable[[_T_co], SingleTrackHelper[_T]]
+    ) -> SingleTrackHelper[_T]:
         return f(self.core)
