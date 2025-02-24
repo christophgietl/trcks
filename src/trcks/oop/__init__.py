@@ -1,11 +1,11 @@
-from trcks.oop.awaitable_dual_track import AwaitableDualTrackHelper
-from trcks.oop.awaitable_single_track import AwaitableSingleTrackHelper
-from trcks.oop.dual_track import DualTrackHelper
-from trcks.oop.single_track import SingleTrackHelper
+from trcks.oop.async_dual_track import AsyncDualTrack
+from trcks.oop.async_single_track import AsyncSingleTrack
+from trcks.oop.dual_track import DualTrack
+from trcks.oop.single_track import SingleTrack
 
 __all__ = [
-    "AwaitableDualTrackHelper",
-    "AwaitableSingleTrackHelper",
-    "DualTrackHelper",
-    "SingleTrackHelper",
+    "AsyncDualTrack",
+    "AsyncSingleTrack",
+    "DualTrack",
+    "SingleTrack",
 ]
