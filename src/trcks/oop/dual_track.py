@@ -4,60 +4,62 @@ import dataclasses
 import sys
 from typing import TYPE_CHECKING, Literal, TypeVar
 
-from trcks.fp.monad import dual
+from trcks.fp.monad import result
 from trcks.oop import _track
 
 if TYPE_CHECKING:
     from collections.abc import Callable
 
 if sys.version_info >= (3, 11):
-    from typing import Never
+    from typing import Never, TypeAlias
 else:
-    from typing_extensions import Never
+    from typing_extensions import Never, TypeAlias
 
-_L = TypeVar("_L")
-_R = TypeVar("_R")
+_F = TypeVar("_F")
+_S = TypeVar("_S")
 
-_L_co = TypeVar("_L_co", covariant=True)
-_R_co = TypeVar("_R_co", covariant=True)
+_F_co = TypeVar("_F_co", covariant=True)
+_S_co = TypeVar("_S_co", covariant=True)
+
+Result: TypeAlias = result.Result[_F_co, _S_co]
 
 
 @dataclasses.dataclass(frozen=True)
-class DualTrack(_track.Track[dual.Dual[_L_co, _R_co]]):
+class DualTrack(_track.Track[Result[_F_co, _S_co]]):
     @staticmethod
-    def left(value: _L) -> DualTrack[_L, Never]:
-        return DualTrack(dual.of_left(value))
+    def failure(value: _F) -> DualTrack[_F, Never]:
+        return DualTrack(result.of_failure(value))
 
-    def map_left(self, f: Callable[[_L_co], _L]) -> DualTrack[_L, _R_co]:
-        f_mapped = dual.map_left(f)
+    def map_failure(self, f: Callable[[_F_co], _F]) -> DualTrack[_F, _S_co]:
+        f_mapped = result.map_failure(f)
         return DualTrack(f_mapped(self.core))
 
-    def map_left_to_dual_track(
-        self, f: Callable[[_L_co], DualTrack[_L, _R]]
-    ) -> DualTrack[_L, _R_co | _R]:
+    def map_failure_to_dual_track(
+        self, f: Callable[[_F_co], DualTrack[_F, _S]]
+    ) -> DualTrack[_F, _S_co | _S]:
         f_unwrapped = DualTrack.unwrap_return_value(f)
-        f_mapped = dual.flat_map_left(f_unwrapped)
+        f_mapped = result.flat_map_failure(f_unwrapped)
         return DualTrack(f_mapped(self.core))
 
-    def map_right(self, f: Callable[[_R_co], _R]) -> DualTrack[_L_co, _R]:
-        f_mapped = dual.map_right(f)
+    def map_success(self, f: Callable[[_S_co], _S]) -> DualTrack[_F_co, _S]:
+        f_mapped = result.map_success(f)
         return DualTrack(f_mapped(self.core))
 
-    def map_right_to_dual_track(
-        self, f: Callable[[_R_co], DualTrack[_L, _R]]
-    ) -> DualTrack[_L_co | _L, _R]:
+    def map_success_to_dual_track(
+        self, f: Callable[[_S_co], DualTrack[_F, _S]]
+    ) -> DualTrack[_F_co | _F, _S]:
         f_unwrapped = DualTrack.unwrap_return_value(f)
-        f_mapped = dual.flat_map_right(f_unwrapped)
+        f_mapped = result.flat_map_success(f_unwrapped)
         return DualTrack(f_mapped(self.core))
 
     @staticmethod
-    def right(value: _R) -> DualTrack[Never, _R]:
-        return DualTrack(dual.of_right(value))
+    def success(value: _S) -> DualTrack[Never, _S]:
+        return DualTrack(result.of_success(value))
 
     @property
-    def track(self) -> Literal["left", "right"]:
+    def track(self) -> Literal["failure", "success"]:
         return self.core[0]
 
     @property
-    def value(self) -> _L_co | _R_co:
+    def value(self) -> _F_co | _S_co:
         return self.core[1]

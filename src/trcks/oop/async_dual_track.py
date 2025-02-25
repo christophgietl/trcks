@@ -4,7 +4,7 @@ import dataclasses
 import sys
 from typing import TYPE_CHECKING, Literal, TypeVar
 
-from trcks.fp.monad import awaitable_dual
+from trcks.fp.monad import awaitable_result
 from trcks.oop import _track
 
 if TYPE_CHECKING:
@@ -15,53 +15,53 @@ if sys.version_info >= (3, 11):
 else:
     from typing_extensions import Never
 
-_L = TypeVar("_L")
-_R = TypeVar("_R")
+_F = TypeVar("_F")
+_S = TypeVar("_S")
 
-_L_co = TypeVar("_L_co", covariant=True)
-_R_co = TypeVar("_R_co", covariant=True)
+_F_co = TypeVar("_F_co", covariant=True)
+_S_co = TypeVar("_S_co", covariant=True)
 
 
 @dataclasses.dataclass(frozen=True)
-class AsyncDualTrack(_track.Track[awaitable_dual.AwaitableDual[_L_co, _R_co]]):
+class AsyncDualTrack(_track.Track[awaitable_result.AwaitableResult[_F_co, _S_co]]):
     @staticmethod
-    def left(value: Awaitable[_L]) -> AsyncDualTrack[_L, Never]:
-        return AsyncDualTrack(awaitable_dual.from_awaitable_left(value))
+    def failure(value: Awaitable[_F]) -> AsyncDualTrack[_F, Never]:
+        return AsyncDualTrack(awaitable_result.from_awaitable_failure(value))
 
     @staticmethod
-    def left_from_sync(value: _L) -> AsyncDualTrack[_L, Never]:
-        return AsyncDualTrack(awaitable_dual.of_left(value))
+    def failure_from_sync(value: _F) -> AsyncDualTrack[_F, Never]:
+        return AsyncDualTrack(awaitable_result.of_failure(value))
 
-    def map_left(self, f: Callable[[_L_co], _L]) -> AsyncDualTrack[_L, _R_co]:
-        f_mapped = awaitable_dual.map_left(f)
+    def map_failure(self, f: Callable[[_F_co], _F]) -> AsyncDualTrack[_F, _S_co]:
+        f_mapped = awaitable_result.map_failure(f)
         return AsyncDualTrack(f_mapped(self.core))
 
-    def map_left_to_async_dual_track(
-        self, f: Callable[[_L_co], AsyncDualTrack[_L, _R]]
-    ) -> AsyncDualTrack[_L, _R_co | _R]:
+    def map_failure_to_async_dual_track(
+        self, f: Callable[[_F_co], AsyncDualTrack[_F, _S]]
+    ) -> AsyncDualTrack[_F, _S_co | _S]:
         f_unwrapped = AsyncDualTrack.unwrap_return_value(f)
-        f_mapped = awaitable_dual.flat_map_left(f_unwrapped)
+        f_mapped = awaitable_result.flat_map_failure(f_unwrapped)
         return AsyncDualTrack(f_mapped(self.core))
 
-    def map_right(self, f: Callable[[_R_co], _R]) -> AsyncDualTrack[_L_co, _R]:
-        f_mapped = awaitable_dual.map_right(f)
+    def map_success(self, f: Callable[[_S_co], _S]) -> AsyncDualTrack[_F_co, _S]:
+        f_mapped = awaitable_result.map_success(f)
         return AsyncDualTrack(f_mapped(self.core))
 
-    def map_right_to_async_dual_track(
-        self, f: Callable[[_R_co], AsyncDualTrack[_L, _R]]
-    ) -> AsyncDualTrack[_L_co | _L, _R]:
+    def map_success_to_async_dual_track(
+        self, f: Callable[[_S_co], AsyncDualTrack[_F, _S]]
+    ) -> AsyncDualTrack[_F_co | _F, _S]:
         f_unwrapped = AsyncDualTrack.unwrap_return_value(f)
-        f_mapped = awaitable_dual.flat_map_right(f_unwrapped)
+        f_mapped = awaitable_result.flat_map_success(f_unwrapped)
         return AsyncDualTrack(f_mapped(self.core))
 
     @staticmethod
-    def right(value: Awaitable[_R]) -> AsyncDualTrack[Never, _R]:
-        return AsyncDualTrack(awaitable_dual.from_awaitable_right(value))
+    def success(value: Awaitable[_S]) -> AsyncDualTrack[Never, _S]:
+        return AsyncDualTrack(awaitable_result.from_awaitable_success(value))
 
     @property
-    async def track(self) -> Literal["left", "right"]:
+    async def track(self) -> Literal["failure", "success"]:
         return (await self.core)[0]
 
     @property
-    async def value(self) -> _L_co | _R_co:
+    async def value(self) -> _F_co | _S_co:
         return (await self.core)[1]
