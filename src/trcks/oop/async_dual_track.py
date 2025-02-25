@@ -36,22 +36,8 @@ class AsyncDualTrack(_track.Track[awaitable_result.AwaitableResult[_F_co, _S_co]
         f_mapped = awaitable_result.map_failure(f)
         return AsyncDualTrack(f_mapped(self.core))
 
-    def map_failure_to_async_dual_track(
-        self, f: Callable[[_F_co], AsyncDualTrack[_F, _S]]
-    ) -> AsyncDualTrack[_F, _S_co | _S]:
-        f_unwrapped = AsyncDualTrack.unwrap_return_value(f)
-        f_mapped = awaitable_result.flat_map_failure(f_unwrapped)
-        return AsyncDualTrack(f_mapped(self.core))
-
     def map_success(self, f: Callable[[_S_co], _S]) -> AsyncDualTrack[_F_co, _S]:
         f_mapped = awaitable_result.map_success(f)
-        return AsyncDualTrack(f_mapped(self.core))
-
-    def map_success_to_async_dual_track(
-        self, f: Callable[[_S_co], AsyncDualTrack[_F, _S]]
-    ) -> AsyncDualTrack[_F_co | _F, _S]:
-        f_unwrapped = AsyncDualTrack.unwrap_return_value(f)
-        f_mapped = awaitable_result.flat_map_success(f_unwrapped)
         return AsyncDualTrack(f_mapped(self.core))
 
     @staticmethod

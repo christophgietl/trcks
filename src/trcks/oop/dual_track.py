@@ -34,22 +34,8 @@ class DualTrack(_track.Track[Result[_F_co, _S_co]]):
         f_mapped = result.map_failure(f)
         return DualTrack(f_mapped(self.core))
 
-    def map_failure_to_dual_track(
-        self, f: Callable[[_F_co], DualTrack[_F, _S]]
-    ) -> DualTrack[_F, _S_co | _S]:
-        f_unwrapped = DualTrack.unwrap_return_value(f)
-        f_mapped = result.flat_map_failure(f_unwrapped)
-        return DualTrack(f_mapped(self.core))
-
     def map_success(self, f: Callable[[_S_co], _S]) -> DualTrack[_F_co, _S]:
         f_mapped = result.map_success(f)
-        return DualTrack(f_mapped(self.core))
-
-    def map_success_to_dual_track(
-        self, f: Callable[[_S_co], DualTrack[_F, _S]]
-    ) -> DualTrack[_F_co | _F, _S]:
-        f_unwrapped = DualTrack.unwrap_return_value(f)
-        f_mapped = result.flat_map_success(f_unwrapped)
         return DualTrack(f_mapped(self.core))
 
     @staticmethod
