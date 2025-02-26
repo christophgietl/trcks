@@ -4,7 +4,7 @@ import dataclasses
 import sys
 from typing import TYPE_CHECKING, Literal, TypeVar
 
-from trcks.fp.monad import awaitable_result, result
+from trcks.fp.monad import result
 from trcks.oop._track import Track
 from trcks.oop.async_dual_track import AsyncDualTrack, AwaitableResult
 
@@ -46,18 +46,16 @@ class DualTrack(Track[Result[_F_co, _S_co]]):
     def map_failure_to_awaitable(
         self, f: Callable[[_F_co], Awaitable[_F]]
     ) -> AsyncDualTrack[_F, _S_co]:
-        f_mapped = awaitable_result.map_failure_to_awaitable(f)
-        return AsyncDualTrack(
-            f_mapped(awaitable_result.construct_from_result(self.core))
+        return AsyncDualTrack.construct_from_result(self.core).map_failure_to_awaitable(
+            f
         )
 
     def map_failure_to_awaitable_result(
         self, f: Callable[[_F_co], AwaitableResult[_F, _S]]
     ) -> AsyncDualTrack[_F, _S_co | _S]:
-        f_mapped = awaitable_result.map_failure_to_awaitable_result(f)
-        return AsyncDualTrack(
-            f_mapped(awaitable_result.construct_from_result(self.core))
-        )
+        return AsyncDualTrack.construct_from_result(
+            self.core
+        ).map_failure_to_awaitable_result(f)
 
     def map_failure_to_result(
         self, f: Callable[[_F_co], Result[_F, _S]]
@@ -72,18 +70,16 @@ class DualTrack(Track[Result[_F_co, _S_co]]):
     def map_success_to_awaitable(
         self, f: Callable[[_S_co], Awaitable[_S]]
     ) -> AsyncDualTrack[_F_co, _S]:
-        f_mapped = awaitable_result.map_success_to_awaitable(f)
-        return AsyncDualTrack(
-            f_mapped(awaitable_result.construct_from_result(self.core))
+        return AsyncDualTrack.construct_from_result(self.core).map_sucess_to_awaitable(
+            f
         )
 
     def map_success_to_awaitable_result(
         self, f: Callable[[_S_co], AwaitableResult[_F, _S]]
     ) -> AsyncDualTrack[_F_co | _F, _S]:
-        f_mapped = awaitable_result.map_success_to_awaitable_result(f)
-        return AsyncDualTrack(
-            f_mapped(awaitable_result.construct_from_result(self.core))
-        )
+        return AsyncDualTrack.construct_from_result(
+            self.core
+        ).map_sucess_to_awaitable_result(f)
 
     def map_success_to_result(
         self, f: Callable[[_S_co], Result[_F, _S]]

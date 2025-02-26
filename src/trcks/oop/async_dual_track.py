@@ -5,7 +5,7 @@ import sys
 from typing import TYPE_CHECKING, Literal, TypeVar
 
 from trcks.fp.monad import awaitable_result
-from trcks.oop import _track
+from trcks.oop._track import Track
 
 if TYPE_CHECKING:
     from collections.abc import Awaitable, Callable
@@ -28,7 +28,7 @@ AwaitableResult: TypeAlias = awaitable_result.AwaitableResult[_F_co, _S_co]
 
 
 @dataclasses.dataclass(frozen=True)
-class AsyncDualTrack(_track.Track[AwaitableResult[_F_co, _S_co]]):
+class AsyncDualTrack(Track[AwaitableResult[_F_co, _S_co]]):
     @staticmethod
     def construct_failure(value: _F) -> AsyncDualTrack[_F, Never]:
         return AsyncDualTrack(awaitable_result.construct_failure(value))
