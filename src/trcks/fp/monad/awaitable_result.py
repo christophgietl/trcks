@@ -31,7 +31,8 @@ def construct_failure(value: _F) -> AwaitableFailure[_F]:
     return awaitable.construct(result.construct_failure(value))
 
 
-construct_failure_from_awaitable = awaitable.map_(result.construct_failure)
+def construct_failure_from_awaitable(awtbl: Awaitable[_F]) -> AwaitableFailure[_F]:
+    return awaitable.map_(result.construct_failure)(awtbl)
 
 
 def construct_from_result(rslt: result.Result[_F, _S]) -> AwaitableResult[_F, _S]:
@@ -42,7 +43,8 @@ def construct_success(value: _S) -> AwaitableSuccess[_S]:
     return awaitable.construct(result.construct_success(value))
 
 
-construct_success_from_awaitable = awaitable.map_(result.construct_success)
+def construct_success_from_awaitable(awtbl: Awaitable[_S]) -> AwaitableSuccess[_S]:
+    return awaitable.map_(result.construct_success)(awtbl)
 
 
 def map_failure(
