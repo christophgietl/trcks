@@ -10,7 +10,7 @@ _T1 = TypeVar("_T1")
 _T2 = TypeVar("_T2")
 
 
-def flat_map(
+def map_to_awaitable(
     f: Callable[[_T1], Awaitable[_T2]],
 ) -> Callable[[Awaitable[_T1]], Awaitable[_T2]]:
     async def f_mapped(awaitable: Awaitable[_T1]) -> _T2:
