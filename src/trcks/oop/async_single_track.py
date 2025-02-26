@@ -32,11 +32,11 @@ _T_co = TypeVar("_T_co", covariant=True)
 class AsyncSingleTrack(Track[Awaitable[_T_co]]):
     @property
     def _core_as_awaitable_success(self) -> AwaitableResult[Never, _T_co]:
-        return awaitable_result.from_awaitable_success(self.core)
+        return awaitable_result.construct_success_from_awaitable(self.core)
 
     @staticmethod
     def construct(value: _T) -> AsyncSingleTrack[_T]:
-        return AsyncSingleTrack(awaitable.of(value))
+        return AsyncSingleTrack(awaitable.construct(value))
 
     @staticmethod
     def construct_from_awaitable(awtbl: Awaitable[_T]) -> AsyncSingleTrack[_T]:

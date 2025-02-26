@@ -10,6 +10,10 @@ _T1 = TypeVar("_T1")
 _T2 = TypeVar("_T2")
 
 
+async def construct(value: _T) -> _T:
+    return value
+
+
 def map_to_awaitable(
     f: Callable[[_T1], Awaitable[_T2]],
 ) -> Callable[[Awaitable[_T1]], Awaitable[_T2]]:
@@ -24,7 +28,3 @@ def map_(f: Callable[[_T1], _T2]) -> Callable[[Awaitable[_T1]], Awaitable[_T2]]:
         return f(await awaitable)
 
     return f_mapped
-
-
-async def of(value: _T) -> _T:
-    return value

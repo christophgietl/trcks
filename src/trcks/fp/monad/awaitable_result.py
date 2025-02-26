@@ -27,12 +27,22 @@ AwaitableSuccess: TypeAlias = Awaitable[result.Success[_S_co]]
 AwaitableResult: TypeAlias = Awaitable[result.Result[_F_co, _S_co]]
 
 
-from_awaitable_failure = awaitable.map_(result.of_failure)
-from_awaitable_success = awaitable.map_(result.of_success)
+def construct_failure(value: _F) -> AwaitableFailure[_F]:
+    return awaitable.construct(result.construct_failure(value))
 
 
-def from_result(rslt: result.Result[_F, _S]) -> AwaitableResult[_F, _S]:
-    return awaitable.of(rslt)
+construct_failure_from_awaitable = awaitable.map_(result.construct_failure)
+
+
+def construct_from_result(rslt: result.Result[_F, _S]) -> AwaitableResult[_F, _S]:
+    return awaitable.construct(rslt)
+
+
+def construct_success(value: _S) -> AwaitableSuccess[_S]:
+    return awaitable.construct(result.construct_success(value))
+
+
+construct_success_from_awaitable = awaitable.map_(result.construct_success)
 
 
 def map_failure(
@@ -48,7 +58,9 @@ def map_failure_to_awaitable(
         a_rslt: AwaitableResult[_F1, _S1],
     ) -> result.Result[_F2, _S1]:
         rslt = await a_rslt
-        return result.of_failure(await f(rslt[1])) if rslt[0] == "failure" else rslt
+        return (
+            result.construct_failure(await f(rslt[1])) if rslt[0] == "failure" else rslt
+        )
 
     return mapped_f
 
@@ -90,7 +102,9 @@ def map_success_to_awaitable(
         a_rslt: AwaitableResult[_F1, _S1],
     ) -> result.Result[_F1, _S2]:
         rslt = await a_rslt
-        return result.of_success(await f(rslt[1])) if rslt[0] == "success" else rslt
+        return (
+            result.construct_success(await f(rslt[1])) if rslt[0] == "success" else rslt
+        )
 
     return mapped_f
 
@@ -117,11 +131,3 @@ def map_success_to_result(
         return f(rslt[1]) if rslt[0] == "success" else rslt
 
     return mapped_f
-
-
-def of_failure(value: _F) -> AwaitableFailure[_F]:
-    return awaitable.of(result.of_failure(value))
-
-
-def of_success(value: _S) -> AwaitableSuccess[_S]:
-    return awaitable.of(result.of_success(value))

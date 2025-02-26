@@ -33,7 +33,7 @@ class DualTrack(Track[Result[_F_co, _S_co]]):
 
     @staticmethod
     def construct_failure(value: _F) -> DualTrack[_F, Never]:
-        return DualTrack(result.of_failure(value))
+        return DualTrack(result.construct_failure(value))
 
     @staticmethod
     def construct_from_result(rslt: Result[_F, _S]) -> DualTrack[_F, _S]:
@@ -41,7 +41,7 @@ class DualTrack(Track[Result[_F_co, _S_co]]):
 
     @staticmethod
     def construct_success(value: _S) -> DualTrack[Never, _S]:
-        return DualTrack(result.of_success(value))
+        return DualTrack(result.construct_success(value))
 
     def map_failure(self, f: Callable[[_F_co], _F]) -> DualTrack[_F, _S_co]:
         f_mapped = result.map_failure(f)

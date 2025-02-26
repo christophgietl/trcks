@@ -31,13 +31,13 @@ AwaitableResult: TypeAlias = awaitable_result.AwaitableResult[_F_co, _S_co]
 class AsyncDualTrack(_track.Track[AwaitableResult[_F_co, _S_co]]):
     @staticmethod
     def construct_failure(value: _F) -> AsyncDualTrack[_F, Never]:
-        return AsyncDualTrack(awaitable_result.of_failure(value))
+        return AsyncDualTrack(awaitable_result.construct_failure(value))
 
     @staticmethod
     def construct_failure_from_awaitable(
         awtbl: Awaitable[_F],
     ) -> AsyncDualTrack[_F, Never]:
-        return AsyncDualTrack(awaitable_result.from_awaitable_failure(awtbl))
+        return AsyncDualTrack(awaitable_result.construct_failure_from_awaitable(awtbl))
 
     @staticmethod
     def construct_from_awaitable_result(
@@ -47,17 +47,17 @@ class AsyncDualTrack(_track.Track[AwaitableResult[_F_co, _S_co]]):
 
     @staticmethod
     def construct_from_result(rslt: Result[_F, _S]) -> AsyncDualTrack[_F, _S]:
-        return AsyncDualTrack(awaitable_result.from_result(rslt))
+        return AsyncDualTrack(awaitable_result.construct_from_result(rslt))
 
     @staticmethod
     def construct_success(value: _S) -> AsyncDualTrack[Never, _S]:
-        return AsyncDualTrack(awaitable_result.of_success(value))
+        return AsyncDualTrack(awaitable_result.construct_success(value))
 
     @staticmethod
     def construct_success_from_awaitable(
         awtbl: Awaitable[_S],
     ) -> AsyncDualTrack[Never, _S]:
-        return AsyncDualTrack(awaitable_result.from_awaitable_success(awtbl))
+        return AsyncDualTrack(awaitable_result.construct_success_from_awaitable(awtbl))
 
     def map_failure(self, f: Callable[[_F_co], _F]) -> AsyncDualTrack[_F, _S_co]:
         f_mapped = awaitable_result.map_failure(f)

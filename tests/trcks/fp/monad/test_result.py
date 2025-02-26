@@ -8,8 +8,8 @@ else:
     from typing_extensions import reveal_type
 
 
-def test_of_right() -> None:
-    rslt: result.Result[str, int] = result.of_success(5)
+def test_construct_success() -> None:
+    rslt: result.Result[str, int] = result.construct_success(5)
     reveal_type(rslt)
     if rslt[0] == "failure":
         reveal_type(rslt)

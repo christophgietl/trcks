@@ -27,11 +27,19 @@ Success: TypeAlias = tuple[Literal["success"], _S_co]
 Result: TypeAlias = Union[Failure[_F_co], Success[_S_co]]
 
 
+def construct_failure(value: _F) -> Failure[_F]:
+    return ("failure", value)
+
+
+def construct_success(value: _S) -> Success[_S]:
+    return ("success", value)
+
+
 def map_failure(
     f: Callable[[_F1], _F2],
 ) -> Callable[[Result[_F1, _S1]], Result[_F2, _S1]]:
     def mapped_f(rslt: Result[_F1, _S1]) -> Result[_F2, _S1]:
-        return of_failure(f(rslt[1])) if rslt[0] == "failure" else rslt
+        return construct_failure(f(rslt[1])) if rslt[0] == "failure" else rslt
 
     return mapped_f
 
@@ -49,7 +57,7 @@ def map_success(
     f: Callable[[_S1], _S2],
 ) -> Callable[[Result[_F1, _S1]], Result[_F1, _S2]]:
     def mapped_f(rslt: Result[_F1, _S1]) -> Result[_F1, _S2]:
-        return of_success(f(rslt[1])) if rslt[0] == "success" else rslt
+        return construct_success(f(rslt[1])) if rslt[0] == "success" else rslt
 
     return mapped_f
 
@@ -61,11 +69,3 @@ def map_success_to_result(
         return f(rslt[1]) if rslt[0] == "success" else rslt
 
     return mapped_f
-
-
-def of_failure(value: _F) -> Failure[_F]:
-    return ("failure", value)
-
-
-def of_success(value: _S) -> Success[_S]:
-    return ("success", value)
