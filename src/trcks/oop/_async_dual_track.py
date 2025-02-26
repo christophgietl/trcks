@@ -10,7 +10,7 @@ from trcks.oop._track import Track
 if TYPE_CHECKING:
     from collections.abc import Awaitable, Callable
 
-    from trcks.oop.dual_track import Result
+    from trcks.oop._dual_track import Result
 
 if sys.version_info >= (3, 11):
     from typing import Never, TypeAlias

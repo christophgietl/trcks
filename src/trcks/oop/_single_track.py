@@ -3,10 +3,10 @@ from __future__ import annotations
 import dataclasses
 from typing import TYPE_CHECKING, TypeVar
 
+from trcks.oop._async_dual_track import AsyncDualTrack, AwaitableResult
+from trcks.oop._async_single_track import AsyncSingleTrack
+from trcks.oop._dual_track import DualTrack, Result
 from trcks.oop._track import Track
-from trcks.oop.async_dual_track import AsyncDualTrack, AwaitableResult
-from trcks.oop.async_single_track import AsyncSingleTrack
-from trcks.oop.dual_track import DualTrack, Result
 
 if TYPE_CHECKING:
     from collections.abc import Awaitable, Callable

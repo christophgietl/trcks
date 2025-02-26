@@ -5,8 +5,8 @@ import sys
 from typing import TYPE_CHECKING, Literal, TypeVar
 
 from trcks.fp.monad import result
+from trcks.oop._async_dual_track import AsyncDualTrack, AwaitableResult
 from trcks.oop._track import Track
-from trcks.oop.async_dual_track import AsyncDualTrack, AwaitableResult
 
 if TYPE_CHECKING:
     from collections.abc import Awaitable, Callable
