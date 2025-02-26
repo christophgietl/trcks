@@ -58,9 +58,9 @@ def map_failure_to_awaitable(
         a_rslt: AwaitableResult[_F1, _S1],
     ) -> result.Result[_F2, _S1]:
         rslt = await a_rslt
-        return (
-            result.construct_failure(await f(rslt[1])) if rslt[0] == "failure" else rslt
-        )
+        if rslt[0] == "success":
+            return rslt
+        return result.construct_failure(await f(rslt[1]))
 
     return mapped_f
 
@@ -72,7 +72,9 @@ def map_failure_to_awaitable_result(
         a_rslt: AwaitableResult[_F1, _S1],
     ) -> result.Result[_F2, _S1 | _S2]:
         rslt = await a_rslt
-        return await f(rslt[1]) if rslt[0] == "failure" else rslt
+        if rslt[0] == "success":
+            return rslt
+        return await f(rslt[1])
 
     return mapped_f
 
@@ -84,7 +86,9 @@ def map_failure_to_result(
         a_rslt: AwaitableResult[_F1, _S1],
     ) -> result.Result[_F2, _S1 | _S2]:
         rslt = await a_rslt
-        return f(rslt[1]) if rslt[0] == "failure" else rslt
+        if rslt[0] == "success":
+            return rslt
+        return f(rslt[1])
 
     return mapped_f
 
@@ -102,9 +106,9 @@ def map_success_to_awaitable(
         a_rslt: AwaitableResult[_F1, _S1],
     ) -> result.Result[_F1, _S2]:
         rslt = await a_rslt
-        return (
-            result.construct_success(await f(rslt[1])) if rslt[0] == "success" else rslt
-        )
+        if rslt[0] == "failure":
+            return rslt
+        return result.construct_success(await f(rslt[1]))
 
     return mapped_f
 
@@ -116,7 +120,9 @@ def map_success_to_awaitable_result(
         a_rslt: AwaitableResult[_F1, _S1],
     ) -> result.Result[_F1 | _F2, _S2]:
         rslt = await a_rslt
-        return await f(rslt[1]) if rslt[0] == "success" else rslt
+        if rslt[0] == "failure":
+            return rslt
+        return await f(rslt[1])
 
     return mapped_f
 
@@ -128,6 +134,8 @@ def map_success_to_result(
         a_rslt: AwaitableResult[_F1, _S1],
     ) -> result.Result[_F1 | _F2, _S2]:
         rslt = await a_rslt
-        return f(rslt[1]) if rslt[0] == "success" else rslt
+        if rslt[0] == "failure":
+            return rslt
+        return f(rslt[1])
 
     return mapped_f

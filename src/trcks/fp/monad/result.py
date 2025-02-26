@@ -39,7 +39,9 @@ def map_failure(
     f: Callable[[_F1], _F2],
 ) -> Callable[[Result[_F1, _S1]], Result[_F2, _S1]]:
     def mapped_f(rslt: Result[_F1, _S1]) -> Result[_F2, _S1]:
-        return construct_failure(f(rslt[1])) if rslt[0] == "failure" else rslt
+        if rslt[0] == "success":
+            return rslt
+        return construct_failure(f(rslt[1]))
 
     return mapped_f
 
@@ -48,7 +50,9 @@ def map_failure_to_result(
     f: Callable[[_F1], Result[_F2, _S2]],
 ) -> Callable[[Result[_F1, _S1]], Result[_F2, _S1 | _S2]]:
     def mapped_f(rslt: Result[_F1, _S1]) -> Result[_F2, _S1 | _S2]:
-        return f(rslt[1]) if rslt[0] == "failure" else rslt
+        if rslt[0] == "success":
+            return rslt
+        return f(rslt[1])
 
     return mapped_f
 
@@ -57,7 +61,9 @@ def map_success(
     f: Callable[[_S1], _S2],
 ) -> Callable[[Result[_F1, _S1]], Result[_F1, _S2]]:
     def mapped_f(rslt: Result[_F1, _S1]) -> Result[_F1, _S2]:
-        return construct_success(f(rslt[1])) if rslt[0] == "success" else rslt
+        if rslt[0] == "failure":
+            return rslt
+        return construct_success(f(rslt[1]))
 
     return mapped_f
 
@@ -66,6 +72,8 @@ def map_success_to_result(
     f: Callable[[_S1], Result[_F2, _S2]],
 ) -> Callable[[Result[_F1, _S1]], Result[_F1 | _F2, _S2]]:
     def mapped_f(rslt: Result[_F1, _S1]) -> Result[_F1 | _F2, _S2]:
-        return f(rslt[1]) if rslt[0] == "success" else rslt
+        if rslt[0] == "failure":
+            return rslt
+        return f(rslt[1])
 
     return mapped_f
