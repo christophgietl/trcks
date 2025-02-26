@@ -20,6 +20,10 @@ _T_co = TypeVar("_T_co", covariant=True)
 
 @dataclasses.dataclass(frozen=True)
 class SingleTrack(Track[_T_co]):
+    @staticmethod
+    def construct(value: _T) -> SingleTrack[_T]:
+        return SingleTrack(value)
+
     def map(self, f: Callable[[_T_co], _T]) -> SingleTrack[_T]:
         return SingleTrack(f(self.core))
 

@@ -34,6 +34,14 @@ class AsyncSingleTrack(Track[Awaitable[_T_co]]):
     def _core_as_awaitable_success(self) -> AwaitableResult[Never, _T_co]:
         return awaitable_result.from_awaitable_success(self.core)
 
+    @staticmethod
+    def construct(value: _T) -> AsyncSingleTrack[_T]:
+        return AsyncSingleTrack(awaitable.of(value))
+
+    @staticmethod
+    def construct_from_awaitable(awtbl: Awaitable[_T]) -> AsyncSingleTrack[_T]:
+        return AsyncSingleTrack(awtbl)
+
     def map(self, f: Callable[[_T_co], _T]) -> AsyncSingleTrack[_T]:
         f_mapped = awaitable.map_(f)
         return AsyncSingleTrack(f_mapped(self.core))

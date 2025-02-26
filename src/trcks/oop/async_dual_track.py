@@ -30,12 +30,34 @@ AwaitableResult: TypeAlias = awaitable_result.AwaitableResult[_F_co, _S_co]
 @dataclasses.dataclass(frozen=True)
 class AsyncDualTrack(_track.Track[AwaitableResult[_F_co, _S_co]]):
     @staticmethod
-    def failure(value: Awaitable[_F]) -> AsyncDualTrack[_F, Never]:
-        return AsyncDualTrack(awaitable_result.from_awaitable_failure(value))
+    def construct_failure(value: _F) -> AsyncDualTrack[_F, Never]:
+        return AsyncDualTrack(awaitable_result.of_failure(value))
 
     @staticmethod
-    def failure_from_sync(value: _F) -> AsyncDualTrack[_F, Never]:
-        return AsyncDualTrack(awaitable_result.of_failure(value))
+    def construct_failure_from_awaitable(
+        awtbl: Awaitable[_F],
+    ) -> AsyncDualTrack[_F, Never]:
+        return AsyncDualTrack(awaitable_result.from_awaitable_failure(awtbl))
+
+    @staticmethod
+    def construct_from_awaitable_result(
+        a_rslt: AwaitableResult[_F, _S],
+    ) -> AsyncDualTrack[_F, _S]:
+        return AsyncDualTrack(a_rslt)
+
+    @staticmethod
+    def construct_from_result(rslt: Result[_F, _S]) -> AsyncDualTrack[_F, _S]:
+        return AsyncDualTrack(awaitable_result.from_result(rslt))
+
+    @staticmethod
+    def construct_success(value: _S) -> AsyncDualTrack[Never, _S]:
+        return AsyncDualTrack(awaitable_result.of_success(value))
+
+    @staticmethod
+    def construct_success_from_awaitable(
+        awtbl: Awaitable[_S],
+    ) -> AsyncDualTrack[Never, _S]:
+        return AsyncDualTrack(awaitable_result.from_awaitable_success(awtbl))
 
     def map_failure(self, f: Callable[[_F_co], _F]) -> AsyncDualTrack[_F, _S_co]:
         f_mapped = awaitable_result.map_failure(f)
@@ -80,10 +102,6 @@ class AsyncDualTrack(_track.Track[AwaitableResult[_F_co, _S_co]]):
     ) -> AsyncDualTrack[_F_co | _F, _S]:
         f_mapped = awaitable_result.map_success_to_result(f)
         return AsyncDualTrack(f_mapped(self.core))
-
-    @staticmethod
-    def success(value: Awaitable[_S]) -> AsyncDualTrack[Never, _S]:
-        return AsyncDualTrack(awaitable_result.from_awaitable_success(value))
 
     @property
     async def track(self) -> Literal["failure", "success"]:
