@@ -1,3 +1,6 @@
+# pytest-generated files
+.coverage
+
 # Python-generated files
 __pycache__/
 *.py[oc]
