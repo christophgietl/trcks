@@ -4,7 +4,7 @@ from typing import Final, Literal
 
 import pytest
 
-from trcks.oop import DualTrack, Result, SingleTrack
+from trcks.oop import AsyncSingleTrack, DualTrack, Result, SingleTrack
 
 _FLOATS: Final[tuple[float, ...]] = (0.0, 1.5, -2.3, 100.75, math.pi, -math.e)
 _OBJECTS: Final[tuple[object, ...]] = (
@@ -50,6 +50,57 @@ async def _get_square_root_safely_and_slowly(
 async def _stringify_slowly(o: object) -> str:
     await asyncio.sleep(0.001)
     return str(o)
+
+
+class TestAsyncSingleTrack:
+    @pytest.mark.parametrize("value", _OBJECTS)
+    async def test_async_single_track_wraps_awaitable(self, value: object) -> None:
+        awaitable = asyncio.create_task(asyncio.sleep(0.001, result=value))
+        async_single_track = AsyncSingleTrack(awaitable)
+        assert async_single_track.core is awaitable
+
+    @pytest.mark.parametrize("value", _OBJECTS)
+    async def test_construct_wraps_object(self, value: object) -> None:
+        async_single_track = AsyncSingleTrack.construct(value)
+        assert await async_single_track.core == value
+
+    @pytest.mark.parametrize("value", _OBJECTS)
+    async def test_construct_from_awaitable_wraps_awaitable(
+        self, value: object
+    ) -> None:
+        awaitable = asyncio.create_task(asyncio.sleep(0.001, result=value))
+        async_single_track = AsyncSingleTrack.construct_from_awaitable(awaitable)
+        assert async_single_track.core is awaitable
+
+    @pytest.mark.parametrize("value", _FLOATS)
+    async def test_map_maps_applies_function_to_core(self, value: float) -> None:
+        assert await AsyncSingleTrack.construct(value).map(_double).core == _double(
+            value
+        )
+
+    @pytest.mark.parametrize("value", _FLOATS)
+    async def test_map_to_awaitable_applies_async_function_to_core(
+        self, value: float
+    ) -> None:
+        assert await AsyncSingleTrack.construct(value).map_to_awaitable(
+            _double_slowly
+        ).core == await _double_slowly(value)
+
+    @pytest.mark.parametrize("value", _FLOATS)
+    async def test_map_to_awaitable_result_applies_async_function_to_core(
+        self, value: float
+    ) -> None:
+        assert await AsyncSingleTrack.construct(value).map_to_awaitable_result(
+            _get_square_root_safely_and_slowly
+        ).core == await _get_square_root_safely_and_slowly(value)
+
+    @pytest.mark.parametrize("value", _FLOATS)
+    async def test_map_to_result_maps_applies_async_function_to_core(
+        self, value: float
+    ) -> None:
+        assert await AsyncSingleTrack.construct(value).map_to_result(
+            _get_square_root_safely
+        ).core == _get_square_root_safely(value)
 
 
 class TestDualTrack:

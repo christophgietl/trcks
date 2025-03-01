@@ -9,7 +9,7 @@ from trcks.fp.monad import awaitable
 from trcks.oop._async_dual_track import AsyncDualTrack, AwaitableResult
 from trcks.oop._track import Track
 
-if TYPE_CHECKING:
+if TYPE_CHECKING:  # pragma: no cover
     from collections.abc import Callable
 
     from trcks.oop._dual_track import Result
