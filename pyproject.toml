@@ -14,7 +14,7 @@ dev = [
 
 [project]
 dependencies = [
-    "typing-extensions>=4.12.2 ; python_full_version < '3.11'",
+    "typing-extensions>=4.12.2 ; python_full_version < '3.13'",
 ]
 description = "Add your description here"
 name = "trcks"

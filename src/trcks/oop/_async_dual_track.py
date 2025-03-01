@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import dataclasses
 import sys
-from typing import TYPE_CHECKING, Literal, TypeVar
+from typing import TYPE_CHECKING, Literal
 
 from trcks.fp.monad import awaitable_result
 from trcks.oop._track import Track
@@ -17,11 +17,16 @@ if sys.version_info >= (3, 11):
 else:
     from typing_extensions import Never, TypeAlias
 
+if sys.version_info >= (3, 13):
+    from typing import TypeVar
+else:
+    from typing_extensions import TypeVar
+
 _F = TypeVar("_F")
 _S = TypeVar("_S")
 
-_F_co = TypeVar("_F_co", covariant=True)
-_S_co = TypeVar("_S_co", covariant=True)
+_F_co = TypeVar("_F_co", covariant=True, default=Never)
+_S_co = TypeVar("_S_co", covariant=True, default=Never)
 
 
 AwaitableResult: TypeAlias = awaitable_result.AwaitableResult[_F_co, _S_co]

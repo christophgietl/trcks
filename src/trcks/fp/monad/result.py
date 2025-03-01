@@ -1,15 +1,20 @@
 from __future__ import annotations
 
 import sys
-from typing import TYPE_CHECKING, Literal, TypeVar, Union
+from typing import TYPE_CHECKING, Literal, Union
 
 if TYPE_CHECKING:
     from collections.abc import Callable
 
 if sys.version_info >= (3, 11):
-    from typing import TypeAlias
+    from typing import Never, TypeAlias
 else:
-    from typing_extensions import TypeAlias
+    from typing_extensions import Never, TypeAlias
+
+if sys.version_info >= (3, 13):
+    from typing import TypeVar
+else:
+    from typing_extensions import TypeVar
 
 _F = TypeVar("_F")
 _F1 = TypeVar("_F1")
@@ -18,8 +23,8 @@ _S = TypeVar("_S")
 _S1 = TypeVar("_S1")
 _S2 = TypeVar("_S2")
 
-_F_co = TypeVar("_F_co", covariant=True)
-_S_co = TypeVar("_S_co", covariant=True)
+_F_co = TypeVar("_F_co", covariant=True, default=Never)
+_S_co = TypeVar("_S_co", covariant=True, default=Never)
 
 
 Failure: TypeAlias = tuple[Literal["failure"], _F_co]
