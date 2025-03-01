@@ -35,7 +35,7 @@ warn_incomplete_stub = true
 warn_unreachable = true
 
 [tool.pytest.ini_options]
-addopts = "--cov=trcks --cov-report term-missing"
+addopts = "--cov=trcks --cov-fail-under=100 --cov-report term-missing"
 asyncio_default_fixture_loop_scope = "function"
 asyncio_mode = "auto"
 
