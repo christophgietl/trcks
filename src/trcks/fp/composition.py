@@ -2,14 +2,10 @@
 
 from __future__ import annotations
 
-import sys
 from collections.abc import Callable
-from typing import Optional, TypeVar, overload
+from typing import Optional, overload
 
-if sys.version_info >= (3, 11):
-    from typing import TypeAlias
-else:
-    from typing_extensions import TypeAlias
+from trcks._typing_extensions import TypeAlias, TypeVar
 
 _X0 = TypeVar("_X0")
 _X1 = TypeVar("_X1")

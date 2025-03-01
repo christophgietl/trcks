@@ -2,8 +2,9 @@ from __future__ import annotations
 
 import dataclasses
 from collections.abc import Awaitable
-from typing import TYPE_CHECKING, TypeVar
+from typing import TYPE_CHECKING
 
+from trcks._typing_extensions import TypeVar
 from trcks.fp.monad import awaitable
 from trcks.oop._async_dual_track import AsyncDualTrack, AwaitableResult
 from trcks.oop._track import Track

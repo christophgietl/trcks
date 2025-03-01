@@ -1,16 +1,11 @@
 from __future__ import annotations
 
-import sys
 from collections.abc import Callable
 
 import pytest
 
+from trcks._typing_extensions import assert_type
 from trcks.fp.composition import compose, pipe
-
-if sys.version_info >= (3, 11):
-    from typing import assert_type
-else:
-    from typing_extensions import assert_type
 
 
 def _foo(x: int) -> str:

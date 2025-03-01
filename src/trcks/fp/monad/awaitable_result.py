@@ -1,20 +1,9 @@
 from __future__ import annotations
 
-import sys
 from collections.abc import Awaitable, Callable
 
+from trcks._typing_extensions import Never, TypeAlias, TypeVar
 from trcks.fp.monad import awaitable, result
-
-if sys.version_info >= (3, 11):
-    from typing import Never, TypeAlias
-else:
-    from typing_extensions import Never, TypeAlias
-
-
-if sys.version_info >= (3, 13):
-    from typing import TypeVar
-else:
-    from typing_extensions import TypeVar
 
 _F = TypeVar("_F")
 _F1 = TypeVar("_F1")
