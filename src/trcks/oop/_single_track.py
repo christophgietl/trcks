@@ -9,7 +9,7 @@ from trcks.oop._async_single_track import AsyncSingleTrack
 from trcks.oop._dual_track import DualTrack, Result
 from trcks.oop._track import Track
 
-if TYPE_CHECKING:
+if TYPE_CHECKING:  # pragma: no cover
     from collections.abc import Awaitable, Callable
 
 _F = TypeVar("_F")
