@@ -47,11 +47,11 @@ class AsyncSingleTrack(Track[Awaitable[_T_co]]):
     ) -> AsyncDualTrack[_F, _S]:
         return AsyncDualTrack.construct_success_from_awaitable(
             self.core
-        ).map_sucess_to_awaitable_result(f)
+        ).map_success_to_awaitable_result(f)
 
     def map_to_result(
         self, f: Callable[[_T_co], Result[_F, _S]]
     ) -> AsyncDualTrack[_F, _S]:
         return AsyncDualTrack.construct_success_from_awaitable(
             self.core
-        ).map_sucess_to_result(f)
+        ).map_success_to_result(f)

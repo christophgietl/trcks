@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING, Literal, Union
 
 from trcks._typing_extensions import Never, TypeAlias, TypeVar
 
-if TYPE_CHECKING:
+if TYPE_CHECKING:  # pragma: no cover
     from collections.abc import Callable
 
 

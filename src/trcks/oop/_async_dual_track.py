@@ -7,7 +7,7 @@ from trcks._typing_extensions import Never, TypeAlias, TypeVar
 from trcks.fp.monad import awaitable_result
 from trcks.oop._track import Track
 
-if TYPE_CHECKING:
+if TYPE_CHECKING:  # pragma: no cover
     from collections.abc import Awaitable, Callable
 
     from trcks.oop._dual_track import Result
@@ -81,19 +81,19 @@ class AsyncDualTrack(Track[AwaitableResult[_F_co, _S_co]]):
         f_mapped = awaitable_result.map_success(f)
         return AsyncDualTrack(f_mapped(self.core))
 
-    def map_sucess_to_awaitable(
+    def map_success_to_awaitable(
         self, f: Callable[[_S_co], Awaitable[_S]]
     ) -> AsyncDualTrack[_F_co, _S]:
         f_mapped = awaitable_result.map_success_to_awaitable(f)
         return AsyncDualTrack(f_mapped(self.core))
 
-    def map_sucess_to_awaitable_result(
+    def map_success_to_awaitable_result(
         self, f: Callable[[_S_co], AwaitableResult[_F, _S]]
     ) -> AsyncDualTrack[_F_co | _F, _S]:
         f_mapped = awaitable_result.map_success_to_awaitable_result(f)
         return AsyncDualTrack(f_mapped(self.core))
 
-    def map_sucess_to_result(
+    def map_success_to_result(
         self, f: Callable[[_S_co], Result[_F, _S]]
     ) -> AsyncDualTrack[_F_co | _F, _S]:
         f_mapped = awaitable_result.map_success_to_result(f)

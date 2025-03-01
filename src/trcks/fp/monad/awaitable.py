@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING
 
 from trcks._typing_extensions import TypeVar
 
-if TYPE_CHECKING:
+if TYPE_CHECKING:  # pragma: no cover
     from collections.abc import Awaitable, Callable
 
 _T = TypeVar("_T")
