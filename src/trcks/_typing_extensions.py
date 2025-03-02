@@ -27,3 +27,4 @@ __all__ = [
     "TypeVar",
     "assert_type",
 ]
+__docformat__ = "google"

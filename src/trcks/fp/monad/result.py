@@ -87,3 +87,4 @@ __all__ = [
     "map_success",
     "map_success_to_result",
 ]
+__docformat__ = "google"

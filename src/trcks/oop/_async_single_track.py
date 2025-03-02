@@ -59,3 +59,4 @@ class AsyncSingleTrack(Track[Awaitable[_T_co]]):
 
 
 __all__ = ["AsyncSingleTrack"]
+__docformat__ = "google"

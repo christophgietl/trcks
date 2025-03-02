@@ -154,3 +154,4 @@ __all__ = [
     "map_success_to_awaitable_result",
     "map_success_to_result",
 ]
+__docformat__ = "google"

@@ -92,3 +92,4 @@ class DualTrack(Track[Result[_F_co, _S_co]]):
 
 
 __all__ = ["DualTrack", "Failure", "Result", "Success"]
+__docformat__ = "google"

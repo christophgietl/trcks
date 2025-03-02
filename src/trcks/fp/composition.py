@@ -372,3 +372,4 @@ def pipe(  # noqa: PLR0911, PLR0913
 
 
 __all__ = ["compose", "pipe"]
+__docformat__ = "google"

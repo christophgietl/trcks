@@ -20,3 +20,4 @@ __all__ = [
     "SingleTrack",
     "Success",
 ]
+__docformat__ = "google"

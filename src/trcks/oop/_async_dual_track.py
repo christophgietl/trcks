@@ -111,3 +111,4 @@ class AsyncDualTrack(Track[AwaitableResult[_F_co, _S_co]]):
 
 
 __all__ = ["AsyncDualTrack", "AwaitableFailure", "AwaitableResult", "AwaitableSuccess"]
+__docformat__ = "google"

@@ -43,3 +43,4 @@ class SingleTrack(Track[_T_co]):
 
 
 __all__ = ["SingleTrack"]
+__docformat__ = "google"
