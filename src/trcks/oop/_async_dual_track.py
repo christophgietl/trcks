@@ -3,8 +3,13 @@ from __future__ import annotations
 import dataclasses
 from typing import TYPE_CHECKING, Literal
 
-from trcks._typing_extensions import Never, TypeAlias, TypeVar
+from trcks._typing_extensions import Never, TypeVar
 from trcks.fp.monad import awaitable_result
+from trcks.fp.monad.awaitable_result import (
+    AwaitableFailure,
+    AwaitableResult,
+    AwaitableSuccess,
+)
 from trcks.oop._track import Track
 
 if TYPE_CHECKING:  # pragma: no cover
@@ -18,9 +23,6 @@ _S = TypeVar("_S")
 
 _F_co = TypeVar("_F_co", covariant=True, default=Never)
 _S_co = TypeVar("_S_co", covariant=True, default=Never)
-
-
-AwaitableResult: TypeAlias = awaitable_result.AwaitableResult[_F_co, _S_co]
 
 
 @dataclasses.dataclass(frozen=True)
@@ -106,3 +108,6 @@ class AsyncDualTrack(Track[AwaitableResult[_F_co, _S_co]]):
     @property
     async def value(self) -> _F_co | _S_co:
         return (await self.core)[1]
+
+
+__all__ = ["AsyncDualTrack", "AwaitableFailure", "AwaitableResult", "AwaitableSuccess"]

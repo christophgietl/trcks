@@ -3,8 +3,9 @@ from __future__ import annotations
 import dataclasses
 from typing import TYPE_CHECKING, Literal
 
-from trcks._typing_extensions import Never, TypeAlias, TypeVar
+from trcks._typing_extensions import Never, TypeVar
 from trcks.fp.monad import result
+from trcks.fp.monad.result import Failure, Result, Success
 from trcks.oop._async_dual_track import AsyncDualTrack, AwaitableResult
 from trcks.oop._track import Track
 
@@ -17,8 +18,6 @@ _S = TypeVar("_S")
 
 _F_co = TypeVar("_F_co", covariant=True, default=Never)
 _S_co = TypeVar("_S_co", covariant=True, default=Never)
-
-Result: TypeAlias = result.Result[_F_co, _S_co]
 
 
 @dataclasses.dataclass(frozen=True)
@@ -90,3 +89,6 @@ class DualTrack(Track[Result[_F_co, _S_co]]):
     @property
     def value(self) -> _F_co | _S_co:
         return self.core[1]
+
+
+__all__ = ["DualTrack", "Failure", "Result", "Success"]

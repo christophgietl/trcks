@@ -369,3 +369,6 @@ def pipe(  # noqa: PLR0911, PLR0913
     if f9 is None:
         return f8(f7(f6(f5(f4(f3(f2(f1(x0))))))))
     return f9(f8(f7(f6(f5(f4(f3(f2(f1(x0)))))))))
+
+
+__all__ = ["compose", "pipe"]

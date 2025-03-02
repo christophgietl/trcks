@@ -40,3 +40,6 @@ class SingleTrack(Track[_T_co]):
 
     def map_to_result(self, f: Callable[[_T_co], Result[_F, _S]]) -> DualTrack[_F, _S]:
         return DualTrack(f(self.core))
+
+
+__all__ = ["SingleTrack"]

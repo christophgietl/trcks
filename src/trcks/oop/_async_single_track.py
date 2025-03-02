@@ -6,12 +6,13 @@ from typing import TYPE_CHECKING
 
 from trcks._typing_extensions import TypeVar
 from trcks.fp.monad import awaitable
-from trcks.oop._async_dual_track import AsyncDualTrack, AwaitableResult
+from trcks.oop._async_dual_track import AsyncDualTrack
 from trcks.oop._track import Track
 
 if TYPE_CHECKING:  # pragma: no cover
     from collections.abc import Callable
 
+    from trcks.oop._async_dual_track import AwaitableResult
     from trcks.oop._dual_track import Result
 
 
@@ -55,3 +56,6 @@ class AsyncSingleTrack(Track[Awaitable[_T_co]]):
         return AsyncDualTrack.construct_success_from_awaitable(
             self.core
         ).map_success_to_result(f)
+
+
+__all__ = ["AsyncSingleTrack"]
