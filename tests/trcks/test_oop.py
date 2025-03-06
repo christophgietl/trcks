@@ -1,5 +1,6 @@
 import asyncio
 import math
+from collections.abc import Coroutine
 from typing import Final, Literal
 
 import pytest
@@ -108,6 +109,11 @@ class TestAsyncDualTrack:
         ).core
         assert awaited_core[0] == "success"
         assert awaited_core[1] is value
+
+    async def test_core_as_coroutine_is_coroutine(self) -> None:
+        core_as_coroutine = AsyncDualTrack.construct_success(1).core_as_coroutine
+        assert isinstance(core_as_coroutine, Coroutine)
+        assert await core_as_coroutine == ("success", 1)
 
     @pytest.mark.parametrize("value", _OBJECTS)
     async def test_map_failure_does_not_change_success(self, value: object) -> None:
@@ -290,6 +296,11 @@ class TestAsyncSingleTrack:
     ) -> None:
         awaitable = asyncio.create_task(asyncio.sleep(0.001, result=value))
         assert AsyncSingleTrack.construct_from_awaitable(awaitable).core is awaitable
+
+    async def test_core_as_coroutine_is_coroutine(self) -> None:
+        core_as_coroutine = AsyncSingleTrack.construct(1).core_as_coroutine
+        assert isinstance(core_as_coroutine, Coroutine)
+        assert await core_as_coroutine == 1
 
     @pytest.mark.parametrize("value", _FLOATS)
     async def test_map_maps_value(self, value: float) -> None:

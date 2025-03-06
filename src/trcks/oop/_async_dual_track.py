@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING, Literal
 
 from trcks._typing_extensions import Never, TypeVar
 from trcks.fp.monads import awaitable_result
-from trcks.oop._track import Track
+from trcks.oop._async_track import AsyncTrack
 from trcks.types_ import AwaitableResult, Result
 
 if TYPE_CHECKING:  # pragma: no cover
@@ -20,7 +20,7 @@ _S_co = TypeVar("_S_co", covariant=True, default=Never)
 
 
 @dataclasses.dataclass(frozen=True)
-class AsyncDualTrack(Track[AwaitableResult[_F_co, _S_co]]):
+class AsyncDualTrack(AsyncTrack[Result[_F_co, _S_co]]):
     @staticmethod
     def construct_failure(value: _F) -> AsyncDualTrack[_F, Never]:
         return AsyncDualTrack(awaitable_result.construct_failure(value))

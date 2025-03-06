@@ -1,15 +1,16 @@
 from __future__ import annotations
 
 import dataclasses
-from collections.abc import Awaitable, Callable
 from typing import TYPE_CHECKING
 
 from trcks._typing_extensions import TypeVar
 from trcks.fp.monads import awaitable
 from trcks.oop._async_dual_track import AsyncDualTrack
-from trcks.oop._track import Track
+from trcks.oop._async_track import AsyncTrack
 
 if TYPE_CHECKING:  # pragma: no cover
+    from collections.abc import Awaitable, Callable
+
     from trcks.types_ import AwaitableResult, Result
 
 
@@ -21,7 +22,7 @@ _T_co = TypeVar("_T_co", covariant=True)
 
 
 @dataclasses.dataclass(frozen=True)
-class AsyncSingleTrack(Track[Awaitable[_T_co]]):
+class AsyncSingleTrack(AsyncTrack[_T_co]):
     @staticmethod
     def construct(value: _T) -> AsyncSingleTrack[_T]:
         return AsyncSingleTrack(awaitable.construct(value))
