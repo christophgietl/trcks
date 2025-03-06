@@ -4,18 +4,12 @@ import dataclasses
 from typing import TYPE_CHECKING, Literal
 
 from trcks._typing_extensions import Never, TypeVar
-from trcks.fp.monad import awaitable_result
-from trcks.fp.monad.awaitable_result import (
-    AwaitableFailure,
-    AwaitableResult,
-    AwaitableSuccess,
-)
+from trcks.fp.monads import awaitable_result
 from trcks.oop._track import Track
+from trcks.types_ import AwaitableResult, Result
 
 if TYPE_CHECKING:  # pragma: no cover
     from collections.abc import Awaitable, Callable
-
-    from trcks.oop._dual_track import Result
 
 
 _F = TypeVar("_F")
@@ -110,5 +104,4 @@ class AsyncDualTrack(Track[AwaitableResult[_F_co, _S_co]]):
         return (await self.core)[1]
 
 
-__all__ = ["AsyncDualTrack", "AwaitableFailure", "AwaitableResult", "AwaitableSuccess"]
 __docformat__ = "google"

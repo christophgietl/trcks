@@ -1,11 +1,13 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Literal, Union
+from typing import TYPE_CHECKING
 
-from trcks._typing_extensions import Never, TypeAlias, TypeVar
+from trcks._typing_extensions import TypeVar
 
 if TYPE_CHECKING:  # pragma: no cover
     from collections.abc import Callable
+
+    from trcks.types_ import Failure, Result, Success
 
 
 _F = TypeVar("_F")
@@ -14,14 +16,6 @@ _F2 = TypeVar("_F2")
 _S = TypeVar("_S")
 _S1 = TypeVar("_S1")
 _S2 = TypeVar("_S2")
-
-_F_co = TypeVar("_F_co", covariant=True, default=Never)
-_S_co = TypeVar("_S_co", covariant=True, default=Never)
-
-
-Failure: TypeAlias = tuple[Literal["failure"], _F_co]
-Success: TypeAlias = tuple[Literal["success"], _S_co]
-Result: TypeAlias = Union[Failure[_F_co], Success[_S_co]]
 
 
 def construct_failure(value: _F) -> Failure[_F]:
@@ -76,15 +70,4 @@ def map_success_to_result(
     return mapped_f
 
 
-__all__ = [
-    "Failure",
-    "Result",
-    "Success",
-    "construct_failure",
-    "construct_success",
-    "map_failure",
-    "map_failure_to_result",
-    "map_success",
-    "map_success_to_result",
-]
 __docformat__ = "google"

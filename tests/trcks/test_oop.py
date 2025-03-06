@@ -4,7 +4,8 @@ from typing import Final, Literal
 
 import pytest
 
-from trcks.oop import AsyncDualTrack, AsyncSingleTrack, DualTrack, Result, SingleTrack
+from trcks.oop import AsyncDualTrack, AsyncSingleTrack, DualTrack, SingleTrack
+from trcks.types_ import Result
 
 _FLOATS: Final[tuple[float, ...]] = (0.0, 1.5, -2.3, 100.75, math.pi, -math.e)
 _OBJECTS: Final[tuple[object, ...]] = (

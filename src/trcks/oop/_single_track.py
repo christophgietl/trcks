@@ -4,13 +4,15 @@ import dataclasses
 from typing import TYPE_CHECKING
 
 from trcks._typing_extensions import TypeVar
-from trcks.oop._async_dual_track import AsyncDualTrack, AwaitableResult
+from trcks.oop._async_dual_track import AsyncDualTrack
 from trcks.oop._async_single_track import AsyncSingleTrack
-from trcks.oop._dual_track import DualTrack, Result
+from trcks.oop._dual_track import DualTrack
 from trcks.oop._track import Track
 
 if TYPE_CHECKING:  # pragma: no cover
     from collections.abc import Awaitable, Callable
+
+    from trcks.types_ import AwaitableResult, Result
 
 _F = TypeVar("_F")
 _S = TypeVar("_S")
@@ -42,5 +44,4 @@ class SingleTrack(Track[_T_co]):
         return DualTrack(f(self.core))
 
 
-__all__ = ["SingleTrack"]
 __docformat__ = "google"
