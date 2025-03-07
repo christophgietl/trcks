@@ -3,7 +3,7 @@ from __future__ import annotations
 import dataclasses
 from typing import Generic
 
-from trcks._typing_extensions import TypeVar
+from trcks._typing import TypeVar
 
 _T_co = TypeVar("_T_co", covariant=True)
 

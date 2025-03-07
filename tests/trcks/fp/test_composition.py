@@ -4,7 +4,7 @@ from collections.abc import Callable
 
 import pytest
 
-from trcks._typing_extensions import assert_type
+from trcks._typing import assert_type
 from trcks.fp.composition import compose, pipe
 
 

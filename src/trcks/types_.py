@@ -1,7 +1,7 @@
 from collections.abc import Awaitable
 from typing import Literal, Union
 
-from trcks._typing_extensions import Never, TypeAlias, TypeVar
+from trcks._typing import Never, TypeAlias, TypeVar
 
 _F_co = TypeVar("_F_co", covariant=True, default=Never)
 _S_co = TypeVar("_S_co", covariant=True, default=Never)

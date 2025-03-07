@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from trcks._typing_extensions import TypeVar
+from trcks._typing import TypeVar
 
 if TYPE_CHECKING:  # pragma: no cover
     from collections.abc import Awaitable, Callable

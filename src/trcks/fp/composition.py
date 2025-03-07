@@ -5,7 +5,7 @@ from __future__ import annotations
 from collections.abc import Callable
 from typing import Optional, overload
 
-from trcks._typing_extensions import TypeAlias, TypeVar
+from trcks._typing import TypeAlias, TypeVar
 
 _X0 = TypeVar("_X0")
 _X1 = TypeVar("_X1")

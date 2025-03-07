@@ -3,7 +3,7 @@ from __future__ import annotations
 import dataclasses
 from collections.abc import Awaitable
 
-from trcks._typing_extensions import TypeVar
+from trcks._typing import TypeVar
 from trcks.oop._track import Track
 
 _T_co = TypeVar("_T_co", covariant=True)

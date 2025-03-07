@@ -1,6 +1,7 @@
-"""Imports objects from typing_extensions if necessary, otherwise from typing.
+"""Recent features from `typing`.
 
-This helps to avoid sys.version_info checks in the codebase.
+Imported from `typing_extensions` if necessary in older Python versions.
+This helps to avoid `sys.version_info` checks in the codebase.
 """
 
 import sys

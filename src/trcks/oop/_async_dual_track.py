@@ -3,7 +3,7 @@ from __future__ import annotations
 import dataclasses
 from typing import TYPE_CHECKING, Literal
 
-from trcks._typing_extensions import Never, TypeVar
+from trcks._typing import Never, TypeVar
 from trcks.fp.monads import awaitable_result
 from trcks.oop._async_track import AsyncTrack
 from trcks.types_ import AwaitableResult, Result

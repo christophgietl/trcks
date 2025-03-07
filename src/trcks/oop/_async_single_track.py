@@ -3,7 +3,7 @@ from __future__ import annotations
 import dataclasses
 from typing import TYPE_CHECKING
 
-from trcks._typing_extensions import TypeVar
+from trcks._typing import TypeVar
 from trcks.fp.monads import awaitable
 from trcks.oop._async_dual_track import AsyncDualTrack
 from trcks.oop._async_track import AsyncTrack
