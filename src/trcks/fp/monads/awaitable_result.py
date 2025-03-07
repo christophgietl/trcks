@@ -8,7 +8,12 @@ from trcks.fp.monads import awaitable, result
 if TYPE_CHECKING:  # pragma: no cover
     from collections.abc import Awaitable, Callable
 
-    from trcks.types_ import AwaitableFailure, AwaitableResult, AwaitableSuccess, Result
+    from trcks._type_aliases import (
+        AwaitableFailure,
+        AwaitableResult,
+        AwaitableSuccess,
+        Result,
+    )
 
 _F = TypeVar("_F")
 _F1 = TypeVar("_F1")

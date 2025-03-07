@@ -7,7 +7,7 @@ from trcks._typing import TypeVar, assert_never
 if TYPE_CHECKING:  # pragma: no cover
     from collections.abc import Callable
 
-    from trcks.types_ import Failure, Result, Success
+    from trcks._type_aliases import Failure, Result, Success
 
 
 _F = TypeVar("_F")

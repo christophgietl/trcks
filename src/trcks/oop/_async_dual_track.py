@@ -3,10 +3,10 @@ from __future__ import annotations
 import dataclasses
 from typing import TYPE_CHECKING, Literal
 
+from trcks._type_aliases import AwaitableResult, Result
 from trcks._typing import Never, TypeVar
 from trcks.fp.monads import awaitable_result
 from trcks.oop._async_track import AsyncTrack
-from trcks.types_ import AwaitableResult, Result
 
 if TYPE_CHECKING:  # pragma: no cover
     from collections.abc import Awaitable, Callable
