@@ -47,8 +47,8 @@ def map_failure(
 def map_failure_to_awaitable(
     f: Callable[[_F1], Awaitable[_F2]],
 ) -> Callable[[AwaitableResult[_F1, _S1]], AwaitableResult[_F2, _S1]]:
-    def composed_f(f1: _F1) -> AwaitableFailure[_F2]:
-        return construct_failure_from_awaitable(f(f1))
+    def composed_f(value: _F1) -> AwaitableFailure[_F2]:
+        return construct_failure_from_awaitable(f(value))
 
     return map_failure_to_awaitable_result(composed_f)
 
@@ -56,17 +56,14 @@ def map_failure_to_awaitable(
 def map_failure_to_awaitable_result(
     f: Callable[[_F1], AwaitableResult[_F2, _S2]],
 ) -> Callable[[AwaitableResult[_F1, _S1]], AwaitableResult[_F2, _S1 | _S2]]:
-    async def mapped_f(
-        a_rslt: AwaitableResult[_F1, _S1],
-    ) -> Result[_F2, _S1 | _S2]:
-        rslt = await a_rslt
+    async def partially_mapped_f(rslt: Result[_F1, _S1]) -> Result[_F2, _S1 | _S2]:
         if rslt[0] == "failure":
             return await f(rslt[1])
         if rslt[0] == "success":
             return rslt
         return assert_never(rslt)  # type: ignore [unreachable]  # pragma: no cover
 
-    return mapped_f
+    return awaitable.map_to_awaitable(partially_mapped_f)
 
 
 def map_failure_to_result(
@@ -84,8 +81,8 @@ def map_success(
 def map_success_to_awaitable(
     f: Callable[[_S1], Awaitable[_S2]],
 ) -> Callable[[AwaitableResult[_F1, _S1]], AwaitableResult[_F1, _S2]]:
-    def composed_f(s1: _S1) -> AwaitableSuccess[_S2]:
-        return construct_success_from_awaitable(f(s1))
+    def composed_f(value: _S1) -> AwaitableSuccess[_S2]:
+        return construct_success_from_awaitable(f(value))
 
     return map_success_to_awaitable_result(composed_f)
 
@@ -93,17 +90,14 @@ def map_success_to_awaitable(
 def map_success_to_awaitable_result(
     f: Callable[[_S1], AwaitableResult[_F2, _S2]],
 ) -> Callable[[AwaitableResult[_F1, _S1]], AwaitableResult[_F1 | _F2, _S2]]:
-    async def mapped_f(
-        a_rslt: AwaitableResult[_F1, _S1],
-    ) -> Result[_F1 | _F2, _S2]:
-        rslt = await a_rslt
+    async def partially_mapped_f(rslt: Result[_F1, _S1]) -> Result[_F1 | _F2, _S2]:
         if rslt[0] == "failure":
             return rslt
         if rslt[0] == "success":
             return await f(rslt[1])
         return assert_never(rslt)  # type: ignore [unreachable]  # pragma: no cover
 
-    return mapped_f
+    return awaitable.map_to_awaitable(partially_mapped_f)
 
 
 def map_success_to_result(
