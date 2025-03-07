@@ -5,7 +5,7 @@ from typing import Final, Literal
 
 import pytest
 
-from trcks._type_aliases import Result
+from trcks import Result
 from trcks.oop import AsyncDualTrack, AsyncSingleTrack, DualTrack, SingleTrack
 
 _FLOATS: Final[tuple[float, ...]] = (0.0, 1.5, -2.3, 100.75, math.pi, -math.e)

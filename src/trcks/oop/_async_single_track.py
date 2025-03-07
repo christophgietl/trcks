@@ -11,7 +11,7 @@ from trcks.oop._async_track import AsyncTrack
 if TYPE_CHECKING:  # pragma: no cover
     from collections.abc import Awaitable, Callable
 
-    from trcks._type_aliases import AwaitableResult, Result
+    from trcks import AwaitableResult, Result
 
 
 _F = TypeVar("_F")

@@ -12,7 +12,7 @@ from trcks.oop._track import Track
 if TYPE_CHECKING:  # pragma: no cover
     from collections.abc import Awaitable, Callable
 
-    from trcks._type_aliases import AwaitableResult, Result
+    from trcks import AwaitableResult, Result
 
 _F = TypeVar("_F")
 _S = TypeVar("_S")
