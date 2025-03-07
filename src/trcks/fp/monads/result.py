@@ -29,14 +29,10 @@ def construct_success(value: _S) -> Success[_S]:
 def map_failure(
     f: Callable[[_F1], _F2],
 ) -> Callable[[Result[_F1, _S1]], Result[_F2, _S1]]:
-    def mapped_f(rslt: Result[_F1, _S1]) -> Result[_F2, _S1]:
-        if rslt[0] == "failure":
-            return construct_failure(f(rslt[1]))
-        if rslt[0] == "success":
-            return rslt
-        return assert_never(rslt)  # type: ignore [unreachable]  # pragma: no cover
+    def composed_f(value: _F1) -> Failure[_F2]:
+        return construct_failure(f(value))
 
-    return mapped_f
+    return map_failure_to_result(composed_f)
 
 
 def map_failure_to_result(
@@ -55,14 +51,10 @@ def map_failure_to_result(
 def map_success(
     f: Callable[[_S1], _S2],
 ) -> Callable[[Result[_F1, _S1]], Result[_F1, _S2]]:
-    def mapped_f(rslt: Result[_F1, _S1]) -> Result[_F1, _S2]:
-        if rslt[0] == "failure":
-            return rslt
-        if rslt[0] == "success":
-            return construct_success(f(rslt[1]))
-        return assert_never(rslt)  # type: ignore [unreachable]  # pragma: no cover
+    def composed_f(value: _S1) -> Success[_S2]:
+        return construct_success(f(value))
 
-    return mapped_f
+    return map_success_to_result(composed_f)
 
 
 def map_success_to_result(

@@ -17,19 +17,19 @@ async def construct(value: _T) -> _T:
 
 
 def map_(f: Callable[[_T1], _T2]) -> Callable[[Awaitable[_T1]], Awaitable[_T2]]:
-    async def f_mapped(awaitable: Awaitable[_T1]) -> _T2:
-        return f(await awaitable)
+    def composed_f(value: _T1) -> Awaitable[_T2]:
+        return construct(f(value))
 
-    return f_mapped
+    return map_to_awaitable(composed_f)
 
 
 def map_to_awaitable(
     f: Callable[[_T1], Awaitable[_T2]],
 ) -> Callable[[Awaitable[_T1]], Awaitable[_T2]]:
-    async def f_mapped(awaitable: Awaitable[_T1]) -> _T2:
+    async def mapped_f(awaitable: Awaitable[_T1]) -> _T2:
         return await f(await awaitable)
 
-    return f_mapped
+    return mapped_f
 
 
 __docformat__ = "google"
