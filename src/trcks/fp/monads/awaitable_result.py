@@ -47,17 +47,10 @@ def map_failure(
 def map_failure_to_awaitable(
     f: Callable[[_F1], Awaitable[_F2]],
 ) -> Callable[[AwaitableResult[_F1, _S1]], AwaitableResult[_F2, _S1]]:
-    async def mapped_f(
-        a_rslt: AwaitableResult[_F1, _S1],
-    ) -> Result[_F2, _S1]:
-        rslt = await a_rslt
-        if rslt[0] == "failure":
-            return result.construct_failure(await f(rslt[1]))
-        if rslt[0] == "success":
-            return rslt
-        return assert_never(rslt)  # type: ignore [unreachable]  # pragma: no cover
+    def composed_f(f1: _F1) -> AwaitableFailure[_F2]:
+        return construct_failure_from_awaitable(f(f1))
 
-    return mapped_f
+    return map_failure_to_awaitable_result(composed_f)
 
 
 def map_failure_to_awaitable_result(
@@ -79,17 +72,7 @@ def map_failure_to_awaitable_result(
 def map_failure_to_result(
     f: Callable[[_F1], Result[_F2, _S2]],
 ) -> Callable[[AwaitableResult[_F1, _S1]], AwaitableResult[_F2, _S1 | _S2]]:
-    async def mapped_f(
-        a_rslt: AwaitableResult[_F1, _S1],
-    ) -> Result[_F2, _S1 | _S2]:
-        rslt = await a_rslt
-        if rslt[0] == "failure":
-            return f(rslt[1])
-        if rslt[0] == "success":
-            return rslt
-        return assert_never(rslt)  # type: ignore [unreachable]  # pragma: no cover
-
-    return mapped_f
+    return awaitable.map_(result.map_failure_to_result(f))
 
 
 def map_success(
@@ -101,17 +84,10 @@ def map_success(
 def map_success_to_awaitable(
     f: Callable[[_S1], Awaitable[_S2]],
 ) -> Callable[[AwaitableResult[_F1, _S1]], AwaitableResult[_F1, _S2]]:
-    async def mapped_f(
-        a_rslt: AwaitableResult[_F1, _S1],
-    ) -> Result[_F1, _S2]:
-        rslt = await a_rslt
-        if rslt[0] == "failure":
-            return rslt
-        if rslt[0] == "success":
-            return result.construct_success(await f(rslt[1]))
-        return assert_never(rslt)  # type: ignore [unreachable]  # pragma: no cover
+    def composed_f(s1: _S1) -> AwaitableSuccess[_S2]:
+        return construct_success_from_awaitable(f(s1))
 
-    return mapped_f
+    return map_success_to_awaitable_result(composed_f)
 
 
 def map_success_to_awaitable_result(
@@ -133,17 +109,7 @@ def map_success_to_awaitable_result(
 def map_success_to_result(
     f: Callable[[_S1], Result[_F2, _S2]],
 ) -> Callable[[AwaitableResult[_F1, _S1]], AwaitableResult[_F1 | _F2, _S2]]:
-    async def mapped_f(
-        a_rslt: AwaitableResult[_F1, _S1],
-    ) -> Result[_F1 | _F2, _S2]:
-        rslt = await a_rslt
-        if rslt[0] == "failure":
-            return rslt
-        if rslt[0] == "success":
-            return f(rslt[1])
-        return assert_never(rslt)  # type: ignore [unreachable]  # pragma: no cover
-
-    return mapped_f
+    return awaitable.map_(result.map_success_to_result(f))
 
 
 __docformat__ = "google"
