@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from trcks._typing_extensions import TypeVar
+from trcks._typing_extensions import TypeVar, assert_never
 from trcks.fp.monads import awaitable, result
 
 if TYPE_CHECKING:  # pragma: no cover
@@ -51,9 +51,11 @@ def map_failure_to_awaitable(
         a_rslt: AwaitableResult[_F1, _S1],
     ) -> Result[_F2, _S1]:
         rslt = await a_rslt
+        if rslt[0] == "failure":
+            return result.construct_failure(await f(rslt[1]))
         if rslt[0] == "success":
             return rslt
-        return result.construct_failure(await f(rslt[1]))
+        return assert_never(rslt)  # type: ignore [unreachable]  # pragma: no cover
 
     return mapped_f
 
@@ -65,9 +67,11 @@ def map_failure_to_awaitable_result(
         a_rslt: AwaitableResult[_F1, _S1],
     ) -> Result[_F2, _S1 | _S2]:
         rslt = await a_rslt
+        if rslt[0] == "failure":
+            return await f(rslt[1])
         if rslt[0] == "success":
             return rslt
-        return await f(rslt[1])
+        return assert_never(rslt)  # type: ignore [unreachable]  # pragma: no cover
 
     return mapped_f
 
@@ -79,9 +83,11 @@ def map_failure_to_result(
         a_rslt: AwaitableResult[_F1, _S1],
     ) -> Result[_F2, _S1 | _S2]:
         rslt = await a_rslt
+        if rslt[0] == "failure":
+            return f(rslt[1])
         if rslt[0] == "success":
             return rslt
-        return f(rslt[1])
+        return assert_never(rslt)  # type: ignore [unreachable]  # pragma: no cover
 
     return mapped_f
 
@@ -101,7 +107,9 @@ def map_success_to_awaitable(
         rslt = await a_rslt
         if rslt[0] == "failure":
             return rslt
-        return result.construct_success(await f(rslt[1]))
+        if rslt[0] == "success":
+            return result.construct_success(await f(rslt[1]))
+        return assert_never(rslt)  # type: ignore [unreachable]  # pragma: no cover
 
     return mapped_f
 
@@ -115,7 +123,9 @@ def map_success_to_awaitable_result(
         rslt = await a_rslt
         if rslt[0] == "failure":
             return rslt
-        return await f(rslt[1])
+        if rslt[0] == "success":
+            return await f(rslt[1])
+        return assert_never(rslt)  # type: ignore [unreachable]  # pragma: no cover
 
     return mapped_f
 
@@ -129,7 +139,9 @@ def map_success_to_result(
         rslt = await a_rslt
         if rslt[0] == "failure":
             return rslt
-        return f(rslt[1])
+        if rslt[0] == "success":
+            return f(rslt[1])
+        return assert_never(rslt)  # type: ignore [unreachable]  # pragma: no cover
 
     return mapped_f
 

@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from trcks._typing_extensions import TypeVar
+from trcks._typing_extensions import TypeVar, assert_never
 
 if TYPE_CHECKING:  # pragma: no cover
     from collections.abc import Callable
@@ -30,9 +30,11 @@ def map_failure(
     f: Callable[[_F1], _F2],
 ) -> Callable[[Result[_F1, _S1]], Result[_F2, _S1]]:
     def mapped_f(rslt: Result[_F1, _S1]) -> Result[_F2, _S1]:
+        if rslt[0] == "failure":
+            return construct_failure(f(rslt[1]))
         if rslt[0] == "success":
             return rslt
-        return construct_failure(f(rslt[1]))
+        return assert_never(rslt)  # type: ignore [unreachable]  # pragma: no cover
 
     return mapped_f
 
@@ -41,9 +43,11 @@ def map_failure_to_result(
     f: Callable[[_F1], Result[_F2, _S2]],
 ) -> Callable[[Result[_F1, _S1]], Result[_F2, _S1 | _S2]]:
     def mapped_f(rslt: Result[_F1, _S1]) -> Result[_F2, _S1 | _S2]:
+        if rslt[0] == "failure":
+            return f(rslt[1])
         if rslt[0] == "success":
             return rslt
-        return f(rslt[1])
+        return assert_never(rslt)  # type: ignore [unreachable]  # pragma: no cover
 
     return mapped_f
 
@@ -54,7 +58,9 @@ def map_success(
     def mapped_f(rslt: Result[_F1, _S1]) -> Result[_F1, _S2]:
         if rslt[0] == "failure":
             return rslt
-        return construct_success(f(rslt[1]))
+        if rslt[0] == "success":
+            return construct_success(f(rslt[1]))
+        return assert_never(rslt)  # type: ignore [unreachable]  # pragma: no cover
 
     return mapped_f
 
@@ -65,7 +71,9 @@ def map_success_to_result(
     def mapped_f(rslt: Result[_F1, _S1]) -> Result[_F1 | _F2, _S2]:
         if rslt[0] == "failure":
             return rslt
-        return f(rslt[1])
+        if rslt[0] == "success":
+            return f(rslt[1])
+        return assert_never(rslt)  # type: ignore [unreachable]  # pragma: no cover
 
     return mapped_f
 
