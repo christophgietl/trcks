@@ -6,8 +6,8 @@ from typing import TYPE_CHECKING, Literal
 from trcks import AwaitableResult, Result
 from trcks._typing import Never, TypeVar
 from trcks.fp.monads import result
-from trcks.oop._async_dual_track import AsyncDualTrack
-from trcks.oop._track import Track
+from trcks.oop._awaitable_result_railway import AwaitableResultRailway
+from trcks.oop._base_railway import BaseRailway
 
 if TYPE_CHECKING:  # pragma: no cover
     from collections.abc import Awaitable, Callable
@@ -21,66 +21,66 @@ _S_co = TypeVar("_S_co", covariant=True, default=Never)
 
 
 @dataclasses.dataclass(frozen=True)
-class DualTrack(Track[Result[_F_co, _S_co]]):
+class ResultRailway(BaseRailway[Result[_F_co, _S_co]]):
     @staticmethod
-    def construct_failure(value: _F) -> DualTrack[_F, Never]:
-        return DualTrack(result.construct_failure(value))
+    def construct_failure(value: _F) -> ResultRailway[_F, Never]:
+        return ResultRailway(result.construct_failure(value))
 
     @staticmethod
-    def construct_from_result(rslt: Result[_F, _S]) -> DualTrack[_F, _S]:
-        return DualTrack(rslt)
+    def construct_from_result(rslt: Result[_F, _S]) -> ResultRailway[_F, _S]:
+        return ResultRailway(rslt)
 
     @staticmethod
-    def construct_success(value: _S) -> DualTrack[Never, _S]:
-        return DualTrack(result.construct_success(value))
+    def construct_success(value: _S) -> ResultRailway[Never, _S]:
+        return ResultRailway(result.construct_success(value))
 
-    def map_failure(self, f: Callable[[_F_co], _F]) -> DualTrack[_F, _S_co]:
+    def map_failure(self, f: Callable[[_F_co], _F]) -> ResultRailway[_F, _S_co]:
         f_mapped = result.map_failure(f)
-        return DualTrack(f_mapped(self.core))
+        return ResultRailway(f_mapped(self.core))
 
     def map_failure_to_awaitable(
         self, f: Callable[[_F_co], Awaitable[_F]]
-    ) -> AsyncDualTrack[_F, _S_co]:
-        return AsyncDualTrack.construct_from_result(self.core).map_failure_to_awaitable(
-            f
-        )
+    ) -> AwaitableResultRailway[_F, _S_co]:
+        return AwaitableResultRailway.construct_from_result(
+            self.core
+        ).map_failure_to_awaitable(f)
 
     def map_failure_to_awaitable_result(
         self, f: Callable[[_F_co], AwaitableResult[_F, _S]]
-    ) -> AsyncDualTrack[_F, _S_co | _S]:
-        return AsyncDualTrack.construct_from_result(
+    ) -> AwaitableResultRailway[_F, _S_co | _S]:
+        return AwaitableResultRailway.construct_from_result(
             self.core
         ).map_failure_to_awaitable_result(f)
 
     def map_failure_to_result(
         self, f: Callable[[_F_co], Result[_F, _S]]
-    ) -> DualTrack[_F, _S_co | _S]:
+    ) -> ResultRailway[_F, _S_co | _S]:
         f_mapped = result.map_failure_to_result(f)
-        return DualTrack(f_mapped(self.core))
+        return ResultRailway(f_mapped(self.core))
 
-    def map_success(self, f: Callable[[_S_co], _S]) -> DualTrack[_F_co, _S]:
+    def map_success(self, f: Callable[[_S_co], _S]) -> ResultRailway[_F_co, _S]:
         f_mapped = result.map_success(f)
-        return DualTrack(f_mapped(self.core))
+        return ResultRailway(f_mapped(self.core))
 
     def map_success_to_awaitable(
         self, f: Callable[[_S_co], Awaitable[_S]]
-    ) -> AsyncDualTrack[_F_co, _S]:
-        return AsyncDualTrack.construct_from_result(self.core).map_success_to_awaitable(
-            f
-        )
+    ) -> AwaitableResultRailway[_F_co, _S]:
+        return AwaitableResultRailway.construct_from_result(
+            self.core
+        ).map_success_to_awaitable(f)
 
     def map_success_to_awaitable_result(
         self, f: Callable[[_S_co], AwaitableResult[_F, _S]]
-    ) -> AsyncDualTrack[_F_co | _F, _S]:
-        return AsyncDualTrack.construct_from_result(
+    ) -> AwaitableResultRailway[_F_co | _F, _S]:
+        return AwaitableResultRailway.construct_from_result(
             self.core
         ).map_success_to_awaitable_result(f)
 
     def map_success_to_result(
         self, f: Callable[[_S_co], Result[_F, _S]]
-    ) -> DualTrack[_F_co | _F, _S]:
+    ) -> ResultRailway[_F_co | _F, _S]:
         f_mapped = result.map_success_to_result(f)
-        return DualTrack(f_mapped(self.core))
+        return ResultRailway(f_mapped(self.core))
 
     @property
     def track(self) -> Literal["failure", "success"]:

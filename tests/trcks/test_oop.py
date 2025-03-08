@@ -6,7 +6,7 @@ from typing import Final, Literal
 import pytest
 
 from trcks import Result
-from trcks.oop import AsyncDualTrack, AsyncSingleTrack, DualTrack, SingleTrack
+from trcks.oop import AwaitableRailway, AwaitableResultRailway, Railway, ResultRailway
 
 _FLOATS: Final[tuple[float, ...]] = (0.0, 1.5, -2.3, 100.75, math.pi, -math.e)
 _OBJECTS: Final[tuple[object, ...]] = (
@@ -54,17 +54,64 @@ async def _stringify_slowly(o: object) -> str:
     return str(o)
 
 
-class TestAsyncDualTrack:
+class TestAwaitableRailway:
+    @pytest.mark.parametrize("value", _OBJECTS)
+    async def test_awaitable_railway_wraps_awaitable(self, value: object) -> None:
+        awaitable = asyncio.create_task(asyncio.sleep(0.001, result=value))
+        assert AwaitableRailway(awaitable).core is awaitable
+
+    @pytest.mark.parametrize("value", _OBJECTS)
+    async def test_construct_wraps_value(self, value: object) -> None:
+        assert await AwaitableRailway.construct(value).core == value
+
+    @pytest.mark.parametrize("value", _OBJECTS)
+    async def test_construct_from_awaitable_wraps_awaitable(
+        self, value: object
+    ) -> None:
+        awaitable = asyncio.create_task(asyncio.sleep(0.001, result=value))
+        assert AwaitableRailway.construct_from_awaitable(awaitable).core is awaitable
+
+    async def test_core_as_coroutine_is_coroutine(self) -> None:
+        core_as_coroutine = AwaitableRailway.construct(1).core_as_coroutine
+        assert isinstance(core_as_coroutine, Coroutine)
+        assert await core_as_coroutine == 1
+
+    @pytest.mark.parametrize("value", _FLOATS)
+    async def test_map_maps_value(self, value: float) -> None:
+        assert await AwaitableRailway.construct(value).map(_double).core == _double(
+            value
+        )
+
+    @pytest.mark.parametrize("value", _FLOATS)
+    async def test_map_to_awaitable_maps_value(self, value: float) -> None:
+        assert await AwaitableRailway.construct(value).map_to_awaitable(
+            _double_slowly
+        ).core == await _double_slowly(value)
+
+    @pytest.mark.parametrize("value", _FLOATS)
+    async def test_map_to_awaitable_result_maps_value(self, value: float) -> None:
+        assert await AwaitableRailway.construct(value).map_to_awaitable_result(
+            _get_square_root_safely_and_slowly
+        ).core == await _get_square_root_safely_and_slowly(value)
+
+    @pytest.mark.parametrize("value", _FLOATS)
+    async def test_map_to_result_maps_maps_value(self, value: float) -> None:
+        assert await AwaitableRailway.construct(value).map_to_result(
+            _get_square_root_safely
+        ).core == _get_square_root_safely(value)
+
+
+class TestAwaitableResultRailway:
     @pytest.mark.parametrize("result", _RESULTS)
-    async def test_async_dual_track_wraps_awaitable_result(
+    async def test_awaitable_result_railway_wraps_awaitable_result(
         self, result: Result[object, object]
     ) -> None:
         awaitable_result = asyncio.create_task(asyncio.sleep(0.001, result=result))
-        assert AsyncDualTrack(awaitable_result).core is awaitable_result
+        assert AwaitableResultRailway(awaitable_result).core is awaitable_result
 
     @pytest.mark.parametrize("value", _OBJECTS)
     async def test_construct_failure_wraps_value(self, value: object) -> None:
-        awaited_core = await AsyncDualTrack.construct_failure(value).core
+        awaited_core = await AwaitableResultRailway.construct_failure(value).core
         assert awaited_core[0] == "failure"
         assert awaited_core[1] is value
 
@@ -72,7 +119,7 @@ class TestAsyncDualTrack:
     async def test_construct_failure_from_awaitable_wraps_value(
         self, value: object
     ) -> None:
-        awaited_core = await AsyncDualTrack.construct_failure_from_awaitable(
+        awaited_core = await AwaitableResultRailway.construct_failure_from_awaitable(
             asyncio.create_task(asyncio.sleep(0.001, result=value))
         ).core
         assert awaited_core[0] == "failure"
@@ -84,7 +131,9 @@ class TestAsyncDualTrack:
     ) -> None:
         awaitable_result = asyncio.create_task(asyncio.sleep(0.001, result=result))
         assert (
-            AsyncDualTrack.construct_from_awaitable_result(awaitable_result).core
+            AwaitableResultRailway.construct_from_awaitable_result(
+                awaitable_result
+            ).core
             is awaitable_result
         )
 
@@ -92,11 +141,11 @@ class TestAsyncDualTrack:
     async def test_construct_from_result_wraps_result(
         self, result: Result[object, object]
     ) -> None:
-        assert await AsyncDualTrack.construct_from_result(result).core is result
+        assert await AwaitableResultRailway.construct_from_result(result).core is result
 
     @pytest.mark.parametrize("value", _OBJECTS)
     async def test_construct_success_wraps_value(self, value: object) -> None:
-        awaited_core = await AsyncDualTrack.construct_success(value).core
+        awaited_core = await AwaitableResultRailway.construct_success(value).core
         assert awaited_core[0] == "success"
         assert awaited_core[1] is value
 
@@ -104,14 +153,16 @@ class TestAsyncDualTrack:
     async def test_construct_success_from_awaitable_wraps_value(
         self, value: object
     ) -> None:
-        awaited_core = await AsyncDualTrack.construct_success_from_awaitable(
+        awaited_core = await AwaitableResultRailway.construct_success_from_awaitable(
             asyncio.create_task(asyncio.sleep(0.001, result=value))
         ).core
         assert awaited_core[0] == "success"
         assert awaited_core[1] is value
 
     async def test_core_as_coroutine_is_coroutine(self) -> None:
-        core_as_coroutine = AsyncDualTrack.construct_success(1).core_as_coroutine
+        core_as_coroutine = AwaitableResultRailway.construct_success(
+            1
+        ).core_as_coroutine
         assert isinstance(core_as_coroutine, Coroutine)
         assert await core_as_coroutine == ("success", 1)
 
@@ -119,7 +170,7 @@ class TestAsyncDualTrack:
     async def test_map_failure_does_not_change_success(self, value: object) -> None:
         success: Final = ("success", value)
         assert (
-            await AsyncDualTrack.construct_from_result(success)
+            await AwaitableResultRailway.construct_from_result(success)
             .map_failure(_double)
             .core
             is success
@@ -127,7 +178,7 @@ class TestAsyncDualTrack:
 
     @pytest.mark.parametrize("value", _FLOATS)
     async def test_map_failure_maps_failure_value(self, value: float) -> None:
-        assert await AsyncDualTrack.construct_failure(value).map_failure(
+        assert await AwaitableResultRailway.construct_failure(value).map_failure(
             _double
         ).core == ("failure", _double(value))
 
@@ -137,7 +188,7 @@ class TestAsyncDualTrack:
     ) -> None:
         success: Final = ("success", value)
         assert (
-            await AsyncDualTrack.construct_from_result(success)
+            await AwaitableResultRailway.construct_from_result(success)
             .map_failure_to_awaitable(_double_slowly)
             .core
             is success
@@ -147,9 +198,12 @@ class TestAsyncDualTrack:
     async def test_map_failure_to_awaitable_maps_failure_value(
         self, value: float
     ) -> None:
-        assert await AsyncDualTrack.construct_failure(value).map_failure_to_awaitable(
-            _double_slowly
-        ).core == ("failure", await _double_slowly(value))
+        assert await AwaitableResultRailway.construct_failure(
+            value
+        ).map_failure_to_awaitable(_double_slowly).core == (
+            "failure",
+            await _double_slowly(value),
+        )
 
     @pytest.mark.parametrize("value", _FLOATS)
     async def test_map_failure_to_awaitable_result_does_not_change_success(
@@ -157,7 +211,7 @@ class TestAsyncDualTrack:
     ) -> None:
         success: Final = ("success", value)
         assert (
-            await AsyncDualTrack.construct_from_result(success)
+            await AwaitableResultRailway.construct_from_result(success)
             .map_failure_to_awaitable_result(_get_square_root_safely_and_slowly)
             .core
             is success
@@ -167,7 +221,7 @@ class TestAsyncDualTrack:
     async def test_map_failure_to_awaitable_result_maps_failure_value(
         self, value: float
     ) -> None:
-        assert await AsyncDualTrack.construct_failure(
+        assert await AwaitableResultRailway.construct_failure(
             value
         ).map_failure_to_awaitable_result(
             _get_square_root_safely_and_slowly
@@ -179,7 +233,7 @@ class TestAsyncDualTrack:
     ) -> None:
         success: Final = ("success", value)
         assert (
-            await AsyncDualTrack.construct_from_result(success)
+            await AwaitableResultRailway.construct_from_result(success)
             .map_failure_to_result(_get_square_root_safely)
             .core
             is success
@@ -187,7 +241,9 @@ class TestAsyncDualTrack:
 
     @pytest.mark.parametrize("value", _FLOATS)
     async def test_map_failure_to_result_maps_failure_value(self, value: float) -> None:
-        assert await AsyncDualTrack.construct_failure(value).map_failure_to_result(
+        assert await AwaitableResultRailway.construct_failure(
+            value
+        ).map_failure_to_result(
             _get_square_root_safely
         ).core == _get_square_root_safely(value)
 
@@ -195,7 +251,7 @@ class TestAsyncDualTrack:
     async def test_map_success_does_not_change_failure(self, value: object) -> None:
         failure: Final = ("failure", value)
         assert (
-            await AsyncDualTrack.construct_from_result(failure)
+            await AwaitableResultRailway.construct_from_result(failure)
             .map_success(_double)
             .core
             is failure
@@ -203,7 +259,7 @@ class TestAsyncDualTrack:
 
     @pytest.mark.parametrize("value", _FLOATS)
     async def test_map_success_maps_success_value(self, value: float) -> None:
-        assert await AsyncDualTrack.construct_success(value).map_success(
+        assert await AwaitableResultRailway.construct_success(value).map_success(
             _double
         ).core == ("success", _double(value))
 
@@ -213,7 +269,7 @@ class TestAsyncDualTrack:
     ) -> None:
         failure: Final = ("failure", value)
         assert (
-            await AsyncDualTrack.construct_from_result(failure)
+            await AwaitableResultRailway.construct_from_result(failure)
             .map_success_to_awaitable(_double_slowly)
             .core
             is failure
@@ -223,9 +279,12 @@ class TestAsyncDualTrack:
     async def test_map_success_to_awaitable_maps_success_value(
         self, value: float
     ) -> None:
-        assert await AsyncDualTrack.construct_success(value).map_success_to_awaitable(
-            _double_slowly
-        ).core == ("success", await _double_slowly(value))
+        assert await AwaitableResultRailway.construct_success(
+            value
+        ).map_success_to_awaitable(_double_slowly).core == (
+            "success",
+            await _double_slowly(value),
+        )
 
     @pytest.mark.parametrize("value", _FLOATS)
     async def test_map_success_to_awaitable_result_does_not_change_failure(
@@ -233,7 +292,7 @@ class TestAsyncDualTrack:
     ) -> None:
         failure: Final = ("failure", value)
         assert (
-            await AsyncDualTrack.construct_from_result(failure)
+            await AwaitableResultRailway.construct_from_result(failure)
             .map_success_to_awaitable_result(_get_square_root_safely_and_slowly)
             .core
             is failure
@@ -243,7 +302,7 @@ class TestAsyncDualTrack:
     async def test_map_success_to_awaitable_result_maps_success_value(
         self, value: float
     ) -> None:
-        assert await AsyncDualTrack.construct_success(
+        assert await AwaitableResultRailway.construct_success(
             value
         ).map_success_to_awaitable_result(
             _get_square_root_safely_and_slowly
@@ -255,7 +314,7 @@ class TestAsyncDualTrack:
     ) -> None:
         failure: Final = ("failure", value)
         assert (
-            await AsyncDualTrack.construct_from_result(failure)
+            await AwaitableResultRailway.construct_from_result(failure)
             .map_success_to_result(_get_square_root_safely)
             .core
             is failure
@@ -263,7 +322,9 @@ class TestAsyncDualTrack:
 
     @pytest.mark.parametrize("value", _FLOATS)
     async def test_map_success_to_result_maps_success_value(self, value: float) -> None:
-        assert await AsyncDualTrack.construct_success(value).map_success_to_result(
+        assert await AwaitableResultRailway.construct_success(
+            value
+        ).map_success_to_result(
             _get_square_root_safely
         ).core == _get_square_root_safely(value)
 
@@ -271,93 +332,84 @@ class TestAsyncDualTrack:
     async def test_track_equals_first_element_of_result(
         self, result: Result[object, object]
     ) -> None:
-        assert await AsyncDualTrack.construct_from_result(result).track == result[0]
+        assert (
+            await AwaitableResultRailway.construct_from_result(result).track
+            == result[0]
+        )
 
     @pytest.mark.parametrize("result", _RESULTS)
     async def test_value_equals_second_element_of_result(
         self, result: Result[object, object]
     ) -> None:
-        assert await AsyncDualTrack.construct_from_result(result).value == result[1]
-
-
-class TestAsyncSingleTrack:
-    @pytest.mark.parametrize("value", _OBJECTS)
-    async def test_async_single_track_wraps_awaitable(self, value: object) -> None:
-        awaitable = asyncio.create_task(asyncio.sleep(0.001, result=value))
-        assert AsyncSingleTrack(awaitable).core is awaitable
-
-    @pytest.mark.parametrize("value", _OBJECTS)
-    async def test_construct_wraps_value(self, value: object) -> None:
-        assert await AsyncSingleTrack.construct(value).core == value
-
-    @pytest.mark.parametrize("value", _OBJECTS)
-    async def test_construct_from_awaitable_wraps_awaitable(
-        self, value: object
-    ) -> None:
-        awaitable = asyncio.create_task(asyncio.sleep(0.001, result=value))
-        assert AsyncSingleTrack.construct_from_awaitable(awaitable).core is awaitable
-
-    async def test_core_as_coroutine_is_coroutine(self) -> None:
-        core_as_coroutine = AsyncSingleTrack.construct(1).core_as_coroutine
-        assert isinstance(core_as_coroutine, Coroutine)
-        assert await core_as_coroutine == 1
-
-    @pytest.mark.parametrize("value", _FLOATS)
-    async def test_map_maps_value(self, value: float) -> None:
-        assert await AsyncSingleTrack.construct(value).map(_double).core == _double(
-            value
+        assert (
+            await AwaitableResultRailway.construct_from_result(result).value
+            == result[1]
         )
 
-    @pytest.mark.parametrize("value", _FLOATS)
-    async def test_map_to_awaitable_maps_value(self, value: float) -> None:
-        assert await AsyncSingleTrack.construct(value).map_to_awaitable(
-            _double_slowly
-        ).core == await _double_slowly(value)
+
+class TestRailway:
+    @pytest.mark.parametrize("value", _OBJECTS)
+    def test_railway_wraps_value(self, value: object) -> None:
+        assert Railway(value).core is value
+
+    @pytest.mark.parametrize("value", _OBJECTS)
+    def test_construct_wraps_value(self, value: object) -> None:
+        assert Railway.construct(value).core is value
 
     @pytest.mark.parametrize("value", _FLOATS)
-    async def test_map_to_awaitable_result_maps_value(self, value: float) -> None:
-        assert await AsyncSingleTrack.construct(value).map_to_awaitable_result(
-            _get_square_root_safely_and_slowly
-        ).core == await _get_square_root_safely_and_slowly(value)
+    def test_map_maps_value(self, value: float) -> None:
+        assert Railway(value).map(_double).core == _double(value)
+
+    @pytest.mark.parametrize("value", _OBJECTS)
+    async def test_map_to_awaitable_maps_value(self, value: object) -> None:
+        assert await Railway(value).map_to_awaitable(
+            _stringify_slowly
+        ).core == await _stringify_slowly(value)
 
     @pytest.mark.parametrize("value", _FLOATS)
-    async def test_map_to_result_maps_maps_value(self, value: float) -> None:
-        assert await AsyncSingleTrack.construct(value).map_to_result(
+    def test_map_to_result_maps_value(self, value: float) -> None:
+        assert Railway(value).map_to_result(
             _get_square_root_safely
         ).core == _get_square_root_safely(value)
 
+    @pytest.mark.parametrize("value", _FLOATS)
+    async def test_map_to_awaitable_result_maps_value(self, value: float) -> None:
+        assert await Railway(value).map_to_awaitable_result(
+            _get_square_root_safely_and_slowly
+        ).core == await _get_square_root_safely_and_slowly(value)
 
-class TestDualTrack:
+
+class TestResultRailway:
     @pytest.mark.parametrize("result", _RESULTS)
-    def test_dual_track_wraps_result(self, result: Result[object, object]) -> None:
-        assert DualTrack(result).core is result
+    def test_result_railway_wraps_result(self, result: Result[object, object]) -> None:
+        assert ResultRailway(result).core is result
 
     @pytest.mark.parametrize("value", _OBJECTS)
     def test_construct_failure_wraps_value(self, value: object) -> None:
-        dual_track = DualTrack.construct_failure(value)
-        assert dual_track.core[0] == "failure"
-        assert dual_track.core[1] is value
+        result_railway = ResultRailway.construct_failure(value)
+        assert result_railway.core[0] == "failure"
+        assert result_railway.core[1] is value
 
     @pytest.mark.parametrize("result", _RESULTS)
     def test_construct_from_result_wraps_result(
         self, result: Result[object, object]
     ) -> None:
-        assert DualTrack.construct_from_result(result).core is result
+        assert ResultRailway.construct_from_result(result).core is result
 
     @pytest.mark.parametrize("value", _OBJECTS)
     def test_construct_success_wraps_value(self, value: object) -> None:
-        dual_track = DualTrack.construct_success(value)
-        assert dual_track.core[0] == "success"
-        assert dual_track.core[1] is value
+        result_railway = ResultRailway.construct_success(value)
+        assert result_railway.core[0] == "success"
+        assert result_railway.core[1] is value
 
     @pytest.mark.parametrize("value", _OBJECTS)
     def test_map_failure_does_not_change_success(self, value: object) -> None:
         success: Final = ("success", value)
-        assert DualTrack(success).map_failure(_double).core is success
+        assert ResultRailway(success).map_failure(_double).core is success
 
     @pytest.mark.parametrize("value", _FLOATS)
     def test_map_failure_maps_failure_value(self, value: float) -> None:
-        assert DualTrack.construct_failure(value).map_failure(_double).core == (
+        assert ResultRailway.construct_failure(value).map_failure(_double).core == (
             "failure",
             _double(value),
         )
@@ -368,7 +420,7 @@ class TestDualTrack:
     ) -> None:
         success: Final = ("success", value)
         assert (
-            await DualTrack(success).map_failure_to_awaitable(_double_slowly).core
+            await ResultRailway(success).map_failure_to_awaitable(_double_slowly).core
             is success
         )
 
@@ -376,7 +428,7 @@ class TestDualTrack:
     async def test_map_failure_to_awaitable_maps_failure_value(
         self, value: float
     ) -> None:
-        assert await DualTrack.construct_failure(value).map_failure_to_awaitable(
+        assert await ResultRailway.construct_failure(value).map_failure_to_awaitable(
             _double_slowly
         ).core == (
             "failure",
@@ -389,7 +441,7 @@ class TestDualTrack:
     ) -> None:
         success: Final = ("success", value)
         assert (
-            await DualTrack(success)
+            await ResultRailway(success)
             .map_failure_to_awaitable_result(_get_square_root_safely_and_slowly)
             .core
             is success
@@ -399,7 +451,9 @@ class TestDualTrack:
     async def test_map_failure_to_awaitable_result_maps_failure_value(
         self, value: float
     ) -> None:
-        assert await DualTrack.construct_failure(value).map_failure_to_awaitable_result(
+        assert await ResultRailway.construct_failure(
+            value
+        ).map_failure_to_awaitable_result(
             _get_square_root_safely_and_slowly
         ).core == await _get_square_root_safely_and_slowly(value)
 
@@ -407,24 +461,24 @@ class TestDualTrack:
     def test_map_failure_to_result_does_not_change_success(self, value: float) -> None:
         success: Final = ("success", value)
         assert (
-            DualTrack(success).map_failure_to_result(_get_square_root_safely).core
+            ResultRailway(success).map_failure_to_result(_get_square_root_safely).core
             is success
         )
 
     @pytest.mark.parametrize("value", _FLOATS)
     def test_map_failure_to_result_maps_failure_value(self, value: float) -> None:
-        assert DualTrack.construct_failure(value).map_failure_to_result(
+        assert ResultRailway.construct_failure(value).map_failure_to_result(
             _get_square_root_safely
         ).core == _get_square_root_safely(value)
 
     @pytest.mark.parametrize("value", _OBJECTS)
     def test_map_success_does_not_change_failure(self, value: object) -> None:
         failure: Final = ("failure", value)
-        assert DualTrack(failure).map_success(_double).core is failure
+        assert ResultRailway(failure).map_success(_double).core is failure
 
     @pytest.mark.parametrize("value", _FLOATS)
     def test_map_success_maps_success_value(self, value: float) -> None:
-        assert DualTrack.construct_success(value).map_success(_double).core == (
+        assert ResultRailway.construct_success(value).map_success(_double).core == (
             "success",
             _double(value),
         )
@@ -435,7 +489,7 @@ class TestDualTrack:
     ) -> None:
         failure: Final = ("failure", value)
         assert (
-            await DualTrack(failure).map_success_to_awaitable(_double_slowly).core
+            await ResultRailway(failure).map_success_to_awaitable(_double_slowly).core
             is failure
         )
 
@@ -443,7 +497,7 @@ class TestDualTrack:
     async def test_map_success_to_awaitable_maps_success_value(
         self, value: float
     ) -> None:
-        assert await DualTrack.construct_success(value).map_success_to_awaitable(
+        assert await ResultRailway.construct_success(value).map_success_to_awaitable(
             _double_slowly
         ).core == (
             "success",
@@ -456,7 +510,7 @@ class TestDualTrack:
     ) -> None:
         failure: Final = ("failure", value)
         assert (
-            await DualTrack(failure)
+            await ResultRailway(failure)
             .map_success_to_awaitable_result(_get_square_root_safely_and_slowly)
             .core
             is failure
@@ -466,7 +520,9 @@ class TestDualTrack:
     async def test_map_success_to_awaitable_result_maps_success_value(
         self, value: float
     ) -> None:
-        assert await DualTrack.construct_success(value).map_success_to_awaitable_result(
+        assert await ResultRailway.construct_success(
+            value
+        ).map_success_to_awaitable_result(
             _get_square_root_safely_and_slowly
         ).core == await _get_square_root_safely_and_slowly(value)
 
@@ -474,13 +530,13 @@ class TestDualTrack:
     def test_map_success_to_result_does_not_change_failure(self, value: float) -> None:
         failure: Final = ("failure", value)
         assert (
-            DualTrack(failure).map_success_to_result(_get_square_root_safely).core
+            ResultRailway(failure).map_success_to_result(_get_square_root_safely).core
             is failure
         )
 
     @pytest.mark.parametrize("value", _FLOATS)
     def test_map_success_to_result_maps_success_value(self, value: float) -> None:
-        assert DualTrack.construct_success(value).map_success_to_result(
+        assert ResultRailway.construct_success(value).map_success_to_result(
             _get_square_root_safely
         ).core == _get_square_root_safely(value)
 
@@ -488,42 +544,10 @@ class TestDualTrack:
     def test_track_equals_first_element_of_result(
         self, result: Result[object, object]
     ) -> None:
-        assert DualTrack.construct_from_result(result).track == result[0]
+        assert ResultRailway.construct_from_result(result).track == result[0]
 
     @pytest.mark.parametrize("result", _RESULTS)
     def test_value_equals_second_element_of_result(
         self, result: Result[object, object]
     ) -> None:
-        assert DualTrack(result).value == result[1]
-
-
-class TestSingleTrack:
-    @pytest.mark.parametrize("value", _OBJECTS)
-    def test_single_track_wraps_value(self, value: object) -> None:
-        assert SingleTrack(value).core is value
-
-    @pytest.mark.parametrize("value", _OBJECTS)
-    def test_construct_wraps_value(self, value: object) -> None:
-        assert SingleTrack.construct(value).core is value
-
-    @pytest.mark.parametrize("value", _FLOATS)
-    def test_map_maps_value(self, value: float) -> None:
-        assert SingleTrack(value).map(_double).core == _double(value)
-
-    @pytest.mark.parametrize("value", _OBJECTS)
-    async def test_map_to_awaitable_maps_value(self, value: object) -> None:
-        assert await SingleTrack(value).map_to_awaitable(
-            _stringify_slowly
-        ).core == await _stringify_slowly(value)
-
-    @pytest.mark.parametrize("value", _FLOATS)
-    def test_map_to_result_maps_value(self, value: float) -> None:
-        assert SingleTrack(value).map_to_result(
-            _get_square_root_safely
-        ).core == _get_square_root_safely(value)
-
-    @pytest.mark.parametrize("value", _FLOATS)
-    async def test_map_to_awaitable_result_maps_value(self, value: float) -> None:
-        assert await SingleTrack(value).map_to_awaitable_result(
-            _get_square_root_safely_and_slowly
-        ).core == await _get_square_root_safely_and_slowly(value)
+        assert ResultRailway(result).value == result[1]

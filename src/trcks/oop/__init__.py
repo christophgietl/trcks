@@ -1,12 +1,12 @@
-from trcks.oop._async_dual_track import AsyncDualTrack
-from trcks.oop._async_single_track import AsyncSingleTrack
-from trcks.oop._dual_track import DualTrack
-from trcks.oop._single_track import SingleTrack
+from trcks.oop._awaitable_railway import AwaitableRailway
+from trcks.oop._awaitable_result_railway import AwaitableResultRailway
+from trcks.oop._railway import Railway
+from trcks.oop._result_railway import ResultRailway
 
 __all__ = [
-    "AsyncDualTrack",
-    "AsyncSingleTrack",
-    "DualTrack",
-    "SingleTrack",
+    "AwaitableRailway",
+    "AwaitableResultRailway",
+    "Railway",
+    "ResultRailway",
 ]
 __docformat__ = "google"

@@ -9,7 +9,7 @@ _T_co = TypeVar("_T_co", covariant=True)
 
 
 @dataclasses.dataclass(frozen=True)
-class Track(Generic[_T_co]):
+class BaseRailway(Generic[_T_co]):
     core: _T_co
 
 
