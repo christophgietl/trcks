@@ -28,22 +28,22 @@ class Railway(BaseRailway[_T_co]):
         return Railway(value)
 
     def map(self, f: Callable[[_T_co], _T]) -> Railway[_T]:
-        return Railway(f(self.core))
+        return Railway(f(self.freight))
 
     def map_to_awaitable(
         self, f: Callable[[_T_co], Awaitable[_T]]
     ) -> AwaitableRailway[_T]:
-        return AwaitableRailway(f(self.core))
+        return AwaitableRailway(f(self.freight))
 
     def map_to_awaitable_result(
         self, f: Callable[[_T_co], AwaitableResult[_F, _S]]
     ) -> AwaitableResultRailway[_F, _S]:
-        return AwaitableResultRailway(f(self.core))
+        return AwaitableResultRailway(f(self.freight))
 
     def map_to_result(
         self, f: Callable[[_T_co], Result[_F, _S]]
     ) -> ResultRailway[_F, _S]:
-        return ResultRailway(f(self.core))
+        return ResultRailway(f(self.freight))
 
 
 __docformat__ = "google"

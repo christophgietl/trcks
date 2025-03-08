@@ -36,59 +36,59 @@ class ResultRailway(BaseRailway[Result[_F_co, _S_co]]):
 
     def map_failure(self, f: Callable[[_F_co], _F]) -> ResultRailway[_F, _S_co]:
         f_mapped = result.map_failure(f)
-        return ResultRailway(f_mapped(self.core))
+        return ResultRailway(f_mapped(self.freight))
 
     def map_failure_to_awaitable(
         self, f: Callable[[_F_co], Awaitable[_F]]
     ) -> AwaitableResultRailway[_F, _S_co]:
         return AwaitableResultRailway.construct_from_result(
-            self.core
+            self.freight
         ).map_failure_to_awaitable(f)
 
     def map_failure_to_awaitable_result(
         self, f: Callable[[_F_co], AwaitableResult[_F, _S]]
     ) -> AwaitableResultRailway[_F, _S_co | _S]:
         return AwaitableResultRailway.construct_from_result(
-            self.core
+            self.freight
         ).map_failure_to_awaitable_result(f)
 
     def map_failure_to_result(
         self, f: Callable[[_F_co], Result[_F, _S]]
     ) -> ResultRailway[_F, _S_co | _S]:
         f_mapped = result.map_failure_to_result(f)
-        return ResultRailway(f_mapped(self.core))
+        return ResultRailway(f_mapped(self.freight))
 
     def map_success(self, f: Callable[[_S_co], _S]) -> ResultRailway[_F_co, _S]:
         f_mapped = result.map_success(f)
-        return ResultRailway(f_mapped(self.core))
+        return ResultRailway(f_mapped(self.freight))
 
     def map_success_to_awaitable(
         self, f: Callable[[_S_co], Awaitable[_S]]
     ) -> AwaitableResultRailway[_F_co, _S]:
         return AwaitableResultRailway.construct_from_result(
-            self.core
+            self.freight
         ).map_success_to_awaitable(f)
 
     def map_success_to_awaitable_result(
         self, f: Callable[[_S_co], AwaitableResult[_F, _S]]
     ) -> AwaitableResultRailway[_F_co | _F, _S]:
         return AwaitableResultRailway.construct_from_result(
-            self.core
+            self.freight
         ).map_success_to_awaitable_result(f)
 
     def map_success_to_result(
         self, f: Callable[[_S_co], Result[_F, _S]]
     ) -> ResultRailway[_F_co | _F, _S]:
         f_mapped = result.map_success_to_result(f)
-        return ResultRailway(f_mapped(self.core))
+        return ResultRailway(f_mapped(self.freight))
 
     @property
     def track(self) -> Literal["failure", "success"]:
-        return self.core[0]
+        return self.freight[0]
 
     @property
     def value(self) -> _F_co | _S_co:
-        return self.core[1]
+        return self.freight[1]
 
 
 __docformat__ = "google"

@@ -33,26 +33,26 @@ class AwaitableRailway(BaseAwaitableRailway[_T_co]):
 
     def map(self, f: Callable[[_T_co], _T]) -> AwaitableRailway[_T]:
         f_mapped = awaitable.map_(f)
-        return AwaitableRailway(f_mapped(self.core))
+        return AwaitableRailway(f_mapped(self.freight))
 
     def map_to_awaitable(
         self, f: Callable[[_T_co], Awaitable[_T]]
     ) -> AwaitableRailway[_T]:
         f_mapped = awaitable.map_to_awaitable(f)
-        return AwaitableRailway(f_mapped(self.core))
+        return AwaitableRailway(f_mapped(self.freight))
 
     def map_to_awaitable_result(
         self, f: Callable[[_T_co], AwaitableResult[_F, _S]]
     ) -> AwaitableResultRailway[_F, _S]:
         return AwaitableResultRailway.construct_success_from_awaitable(
-            self.core
+            self.freight
         ).map_success_to_awaitable_result(f)
 
     def map_to_result(
         self, f: Callable[[_T_co], Result[_F, _S]]
     ) -> AwaitableResultRailway[_F, _S]:
         return AwaitableResultRailway.construct_success_from_awaitable(
-            self.core
+            self.freight
         ).map_success_to_result(f)
 
 

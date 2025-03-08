@@ -12,8 +12,8 @@ _T_co = TypeVar("_T_co", covariant=True)
 @dataclasses.dataclass(frozen=True)
 class BaseAwaitableRailway(BaseRailway[Awaitable[_T_co]]):
     @property
-    async def core_as_coroutine(self) -> _T_co:
-        return await self.core
+    async def freight_as_coroutine(self) -> _T_co:
+        return await self.freight
 
 
 __docformat__ = "google"
