@@ -1,12 +1,12 @@
-from trcks.oop._awaitable_railway import AwaitableRailway
-from trcks.oop._awaitable_result_railway import AwaitableResultRailway
-from trcks.oop._railway import Railway
-from trcks.oop._result_railway import ResultRailway
+from trcks.oop._awaitable_result_wrapper import AwaitableResultWrapper
+from trcks.oop._awaitable_wrapper import AwaitableWrapper
+from trcks.oop._result_wrapper import ResultWrapper
+from trcks.oop._wrapper import Wrapper
 
 __all__ = [
-    "AwaitableRailway",
-    "AwaitableResultRailway",
-    "Railway",
-    "ResultRailway",
+    "AwaitableResultWrapper",
+    "AwaitableWrapper",
+    "ResultWrapper",
+    "Wrapper",
 ]
 __docformat__ = "google"

@@ -9,8 +9,8 @@ _T_co = TypeVar("_T_co", covariant=True)
 
 
 @dataclasses.dataclass(frozen=True)
-class BaseRailway(Generic[_T_co]):
-    freight: _T_co
+class BaseWrapper(Generic[_T_co]):
+    core: _T_co
 
 
 __docformat__ = "google"

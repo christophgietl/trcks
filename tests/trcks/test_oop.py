@@ -6,7 +6,7 @@ from typing import Final, Literal
 import pytest
 
 from trcks import Result
-from trcks.oop import AwaitableRailway, AwaitableResultRailway, Railway, ResultRailway
+from trcks.oop import AwaitableResultWrapper, AwaitableWrapper, ResultWrapper, Wrapper
 
 _FLOATS: Final[tuple[float, ...]] = (0.0, 1.5, -2.3, 100.75, math.pi, -math.e)
 _OBJECTS: Final[tuple[object, ...]] = (
@@ -54,76 +54,76 @@ async def _stringify_slowly(o: object) -> str:
     return str(o)
 
 
-class TestAwaitableRailway:
+class TestAwaitableWrapper:
     @pytest.mark.parametrize("value", _OBJECTS)
-    async def test_awaitable_railway_wraps_awaitable(self, value: object) -> None:
+    async def test_awaitable_wrapper_wraps_awaitable(self, value: object) -> None:
         awaitable = asyncio.create_task(asyncio.sleep(0.001, result=value))
-        assert AwaitableRailway(awaitable).freight is awaitable
+        assert AwaitableWrapper(awaitable).core is awaitable
 
     @pytest.mark.parametrize("value", _OBJECTS)
     async def test_construct_wraps_value(self, value: object) -> None:
-        assert await AwaitableRailway.construct(value).freight == value
+        assert await AwaitableWrapper.construct(value).core == value
 
     @pytest.mark.parametrize("value", _OBJECTS)
     async def test_construct_from_awaitable_wraps_awaitable(
         self, value: object
     ) -> None:
         awaitable = asyncio.create_task(asyncio.sleep(0.001, result=value))
-        assert AwaitableRailway.construct_from_awaitable(awaitable).freight is awaitable
+        assert AwaitableWrapper.construct_from_awaitable(awaitable).core is awaitable
 
-    async def test_freight_as_coroutine_is_coroutine(self) -> None:
-        freight_as_coroutine = AwaitableRailway.construct(1).freight_as_coroutine
-        assert isinstance(freight_as_coroutine, Coroutine)
-        assert await freight_as_coroutine == 1
+    async def test_core_as_coroutine_is_coroutine(self) -> None:
+        core_as_coroutine = AwaitableWrapper.construct(1).core_as_coroutine
+        assert isinstance(core_as_coroutine, Coroutine)
+        assert await core_as_coroutine == 1
 
     @pytest.mark.parametrize("value", _FLOATS)
     async def test_map_maps_value(self, value: float) -> None:
-        assert await AwaitableRailway.construct(value).map(_double).freight == _double(
+        assert await AwaitableWrapper.construct(value).map(_double).core == _double(
             value
         )
 
     @pytest.mark.parametrize("value", _FLOATS)
     async def test_map_to_awaitable_maps_value(self, value: float) -> None:
-        assert await AwaitableRailway.construct(value).map_to_awaitable(
+        assert await AwaitableWrapper.construct(value).map_to_awaitable(
             _double_slowly
-        ).freight == await _double_slowly(value)
+        ).core == await _double_slowly(value)
 
     @pytest.mark.parametrize("value", _FLOATS)
     async def test_map_to_awaitable_result_maps_value(self, value: float) -> None:
-        assert await AwaitableRailway.construct(value).map_to_awaitable_result(
+        assert await AwaitableWrapper.construct(value).map_to_awaitable_result(
             _get_square_root_safely_and_slowly
-        ).freight == await _get_square_root_safely_and_slowly(value)
+        ).core == await _get_square_root_safely_and_slowly(value)
 
     @pytest.mark.parametrize("value", _FLOATS)
     async def test_map_to_result_maps_maps_value(self, value: float) -> None:
-        assert await AwaitableRailway.construct(value).map_to_result(
+        assert await AwaitableWrapper.construct(value).map_to_result(
             _get_square_root_safely
-        ).freight == _get_square_root_safely(value)
+        ).core == _get_square_root_safely(value)
 
 
-class TestAwaitableResultRailway:
+class TestAwaitableResultWrapper:
     @pytest.mark.parametrize("result", _RESULTS)
-    async def test_awaitable_result_railway_wraps_awaitable_result(
+    async def test_awaitable_result_wrapper_wraps_awaitable_result(
         self, result: Result[object, object]
     ) -> None:
         awaitable_result = asyncio.create_task(asyncio.sleep(0.001, result=result))
-        assert AwaitableResultRailway(awaitable_result).freight is awaitable_result
+        assert AwaitableResultWrapper(awaitable_result).core is awaitable_result
 
     @pytest.mark.parametrize("value", _OBJECTS)
     async def test_construct_failure_wraps_value(self, value: object) -> None:
-        awaited_freight = await AwaitableResultRailway.construct_failure(value).freight
-        assert awaited_freight[0] == "failure"
-        assert awaited_freight[1] is value
+        awaited_core = await AwaitableResultWrapper.construct_failure(value).core
+        assert awaited_core[0] == "failure"
+        assert awaited_core[1] is value
 
     @pytest.mark.parametrize("value", _OBJECTS)
     async def test_construct_failure_from_awaitable_wraps_value(
         self, value: object
     ) -> None:
-        awaited_freight = await AwaitableResultRailway.construct_failure_from_awaitable(
+        awaited_core = await AwaitableResultWrapper.construct_failure_from_awaitable(
             asyncio.create_task(asyncio.sleep(0.001, result=value))
-        ).freight
-        assert awaited_freight[0] == "failure"
-        assert awaited_freight[1] is value
+        ).core
+        assert awaited_core[0] == "failure"
+        assert awaited_core[1] is value
 
     @pytest.mark.parametrize("result", _RESULTS)
     async def test_construct_from_awaitable_result_wraps_awaitable_result(
@@ -131,9 +131,9 @@ class TestAwaitableResultRailway:
     ) -> None:
         awaitable_result = asyncio.create_task(asyncio.sleep(0.001, result=result))
         assert (
-            AwaitableResultRailway.construct_from_awaitable_result(
+            AwaitableResultWrapper.construct_from_awaitable_result(
                 awaitable_result
-            ).freight
+            ).core
             is awaitable_result
         )
 
@@ -141,48 +141,46 @@ class TestAwaitableResultRailway:
     async def test_construct_from_result_wraps_result(
         self, result: Result[object, object]
     ) -> None:
-        assert (
-            await AwaitableResultRailway.construct_from_result(result).freight is result
-        )
+        assert await AwaitableResultWrapper.construct_from_result(result).core is result
 
     @pytest.mark.parametrize("value", _OBJECTS)
     async def test_construct_success_wraps_value(self, value: object) -> None:
-        awaited_freight = await AwaitableResultRailway.construct_success(value).freight
-        assert awaited_freight[0] == "success"
-        assert awaited_freight[1] is value
+        awaited_core = await AwaitableResultWrapper.construct_success(value).core
+        assert awaited_core[0] == "success"
+        assert awaited_core[1] is value
 
     @pytest.mark.parametrize("value", _OBJECTS)
     async def test_construct_success_from_awaitable_wraps_value(
         self, value: object
     ) -> None:
-        awaited_freight = await AwaitableResultRailway.construct_success_from_awaitable(
+        awaited_core = await AwaitableResultWrapper.construct_success_from_awaitable(
             asyncio.create_task(asyncio.sleep(0.001, result=value))
-        ).freight
-        assert awaited_freight[0] == "success"
-        assert awaited_freight[1] is value
+        ).core
+        assert awaited_core[0] == "success"
+        assert awaited_core[1] is value
 
-    async def test_freight_as_coroutine_is_coroutine(self) -> None:
-        freight_as_coroutine = AwaitableResultRailway.construct_success(
+    async def test_core_as_coroutine_is_coroutine(self) -> None:
+        core_as_coroutine = AwaitableResultWrapper.construct_success(
             1
-        ).freight_as_coroutine
-        assert isinstance(freight_as_coroutine, Coroutine)
-        assert await freight_as_coroutine == ("success", 1)
+        ).core_as_coroutine
+        assert isinstance(core_as_coroutine, Coroutine)
+        assert await core_as_coroutine == ("success", 1)
 
     @pytest.mark.parametrize("value", _OBJECTS)
     async def test_map_failure_does_not_change_success(self, value: object) -> None:
         success: Final = ("success", value)
         assert (
-            await AwaitableResultRailway.construct_from_result(success)
+            await AwaitableResultWrapper.construct_from_result(success)
             .map_failure(_double)
-            .freight
+            .core
             is success
         )
 
     @pytest.mark.parametrize("value", _FLOATS)
     async def test_map_failure_maps_failure_value(self, value: float) -> None:
-        assert await AwaitableResultRailway.construct_failure(value).map_failure(
+        assert await AwaitableResultWrapper.construct_failure(value).map_failure(
             _double
-        ).freight == ("failure", _double(value))
+        ).core == ("failure", _double(value))
 
     @pytest.mark.parametrize("value", _OBJECTS)
     async def test_map_failure_to_awaitable_does_not_change_success(
@@ -190,9 +188,9 @@ class TestAwaitableResultRailway:
     ) -> None:
         success: Final = ("success", value)
         assert (
-            await AwaitableResultRailway.construct_from_result(success)
+            await AwaitableResultWrapper.construct_from_result(success)
             .map_failure_to_awaitable(_double_slowly)
-            .freight
+            .core
             is success
         )
 
@@ -200,9 +198,9 @@ class TestAwaitableResultRailway:
     async def test_map_failure_to_awaitable_maps_failure_value(
         self, value: float
     ) -> None:
-        assert await AwaitableResultRailway.construct_failure(
+        assert await AwaitableResultWrapper.construct_failure(
             value
-        ).map_failure_to_awaitable(_double_slowly).freight == (
+        ).map_failure_to_awaitable(_double_slowly).core == (
             "failure",
             await _double_slowly(value),
         )
@@ -213,9 +211,9 @@ class TestAwaitableResultRailway:
     ) -> None:
         success: Final = ("success", value)
         assert (
-            await AwaitableResultRailway.construct_from_result(success)
+            await AwaitableResultWrapper.construct_from_result(success)
             .map_failure_to_awaitable_result(_get_square_root_safely_and_slowly)
-            .freight
+            .core
             is success
         )
 
@@ -223,11 +221,11 @@ class TestAwaitableResultRailway:
     async def test_map_failure_to_awaitable_result_maps_failure_value(
         self, value: float
     ) -> None:
-        assert await AwaitableResultRailway.construct_failure(
+        assert await AwaitableResultWrapper.construct_failure(
             value
         ).map_failure_to_awaitable_result(
             _get_square_root_safely_and_slowly
-        ).freight == await _get_square_root_safely_and_slowly(value)
+        ).core == await _get_square_root_safely_and_slowly(value)
 
     @pytest.mark.parametrize("value", _FLOATS)
     async def test_map_failure_to_result_does_not_change_success(
@@ -235,35 +233,35 @@ class TestAwaitableResultRailway:
     ) -> None:
         success: Final = ("success", value)
         assert (
-            await AwaitableResultRailway.construct_from_result(success)
+            await AwaitableResultWrapper.construct_from_result(success)
             .map_failure_to_result(_get_square_root_safely)
-            .freight
+            .core
             is success
         )
 
     @pytest.mark.parametrize("value", _FLOATS)
     async def test_map_failure_to_result_maps_failure_value(self, value: float) -> None:
-        assert await AwaitableResultRailway.construct_failure(
+        assert await AwaitableResultWrapper.construct_failure(
             value
         ).map_failure_to_result(
             _get_square_root_safely
-        ).freight == _get_square_root_safely(value)
+        ).core == _get_square_root_safely(value)
 
     @pytest.mark.parametrize("value", _OBJECTS)
     async def test_map_success_does_not_change_failure(self, value: object) -> None:
         failure: Final = ("failure", value)
         assert (
-            await AwaitableResultRailway.construct_from_result(failure)
+            await AwaitableResultWrapper.construct_from_result(failure)
             .map_success(_double)
-            .freight
+            .core
             is failure
         )
 
     @pytest.mark.parametrize("value", _FLOATS)
     async def test_map_success_maps_success_value(self, value: float) -> None:
-        assert await AwaitableResultRailway.construct_success(value).map_success(
+        assert await AwaitableResultWrapper.construct_success(value).map_success(
             _double
-        ).freight == ("success", _double(value))
+        ).core == ("success", _double(value))
 
     @pytest.mark.parametrize("value", _OBJECTS)
     async def test_map_success_to_awaitable_does_not_change_failure(
@@ -271,9 +269,9 @@ class TestAwaitableResultRailway:
     ) -> None:
         failure: Final = ("failure", value)
         assert (
-            await AwaitableResultRailway.construct_from_result(failure)
+            await AwaitableResultWrapper.construct_from_result(failure)
             .map_success_to_awaitable(_double_slowly)
-            .freight
+            .core
             is failure
         )
 
@@ -281,9 +279,9 @@ class TestAwaitableResultRailway:
     async def test_map_success_to_awaitable_maps_success_value(
         self, value: float
     ) -> None:
-        assert await AwaitableResultRailway.construct_success(
+        assert await AwaitableResultWrapper.construct_success(
             value
-        ).map_success_to_awaitable(_double_slowly).freight == (
+        ).map_success_to_awaitable(_double_slowly).core == (
             "success",
             await _double_slowly(value),
         )
@@ -294,9 +292,9 @@ class TestAwaitableResultRailway:
     ) -> None:
         failure: Final = ("failure", value)
         assert (
-            await AwaitableResultRailway.construct_from_result(failure)
+            await AwaitableResultWrapper.construct_from_result(failure)
             .map_success_to_awaitable_result(_get_square_root_safely_and_slowly)
-            .freight
+            .core
             is failure
         )
 
@@ -304,11 +302,11 @@ class TestAwaitableResultRailway:
     async def test_map_success_to_awaitable_result_maps_success_value(
         self, value: float
     ) -> None:
-        assert await AwaitableResultRailway.construct_success(
+        assert await AwaitableResultWrapper.construct_success(
             value
         ).map_success_to_awaitable_result(
             _get_square_root_safely_and_slowly
-        ).freight == await _get_square_root_safely_and_slowly(value)
+        ).core == await _get_square_root_safely_and_slowly(value)
 
     @pytest.mark.parametrize("value", _FLOATS)
     async def test_map_success_to_result_does_not_change_failure(
@@ -316,26 +314,26 @@ class TestAwaitableResultRailway:
     ) -> None:
         failure: Final = ("failure", value)
         assert (
-            await AwaitableResultRailway.construct_from_result(failure)
+            await AwaitableResultWrapper.construct_from_result(failure)
             .map_success_to_result(_get_square_root_safely)
-            .freight
+            .core
             is failure
         )
 
     @pytest.mark.parametrize("value", _FLOATS)
     async def test_map_success_to_result_maps_success_value(self, value: float) -> None:
-        assert await AwaitableResultRailway.construct_success(
+        assert await AwaitableResultWrapper.construct_success(
             value
         ).map_success_to_result(
             _get_square_root_safely
-        ).freight == _get_square_root_safely(value)
+        ).core == _get_square_root_safely(value)
 
     @pytest.mark.parametrize("result", _RESULTS)
     async def test_track_equals_first_element_of_result(
         self, result: Result[object, object]
     ) -> None:
         assert (
-            await AwaitableResultRailway.construct_from_result(result).track
+            await AwaitableResultWrapper.construct_from_result(result).track
             == result[0]
         )
 
@@ -344,74 +342,74 @@ class TestAwaitableResultRailway:
         self, result: Result[object, object]
     ) -> None:
         assert (
-            await AwaitableResultRailway.construct_from_result(result).value
+            await AwaitableResultWrapper.construct_from_result(result).value
             == result[1]
         )
 
 
-class TestRailway:
+class TestWrapper:
     @pytest.mark.parametrize("value", _OBJECTS)
-    def test_railway_wraps_value(self, value: object) -> None:
-        assert Railway(value).freight is value
+    def test_wrapper_wraps_value(self, value: object) -> None:
+        assert Wrapper(value).core is value
 
     @pytest.mark.parametrize("value", _OBJECTS)
     def test_construct_wraps_value(self, value: object) -> None:
-        assert Railway.construct(value).freight is value
+        assert Wrapper.construct(value).core is value
 
     @pytest.mark.parametrize("value", _FLOATS)
     def test_map_maps_value(self, value: float) -> None:
-        assert Railway(value).map(_double).freight == _double(value)
+        assert Wrapper(value).map(_double).core == _double(value)
 
     @pytest.mark.parametrize("value", _OBJECTS)
     async def test_map_to_awaitable_maps_value(self, value: object) -> None:
-        assert await Railway(value).map_to_awaitable(
+        assert await Wrapper(value).map_to_awaitable(
             _stringify_slowly
-        ).freight == await _stringify_slowly(value)
+        ).core == await _stringify_slowly(value)
 
     @pytest.mark.parametrize("value", _FLOATS)
     def test_map_to_result_maps_value(self, value: float) -> None:
-        assert Railway(value).map_to_result(
+        assert Wrapper(value).map_to_result(
             _get_square_root_safely
-        ).freight == _get_square_root_safely(value)
+        ).core == _get_square_root_safely(value)
 
     @pytest.mark.parametrize("value", _FLOATS)
     async def test_map_to_awaitable_result_maps_value(self, value: float) -> None:
-        assert await Railway(value).map_to_awaitable_result(
+        assert await Wrapper(value).map_to_awaitable_result(
             _get_square_root_safely_and_slowly
-        ).freight == await _get_square_root_safely_and_slowly(value)
+        ).core == await _get_square_root_safely_and_slowly(value)
 
 
-class TestResultRailway:
+class TestResultWrapper:
     @pytest.mark.parametrize("result", _RESULTS)
-    def test_result_railway_wraps_result(self, result: Result[object, object]) -> None:
-        assert ResultRailway(result).freight is result
+    def test_result_wrapper_wraps_result(self, result: Result[object, object]) -> None:
+        assert ResultWrapper(result).core is result
 
     @pytest.mark.parametrize("value", _OBJECTS)
     def test_construct_failure_wraps_value(self, value: object) -> None:
-        result_railway = ResultRailway.construct_failure(value)
-        assert result_railway.freight[0] == "failure"
-        assert result_railway.freight[1] is value
+        result_wrapper = ResultWrapper.construct_failure(value)
+        assert result_wrapper.core[0] == "failure"
+        assert result_wrapper.core[1] is value
 
     @pytest.mark.parametrize("result", _RESULTS)
     def test_construct_from_result_wraps_result(
         self, result: Result[object, object]
     ) -> None:
-        assert ResultRailway.construct_from_result(result).freight is result
+        assert ResultWrapper.construct_from_result(result).core is result
 
     @pytest.mark.parametrize("value", _OBJECTS)
     def test_construct_success_wraps_value(self, value: object) -> None:
-        result_railway = ResultRailway.construct_success(value)
-        assert result_railway.freight[0] == "success"
-        assert result_railway.freight[1] is value
+        result_wrapper = ResultWrapper.construct_success(value)
+        assert result_wrapper.core[0] == "success"
+        assert result_wrapper.core[1] is value
 
     @pytest.mark.parametrize("value", _OBJECTS)
     def test_map_failure_does_not_change_success(self, value: object) -> None:
         success: Final = ("success", value)
-        assert ResultRailway(success).map_failure(_double).freight is success
+        assert ResultWrapper(success).map_failure(_double).core is success
 
     @pytest.mark.parametrize("value", _FLOATS)
     def test_map_failure_maps_failure_value(self, value: float) -> None:
-        assert ResultRailway.construct_failure(value).map_failure(_double).freight == (
+        assert ResultWrapper.construct_failure(value).map_failure(_double).core == (
             "failure",
             _double(value),
         )
@@ -422,9 +420,7 @@ class TestResultRailway:
     ) -> None:
         success: Final = ("success", value)
         assert (
-            await ResultRailway(success)
-            .map_failure_to_awaitable(_double_slowly)
-            .freight
+            await ResultWrapper(success).map_failure_to_awaitable(_double_slowly).core
             is success
         )
 
@@ -432,9 +428,9 @@ class TestResultRailway:
     async def test_map_failure_to_awaitable_maps_failure_value(
         self, value: float
     ) -> None:
-        assert await ResultRailway.construct_failure(value).map_failure_to_awaitable(
+        assert await ResultWrapper.construct_failure(value).map_failure_to_awaitable(
             _double_slowly
-        ).freight == (
+        ).core == (
             "failure",
             await _double_slowly(value),
         )
@@ -445,9 +441,9 @@ class TestResultRailway:
     ) -> None:
         success: Final = ("success", value)
         assert (
-            await ResultRailway(success)
+            await ResultWrapper(success)
             .map_failure_to_awaitable_result(_get_square_root_safely_and_slowly)
-            .freight
+            .core
             is success
         )
 
@@ -455,36 +451,34 @@ class TestResultRailway:
     async def test_map_failure_to_awaitable_result_maps_failure_value(
         self, value: float
     ) -> None:
-        assert await ResultRailway.construct_failure(
+        assert await ResultWrapper.construct_failure(
             value
         ).map_failure_to_awaitable_result(
             _get_square_root_safely_and_slowly
-        ).freight == await _get_square_root_safely_and_slowly(value)
+        ).core == await _get_square_root_safely_and_slowly(value)
 
     @pytest.mark.parametrize("value", _FLOATS)
     def test_map_failure_to_result_does_not_change_success(self, value: float) -> None:
         success: Final = ("success", value)
         assert (
-            ResultRailway(success)
-            .map_failure_to_result(_get_square_root_safely)
-            .freight
+            ResultWrapper(success).map_failure_to_result(_get_square_root_safely).core
             is success
         )
 
     @pytest.mark.parametrize("value", _FLOATS)
     def test_map_failure_to_result_maps_failure_value(self, value: float) -> None:
-        assert ResultRailway.construct_failure(value).map_failure_to_result(
+        assert ResultWrapper.construct_failure(value).map_failure_to_result(
             _get_square_root_safely
-        ).freight == _get_square_root_safely(value)
+        ).core == _get_square_root_safely(value)
 
     @pytest.mark.parametrize("value", _OBJECTS)
     def test_map_success_does_not_change_failure(self, value: object) -> None:
         failure: Final = ("failure", value)
-        assert ResultRailway(failure).map_success(_double).freight is failure
+        assert ResultWrapper(failure).map_success(_double).core is failure
 
     @pytest.mark.parametrize("value", _FLOATS)
     def test_map_success_maps_success_value(self, value: float) -> None:
-        assert ResultRailway.construct_success(value).map_success(_double).freight == (
+        assert ResultWrapper.construct_success(value).map_success(_double).core == (
             "success",
             _double(value),
         )
@@ -495,9 +489,7 @@ class TestResultRailway:
     ) -> None:
         failure: Final = ("failure", value)
         assert (
-            await ResultRailway(failure)
-            .map_success_to_awaitable(_double_slowly)
-            .freight
+            await ResultWrapper(failure).map_success_to_awaitable(_double_slowly).core
             is failure
         )
 
@@ -505,9 +497,9 @@ class TestResultRailway:
     async def test_map_success_to_awaitable_maps_success_value(
         self, value: float
     ) -> None:
-        assert await ResultRailway.construct_success(value).map_success_to_awaitable(
+        assert await ResultWrapper.construct_success(value).map_success_to_awaitable(
             _double_slowly
-        ).freight == (
+        ).core == (
             "success",
             await _double_slowly(value),
         )
@@ -518,9 +510,9 @@ class TestResultRailway:
     ) -> None:
         failure: Final = ("failure", value)
         assert (
-            await ResultRailway(failure)
+            await ResultWrapper(failure)
             .map_success_to_awaitable_result(_get_square_root_safely_and_slowly)
-            .freight
+            .core
             is failure
         )
 
@@ -528,36 +520,34 @@ class TestResultRailway:
     async def test_map_success_to_awaitable_result_maps_success_value(
         self, value: float
     ) -> None:
-        assert await ResultRailway.construct_success(
+        assert await ResultWrapper.construct_success(
             value
         ).map_success_to_awaitable_result(
             _get_square_root_safely_and_slowly
-        ).freight == await _get_square_root_safely_and_slowly(value)
+        ).core == await _get_square_root_safely_and_slowly(value)
 
     @pytest.mark.parametrize("value", _FLOATS)
     def test_map_success_to_result_does_not_change_failure(self, value: float) -> None:
         failure: Final = ("failure", value)
         assert (
-            ResultRailway(failure)
-            .map_success_to_result(_get_square_root_safely)
-            .freight
+            ResultWrapper(failure).map_success_to_result(_get_square_root_safely).core
             is failure
         )
 
     @pytest.mark.parametrize("value", _FLOATS)
     def test_map_success_to_result_maps_success_value(self, value: float) -> None:
-        assert ResultRailway.construct_success(value).map_success_to_result(
+        assert ResultWrapper.construct_success(value).map_success_to_result(
             _get_square_root_safely
-        ).freight == _get_square_root_safely(value)
+        ).core == _get_square_root_safely(value)
 
     @pytest.mark.parametrize("result", _RESULTS)
     def test_track_equals_first_element_of_result(
         self, result: Result[object, object]
     ) -> None:
-        assert ResultRailway.construct_from_result(result).track == result[0]
+        assert ResultWrapper.construct_from_result(result).track == result[0]
 
     @pytest.mark.parametrize("result", _RESULTS)
     def test_value_equals_second_element_of_result(
         self, result: Result[object, object]
     ) -> None:
-        assert ResultRailway(result).value == result[1]
+        assert ResultWrapper(result).value == result[1]
