@@ -1,3 +1,6 @@
+# pydoctor-generated files
+/apidocs/
+
 # pytest-generated files
 .coverage
 

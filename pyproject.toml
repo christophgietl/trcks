@@ -5,7 +5,7 @@ requires = ["flit_core>=3.2,<4"]
 [dependency-groups]
 dev = [
     "mypy>=1.15.0",
-    "pdoc>=15.0.1",
+    "pydoctor>=24.11.2",
     "pytest>=8.3.4",
     "pytest-asyncio>=0.25.3",
     "pytest-cov>=6.0.0",
@@ -35,13 +35,17 @@ warn_incomplete_stub = true
 warn_unreachable = true
 
 [tool.pytest.ini_options]
-addopts = "--cov=trcks --cov-fail-under=100 --cov-report term-missing"
+addopts = "--cov=trcks --cov-fail-under=100 --cov-report term-missing --doctest-modules"
 asyncio_default_fixture_loop_scope = "function"
 asyncio_mode = "auto"
 
 [tool.ruff.lint]
-ignore = ["COM812", "D", "ISC001"]
+ignore = ["COM812", "ISC001"]
 select = ["ALL"]
 
 [tool.ruff.lint.per-file-ignores]
-"tests/*" = ["INP001", "S101"]
+"src/trcks/fp/*" = ["D"]
+"tests/*" = ["D", "INP001", "S101"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
