@@ -34,6 +34,15 @@ strict_bytes = true  # will become the default in mypy 2.0
 warn_incomplete_stub = true
 warn_unreachable = true
 
+[tool.pydoctor]
+add-package = ["src/trcks"]
+intersphinx = [
+    "https://docs.python.org/3/objects.inv",
+    "https://typing-extensions.readthedocs.io/en/latest/objects.inv",
+]
+project-name = "trcks"
+warnings-as-errors = true
+
 [tool.pytest.ini_options]
 addopts = "--cov=trcks --cov-fail-under=100 --cov-report term-missing --doctest-modules"
 asyncio_default_fixture_loop_scope = "function"

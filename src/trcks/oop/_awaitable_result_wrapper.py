@@ -73,7 +73,7 @@ class AwaitableResultWrapper(BaseAwaitableWrapper[Result[_F_co, _S_co]]):
 
         Returns:
             A new `AwaitableResultWrapper` instance with
-            the wrapped `collections.abc.Awaitable[trcks.Failure]` object.
+            the wrapped ``collections.abc.Awaitable[trcks.Failure]`` object.
 
         Example:
             >>> import asyncio
@@ -99,7 +99,7 @@ class AwaitableResultWrapper(BaseAwaitableWrapper[Result[_F_co, _S_co]]):
 
         Returns:
             A new `AwaitableResultWrapper` instance with
-            the wrapped `collections.abc.Awaitable[trcks.Failure]` object.
+            the wrapped ``collections.abc.Awaitable[trcks.Failure]`` object.
 
         Example:
             >>> import asyncio
@@ -134,7 +134,7 @@ class AwaitableResultWrapper(BaseAwaitableWrapper[Result[_F_co, _S_co]]):
 
         Returns:
             A new `AwaitableResultWrapper` instance with
-            the wrapped `collections.abc.Awaitable[trcks.Result]` object.
+            the wrapped ``collections.abc.Awaitable[trcks.Result]`` object.
 
         Example:
             >>> import asyncio
@@ -165,7 +165,7 @@ class AwaitableResultWrapper(BaseAwaitableWrapper[Result[_F_co, _S_co]]):
 
         Returns:
             A new `AwaitableResultWrapper` instance with
-            the wrapped `collections.abc.Awaitable[trcks.Result]` object.
+            the wrapped ``collections.abc.Awaitable[trcks.Result]`` object.
 
         Example:
             >>> import asyncio
@@ -190,7 +190,7 @@ class AwaitableResultWrapper(BaseAwaitableWrapper[Result[_F_co, _S_co]]):
 
         Returns:
             A new `AwaitableResultWrapper` instance with
-            the wrapped `collections.abc.Awaitable[trcks.Success]` object.
+            the wrapped ``collections.abc.Awaitable[trcks.Success]`` object.
 
         Example:
             >>> import asyncio
@@ -214,7 +214,7 @@ class AwaitableResultWrapper(BaseAwaitableWrapper[Result[_F_co, _S_co]]):
 
         Returns:
             A new `AwaitableResultWrapper` instance with
-            the wrapped `collections.abc.Awaitable[trcks.Success]` object.
+            the wrapped ``collections.abc.Awaitable[trcks.Success]`` object.
 
         Example:
             >>> import asyncio
