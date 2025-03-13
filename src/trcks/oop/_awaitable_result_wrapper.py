@@ -73,7 +73,7 @@ class AwaitableResultWrapper(BaseAwaitableWrapper[Result[_F_co, _S_co]]):
 
         Returns:
             A new `AwaitableResultWrapper` instance with
-            the wrapped `trcks.AwaitableFailure` object.
+            the wrapped `trcks.AwaitableResult` object.
 
         Example:
             >>> import asyncio
@@ -99,7 +99,7 @@ class AwaitableResultWrapper(BaseAwaitableWrapper[Result[_F_co, _S_co]]):
 
         Returns:
             A new `AwaitableResultWrapper` instance with
-            the wrapped `trcks.AwaitableFailure` object.
+            the wrapped `trcks.AwaitableResult` object.
 
         Example:
             >>> import asyncio
@@ -190,7 +190,7 @@ class AwaitableResultWrapper(BaseAwaitableWrapper[Result[_F_co, _S_co]]):
 
         Returns:
             A new `AwaitableResultWrapper` instance with
-            the wrapped `trcks.AwaitableSuccess` object.
+            the wrapped `trcks.AwaitableResult` object.
 
         Example:
             >>> import asyncio
@@ -214,7 +214,7 @@ class AwaitableResultWrapper(BaseAwaitableWrapper[Result[_F_co, _S_co]]):
 
         Returns:
             A new `AwaitableResultWrapper` instance with
-            the wrapped `trcks.AwaitableSuccess` object.
+            the wrapped `trcks.AwaitableResult` object.
 
         Example:
             >>> import asyncio
