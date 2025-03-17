@@ -11,15 +11,9 @@ if sys.version_info >= (3, 11):  # pragma: no cover
 else:
     from typing_extensions import Never, TypeAlias, assert_never
 
-if sys.version_info >= (3, 13):  # pragma: no cover
-    from typing import assert_type
-else:
-    from typing_extensions import assert_type
-
 __all__ = [
     "Never",
     "TypeAlias",
     "assert_never",
-    "assert_type",
 ]
 __docformat__ = "google"
