@@ -2,8 +2,8 @@ from __future__ import annotations
 
 import dataclasses
 from collections.abc import Awaitable
+from typing import TypeVar
 
-from trcks._typing import TypeVar
 from trcks.oop._base_wrapper import BaseWrapper
 
 __docformat__ = "google"

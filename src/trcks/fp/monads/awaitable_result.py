@@ -1,8 +1,8 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, TypeVar
 
-from trcks._typing import TypeVar, assert_never
+from trcks._typing import assert_never
 from trcks.fp.monads import awaitable, result
 
 if TYPE_CHECKING:  # pragma: no cover

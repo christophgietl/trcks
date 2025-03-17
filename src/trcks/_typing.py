@@ -12,20 +12,13 @@ else:
     from typing_extensions import Never, TypeAlias, assert_never
 
 if sys.version_info >= (3, 13):  # pragma: no cover
-    from typing import (
-        TypeVar,  # typing.TypeVar does not have the attribute "default" before 3.13.
-        assert_type,
-    )
+    from typing import assert_type
 else:
-    from typing_extensions import (
-        TypeVar,
-        assert_type,
-    )
+    from typing_extensions import assert_type
 
 __all__ = [
     "Never",
     "TypeAlias",
-    "TypeVar",
     "assert_never",
     "assert_type",
 ]

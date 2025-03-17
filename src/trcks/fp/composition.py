@@ -3,9 +3,9 @@
 from __future__ import annotations
 
 from collections.abc import Callable
-from typing import Union
+from typing import TypeVar, Union
 
-from trcks._typing import TypeAlias, TypeVar, assert_never
+from trcks._typing import TypeAlias, assert_never
 
 __docformat__ = "google"
 

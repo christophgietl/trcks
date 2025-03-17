@@ -1,9 +1,8 @@
 from __future__ import annotations
 
 import dataclasses
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, TypeVar
 
-from trcks._typing import TypeVar
 from trcks.fp.monads import awaitable
 from trcks.oop._awaitable_result_wrapper import AwaitableResultWrapper
 from trcks.oop._base_awaitable_wrapper import BaseAwaitableWrapper

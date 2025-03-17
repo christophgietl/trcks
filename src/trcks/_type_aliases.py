@@ -1,14 +1,14 @@
 """Type aliases used across `trcks`."""
 
 from collections.abc import Awaitable
-from typing import Literal, Union
+from typing import Literal, TypeVar, Union
 
-from trcks._typing import Never, TypeAlias, TypeVar
+from trcks._typing import TypeAlias
 
 __docformat__ = "google"
 
-_F_co = TypeVar("_F_co", covariant=True, default=Never)
-_S_co = TypeVar("_S_co", covariant=True, default=Never)
+_F_co = TypeVar("_F_co", covariant=True)
+_S_co = TypeVar("_S_co", covariant=True)
 
 
 Failure: TypeAlias = tuple[Literal["failure"], _F_co]

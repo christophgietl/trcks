@@ -1,9 +1,7 @@
 from __future__ import annotations
 
 import dataclasses
-from typing import Generic
-
-from trcks._typing import TypeVar
+from typing import Generic, TypeVar
 
 __docformat__ = "google"
 

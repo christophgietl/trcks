@@ -1,10 +1,9 @@
 from __future__ import annotations
 
 import dataclasses
-from typing import TYPE_CHECKING, Literal
+from typing import TYPE_CHECKING, Literal, TypeVar
 
 from trcks import AwaitableResult, Result
-from trcks._typing import Never, TypeVar
 from trcks.fp.monads import result
 from trcks.oop._awaitable_result_wrapper import AwaitableResultWrapper
 from trcks.oop._base_wrapper import BaseWrapper
@@ -12,13 +11,15 @@ from trcks.oop._base_wrapper import BaseWrapper
 if TYPE_CHECKING:  # pragma: no cover
     from collections.abc import Awaitable, Callable
 
+    from trcks._typing import Never
+
 __docformat__ = "google"
 
 _F = TypeVar("_F")
 _S = TypeVar("_S")
 
-_F_co = TypeVar("_F_co", covariant=True, default=Never)
-_S_co = TypeVar("_S_co", covariant=True, default=Never)
+_F_co = TypeVar("_F_co", covariant=True)
+_S_co = TypeVar("_S_co", covariant=True)
 
 
 @dataclasses.dataclass(frozen=True)
