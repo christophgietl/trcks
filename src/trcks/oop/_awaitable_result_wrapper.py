@@ -4,7 +4,7 @@ import dataclasses
 from typing import TYPE_CHECKING, Literal, TypeVar
 
 from trcks import AwaitableResult, Result
-from trcks.fp.monads import awaitable_result
+from trcks.fp.monads import awaitable_result as ar
 from trcks.oop._base_awaitable_wrapper import BaseAwaitableWrapper
 
 if TYPE_CHECKING:  # pragma: no cover
@@ -87,7 +87,7 @@ class AwaitableResultWrapper(BaseAwaitableWrapper[Result[_F_co, _S_co]]):
             >>> asyncio.run(awaitable_result_wrapper.core_as_coroutine)
             ('failure', 'not found')
         """
-        return AwaitableResultWrapper(awaitable_result.construct_failure(value))
+        return AwaitableResultWrapper(ar.construct_failure(value))
 
     @staticmethod
     def construct_failure_from_awaitable(
@@ -120,9 +120,7 @@ class AwaitableResultWrapper(BaseAwaitableWrapper[Result[_F_co, _S_co]]):
             >>> asyncio.run(awaitable_result_wrapper.core_as_coroutine)
             ('failure', <HTTPStatus.NOT_FOUND: 404>)
         """
-        return AwaitableResultWrapper(
-            awaitable_result.construct_failure_from_awaitable(awtbl)
-        )
+        return AwaitableResultWrapper(ar.construct_failure_from_awaitable(awtbl))
 
     @staticmethod
     def construct_from_awaitable_result(
@@ -180,7 +178,7 @@ class AwaitableResultWrapper(BaseAwaitableWrapper[Result[_F_co, _S_co]]):
             >>> asyncio.run(awaitable_result_wrapper.core_as_coroutine)
             ('failure', 'not found')
         """
-        return AwaitableResultWrapper(awaitable_result.construct_from_result(rslt))
+        return AwaitableResultWrapper(ar.construct_from_result(rslt))
 
     @staticmethod
     def construct_success(value: _S) -> AwaitableResultWrapper[Never, _S]:
@@ -202,7 +200,7 @@ class AwaitableResultWrapper(BaseAwaitableWrapper[Result[_F_co, _S_co]]):
             >>> asyncio.run(awaitable_result_wrapper.core_as_coroutine)
             ('success', 42)
         """
-        return AwaitableResultWrapper(awaitable_result.construct_success(value))
+        return AwaitableResultWrapper(ar.construct_success(value))
 
     @staticmethod
     def construct_success_from_awaitable(
@@ -234,9 +232,7 @@ class AwaitableResultWrapper(BaseAwaitableWrapper[Result[_F_co, _S_co]]):
             >>> asyncio.run(awaitable_result_wrapper.core_as_coroutine)
             ('success', 'Hello, world!')
         """
-        return AwaitableResultWrapper(
-            awaitable_result.construct_success_from_awaitable(awtbl)
-        )
+        return AwaitableResultWrapper(ar.construct_success_from_awaitable(awtbl))
 
     def map_failure(
         self, f: Callable[[_F_co], _F]
@@ -276,7 +272,7 @@ class AwaitableResultWrapper(BaseAwaitableWrapper[Result[_F_co, _S_co]]):
             >>> asyncio.run(awaitable_result_wrapper_2.core_as_coroutine)
             ('success', 25.0)
         """
-        f_mapped = awaitable_result.map_failure(f)
+        f_mapped = ar.map_failure(f)
         return AwaitableResultWrapper(f_mapped(self.core))
 
     def map_failure_to_awaitable(
@@ -321,7 +317,7 @@ class AwaitableResultWrapper(BaseAwaitableWrapper[Result[_F_co, _S_co]]):
             >>> asyncio.run(awaitable_result_wrapper_2.core_as_coroutine)
             ('success', 42)
         """
-        f_mapped = awaitable_result.map_failure_to_awaitable(f)
+        f_mapped = ar.map_failure_to_awaitable(f)
         return AwaitableResultWrapper(f_mapped(self.core))
 
     def map_failure_to_awaitable_result(
@@ -379,7 +375,7 @@ class AwaitableResultWrapper(BaseAwaitableWrapper[Result[_F_co, _S_co]]):
             >>> asyncio.run(awaitable_result_wrapper_3.core_as_coroutine)
             ('success', 25.0)
         """
-        f_mapped = awaitable_result.map_failure_to_awaitable_result(f)
+        f_mapped = ar.map_failure_to_awaitable_result(f)
         return AwaitableResultWrapper(f_mapped(self.core))
 
     def map_failure_to_result(
@@ -436,7 +432,7 @@ class AwaitableResultWrapper(BaseAwaitableWrapper[Result[_F_co, _S_co]]):
             >>> asyncio.run(awaitable_result_wrapper_3.core_as_coroutine)
             ('success', 25.0)
         """
-        f_mapped = awaitable_result.map_failure_to_result(f)
+        f_mapped = ar.map_failure_to_result(f)
         return AwaitableResultWrapper(f_mapped(self.core))
 
     def map_success(
@@ -478,7 +474,7 @@ class AwaitableResultWrapper(BaseAwaitableWrapper[Result[_F_co, _S_co]]):
             >>> asyncio.run(awaitable_result_wrapper_2.core_as_coroutine)
             ('success', 43)
         """
-        f_mapped = awaitable_result.map_success(f)
+        f_mapped = ar.map_success(f)
         return AwaitableResultWrapper(f_mapped(self.core))
 
     def map_success_to_awaitable(
@@ -523,7 +519,7 @@ class AwaitableResultWrapper(BaseAwaitableWrapper[Result[_F_co, _S_co]]):
             >>> asyncio.run(awaitable_result_wrapper_2.core_as_coroutine)
             ('success', 43)
         """
-        f_mapped = awaitable_result.map_success_to_awaitable(f)
+        f_mapped = ar.map_success_to_awaitable(f)
         return AwaitableResultWrapper(f_mapped(self.core))
 
     def map_success_to_awaitable_result(
@@ -582,7 +578,7 @@ class AwaitableResultWrapper(BaseAwaitableWrapper[Result[_F_co, _S_co]]):
             >>> asyncio.run(awaitable_result_wrapper_3.core_as_coroutine)
             ('success', 5.0)
         """
-        f_mapped = awaitable_result.map_success_to_awaitable_result(f)
+        f_mapped = ar.map_success_to_awaitable_result(f)
         return AwaitableResultWrapper(f_mapped(self.core))
 
     def map_success_to_result(
@@ -640,7 +636,7 @@ class AwaitableResultWrapper(BaseAwaitableWrapper[Result[_F_co, _S_co]]):
             >>> asyncio.run(awaitable_result_3.core_as_coroutine)
             ('success', 5.0)
         """
-        f_mapped = awaitable_result.map_success_to_result(f)
+        f_mapped = ar.map_success_to_result(f)
         return AwaitableResultWrapper(f_mapped(self.core))
 
     @property

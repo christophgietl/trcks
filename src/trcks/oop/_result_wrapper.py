@@ -4,7 +4,7 @@ import dataclasses
 from typing import TYPE_CHECKING, Literal, TypeVar
 
 from trcks import AwaitableResult, Result
-from trcks.fp.monads import result
+from trcks.fp.monads import result as r
 from trcks.oop._awaitable_result_wrapper import AwaitableResultWrapper
 from trcks.oop._base_wrapper import BaseWrapper
 
@@ -65,7 +65,7 @@ class ResultWrapper(BaseWrapper[Result[_F_co, _S_co]]):
             >>> ResultWrapper.construct_failure(42)
             ResultWrapper(core=('failure', 42))
         """
-        return ResultWrapper(result.construct_failure(value))
+        return ResultWrapper(r.construct_failure(value))
 
     @staticmethod
     def construct_from_result(rslt: Result[_F, _S]) -> ResultWrapper[_F, _S]:
@@ -97,7 +97,7 @@ class ResultWrapper(BaseWrapper[Result[_F_co, _S_co]]):
             >>> ResultWrapper.construct_success(42)
             ResultWrapper(core=('success', 42))
         """
-        return ResultWrapper(result.construct_success(value))
+        return ResultWrapper(r.construct_success(value))
 
     def map_failure(self, f: Callable[[_F_co], _F]) -> ResultWrapper[_F, _S_co]:
         """Apply sync. func. to the wrapped `trcks.Result` object if it is a failure.
@@ -123,7 +123,7 @@ class ResultWrapper(BaseWrapper[Result[_F_co, _S_co]]):
             ... )
             ResultWrapper(core=('success', 25.0))
         """
-        f_mapped = result.map_failure(f)
+        f_mapped = r.map_failure(f)
         return ResultWrapper(f_mapped(self.core))
 
     def map_failure_to_awaitable(
@@ -275,7 +275,7 @@ class ResultWrapper(BaseWrapper[Result[_F_co, _S_co]]):
             ... )
             ResultWrapper(core=('success', 25.0))
         """
-        f_mapped = result.map_failure_to_result(f)
+        f_mapped = r.map_failure_to_result(f)
         return ResultWrapper(f_mapped(self.core))
 
     def map_success(self, f: Callable[[_S_co], _S]) -> ResultWrapper[_F_co, _S]:
@@ -298,7 +298,7 @@ class ResultWrapper(BaseWrapper[Result[_F_co, _S_co]]):
             >>> ResultWrapper.construct_success(42).map_success(lambda n: n+1)
             ResultWrapper(core=('success', 43))
         """
-        f_mapped = result.map_success(f)
+        f_mapped = r.map_success(f)
         return ResultWrapper(f_mapped(self.core))
 
     def map_success_to_awaitable(
@@ -446,7 +446,7 @@ class ResultWrapper(BaseWrapper[Result[_F_co, _S_co]]):
             ... )
             ResultWrapper(core=('success', 5.0))
         """
-        f_mapped = result.map_success_to_result(f)
+        f_mapped = r.map_success_to_result(f)
         return ResultWrapper(f_mapped(self.core))
 
     @property

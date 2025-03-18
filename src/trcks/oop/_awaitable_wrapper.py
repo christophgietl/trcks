@@ -3,7 +3,7 @@ from __future__ import annotations
 import dataclasses
 from typing import TYPE_CHECKING, TypeVar
 
-from trcks.fp.monads import awaitable
+from trcks.fp.monads import awaitable as a
 from trcks.oop._awaitable_result_wrapper import AwaitableResultWrapper
 from trcks.oop._base_awaitable_wrapper import BaseAwaitableWrapper
 
@@ -80,7 +80,7 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
             >>> asyncio.run(awaitable_wrapper.core_as_coroutine)
             'Hello, world!'
         """
-        return AwaitableWrapper(awaitable.construct(value))
+        return AwaitableWrapper(a.construct(value))
 
     @staticmethod
     def construct_from_awaitable(awtbl: Awaitable[_T]) -> AwaitableWrapper[_T]:
@@ -136,7 +136,7 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
             >>> asyncio.run(awaitable_wrapper.core_as_coroutine)
             'Length: 13'
         """
-        f_mapped = awaitable.map_(f)
+        f_mapped = a.map_(f)
         return AwaitableWrapper(f_mapped(self.core))
 
     def map_to_awaitable(
@@ -168,7 +168,7 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
             >>> asyncio.run(awaitable_wrapper.core_as_coroutine)
             Wrote 'Hello, world!' to disk.
         """
-        f_mapped = awaitable.map_to_awaitable(f)
+        f_mapped = a.map_to_awaitable(f)
         return AwaitableWrapper(f_mapped(self.core))
 
     def map_to_awaitable_result(
