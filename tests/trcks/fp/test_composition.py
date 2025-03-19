@@ -88,8 +88,7 @@ def test_pipe_correctly_applies_pipeline(p: _IntPipeline) -> None:
     "input_", [42, "test", [4, 5, 6], {"key": "value"}, None, True]
 )
 def test_pipe_with_1_argument_returns_identical_value(input_: object) -> None:
-    output = pipe((input_,))
-    assert output is input_
+    assert pipe((input_,)) is input_
 
 
 @pytest.mark.parametrize("value", [23, 42, -100, 0, 1000, 999999])
