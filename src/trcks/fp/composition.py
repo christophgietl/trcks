@@ -10,175 +10,169 @@ from trcks._typing import TypeAlias, assert_never
 __docformat__ = "google"
 
 
-_X0 = TypeVar("_X0")
-_X1 = TypeVar("_X1")
-_X2 = TypeVar("_X2")
-_X3 = TypeVar("_X3")
-_X4 = TypeVar("_X4")
-_X5 = TypeVar("_X5")
-_X6 = TypeVar("_X6")
-_X7 = TypeVar("_X7")
-_XR = TypeVar("_XR")
+_IN = TypeVar("_IN")
+_OUT = TypeVar("_OUT")
+_T0 = TypeVar("_T0")
+_T1 = TypeVar("_T1")
+_T2 = TypeVar("_T2")
+_T3 = TypeVar("_T3")
+_T4 = TypeVar("_T4")
+_T5 = TypeVar("_T5")
+_T6 = TypeVar("_T6")
+_T7 = TypeVar("_T7")
 
 # Tuple type unpacking does not work correctly in Python 3.9 and 3.10
 # (see https://github.com/python/typing_extensions/issues/103).
 # Therefore, the following tuple type definitions contain a lot of repetitions:
 
-Composable1: TypeAlias = tuple[Callable[[_X0], _X1],]
+Composable1: TypeAlias = tuple[Callable[[_T0], _T1],]
+
 Composable2: TypeAlias = tuple[
-    Callable[[_X0], _X1],
-    Callable[[_X1], _X2],
+    Callable[[_T0], _T1],
+    Callable[[_T1], _T2],
 ]
+
 Composable3: TypeAlias = tuple[
-    Callable[[_X0], _X1],
-    Callable[[_X1], _X2],
-    Callable[[_X2], _X3],
+    Callable[[_T0], _T1],
+    Callable[[_T1], _T2],
+    Callable[[_T2], _T3],
 ]
+
 Composable4: TypeAlias = tuple[
-    Callable[[_X0], _X1],
-    Callable[[_X1], _X2],
-    Callable[[_X2], _X3],
-    Callable[[_X3], _X4],
+    Callable[[_T0], _T1],
+    Callable[[_T1], _T2],
+    Callable[[_T2], _T3],
+    Callable[[_T3], _T4],
 ]
+
 Composable5: TypeAlias = tuple[
-    Callable[[_X0], _X1],
-    Callable[[_X1], _X2],
-    Callable[[_X2], _X3],
-    Callable[[_X3], _X4],
-    Callable[[_X4], _X5],
+    Callable[[_T0], _T1],
+    Callable[[_T1], _T2],
+    Callable[[_T2], _T3],
+    Callable[[_T3], _T4],
+    Callable[[_T4], _T5],
 ]
+
 Composable6: TypeAlias = tuple[
-    Callable[[_X0], _X1],
-    Callable[[_X1], _X2],
-    Callable[[_X2], _X3],
-    Callable[[_X3], _X4],
-    Callable[[_X4], _X5],
-    Callable[[_X5], _X6],
+    Callable[[_T0], _T1],
+    Callable[[_T1], _T2],
+    Callable[[_T2], _T3],
+    Callable[[_T3], _T4],
+    Callable[[_T4], _T5],
+    Callable[[_T5], _T6],
 ]
+
 Composable7: TypeAlias = tuple[
-    Callable[[_X0], _X1],
-    Callable[[_X1], _X2],
-    Callable[[_X2], _X3],
-    Callable[[_X3], _X4],
-    Callable[[_X4], _X5],
-    Callable[[_X5], _X6],
-    Callable[[_X6], _X7],
+    Callable[[_T0], _T1],
+    Callable[[_T1], _T2],
+    Callable[[_T2], _T3],
+    Callable[[_T3], _T4],
+    Callable[[_T4], _T5],
+    Callable[[_T5], _T6],
+    Callable[[_T6], _T7],
 ]
+
 Composable: TypeAlias = Union[
-    Composable7[_X0, _X1, _X2, _X3, _X4, _X5, _X6, _XR],
-    Composable6[_X0, _X1, _X2, _X3, _X4, _X5, _XR],
-    Composable5[_X0, _X1, _X2, _X3, _X4, _XR],
-    Composable4[_X0, _X1, _X2, _X3, _XR],
-    Composable3[_X0, _X1, _X2, _XR],
-    Composable2[_X0, _X1, _XR],
-    Composable1[_X0, _XR],
+    Composable7[_IN, _T1, _T2, _T3, _T4, _T5, _T6, _OUT],
+    Composable6[_IN, _T1, _T2, _T3, _T4, _T5, _OUT],
+    Composable5[_IN, _T1, _T2, _T3, _T4, _OUT],
+    Composable4[_IN, _T1, _T2, _T3, _OUT],
+    Composable3[_IN, _T1, _T2, _OUT],
+    Composable2[_IN, _T1, _OUT],
+    Composable1[_IN, _OUT],
 ]
 
-Pipeline0: TypeAlias = tuple[_X0,]
+Pipeline0: TypeAlias = tuple[_T0,]
+
 Pipeline1: TypeAlias = tuple[
-    _X0,
-    Callable[[_X0], _X1],
+    _T0,
+    Callable[[_T0], _T1],
 ]
+
 Pipeline2: TypeAlias = tuple[
-    _X0,
-    Callable[[_X0], _X1],
-    Callable[[_X1], _X2],
+    _T0,
+    Callable[[_T0], _T1],
+    Callable[[_T1], _T2],
 ]
+
 Pipeline3: TypeAlias = tuple[
-    _X0,
-    Callable[[_X0], _X1],
-    Callable[[_X1], _X2],
-    Callable[[_X2], _X3],
+    _T0,
+    Callable[[_T0], _T1],
+    Callable[[_T1], _T2],
+    Callable[[_T2], _T3],
 ]
+
 Pipeline4: TypeAlias = tuple[
-    _X0,
-    Callable[[_X0], _X1],
-    Callable[[_X1], _X2],
-    Callable[[_X2], _X3],
-    Callable[[_X3], _X4],
+    _T0,
+    Callable[[_T0], _T1],
+    Callable[[_T1], _T2],
+    Callable[[_T2], _T3],
+    Callable[[_T3], _T4],
 ]
+
 Pipeline5: TypeAlias = tuple[
-    _X0,
-    Callable[[_X0], _X1],
-    Callable[[_X1], _X2],
-    Callable[[_X2], _X3],
-    Callable[[_X3], _X4],
-    Callable[[_X4], _X5],
+    _T0,
+    Callable[[_T0], _T1],
+    Callable[[_T1], _T2],
+    Callable[[_T2], _T3],
+    Callable[[_T3], _T4],
+    Callable[[_T4], _T5],
 ]
+
 Pipeline6: TypeAlias = tuple[
-    _X0,
-    Callable[[_X0], _X1],
-    Callable[[_X1], _X2],
-    Callable[[_X2], _X3],
-    Callable[[_X3], _X4],
-    Callable[[_X4], _X5],
-    Callable[[_X5], _X6],
+    _T0,
+    Callable[[_T0], _T1],
+    Callable[[_T1], _T2],
+    Callable[[_T2], _T3],
+    Callable[[_T3], _T4],
+    Callable[[_T4], _T5],
+    Callable[[_T5], _T6],
 ]
+
 Pipeline7: TypeAlias = tuple[
-    _X0,
-    Callable[[_X0], _X1],
-    Callable[[_X1], _X2],
-    Callable[[_X2], _X3],
-    Callable[[_X3], _X4],
-    Callable[[_X4], _X5],
-    Callable[[_X5], _X6],
-    Callable[[_X6], _X7],
+    _T0,
+    Callable[[_T0], _T1],
+    Callable[[_T1], _T2],
+    Callable[[_T2], _T3],
+    Callable[[_T3], _T4],
+    Callable[[_T4], _T5],
+    Callable[[_T5], _T6],
+    Callable[[_T6], _T7],
 ]
+
 Pipeline: TypeAlias = Union[
-    Pipeline7[_X0, _X1, _X2, _X3, _X4, _X5, _X6, _XR],
-    Pipeline6[_X0, _X1, _X2, _X3, _X4, _X5, _XR],
-    Pipeline5[_X0, _X1, _X2, _X3, _X4, _XR],
-    Pipeline4[_X0, _X1, _X2, _X3, _XR],
-    Pipeline3[_X0, _X1, _X2, _XR],
-    Pipeline2[_X0, _X1, _XR],
-    Pipeline1[_X0, _XR],
-    Pipeline0[_XR],
+    Pipeline7[_T0, _T1, _T2, _T3, _T4, _T5, _T6, _OUT],
+    Pipeline6[_T0, _T1, _T2, _T3, _T4, _T5, _OUT],
+    Pipeline5[_T0, _T1, _T2, _T3, _T4, _OUT],
+    Pipeline4[_T0, _T1, _T2, _T3, _OUT],
+    Pipeline3[_T0, _T1, _T2, _OUT],
+    Pipeline2[_T0, _T1, _OUT],
+    Pipeline1[_T0, _OUT],
+    Pipeline0[_OUT],
 ]
 
 
-def _concatenate(  # noqa: PLR0911
-    x0: _X0, c: Composable[_X0, _X1, _X2, _X3, _X4, _X5, _X6, _XR]
-) -> Pipeline[_X0, _X1, _X2, _X3, _X4, _X5, _X6, _XR]:
-    # The following if-statements help static type checkers understand
-    # that (x0, *c) has type Pipeline[_X0, _X1, _X2, _X3, _X4, _X5, _X6, _XR]:
+def compose(  # noqa: PLR0911
+    c: Composable[_IN, _T1, _T2, _T3, _T4, _T5, _T6, _OUT],
+) -> Callable[[_IN], _OUT]:
     if len(c) == 1:
-        return x0, *c
+        return lambda in_: c[0](in_)
     if len(c) == 2:  # noqa: PLR2004
-        return x0, *c
+        return lambda in_: c[1](c[0](in_))
     if len(c) == 3:  # noqa: PLR2004
-        return x0, *c
+        return lambda in_: c[2](c[1](c[0](in_)))
     if len(c) == 4:  # noqa: PLR2004
-        return x0, *c
+        return lambda in_: c[3](c[2](c[1](c[0](in_))))
     if len(c) == 5:  # noqa: PLR2004
-        return x0, *c
+        return lambda in_: c[4](c[3](c[2](c[1](c[0](in_)))))
     if len(c) == 6:  # noqa: PLR2004
-        return x0, *c
+        return lambda in_: c[5](c[4](c[3](c[2](c[1](c[0](in_))))))
     if len(c) == 7:  # noqa: PLR2004
-        return x0, *c
+        return lambda in_: c[6](c[5](c[4](c[3](c[2](c[1](c[0](in_)))))))
     return assert_never(c)  # type: ignore [unreachable]  # pragma: no cover
 
 
-def compose(
-    c: Composable[_X0, _X1, _X2, _X3, _X4, _X5, _X6, _XR],
-) -> Callable[[_X0], _XR]:
-    return lambda x0: pipe(_concatenate(x0, c))
-
-
-def pipe(p: Pipeline[_X0, _X1, _X2, _X3, _X4, _X5, _X6, _XR]) -> _XR:  # noqa: PLR0911
+def pipe(p: Pipeline[_T0, _T1, _T2, _T3, _T4, _T5, _T6, _OUT]) -> _OUT:
     if len(p) == 1:
         return p[0]
-    if len(p) == 2:  # noqa: PLR2004
-        return p[1](p[0])
-    if len(p) == 3:  # noqa: PLR2004
-        return p[2](p[1](p[0]))
-    if len(p) == 4:  # noqa: PLR2004
-        return p[3](p[2](p[1](p[0])))
-    if len(p) == 5:  # noqa: PLR2004
-        return p[4](p[3](p[2](p[1](p[0]))))
-    if len(p) == 6:  # noqa: PLR2004
-        return p[5](p[4](p[3](p[2](p[1](p[0])))))
-    if len(p) == 7:  # noqa: PLR2004
-        return p[6](p[5](p[4](p[3](p[2](p[1](p[0]))))))
-    if len(p) == 8:  # noqa: PLR2004
-        return p[7](p[6](p[5](p[4](p[3](p[2](p[1](p[0])))))))
-    return assert_never(p)  # type: ignore [unreachable]  # pragma: no cover
+    return compose(p[1:])(p[0])
