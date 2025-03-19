@@ -1,4 +1,66 @@
-"""Higher order functions for composition."""
+"""Types and higher order functions for function composition.
+
+Attributes:
+    Composable:
+        Up to seven compatible functions that can be applied sequentially
+        from first to last.
+    Composable1:
+        A single function.
+    Composable2:
+        Two compatible functions that can be applied sequentially from first to last.
+    Composable3:
+        Three compatible functions that can be applied sequentially from first to last.
+    Composable4:
+        Four compatible functions that can be applied sequentially from first to last.
+    Composable5:
+        Five compatible functions that can be applied sequentially from first to last.
+    Composable6:
+        Six compatible functions that can be applied sequentially from first to last.
+    Composable7:
+        Seven compatible functions that can be applied sequentially from first to last.
+    Pipeline:
+        A single value followed by up to seven compatible functions
+        that can be applied sequentially from first to last.
+    Pipeline0:
+        A single value.
+    Pipeline1:
+        A single value followed by a single compatible function
+        that can be applied.
+    Pipeline2:
+        A single value followed by two compatible functions
+        that can be applied sequentially from first to last.
+    Pipeline3:
+        A single value followed by three compatible functions
+        that can be applied sequentially from first to last.
+    Pipeline4:
+        A single value followed by four compatible functions
+        that can be applied sequentially from first to last.
+    Pipeline5:
+        A single value followed by five compatible functions
+        that can be applied sequentially from first to last.
+    Pipeline6:
+        A single value followed by six compatible functions
+        that can be applied sequentially from first to last.
+    Pipeline7:
+        A single value followed by seven compatible functions
+        that can be applied sequentially from first to last.
+
+Example:
+    Sequentially apply two functions to one input value
+    in three different ways:
+
+        >>> def to_length_string(n: int) -> str:
+        ...     return f"Length: {n}"
+        ...
+        >>> input_ = "Hello, world!"
+        >>> to_length_string(len(input_))
+        'Length: 13'
+        >>> get_length_string = compose((len, to_length_string))
+        >>> get_length_string(input_)
+        'Length: 13'
+        >>> pipe((input_, len, to_length_string))
+        'Length: 13'
+"""
 
 from __future__ import annotations
 
@@ -155,6 +217,19 @@ Pipeline: TypeAlias = Union[
 def compose(  # noqa: PLR0911
     c: Composable[_IN, _T1, _T2, _T3, _T4, _T5, _T6, _OUT],
 ) -> Callable[[_IN], _OUT]:
+    """Compose a tuple of compatible functions from first to last.
+
+    Args:
+        c: Compatible functions that can be applied sequentially from first to last.
+
+    Returns:
+        Function that applies the given functions from first to last.
+
+    Example:
+        >>> get_length_string = compose((len, lambda n: f"Length: {n}"))
+        >>> get_length_string("Hello, world!")
+        'Length: 13'
+    """
     if len(c) == 1:
         return lambda in_: c[0](in_)
     if len(c) == 2:  # noqa: PLR2004
@@ -173,6 +248,21 @@ def compose(  # noqa: PLR0911
 
 
 def pipe(p: Pipeline[_T0, _T1, _T2, _T3, _T4, _T5, _T6, _OUT]) -> _OUT:
+    """Evaluate a `Pipeline`.
+
+    Args:
+        p:
+            Single value followed by up to seven compatible functions
+            that can be applied sequentially from first to last.
+
+    Returns:
+        Result of sequentially applying the given functions from first to last
+        to the given value.
+
+    Example:
+        >>> pipe(("Hello, world!", len, lambda n: f"Length: {n}"))
+        'Length: 13'
+    """
     if len(p) == 1:
         return p[0]
     return compose(p[1:])(p[0])
