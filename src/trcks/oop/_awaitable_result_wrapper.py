@@ -272,8 +272,8 @@ class AwaitableResultWrapper(BaseAwaitableWrapper[Result[_F_co, _S_co]]):
             >>> asyncio.run(awaitable_result_wrapper_2.core_as_coroutine)
             ('success', 25.0)
         """
-        f_mapped = ar.map_failure(f)
-        return AwaitableResultWrapper(f_mapped(self.core))
+        mapped_f = ar.map_failure(f)
+        return AwaitableResultWrapper(mapped_f(self.core))
 
     def map_failure_to_awaitable(
         self, f: Callable[[_F_co], Awaitable[_F]]
@@ -317,8 +317,8 @@ class AwaitableResultWrapper(BaseAwaitableWrapper[Result[_F_co, _S_co]]):
             >>> asyncio.run(awaitable_result_wrapper_2.core_as_coroutine)
             ('success', 42)
         """
-        f_mapped = ar.map_failure_to_awaitable(f)
-        return AwaitableResultWrapper(f_mapped(self.core))
+        mapped_f = ar.map_failure_to_awaitable(f)
+        return AwaitableResultWrapper(mapped_f(self.core))
 
     def map_failure_to_awaitable_result(
         self, f: Callable[[_F_co], AwaitableResult[_F, _S]]
@@ -375,8 +375,8 @@ class AwaitableResultWrapper(BaseAwaitableWrapper[Result[_F_co, _S_co]]):
             >>> asyncio.run(awaitable_result_wrapper_3.core_as_coroutine)
             ('success', 25.0)
         """
-        f_mapped = ar.map_failure_to_awaitable_result(f)
-        return AwaitableResultWrapper(f_mapped(self.core))
+        mapped_f = ar.map_failure_to_awaitable_result(f)
+        return AwaitableResultWrapper(mapped_f(self.core))
 
     def map_failure_to_result(
         self, f: Callable[[_F_co], Result[_F, _S]]
@@ -432,8 +432,8 @@ class AwaitableResultWrapper(BaseAwaitableWrapper[Result[_F_co, _S_co]]):
             >>> asyncio.run(awaitable_result_wrapper_3.core_as_coroutine)
             ('success', 25.0)
         """
-        f_mapped = ar.map_failure_to_result(f)
-        return AwaitableResultWrapper(f_mapped(self.core))
+        mapped_f = ar.map_failure_to_result(f)
+        return AwaitableResultWrapper(mapped_f(self.core))
 
     def map_success(
         self, f: Callable[[_S_co], _S]
@@ -474,8 +474,8 @@ class AwaitableResultWrapper(BaseAwaitableWrapper[Result[_F_co, _S_co]]):
             >>> asyncio.run(awaitable_result_wrapper_2.core_as_coroutine)
             ('success', 43)
         """
-        f_mapped = ar.map_success(f)
-        return AwaitableResultWrapper(f_mapped(self.core))
+        mapped_f = ar.map_success(f)
+        return AwaitableResultWrapper(mapped_f(self.core))
 
     def map_success_to_awaitable(
         self, f: Callable[[_S_co], Awaitable[_S]]
@@ -519,8 +519,8 @@ class AwaitableResultWrapper(BaseAwaitableWrapper[Result[_F_co, _S_co]]):
             >>> asyncio.run(awaitable_result_wrapper_2.core_as_coroutine)
             ('success', 43)
         """
-        f_mapped = ar.map_success_to_awaitable(f)
-        return AwaitableResultWrapper(f_mapped(self.core))
+        mapped_f = ar.map_success_to_awaitable(f)
+        return AwaitableResultWrapper(mapped_f(self.core))
 
     def map_success_to_awaitable_result(
         self, f: Callable[[_S_co], AwaitableResult[_F, _S]]
@@ -578,8 +578,8 @@ class AwaitableResultWrapper(BaseAwaitableWrapper[Result[_F_co, _S_co]]):
             >>> asyncio.run(awaitable_result_wrapper_3.core_as_coroutine)
             ('success', 5.0)
         """
-        f_mapped = ar.map_success_to_awaitable_result(f)
-        return AwaitableResultWrapper(f_mapped(self.core))
+        mapped_f = ar.map_success_to_awaitable_result(f)
+        return AwaitableResultWrapper(mapped_f(self.core))
 
     def map_success_to_result(
         self, f: Callable[[_S_co], Result[_F, _S]]
@@ -636,8 +636,8 @@ class AwaitableResultWrapper(BaseAwaitableWrapper[Result[_F_co, _S_co]]):
             >>> asyncio.run(awaitable_result_3.core_as_coroutine)
             ('success', 5.0)
         """
-        f_mapped = ar.map_success_to_result(f)
-        return AwaitableResultWrapper(f_mapped(self.core))
+        mapped_f = ar.map_success_to_result(f)
+        return AwaitableResultWrapper(mapped_f(self.core))
 
     @property
     async def track(self) -> Literal["failure", "success"]:

@@ -136,8 +136,8 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
             >>> asyncio.run(awaitable_wrapper.core_as_coroutine)
             'Length: 13'
         """
-        f_mapped = a.map_(f)
-        return AwaitableWrapper(f_mapped(self.core))
+        mapped_f = a.map_(f)
+        return AwaitableWrapper(mapped_f(self.core))
 
     def map_to_awaitable(
         self, f: Callable[[_T_co], Awaitable[_T]]
@@ -168,8 +168,8 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
             >>> asyncio.run(awaitable_wrapper.core_as_coroutine)
             Wrote 'Hello, world!' to disk.
         """
-        f_mapped = a.map_to_awaitable(f)
-        return AwaitableWrapper(f_mapped(self.core))
+        mapped_f = a.map_to_awaitable(f)
+        return AwaitableWrapper(mapped_f(self.core))
 
     def map_to_awaitable_result(
         self, f: Callable[[_T_co], AwaitableResult[_F, _S]]

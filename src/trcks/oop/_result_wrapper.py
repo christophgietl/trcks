@@ -123,8 +123,8 @@ class ResultWrapper(BaseWrapper[Result[_F_co, _S_co]]):
             ... )
             ResultWrapper(core=('success', 25.0))
         """
-        f_mapped = r.map_failure(f)
-        return ResultWrapper(f_mapped(self.core))
+        mapped_f = r.map_failure(f)
+        return ResultWrapper(mapped_f(self.core))
 
     def map_failure_to_awaitable(
         self, f: Callable[[_F_co], Awaitable[_F]]
@@ -275,8 +275,8 @@ class ResultWrapper(BaseWrapper[Result[_F_co, _S_co]]):
             ... )
             ResultWrapper(core=('success', 25.0))
         """
-        f_mapped = r.map_failure_to_result(f)
-        return ResultWrapper(f_mapped(self.core))
+        mapped_f = r.map_failure_to_result(f)
+        return ResultWrapper(mapped_f(self.core))
 
     def map_success(self, f: Callable[[_S_co], _S]) -> ResultWrapper[_F_co, _S]:
         """Apply sync. func. to the wrapped `trcks.Result` object if it is a success.
@@ -298,8 +298,8 @@ class ResultWrapper(BaseWrapper[Result[_F_co, _S_co]]):
             >>> ResultWrapper.construct_success(42).map_success(lambda n: n+1)
             ResultWrapper(core=('success', 43))
         """
-        f_mapped = r.map_success(f)
-        return ResultWrapper(f_mapped(self.core))
+        mapped_f = r.map_success(f)
+        return ResultWrapper(mapped_f(self.core))
 
     def map_success_to_awaitable(
         self, f: Callable[[_S_co], Awaitable[_S]]
@@ -446,8 +446,8 @@ class ResultWrapper(BaseWrapper[Result[_F_co, _S_co]]):
             ... )
             ResultWrapper(core=('success', 5.0))
         """
-        f_mapped = r.map_success_to_result(f)
-        return ResultWrapper(f_mapped(self.core))
+        mapped_f = r.map_success_to_result(f)
+        return ResultWrapper(mapped_f(self.core))
 
     @property
     def track(self) -> Literal["failure", "success"]:
