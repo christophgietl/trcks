@@ -76,7 +76,7 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
             >>> from trcks.oop import AwaitableWrapper
             >>> awaitable_wrapper = AwaitableWrapper.construct("Hello, world!")
             >>> awaitable_wrapper
-            AwaitableWrapper(core=<coroutine object construct at 0x...>)
+            AwaitableWrapper(core=<coroutine object ...>)
             >>> asyncio.run(awaitable_wrapper.core_as_coroutine)
             'Hello, world!'
         """

@@ -342,8 +342,8 @@ class AwaitableResultWrapper(BaseAwaitableWrapper[Result[_F_co, _S_co]]):
             >>> async def slowly_replace_not_found(s: str) -> Result[str, float]:
             ...     await asyncio.sleep(0.001)
             ...     if s == "not found":
-            ...         return ("success", 0)
-            ...     return ("failure", s)
+            ...         return "success", 0
+            ...     return "failure", s
             ...
             >>> awaitable_result_wrapper_1 = (
             ...     AwaitableResultWrapper
@@ -545,8 +545,8 @@ class AwaitableResultWrapper(BaseAwaitableWrapper[Result[_F_co, _S_co]]):
             >>> async def get_square_root_slowly(x: float) -> Result[str, float]:
             ...     await asyncio.sleep(0.001)
             ...     if x < 0:
-            ...         return ("failure", "negative value")
-            ...     return ("success", math.sqrt(x))
+            ...         return "failure", "negative value"
+            ...     return "success", math.sqrt(x)
             ...
             >>> awaitable_result_wrapper_1 = (
             ...     AwaitableResultWrapper
@@ -603,8 +603,8 @@ class AwaitableResultWrapper(BaseAwaitableWrapper[Result[_F_co, _S_co]]):
             >>> from trcks.oop import AwaitableResultWrapper
             >>> def get_square_root(x: float) -> Result[str, float]:
             ...     if x < 0:
-            ...         return ("failure", "negative value")
-            ...     return ("success", math.sqrt(x))
+            ...         return "failure", "negative value"
+            ...     return "success", math.sqrt(x)
             ...
             >>> awaitable_result_1 = (
             ...     AwaitableResultWrapper
