@@ -3,7 +3,8 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, TypeVar
 
 from trcks._typing import assert_never
-from trcks.fp.monads import awaitable, result
+from trcks.fp.monads import awaitable as a
+from trcks.fp.monads import result as r
 
 if TYPE_CHECKING:  # pragma: no cover
     from collections.abc import Awaitable, Callable
@@ -19,29 +20,29 @@ _S2 = TypeVar("_S2")
 
 
 def construct_failure(value: _F) -> AwaitableFailure[_F]:
-    return awaitable.construct(result.construct_failure(value))
+    return a.construct(r.construct_failure(value))
 
 
 def construct_failure_from_awaitable(awtbl: Awaitable[_F]) -> AwaitableFailure[_F]:
-    return awaitable.map_(result.construct_failure)(awtbl)
+    return a.map_(r.construct_failure)(awtbl)
 
 
 def construct_from_result(rslt: Result[_F, _S]) -> AwaitableResult[_F, _S]:
-    return awaitable.construct(rslt)
+    return a.construct(rslt)
 
 
 def construct_success(value: _S) -> AwaitableSuccess[_S]:
-    return awaitable.construct(result.construct_success(value))
+    return a.construct(r.construct_success(value))
 
 
 def construct_success_from_awaitable(awtbl: Awaitable[_S]) -> AwaitableSuccess[_S]:
-    return awaitable.map_(result.construct_success)(awtbl)
+    return a.map_(r.construct_success)(awtbl)
 
 
 def map_failure(
     f: Callable[[_F1], _F2],
 ) -> Callable[[AwaitableResult[_F1, _S1]], AwaitableResult[_F2, _S1]]:
-    return awaitable.map_(result.map_failure(f))
+    return a.map_(r.map_failure(f))
 
 
 def map_failure_to_awaitable(
@@ -63,19 +64,19 @@ def map_failure_to_awaitable_result(
             return rslt
         return assert_never(rslt)  # type: ignore [unreachable]  # pragma: no cover
 
-    return awaitable.map_to_awaitable(partially_mapped_f)
+    return a.map_to_awaitable(partially_mapped_f)
 
 
 def map_failure_to_result(
     f: Callable[[_F1], Result[_F2, _S2]],
 ) -> Callable[[AwaitableResult[_F1, _S1]], AwaitableResult[_F2, _S1 | _S2]]:
-    return awaitable.map_(result.map_failure_to_result(f))
+    return a.map_(r.map_failure_to_result(f))
 
 
 def map_success(
     f: Callable[[_S1], _S2],
 ) -> Callable[[AwaitableResult[_F1, _S1]], AwaitableResult[_F1, _S2]]:
-    return awaitable.map_(result.map_success(f))
+    return a.map_(r.map_success(f))
 
 
 def map_success_to_awaitable(
@@ -97,13 +98,13 @@ def map_success_to_awaitable_result(
             return await f(rslt[1])
         return assert_never(rslt)  # type: ignore [unreachable]  # pragma: no cover
 
-    return awaitable.map_to_awaitable(partially_mapped_f)
+    return a.map_to_awaitable(partially_mapped_f)
 
 
 def map_success_to_result(
     f: Callable[[_S1], Result[_F2, _S2]],
 ) -> Callable[[AwaitableResult[_F1, _S1]], AwaitableResult[_F1 | _F2, _S2]]:
-    return awaitable.map_(result.map_success_to_result(f))
+    return a.map_(r.map_success_to_result(f))
 
 
 __docformat__ = "google"

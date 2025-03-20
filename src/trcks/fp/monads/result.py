@@ -19,11 +19,11 @@ _S2 = TypeVar("_S2")
 
 
 def construct_failure(value: _F) -> Failure[_F]:
-    return ("failure", value)
+    return "failure", value
 
 
 def construct_success(value: _S) -> Success[_S]:
-    return ("success", value)
+    return "success", value
 
 
 def map_failure(
