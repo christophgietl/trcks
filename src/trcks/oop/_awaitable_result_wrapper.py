@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import dataclasses
-from typing import TYPE_CHECKING, Literal, TypeVar
+from typing import TYPE_CHECKING, Literal
 
 from trcks import AwaitableResult, Result
 from trcks.fp.monads import awaitable_result as ar
@@ -10,19 +10,25 @@ from trcks.oop._base_awaitable_wrapper import BaseAwaitableWrapper
 if TYPE_CHECKING:  # pragma: no cover
     from collections.abc import Awaitable, Callable
 
-    from trcks._typing import Never
+
+from trcks._typing import Never, TypeVar
 
 __docformat__ = "google"
 
 _F = TypeVar("_F")
 _S = TypeVar("_S")
 
-_F_co = TypeVar("_F_co", covariant=True)
-_S_co = TypeVar("_S_co", covariant=True)
+_F_default = TypeVar("_F_default", default=Never)
+_S_default = TypeVar("_S_default", default=Never)
+
+_F_default_co = TypeVar("_F_default_co", covariant=True, default=Never)
+_S_default_co = TypeVar("_S_default_co", covariant=True, default=Never)
 
 
 @dataclasses.dataclass(frozen=True)
-class AwaitableResultWrapper(BaseAwaitableWrapper[Result[_F_co, _S_co]]):
+class AwaitableResultWrapper(
+    BaseAwaitableWrapper[Result[_F_default_co, _S_default_co]]
+):
     """Typesafe and immutable wrapper for `trcks.AwaitableResult` objects.
 
     The wrapped object can be accessed via the attribute `AwaitableResultWrapper.core`.
@@ -40,12 +46,12 @@ class AwaitableResultWrapper(BaseAwaitableWrapper[Result[_F_co, _S_co]]):
         >>> from trcks.oop import AwaitableResultWrapper
         >>> async def read_from_disk() -> Result[str, float]:
         ...     await asyncio.sleep(0.001)
-        ...     return ("failure", "not found")
+        ...     return "failure", "not found"
         ...
         >>> def get_square_root(x: float) -> Result[str, float]:
         ...     if x < 0:
-        ...         return ("failure", "negative value")
-        ...     return ("success", math.sqrt(x))
+        ...         return "failure", "negative value"
+        ...     return "success", math.sqrt(x)
         ...
         >>> async def write_to_disk(output: float) -> None:
         ...     await asyncio.sleep(0.001)
@@ -141,7 +147,7 @@ class AwaitableResultWrapper(BaseAwaitableWrapper[Result[_F_co, _S_co]]):
             >>> from trcks.oop import AwaitableResultWrapper
             >>> async def read_from_disk() -> Result[str, str]:
             ...     await asyncio.sleep(0.001)
-            ...     return ("failure", "file not found")
+            ...     return "failure", "file not found"
             ...
             >>> awaitable_result = read_from_disk()
             >>> awaitable_wrapper = (
@@ -156,7 +162,9 @@ class AwaitableResultWrapper(BaseAwaitableWrapper[Result[_F_co, _S_co]]):
         return AwaitableResultWrapper(a_rslt)
 
     @staticmethod
-    def construct_from_result(rslt: Result[_F, _S]) -> AwaitableResultWrapper[_F, _S]:
+    def construct_from_result(
+        rslt: Result[_F_default, _S_default],
+    ) -> AwaitableResultWrapper[_F_default, _S_default]:
         """Construct and wrap an awaitbl. `trcks.Result` obj. from a `trcks.Result` obj.
 
         Args:
@@ -235,8 +243,8 @@ class AwaitableResultWrapper(BaseAwaitableWrapper[Result[_F_co, _S_co]]):
         return AwaitableResultWrapper(ar.construct_success_from_awaitable(awtbl))
 
     def map_failure(
-        self, f: Callable[[_F_co], _F]
-    ) -> AwaitableResultWrapper[_F, _S_co]:
+        self, f: Callable[[_F_default_co], _F]
+    ) -> AwaitableResultWrapper[_F, _S_default_co]:
         """Apply sync. func. to wrapped `trcks.AwaitableResult` obj. if it is a failure.
 
         Args:
@@ -276,8 +284,8 @@ class AwaitableResultWrapper(BaseAwaitableWrapper[Result[_F_co, _S_co]]):
         return AwaitableResultWrapper(mapped_f(self.core))
 
     def map_failure_to_awaitable(
-        self, f: Callable[[_F_co], Awaitable[_F]]
-    ) -> AwaitableResultWrapper[_F, _S_co]:
+        self, f: Callable[[_F_default_co], Awaitable[_F]]
+    ) -> AwaitableResultWrapper[_F, _S_default_co]:
         """Apply async. func. to wrapped `trcks.AwaitableResult` obj. if failure.
 
         Args:
@@ -321,8 +329,8 @@ class AwaitableResultWrapper(BaseAwaitableWrapper[Result[_F_co, _S_co]]):
         return AwaitableResultWrapper(mapped_f(self.core))
 
     def map_failure_to_awaitable_result(
-        self, f: Callable[[_F_co], AwaitableResult[_F, _S]]
-    ) -> AwaitableResultWrapper[_F, _S_co | _S]:
+        self, f: Callable[[_F_default_co], AwaitableResult[_F, _S]]
+    ) -> AwaitableResultWrapper[_F, _S_default_co | _S]:
         """Apply async. `trcks.Result` func. to `trcks.AwaitableResult` if failure.
 
         Args:
@@ -379,8 +387,8 @@ class AwaitableResultWrapper(BaseAwaitableWrapper[Result[_F_co, _S_co]]):
         return AwaitableResultWrapper(mapped_f(self.core))
 
     def map_failure_to_result(
-        self, f: Callable[[_F_co], Result[_F, _S]]
-    ) -> AwaitableResultWrapper[_F, _S_co | _S]:
+        self, f: Callable[[_F_default_co], Result[_F, _S]]
+    ) -> AwaitableResultWrapper[_F, _S_default_co | _S]:
         """Apply sync. `trcks.Result` func. to `trcks.AwaitableResult` if failure.
 
         Args:
@@ -399,8 +407,8 @@ class AwaitableResultWrapper(BaseAwaitableWrapper[Result[_F_co, _S_co]]):
             >>> from trcks.oop import AwaitableResultWrapper
             >>> def replace_not_found_by_default_value(s: str) -> Result[str, float]:
             ...     if s == "not found":
-            ...         return ("success", 0)
-            ...     return ("failure", s)
+            ...         return "success", 0
+            ...     return "failure", s
             ...
             >>> awaitable_result_wrapper_1 = (
             ...     AwaitableResultWrapper
@@ -436,8 +444,8 @@ class AwaitableResultWrapper(BaseAwaitableWrapper[Result[_F_co, _S_co]]):
         return AwaitableResultWrapper(mapped_f(self.core))
 
     def map_success(
-        self, f: Callable[[_S_co], _S]
-    ) -> AwaitableResultWrapper[_F_co, _S]:
+        self, f: Callable[[_S_default_co], _S]
+    ) -> AwaitableResultWrapper[_F_default_co, _S]:
         """Apply sync. func. to wrapped `trcks.AwaitableResult` obj. if success.
 
         Args:
@@ -478,8 +486,8 @@ class AwaitableResultWrapper(BaseAwaitableWrapper[Result[_F_co, _S_co]]):
         return AwaitableResultWrapper(mapped_f(self.core))
 
     def map_success_to_awaitable(
-        self, f: Callable[[_S_co], Awaitable[_S]]
-    ) -> AwaitableResultWrapper[_F_co, _S]:
+        self, f: Callable[[_S_default_co], Awaitable[_S]]
+    ) -> AwaitableResultWrapper[_F_default_co, _S]:
         """Apply async. func. to wrapped `trcks.AwaitableResult` obj. if success.
 
         Args:
@@ -523,8 +531,8 @@ class AwaitableResultWrapper(BaseAwaitableWrapper[Result[_F_co, _S_co]]):
         return AwaitableResultWrapper(mapped_f(self.core))
 
     def map_success_to_awaitable_result(
-        self, f: Callable[[_S_co], AwaitableResult[_F, _S]]
-    ) -> AwaitableResultWrapper[_F_co | _F, _S]:
+        self, f: Callable[[_S_default_co], AwaitableResult[_F, _S]]
+    ) -> AwaitableResultWrapper[_F_default_co | _F, _S]:
         """Apply async. `trcks.Result` func. to `trcks.AwaitableResult` if success.
 
         Args:
@@ -582,8 +590,8 @@ class AwaitableResultWrapper(BaseAwaitableWrapper[Result[_F_co, _S_co]]):
         return AwaitableResultWrapper(mapped_f(self.core))
 
     def map_success_to_result(
-        self, f: Callable[[_S_co], Result[_F, _S]]
-    ) -> AwaitableResultWrapper[_F_co | _F, _S]:
+        self, f: Callable[[_S_default_co], Result[_F, _S]]
+    ) -> AwaitableResultWrapper[_F_default_co | _F, _S]:
         """Apply sync. `trcks.Result` func. to `trcks.AwaitableResult` if success.
 
         Args:
@@ -655,7 +663,7 @@ class AwaitableResultWrapper(BaseAwaitableWrapper[Result[_F_co, _S_co]]):
         return (await self.core)[0]
 
     @property
-    async def value(self) -> _F_co | _S_co:
+    async def value(self) -> _F_default_co | _S_default_co:
         """Second element of the awaited attribute `AwaitableResultWrapper.core`.
 
         Example:

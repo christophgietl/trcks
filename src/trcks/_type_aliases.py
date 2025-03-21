@@ -1,9 +1,9 @@
 """Type aliases used across `trcks`."""
 
 from collections.abc import Awaitable
-from typing import Literal, TypeVar, Union
+from typing import Literal, Union
 
-from trcks._typing import TypeAlias
+from trcks._typing import TypeAlias, TypeVar
 
 __docformat__ = "google"
 

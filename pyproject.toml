@@ -6,6 +6,7 @@ requires = ["flit_core>=3.2,<4"]
 dev = [
     "mypy>=1.15.0",
     "pydoctor>=24.11.2",
+    "pyright>=1.1.397",
     "pytest>=8.3.4",
     "pytest-asyncio>=0.25.3",
     "pytest-cov>=6.0.0",
@@ -42,6 +43,20 @@ intersphinx = [
 ]
 project-name = "trcks"
 warnings-as-errors = true
+
+[tool.pyright]
+deprecateTypingAliases = true
+reportCallInDefaultInitializer = true
+reportImplicitOverride = true
+reportImplicitStringConcatenation = true
+reportImportCycles = true
+reportMissingSuperCall = true
+reportPropertyTypeMismatch = true
+reportShadowedImports = true
+reportUninitializedInstanceVariable = true
+reportUnnecessaryTypeIgnoreComment = true
+reportUnusedCallResult = true
+typeCheckingMode = "strict"
 
 [tool.pytest.ini_options]
 addopts = "--cov=trcks --cov-fail-under=100 --cov-report term-missing --doctest-modules"

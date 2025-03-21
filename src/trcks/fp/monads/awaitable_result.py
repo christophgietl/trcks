@@ -38,9 +38,9 @@ Example:
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, TypeVar
+from typing import TYPE_CHECKING
 
-from trcks._typing import assert_never
+from trcks._typing import TypeVar, assert_never
 from trcks.fp.monads import awaitable as a
 from trcks.fp.monads import result as r
 

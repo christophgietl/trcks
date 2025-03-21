@@ -422,6 +422,15 @@ wheels = [
 ]
 
 [[package]]
+name = "nodeenv"
+version = "1.9.1"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/43/16/fc88b08840de0e0a72a2f9d8c6bae36be573e475a6326ae854bcc549fc45/nodeenv-1.9.1.tar.gz", hash = "sha256:6ec12890a2dab7946721edbfbcd91f3319c6ccc9aec47be7c7e6b7011ee6645f", size = 47437 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/d2/1d/1b658dbd2b9fa9c4c9f32accbfc0205d532c8c6194dc0f2a4c0428e7128a/nodeenv-1.9.1-py2.py3-none-any.whl", hash = "sha256:ba11c9782d29c27c70ffbdda2d7415098754709be8a7056d79a737cd901155c9", size = 22314 },
+]
+
+[[package]]
 name = "packaging"
 version = "24.2"
 source = { registry = "https://pypi.org/simple" }
@@ -467,6 +476,19 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/7a/7c/c3491dd1666b9fdede4bddb2ebf9a1bc31ff8e0536ee6572ad5a028e109b/pydoctor-24.11.2.tar.gz", hash = "sha256:d52c13caa17b870da1a245981c15cda88406eb73a863dbe23db3fbc43e3b3fc3", size = 946366 }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/f4/c2/016a296de5eb70478c65cc58722f11aedd858bf248431486b0dff479016c/pydoctor-24.11.2-py3-none-any.whl", hash = "sha256:69004e7b4a2b4db6425f1a46869adf7ebcd7c4fd0340515538134a4df181ab82", size = 1584835 },
+]
+
+[[package]]
+name = "pyright"
+version = "1.1.397"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "nodeenv" },
+    { name = "typing-extensions" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/92/23/cefa10c9cb198e0858ed0b9233371d62bca880337f628e58f50dfdfb12f0/pyright-1.1.397.tar.gz", hash = "sha256:07530fd65a449e4b0b28dceef14be0d8e0995a7a5b1bb2f3f897c3e548451ce3", size = 3818998 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/01/b5/98ec41e1e0ad5576ecd42c90ec363560f7b389a441722ea3c7207682dec7/pyright-1.1.397-py3-none-any.whl", hash = "sha256:2e93fba776e714a82b085d68f8345b01f91ba43e1ab9d513e79b70fc85906257", size = 5693631 },
 ]
 
 [[package]]
@@ -620,6 +642,7 @@ dependencies = [
 dev = [
     { name = "mypy" },
     { name = "pydoctor" },
+    { name = "pyright" },
     { name = "pytest" },
     { name = "pytest-asyncio" },
     { name = "pytest-cov" },
@@ -633,6 +656,7 @@ requires-dist = [{ name = "typing-extensions", marker = "python_full_version < '
 dev = [
     { name = "mypy", specifier = ">=1.15.0" },
     { name = "pydoctor", specifier = ">=24.11.2" },
+    { name = "pyright", specifier = ">=1.1.397" },
     { name = "pytest", specifier = ">=8.3.4" },
     { name = "pytest-asyncio", specifier = ">=0.25.3" },
     { name = "pytest-cov", specifier = ">=6.0.0" },

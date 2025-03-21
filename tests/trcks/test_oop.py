@@ -1,6 +1,6 @@
 import asyncio
 import math
-from collections.abc import Coroutine
+from collections.abc import Callable, Coroutine
 from typing import Final, Literal
 
 import pytest
@@ -8,10 +8,12 @@ import pytest
 from trcks import Result
 from trcks.oop import AwaitableResultWrapper, AwaitableWrapper, ResultWrapper, Wrapper
 
+_TO_PAIR: Callable[[int], tuple[int, int]] = lambda n: (n, n)  # noqa: E731
+
 _FLOATS: Final[tuple[float, ...]] = (0.0, 1.5, -2.3, 100.75, math.pi, -math.e)
 _OBJECTS: Final[tuple[object, ...]] = (
     21,
-    lambda n: (n, n),
+    _TO_PAIR,
     "test",
     [1, 2, 3],
     {"a": 1},
@@ -36,17 +38,17 @@ async def _double_slowly(x: float) -> float:
 
 def _get_square_root_safely(x: float) -> Result[Literal["negative"], float]:
     if x < 0:
-        return ("failure", "negative")
-    return ("success", math.sqrt(x))
+        return "failure", "negative"
+    return "success", math.sqrt(x)
 
 
 async def _get_square_root_safely_and_slowly(
     x: float,
 ) -> Result[Literal["negative"], float]:
     if x < 0:
-        return ("failure", "negative")
+        return "failure", "negative"
     await asyncio.sleep(0.001)
-    return ("success", math.sqrt(x))
+    return "success", math.sqrt(x)
 
 
 async def _stringify_slowly(o: object) -> str:

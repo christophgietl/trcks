@@ -1,9 +1,10 @@
 from __future__ import annotations
 
 import dataclasses
-from typing import TYPE_CHECKING, Literal, TypeVar
+from typing import TYPE_CHECKING, Literal
 
 from trcks import AwaitableResult, Result
+from trcks._typing import Never, TypeVar
 from trcks.fp.monads import result as r
 from trcks.oop._awaitable_result_wrapper import AwaitableResultWrapper
 from trcks.oop._base_wrapper import BaseWrapper
@@ -11,19 +12,21 @@ from trcks.oop._base_wrapper import BaseWrapper
 if TYPE_CHECKING:  # pragma: no cover
     from collections.abc import Awaitable, Callable
 
-    from trcks._typing import Never
-
 __docformat__ = "google"
 
 _F = TypeVar("_F")
 _S = TypeVar("_S")
 
-_F_co = TypeVar("_F_co", covariant=True)
-_S_co = TypeVar("_S_co", covariant=True)
+
+_F_default = TypeVar("_F_default", default=Never)
+_S_default = TypeVar("_S_default", default=Never)
+
+_F_default_co = TypeVar("_F_default_co", covariant=True, default=Never)
+_S_default_co = TypeVar("_S_default_co", covariant=True, default=Never)
 
 
 @dataclasses.dataclass(frozen=True)
-class ResultWrapper(BaseWrapper[Result[_F_co, _S_co]]):
+class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
     """Typesafe and immutable wrapper for `trcks.Result` objects.
 
     The wrapped object can be accessed via the attribute `ResultWrapper.core`.
@@ -68,7 +71,9 @@ class ResultWrapper(BaseWrapper[Result[_F_co, _S_co]]):
         return ResultWrapper(r.construct_failure(value))
 
     @staticmethod
-    def construct_from_result(rslt: Result[_F, _S]) -> ResultWrapper[_F, _S]:
+    def construct_from_result(
+        rslt: Result[_F_default, _S_default],
+    ) -> ResultWrapper[_F_default, _S_default]:
         """Wrap a `trcks.Result` object.
 
         Args:
@@ -99,7 +104,9 @@ class ResultWrapper(BaseWrapper[Result[_F_co, _S_co]]):
         """
         return ResultWrapper(r.construct_success(value))
 
-    def map_failure(self, f: Callable[[_F_co], _F]) -> ResultWrapper[_F, _S_co]:
+    def map_failure(
+        self, f: Callable[[_F_default_co], _F]
+    ) -> ResultWrapper[_F, _S_default_co]:
         """Apply sync. func. to the wrapped `trcks.Result` object if it is a failure.
 
         Args:
@@ -127,8 +134,8 @@ class ResultWrapper(BaseWrapper[Result[_F_co, _S_co]]):
         return ResultWrapper(mapped_f(self.core))
 
     def map_failure_to_awaitable(
-        self, f: Callable[[_F_co], Awaitable[_F]]
-    ) -> AwaitableResultWrapper[_F, _S_co]:
+        self, f: Callable[[_F_default_co], Awaitable[_F]]
+    ) -> AwaitableResultWrapper[_F, _S_default_co]:
         """Apply async. func. to the wrapped `trcks.Result` object if it is a failure.
 
         Args:
@@ -173,8 +180,8 @@ class ResultWrapper(BaseWrapper[Result[_F_co, _S_co]]):
         ).map_failure_to_awaitable(f)
 
     def map_failure_to_awaitable_result(
-        self, f: Callable[[_F_co], AwaitableResult[_F, _S]]
-    ) -> AwaitableResultWrapper[_F, _S_co | _S]:
+        self, f: Callable[[_F_default_co], AwaitableResult[_F, _S]]
+    ) -> AwaitableResultWrapper[_F, _S_default_co | _S]:
         """Apply async. `trcks.Result` func. to wrapped `trcks.Result` obj. if failure.
 
         Args:
@@ -232,8 +239,8 @@ class ResultWrapper(BaseWrapper[Result[_F_co, _S_co]]):
         ).map_failure_to_awaitable_result(f)
 
     def map_failure_to_result(
-        self, f: Callable[[_F_co], Result[_F, _S]]
-    ) -> ResultWrapper[_F, _S_co | _S]:
+        self, f: Callable[[_F_default_co], Result[_F, _S]]
+    ) -> ResultWrapper[_F, _S_default_co | _S]:
         """Apply sync. `trcks.Result` func. to wrapped `trcks.Result` obj. if failure.
 
         Args:
@@ -278,7 +285,9 @@ class ResultWrapper(BaseWrapper[Result[_F_co, _S_co]]):
         mapped_f = r.map_failure_to_result(f)
         return ResultWrapper(mapped_f(self.core))
 
-    def map_success(self, f: Callable[[_S_co], _S]) -> ResultWrapper[_F_co, _S]:
+    def map_success(
+        self, f: Callable[[_S_default_co], _S]
+    ) -> ResultWrapper[_F_default_co, _S]:
         """Apply sync. func. to the wrapped `trcks.Result` object if it is a success.
 
         Args:
@@ -302,8 +311,8 @@ class ResultWrapper(BaseWrapper[Result[_F_co, _S_co]]):
         return ResultWrapper(mapped_f(self.core))
 
     def map_success_to_awaitable(
-        self, f: Callable[[_S_co], Awaitable[_S]]
-    ) -> AwaitableResultWrapper[_F_co, _S]:
+        self, f: Callable[[_S_default_co], Awaitable[_S]]
+    ) -> AwaitableResultWrapper[_F_default_co, _S]:
         """Apply async. func. to the wrapped `trcks.Result` object if it is a success.
 
         Args:
@@ -348,8 +357,8 @@ class ResultWrapper(BaseWrapper[Result[_F_co, _S_co]]):
         ).map_success_to_awaitable(f)
 
     def map_success_to_awaitable_result(
-        self, f: Callable[[_S_co], AwaitableResult[_F, _S]]
-    ) -> AwaitableResultWrapper[_F_co | _F, _S]:
+        self, f: Callable[[_S_default_co], AwaitableResult[_F, _S]]
+    ) -> AwaitableResultWrapper[_F_default_co | _F, _S]:
         """Apply async. `trcks.Result` func. to wrapped `trcks.Result` obj. if success.
 
         Args:
@@ -408,8 +417,8 @@ class ResultWrapper(BaseWrapper[Result[_F_co, _S_co]]):
         ).map_success_to_awaitable_result(f)
 
     def map_success_to_result(
-        self, f: Callable[[_S_co], Result[_F, _S]]
-    ) -> ResultWrapper[_F_co | _F, _S]:
+        self, f: Callable[[_S_default_co], Result[_F, _S]]
+    ) -> ResultWrapper[_F_default_co | _F, _S]:
         """Apply sync. `trcks.Result` func. to wrapped `trcks.Result` obj. if success.
 
         Args:
@@ -460,7 +469,7 @@ class ResultWrapper(BaseWrapper[Result[_F_co, _S_co]]):
         return self.core[0]
 
     @property
-    def value(self) -> _F_co | _S_co:
+    def value(self) -> _F_default_co | _S_default_co:
         """Second element of the attribute `ResultWrapper.core`.
 
         Example:
