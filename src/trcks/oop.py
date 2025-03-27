@@ -96,7 +96,7 @@ _F_default_co = TypeVar("_F_default_co", covariant=True, default=Never)
 _S_default_co = TypeVar("_S_default_co", covariant=True, default=Never)
 
 
-class BaseWrapper(Generic[_T_co]):
+class _Wrapper(Generic[_T_co]):
     """Base class for all wrappers in the `trcks.oop` module."""
 
     _core: _T_co
@@ -121,12 +121,8 @@ class BaseWrapper(Generic[_T_co]):
         return self._core
 
 
-class BaseAwaitableWrapper(BaseWrapper[Awaitable[_T_co]]):
-    """Base class for all asynchronous wrappers in the `trcks.oop` module.
-
-    Attributes:
-        core: The wrapped `collections.abc.Awaitable` object.
-    """
+class _AwaitableWrapper(_Wrapper[Awaitable[_T_co]]):
+    """Base class for all asynchronous wrappers in the `trcks.oop` module."""
 
     @property
     async def core_as_coroutine(self) -> _T_co:
@@ -135,25 +131,18 @@ class BaseAwaitableWrapper(BaseWrapper[Awaitable[_T_co]]):
         This is useful for functions that expect a coroutine (e.g. `asyncio.run`).
 
         Note:
-            The attribute `BaseAwaitableWrapper.core`
+            The attribute `_BaseAwaitableWrapper.core`
             has type `collections.abc.Awaitable`,
             a superclass of `collections.abc.Coroutine`.
         """
         return await self.core
 
 
-class AwaitableResultWrapper(
-    BaseAwaitableWrapper[Result[_F_default_co, _S_default_co]]
-):
+class AwaitableResultWrapper(_AwaitableWrapper[Result[_F_default_co, _S_default_co]]):
     """Typesafe and immutable wrapper for `trcks.AwaitableResult` objects.
 
     The wrapped object can be accessed via the attribute `AwaitableResultWrapper.core`.
     The ``AwaitableResultWrapper.map*`` methods allow method chaining.
-
-    Attributes:
-        core: The wrapped `trcks.AwaitableResult` object.
-        core_as_coroutine:
-            The wrapped `trcks.AwaitableResult` object transformed into a coroutine.
 
     Example:
         >>> import asyncio
@@ -794,7 +783,7 @@ class AwaitableResultWrapper(
         return (await self.core)[1]
 
 
-class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
+class AwaitableWrapper(_AwaitableWrapper[_T_co]):
     """Typesafe and immutable wrapper for `collections.abc.Awaitable` objects.
 
     The wrapped `collections.abc.Awaitable` can be accessed
@@ -1015,14 +1004,11 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
         ).map_success_to_result(f)
 
 
-class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
+class ResultWrapper(_Wrapper[Result[_F_default_co, _S_default_co]]):
     """Typesafe and immutable wrapper for `trcks.Result` objects.
 
     The wrapped object can be accessed via the attribute `ResultWrapper.core`.
     The ``ResultWrapper.map*`` methods allow method chaining.
-
-    Attributes:
-        core: The wrapped `trcks.Result` object.
 
     Example:
         >>> import math
@@ -1468,7 +1454,7 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
         return self.core[1]
 
 
-class Wrapper(BaseWrapper[_T_co]):
+class Wrapper(_Wrapper[_T_co]):
     """Typesafe and immutable wrapper for arbitrary objects.
 
     The wrapped object can be accessed via the attribute `Wrapper.core`.
