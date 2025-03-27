@@ -72,12 +72,11 @@ See:
 
 from __future__ import annotations
 
-import dataclasses
 from collections.abc import Awaitable, Callable
 from typing import Generic, Literal
 
 from trcks import AwaitableResult, Result
-from trcks._typing import Never, TypeVar
+from trcks._typing import Never, TypeVar, override
 from trcks.fp.monads import awaitable as a
 from trcks.fp.monads import awaitable_result as ar
 from trcks.fp.monads import result as r
@@ -97,21 +96,31 @@ _F_default_co = TypeVar("_F_default_co", covariant=True, default=Never)
 _S_default_co = TypeVar("_S_default_co", covariant=True, default=Never)
 
 
-@dataclasses.dataclass(frozen=True)
 class BaseWrapper(Generic[_T_co]):
-    """Base class for all wrappers in the `trcks.oop` module.
+    """Base class for all wrappers in the `trcks.oop` module."""
 
-    Attributes:
-        core: The wrapped object.
+    _core: _T_co
 
-    Args:
-        core: The object to be wrapped.
-    """
+    def __init__(self, core: _T_co) -> None:
+        """Construct wrapper.
 
-    core: _T_co
+        Args:
+            core: The value to be wrapped.
+        """
+        super().__init__()
+        self._core = core
+
+    @override
+    def __repr__(self) -> str:
+        """Return a string representation of the wrapper."""
+        return f"{self.__class__.__name__}(core={self._core!r})"
+
+    @property
+    def core(self) -> _T_co:
+        """The wrapped object."""
+        return self._core
 
 
-@dataclasses.dataclass(frozen=True)
 class BaseAwaitableWrapper(BaseWrapper[Awaitable[_T_co]]):
     """Base class for all asynchronous wrappers in the `trcks.oop` module.
 
@@ -133,7 +142,6 @@ class BaseAwaitableWrapper(BaseWrapper[Awaitable[_T_co]]):
         return await self.core
 
 
-@dataclasses.dataclass(frozen=True)
 class AwaitableResultWrapper(
     BaseAwaitableWrapper[Result[_F_default_co, _S_default_co]]
 ):
@@ -786,7 +794,6 @@ class AwaitableResultWrapper(
         return (await self.core)[1]
 
 
-@dataclasses.dataclass(frozen=True)
 class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
     """Typesafe and immutable wrapper for `collections.abc.Awaitable` objects.
 
@@ -1008,7 +1015,6 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
         ).map_success_to_result(f)
 
 
-@dataclasses.dataclass(frozen=True)
 class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
     """Typesafe and immutable wrapper for `trcks.Result` objects.
 
@@ -1462,7 +1468,6 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
         return self.core[1]
 
 
-@dataclasses.dataclass(frozen=True)
 class Wrapper(BaseWrapper[_T_co]):
     """Typesafe and immutable wrapper for arbitrary objects.
 
