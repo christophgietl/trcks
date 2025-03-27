@@ -1,0 +1,1599 @@
+"""Object-oriented interface for `trcks`.
+
+This module provides wrapper classes for processing values of the following types
+in a method-chaining style:
+
+- `collections.abc.Awaitable`
+- `trcks.AwaitableResult`
+- `trcks.Result`
+
+Example:
+    This example uses the classes `Wrapper` and `ResultWrapper`
+    to create and further process a value of type `trcks.Result`:
+
+        >>> import enum
+        >>> import math
+        >>> from trcks import Result
+        >>> from trcks.oop import Wrapper
+        >>> class GetSquareRootError(enum.Enum):
+        ...     NEGATIVE_INPUT = enum.auto()
+        ...
+        >>> def get_square_root(x: float) -> Result[GetSquareRootError, float]:
+        ...     return (
+        ...         Wrapper(core=x)
+        ...         .map_to_result(
+        ...             lambda x: ("success", x)
+        ...             if x >= 0
+        ...             else ("failure", GetSquareRootError.NEGATIVE_INPUT)
+        ...         )
+        ...         .map_success(math.sqrt)
+        ...         .core
+        ...     )
+        ...
+        >>> get_square_root(25.0)
+        ('success', 5.0)
+        >>> get_square_root(-25.0)
+        ('failure', <GetSquareRootError.NEGATIVE_INPUT: 1>)
+
+    Variable and type assignments for intermediate values might help  to clarify
+    what is going on:
+
+        >>> import enum
+        >>> import math
+        >>> from trcks import Result
+        >>> from trcks.oop import ResultWrapper, Wrapper
+        >>> class GetSquareRootError(enum.Enum):
+        ...     NEGATIVE_INPUT = enum.auto()
+        ...
+        >>> def get_square_root(x: float) -> Result[GetSquareRootError, float]:
+        ...     wrapper: Wrapper[float] = Wrapper(core=x)
+        ...     result_wrapper: ResultWrapper[
+        ...         GetSquareRootError, float
+        ...     ] = wrapper.map_to_result(
+        ...         lambda x: ("success", x)
+        ...         if x >= 0
+        ...         else ("failure", GetSquareRootError.NEGATIVE_INPUT)
+        ...     )
+        ...     mapped_result_wrapper: ResultWrapper[GetSquareRootError, float] = (
+        ...         result_wrapper.map_success(math.sqrt)
+        ...     )
+        ...     result: Result[GetSquareRootError, float] = mapped_result_wrapper.core
+        ...     return result
+        ...
+        >>> get_square_root(25.0)
+        ('success', 5.0)
+        >>> get_square_root(-25.0)
+        ('failure', <GetSquareRootError.NEGATIVE_INPUT: 1>)
+
+See:
+    - https://en.wikipedia.org/w/index.php?title=Method_chaining&oldid=1262555147
+    - https://www.geeksforgeeks.org/method-chaining-in-python/
+"""
+
+from __future__ import annotations
+
+import dataclasses
+from collections.abc import Awaitable, Callable
+from typing import Generic, Literal
+
+from trcks import AwaitableResult, Result
+from trcks._typing import Never, TypeVar
+from trcks.fp.monads import awaitable as a
+from trcks.fp.monads import awaitable_result as ar
+from trcks.fp.monads import result as r
+
+__docformat__ = "google"
+
+_F = TypeVar("_F")
+_S = TypeVar("_S")
+_T = TypeVar("_T")
+
+_T_co = TypeVar("_T_co", covariant=True)
+
+_F_default = TypeVar("_F_default", default=Never)
+_S_default = TypeVar("_S_default", default=Never)
+
+_F_default_co = TypeVar("_F_default_co", covariant=True, default=Never)
+_S_default_co = TypeVar("_S_default_co", covariant=True, default=Never)
+
+
+@dataclasses.dataclass(frozen=True)
+class BaseWrapper(Generic[_T_co]):
+    """Base class for all wrappers in the `trcks.oop` module.
+
+    Attributes:
+        core: The wrapped object.
+
+    Args:
+        core: The object to be wrapped.
+    """
+
+    core: _T_co
+
+
+@dataclasses.dataclass(frozen=True)
+class BaseAwaitableWrapper(BaseWrapper[Awaitable[_T_co]]):
+    """Base class for all asynchronous wrappers in the `trcks.oop` module.
+
+    Attributes:
+        core: The wrapped `collections.abc.Awaitable` object.
+    """
+
+    @property
+    async def core_as_coroutine(self) -> _T_co:
+        """The wrapped `collections.abc.Awaitable` object transformed into a coroutine.
+
+        This is useful for functions that expect a coroutine (e.g. `asyncio.run`).
+
+        Note:
+            The attribute `BaseAwaitableWrapper.core`
+            has type `collections.abc.Awaitable`,
+            a superclass of `collections.abc.Coroutine`.
+        """
+        return await self.core
+
+
+@dataclasses.dataclass(frozen=True)
+class AwaitableResultWrapper(
+    BaseAwaitableWrapper[Result[_F_default_co, _S_default_co]]
+):
+    """Typesafe and immutable wrapper for `trcks.AwaitableResult` objects.
+
+    The wrapped object can be accessed via the attribute `AwaitableResultWrapper.core`.
+    The ``AwaitableResultWrapper.map*`` methods allow method chaining.
+
+    Attributes:
+        core: The wrapped `trcks.AwaitableResult` object.
+        core_as_coroutine:
+            The wrapped `trcks.AwaitableResult` object transformed into a coroutine.
+
+    Example:
+        >>> import asyncio
+        >>> import math
+        >>> from trcks import Result
+        >>> from trcks.oop import AwaitableResultWrapper
+        >>> async def read_from_disk() -> Result[str, float]:
+        ...     await asyncio.sleep(0.001)
+        ...     return "failure", "not found"
+        ...
+        >>> def get_square_root(x: float) -> Result[str, float]:
+        ...     if x < 0:
+        ...         return "failure", "negative value"
+        ...     return "success", math.sqrt(x)
+        ...
+        >>> async def write_to_disk(output: float) -> None:
+        ...     await asyncio.sleep(0.001)
+        ...     print(f"Wrote '{output}' to disk.")
+        ...
+        >>> async def main() -> Result[str, None]:
+        ...     awaitable_result = read_from_disk()
+        ...     return await (
+        ...         AwaitableResultWrapper
+        ...         .construct_from_awaitable_result(awaitable_result)
+        ...         .map_success_to_result(get_square_root)
+        ...         .map_success_to_awaitable(write_to_disk)
+        ...         .core
+        ...     )
+        ...
+        >>> asyncio.run(main())
+        ('failure', 'not found')
+    """
+
+    @staticmethod
+    def construct_failure(value: _F) -> AwaitableResultWrapper[_F, Never]:
+        """Construct and wrap an awaitable `trcks.Failure` object from a value.
+
+        Args:
+            value: The value to be wrapped.
+
+        Returns:
+            A new `AwaitableResultWrapper` instance with
+            the wrapped `trcks.AwaitableResult` object.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks.oop import AwaitableResultWrapper
+            >>> awaitable_result_wrapper = (
+            ...     AwaitableResultWrapper.construct_failure("not found")
+            ... )
+            >>> awaitable_result_wrapper
+            AwaitableResultWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(awaitable_result_wrapper.core_as_coroutine)
+            ('failure', 'not found')
+        """
+        return AwaitableResultWrapper(ar.construct_failure(value))
+
+    @staticmethod
+    def construct_failure_from_awaitable(
+        awtbl: Awaitable[_F],
+    ) -> AwaitableResultWrapper[_F, Never]:
+        """Construct and wrap an awaitable `trcks.Failure` from an awaitable value.
+
+        Args:
+            awtbl: The awaitable value to be wrapped.
+
+        Returns:
+            A new `AwaitableResultWrapper` instance with
+            the wrapped `trcks.AwaitableResult` object.
+
+        Example:
+            >>> import asyncio
+            >>> from http import HTTPStatus
+            >>> from trcks.oop import AwaitableResultWrapper
+            >>> async def get_status() -> HTTPStatus:
+            ...     await asyncio.sleep(0.001)
+            ...     return HTTPStatus.NOT_FOUND
+            ...
+            >>> awaitable_status = get_status()
+            >>> awaitable_result_wrapper = (
+            ...     AwaitableResultWrapper
+            ...     .construct_failure_from_awaitable(awaitable_status)
+            ... )
+            >>> awaitable_result_wrapper
+            AwaitableResultWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(awaitable_result_wrapper.core_as_coroutine)
+            ('failure', <HTTPStatus.NOT_FOUND: 404>)
+        """
+        return AwaitableResultWrapper(ar.construct_failure_from_awaitable(awtbl))
+
+    @staticmethod
+    def construct_from_awaitable_result(
+        a_rslt: AwaitableResult[_F, _S],
+    ) -> AwaitableResultWrapper[_F, _S]:
+        """Wrap an awaitable `trcks.Result` object.
+
+        Args:
+            a_rslt: The awaitable `trcks.Result` object to be wrapped.
+
+        Returns:
+            A new `AwaitableResultWrapper` instance with
+            the wrapped `trcks.AwaitableResult` object.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks import Result
+            >>> from trcks.oop import AwaitableResultWrapper
+            >>> async def read_from_disk() -> Result[str, str]:
+            ...     await asyncio.sleep(0.001)
+            ...     return "failure", "file not found"
+            ...
+            >>> awaitable_result = read_from_disk()
+            >>> awaitable_wrapper = (
+            ...     AwaitableResultWrapper
+            ...     .construct_from_awaitable_result(awaitable_result)
+            ... )
+            >>> awaitable_wrapper
+            AwaitableResultWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(awaitable_wrapper.core_as_coroutine)
+            ('failure', 'file not found')
+        """
+        return AwaitableResultWrapper(a_rslt)
+
+    @staticmethod
+    def construct_from_result(
+        rslt: Result[_F_default, _S_default],
+    ) -> AwaitableResultWrapper[_F_default, _S_default]:
+        """Construct and wrap an awaitbl. `trcks.Result` obj. from a `trcks.Result` obj.
+
+        Args:
+            rslt: The `trcks.Result` object to be wrapped.
+
+        Returns:
+            A new `AwaitableResultWrapper` instance with
+            the wrapped `trcks.AwaitableResult` object.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks.oop import AwaitableResultWrapper
+            >>> awaitable_result_wrapper = (
+            ...     AwaitableResultWrapper
+            ...     .construct_from_result(("failure", "not found"))
+            ... )
+            >>> awaitable_result_wrapper
+            AwaitableResultWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(awaitable_result_wrapper.core_as_coroutine)
+            ('failure', 'not found')
+        """
+        return AwaitableResultWrapper(ar.construct_from_result(rslt))
+
+    @staticmethod
+    def construct_success(value: _S) -> AwaitableResultWrapper[Never, _S]:
+        """Construct and wrap an awaitable `trcks.Success` object from a value.
+
+        Args:
+            value: The value to be wrapped.
+
+        Returns:
+            A new `AwaitableResultWrapper` instance with
+            the wrapped `trcks.AwaitableResult` object.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks.oop import AwaitableResultWrapper
+            >>> awaitable_result_wrapper = AwaitableResultWrapper.construct_success(42)
+            >>> awaitable_result_wrapper
+            AwaitableResultWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(awaitable_result_wrapper.core_as_coroutine)
+            ('success', 42)
+        """
+        return AwaitableResultWrapper(ar.construct_success(value))
+
+    @staticmethod
+    def construct_success_from_awaitable(
+        awtbl: Awaitable[_S],
+    ) -> AwaitableResultWrapper[Never, _S]:
+        """Construct and wrap an awaitable `trcks.Success` from an awaitable value.
+
+        Args:
+            awtbl: The awaitable value to be wrapped.
+
+        Returns:
+            A new `AwaitableResultWrapper` instance with
+            the wrapped `trcks.AwaitableResult` object.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks.oop import AwaitableResultWrapper
+            >>> async def read_from_disk() -> str:
+            ...     await asyncio.sleep(0.001)
+            ...     return "Hello, world!"
+            ...
+            >>> awaitable_str = read_from_disk()
+            >>> awaitable_result_wrapper = (
+            ...     AwaitableResultWrapper
+            ...     .construct_success_from_awaitable(awaitable_str)
+            ... )
+            >>> awaitable_result_wrapper
+            AwaitableResultWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(awaitable_result_wrapper.core_as_coroutine)
+            ('success', 'Hello, world!')
+        """
+        return AwaitableResultWrapper(ar.construct_success_from_awaitable(awtbl))
+
+    def map_failure(
+        self, f: Callable[[_F_default_co], _F]
+    ) -> AwaitableResultWrapper[_F, _S_default_co]:
+        """Apply sync. func. to wrapped `trcks.AwaitableResult` obj. if it is a failure.
+
+        Args:
+            f: The synchronous function to be applied.
+
+        Returns:
+            A new `AwaitableResultWrapper` instance with
+
+            - the result of the function application if
+              the original `trcks.AwaitableResult` is a failure, or
+            - the original `trcks.AwaitableResult` object if it is a success.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks.oop import AwaitableResultWrapper
+            >>> awaitable_result_wrapper_1 = (
+            ...     AwaitableResultWrapper
+            ...     .construct_failure("negative value")
+            ...     .map_failure(lambda s: f"Prefix: {s}")
+            ... )
+            >>> awaitable_result_wrapper_1
+            AwaitableResultWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(awaitable_result_wrapper_1.core_as_coroutine)
+            ('failure', 'Prefix: negative value')
+            >>>
+            >>> awaitable_result_wrapper_2 = (
+            ...     AwaitableResultWrapper
+            ...     .construct_success(25.0)
+            ...     .map_failure(lambda s: f"Prefix: {s}")
+            ... )
+            >>> awaitable_result_wrapper_2
+            AwaitableResultWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(awaitable_result_wrapper_2.core_as_coroutine)
+            ('success', 25.0)
+        """
+        mapped_f = ar.map_failure(f)
+        return AwaitableResultWrapper(mapped_f(self.core))
+
+    def map_failure_to_awaitable(
+        self, f: Callable[[_F_default_co], Awaitable[_F]]
+    ) -> AwaitableResultWrapper[_F, _S_default_co]:
+        """Apply async. func. to wrapped `trcks.AwaitableResult` obj. if failure.
+
+        Args:
+            f: The asynchronous function to be applied.
+
+        Returns:
+            A new `AwaitableResultWrapper` instance with
+
+            - the result of the function application if
+              the original `trcks.AwaitableResult` is a failure, or
+            - the original `trcks.AwaitableResult` object if it is a success.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks.oop import AwaitableResultWrapper
+            >>> async def add_prefix_slowly(s: str) -> str:
+            ...     await asyncio.sleep(0.001)
+            ...     return f"Prefix: {s}"
+            ...
+            >>> awaitable_result_wrapper_1 = (
+            ...     AwaitableResultWrapper
+            ...     .construct_failure("not found")
+            ...     .map_failure_to_awaitable(add_prefix_slowly)
+            ... )
+            >>> awaitable_result_wrapper_1
+            AwaitableResultWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(awaitable_result_wrapper_1.core_as_coroutine)
+            ('failure', 'Prefix: not found')
+            >>>
+            >>> awaitable_result_wrapper_2 = (
+            ...     AwaitableResultWrapper
+            ...     .construct_success(42)
+            ...     .map_failure_to_awaitable(add_prefix_slowly)
+            ... )
+            >>> awaitable_result_wrapper_2
+            AwaitableResultWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(awaitable_result_wrapper_2.core_as_coroutine)
+            ('success', 42)
+        """
+        mapped_f = ar.map_failure_to_awaitable(f)
+        return AwaitableResultWrapper(mapped_f(self.core))
+
+    def map_failure_to_awaitable_result(
+        self, f: Callable[[_F_default_co], AwaitableResult[_F, _S]]
+    ) -> AwaitableResultWrapper[_F, _S_default_co | _S]:
+        """Apply async. `trcks.Result` func. to `trcks.AwaitableResult` if failure.
+
+        Args:
+            f: The asynchronous function to be applied.
+
+        Returns:
+            A new `AwaitableResultWrapper` instance with
+
+            - the result of the function application if
+              the original `trcks.AwaitableResult` is a failure, or
+            - the original `trcks.AwaitableResult` object if it is a success.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks import Result
+            >>> from trcks.oop import AwaitableResultWrapper
+            >>> async def slowly_replace_not_found(s: str) -> Result[str, float]:
+            ...     await asyncio.sleep(0.001)
+            ...     if s == "not found":
+            ...         return "success", 0
+            ...     return "failure", s
+            ...
+            >>> awaitable_result_wrapper_1 = (
+            ...     AwaitableResultWrapper
+            ...     .construct_failure("not found")
+            ...     .map_failure_to_awaitable_result(slowly_replace_not_found)
+            ... )
+            >>> awaitable_result_wrapper_1
+            AwaitableResultWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(awaitable_result_wrapper_1.core_as_coroutine)
+            ('success', 0)
+            >>>
+            >>> awaitable_result_wrapper_2 = (
+            ...     AwaitableResultWrapper
+            ...     .construct_failure("other failure")
+            ...     .map_failure_to_awaitable_result(slowly_replace_not_found)
+            ... )
+            >>> awaitable_result_wrapper_2
+            AwaitableResultWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(awaitable_result_wrapper_2.core_as_coroutine)
+            ('failure', 'other failure')
+            >>>
+            >>> awaitable_result_wrapper_3 = (
+            ...     AwaitableResultWrapper
+            ...     .construct_success(25.0)
+            ...     .map_failure_to_awaitable_result(slowly_replace_not_found)
+            ... )
+            >>> awaitable_result_wrapper_3
+            AwaitableResultWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(awaitable_result_wrapper_3.core_as_coroutine)
+            ('success', 25.0)
+        """
+        mapped_f = ar.map_failure_to_awaitable_result(f)
+        return AwaitableResultWrapper(mapped_f(self.core))
+
+    def map_failure_to_result(
+        self, f: Callable[[_F_default_co], Result[_F, _S]]
+    ) -> AwaitableResultWrapper[_F, _S_default_co | _S]:
+        """Apply sync. `trcks.Result` func. to `trcks.AwaitableResult` if failure.
+
+        Args:
+            f: The synchronous function to be applied.
+
+        Returns:
+            A new `AwaitableResultWrapper` instance with
+
+            - the result of the function application if
+              the original `trcks.AwaitableResult` is a failure, or
+            - the original `trcks.AwaitableResult` object if it is a success.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks import Result
+            >>> from trcks.oop import AwaitableResultWrapper
+            >>> def replace_not_found_by_default_value(s: str) -> Result[str, float]:
+            ...     if s == "not found":
+            ...         return "success", 0
+            ...     return "failure", s
+            ...
+            >>> awaitable_result_wrapper_1 = (
+            ...     AwaitableResultWrapper
+            ...     .construct_failure("not found")
+            ...     .map_failure_to_result(replace_not_found_by_default_value)
+            ... )
+            >>> awaitable_result_wrapper_1
+            AwaitableResultWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(awaitable_result_wrapper_1.core_as_coroutine)
+            ('success', 0)
+            >>>
+            >>> awaitable_result_wrapper_2 = (
+            ...     AwaitableResultWrapper
+            ...     .construct_failure("other failure")
+            ...     .map_failure_to_result(replace_not_found_by_default_value)
+            ... )
+            >>> awaitable_result_wrapper_2
+            AwaitableResultWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(awaitable_result_wrapper_2.core_as_coroutine)
+            ('failure', 'other failure')
+            >>>
+            >>> awaitable_result_wrapper_3 = (
+            ...     AwaitableResultWrapper
+            ...     .construct_success(25.0)
+            ...     .map_failure_to_result(replace_not_found_by_default_value)
+            ... )
+            >>> awaitable_result_wrapper_3
+            AwaitableResultWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(awaitable_result_wrapper_3.core_as_coroutine)
+            ('success', 25.0)
+        """
+        mapped_f = ar.map_failure_to_result(f)
+        return AwaitableResultWrapper(mapped_f(self.core))
+
+    def map_success(
+        self, f: Callable[[_S_default_co], _S]
+    ) -> AwaitableResultWrapper[_F_default_co, _S]:
+        """Apply sync. func. to wrapped `trcks.AwaitableResult` obj. if success.
+
+        Args:
+            f: The synchronous function to be applied.
+
+        Returns:
+            A new `AwaitableResultWrapper` instance with
+
+            - the original `trcks.AwaitableResult` object if it is a failure, or
+            - the result of the function application if
+              the original `trcks.AwaitableResult` is a success.
+
+        Example:
+            >>> import asyncio
+            >>> import math
+            >>> from trcks.oop import AwaitableResultWrapper
+            >>> awaitable_result_wrapper_1 = (
+            ...     AwaitableResultWrapper
+            ...     .construct_failure("not found")
+            ...     .map_success(lambda n: n + 1)
+            ... )
+            >>> awaitable_result_wrapper_1
+            AwaitableResultWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(awaitable_result_wrapper_1.core_as_coroutine)
+            ('failure', 'not found')
+            >>>
+            >>> awaitable_result_wrapper_2 = (
+            ...     AwaitableResultWrapper
+            ...     .construct_success(42)
+            ...     .map_success(lambda n: n + 1)
+            ... )
+            >>> awaitable_result_wrapper_2
+            AwaitableResultWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(awaitable_result_wrapper_2.core_as_coroutine)
+            ('success', 43)
+        """
+        mapped_f = ar.map_success(f)
+        return AwaitableResultWrapper(mapped_f(self.core))
+
+    def map_success_to_awaitable(
+        self, f: Callable[[_S_default_co], Awaitable[_S]]
+    ) -> AwaitableResultWrapper[_F_default_co, _S]:
+        """Apply async. func. to wrapped `trcks.AwaitableResult` obj. if success.
+
+        Args:
+            f: The asynchronous function to be applied.
+
+        Returns:
+            A new `AwaitableResultWrapper` instance with
+
+            - the original `trcks.AwaitableResult` object if it is a failure, or
+            - the result of the function application if
+              the original `trcks.AwaitableResult` is a success.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks.oop import AwaitableResultWrapper
+            >>> async def increment_slowly(n: int) -> int:
+            ...     await asyncio.sleep(0.001)
+            ...     return n + 1
+            ...
+            >>> awaitable_result_wrapper_1 = (
+            ...     AwaitableResultWrapper
+            ...     .construct_failure("not found")
+            ...     .map_success_to_awaitable(increment_slowly)
+            ... )
+            >>> awaitable_result_wrapper_1
+            AwaitableResultWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(awaitable_result_wrapper_1.core_as_coroutine)
+            ('failure', 'not found')
+            >>>
+            >>> awaitable_result_wrapper_2 = (
+            ...     AwaitableResultWrapper
+            ...     .construct_success(42)
+            ...     .map_success_to_awaitable(increment_slowly)
+            ... )
+            >>> awaitable_result_wrapper_2
+            AwaitableResultWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(awaitable_result_wrapper_2.core_as_coroutine)
+            ('success', 43)
+        """
+        mapped_f = ar.map_success_to_awaitable(f)
+        return AwaitableResultWrapper(mapped_f(self.core))
+
+    def map_success_to_awaitable_result(
+        self, f: Callable[[_S_default_co], AwaitableResult[_F, _S]]
+    ) -> AwaitableResultWrapper[_F_default_co | _F, _S]:
+        """Apply async. `trcks.Result` func. to `trcks.AwaitableResult` if success.
+
+        Args:
+            f: The asynchronous function to be applied.
+
+        Returns:
+            A new `AwaitableResultWrapper` instance with
+
+            - the original `trcks.AwaitableResult` object if it is a failure, or
+            - the result of the function application if
+              the original `trcks.AwaitableResult` is a success.
+
+        Example:
+            >>> import asyncio
+            >>> import math
+            >>> from trcks import Result
+            >>> from trcks.oop import AwaitableResultWrapper
+            >>> async def get_square_root_slowly(x: float) -> Result[str, float]:
+            ...     await asyncio.sleep(0.001)
+            ...     if x < 0:
+            ...         return "failure", "negative value"
+            ...     return "success", math.sqrt(x)
+            ...
+            >>> awaitable_result_wrapper_1 = (
+            ...     AwaitableResultWrapper
+            ...     .construct_failure("not found")
+            ...     .map_success_to_awaitable_result(get_square_root_slowly)
+            ... )
+            >>> awaitable_result_wrapper_1
+            AwaitableResultWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(awaitable_result_wrapper_1.core_as_coroutine)
+            ('failure', 'not found')
+            >>>
+            >>> awaitable_result_wrapper_2 = (
+            ...     AwaitableResultWrapper
+            ...     .construct_success(-25.0)
+            ...     .map_success_to_awaitable_result(get_square_root_slowly)
+            ... )
+            >>> awaitable_result_wrapper_2
+            AwaitableResultWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(awaitable_result_wrapper_2.core_as_coroutine)
+            ('failure', 'negative value')
+            >>>
+            >>> awaitable_result_wrapper_3 = (
+            ...     AwaitableResultWrapper
+            ...     .construct_success(25.0)
+            ...     .map_success_to_awaitable_result(get_square_root_slowly)
+            ... )
+            >>> awaitable_result_wrapper_3
+            AwaitableResultWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(awaitable_result_wrapper_3.core_as_coroutine)
+            ('success', 5.0)
+        """
+        mapped_f = ar.map_success_to_awaitable_result(f)
+        return AwaitableResultWrapper(mapped_f(self.core))
+
+    def map_success_to_result(
+        self, f: Callable[[_S_default_co], Result[_F, _S]]
+    ) -> AwaitableResultWrapper[_F_default_co | _F, _S]:
+        """Apply sync. `trcks.Result` func. to `trcks.AwaitableResult` if success.
+
+        Args:
+            f: The synchronous function to be applied.
+
+        Returns:
+            A new `AwaitableResultWrapper` instance with
+
+            - the original `trcks.AwaitableResult` object if it is a failure, or
+            - the result of the function application if
+              the original `trcks.AwaitableResult` is a success.
+
+        Example:
+            >>> import asyncio
+            >>> import math
+            >>> from trcks import Result
+            >>> from trcks.oop import AwaitableResultWrapper
+            >>> def get_square_root(x: float) -> Result[str, float]:
+            ...     if x < 0:
+            ...         return "failure", "negative value"
+            ...     return "success", math.sqrt(x)
+            ...
+            >>> awaitable_result_1 = (
+            ...     AwaitableResultWrapper
+            ...     .construct_failure("not found")
+            ...     .map_success_to_result(get_square_root)
+            ... )
+            >>> awaitable_result_1
+            AwaitableResultWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(awaitable_result_1.core_as_coroutine)
+            ('failure', 'not found')
+            >>>
+            >>> awaitable_result_2 = (
+            ...     AwaitableResultWrapper
+            ...     .construct_success(-25.0)
+            ...     .map_success_to_result(get_square_root)
+            ... )
+            >>> awaitable_result_2
+            AwaitableResultWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(awaitable_result_2.core_as_coroutine)
+            ('failure', 'negative value')
+            >>>
+            >>> awaitable_result_3 = (
+            ...     AwaitableResultWrapper
+            ...     .construct_success(25.0)
+            ...     .map_success_to_result(get_square_root)
+            ... )
+            >>> awaitable_result_3
+            AwaitableResultWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(awaitable_result_3.core_as_coroutine)
+            ('success', 5.0)
+        """
+        mapped_f = ar.map_success_to_result(f)
+        return AwaitableResultWrapper(mapped_f(self.core))
+
+    @property
+    async def track(self) -> Literal["failure", "success"]:
+        """First element of the awaited attribute `AwaitableResultWrapper.core`.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks.oop import AwaitableResultWrapper
+            >>> track_coroutine = AwaitableResultWrapper.construct_failure(42).track
+            >>> track_coroutine
+            <coroutine object ...>
+            >>> asyncio.run(track_coroutine)
+            'failure'
+        """
+        return (await self.core)[0]
+
+    @property
+    async def value(self) -> _F_default_co | _S_default_co:
+        """Second element of the awaited attribute `AwaitableResultWrapper.core`.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks.oop import AwaitableResultWrapper
+            >>> value_coroutine = AwaitableResultWrapper.construct_failure(42).value
+            >>> value_coroutine
+            <coroutine object ...>
+            >>> asyncio.run(value_coroutine)
+            42
+        """
+        return (await self.core)[1]
+
+
+@dataclasses.dataclass(frozen=True)
+class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
+    """Typesafe and immutable wrapper for `collections.abc.Awaitable` objects.
+
+    The wrapped `collections.abc.Awaitable` can be accessed
+    via the attribute `AwaitableWrapper.core`.
+    The ``AwaitableWrapper.map*`` methods allow method chaining.
+
+    Example:
+        >>> import asyncio
+        >>> from trcks.oop import AwaitableWrapper
+        >>> async def read_from_disk() -> str:
+        ...     await asyncio.sleep(0.001)
+        ...     input_ = "Hello, world!"
+        ...     print(f"Read '{input_}' from disk.")
+        ...     return input_
+        ...
+        >>> def transform(s: str) -> str:
+        ...     return f"Length: {len(s)}"
+        ...
+        >>> async def write_to_disk(output: str) -> None:
+        ...     await asyncio.sleep(0.001)
+        ...     print(f"Wrote '{output}' to disk.")
+        ...
+        >>> async def main() -> None:
+        ...     awaitable_str = read_from_disk()
+        ...     return await (
+        ...         AwaitableWrapper
+        ...         .construct_from_awaitable(awaitable_str)
+        ...         .map(transform)
+        ...         .map_to_awaitable(write_to_disk)
+        ...         .core
+        ...     )
+        ...
+        >>> asyncio.run(main())
+        Read 'Hello, world!' from disk.
+        Wrote 'Length: 13' to disk.
+    """
+
+    @staticmethod
+    def construct(value: _T) -> AwaitableWrapper[_T]:
+        """Construct and wrap an `collections.abc.Awaitable` object from a value.
+
+        Args:
+            value: The value to be wrapped.
+
+        Returns:
+            A new `AwaitableWrapper` instance
+            with the wrapped `collections.abc.Awaitable` object.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks.oop import AwaitableWrapper
+            >>> awaitable_wrapper = AwaitableWrapper.construct("Hello, world!")
+            >>> awaitable_wrapper
+            AwaitableWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(awaitable_wrapper.core_as_coroutine)
+            'Hello, world!'
+        """
+        return AwaitableWrapper(a.construct(value))
+
+    @staticmethod
+    def construct_from_awaitable(awtbl: Awaitable[_T]) -> AwaitableWrapper[_T]:
+        """Alias for the default constructor.
+
+        Args:
+            awtbl: The `collections.abc.Awaitable` to be wrapped.
+
+        Returns:
+            A new `AwaitableWrapper` instance
+            with the wrapped `collections.abc.Awaitable` object.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks.oop import AwaitableWrapper
+            >>> async def read_from_disk() -> str:
+            ...     return await asyncio.sleep(0.001, result="Hello, world!")
+            ...
+            >>> awaitable_str = read_from_disk()
+            >>> awaitable_wrapper = AwaitableWrapper.construct_from_awaitable(
+            ...     awaitable_str
+            ... )
+            >>> awaitable_wrapper
+            AwaitableWrapper(core=<coroutine object read_from_disk at 0x...>)
+            >>> asyncio.run(awaitable_wrapper.core_as_coroutine)
+            'Hello, world!'
+        """
+        return AwaitableWrapper(awtbl)
+
+    def map(self, f: Callable[[_T_co], _T]) -> AwaitableWrapper[_T]:
+        """Apply a sync. function to the wrapped `collections.abc.Awaitable` object.
+
+        Args:
+            f: The synchronous function to be applied.
+
+        Returns:
+            A new `AwaitableWrapper` instance with
+            the result of the function application.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks.oop import AwaitableWrapper
+            >>> def transform(s: str) -> str:
+            ...     return f"Length: {len(s)}"
+            ...
+            >>> awaitable_wrapper = (
+            ...     AwaitableWrapper
+            ...     .construct("Hello, world!")
+            ...     .map(transform)
+            ... )
+            >>> awaitable_wrapper
+            AwaitableWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(awaitable_wrapper.core_as_coroutine)
+            'Length: 13'
+        """
+        mapped_f = a.map_(f)
+        return AwaitableWrapper(mapped_f(self.core))
+
+    def map_to_awaitable(
+        self, f: Callable[[_T_co], Awaitable[_T]]
+    ) -> AwaitableWrapper[_T]:
+        """Apply an async. function to the wrapped `collections.abc.Awaitable` object.
+
+        Args:
+            f: The asynchronous function to be applied.
+
+        Returns:
+            A new `AwaitableWrapper` instance with
+            the result of the function application.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks.oop import AwaitableWrapper
+            >>> async def write_to_disk(output: str) -> None:
+            ...     await asyncio.sleep(0.001)
+            ...     print(f"Wrote '{output}' to disk.")
+            ...
+            >>> awaitable_wrapper = (
+            ...     AwaitableWrapper
+            ...     .construct("Hello, world!")
+            ...     .map_to_awaitable(write_to_disk)
+            ... )
+            >>> awaitable_wrapper
+            AwaitableWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(awaitable_wrapper.core_as_coroutine)
+            Wrote 'Hello, world!' to disk.
+        """
+        mapped_f = a.map_to_awaitable(f)
+        return AwaitableWrapper(mapped_f(self.core))
+
+    def map_to_awaitable_result(
+        self, f: Callable[[_T_co], AwaitableResult[_F, _S]]
+    ) -> AwaitableResultWrapper[_F, _S]:
+        """Apply an asynchronous function with return type `trcks.Result`.
+
+        Args:
+            f: The asynchronous function to be applied.
+
+        Returns:
+            An `AwaitableResultWrapper` instance with
+            the result of the function application.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks import Result
+            >>> from trcks.oop import AwaitableWrapper
+            >>> async def slowly_assert_non_negative(
+            ...     x: float,
+            ... ) -> Result[str, float]:
+            ...     await asyncio.sleep(0.001)
+            ...     if x < 0:
+            ...         return "failure", "negative value"
+            ...     return "success", x
+            ...
+            >>> awaitable_result_wrapper = (
+            ...     AwaitableWrapper
+            ...     .construct(42.0)
+            ...     .map_to_awaitable_result(slowly_assert_non_negative)
+            ... )
+            >>> awaitable_result_wrapper
+            AwaitableResultWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(awaitable_result_wrapper.core_as_coroutine)
+            ('success', 42.0)
+        """
+        return AwaitableResultWrapper.construct_success_from_awaitable(
+            self.core
+        ).map_success_to_awaitable_result(f)
+
+    def map_to_result(
+        self, f: Callable[[_T_co], Result[_F, _S]]
+    ) -> AwaitableResultWrapper[_F, _S]:
+        """Apply a sync. function with return type `trcks.Result`.
+
+        Args:
+            f: The synchronous function to be applied.
+
+        Returns:
+            An `AwaitableResultWrapper` instance with
+            the result of the function application.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks.oop import AwaitableWrapper
+            >>> awaitable_result_wrapper = (
+            ...     AwaitableWrapper
+            ...     .construct(-1)
+            ...     .map_to_result(
+            ...         lambda x: ("success", x)
+            ...         if x >= 0
+            ...         else ("failure", "negative value")
+            ...     )
+            ... )
+            >>> awaitable_result_wrapper
+            AwaitableResultWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(awaitable_result_wrapper.core_as_coroutine)
+            ('failure', 'negative value')
+        """
+        return AwaitableResultWrapper.construct_success_from_awaitable(
+            self.core
+        ).map_success_to_result(f)
+
+
+@dataclasses.dataclass(frozen=True)
+class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
+    """Typesafe and immutable wrapper for `trcks.Result` objects.
+
+    The wrapped object can be accessed via the attribute `ResultWrapper.core`.
+    The ``ResultWrapper.map*`` methods allow method chaining.
+
+    Attributes:
+        core: The wrapped `trcks.Result` object.
+
+    Example:
+        >>> import math
+        >>> from trcks.oop import ResultWrapper
+        >>> result_wrapper = (
+        ...     ResultWrapper
+        ...     .construct_success(-5.0)
+        ...     .map_success_to_result(
+        ...         lambda x: ("success", x)
+        ...         if x >= 0
+        ...         else ("failure", "negative value")
+        ...     )
+        ...     .map_success(math.sqrt)
+        ... )
+        >>> result_wrapper
+        ResultWrapper(core=('failure', 'negative value'))
+        >>> result_wrapper.core
+        ('failure', 'negative value')
+    """
+
+    @staticmethod
+    def construct_failure(value: _F) -> ResultWrapper[_F, Never]:
+        """Construct and wrap a `trcks.Failure` object from a value.
+
+        Args:
+            value: The value to be wrapped.
+
+        Returns:
+            A new `ResultWrapper` instance with the wrapped `trcks.Failure` object.
+
+        Example:
+            >>> ResultWrapper.construct_failure(42)
+            ResultWrapper(core=('failure', 42))
+        """
+        return ResultWrapper(r.construct_failure(value))
+
+    @staticmethod
+    def construct_from_result(
+        rslt: Result[_F_default, _S_default],
+    ) -> ResultWrapper[_F_default, _S_default]:
+        """Wrap a `trcks.Result` object.
+
+        Args:
+            rslt: The `trcks.Result` object to be wrapped.
+
+        Returns:
+            A new `ResultWrapper` instance with the wrapped `trcks.Result` object.
+
+        Example:
+            >>> ResultWrapper.construct_from_result(("success", 0.0))
+            ResultWrapper(core=('success', 0.0))
+        """
+        return ResultWrapper(rslt)
+
+    @staticmethod
+    def construct_success(value: _S) -> ResultWrapper[Never, _S]:
+        """Construct and wrap a `trcks.Success` object from a value.
+
+        Args:
+            value: The value to be wrapped.
+
+        Returns:
+            A new `ResultWrapper` instance with the wrapped `trcks.Success` object.
+
+        Example:
+            >>> ResultWrapper.construct_success(42)
+            ResultWrapper(core=('success', 42))
+        """
+        return ResultWrapper(r.construct_success(value))
+
+    def map_failure(
+        self, f: Callable[[_F_default_co], _F]
+    ) -> ResultWrapper[_F, _S_default_co]:
+        """Apply sync. func. to the wrapped `trcks.Result` object if it is a failure.
+
+        Args:
+            f: The synchronous function to be applied.
+
+        Returns:
+            A new `ResultWrapper` instance with
+
+            - the result of the function application if
+              the original `trcks.Result` is a failure, or
+            - the original `trcks.Result` object if it is a success.
+
+        Example:
+            >>> ResultWrapper.construct_failure("negative value").map_failure(
+            ...     lambda s: f"Prefix: {s}"
+            ... )
+            ResultWrapper(core=('failure', 'Prefix: negative value'))
+            >>>
+            >>> ResultWrapper.construct_success(25.0).map_failure(
+            ...     lambda s: f"Prefix: {s}"
+            ... )
+            ResultWrapper(core=('success', 25.0))
+        """
+        mapped_f = r.map_failure(f)
+        return ResultWrapper(mapped_f(self.core))
+
+    def map_failure_to_awaitable(
+        self, f: Callable[[_F_default_co], Awaitable[_F]]
+    ) -> AwaitableResultWrapper[_F, _S_default_co]:
+        """Apply async. func. to the wrapped `trcks.Result` object if it is a failure.
+
+        Args:
+            f: The asynchronous function to be applied.
+
+        Returns:
+            An `AwaitableResultWrapper` instance with
+
+            - the result of the function application if
+              the original `trcks.Result` is a failure, or
+            - the original `trcks.Result` object if it is a success.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks.oop import ResultWrapper
+            >>> async def add_prefix_slowly(s: str) -> str:
+            ...     await asyncio.sleep(0.001)
+            ...     return f"Prefix: {s}"
+            ...
+            >>> awaitable_result_wrapper_1 = (
+            ...     ResultWrapper
+            ...     .construct_failure("not found")
+            ...     .map_failure_to_awaitable(add_prefix_slowly)
+            ... )
+            >>> awaitable_result_wrapper_1
+            AwaitableResultWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(awaitable_result_wrapper_1.core_as_coroutine)
+            ('failure', 'Prefix: not found')
+            >>>
+            >>> awaitable_result_wrapper_2 = (
+            ...     ResultWrapper
+            ...     .construct_success(42)
+            ...     .map_failure_to_awaitable(add_prefix_slowly)
+            ... )
+            >>> awaitable_result_wrapper_2
+            AwaitableResultWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(awaitable_result_wrapper_2.core_as_coroutine)
+            ('success', 42)
+        """
+        return AwaitableResultWrapper.construct_from_result(
+            self.core
+        ).map_failure_to_awaitable(f)
+
+    def map_failure_to_awaitable_result(
+        self, f: Callable[[_F_default_co], AwaitableResult[_F, _S]]
+    ) -> AwaitableResultWrapper[_F, _S_default_co | _S]:
+        """Apply async. `trcks.Result` func. to wrapped `trcks.Result` obj. if failure.
+
+        Args:
+            f: The asynchronous function to be applied.
+
+        Returns:
+            An `AwaitableResultWrapper` instance with
+
+            - the result of the function application if
+              the original `trcks.Result` is a failure, or
+            - the original `trcks.Result` object if it is a success.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks import Result
+            >>> from trcks.oop import ResultWrapper
+            >>> async def slowly_replace_not_found(s: str) -> Result[str, float]:
+            ...     await asyncio.sleep(0.001)
+            ...     if s == "not found":
+            ...         return "success", 0
+            ...     return "failure", s
+            ...
+            >>> awaitable_result_wrapper_1 = (
+            ...     ResultWrapper
+            ...     .construct_failure("not found")
+            ...     .map_failure_to_awaitable_result(slowly_replace_not_found)
+            ... )
+            >>> awaitable_result_wrapper_1
+            AwaitableResultWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(awaitable_result_wrapper_1.core_as_coroutine)
+            ('success', 0)
+            >>>
+            >>> awaitable_result_wrapper_2 = (
+            ...     ResultWrapper
+            ...     .construct_failure("other failure")
+            ...     .map_failure_to_awaitable_result(slowly_replace_not_found)
+            ... )
+            >>> awaitable_result_wrapper_2
+            AwaitableResultWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(awaitable_result_wrapper_2.core_as_coroutine)
+            ('failure', 'other failure')
+            >>>
+            >>> awaitable_result_wrapper_3 = (
+            ...     ResultWrapper
+            ...     .construct_success(25.0)
+            ...     .map_failure_to_awaitable_result(slowly_replace_not_found)
+            ... )
+            >>> awaitable_result_wrapper_3
+            AwaitableResultWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(awaitable_result_wrapper_3.core_as_coroutine)
+            ('success', 25.0)
+        """
+        return AwaitableResultWrapper.construct_from_result(
+            self.core
+        ).map_failure_to_awaitable_result(f)
+
+    def map_failure_to_result(
+        self, f: Callable[[_F_default_co], Result[_F, _S]]
+    ) -> ResultWrapper[_F, _S_default_co | _S]:
+        """Apply sync. `trcks.Result` func. to wrapped `trcks.Result` obj. if failure.
+
+        Args:
+            f: The synchronous function to be applied.
+
+        Returns:
+            A new `ResultWrapper` instance with
+
+            - the result of the function application if
+              the original `trcks.Result` is a failure, or
+            - the original `trcks.Result` object if it is a success.
+
+        Example:
+            >>> from trcks import Result
+            >>> from trcks.oop import ResultWrapper
+            >>> def replace_not_found_by_default_value(s: str) -> Result[str, float]:
+            ...     if s == "not found":
+            ...         return "success", 0
+            ...     return "failure", s
+            ...
+            >>> ResultWrapper.construct_failure(
+            ...     "not found"
+            ... ).map_failure_to_result(
+            ...     replace_not_found_by_default_value
+            ... )
+            ResultWrapper(core=('success', 0))
+            >>>
+            >>> ResultWrapper.construct_failure(
+            ...     "other failure"
+            ... ).map_failure_to_result(
+            ...     replace_not_found_by_default_value
+            ... )
+            ResultWrapper(core=('failure', 'other failure'))
+            >>>
+            >>> ResultWrapper.construct_success(
+            ...     25.0
+            ... ).map_failure_to_result(
+            ...     replace_not_found_by_default_value
+            ... )
+            ResultWrapper(core=('success', 25.0))
+        """
+        mapped_f = r.map_failure_to_result(f)
+        return ResultWrapper(mapped_f(self.core))
+
+    def map_success(
+        self, f: Callable[[_S_default_co], _S]
+    ) -> ResultWrapper[_F_default_co, _S]:
+        """Apply sync. func. to the wrapped `trcks.Result` object if it is a success.
+
+        Args:
+            f: The synchronous function to be applied.
+
+        Returns:
+            A new `ResultWrapper` instance with
+
+            - the original `trcks.Result` object if it is a failure, or
+            - the result of the function application if
+              the original `trcks.Result` is a success.
+
+        Example:
+            >>> ResultWrapper.construct_failure("not found").map_success(lambda n: n+1)
+            ResultWrapper(core=('failure', 'not found'))
+            >>>
+            >>> ResultWrapper.construct_success(42).map_success(lambda n: n+1)
+            ResultWrapper(core=('success', 43))
+        """
+        mapped_f = r.map_success(f)
+        return ResultWrapper(mapped_f(self.core))
+
+    def map_success_to_awaitable(
+        self, f: Callable[[_S_default_co], Awaitable[_S]]
+    ) -> AwaitableResultWrapper[_F_default_co, _S]:
+        """Apply async. func. to the wrapped `trcks.Result` object if it is a success.
+
+        Args:
+            f: The asynchronous function to be applied.
+
+        Returns:
+            An `AwaitableResultWrapper` instance with
+
+            - the original `trcks.Result` object if it is a failure, or
+            - the result of the function application if
+              the original `trcks.Result` is a success.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks.oop import ResultWrapper
+            >>> async def increment_slowly(n: int) -> int:
+            ...     await asyncio.sleep(0.001)
+            ...     return n + 1
+            ...
+            >>> awaitable_result_wrapper_1 = (
+            ...     ResultWrapper
+            ...     .construct_failure("not found")
+            ...     .map_success_to_awaitable(increment_slowly)
+            ... )
+            >>> awaitable_result_wrapper_1
+            AwaitableResultWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(awaitable_result_wrapper_1.core_as_coroutine)
+            ('failure', 'not found')
+            >>>
+            >>> awaitable_result_wrapper_2 = (
+            ...     ResultWrapper
+            ...     .construct_success(42)
+            ...     .map_success_to_awaitable(increment_slowly)
+            ... )
+            >>> awaitable_result_wrapper_2
+            AwaitableResultWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(awaitable_result_wrapper_2.core_as_coroutine)
+            ('success', 43)
+        """
+        return AwaitableResultWrapper.construct_from_result(
+            self.core
+        ).map_success_to_awaitable(f)
+
+    def map_success_to_awaitable_result(
+        self, f: Callable[[_S_default_co], AwaitableResult[_F, _S]]
+    ) -> AwaitableResultWrapper[_F_default_co | _F, _S]:
+        """Apply async. `trcks.Result` func. to wrapped `trcks.Result` obj. if success.
+
+        Args:
+            f: The asynchronous function to be applied.
+
+        Returns:
+            An `AwaitableResultWrapper` instance with
+
+            - the original `trcks.Result` object if it is a failure, or
+            - the result of the function application if
+              the original `trcks.Result` is a success.
+
+        Example:
+            >>> import asyncio
+            >>> import math
+            >>> from trcks import Result
+            >>> from trcks.oop import ResultWrapper
+            >>> async def get_square_root_slowly(x: float) -> Result[str, float]:
+            ...     await asyncio.sleep(0.001)
+            ...     if x < 0:
+            ...         return "failure", "negative value"
+            ...     return "success", math.sqrt(x)
+            ...
+            >>> awaitable_result_wrapper_1 = (
+            ...     ResultWrapper
+            ...     .construct_failure("not found")
+            ...     .map_success_to_awaitable_result(get_square_root_slowly)
+            ... )
+            >>> awaitable_result_wrapper_1
+            AwaitableResultWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(awaitable_result_wrapper_1.core_as_coroutine)
+            ('failure', 'not found')
+            >>>
+            >>> awaitable_result_wrapper_2 = (
+            ...     ResultWrapper
+            ...     .construct_success(-25.0)
+            ...     .map_success_to_awaitable_result(get_square_root_slowly)
+            ... )
+            >>> awaitable_result_wrapper_2
+            AwaitableResultWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(awaitable_result_wrapper_2.core_as_coroutine)
+            ('failure', 'negative value')
+            >>>
+            >>> awaitable_result_wrapper_3 = (
+            ...     ResultWrapper
+            ...     .construct_success(25.0)
+            ...     .map_success_to_awaitable_result(get_square_root_slowly)
+            ... )
+            >>> awaitable_result_wrapper_3
+            AwaitableResultWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(awaitable_result_wrapper_3.core_as_coroutine)
+            ('success', 5.0)
+        """
+        return AwaitableResultWrapper.construct_from_result(
+            self.core
+        ).map_success_to_awaitable_result(f)
+
+    def map_success_to_result(
+        self, f: Callable[[_S_default_co], Result[_F, _S]]
+    ) -> ResultWrapper[_F_default_co | _F, _S]:
+        """Apply sync. `trcks.Result` func. to wrapped `trcks.Result` obj. if success.
+
+        Args:
+            f: The synchronous function to be applied.
+
+        Returns:
+            A new `ResultWrapper` instance with
+
+            - the original `trcks.Result` object if it is a failure, or
+            - the result of the function application if
+              the original `trcks.Result` is a success.
+
+        Example:
+            >>> import math
+            >>> from trcks import Result
+            >>> from trcks.oop import ResultWrapper
+            >>> def get_square_root(x: float) -> Result[str, float]:
+            ...     if x < 0:
+            ...         return "failure", "negative value"
+            ...     return "success", math.sqrt(x)
+            ...
+            >>> ResultWrapper.construct_failure("not found").map_success_to_result(
+            ...     get_square_root
+            ... )
+            ResultWrapper(core=('failure', 'not found'))
+            >>>
+            >>> ResultWrapper.construct_success(-25.0).map_success_to_result(
+            ...     get_square_root
+            ... )
+            ResultWrapper(core=('failure', 'negative value'))
+            >>>
+            >>> ResultWrapper.construct_success(25.0).map_success_to_result(
+            ...     get_square_root
+            ... )
+            ResultWrapper(core=('success', 5.0))
+        """
+        mapped_f = r.map_success_to_result(f)
+        return ResultWrapper(mapped_f(self.core))
+
+    @property
+    def track(self) -> Literal["failure", "success"]:
+        """First element of the attribute `ResultWrapper.core`.
+
+        Example:
+            >>> ResultWrapper(core=('failure', 42)).track
+            'failure'
+        """
+        return self.core[0]
+
+    @property
+    def value(self) -> _F_default_co | _S_default_co:
+        """Second element of the attribute `ResultWrapper.core`.
+
+        Example:
+            >>> ResultWrapper(core=('failure', 42)).value
+            42
+        """
+        return self.core[1]
+
+
+@dataclasses.dataclass(frozen=True)
+class Wrapper(BaseWrapper[_T_co]):
+    """Typesafe and immutable wrapper for arbitrary objects.
+
+    The wrapped object can be accessed via the attribute `Wrapper.core`.
+    The ``Wrapper.map*`` methods allow method chaining.
+
+    Example:
+        The string ``"Hello"`` is wrapped and manipulated in the following example.
+        Finally, the result is unwrapped:
+
+            >>> wrapper = (
+            ...     Wrapper(core="Hello").map(len).map(lambda n: f"Length: {n}")
+            ... )
+            >>> wrapper
+            Wrapper(core='Length: 5')
+            >>> wrapper.core
+            'Length: 5'
+    """
+
+    @staticmethod
+    def construct(value: _T) -> Wrapper[_T]:
+        """Alias for the default constructor.
+
+        Args:
+            value: The object to be wrapped.
+
+        Returns:
+            A new `Wrapper` instance with the wrapped object.
+
+        Example:
+            >>> Wrapper.construct(5)
+            Wrapper(core=5)
+        """
+        return Wrapper(core=value)
+
+    def map(self, f: Callable[[_T_co], _T]) -> Wrapper[_T]:
+        """Apply a synchronous function to the wrapped object.
+
+        Args:
+            f: The synchronous function to be applied.
+
+        Returns:
+            A new `Wrapper` instance with the result of the function application.
+
+        Example:
+            >>> Wrapper.construct(5).map(lambda n: f"The number is {n}.")
+            Wrapper(core='The number is 5.')
+        """
+        return Wrapper(f(self.core))
+
+    def map_to_awaitable(
+        self, f: Callable[[_T_co], Awaitable[_T]]
+    ) -> AwaitableWrapper[_T]:
+        """Apply an asynchronous function to the wrapped object.
+
+        Args:
+            f: The asynchronous function to be applied.
+
+        Returns:
+            An `AwaitableWrapper` instance with the result of the function application.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks.oop import Wrapper
+            >>> async def stringify_slowly(o: object) -> str:
+            ...     await asyncio.sleep(0.001)
+            ...     return str(o)
+            ...
+            >>> awaitable_wrapper = Wrapper.construct(3.14).map_to_awaitable(
+            ...     stringify_slowly
+            ... )
+            >>> awaitable_wrapper
+            AwaitableWrapper(core=<coroutine object stringify_slowly at 0x...>)
+            >>> asyncio.run(awaitable_wrapper.core_as_coroutine)
+            '3.14'
+        """
+        return AwaitableWrapper(f(self.core))
+
+    def map_to_awaitable_result(
+        self, f: Callable[[_T_co], AwaitableResult[_F, _S]]
+    ) -> AwaitableResultWrapper[_F, _S]:
+        """Apply an asynchronous function with return type `trcks.Result`.
+
+        Args:
+            f: The asynchronous function to be applied.
+
+        Returns:
+            An `AwaitableResultWrapper` instance with
+            the result of the function application.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks import Result
+            >>> from trcks.oop import Wrapper
+            >>> async def slowly_assert_non_negative(
+            ...     x: float,
+            ... ) -> Result[str, float]:
+            ...     await asyncio.sleep(0.001)
+            ...     if x < 0:
+            ...         return "failure", "negative value"
+            ...     return "success", x
+            ...
+            >>> awaitable_result_wrapper = (
+            ...     Wrapper
+            ...     .construct(42.0)
+            ...     .map_to_awaitable_result(slowly_assert_non_negative)
+            ... )
+            >>> awaitable_result_wrapper
+            AwaitableResultWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(awaitable_result_wrapper.core_as_coroutine)
+            ('success', 42.0)
+        """
+        return AwaitableResultWrapper(f(self.core))
+
+    def map_to_result(
+        self, f: Callable[[_T_co], Result[_F, _S]]
+    ) -> ResultWrapper[_F, _S]:
+        """Apply a sync. function with ret. type `trcks.Result` to the wrapped object.
+
+        Args:
+            f: The synchronous function to be applied.
+
+        Returns:
+            A `ResultWrapper` instance with the result of the function application.
+
+        Example:
+            >>> Wrapper.construct(-1).map_to_result(
+            ...     lambda x: ("success", x)
+            ...     if x >= 0
+            ...     else ("failure", "negative value")
+            ... )
+            ResultWrapper(core=('failure', 'negative value'))
+        """
+        return ResultWrapper(f(self.core))
