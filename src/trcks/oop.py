@@ -131,7 +131,7 @@ class _AwaitableWrapper(_Wrapper[Awaitable[_T_co]]):
         This is useful for functions that expect a coroutine (e.g. `asyncio.run`).
 
         Note:
-            The attribute `_BaseAwaitableWrapper.core`
+            The attribute `_AwaitableWrapper.core`
             has type `collections.abc.Awaitable`,
             a superclass of `collections.abc.Coroutine`.
         """
