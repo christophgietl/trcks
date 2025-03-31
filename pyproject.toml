@@ -10,6 +10,7 @@ dev = [
     "pytest>=8.3.4",
     "pytest-asyncio>=0.25.3",
     "pytest-cov>=6.0.0",
+    "pytest-doctestplus>=1.4.0",
     "ruff>=0.9.7",
 ]
 
@@ -59,9 +60,10 @@ reportUnusedCallResult = true
 typeCheckingMode = "strict"
 
 [tool.pytest.ini_options]
-addopts = "--cov=trcks --cov-fail-under=100 --cov-report term-missing --doctest-modules"
+addopts = "--cov=trcks --cov-fail-under=100 --cov-report term-missing --doctest-glob '*.md'"
 asyncio_default_fixture_loop_scope = "function"
 asyncio_mode = "auto"
+doctest_plus = "enabled"
 
 [tool.ruff.lint]
 ignore = ["COM812", "ISC001"]
