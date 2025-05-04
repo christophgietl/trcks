@@ -148,10 +148,10 @@ def map_failure_to_result(
     Example:
         >>> from trcks.fp.monads import result as r
         >>> replace_not_found_by_default_value = r.map_failure_to_result(
-        ...     lambda s: ("success", 0) if s == "not found" else ("failure", s)
+        ...     lambda s: ("success", 0.0) if s == "not found" else ("failure", s)
         ... )
         >>> replace_not_found_by_default_value(("failure", "not found"))
-        ('success', 0)
+        ('success', 0.0)
         >>> replace_not_found_by_default_value(("failure", "other failure"))
         ('failure', 'other failure')
         >>> replace_not_found_by_default_value(("success", 25.0))

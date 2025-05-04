@@ -284,7 +284,7 @@ def map_failure_to_awaitable_result(
         >>> async def _slowly_replace_not_found(s: str) -> Result[str, float]:
         ...     await asyncio.sleep(0.001)
         ...     if s == "not found":
-        ...         return "success", 0
+        ...         return "success", 0.0
         ...     return "failure", s
         ...
         >>> slowly_replace_not_found = ar.map_failure_to_awaitable_result(
@@ -293,7 +293,7 @@ def map_failure_to_awaitable_result(
         >>>
         >>> a_rslt_1 = slowly_replace_not_found(ar.construct_failure("not found"))
         >>> asyncio.run(ar.to_coroutine_result(a_rslt_1))
-        ('success', 0)
+        ('success', 0.0)
         >>> a_rslt_2 = slowly_replace_not_found(ar.construct_failure("other failure"))
         >>> asyncio.run(ar.to_coroutine_result(a_rslt_2))
         ('failure', 'other failure')
@@ -332,13 +332,13 @@ def map_failure_to_result(
         >>> from trcks import AwaitableResult
         >>> from trcks.fp.monads import awaitable_result as ar
         >>> replace_not_found_by_default_value = ar.map_failure_to_result(
-        ...     lambda s: ("success", 0) if s == "not found" else ("failure", s)
+        ...     lambda s: ("success", 0.0) if s == "not found" else ("failure", s)
         ... )
         >>> a_rslt_1: AwaitableResult[str, float] = replace_not_found_by_default_value(
         ...     ar.construct_failure("not found")
         ... )
         >>> asyncio.run(ar.to_coroutine_result(a_rslt_1))
-        ('success', 0)
+        ('success', 0.0)
         >>> a_rslt_2: AwaitableResult[str, float] = replace_not_found_by_default_value(
         ...     ar.construct_failure("other failure")
         ... )

@@ -455,7 +455,7 @@ class AwaitableResultWrapper(_AwaitableWrapper[Result[_F_default_co, _S_default_
             >>> async def slowly_replace_not_found(s: str) -> Result[str, float]:
             ...     await asyncio.sleep(0.001)
             ...     if s == "not found":
-            ...         return "success", 0
+            ...         return "success", 0.0
             ...     return "failure", s
             ...
             >>> awaitable_result_wrapper_1 = (
@@ -466,7 +466,7 @@ class AwaitableResultWrapper(_AwaitableWrapper[Result[_F_default_co, _S_default_
             >>> awaitable_result_wrapper_1
             AwaitableResultWrapper(core=<coroutine object ...>)
             >>> asyncio.run(awaitable_result_wrapper_1.core_as_coroutine)
-            ('success', 0)
+            ('success', 0.0)
             >>>
             >>> awaitable_result_wrapper_2 = (
             ...     AwaitableResultWrapper
@@ -512,7 +512,7 @@ class AwaitableResultWrapper(_AwaitableWrapper[Result[_F_default_co, _S_default_
             >>> from trcks.oop import AwaitableResultWrapper
             >>> def replace_not_found_by_default_value(s: str) -> Result[str, float]:
             ...     if s == "not found":
-            ...         return "success", 0
+            ...         return "success", 0.0
             ...     return "failure", s
             ...
             >>> awaitable_result_wrapper_1 = (
@@ -523,7 +523,7 @@ class AwaitableResultWrapper(_AwaitableWrapper[Result[_F_default_co, _S_default_
             >>> awaitable_result_wrapper_1
             AwaitableResultWrapper(core=<coroutine object ...>)
             >>> asyncio.run(awaitable_result_wrapper_1.core_as_coroutine)
-            ('success', 0)
+            ('success', 0.0)
             >>>
             >>> awaitable_result_wrapper_2 = (
             ...     AwaitableResultWrapper
@@ -1176,7 +1176,7 @@ class ResultWrapper(_Wrapper[Result[_F_default_co, _S_default_co]]):
             >>> async def slowly_replace_not_found(s: str) -> Result[str, float]:
             ...     await asyncio.sleep(0.001)
             ...     if s == "not found":
-            ...         return "success", 0
+            ...         return "success", 0.0
             ...     return "failure", s
             ...
             >>> awaitable_result_wrapper_1 = (
@@ -1187,7 +1187,7 @@ class ResultWrapper(_Wrapper[Result[_F_default_co, _S_default_co]]):
             >>> awaitable_result_wrapper_1
             AwaitableResultWrapper(core=<coroutine object ...>)
             >>> asyncio.run(awaitable_result_wrapper_1.core_as_coroutine)
-            ('success', 0)
+            ('success', 0.0)
             >>>
             >>> awaitable_result_wrapper_2 = (
             ...     ResultWrapper
@@ -1233,7 +1233,7 @@ class ResultWrapper(_Wrapper[Result[_F_default_co, _S_default_co]]):
             >>> from trcks.oop import ResultWrapper
             >>> def replace_not_found_by_default_value(s: str) -> Result[str, float]:
             ...     if s == "not found":
-            ...         return "success", 0
+            ...         return "success", 0.0
             ...     return "failure", s
             ...
             >>> ResultWrapper.construct_failure(
@@ -1241,7 +1241,7 @@ class ResultWrapper(_Wrapper[Result[_F_default_co, _S_default_co]]):
             ... ).map_failure_to_result(
             ...     replace_not_found_by_default_value
             ... )
-            ResultWrapper(core=('success', 0))
+            ResultWrapper(core=('success', 0.0))
             >>>
             >>> ResultWrapper.construct_failure(
             ...     "other failure"
