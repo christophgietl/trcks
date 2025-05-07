@@ -160,7 +160,7 @@ using method chaining:
 >>>
 >>> def get_subscription_fee_by_email(user_email: str) -> Result[FailureDescription, float]:
 ...     return (
-...         Wrapper(user_email)
+...         Wrapper(core=user_email)
 ...         .map_to_result(get_user_id)
 ...         .map_success_to_result(get_subscription_id)
 ...         .map_success(get_subscription_fee)
