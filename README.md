@@ -74,7 +74,8 @@ We can document (domain) exceptions in the docstring of the function:
 
 While this helps humans (and maybe LLMs),
 static type checkers usually ignore docstrings.
-Moreover, it is difficult to document all (domain) exceptions in the docstring and
+Moreover, it is difficult
+to document all (domain) exceptions in the docstring and
 to keep this documentation up-to-date.
 
 
@@ -213,6 +214,8 @@ using function composition:
 
 ## Usage
 
+The following subsections describe the usage of `trcks`, `trcks.oop` and `trcks.fp`.
+
 ### Tuple types provided by `trcks`
 
 The generic type `trcks.Failure[F]` describes all `tuple`s of length 2
@@ -258,6 +261,7 @@ Here, `S` can be any type.
 
 The generic type `trcks.Result[F, S]` is the union of `Failure[F]` and `Success[S]`.
 It is primarily used as a return type for functions:
+
 ```pycon
 >>> from typing import Literal
 >>> from trcks import Result
@@ -277,6 +281,10 @@ It is primarily used as a return type for functions:
 ```
 
 ### Railway-oriented programming with `trcks.oop`
+
+The following subsections describe how to use `trcks.oop` for railway-oriented programming.
+Single-track and double-track code are both discussed.
+So are synchronous and asynchronous code.
 
 #### Synchronous single-track code with `trcks.oop.Wrapper`
 
@@ -473,6 +481,8 @@ Wrote 'Length: 13' to file output.txt.
 
 ```
 
+To understand what is going on here,
+let us have a look at the individual steps of the chain:
 
 ```pycon
 >>> from collections.abc import Coroutine
@@ -547,6 +557,9 @@ Wrote 'Length: 13' to file output.txt.
 
 ```
 
+To understand what is going on here,
+let us have a look at the individual steps of the chain:
+
 ```pycon
 >>> from collections.abc import Coroutine
 >>> from typing import Any
@@ -605,7 +618,13 @@ Wrote 'Length: 13' to file output.txt.
 
 ### Railway-oriented programming with `trcks.fp`
 
+The following subsections describe how to use `trcks.fp` for railway-oriented programming.
+Single-track and double-track code are both discussed.
+So are synchronous and asynchronous code.
+
 #### Synchronous single-track code with `trcks.fp.composition`
+
+The function `trcks.fp.composition.pipe` allows us to chain functions like this:
 
 ```pycon
 >>> from trcks.fp.composition import pipe
@@ -616,6 +635,9 @@ Wrote 'Length: 13' to file output.txt.
 'Length: 13'
 
 ```
+
+To understand what is going on here,
+let us have a look at the individual steps of the chain:
 
 ```pycon
 >>> pipe(("Hello, world!",))
@@ -681,6 +703,9 @@ Wrote 'Length: 13' to file output.txt.
 ('success', '0.4')
 
 ```
+
+To understand what is going on here,
+let us have a look at the individual steps of the chain:
 
 ```pycon
 >>> from trcks.fp.composition import (
@@ -780,6 +805,9 @@ Wrote 'Length: 13' to file output.txt.
 
 ```
 
+To understand what is going on here,
+let us have a look at the individual steps of the chain:
+
 ```pycon
 >>> from trcks.fp.composition import Pipeline1, Pipeline2, Pipeline3, pipe
 >>> p1: Pipeline1[str, Awaitable[str]] = (
@@ -859,6 +887,9 @@ Wrote 'Length: 13' to file output.txt.
 ('success', None)
 
 ```
+
+To understand what is going on here,
+let us have a look at the individual steps of the chain:
 
 ```pycon
 >>> import asyncio
