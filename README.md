@@ -360,48 +360,21 @@ The generic class `trcks.oop.ResultWrapper[F, S]` simplifies
 the implementation of the parallel code tracks.
 
 ```pycon
->>> from typing import Literal, Union
->>> from trcks import Result
->>> from trcks.oop import Wrapper
->>> CannotInvertZeroLiteral = Literal["cannot invert zero"]
->>> CannotParseAsFloatLiteral = Literal["cannot parse as float"]
->>> def handle_cannot_invert_zero_failure(
-...     literal: Union[CannotInvertZeroLiteral, CannotParseAsFloatLiteral],
-... ) -> Result[CannotParseAsFloatLiteral, str]:
-...     if literal == "cannot invert zero":
-...         return "success", "±infinity"
-...     return "failure", literal
-...
->>> def invert_float(x: float) -> Result[CannotInvertZeroLiteral, float]:
-...     try:
-...         return "success", 1.0 / x
-...     except ZeroDivisionError:
-...         return "failure", "cannot invert zero"
-...
->>> def parse_as_float(s: str) -> Result[CannotParseAsFloatLiteral, float]:
-...     try:
-...         return "success", float(s)
-...     except ValueError:
-...         return "failure", "cannot parse as float"
-...
->>> def invert_numeric_string(
-...     s: str,
-... ) -> Result[CannotParseAsFloatLiteral, str]:
+>>> def get_subscription_fee_by_email(user_email: str) -> Result[FailureDescription, float]:
 ...     return (
-...         Wrapper(core=s)
-...         .map_to_result(parse_as_float)
-...         .map_success_to_result(invert_float)
-...         .map_success(str)
-...         .map_failure_to_result(handle_cannot_invert_zero_failure)
+...         Wrapper(core=user_email)
+...         .map_to_result(get_user_id)
+...         .map_success_to_result(get_subscription_id)
+...         .map_success(get_subscription_fee)
 ...         .core
 ...     )
 ...
->>> invert_numeric_string("foo")
-('failure', 'cannot parse as float')
->>> invert_numeric_string("0.0")
-('success', '±infinity')
->>> invert_numeric_string("2.5")
-('success', '0.4')
+>>> get_subscription_fee_by_email("erika.mustermann@domain.org")
+('success', 4.2)
+>>> get_subscription_fee_by_email("john_doe@provider.com")
+('failure', 'User does not have a subscription')
+>>> get_subscription_fee_by_email("jane_doe@provider.com")
+('failure', 'User does not exist')
 
 ```
 
@@ -412,37 +385,33 @@ let us have a look at the individual steps of the chain:
 >>> from trcks.oop import ResultWrapper
 >>>
 >>> # 1. Wrap the input string:
->>> wrapped: Wrapper[str] = Wrapper(core="0.0")
+>>> wrapped: Wrapper[str] = Wrapper(core="erika.mustermann@domain.org")
 >>> wrapped
-Wrapper(core='0.0')
->>> # 2. Apply the Result function parse_as_float:
->>> mapped_once: ResultWrapper[CannotParseAsFloatLiteral, float] = wrapped.map_to_result(
-...     parse_as_float
+Wrapper(core='erika.mustermann@domain.org')
+>>> # 2. Apply the Result function get_user_id:
+>>> mapped_once: ResultWrapper[UserDoesNotExist, int] = wrapped.map_to_result(
+...     get_user_id
 ... )
 >>> mapped_once
-ResultWrapper(core=('success', 0.0))
->>> # 3. Apply the Result function invert_float in the success case:
+ResultWrapper(core=('success', 1))
+>>> # 3. Apply the Result function get_subscription_id in the success case:
 >>> mapped_two_times: ResultWrapper[
-...     Union[CannotInvertZeroLiteral, CannotParseAsFloatLiteral], float
-... ] = mapped_once.map_success_to_result(invert_float)
+...     Union[UserDoesNotExist, UserDoesNotHaveASubscription], int
+... ] = mapped_once.map_success_to_result(get_subscription_id)
 >>> mapped_two_times
-ResultWrapper(core=('failure', 'cannot invert zero'))
->>> # 4. Apply the builtin function str in the success case:
+ResultWrapper(core=('success', 42))
+>>> # 4. Apply the function get_subscription_fee in the success case:
 >>> mapped_three_times: ResultWrapper[
-...     Union[CannotInvertZeroLiteral, CannotParseAsFloatLiteral], str
-... ] = mapped_two_times.map_success(str)
+...     Union[UserDoesNotExist, UserDoesNotHaveASubscription], float
+... ] = mapped_two_times.map_success(get_subscription_fee)
 >>> mapped_three_times
-ResultWrapper(core=('failure', 'cannot invert zero'))
->>> # 5. Apply the Result function handle_cannot_invert_zero_failure in the failure case:
->>> mapped_four_times: ResultWrapper[CannotParseAsFloatLiteral, str] = (
-...     mapped_three_times.map_failure_to_result(handle_cannot_invert_zero_failure)
-... )
->>> mapped_four_times
-ResultWrapper(core=('success', '±infinity'))
->>> # 6. Unwrap the final result:
->>> unwrapped: Result[CannotParseAsFloatLiteral, str] = mapped_four_times.core
+ResultWrapper(core=('success', 4.2))
+>>> # 5. Unwrap the final result:
+>>> unwrapped: Result[
+...     Union[UserDoesNotExist, UserDoesNotHaveASubscription], float
+... ] = mapped_three_times.core
 >>> unwrapped
-('success', '±infinity')
+('success', 4.2)
 
 ```
 
@@ -654,55 +623,29 @@ let us have a look at the individual steps of the chain:
 #### Synchronous double-track code with `trcks.fp.composition` and `trcks.fp.monads.result`
 
 ```pycon
->>> from typing import Literal, Union
->>> from trcks import Result
->>> from trcks.fp.composition import Pipeline4, pipe
->>> from trcks.fp.monads import result as r
->>> CannotInvertZeroLiteral = Literal["cannot invert zero"]
->>> CannotParseAsFloatLiteral = Literal["cannot parse as float"]
->>> def handle_cannot_invert_zero_failure(
-...     literal: Union[CannotInvertZeroLiteral, CannotParseAsFloatLiteral],
-... ) -> Result[CannotParseAsFloatLiteral, str]:
-...     if literal == "cannot invert zero":
-...         return "success", "±infinity"
-...     return "failure", literal
-...
->>> def invert_float(x: float) -> Result[CannotInvertZeroLiteral, float]:
-...     try:
-...         return "success", 1.0 / x
-...     except ZeroDivisionError:
-...         return "failure", "cannot invert zero"
-...
->>> def parse_as_float(s: str) -> Result[CannotParseAsFloatLiteral, float]:
-...     try:
-...         return "success", float(s)
-...     except ValueError:
-...         return "failure", "cannot parse as float"
-...
->>> def invert_numeric_string(
-...     s: str,
-... ) -> Result[CannotParseAsFloatLiteral, str]:
-...     p: Pipeline4[
+>>> def get_subscription_fee_by_email(user_email: str) -> Result[FailureDescription, float]:
+...     # If your static type checker cannot infer
+...     # the type of the argument passed to `pipe`,
+...     # explicit type assignment can help:
+...     pipeline: Pipeline3[
 ...         str,
-...         Result[CannotParseAsFloatLiteral, float],
-...         Result[Union[CannotInvertZeroLiteral, CannotParseAsFloatLiteral], float],
-...         Result[Union[CannotInvertZeroLiteral, CannotParseAsFloatLiteral], str],
-...         Result[CannotParseAsFloatLiteral, str],
+...         Result[UserDoesNotExist, int],
+...         Result[FailureDescription, int],
+...         Result[FailureDescription, float],
 ...     ] = (
-...         s,
-...         parse_as_float,
-...         r.map_success_to_result(invert_float),
-...         r.map_success(str),
-...         r.map_failure_to_result(handle_cannot_invert_zero_failure),
+...         user_email,
+...         get_user_id,
+...         r.map_success_to_result(get_subscription_id),
+...         r.map_success(get_subscription_fee),
 ...     )
-...     return pipe(p)
+...     return pipe(pipeline)
 ...
->>> invert_numeric_string("foo")
-('failure', 'cannot parse as float')
->>> invert_numeric_string("0.0")
-('success', '±infinity')
->>> invert_numeric_string("2.5")
-('success', '0.4')
+>>> get_subscription_fee_by_email("erika.mustermann@domain.org")
+('success', 4.2)
+>>> get_subscription_fee_by_email("john_doe@provider.com")
+('failure', 'User does not have a subscription')
+>>> get_subscription_fee_by_email("jane_doe@provider.com")
+('failure', 'User does not exist')
 
 ```
 
@@ -710,65 +653,36 @@ To understand what is going on here,
 let us have a look at the individual steps of the chain:
 
 ```pycon
->>> from trcks.fp.composition import (
-...     Pipeline0,
-...     Pipeline1,
-...     Pipeline2,
-...     Pipeline3,
-...     Pipeline4,
-...     pipe,
-... )
->>> p0: Pipeline0[str] = ("0.0",)
+>>> from trcks.fp.composition import Pipeline0, Pipeline1, Pipeline2, Pipeline3, pipe
+>>> p0: Pipeline0[str] = ("erika.mustermann@domain.org",)
 >>> pipe(p0)
-'0.0'
->>> p1: Pipeline1[
-...     str,
-...     Result[CannotParseAsFloatLiteral, float],
-... ] = (
-...     "0.0",
-...     parse_as_float,
+'erika.mustermann@domain.org'
+>>> p1: Pipeline1[str, Result[UserDoesNotExist, int]] = (
+...     "erika.mustermann@domain.org",
+...     get_user_id,
 ... )
 >>> pipe(p1)
-('success', 0.0)
->>> p2: Pipeline2[
-...     str,
-...     Result[CannotParseAsFloatLiteral, float],
-...     Result[Union[CannotInvertZeroLiteral, CannotParseAsFloatLiteral], float],
-... ] = (
-...     "0.0",
-...     parse_as_float,
-...     r.map_success_to_result(invert_float),
+('success', 1)
+>>> p2: Pipeline2[str, Result[UserDoesNotExist, int], Result[FailureDescription, int]] = (
+...     "erika.mustermann@domain.org",
+...     get_user_id,
+...     r.map_success_to_result(get_subscription_id),
 ... )
 >>> pipe(p2)
-('failure', 'cannot invert zero')
+('success', 42)
 >>> p3: Pipeline3[
 ...     str,
-...     Result[CannotParseAsFloatLiteral, float],
-...     Result[Union[CannotInvertZeroLiteral, CannotParseAsFloatLiteral], float],
-...     Result[Union[CannotInvertZeroLiteral, CannotParseAsFloatLiteral], str],
+...     Result[UserDoesNotExist, int],
+...     Result[FailureDescription, int],
+...     Result[FailureDescription, float],
 ... ] = (
-...     "0.0",
-...     parse_as_float,
-...     r.map_success_to_result(invert_float),
-...     r.map_success(str),
+...     "erika.mustermann@domain.org",
+...     get_user_id,
+...     r.map_success_to_result(get_subscription_id),
+...     r.map_success(get_subscription_fee),
 ... )
 >>> pipe(p3)
-('failure', 'cannot invert zero')
->>> p4: Pipeline4[
-...     str,
-...     Result[CannotParseAsFloatLiteral, float],
-...     Result[Union[CannotInvertZeroLiteral, CannotParseAsFloatLiteral], float],
-...     Result[Union[CannotInvertZeroLiteral, CannotParseAsFloatLiteral], str],
-...     Result[CannotParseAsFloatLiteral, str],
-... ] = (
-...     "0.0",
-...     parse_as_float,
-...     r.map_success_to_result(invert_float),
-...     r.map_success(str),
-...     r.map_failure_to_result(handle_cannot_invert_zero_failure),
-... )
->>> pipe(p4)
-('success', '±infinity')
+('success', 4.2)
 
 ```
 
