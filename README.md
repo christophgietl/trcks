@@ -10,12 +10,14 @@ in two different programming styles:
 
 ## Motivation
 
-The following subsections motivate railway-oriented programming in general
-and the `trcks` library in particular.
+The following subsections motivate
+railway-oriented programming in general and
+the `trcks` library in particular.
 
 ### Why should I use railway-oriented programming?
 
-When writing modular Python code, return type annotations are extremely helpful.
+When writing modular Python code,
+return type annotations are extremely helpful.
 They help humans
 (and maybe [LLMs](https://en.wikipedia.org/w/index.php?title=Large_language_model&oldid=1283157830))
 to understand the purpose of a function.
@@ -227,18 +229,18 @@ Usually, the second element is a string, an exception or an enum value:
 >>> from typing import Literal
 >>> from trcks import Failure
 >>>
->>> FooErrorLiteral = Literal["foo error"]
->>> literal_failure: Failure[FooErrorLiteral] = ("failure", "foo error")
+>>> UserDoesNotExistLiteral = Literal["User does not exist"]
+>>> literal_failure: Failure[UserDoesNotExistLiteral] = ("failure", "User does not exist")
 >>>
->>> class FooErrorException(Exception):
+>>> class UserDoesNotExistException(Exception):
 ...     pass
 ...
->>> exception_failure: Failure[FooErrorException] = ("failure", FooErrorException())
+>>> exception_failure: Failure[UserDoesNotExistException] = ("failure", UserDoesNotExistException())
 >>>
 >>> class ErrorEnum(enum.Enum):
-...     FOO = enum.auto
+...     USER_DOES_NOT_EXIST = enum.auto
 ...
->>> enum_failure: Failure[ErrorEnum] = ("failure", ErrorEnum.FOO)
+>>> enum_failure: Failure[ErrorEnum] = ("failure", ErrorEnum.USER_DOES_NOT_EXIST)
 
 ```
 
