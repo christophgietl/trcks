@@ -530,11 +530,17 @@ we need to use the property `core_as_coroutine` instead.
 
 #### Asynchronous double-track code with `trcks.AwaitableResult` and `trcks.oop.AwaitableResultWrapper`
 
+Whenever we define a function using the `async def ... -> Result[F, S]` syntax,
+we actually get a function with the return type `collections.abc.Awaitable[trcks.Result[F, S]]`.
+The module `trcks.oop` provides the type alias `trcks.oop.AwaitableResult[F, S]`
+for this type.
+Moreover, the method `trcks.oop.Wrapper.map_to_awaitable_result` and
+the class `trcks.oop.AwaitableResultWrapper`
+allow us to combine `trcks.oop.AwaitableResult`-returning functions
+with other `trcks.oop.AwaitableResult`-returning functions or
+with "regular" functions:
+
 ```pycon
->>> import asyncio
->>> from typing import Literal, Union
->>> from trcks import Result
->>> from trcks.oop import Wrapper
 >>> ReadErrorLiteral = Literal["read error"]
 >>> WriteErrorLiteral = Literal["write error"]
 >>> async def read_from_disk(path: str) -> Result[ReadErrorLiteral, str]:
@@ -578,42 +584,24 @@ To understand what is going on here,
 let us have a look at the individual steps of the chain:
 
 ```pycon
->>> from collections.abc import Coroutine
->>> from typing import Any
 >>> from trcks.oop import AwaitableResultWrapper
->>> ReadErrorLiteral = Literal["read error"]
->>> WriteErrorLiteral = Literal["write error"]
->>> async def read_from_disk(path: str) -> Result[ReadErrorLiteral, str]:
-...     if path != "input.txt":
-...         return "failure", "read error"
-...     await asyncio.sleep(0.001)
-...     s = "Hello, world!"
-...     print(f"Read '{s}' from file {path}.")
-...     return "success", s
-...
->>> def transform(s: str) -> str:
-...     return f"Length: {len(s)}"
-...
->>> async def write_to_disk(s: str, path: str) -> Result[WriteErrorLiteral, None]:
-...     if path != "output.txt":
-...         return "failure", "write error"
-...     await asyncio.sleep(0.001)
-...     print(f"Wrote '{s}' to file {path}.")
-...     return "success", None
-...
+>>> # 1. Wrap the input string:
 >>> wrapped: Wrapper[str] = Wrapper(core="input.txt")
 >>> wrapped
 Wrapper(core='input.txt')
+>>> # 2. Apply the AwaitableResult function read_from_disk:
 >>> mapped_once: AwaitableResultWrapper[ReadErrorLiteral, str] = (
 ...     wrapped.map_to_awaitable_result(read_from_disk)
 ... )
 >>> mapped_once
 AwaitableResultWrapper(core=<coroutine object ...>)
+>>> # 3. Apply the function transform in the success case:
 >>> mapped_twice: AwaitableResultWrapper[ReadErrorLiteral, str] = mapped_once.map_success(
 ...     transform
 ... )
 >>> mapped_twice
 AwaitableResultWrapper(core=<coroutine object ...>)
+>>> # 4. Apply the AwaitableResult function write_to_disk in the success case:
 >>> mapped_thrice: AwaitableResultWrapper[
 ...     Union[ReadErrorLiteral, WriteErrorLiteral], None
 ... ] = mapped_twice.map_success_to_awaitable_result(
@@ -621,11 +609,13 @@ AwaitableResultWrapper(core=<coroutine object ...>)
 ... )
 >>> mapped_thrice
 AwaitableResultWrapper(core=<coroutine object ...>)
+>>> # 5. Unwrap the output coroutine:
 >>> unwrapped: Coroutine[
 ...     Any, Any, Result[Union[ReadErrorLiteral, WriteErrorLiteral], None]
 ... ] = mapped_thrice.core_as_coroutine
 >>> unwrapped
 <coroutine object ...>
+>>> # 6. Run the output coroutine:
 >>> asyncio.run(unwrapped)
 Read 'Hello, world!' from file input.txt.
 Wrote 'Length: 13' to file output.txt.
