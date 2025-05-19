@@ -419,7 +419,7 @@ ResultWrapper(core=('success', 4.2))
 The corresponding class `ResultWrapper` has a `map_failure*` and a `map_success*` method
 for each `map*` method of the class `Wrapper`.
 
-#### Asynchronous single-track code with `trcks.oop.AwaitableWrapper`
+#### Asynchronous single-track code with `collections.abc.Awaitable` and `trcks.oop.AwaitableWrapper`
 
 ```pycon
 >>> import asyncio
@@ -482,7 +482,7 @@ Wrote 'Length: 13' to file output.txt.
 
 ```
 
-#### Asynchronous double-track code with `trcks.oop.AwaitableResultWrapper`
+#### Asynchronous double-track code with `trcks.AwaitableResult` and `trcks.oop.AwaitableResultWrapper`
 
 ```pycon
 >>> import asyncio
