@@ -265,7 +265,8 @@ Here, `S` can be any type.
 
 ```
 
-The generic type `trcks.Result[F, S]` is the union of `Failure[F]` and `Success[S]`.
+The generic type `trcks.Result[F, S]` is
+the union of `trcks.Failure[F]` and `trcks.Success[S]`.
 It is primarily used as a return type for functions:
 
 ```pycon
@@ -288,7 +289,8 @@ It is primarily used as a return type for functions:
 
 ### Railway-oriented programming with `trcks.oop`
 
-The following subsections describe how to use `trcks.oop` for railway-oriented programming.
+The following subsections describe how to use `trcks.oop`
+for railway-oriented programming.
 Single-track and double-track code are both discussed.
 So are synchronous and asynchronous code.
 
@@ -330,8 +332,8 @@ Wrapper(core='Length: 13')
 
 ```
 
-*Note:* Instead of the default constructor `Wrapper(core="Hello, world!")`,
-we can also use the static method `Wrapper.construct("Hello, world!")`.
+*Note:* Instead of the default constructor `trcks.oop.Wrapper(core="Hello, world!")`,
+we can also use the static method `trcks.oop.Wrapper.construct("Hello, world!")`.
 
 By following the pattern of wrapping, mapping and unwrapping,
 we can write code that resembles a single-track railway
@@ -415,9 +417,11 @@ ResultWrapper(core=('success', 4.2))
 
 ```
 
-*Note:* The method `Wrapper.map_to_result` returns a `ResultWrapper` object.
-The corresponding class `ResultWrapper` has a `map_failure*` and a `map_success*` method
-for each `map*` method of the class `Wrapper`.
+*Note:* The method `trcks.oop.Wrapper.map_to_result` returns
+a `trcks.oop.ResultWrapper` object.
+The corresponding class `trcks.oop.ResultWrapper`
+has a `map_failure*` and a `map_success*` method
+for each `map*` method of the class `trcks.oop.Wrapper`.
 
 #### Asynchronous single-track code with `collections.abc.Awaitable` and `trcks.oop.AwaitableWrapper`
 
@@ -456,9 +460,10 @@ True
 
 So, whenever we define a function using the `async def ... -> T` syntax,
 we actually get a function with the return type `collections.abc.Awaitable[T]`.
-The method `Wrapper.map_to_awaitable` and the class `AwaitableWrapper` allow us
-to combine `Awaitable`-returning functions
-with other `Awaitable`-returning functions or with "regular" functions:
+The method `trcks.oop.Wrapper.map_to_awaitable` and the class `trcks.oop.AwaitableWrapper`
+allow us to combine `collections.abc.Awaitable`-returning functions
+with other `collections.abc.Awaitable`-returning functions or
+with "regular" functions:
 
 ```pycon
 >>> def transform(s: str) -> str:
