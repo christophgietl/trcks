@@ -294,7 +294,7 @@ So are synchronous and asynchronous code.
 
 #### Synchronous single-track code with `trcks.oop.Wrapper`
 
-The generic class `trcks.oop.Wrapper[T]` allows us to chain functions like this:
+The generic class `trcks.oop.Wrapper[T]` allows us to chain functions:
 
 ```pycon
 >>> from trcks.oop import Wrapper
@@ -311,8 +311,6 @@ To understand what is going on here,
 let us have a look at the individual steps of the chain:
 
 ```pycon
->>> from trcks.oop import Wrapper
->>>
 >>> # 1. Wrap the input string:
 >>> wrapped: Wrapper[str] = Wrapper(core="Hello, world!")
 >>> wrapped
@@ -325,7 +323,7 @@ Wrapper(core=13)
 >>> mapped_again: Wrapper[str] = mapped.map(lambda n: f"Length: {n}")
 >>> mapped_again
 Wrapper(core='Length: 13')
->>> # 4. Unwrap the final result:
+>>> # 4. Unwrap the output string:
 >>> unwrapped: str = mapped_again.core
 >>> unwrapped
 'Length: 13'
@@ -337,7 +335,7 @@ we can also use the static method `Wrapper.construct("Hello, world!")`.
 
 By following the pattern of wrapping, mapping and unwrapping,
 we can write code that resembles a single-track railway
-(or maybe a pipeline).
+(or maybe a single-pipe pipeline).
 
 #### Synchronous double-track code with `trcks.Result` and `trcks.oop.ResultWrapper`
 
@@ -399,28 +397,26 @@ Wrapper(core='erika.mustermann@domain.org')
 >>> mapped_once
 ResultWrapper(core=('success', 1))
 >>> # 3. Apply the Result function get_subscription_id in the success case:
->>> mapped_two_times: ResultWrapper[
-...     Union[UserDoesNotExist, UserDoesNotHaveASubscription], int
+>>> mapped_twice: ResultWrapper[
+...     FailureDescription, int
 ... ] = mapped_once.map_success_to_result(get_subscription_id)
->>> mapped_two_times
+>>> mapped_twice
 ResultWrapper(core=('success', 42))
 >>> # 4. Apply the function get_subscription_fee in the success case:
->>> mapped_three_times: ResultWrapper[
-...     Union[UserDoesNotExist, UserDoesNotHaveASubscription], float
-... ] = mapped_two_times.map_success(get_subscription_fee)
->>> mapped_three_times
+>>> mapped_thrice: ResultWrapper[
+...     FailureDescription, float
+... ] = mapped_twice.map_success(get_subscription_fee)
+>>> mapped_thrice
 ResultWrapper(core=('success', 4.2))
->>> # 5. Unwrap the final result:
->>> unwrapped: Result[
-...     Union[UserDoesNotExist, UserDoesNotHaveASubscription], float
-... ] = mapped_three_times.core
+>>> # 5. Unwrap the output result:
+>>> unwrapped: Result[FailureDescription, float] = mapped_thrice.core
 >>> unwrapped
 ('success', 4.2)
 
 ```
 
 *Note:* The method `Wrapper.map_to_result` returns a `ResultWrapper` object.
-The class `ResultWrapper` has a `map_failure*` and a `map_success*` method
+The corresponding class `ResultWrapper` has a `map_failure*` and a `map_success*` method
 for each `map*` method of the class `Wrapper`.
 
 #### Asynchronous single-track code with `trcks.oop.AwaitableWrapper`
