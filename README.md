@@ -79,16 +79,13 @@ static type checkers usually ignore docstrings.
 Moreover, it is difficult
 to document all (domain) exceptions in the docstring and
 to keep this documentation up-to-date.
+Therefore, we should use railway-oriented programming.
 
 
 ### How can I use railway-oriented programming?
 
 Instead of raising exceptions (and documenting this behavior in the docstring),
-we can return a generic `Result` type.
-This return type
-
-1. describes the success case *and* the failure case and
-2. is verified by static type checkers.
+we return a `Result` type:
 
 ```pycon
 >>> from typing import Literal
@@ -107,6 +104,11 @@ This return type
 ('failure', 'User does not have a subscription')
 
 ```
+
+This return type
+
+1. describes the success case *and* the failure case and
+2. is verified by static type checkers.
 
 ### What do I need for railway-oriented programming?
 
@@ -140,7 +142,9 @@ Moreover, it can lead to repetitive code patterns:
 ...         return subscription_id_result
 ...     subscription_id = subscription_id_result[1]
 ...     # Apply get_subscription_fee:
-...     return "success", get_subscription_fee(subscription_id)
+...     subscription_fee = get_subscription_fee(subscription_id)
+...     # Return result:
+...     return "success", subscription_fee
 ...
 >>> get_subscription_fee_by_email("erika.mustermann@domain.org")
 ('success', 4.2)
@@ -151,7 +155,7 @@ Moreover, it can lead to repetitive code patterns:
 
 ```
 
-Therefore, we need a library that helps us with combining functions.
+Therefore, we need a library that helps us combine functions.
 
 ### How does the module `trcks.oop` help with function combination?
 
