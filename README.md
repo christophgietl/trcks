@@ -421,15 +421,46 @@ for each `map*` method of the class `Wrapper`.
 
 #### Asynchronous single-track code with `collections.abc.Awaitable` and `trcks.oop.AwaitableWrapper`
 
+While the class `trcks.oop.Wrapper` and its method `map` allow
+the chaining of synchronous functions,
+they cannot chain asynchronous functions.
+To understand why,
+we first need to understand the return type of asynchronous functions:
+
 ```pycon
 >>> import asyncio
->>> from trcks.oop import Wrapper
+>>> from collections.abc import Awaitable, Coroutine
 >>> async def read_from_disk(path: str) -> str:
 ...     await asyncio.sleep(0.001)
 ...     s = "Hello, world!"
 ...     print(f"Read '{s}' from file {path}.")
 ...     return s
 ...
+>>> # Examine the return value of read_from_disk:
+>>> return_value = read_from_disk("input.txt")
+>>> return_value
+<coroutine object read_from_disk at ...>
+>>> asyncio.run(return_value)
+Read 'Hello, world!' from file input.txt.
+'Hello, world!'
+>>> # Examine the type of the return value:
+>>> return_type = type(return_value)
+>>> return_type
+<class 'coroutine'>
+>>> issubclass(return_type, Coroutine)
+True
+>>> issubclass(Coroutine, Awaitable)
+True
+
+```
+
+So, whenever we define a function using the `async def ... -> T` syntax,
+we actually get a function with the return type `collections.abc.Awaitable[T]`.
+The method `Wrapper.map_to_awaitable` and the class `AwaitableWrapper` allow us
+to combine `Awaitable`-returning functions
+with other `Awaitable`-returning functions or with "regular" functions:
+
+```pycon
 >>> def transform(s: str) -> str:
 ...     return f"Length: {len(s)}"
 ...
@@ -456,31 +487,41 @@ To understand what is going on here,
 let us have a look at the individual steps of the chain:
 
 ```pycon
->>> from collections.abc import Coroutine
 >>> from typing import Any
 >>> from trcks.oop import AwaitableWrapper
+>>> # 1. Wrap the input string:
 >>> wrapped: Wrapper[str] = Wrapper(core="input.txt")
 >>> wrapped
 Wrapper(core='input.txt')
+>>> # 2. Apply the Awaitable function read_from_disk:
 >>> mapped_once: AwaitableWrapper[str] = wrapped.map_to_awaitable(read_from_disk)
 >>> mapped_once
 AwaitableWrapper(core=<coroutine object ...>)
+>>> # 3. Apply the function transform:
 >>> mapped_twice: AwaitableWrapper[str] = mapped_once.map(transform)
 >>> mapped_twice
 AwaitableWrapper(core=<coroutine object ...>)
+>>> # 4. Apply the Awaitable function write_to_disk:
 >>> mapped_thrice: AwaitableWrapper[None] = mapped_twice.map_to_awaitable(
 ...     lambda s: write_to_disk(s, "output.txt")
 ... )
 >>> mapped_thrice
 AwaitableWrapper(core=<coroutine object ...>)
+>>> # 5. Unwrap the output coroutine:
 >>> unwrapped: Coroutine[Any, Any, None] = mapped_thrice.core_as_coroutine
 >>> unwrapped
 <coroutine object ...>
+>>> # 6. Run the output coroutine:
 >>> asyncio.run(unwrapped)
 Read 'Hello, world!' from file input.txt.
 Wrote 'Length: 13' to file output.txt.
 
 ```
+
+*Note:* The property `core` of the class `trcks.oop.AwaitableWrapper`
+has type `collections.abc.Awaitable`.
+Since `asyncio.run` expects a `collections.abc.Coroutine` object,
+we need to use the property `core_as_coroutine` instead.
 
 #### Asynchronous double-track code with `trcks.AwaitableResult` and `trcks.oop.AwaitableResultWrapper`
 
