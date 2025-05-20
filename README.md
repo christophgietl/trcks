@@ -656,10 +656,19 @@ let us have a look at the individual steps of the chain:
 
 ```
 
-*Note:* The function `trcks.fp.composition.pipe` expects a tuple consisting of
-a start value followed by up to seven compatible functions.
+*Note:* The function `trcks.fp.composition.pipe` expects a `trcks.fp.composition.Pipeline`,
+i.e. a tuple consisting of a start value followed by up to seven compatible functions.
 
 #### Synchronous double-track code with `trcks.fp.composition` and `trcks.fp.monads.result`
+
+If one of the functions in a `trcks.fp.composition.Pipeline` returns a `trcks.Result[F, S]` type,
+the following function must accept this `trcks.Result[F, S]` type as its input.
+However, functions with input type `trcks.Result[F, S]` tend to violate
+the "do one thing and do it well" principle.
+Therefore, the module `trcks.fp.monads.result` provides
+some higher-order functions named `map_*`
+that turn functions with input type `F` and functions with input type `S`
+into functions with input type `trcks.Result[F, S]`.
 
 ```pycon
 >>> def get_subscription_fee_by_email(user_email: str) -> Result[FailureDescription, float]:
