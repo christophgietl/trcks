@@ -809,15 +809,23 @@ Wrote 'Length: 13' to file output.txt.
 *Note:* The values `pipe(p1)`, `pipe(p2)` and `pipe(p3)` are all of type `collections.abc.Awaitable`.
 Since `asyncio.run` expects the input type `collections.abc.Coroutine`,
 we use the function `trcks.fp.monads.awaitable.to_coroutine` to convert
-the `collections.abc.Awaitable[T]`s to `collections.abc.Coroutine[T]`s.
+the `collections.abc.Awaitable`s to `collections.abc.Coroutine`s.
 
 #### Asynchronous double-track code with `trcks.fp.composition` and `trcks.fp.monads.awaitable_result`
 
+If one of the functions in a `trcks.fp.composition.Pipeline` returns
+a `trcks.AwaitableResult[F, S]` type,
+the following function must accept this `trcks.AwaitableResult[F, S]` type
+as its input.
+However, functions with input type `trcks.AwaitableResult[F, S]` tend to
+contain unnecessary `await` statements and
+violate the "do one thing and do it well" principle.
+Therefore, the module `trcks.fp.monads.awaitable_result` provides
+some higher-order functions named `map_*`
+that turn functions with input type `F` and functions with input type `S`
+into functions with input type `trcks.AwaitableResult[F, S]`.
+
 ```pycon
->>> import asyncio
->>> from typing import Literal, Union
->>> from trcks import AwaitableResult, Result
->>> from trcks.fp.composition import Pipeline3, pipe
 >>> from trcks.fp.monads import awaitable_result as ar
 >>> ReadErrorLiteral = Literal["read error"]
 >>> WriteErrorLiteral = Literal["write error"]
@@ -866,31 +874,7 @@ To understand what is going on here,
 let us have a look at the individual steps of the chain:
 
 ```pycon
->>> import asyncio
->>> from typing import Literal, Union
 >>> from trcks import AwaitableResult, Result
->>> from trcks.fp.composition import Pipeline1, Pipeline2, Pipeline3, pipe
->>> from trcks.fp.monads import awaitable_result as ar
->>> ReadErrorLiteral = Literal["read error"]
->>> WriteErrorLiteral = Literal["write error"]
->>> async def read_from_disk(path: str) -> Result[ReadErrorLiteral, str]:
-...     if path != "input.txt":
-...         return "failure", "read error"
-...     await asyncio.sleep(0.001)
-...     s = "Hello, world!"
-...     print(f"Read '{s}' from file {path}.")
-...     return "success", s
-...
->>> def transform(s: str) -> str:
-...     return f"Length: {len(s)}"
-...
->>> async def write_to_disk(s: str, path: str) -> Result[WriteErrorLiteral, None]:
-...     if path != "output.txt":
-...         return "failure", "write error"
-...     await asyncio.sleep(0.001)
-...     print(f"Wrote '{s}' to file {path}.")
-...     return "success", None
-...
 >>> p1: Pipeline1[str, AwaitableResult[ReadErrorLiteral, str]] = (
 ...     "input.txt",
 ...     read_from_disk,
@@ -927,3 +911,8 @@ Wrote 'Length: 13' to file output.txt.
 ('success', None)
 
 ```
+
+*Note:* The values `pipe(p1)`, `pipe(p2)` and `pipe(p3)` are all of type `trcks.AwaitableResult`.
+Since `asyncio.run` expects the input type `collections.abc.Coroutine`,
+we use the function `trcks.fp.monads.awaitable_result.to_coroutine` to convert
+the `trcks.AwaitableResult`s to `collections.abc.Coroutine`s.
