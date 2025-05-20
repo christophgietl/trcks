@@ -736,10 +736,16 @@ let us have a look at the individual steps of the chain:
 
 #### Asynchronous single-track code with `trcks.fp.composition` and `trcks.fp.monads.awaitable`
 
+If one of the functions in a `trcks.fp.composition.Pipeline` returns a `collections.abc.Awaitable[T]` type,
+the following function must accept this `collections.abc.Awaitable[T]` type as its input.
+However, functions with input type `collections.abc.Awaitable[T]`
+tend to contain unnecessary `await` statements.
+Therefore, the module `trcks.fp.monads.awaitable` provides
+some higher-order functions named `map_*`
+that turn functions with input type `T`
+into functions with input type `collections.abc.Awaitable[T]`.
+
 ```pycon
->>> import asyncio
->>> from collections.abc import Awaitable
->>> from trcks.fp.composition import pipe, Pipeline3
 >>> from trcks.fp.monads import awaitable as a
 >>> async def read_from_disk(path: str) -> str:
 ...     await asyncio.sleep(0.001)
@@ -773,7 +779,6 @@ To understand what is going on here,
 let us have a look at the individual steps of the chain:
 
 ```pycon
->>> from trcks.fp.composition import Pipeline1, Pipeline2, Pipeline3, pipe
 >>> p1: Pipeline1[str, Awaitable[str]] = (
 ...     "input.txt",
 ...     read_from_disk,
@@ -800,6 +805,11 @@ Read 'Hello, world!' from file input.txt.
 Wrote 'Length: 13' to file output.txt.
 
 ```
+
+*Note:* The values `pipe(p1)`, `pipe(p2)` and `pipe(p3)` are all of type `collections.abc.Awaitable`.
+Since `asyncio.run` expects the input type `collections.abc.Coroutine`,
+we use the function `trcks.fp.monads.awaitable.to_coroutine` to convert
+the `collections.abc.Awaitable[T]`s to `collections.abc.Coroutine[T]`s.
 
 #### Asynchronous double-track code with `trcks.fp.composition` and `trcks.fp.monads.awaitable_result`
 
