@@ -631,7 +631,7 @@ So are synchronous and asynchronous code.
 
 #### Synchronous single-track code with `trcks.fp.composition`
 
-The function `trcks.fp.composition.pipe` allows us to chain functions like this:
+The function `trcks.fp.composition.pipe` allows us to chain functions:
 
 ```pycon
 >>> from trcks.fp.composition import pipe
@@ -655,6 +655,9 @@ let us have a look at the individual steps of the chain:
 'Length: 13'
 
 ```
+
+*Note:* The function `trcks.fp.composition.pipe` expects a tuple consisting of
+a start value followed by up to seven compatible functions.
 
 #### Synchronous double-track code with `trcks.fp.composition` and `trcks.fp.monads.result`
 
