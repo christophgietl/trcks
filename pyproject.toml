@@ -4,19 +4,19 @@ requires = ["flit_core>=3.2,<4"]
 
 [dependency-groups]
 dev = [
-    "mypy>=1.15.0",
-    "pydoctor>=24.11.2",
-    "pyright>=1.1.398",
-    "pytest>=8.3.4",
-    "pytest-asyncio>=0.25.3",
-    "pytest-cov>=6.0.0",
-    "pytest-doctestplus>=1.4.0",
-    "ruff>=0.9.7",
+    "mypy==1.15.0",
+    "pydoctor==24.11.2",
+    "pyright==1.1.400",
+    "pytest==8.3.5",
+    "pytest-asyncio==0.26.0",
+    "pytest-cov==6.1.1",
+    "pytest-doctestplus==1.4.0",
+    "ruff==0.11.10",
 ]
 
 [project]
 dependencies = [
-    "typing-extensions>=4.12.2 ; python_full_version < '3.13'",
+    "typing-extensions>=4.13.2 ; python_full_version < '3.13'",
 ]
 description = "Add your description here"
 name = "trcks"
