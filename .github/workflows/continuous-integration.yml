@@ -50,6 +50,7 @@ jobs:
       - run: uv run mypy
       - run: uv run pyright
       - run: uv run pytest
+      - run: uv run --resolution lowest-direct pytest
   publish:
     if: github.ref_type == 'tag'
     needs:
