@@ -50,10 +50,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-#      - uses: actions/download-artifact@v4
-#        with:
-#          name: package-files
+      - uses: actions/download-artifact@v4
+        with:
+          name: package-files
       - uses: ./.github/actions/set-up-uv
-#      - env:
-#          POETRY_PYPI_TOKEN_PYPI: ${{ secrets.pypi_token }}
-#        run: poetry publish
+      - run: uv publish
