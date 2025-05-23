@@ -13,8 +13,8 @@ jobs:
       - uses: ./.github/actions/set-up-uv
         with:
           install-dependencies: true
-#      - if: github.ref_type == 'tag'
-#        run: poetry version $(git describe --tags --abbrev=0)
+      - if: github.ref_type == 'tag'
+        run: uv version $(git describe --tags --abbrev=0)
       - run: uv build
       - run: uv run pydoctor
       - uses: actions/upload-artifact@v4
@@ -55,6 +55,9 @@ jobs:
     needs:
       - build
       - lint-and-test
+    permissions:
+      contents: read
+      id-token: write
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -62,4 +65,4 @@ jobs:
         with:
           name: package-files
       - uses: ./.github/actions/set-up-uv
-      - run: uv publish
+      - run: uv publish --index testpypi

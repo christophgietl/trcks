@@ -22,7 +22,7 @@ description = "Add your description here"
 name = "trcks"
 readme = "README.md"
 requires-python = ">=3.9"
-version = "0.1.0"
+version = "0.0.0"   # Version will be set by CI workflow based on git tag.
 
 [tool.mypy]
 disallow_any_decorated = true
@@ -75,3 +75,9 @@ select = ["ALL"]
 
 [tool.ruff.lint.pydocstyle]
 convention = "google"
+
+[[tool.uv.index]]
+explicit = true
+name = "testpypi"
+publish-url = "https://test.pypi.org/legacy/"
+url = "https://test.pypi.org/simple/"
