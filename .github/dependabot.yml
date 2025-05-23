@@ -1,0 +1,16 @@
+version: 2
+updates:
+  - directory: /
+    package-ecosystem: github-actions
+    schedule:
+      interval: weekly
+  - allow:
+      - dependency-type: all
+    directory: /
+    package-ecosystem: uv
+    schedule:
+      interval: weekly
+  - directory: /.github/actions/set-up-uv/
+    package-ecosystem: github-actions
+    schedule:
+      interval: weekly
