@@ -1,6 +1,6 @@
 [build-system]
 build-backend = "flit_core.buildapi"
-requires = ["flit_core>=3.2,<4"]
+requires = ["flit_core>=3.11,<4"]
 
 [dependency-groups]
 dev = [
@@ -20,7 +20,9 @@ classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
     "Operating System :: OS Independent",
+    "Programming Language :: Python",
     "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
@@ -40,7 +42,6 @@ keywords = [
     "fp",
     "functional programming",
     "monad",
-    "monads",
     "object-oriented programming",
     "oop",
     "pipeline",
@@ -58,7 +59,7 @@ requires-python = ">=3.9"
 version = "0.0.0"   # Version will be set by CI workflow based on git tag.
 
 [project.urls]
-github = "https://github.com/christophgietl/trcks"
+repository = "https://github.com/christophgietl/trcks"
 
 [tool.mypy]
 disallow_any_decorated = true
