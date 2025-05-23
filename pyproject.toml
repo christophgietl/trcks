@@ -47,6 +47,7 @@ warnings-as-errors = true
 
 [tool.pyright]
 deprecateTypingAliases = true
+pythonVersion = "3.9"
 reportCallInDefaultInitializer = true
 reportImplicitOverride = true
 reportImplicitStringConcatenation = true

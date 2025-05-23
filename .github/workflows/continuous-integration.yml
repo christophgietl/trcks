@@ -41,7 +41,12 @@ jobs:
         with:
           install-dependencies: true
           python-version: ${{ matrix.python-version }}
-#      - run: poetry run pre-commit run --all-files --show-diff-on-failure
+      - run: uv run ruff format --check
+      - run: uv run ruff check
+      - run: uv run mypy
+      - run: uv run pyright
+      - run: uv run pytest
+      - run: uv run pydoctor
   publish:
     if: github.ref_type == 'tag'
     needs:
