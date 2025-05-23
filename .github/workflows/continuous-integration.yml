@@ -11,13 +11,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/set-up-uv
+        with:
+          install-dependencies: true
 #      - if: github.ref_type == 'tag'
 #        run: poetry version $(git describe --tags --abbrev=0)
       - run: uv build
+      - run: uv run pydoctor
       - uses: actions/upload-artifact@v4
         with:
           name: package-files
           path: |
+            apidocs/
             dist/
             pyproject.toml
   lint-and-test:
@@ -46,7 +50,6 @@ jobs:
       - run: uv run mypy
       - run: uv run pyright
       - run: uv run pytest
-      - run: uv run pydoctor
   publish:
     if: github.ref_type == 'tag'
     needs:
