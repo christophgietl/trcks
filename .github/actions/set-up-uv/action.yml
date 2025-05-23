@@ -18,7 +18,7 @@ runs:
   steps:
     - uses: astral-sh/setup-uv@v6
       with:
-        enable-cache: true
+        enable-cache: fromJSON(inputs.install-dependencies)
         python-version: ${{ inputs.python-version }}
         version: ${{ inputs.uv-version }}
     - if: fromJSON(inputs.install-dependencies)
