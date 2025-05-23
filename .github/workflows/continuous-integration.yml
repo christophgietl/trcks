@@ -13,13 +13,13 @@ jobs:
       - uses: ./.github/actions/set-up-uv
 #      - if: github.ref_type == 'tag'
 #        run: poetry version $(git describe --tags --abbrev=0)
-#      - run: poetry build
-#      - uses: actions/upload-artifact@v4
-#        with:
-#          name: package-files
-#          path: |
-#            dist/
-#            pyproject.toml
+      - run: uv build
+      - uses: actions/upload-artifact@v4
+        with:
+          name: package-files
+          path: |
+            dist/
+            pyproject.toml
   lint-and-test:
     strategy:
       fail-fast: false
