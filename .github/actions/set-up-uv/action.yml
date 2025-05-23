@@ -1,0 +1,26 @@
+name: Set up uv
+description: Install uv and Python and, if desired, dependencies
+inputs:
+  install-dependencies:
+    default: "false"
+    description: whether to install the dependencies specified in pyproject.toml
+    required: true
+  python-version:
+    default: "3.9"
+    description: Python version to be installed
+    required: true
+  uv-version:
+    default: 0.7.x
+    description: uv version to be installed
+    required: true
+runs:
+  using: composite
+  steps:
+    - uses: astral-sh/setup-uv@v6
+      with:
+        enable-cache: true
+        python-version: ${{ inputs.python-version }}
+        version: ${{ inputs.uv-version }}
+    - if: fromJSON(inputs.install-dependencies)
+      run: uv sync
+      shell: bash
