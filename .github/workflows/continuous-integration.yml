@@ -75,6 +75,9 @@ jobs:
       - id: deployment
         uses: actions/deploy-pages@v4
   publish-package:
+    environment:
+      name: PyPI
+      url: https://test.pypi.org/project/trcks/
     if: github.ref_type == 'tag'
     needs:
       - publish-docs
