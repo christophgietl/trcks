@@ -75,11 +75,14 @@ warn_unreachable = true
 
 [tool.pydoctor]
 add-package = ["src/trcks"]
+html-base-url = "https://$GITHUB_REPOSITORY_OWNER.github.io/${GITHUB_REPOSITORY#*/}"
+html-viewsource-base = "https://github.com/$GITHUB_REPOSITORY/tree/$GITHUB_SHA"
 intersphinx = [
     "https://docs.python.org/3/objects.inv",
     "https://typing-extensions.readthedocs.io/en/latest/objects.inv",
 ]
 project-name = "trcks"
+project-url = "https://github.com/$GITHUB_REPOSITORY"
 warnings-as-errors = true
 
 [tool.pyright]
