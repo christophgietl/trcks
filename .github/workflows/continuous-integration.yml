@@ -63,7 +63,9 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     if: github.ref_type == 'tag'
-    needs: build-docs
+    needs:
+      - build-docs
+      - lint-and-test
     permissions:
       id-token: write
       pages: write
