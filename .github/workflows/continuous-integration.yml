@@ -77,9 +77,6 @@ jobs:
   publish-package:
     if: github.ref_type == 'tag'
     needs:
-      - build-docs
-      - build-package
-      - lint-and-test
       - publish-docs
     permissions:
       contents: read
