@@ -77,7 +77,7 @@ jobs:
   publish-package:
     environment:
       name: PyPI
-      url: https://test.pypi.org/project/trcks/
+      url: https://pypi.org/project/trcks/
     if: github.ref_type == 'tag'
     needs:
       - publish-docs
@@ -90,4 +90,4 @@ jobs:
         with:
           name: package-files
       - uses: ./.github/actions/set-up-uv
-      - run: uv publish --index testpypi
+      - run: uv publish
