@@ -3,7 +3,7 @@ name: CI
 on:
   - push
 
-permissions: { contents: read }
+permissions: { }
 
 jobs:
   build-docs:
@@ -82,7 +82,6 @@ jobs:
     needs:
       - publish-docs
     permissions:
-      contents: read
       id-token: write
     runs-on: ubuntu-latest
     steps:
