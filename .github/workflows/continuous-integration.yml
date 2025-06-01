@@ -65,6 +65,7 @@ jobs:
     if: github.ref_type == 'tag'
     needs:
       - build-docs
+      - build-package
       - lint-and-test
     permissions:
       id-token: write
@@ -76,6 +77,7 @@ jobs:
   publish-package:
     if: github.ref_type == 'tag'
     needs:
+      - build-docs
       - build-package
       - lint-and-test
       - publish-docs
