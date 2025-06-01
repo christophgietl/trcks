@@ -58,11 +58,25 @@ jobs:
       - run: uv run pyright
       - run: uv run pytest
       - run: uv run --resolution lowest-direct pytest
+  publish-docs:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    if: github.ref_type == 'tag'
+    needs: build-docs
+    permissions:
+      id-token: write
+      pages: write
+    runs-on: ubuntu-latest
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
   publish-package:
     if: github.ref_type == 'tag'
     needs:
       - build-package
       - lint-and-test
+      - publish-docs
     permissions:
       contents: read
       id-token: write
