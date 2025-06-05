@@ -969,7 +969,7 @@ Other major differences are:
 
 [Expression](https://pypi.org/project/Expression/) supports object-oriented style ("fluent syntax") and
 functional style (like `trcks`).
-It provides a `Result` class (and multiple other container classes) for synchronous code and
+It provides a `Result` class (and multiple other container classes) for synchronous code.
 The `Result` class is pretty similar to `trcks.Result` and `trcks.oop.ResultWrapper`.
 [An `AsyncResult` type (based on `collections.abc.AsyncGenerator`) will be added in a future version.](https://github.com/dbrattli/Expression/pull/247)
 
