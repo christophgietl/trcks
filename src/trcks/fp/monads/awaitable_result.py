@@ -169,7 +169,7 @@ def construct_success_from_awaitable(awtbl: Awaitable[_S]) -> AwaitableSuccess[_
         >>> import asyncio
         >>> from collections.abc import Awaitable
         >>> from trcks.fp.monads import awaitable_result as ar
-        >>> async def read_from_disk() -> int:
+        >>> async def read_from_disk() -> str:
         ...     await asyncio.sleep(0.001)
         ...     return "Hello, world!"
         ...
