@@ -22,8 +22,8 @@ Example:
         ...     return (
         ...         Wrapper(core=x)
         ...         .map_to_result(
-        ...             lambda x: ("success", x)
-        ...             if x >= 0
+        ...             lambda xx: ("success", xx)
+        ...             if xx >= 0
         ...             else ("failure", GetSquareRootError.NEGATIVE_INPUT)
         ...         )
         ...         .map_success(math.sqrt)
@@ -50,8 +50,8 @@ Example:
         ...     result_wrapper: ResultWrapper[
         ...         GetSquareRootError, float
         ...     ] = wrapper.map_to_result(
-        ...         lambda x: ("success", x)
-        ...         if x >= 0
+        ...         lambda xx: ("success", xx)
+        ...         if xx >= 0
         ...         else ("failure", GetSquareRootError.NEGATIVE_INPUT)
         ...     )
         ...     mapped_result_wrapper: ResultWrapper[GetSquareRootError, float] = (
