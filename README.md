@@ -58,7 +58,7 @@ Exception: User does not have a subscription
 
 ```
 
-We can document (domain) exceptions in the docstring of the function:
+We can document domain exceptions in the docstring of the function:
 
 ```pycon
 >>> def get_subscription_id(user_id: int) -> int:
@@ -77,7 +77,7 @@ We can document (domain) exceptions in the docstring of the function:
 While this helps humans (and maybe LLMs),
 static type checkers usually ignore docstrings.
 Moreover, it is difficult
-to document all (domain) exceptions in the docstring and
+to document all domain exceptions in the docstring and
 to keep this documentation up-to-date.
 Therefore, we should use railway-oriented programming.
 
