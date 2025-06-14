@@ -21,10 +21,10 @@ repos:
     rev: 63c8f8312b7559622c0d82815639671ae42132ac  # frozen: v2.4.1
     hooks:
       - id: codespell
-  - repo: https://github.com/igorshubovych/markdownlint-cli
-    rev: 192ad822316c3a22fb3d3cc8aa6eafa0b8488360  # frozen: v0.45.0
+  - repo: https://github.com/jackdewinter/pymarkdown
+    rev: e4be0b2c785e3a169b20bcbfe91dbc3db76b592f  # frozen: v0.9.30
     hooks:
-      - id: markdownlint-fix
+      - id: pymarkdown
   - repo: https://github.com/jorisroovers/gitlint
     rev: acc9d9de6369b76d22cb4167029d2035e8730b98  # frozen: v0.19.1
     hooks:
