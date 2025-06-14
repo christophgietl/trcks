@@ -81,7 +81,6 @@ to document all domain exceptions in the docstring and
 to keep this documentation up-to-date.
 Therefore, we should use railway-oriented programming.
 
-
 ### How can I use railway-oriented programming?
 
 Instead of raising exceptions (and documenting this behavior in the docstring),
@@ -93,7 +92,9 @@ we return a `Result` type:
 >>>
 >>> UserDoesNotHaveASubscription = Literal["User does not have a subscription"]
 >>>
->>> def get_subscription_id(user_id: int) -> Result[UserDoesNotHaveASubscription, int]:
+>>> def get_subscription_id(
+...     user_id: int
+... ) -> Result[UserDoesNotHaveASubscription, int]:
 ...     if user_id == 1:
 ...         return "success", 42
 ...     return "failure", "User does not have a subscription"
@@ -130,7 +131,9 @@ Moreover, it can lead to repetitive code patterns:
 ...         return "success", 2
 ...     return "failure", "User does not exist"
 ...
->>> def get_subscription_fee_by_email(user_email: str) -> Result[FailureDescription, float]:
+>>> def get_subscription_fee_by_email(
+...     user_email: str
+... ) -> Result[FailureDescription, float]:
 ...     # Apply get_user_id:
 ...     user_id_result = get_user_id(user_email)
 ...     if user_id_result[0] == "failure":
@@ -165,7 +168,9 @@ using method chaining:
 ```pycon
 >>> from trcks.oop import Wrapper
 >>>
->>> def get_subscription_fee_by_email(user_email: str) -> Result[FailureDescription, float]:
+>>> def get_subscription_fee_by_email(
+...     user_email: str
+... ) -> Result[FailureDescription, float]:
 ...     return (
 ...         Wrapper(core=user_email)
 ...         .map_to_result(get_user_id)
@@ -192,7 +197,9 @@ using function composition:
 >>> from trcks.fp.composition import Pipeline3, pipe
 >>> from trcks.fp.monads import result as r
 >>>
->>> def get_subscription_fee_by_email(user_email: str) -> Result[FailureDescription, float]:
+>>> def get_subscription_fee_by_email(
+...     user_email: str
+... ) -> Result[FailureDescription, float]:
 ...     # If your static type checker cannot infer
 ...     # the type of the argument passed to `pipe`,
 ...     # explicit type assignment can help:
@@ -239,7 +246,9 @@ Usually, the second element is a string, an exception or an enum value:
 >>> from trcks import Failure
 >>>
 >>> UserDoesNotExistLiteral = Literal["User does not exist"]
->>> literal_failure: Failure[UserDoesNotExistLiteral] = ("failure", "User does not exist")
+>>> literal_failure: Failure[UserDoesNotExistLiteral] = (
+...     "failure", "User does not exist"
+... )
 >>>
 >>> class UserDoesNotExistException(Exception):
 ...     pass
@@ -280,7 +289,9 @@ It is primarily used as a return type for functions:
 >>>
 >>> UserDoesNotHaveASubscription = Literal["User does not have a subscription"]
 >>>
->>> def get_subscription_id(user_id: int) -> Result[UserDoesNotHaveASubscription, int]:
+>>> def get_subscription_id(
+...     user_id: int
+... ) -> Result[UserDoesNotHaveASubscription, int]:
 ...     if user_id == 1:
 ...         return "success", 42
 ...     return "failure", "User does not have a subscription"
@@ -369,7 +380,9 @@ The generic class `trcks.oop.ResultWrapper[F, S]` simplifies
 the implementation of the parallel code tracks.
 
 ```pycon
->>> def get_subscription_fee_by_email(user_email: str) -> Result[FailureDescription, float]:
+>>> def get_subscription_fee_by_email(
+...     user_email: str
+... ) -> Result[FailureDescription, float]:
 ...     return (
 ...         Wrapper(core=user_email)
 ...         .map_to_result(get_user_id)
@@ -478,7 +491,9 @@ with "regular" functions:
 ...     await asyncio.sleep(0.001)
 ...     print(f"Wrote '{s}' to file {path}.")
 ...
->>> async def read_and_transform_and_write(input_path: str, output_path: str) -> None:
+>>> async def read_and_transform_and_write(
+...     input_path: str, output_path: str
+... ) -> None:
 ...     return await (
 ...         Wrapper(core=input_path)
 ...         .map_to_awaitable(read_from_disk)
@@ -536,7 +551,8 @@ we need to use the property `core_as_coroutine` instead.
 #### Asynchronous double-track code with `trcks.AwaitableResult` and `trcks.oop.AwaitableResultWrapper`
 
 Whenever we define a function using the `async def ... -> Result[F, S]` syntax,
-we actually get a function with the return type `collections.abc.Awaitable[trcks.Result[F, S]]`.
+we actually get a function with
+the return type `collections.abc.Awaitable[trcks.Result[F, S]]`.
 The module `trcks.oop` provides the type alias `trcks.oop.AwaitableResult[F, S]`
 for this type.
 Moreover, the method `trcks.oop.Wrapper.map_to_awaitable_result` and
@@ -666,7 +682,8 @@ i.e. a tuple consisting of a start value followed by up to seven compatible func
 
 #### Synchronous double-track code with `trcks.fp.composition` and `trcks.fp.monads.result`
 
-If one of the functions in a `trcks.fp.composition.Pipeline` returns a `trcks.Result[F, S]` type,
+If one of the functions in a `trcks.fp.composition.Pipeline`
+returns a `trcks.Result[F, S]` type,
 the following function must accept this `trcks.Result[F, S]` type as its input.
 However, functions with input type `trcks.Result[F, S]` tend to violate
 the "do one thing and do it well" principle.
@@ -676,7 +693,9 @@ that turn functions with input type `F` and functions with input type `S`
 into functions with input type `trcks.Result[F, S]`.
 
 ```pycon
->>> def get_subscription_fee_by_email(user_email: str) -> Result[FailureDescription, float]:
+>>> def get_subscription_fee_by_email(
+...     user_email: str
+... ) -> Result[FailureDescription, float]:
 ...     # If your static type checker cannot infer
 ...     # the type of the argument passed to `pipe`,
 ...     # explicit type assignment can help:
@@ -706,7 +725,9 @@ To understand what is going on here,
 let us have a look at the individual steps of the chain:
 
 ```pycon
->>> from trcks.fp.composition import Pipeline0, Pipeline1, Pipeline2, Pipeline3, pipe
+>>> from trcks.fp.composition import (
+...     Pipeline0, Pipeline1, Pipeline2, Pipeline3, pipe
+... )
 >>> p0: Pipeline0[str] = ("erika.mustermann@domain.org",)
 >>> pipe(p0)
 'erika.mustermann@domain.org'
@@ -716,7 +737,9 @@ let us have a look at the individual steps of the chain:
 ... )
 >>> pipe(p1)
 ('success', 1)
->>> p2: Pipeline2[str, Result[UserDoesNotExist, int], Result[FailureDescription, int]] = (
+>>> p2: Pipeline2[
+...     str, Result[UserDoesNotExist, int], Result[FailureDescription, int]
+... ] = (
 ...     "erika.mustermann@domain.org",
 ...     get_user_id,
 ...     r.map_success_to_result(get_subscription_id),
@@ -741,8 +764,10 @@ let us have a look at the individual steps of the chain:
 
 #### Asynchronous single-track code with `trcks.fp.composition` and `trcks.fp.monads.awaitable`
 
-If one of the functions in a `trcks.fp.composition.Pipeline` returns a `collections.abc.Awaitable[T]` type,
-the following function must accept this `collections.abc.Awaitable[T]` type as its input.
+If one of the functions in a `trcks.fp.composition.Pipeline` returns
+a `collections.abc.Awaitable[T]` type,
+the following function must accept this `collections.abc.Awaitable[T]` type
+as its input.
 However, functions with input type `collections.abc.Awaitable[T]`
 tend to contain unnecessary `await` statements.
 Therefore, the module `trcks.fp.monads.awaitable` provides
@@ -765,7 +790,9 @@ into functions with input type `collections.abc.Awaitable[T]`.
 ...     await asyncio.sleep(0.001)
 ...     print(f"Wrote '{s}' to file {path}.")
 ...
->>> async def read_and_transform_and_write(input_path: str, output_path: str) -> None:
+>>> async def read_and_transform_and_write(
+...     input_path: str, output_path: str
+... ) -> None:
 ...     p: Pipeline3[str, Awaitable[str], Awaitable[str], Awaitable[None]] = (
 ...         input_path,
 ...         read_from_disk,
@@ -948,8 +975,8 @@ Other type checkers may work as well.
 
 ### Which alternatives to `trcks` are there?
 
-[returns](https://pypi.org/project/returns/) supports object-oriented style and functional style
-(like `trcks`).
+[returns](https://pypi.org/project/returns/) supports
+object-oriented style and functional style (like `trcks`).
 It provides
 a `Result` container (and multiple other containers) for synchronous code and
 a `Future` and a `FutureResult` container for asynchronous code.
@@ -957,8 +984,10 @@ Whereas the `Result` container is pretty similar to `trcks.Result`,
 the `Future` container and the `FutureResult` container deviate
 from `collections.abc.Awaitable` and `trcks.AwaitableResult`.
 Other major differences are:
+
 - `returns` provides
-  [do notation](https://returns.readthedocs.io/en/0.25.0/pages/do-notation.html) and
+  [do notation](https://returns.readthedocs.io/en/0.25.0/pages/do-notation.html)
+  and
   [dependency injection](https://returns.readthedocs.io/en/0.25.0/pages/context.html).
 - The authors of `returns`
   [recommend using `mypy`](https://returns.readthedocs.io/en/0.25.0/pages/quickstart.html#typechecking-and-other-integrations)
@@ -967,13 +996,14 @@ Other major differences are:
   and
   [their custom `mypy` plugin](https://returns.readthedocs.io/en/0.25.0/pages/contrib/mypy_plugins.html#mypy-plugin).
 
-[Expression](https://pypi.org/project/Expression/) supports object-oriented style ("fluent syntax") and
+[Expression](https://pypi.org/project/Expression/) supports
+object-oriented style ("fluent syntax") and
 functional style (like `trcks`).
-It provides a `Result` class (and multiple other container classes) for synchronous code.
+It provides a `Result` class (and multiple other container classes)
+for synchronous code.
 The `Result` class is pretty similar to `trcks.Result` and `trcks.oop.ResultWrapper`.
 An `AsyncResult` type based on `collections.abc.AsyncGenerator`
 [will be added in a future version](https://github.com/dbrattli/Expression/pull/247).
-
 
 ### Which libraries inspired `trcks`?
 
