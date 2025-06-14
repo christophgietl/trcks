@@ -566,7 +566,7 @@ with "regular" functions:
 ...     print(f"Wrote '{s}' to file {path}.")
 ...     return "success", None
 ...
->>> 
+>>>
 >>> async def read_and_transform_and_write(
 ...     input_path: str, output_path: str
 ... ) -> Result[Union[ReadErrorLiteral, WriteErrorLiteral], None]:

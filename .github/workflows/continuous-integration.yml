@@ -52,8 +52,7 @@ jobs:
         with:
           install-dependencies: true
           python-version: ${{ matrix.python-version }}
-      - run: uv run ruff format --check
-      - run: uv run ruff check
+      - run: uv run pre-commit run --all-files --show-diff-on-failure
       - run: uv run mypy
       - run: uv run pyright
       - run: uv run pytest
