@@ -52,6 +52,10 @@ jobs:
         with:
           install-dependencies: true
           python-version: ${{ matrix.python-version }}
+      - uses: actions/cache@v4
+        with:
+          key: pre-commit-${{ matrix.os }}-${{ matrix.python-version }}-${{ hashFiles('.pre-commit-config.yaml') }}
+          path: ~/.cache/pre-commit
       - run: uv run pre-commit run --all-files --show-diff-on-failure
       - run: uv run mypy
       - run: uv run pyright
