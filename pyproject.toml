@@ -108,7 +108,10 @@ asyncio_mode = "auto"
 doctest_plus = "enabled"
 
 [tool.ruff.lint]
-ignore = ["COM812", "ISC001"]
+ignore = [
+    "COM812", # "may cause conflicts when used with the formatter"
+    "D205", # forbids multiple lines at the beginning of a docstring
+]
 select = ["ALL"]
 
 [tool.ruff.lint.per-file-ignores]

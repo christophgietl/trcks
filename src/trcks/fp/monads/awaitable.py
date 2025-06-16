@@ -114,7 +114,8 @@ def map_(f: Callable[[_T1], _T2]) -> Callable[[Awaitable[_T1]], Awaitable[_T2]]:
 def map_to_awaitable(
     f: Callable[[_T1], Awaitable[_T2]],
 ) -> Callable[[Awaitable[_T1]], Awaitable[_T2]]:
-    """Turn `Awaitable`-returning func. into func. expecting and returning `Awaitable`.
+    """Turn `Awaitable`-returning function into
+    function expecting and returning `Awaitable`.
 
     Args:
         f:
