@@ -356,7 +356,7 @@ def map_failure_to_result(
 def map_success(
     f: Callable[[_S1], _S2],
 ) -> Callable[[AwaitableResult[_F1, _S1]], AwaitableResult[_F1, _S2]]:
-    """Creates function that maps `AwaitableSuccess` to `AwaitableSuccess` values.
+    """Create function that maps `AwaitableSuccess` to `AwaitableSuccess` values.
 
     `AwaitableFailure` values are left unchanged.
 
@@ -393,7 +393,7 @@ def map_success(
 def map_success_to_awaitable(
     f: Callable[[_S1], Awaitable[_S2]],
 ) -> Callable[[AwaitableResult[_F1, _S1]], AwaitableResult[_F1, _S2]]:
-    """Creates function that maps `AwaitableSuccess` to `AwaitableSuccess` values.
+    """Create function that maps `AwaitableSuccess` to `AwaitableSuccess` values.
 
     `AwaitableFailure` values are left unchanged.
 
@@ -491,7 +491,7 @@ def map_success_to_awaitable_result(
 def map_success_to_result(
     f: Callable[[_S1], Result[_F2, _S2]],
 ) -> Callable[[AwaitableResult[_F1, _S1]], AwaitableResult[_F1 | _F2, _S2]]:
-    """Creates function that maps `AwaitableSuccess` values to `AwaitableResult` values.
+    """Create function that maps `AwaitableSuccess` values to `AwaitableResult` values.
 
     `AwaitableFailure` values are left unchanged.
 

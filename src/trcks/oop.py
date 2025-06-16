@@ -270,7 +270,8 @@ class AwaitableResultWrapper(_AwaitableWrapper[Result[_F_default_co, _S_default_
     def construct_from_result(
         rslt: Result[_F_default, _S_default],
     ) -> AwaitableResultWrapper[_F_default, _S_default]:
-        """Construct and wrap an awaitbl. `trcks.Result` obj. from a `trcks.Result` obj.
+        """Construct and wrap an awaitable `trcks.Result` object
+        from a `trcks.Result` object.
 
         Args:
             rslt: The `trcks.Result` object to be wrapped.
@@ -350,7 +351,8 @@ class AwaitableResultWrapper(_AwaitableWrapper[Result[_F_default_co, _S_default_
     def map_failure(
         self, f: Callable[[_F_default_co], _F]
     ) -> AwaitableResultWrapper[_F, _S_default_co]:
-        """Apply sync. func. to wrapped `trcks.AwaitableResult` obj. if it is a failure.
+        """Apply synchronous function to the wrapped `trcks.AwaitableResult` object
+        if it is a failure.
 
         Args:
             f: The synchronous function to be applied.
@@ -391,7 +393,8 @@ class AwaitableResultWrapper(_AwaitableWrapper[Result[_F_default_co, _S_default_
     def map_failure_to_awaitable(
         self, f: Callable[[_F_default_co], Awaitable[_F]]
     ) -> AwaitableResultWrapper[_F, _S_default_co]:
-        """Apply async. func. to wrapped `trcks.AwaitableResult` obj. if failure.
+        """Apply asynchronous function to the wrapped `trcks.AwaitableResult` object
+        if it is a failure.
 
         Args:
             f: The asynchronous function to be applied.
@@ -436,7 +439,8 @@ class AwaitableResultWrapper(_AwaitableWrapper[Result[_F_default_co, _S_default_
     def map_failure_to_awaitable_result(
         self, f: Callable[[_F_default_co], AwaitableResult[_F, _S]]
     ) -> AwaitableResultWrapper[_F, _S_default_co | _S]:
-        """Apply async. `trcks.Result` func. to `trcks.AwaitableResult` if failure.
+        """Apply asynchronous `trcks.Result` function to `trcks.AwaitableResult`
+        if it is a failure.
 
         Args:
             f: The asynchronous function to be applied.
@@ -494,7 +498,8 @@ class AwaitableResultWrapper(_AwaitableWrapper[Result[_F_default_co, _S_default_
     def map_failure_to_result(
         self, f: Callable[[_F_default_co], Result[_F, _S]]
     ) -> AwaitableResultWrapper[_F, _S_default_co | _S]:
-        """Apply sync. `trcks.Result` func. to `trcks.AwaitableResult` if failure.
+        """Apply synchronous `trcks.Result` function to `trcks.AwaitableResult`
+        if it is a failure.
 
         Args:
             f: The synchronous function to be applied.
@@ -551,7 +556,8 @@ class AwaitableResultWrapper(_AwaitableWrapper[Result[_F_default_co, _S_default_
     def map_success(
         self, f: Callable[[_S_default_co], _S]
     ) -> AwaitableResultWrapper[_F_default_co, _S]:
-        """Apply sync. func. to wrapped `trcks.AwaitableResult` obj. if success.
+        """Apply synchronous function to the wrapped `trcks.AwaitableResult` object
+        if it is a success.
 
         Args:
             f: The synchronous function to be applied.
@@ -593,7 +599,8 @@ class AwaitableResultWrapper(_AwaitableWrapper[Result[_F_default_co, _S_default_
     def map_success_to_awaitable(
         self, f: Callable[[_S_default_co], Awaitable[_S]]
     ) -> AwaitableResultWrapper[_F_default_co, _S]:
-        """Apply async. func. to wrapped `trcks.AwaitableResult` obj. if success.
+        """Apply asynchronous function to the wrapped `trcks.AwaitableResult` object
+        if it is a success.
 
         Args:
             f: The asynchronous function to be applied.
@@ -638,7 +645,8 @@ class AwaitableResultWrapper(_AwaitableWrapper[Result[_F_default_co, _S_default_
     def map_success_to_awaitable_result(
         self, f: Callable[[_S_default_co], AwaitableResult[_F, _S]]
     ) -> AwaitableResultWrapper[_F_default_co | _F, _S]:
-        """Apply async. `trcks.Result` func. to `trcks.AwaitableResult` if success.
+        """Apply asynchronous `trcks.Result` function to `trcks.AwaitableResult`
+        if it is a success.
 
         Args:
             f: The asynchronous function to be applied.
@@ -697,7 +705,8 @@ class AwaitableResultWrapper(_AwaitableWrapper[Result[_F_default_co, _S_default_
     def map_success_to_result(
         self, f: Callable[[_S_default_co], Result[_F, _S]]
     ) -> AwaitableResultWrapper[_F_default_co | _F, _S]:
-        """Apply sync. `trcks.Result` func. to `trcks.AwaitableResult` if success.
+        """Apply synchronous `trcks.Result` function to `trcks.AwaitableResult`
+        if it is a success.
 
         Args:
             f: The synchronous function to be applied.
@@ -872,7 +881,8 @@ class AwaitableWrapper(_AwaitableWrapper[_T_co]):
         return AwaitableWrapper(awtbl)
 
     def map(self, f: Callable[[_T_co], _T]) -> AwaitableWrapper[_T]:
-        """Apply a sync. function to the wrapped `collections.abc.Awaitable` object.
+        """Apply a synchronous function
+        to the wrapped `collections.abc.Awaitable` object.
 
         Args:
             f: The synchronous function to be applied.
@@ -903,7 +913,8 @@ class AwaitableWrapper(_AwaitableWrapper[_T_co]):
     def map_to_awaitable(
         self, f: Callable[[_T_co], Awaitable[_T]]
     ) -> AwaitableWrapper[_T]:
-        """Apply an async. function to the wrapped `collections.abc.Awaitable` object.
+        """Apply an asynchronous function
+        to the wrapped `collections.abc.Awaitable` object.
 
         Args:
             f: The asynchronous function to be applied.
@@ -935,7 +946,8 @@ class AwaitableWrapper(_AwaitableWrapper[_T_co]):
     def map_to_awaitable_result(
         self, f: Callable[[_T_co], AwaitableResult[_F, _S]]
     ) -> AwaitableResultWrapper[_F, _S]:
-        """Apply an asynchronous function with return type `trcks.Result`.
+        """Apply an asynchronous function with return type `trcks.Result`
+        to the wrapped `collections.abc.Awaitable` object.
 
         Args:
             f: The asynchronous function to be applied.
@@ -973,7 +985,8 @@ class AwaitableWrapper(_AwaitableWrapper[_T_co]):
     def map_to_result(
         self, f: Callable[[_T_co], Result[_F, _S]]
     ) -> AwaitableResultWrapper[_F, _S]:
-        """Apply a sync. function with return type `trcks.Result`.
+        """Apply a synchronous function with return type `trcks.Result`
+        to the wrapped `collections.abc.Awaitable` object.
 
         Args:
             f: The synchronous function to be applied.
@@ -1082,7 +1095,8 @@ class ResultWrapper(_Wrapper[Result[_F_default_co, _S_default_co]]):
     def map_failure(
         self, f: Callable[[_F_default_co], _F]
     ) -> ResultWrapper[_F, _S_default_co]:
-        """Apply sync. func. to the wrapped `trcks.Result` object if it is a failure.
+        """Apply synchronous function to the wrapped `trcks.Result` object
+        if it is a failure.
 
         Args:
             f: The synchronous function to be applied.
@@ -1111,7 +1125,8 @@ class ResultWrapper(_Wrapper[Result[_F_default_co, _S_default_co]]):
     def map_failure_to_awaitable(
         self, f: Callable[[_F_default_co], Awaitable[_F]]
     ) -> AwaitableResultWrapper[_F, _S_default_co]:
-        """Apply async. func. to the wrapped `trcks.Result` object if it is a failure.
+        """Apply asynchronous function to the wrapped `trcks.Result` object
+        if it is a failure.
 
         Args:
             f: The asynchronous function to be applied.
@@ -1157,7 +1172,9 @@ class ResultWrapper(_Wrapper[Result[_F_default_co, _S_default_co]]):
     def map_failure_to_awaitable_result(
         self, f: Callable[[_F_default_co], AwaitableResult[_F, _S]]
     ) -> AwaitableResultWrapper[_F, _S_default_co | _S]:
-        """Apply async. `trcks.Result` func. to wrapped `trcks.Result` obj. if failure.
+        """Apply asynchronous `trcks.Result` function
+        to the wrapped `trcks.Result` object
+        if it is a failure.
 
         Args:
             f: The asynchronous function to be applied.
@@ -1216,7 +1233,9 @@ class ResultWrapper(_Wrapper[Result[_F_default_co, _S_default_co]]):
     def map_failure_to_result(
         self, f: Callable[[_F_default_co], Result[_F, _S]]
     ) -> ResultWrapper[_F, _S_default_co | _S]:
-        """Apply sync. `trcks.Result` func. to wrapped `trcks.Result` obj. if failure.
+        """Apply synchronous `trcks.Result` function
+        to the wrapped `trcks.Result` object
+        if it is a failure.
 
         Args:
             f: The synchronous function to be applied.
@@ -1263,7 +1282,8 @@ class ResultWrapper(_Wrapper[Result[_F_default_co, _S_default_co]]):
     def map_success(
         self, f: Callable[[_S_default_co], _S]
     ) -> ResultWrapper[_F_default_co, _S]:
-        """Apply sync. func. to the wrapped `trcks.Result` object if it is a success.
+        """Apply synchronous function to the wrapped `trcks.Result` object
+        if it is a success.
 
         Args:
             f: The synchronous function to be applied.
@@ -1288,7 +1308,8 @@ class ResultWrapper(_Wrapper[Result[_F_default_co, _S_default_co]]):
     def map_success_to_awaitable(
         self, f: Callable[[_S_default_co], Awaitable[_S]]
     ) -> AwaitableResultWrapper[_F_default_co, _S]:
-        """Apply async. func. to the wrapped `trcks.Result` object if it is a success.
+        """Apply asynchronous function to the wrapped `trcks.Result` object
+        if it is a success.
 
         Args:
             f: The asynchronous function to be applied.
@@ -1334,7 +1355,9 @@ class ResultWrapper(_Wrapper[Result[_F_default_co, _S_default_co]]):
     def map_success_to_awaitable_result(
         self, f: Callable[[_S_default_co], AwaitableResult[_F, _S]]
     ) -> AwaitableResultWrapper[_F_default_co | _F, _S]:
-        """Apply async. `trcks.Result` func. to wrapped `trcks.Result` obj. if success.
+        """Apply asynchronous `trcks.Result` function
+        to the wrapped `trcks.Result` object
+        if it is a success.
 
         Args:
             f: The asynchronous function to be applied.
@@ -1394,7 +1417,9 @@ class ResultWrapper(_Wrapper[Result[_F_default_co, _S_default_co]]):
     def map_success_to_result(
         self, f: Callable[[_S_default_co], Result[_F, _S]]
     ) -> ResultWrapper[_F_default_co | _F, _S]:
-        """Apply sync. `trcks.Result` func. to wrapped `trcks.Result` obj. if success.
+        """Apply synchronous `trcks.Result` function
+        to the wrapped `trcks.Result` object
+        if it is a success.
 
         Args:
             f: The synchronous function to be applied.
@@ -1535,7 +1560,8 @@ class Wrapper(_Wrapper[_T_co]):
     def map_to_awaitable_result(
         self, f: Callable[[_T_co], AwaitableResult[_F, _S]]
     ) -> AwaitableResultWrapper[_F, _S]:
-        """Apply an asynchronous function with return type `trcks.Result`.
+        """Apply an asynchronous function with return type `trcks.Result`
+        to the wrapped object.
 
         Args:
             f: The asynchronous function to be applied.
@@ -1571,7 +1597,8 @@ class Wrapper(_Wrapper[_T_co]):
     def map_to_result(
         self, f: Callable[[_T_co], Result[_F, _S]]
     ) -> ResultWrapper[_F, _S]:
-        """Apply a sync. function with ret. type `trcks.Result` to the wrapped object.
+        """Apply a synchronous function with return type `trcks.Result`
+        to the wrapped object.
 
         Args:
             f: The synchronous function to be applied.
