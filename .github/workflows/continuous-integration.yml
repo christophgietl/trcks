@@ -13,7 +13,7 @@ jobs:
       - uses: ./.github/actions/set-up-uv
         with:
           install-dependencies: true
-      - run: uv run pydoctor
+      - run: uv run --locked pydoctor
       - uses: actions/upload-pages-artifact@v3
         with:
           path: apidocs
@@ -56,10 +56,10 @@ jobs:
         with:
           key: pre-commit-${{ matrix.os }}-${{ matrix.python-version }}-${{ hashFiles('.pre-commit-config.yaml') }}
           path: ~/.cache/pre-commit
-      - run: uv run pre-commit run --all-files --show-diff-on-failure
-      - run: uv run mypy
-      - run: uv run pyright
-      - run: uv run pytest
+      - run: uv run --locked pre-commit run --all-files --show-diff-on-failure
+      - run: uv run --locked mypy
+      - run: uv run --locked pyright
+      - run: uv run --locked pytest
       - run: uv run --resolution lowest-direct mypy
       - run: uv run --resolution lowest-direct pyright
       - run: uv run --resolution lowest-direct pytest
