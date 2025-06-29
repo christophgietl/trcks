@@ -60,9 +60,9 @@ jobs:
       - run: uv run --locked mypy
       - run: uv run --locked pyright
       - run: uv run --locked pytest
-      - run: uv run --resolution lowest-direct mypy
-      - run: uv run --resolution lowest-direct pyright
-      - run: uv run --resolution lowest-direct pytest
+      - run: uv run --fork-strategy=fewest --resolution=lowest-direct mypy
+      - run: uv run --fork-strategy=fewest --resolution=lowest-direct pyright
+      - run: uv run --fork-strategy=fewest --resolution=lowest-direct pytest
   publish-docs:
     environment:
       name: github-pages
