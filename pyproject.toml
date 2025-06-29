@@ -60,7 +60,8 @@ requires-python = ">=3.9"
 version = "0.0.0"   # Version will be set by CI workflow based on git tag.
 
 [project.urls]
-Documentation = "https://christophgietl.github.io/trcks"
+Documentation = "https://christophgietl.github.io/trcks/"
+Issues = "https://github.com/christophgietl/trcks/issues"
 Repository = "https://github.com/christophgietl/trcks.git"
 
 [tool.mypy]
