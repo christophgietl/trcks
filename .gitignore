@@ -16,4 +16,7 @@ wheels/
 *.egg-info
 
 # Virtual environments
-.venv
+.venv/
+
+# macOS-generated files
+.DS_Store
