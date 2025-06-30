@@ -4,11 +4,11 @@ requires = ["flit_core>=3.12,<4"]
 
 [dependency-groups]
 dev = [
-    "mypy==1.16.0",
+    "mypy==1.16.1",
     "pre-commit==4.2.0",
     "pydoctor==25.4.0",
     "pyright[nodejs]==1.1.402",
-    "pytest==8.4.0",
+    "pytest==8.4.1",
     "pytest-asyncio==1.0.0",
     "pytest-cov==6.2.1",
     "pytest-doctestplus==1.4.0",
