@@ -56,14 +56,15 @@ jobs:
         with:
           key: pre-commit-${{ matrix.os }}-${{ matrix.python-version }}-${{ hashFiles('.pre-commit-config.yaml') }}
           path: ~/.cache/pre-commit
-      - run: uv run --locked pre-commit run --all-files --show-diff-on-failure
-      - run: uv run --locked mypy
-      - run: uv run --locked pyright
-      - run: uv run --locked pytest
+      - run: uv run --no-sync pre-commit run --all-files --show-diff-on-failure
+      - run: uv sync --locked --resolution=highest
+      - run: uv run --no-sync mypy
+      - run: uv run --no-sync pyright
+      - run: uv run --no-sync pytest
       - run: uv sync --resolution=lowest-direct
-      - run: uv run --locked --resolution=lowest-direct mypy
-      - run: uv run --locked --resolution=lowest-direct pyright
-      - run: uv run --locked --resolution=lowest-direct pytest
+      - run: uv run --no-sync mypy
+      - run: uv run --no-sync pyright
+      - run: uv run --no-sync pytest
   publish-docs:
     environment:
       name: github-pages
