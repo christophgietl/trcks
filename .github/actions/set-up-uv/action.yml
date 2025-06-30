@@ -1,7 +1,7 @@
 name: Set up uv
 description: Install uv and Python and, if desired, dependencies
 inputs:
-  install-dependencies:
+  install-and-cache-dependencies:
     default: "false"
     description: whether to install the dependencies specified in pyproject.toml
     required: true
@@ -18,9 +18,9 @@ runs:
   steps:
     - uses: astral-sh/setup-uv@v6
       with:
-        enable-cache: fromJSON(inputs.install-dependencies)
+        enable-cache: fromJSON(inputs.install-and-cache-dependencies)
         python-version: ${{ inputs.python-version }}
         version: ${{ inputs.uv-version }}
-    - if: fromJSON(inputs.install-dependencies)
+    - if: fromJSON(inputs.install-and-cache-dependencies)
       run: uv sync --locked
       shell: bash
