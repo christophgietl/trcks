@@ -1,0 +1,13 @@
+name: Run pre-commit for all files
+description: Executes pre-commit using caching
+runs:
+  using: composite
+  steps:
+    - uses: actions/cache@v4
+      with:
+        key: pre-commit-${{ matrix.os }}-${{ matrix.python-version }}-${{ hashFiles('.pre-commit-config.yaml') }}
+        path: ~/.cache/pre-commit
+    - run: uv sync --locked
+      shell: bash
+    - run: uv run --no-sync pre-commit run --all-files --show-diff-on-failure
+      shell: bash
