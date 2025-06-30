@@ -55,14 +55,13 @@ jobs:
       - uses: ./.github/actions/run-pre-commit
         with:
           cache-key-suffix: ${{ matrix.os }}-${{ matrix.python-version }}
-      - run: uv sync --locked --resolution=highest
-      - run: uv run --no-sync mypy
-      - run: uv run --no-sync pyright
-      - run: uv run --no-sync pytest
-      - run: uv sync --resolution=lowest-direct
-      - run: uv run --no-sync mypy
-      - run: uv run --no-sync pyright
-      - run: uv run --no-sync pytest
+      - name: Run tests and type checks with dependencies specified in uv.lock file
+        uses: ./.github/actions/run-tests-and-type-checks
+      - name: Run tests and type checks with lowest direct dependencies
+        uses: ./.github/actions/run-tests-and-type-checks
+        with:
+          locked: false
+          resolution-strategy: lowest-direct
   publish-docs:
     environment:
       name: github-pages
