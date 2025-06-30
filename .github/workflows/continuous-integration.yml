@@ -52,6 +52,8 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
       - uses: ./.github/actions/run-pre-commit
+        with:
+          cache-key-suffix: ${{ matrix.os }}-${{ matrix.python-version }}
       - run: uv sync --locked --resolution=highest
       - run: uv run --no-sync mypy
       - run: uv run --no-sync pyright
