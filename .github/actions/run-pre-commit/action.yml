@@ -1,11 +1,16 @@
 name: Run pre-commit for all files
 description: Executes pre-commit using caching
+inputs:
+  cache-key-suffix:
+    default: ""
+    description: Key suffix for the pre-commit cache. Useful for differentiating runs.
+    required: true
 runs:
   using: composite
   steps:
     - uses: actions/cache@v4
       with:
-        key: pre-commit-${{ matrix.os }}-${{ matrix.python-version }}-${{ hashFiles('.pre-commit-config.yaml') }}
+        key: pre-commit--${{ hashFiles('.pre-commit-config.yaml') }}-${{ inputs.cache-key-suffix }}
         path: ~/.cache/pre-commit
     - run: uv sync --locked
       shell: bash
