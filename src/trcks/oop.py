@@ -97,7 +97,13 @@ _S_default_co = TypeVar("_S_default_co", covariant=True, default=Never)
 
 
 class _Wrapper(Generic[_T_co]):
-    """Base class for all wrappers in the `trcks.oop` module."""
+    """Base class for all wrappers in the `trcks.oop` module.
+
+    Attributes:
+        __slots__: Attribute names to be used.
+    """
+
+    __slots__ = ("_core",)
 
     _core: _T_co
 
