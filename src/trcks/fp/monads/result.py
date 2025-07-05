@@ -1,6 +1,7 @@
 """Monadic functions for `trcks.Result`.
 
-Provides utilities for functional composition of `trcks.Result`-returning functions.
+Provides utilities for functional composition of
+synchronous `trcks.Result`-returning functions.
 
 Example:
     Create and process a value of type `trcks.Result`:
@@ -8,18 +9,29 @@ Example:
         >>> import math
         >>> from trcks.fp.composition import pipe
         >>> from trcks.fp.monads import result as r
-        >>> rslt = pipe((
-        ...     r.construct_success(-5.0),
-        ...     r.map_success_to_result(
-        ...             lambda x:
-        ...                 ("success", x)
+        >>> rslt = pipe(
+        ...     (
+        ...         r.construct_success(1_000_000.0),
+        ...         r.tap_success(lambda x: print(f"Processing value {x} ...")),
+        ...         r.map_success_to_result(
+        ...             lambda x: (
+        ...                 ("success", math.sqrt(x))
         ...                 if x >= 0
         ...                 else ("failure", "negative value")
-        ...     ),
-        ...     r.map_success(math.sqrt),
-        ... ))
+        ...             )
+        ...         ),
+        ...         r.tap_success_to_result(
+        ...             lambda x: (
+        ...                 ("success", print(f"Wrote result {x} to disk."))
+        ...                 if x < 100
+        ...                 else ("failure", "out of disk space")
+        ...             )
+        ...         ),
+        ...     )
+        ... )
+        Processing value 1000000.0 ...
         >>> rslt
-        ('failure', 'negative value')
+        ('failure', 'out of disk space')
 
     If your static type checker cannot infer the type of
     the argument passed to `trcks.fp.composition.pipe`,
@@ -27,21 +39,35 @@ Example:
 
         >>> import math
         >>> from trcks import Result, Success
-        >>> from trcks.fp.composition import Pipeline2, pipe
+        >>> from trcks.fp.composition import Pipeline3, pipe
         >>> from trcks.fp.monads import result as r
-        >>> p: Pipeline2[Success[float], Result[str, float], Result[str, float]] = (
-        ...     r.construct_success(-5.0),
+        >>> p: Pipeline3[
+        ...     Success[float],
+        ...     Result[str, float],
+        ...     Result[str, float],
+        ...     Result[str, float],
+        ... ] = (
+        ...     r.construct_success(1_000_000.0),
+        ...     r.tap_success(lambda x: print(f"Processing value {x} ...")),
         ...     r.map_success_to_result(
-        ...             lambda x:
-        ...                 ("success", x)
-        ...                 if x >= 0
-        ...                 else ("failure", "negative value")
+        ...         lambda x: (
+        ...             ("success", math.sqrt(x))
+        ...             if x >= 0
+        ...             else ("failure", "negative value")
+        ...         )
         ...     ),
-        ...     r.map_success(math.sqrt),
+        ...     r.tap_success_to_result(
+        ...         lambda x: (
+        ...             ("success", print(f"Wrote result {x} to disk."))
+        ...             if x < 100
+        ...             else ("failure", "out of disk space")
+        ...         )
+        ...     ),
         ... )
         >>> rslt = pipe(p)
+        Processing value 1000000.0 ...
         >>> rslt
-        ('failure', 'negative value')
+        ('failure', 'out of disk space')
 """
 
 from __future__ import annotations
@@ -49,6 +75,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from trcks._typing import TypeVar, assert_never
+from trcks.fp.monads import identity as i
 
 if TYPE_CHECKING:  # pragma: no cover
     from collections.abc import Callable
@@ -73,7 +100,7 @@ def construct_failure(value: _F) -> Failure[_F]:
         value: Value to be wrapped in a `Failure` object.
 
     Returns:
-        A new `Failure` instance containing the given value.
+        `Failure` object containing the given value.
 
     Example:
         >>> from trcks.fp.monads import result as r
@@ -90,7 +117,7 @@ def construct_success(value: _S) -> Success[_S]:
         value: Value to be wrapped in a `Success` object.
 
     Returns:
-        A new `Success` instance containing the given value.
+        `Success` object containing the given value.
 
     Example:
         >>> from trcks.fp.monads import result as r
@@ -147,14 +174,14 @@ def map_failure_to_result(
 
     Example:
         >>> from trcks.fp.monads import result as r
-        >>> replace_not_found_by_default_value = r.map_failure_to_result(
+        >>> replace_not_found_failure_by_default_value = r.map_failure_to_result(
         ...     lambda s: ("success", 0.0) if s == "not found" else ("failure", s)
         ... )
-        >>> replace_not_found_by_default_value(("failure", "not found"))
+        >>> replace_not_found_failure_by_default_value(("failure", "not found"))
         ('success', 0.0)
-        >>> replace_not_found_by_default_value(("failure", "other failure"))
+        >>> replace_not_found_failure_by_default_value(("failure", "other failure"))
         ('failure', 'other failure')
-        >>> replace_not_found_by_default_value(("success", 25.0))
+        >>> replace_not_found_failure_by_default_value(("success", 25.0))
         ('success', 25.0)
     """
 
@@ -241,3 +268,99 @@ def map_success_to_result(
         return assert_never(rslt)  # type: ignore [unreachable]  # pragma: no cover
 
     return mapped_f
+
+
+def tap_failure(
+    f: Callable[[_F1], object],
+) -> Callable[[Result[_F1, _S1]], Result[_F1, _S1]]:
+    """Create function that applies a side effect to `Failure` values.
+
+    `Success` values are passed on without side effects.
+
+    Args:
+        f: Side effect to apply to the `Failure` value.
+
+    Returns:
+        Applies the given side effect to `Failure` values and
+        returns the original `Failure` value.
+        Passes on `Success` values without side effects.
+    """
+    return map_failure(i.tap(f))
+
+
+def tap_failure_to_result(
+    f: Callable[[_F1], Result[object, _S2]],
+) -> Callable[[Result[_F1, _S1]], Result[_F1, _S1 | _S2]]:
+    """Create function that applies a side effect with return type `Result`
+    to `Failure` values.
+
+    `Success` values are passed on without side effects.
+
+    Args:
+        f: Side effect to apply to the `Failure` value.
+
+    Returns:
+        Applies the given side effect to `Failure` values.
+        If the given side effect returns a `Failure`,
+        *the original* `Failure` value is returned.
+        If the given side effect returns a `Success`, *this* `Success` is returned.
+        Passes on `Success` values without side effects.
+    """
+
+    def bypassed_f(value: _F1) -> Result[_F1, _S2]:
+        rslt: Result[object, _S2] = f(value)
+        if rslt[0] == "failure":
+            return construct_failure(value)
+        if rslt[0] == "success":
+            return rslt
+        return assert_never(rslt)  # type: ignore [unreachable]  # pragma: no cover
+
+    return map_failure_to_result(bypassed_f)
+
+
+def tap_success(
+    f: Callable[[_S1], object],
+) -> Callable[[Result[_F1, _S1]], Result[_F1, _S1]]:
+    """Create function that applies a side effect to `Success` values.
+
+    `Failure` values are passed on without side effects.
+
+    Args:
+        f: Side effect to apply to the `Success` value.
+
+    Returns:
+        Passes on `Failure` values without side effects.
+        Applies the given side effect to `Success` values and
+        returns the original `Success` value.
+    """
+    return map_success(i.tap(f))
+
+
+def tap_success_to_result(
+    f: Callable[[_S1], Result[_F2, object]],
+) -> Callable[[Result[_F1, _S1]], Result[_F1 | _F2, _S1]]:
+    """Create function that applies a side effect with return type `Result`
+    to `Success` values.
+
+    `Failure` values are passed on without side effects.
+
+    Args:
+        f: Side effect to apply to the `Success` value.
+
+    Returns:
+        Passes on `Failure` values without side effects.
+        Applies the given side effect to `Success` values.
+        If the given side effect returns a `Failure`, *this* `Failure` is returned.
+        If the given side effect returns a `Success`,
+        *the original* `Success` value is returned.
+    """
+
+    def bypassed_f(value: _S1) -> Result[_F2, _S1]:
+        rslt: Result[_F2, object] = f(value)
+        if rslt[0] == "failure":
+            return rslt
+        if rslt[0] == "success":
+            return construct_success(value)
+        return assert_never(rslt)  # type: ignore [unreachable]  # pragma: no cover
+
+    return map_success_to_result(bypassed_f)
