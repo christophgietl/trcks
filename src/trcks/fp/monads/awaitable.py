@@ -8,26 +8,31 @@ Example:
     >>> from trcks.fp.monads import awaitable as a
     >>> async def read_from_disk() -> str:
     ...     await asyncio.sleep(0.001)
-    ...     input_ = "Hello, world!"
-    ...     print(f"Read '{input_}' from disk.")
-    ...     return input_
+    ...     return "Hello, world!"
     ...
     >>> def transform(s: str) -> str:
     ...     return f"Length: {len(s)}"
     ...
-    >>> async def write_to_disk(output: str) -> None:
+    >>> async def write_to_disk(s: str) -> None:
     ...     await asyncio.sleep(0.001)
-    ...     print(f"Wrote '{output}' to disk.")
     ...
-    >>> async def main() -> None:
+    >>> async def main() -> str:
     ...     awaitable_str = read_from_disk()
     ...     return await pipe(
-    ...         (awaitable_str, a.map_(transform), a.map_to_awaitable(write_to_disk))
+    ...         (
+    ...             awaitable_str,
+    ...             a.tap(lambda s: print(f"Read '{s}' from disk.")),
+    ...             a.map_(transform),
+    ...             a.tap_to_awaitable(write_to_disk),
+    ...             a.tap(lambda s: print(f"Wrote '{s}' to disk.")),
+    ...         ),
     ...     )
     ...
-    >>> asyncio.run(main())
+    >>> output = asyncio.run(main())
     Read 'Hello, world!' from disk.
     Wrote 'Length: 13' to disk.
+    >>> output
+    'Length: 13'
 """
 
 from __future__ import annotations
@@ -35,6 +40,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from trcks._typing import TypeVar
+from trcks.fp.monads import identity as i
 
 if TYPE_CHECKING:  # pragma: no cover
     from collections.abc import Awaitable, Callable
@@ -148,6 +154,80 @@ def map_to_awaitable(
         return await f(await awaitable)
 
     return mapped_f
+
+
+def tap(f: Callable[[_T1], object]) -> Callable[[Awaitable[_T1]], Awaitable[_T1]]:
+    """Turn synchronous function into
+    function expecting an `Awaitable` and returning the same `Awaitable`.
+
+    Args:
+        f:
+            The synchronous function to be transformed into
+            a function expecting an `Awaitable` and returning the same `Awaitable`.
+
+    Returns:
+        The given function transformed into
+        a function expecting an `Awaitable` and returning the same `Awaitable`.
+
+    Example:
+        >>> import asyncio
+        >>> from collections.abc import Awaitable
+        >>> from trcks.fp.monads import awaitable as a
+        >>> def print_string(s: str) -> None:
+        ...     print(f"String: {s}")
+        ...
+        >>> print_string_tapped = a.tap(print_string)
+        >>> awaitable_input = a.construct("Hello, world!")
+        >>> awaitable_output = print_string_tapped(awaitable_input)
+        >>> isinstance(awaitable_output, Awaitable)
+        True
+        >>> value = asyncio.run(a.to_coroutine(awaitable_output))
+        String: Hello, world!
+        >>> value
+        'Hello, world!'
+    """
+    return map_(i.tap(f))
+
+
+def tap_to_awaitable(
+    f: Callable[[_T1], Awaitable[object]],
+) -> Callable[[Awaitable[_T1]], Awaitable[_T1]]:
+    """Turn `Awaitable`-returning function into
+    function expecting an `Awaitable` and returning the same `Awaitable`.
+
+    Args:
+        f:
+            The asynchronous function to be transformed into
+            a function expecting an `Awaitable` and returning the same `Awaitable`.
+
+    Returns:
+        The given function transformed into
+        a function expecting an `Awaitable` and returning the same `Awaitable`.
+
+    Example:
+        >>> import asyncio
+        >>> from collections.abc import Awaitable
+        >>> from trcks.fp.monads import awaitable as a
+        >>> async def write_to_disk(output: str) -> None:
+        ...     await asyncio.sleep(0.001)
+        ...     print(f"Wrote '{output}' to disk.")
+        ...
+        >>> write_to_disk_tapped = a.tap_to_awaitable(write_to_disk)
+        >>> awaitable_input = a.construct("Hello, world!")
+        >>> awaitable_output = write_to_disk_tapped(awaitable_input)
+        >>> isinstance(awaitable_output, Awaitable)
+        True
+        >>> value = asyncio.run(a.to_coroutine(awaitable_output))
+        Wrote 'Hello, world!' to disk.
+        >>> value
+        'Hello, world!'
+    """
+
+    async def bypassed_f(value: _T1) -> _T1:
+        _ = await f(value)
+        return value
+
+    return map_to_awaitable(bypassed_f)
 
 
 async def to_coroutine(awtbl: Awaitable[_T]) -> _T:

@@ -1,6 +1,6 @@
 """Functional interface for `trcks`.
 
-This package provides functions for processing values of the following types
+This package provides functions for processing values of the following generic types
 in a functional style:
 
 - `collections.abc.Awaitable`
