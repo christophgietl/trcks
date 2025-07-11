@@ -241,3 +241,106 @@ def map_success_to_result(
         return assert_never(rslt)  # type: ignore [unreachable]  # pragma: no cover
 
     return mapped_f
+
+
+def tap_failure(
+    f: Callable[[_F1], object],
+) -> Callable[[Result[_F1, _S1]], Result[_F1, _S1]]:
+    """Create function that applies a side effect to `Failure` values.
+
+    `Success` values are passed on without side effects.
+
+    Args:
+        f: Function to apply to the `Failure` value.
+
+    Returns:
+        A function that applies the given function to `Failure` values
+        and returns the original `Result` without modification.
+    """
+
+    def composed_f(value: _F1) -> Failure[object]:
+        return construct_failure(f(value))
+
+    return tap_failure_to_result(composed_f)
+
+
+def tap_failure_to_result(
+    f: Callable[[_F1], Result[object, _S2]],
+) -> Callable[[Result[_F1, _S1]], Result[_F1, _S1 | _S2]]:
+    """Create function that applies a side effect with return type `Result`
+    to `Failure` values.
+
+    `Success` values are passed on without side effects.
+
+    Args:
+        f: Function to apply to the `Failure` value.
+
+    Returns:
+        A function that
+
+        - passes on `Success` values without side effects,
+        - applies the given function to `Failure` values
+          and returns a `Result` containing the original value
+          if the function returns a `Failure`.
+    """
+
+    def bypassed_f(value: _F1) -> Result[_F1, _S2]:
+        rslt: Result[object, _S2] = f(value)
+        if rslt[0] == "failure":
+            return construct_failure(value)
+        if rslt[0] == "success":
+            return rslt
+        return assert_never(rslt)  # type: ignore [unreachable]  # pragma: no cover
+
+    return map_failure_to_result(bypassed_f)
+
+
+def tap_success(
+    f: Callable[[_S1], object],
+) -> Callable[[Result[_F1, _S1]], Result[_F1, _S1]]:
+    """Create function that applies a side effect to `Success` values.
+
+    `Failure` values are passed on without side effects.
+
+    Args:
+        f: Function to apply to the `Success` value.
+
+    Returns:
+        A function that applies the given function to `Success` values
+        and returns the original `Result` without modification.
+    """
+
+    def composed_f(value: _S1) -> Success[object]:
+        return construct_success(f(value))
+
+    return tap_success_to_result(composed_f)
+
+
+def tap_success_to_result(
+    f: Callable[[_S1], Result[_F2, object]],
+) -> Callable[[Result[_F1, _S1]], Result[_F1 | _F2, _S1]]:
+    """Create function that applies a side effect with return type `Result`
+    to `Success` values.
+
+    `Failure` values are passed on without side effects.
+
+    Args:
+        f: Function to apply to the `Success` value.
+
+    Returns:
+        A function that
+            - passes on `Failure` values without side effects,
+            - applies the given function to `Success` values,
+              and returns a `Result` containing the original value
+              if the function returns a `Success`.
+    """
+
+    def bypassed_f(value: _S1) -> Result[_F2, _S1]:
+        rslt: Result[_F2, object] = f(value)
+        if rslt[0] == "failure":
+            return rslt
+        if rslt[0] == "success":
+            return construct_success(value)
+        return assert_never(rslt)  # type: ignore [unreachable]  # pragma: no cover
+
+    return map_success_to_result(bypassed_f)

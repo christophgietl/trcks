@@ -191,7 +191,7 @@ def map_failure(
     `AwaitableSuccess` values are left unchanged.
 
     Args:
-        f: Function to apply to the `AwaitableFailure` values.
+        f: Synchronous function to apply to the `AwaitableFailure` values.
 
     Returns:
         Maps `AwaitableFailure` values to `AwaitableFailure` values
@@ -320,7 +320,7 @@ def map_failure_to_result(
     `AwaitableSuccess` values are left unchanged.
 
     Args:
-        f: Function to apply to the `AwaitableFailure` values.
+        f: Synchronous function to apply to the `AwaitableFailure` values.
 
     Returns:
         Maps `AwaitableFailure` values to `AwaitableResult` values
@@ -361,7 +361,7 @@ def map_success(
     `AwaitableFailure` values are left unchanged.
 
     Args:
-        f: Function to apply to the `AwaitableSuccess` values.
+        f: Synchronous function to apply to the `AwaitableSuccess` values.
 
     Returns:
         Leaves `AwaitableFailure` values unchanged and
@@ -496,7 +496,7 @@ def map_success_to_result(
     `AwaitableFailure` values are left unchanged.
 
     Args:
-        f: Function to apply to the `AwaitableSuccess` values.
+        f: Synchronous function to apply to the `AwaitableSuccess` values.
 
     Returns:
         Leaves `AwaitableFailure` values unchanged and
@@ -529,6 +529,196 @@ def map_success_to_result(
         ('success', 5.0)
     """
     return a.map_(r.map_success_to_result(f))
+
+
+def tap_failure(
+    f: Callable[[_F1], object],
+) -> Callable[[AwaitableResult[_F1, _S1]], AwaitableResult[_F1, _S1]]:
+    """Create function that applies a synchronous side effect
+    to `AwaitableFailure` values.
+
+    `AwaitableSuccess` values are passed on without side effects.
+
+    Args:
+        f: Synchronous function to apply to the `AwaitableFailure` values.
+
+    Returns:
+        A function that applies the given function to `AwaitableFailure` values
+        and returns the original `AwaitableResult` without modification.
+    """
+    return a.map_(r.tap_failure(f))
+
+
+def tap_failure_to_awaitable(
+    f: Callable[[_F1], Awaitable[object]],
+) -> Callable[[AwaitableResult[_F1, _S1]], AwaitableResult[_F1, _S1]]:
+    """Create function that applies an asynchronous side effect
+    to `AwaitableFailure` values.
+
+    `AwaitableSuccess` values are passed on without side effects.
+
+    Args:
+        f: Asynchronous function to apply to the `AwaitableFailure` values.
+
+    Returns:
+        A function that applies the given function to `AwaitableFailure` values
+        and returns the original `AwaitableResult` without modification.
+    """
+
+    def composed_f(value: _F1) -> AwaitableFailure[object]:
+        return construct_failure_from_awaitable(f(value))
+
+    return tap_failure_to_awaitable_result(composed_f)
+
+
+def tap_failure_to_awaitable_result(
+    f: Callable[[_F1], AwaitableResult[object, _S2]],
+) -> Callable[[AwaitableResult[_F1, _S1]], AwaitableResult[_F1, _S1 | _S2]]:
+    """Create function that applies an asynchronous side effect
+    with return type `Result` to `AwaitableFailure` values.
+
+    `AwaitableSuccess` values are passed on without side effects.
+
+    Args:
+        f: Asynchronous function to apply to the `AwaitableFailure` values.
+
+    Returns:
+        A function that
+            - passes on `AwaitableSuccess` values without side effects,
+            - applies the given function to `AwaitableFailure` values,
+              and returns an `AwaitableResult` containing the original value
+              if the function returns a `Failure`.
+    """
+
+    async def bypassed_f(rslt: Result[_F1, _S1]) -> Result[_F1, _S1 | _S2]:
+        if rslt[0] == "failure":
+            f_rslt: Result[object, _S2] = await f(rslt[1])
+            if f_rslt[0] == "failure":
+                return rslt
+            if f_rslt[0] == "success":
+                return f_rslt
+            return assert_never(f_rslt)  # type: ignore [unreachable]  # pragma: no cover
+        if rslt[0] == "success":
+            return rslt
+        return assert_never(rslt)  # type: ignore [unreachable]  # pragma: no cover
+
+    return a.map_to_awaitable(bypassed_f)
+
+
+def tap_failure_to_result(
+    f: Callable[[_F1], Result[object, _S2]],
+) -> Callable[[AwaitableResult[_F1, _S1]], AwaitableResult[_F1, _S1 | _S2]]:
+    """Create function that applies a synchronous side effect with return type `Result`
+    to `AwaitableFailure` values.
+
+    `AwaitableSuccess` values are passed on without side effects.
+
+    Args:
+        f: Synchronous function to apply to the `AwaitableFailure` values.
+
+    Returns:
+        A function that
+            - passes on `AwaitableSuccess` values without side effects,
+            - applies the given function to `AwaitableFailure` values,
+              and returns an `AwaitableResult` containing the original value
+              if the function returns a `Failure`.
+    """
+    return a.map_(r.tap_failure_to_result(f))
+
+
+def tap_success(
+    f: Callable[[_S1], object],
+) -> Callable[[AwaitableResult[_F1, _S1]], AwaitableResult[_F1, _S1]]:
+    """Create function that applies a synchronous side effect
+    to `AwaitableSuccess` values.
+
+    `AwaitableFailure` values are passed on without side effects.
+
+    Args:
+        f: Synchronous function to apply to the `AwaitableSuccess` values.
+
+    Returns:
+        A function that applies the given function to `AwaitableSuccess` values
+        and returns the original `AwaitableResult` without modification.
+    """
+    return a.map_(r.tap_success(f))
+
+
+def tap_success_to_awaitable(
+    f: Callable[[_S1], Awaitable[object]],
+) -> Callable[[AwaitableResult[_F1, _S1]], AwaitableResult[_F1, _S1]]:
+    """Create function that applies an asynchronous side effect
+    to `AwaitableSuccess` values.
+
+    `AwaitableFailure` values are passed on without side effects.
+
+    Args:
+        f: Asynchronous function to apply to the `AwaitableSuccess` values.
+
+    Returns:
+        A function that applies the given function to `AwaitableSuccess` values
+        and returns the original `AwaitableResult` without modification.
+    """
+
+    def composed_f(value: _S1) -> AwaitableSuccess[object]:
+        return construct_success_from_awaitable(f(value))
+
+    return tap_success_to_awaitable_result(composed_f)
+
+
+def tap_success_to_awaitable_result(
+    f: Callable[[_S1], AwaitableResult[_F2, object]],
+) -> Callable[[AwaitableResult[_F1, _S1]], AwaitableResult[_F1 | _F2, _S1]]:
+    """Create function that applies an asynchronous side effect
+    with return type `Result` to `AwaitableSuccess` values.
+
+    `AwaitableFailure` values are passed on without side effects.
+
+    Args:
+        f: Asynchronous function to apply to the `AwaitableSuccess` values.
+
+    Returns:
+        A function that
+            - passes on `AwaitableFailure` values without side effects,
+            - applies the given function to `AwaitableSuccess` values,
+              and returns an `AwaitableResult` containing the original value
+              if the function returns a `Success`.
+    """
+
+    async def bypassed_f(rslt: Result[_F1, _S1]) -> Result[_F1 | _F2, _S1]:
+        if rslt[0] == "failure":
+            return rslt
+        if rslt[0] == "success":
+            f_rslt: Result[_F2, object] = await f(rslt[1])
+            if f_rslt[0] == "failure":
+                return f_rslt
+            if f_rslt[0] == "success":
+                return rslt
+            return assert_never(f_rslt)  # type: ignore [unreachable]  # pragma: no cover
+        return assert_never(rslt)  # type: ignore [unreachable]  # pragma: no cover
+
+    return a.map_to_awaitable(bypassed_f)
+
+
+def tap_success_to_result(
+    f: Callable[[_S1], Result[_F2, object]],
+) -> Callable[[AwaitableResult[_F1, _S1]], AwaitableResult[_F1 | _F2, _S1]]:
+    """Create function that applies a synchronous side effect with return type `Result`
+    to `AwaitableSuccess` values.
+
+    `AwaitableFailure` values are passed on without side effects.
+
+    Args:
+        f: Synchronous function to apply to the `AwaitableSuccess` values.
+
+    Returns:
+        A function that
+            - passes on `AwaitableFailure` values without side effects,
+            - applies the given function to `AwaitableSuccess` values,
+              and returns an `AwaitableResult` containing the original value
+              if the function returns a `Success`.
+    """
+    return a.map_(r.tap_success_to_result(f))
 
 
 async def to_coroutine_result(a_rslt: AwaitableResult[_F, _S]) -> Result[_F, _S]:
