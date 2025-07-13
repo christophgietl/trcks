@@ -6,24 +6,16 @@ This package provides
 - the subpackages `trcks.fp` and `trcks.oop` for working with these types
   in a functional and object-oriented way, respectively.
 
-Attributes:
-    __version__: Version of this package.
-
 See:
     https://fsharpforfunandprofit.com/posts/recipe-part2/
 """
 
-import contextlib
-import importlib.metadata
 from collections.abc import Awaitable
 from typing import Literal, Union
 
 from trcks._typing import TypeAlias, TypeVar
 
 __docformat__ = "google"
-
-with contextlib.suppress(importlib.metadata.PackageNotFoundError):
-    __version__ = importlib.metadata.version(__name__)
 
 
 _F_co = TypeVar("_F_co", covariant=True)
