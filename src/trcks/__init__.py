@@ -7,7 +7,7 @@ This package provides
   in a functional and object-oriented way, respectively.
 
 Attributes:
-    __version__: Version of the `trcks` package.
+    __version__: Version of this package.
 
 See:
     https://fsharpforfunandprofit.com/posts/recipe-part2/
@@ -23,7 +23,7 @@ from trcks._typing import TypeAlias, TypeVar
 __docformat__ = "google"
 
 with contextlib.suppress(importlib.metadata.PackageNotFoundError):
-    __version__ = importlib.metadata.version("trcks")
+    __version__ = importlib.metadata.version(__name__)
 
 
 _F_co = TypeVar("_F_co", covariant=True)
