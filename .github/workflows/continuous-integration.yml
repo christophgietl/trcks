@@ -21,9 +21,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          # Required for hatch-vcs to work correctly
+          # (see https://github.com/ofek/hatch-vcs/issues/72#issuecomment-2561960617):
+          fetch-depth: 0
       - uses: ./.github/actions/set-up-uv
-      - if: github.ref_type == 'tag'
-        run: uv version "$(git describe --tags --abbrev=0)"
       - run: uv build
       - uses: actions/upload-artifact@v4
         with:

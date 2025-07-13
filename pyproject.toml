@@ -1,6 +1,9 @@
 [build-system]
 build-backend = "hatchling.build"
-requires = ["hatchling>=1.27,<2"]
+requires = [
+    "hatchling>=1.27,<2",
+    "hatch-vcs>=0.5,<0.6",
+]
 
 [dependency-groups]
 dev = [
@@ -35,6 +38,7 @@ dependencies = [
     "typing-extensions >= 4.12 ; python_full_version < '3.13'",
 ]
 description = "Typesafe railway-oriented programming (ROP)"
+dynamic = ["version"]
 keywords = [
     "composition",
     "control flow",
@@ -57,7 +61,6 @@ maintainers = [{ name = "Christoph Gietl" }]
 name = "trcks"
 readme = "README.md"
 requires-python = ">=3.9"
-version = "0.0.0"   # Version will be set by CI workflow based on git tag.
 
 [project.urls]
 Documentation = "https://christophgietl.github.io/trcks/"
@@ -66,6 +69,9 @@ Repository = "https://github.com/christophgietl/trcks.git"
 
 [tool.hatch.build.targets.sdist]
 include = ["src/"]
+
+[tool.hatch.version]
+source = "vcs"
 
 [tool.mypy]
 disallow_any_decorated = true
