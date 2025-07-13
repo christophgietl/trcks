@@ -1,6 +1,6 @@
 [build-system]
-build-backend = "flit_core.buildapi"
-requires = ["flit_core>=3.12,<4"]
+build-backend = "hatchling.build"
+requires = ["hatchling>=1.27,<2"]
 
 [dependency-groups]
 dev = [
@@ -63,6 +63,9 @@ version = "0.0.0"   # Version will be set by CI workflow based on git tag.
 Documentation = "https://christophgietl.github.io/trcks/"
 Issues = "https://github.com/christophgietl/trcks/issues"
 Repository = "https://github.com/christophgietl/trcks.git"
+
+[tool.hatch.build.targets.sdist]
+include = ["src/"]
 
 [tool.mypy]
 disallow_any_decorated = true
