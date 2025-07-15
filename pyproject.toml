@@ -1,8 +1,8 @@
 [build-system]
-build-backend = "hatchling.build"
+build-backend = "setuptools.build_meta"
 requires = [
-    "hatchling>=1.27,<2",
-    "hatch-vcs>=0.5,<0.6",
+    "setuptools>=77.0.3",   # needed for project.license-files support
+    "setuptools-scm>=8",
 ]
 
 [dependency-groups]
@@ -67,12 +67,6 @@ Documentation = "https://christophgietl.github.io/trcks/"
 Issues = "https://github.com/christophgietl/trcks/issues"
 Repository = "https://github.com/christophgietl/trcks.git"
 
-[tool.hatch.build.targets.sdist]
-include = ["src/"]
-
-[tool.hatch.version]
-source = "vcs"
-
 [tool.mypy]
 disallow_any_decorated = true
 disallow_any_explicit = true
@@ -120,8 +114,8 @@ doctest_plus = "enabled"
 
 [tool.ruff.lint]
 ignore = [
-    "COM812", # "may cause conflicts when used with the formatter"
-    "D205", # forbids multiple lines at the beginning of a docstring
+    "COM812",   # "may cause conflicts when used with the formatter"
+    "D205",     # forbids multiple lines at the beginning of a docstring
 ]
 select = ["ALL"]
 
@@ -130,3 +124,6 @@ select = ["ALL"]
 
 [tool.ruff.lint.pydocstyle]
 convention = "google"
+
+[tool.setuptools_scm]
+# enables setuptools-scm (even if empty)
