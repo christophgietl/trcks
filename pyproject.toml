@@ -1,9 +1,6 @@
 [build-system]
-build-backend = "setuptools.build_meta"
-requires = [
-    "setuptools>=77.0.3",   # needed for project.license-files support
-    "setuptools-scm>=8",
-]
+build-backend = "pdm.backend"
+requires = ["pdm-backend"]
 
 [dependency-groups]
 dev = [
@@ -79,6 +76,9 @@ strict_bytes = true  # will become the default in mypy 2.0
 warn_incomplete_stub = true
 warn_unreachable = true
 
+[tool.pdm.version]
+source = "scm"
+
 [tool.pydoctor]
 add-package = ["src/trcks"]
 html-base-url = "https://christophgietl.github.io/trcks"
@@ -124,6 +124,3 @@ select = ["ALL"]
 
 [tool.ruff.lint.pydocstyle]
 convention = "google"
-
-[tool.setuptools_scm]
-# enables setuptools-scm (even if empty)
