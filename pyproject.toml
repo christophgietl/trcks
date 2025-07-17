@@ -107,7 +107,7 @@ reportUnusedCallResult = true
 typeCheckingMode = "strict"
 
 [tool.pytest.ini_options]
-addopts = "--cov=trcks --cov-fail-under 100 --cov-report term-missing --doctest-glob '*.md'"
+addopts = "--cov=trcks --cov-fail-under=100 --cov-report=term-missing --doctest-glob='*.md'"
 asyncio_default_fixture_loop_scope = "function"
 asyncio_mode = "auto"
 doctest_plus = "enabled"
