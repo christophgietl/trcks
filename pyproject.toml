@@ -1,17 +1,17 @@
 [build-system]
 build-backend = "pdm.backend"
-requires = ["pdm-backend"]
+requires = ["pdm-backend >= 2.4, <3"]  # Specified versions support project.license-files.
 
 [dependency-groups]
 dev = [
-    "mypy==1.16.1",
-    "pre-commit==4.2.0",
-    "pydoctor==25.4.0",
-    "pyright[nodejs]==1.1.403",
-    "pytest==8.4.1",
-    "pytest-asyncio==1.0.0",
-    "pytest-cov==6.2.1",
-    "pytest-doctestplus==1.4.0",
+    "mypy == 1.16.1",
+    "pre-commit == 4.2.0",
+    "pydoctor == 25.4.0",
+    "pyright[nodejs] == 1.1.403",
+    "pytest == 8.4.1",
+    "pytest-asyncio == 1.0.0",
+    "pytest-cov == 6.2.1",
+    "pytest-doctestplus == 1.4.0",
 ]
 
 [project]
@@ -107,7 +107,7 @@ reportUnusedCallResult = true
 typeCheckingMode = "strict"
 
 [tool.pytest.ini_options]
-addopts = "--cov=trcks --cov-fail-under=100 --cov-report term-missing --doctest-glob '*.md'"
+addopts = "--cov=trcks --cov-fail-under 100 --cov-report term-missing --doctest-glob '*.md'"
 asyncio_default_fixture_loop_scope = "function"
 asyncio_mode = "auto"
 doctest_plus = "enabled"

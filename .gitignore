@@ -1,3 +1,9 @@
+# macOS-generated files
+.DS_Store
+
+# pdm-generated files
+/.pdm-build/
+
 # PyCharm-generated files
 /.idea/
 
@@ -15,8 +21,5 @@ dist/
 wheels/
 *.egg-info
 
-# Virtual environments
+# virtual environments
 .venv/
-
-# macOS-generated files
-.DS_Store
