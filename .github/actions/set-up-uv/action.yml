@@ -8,7 +8,7 @@ inputs:
   python-version:
     description: Python version to be installed
   uv-version:
-    default: 0.7.x
+    default: 0.8.x
     description: uv version to be installed
     required: true
 runs:
