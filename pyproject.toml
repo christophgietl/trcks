@@ -1,17 +1,17 @@
 [build-system]
 build-backend = "pdm.backend"
-requires = ["pdm-backend >= 2.4, <3"]  # Specified versions support project.license-files.
+requires = ["pdm-backend >= 2.4, < 3"]  # Specified versions support project.license-files.
 
 [dependency-groups]
 dev = [
     "mypy",
-    "pre-commit == 4.2.0",
-    "pydoctor == 25.4.0",
+    "pre-commit >= 4.2",
+    "pydoctor >= 25.4",
     "pyright[nodejs]",
-    "pytest == 8.4.1",
-    "pytest-asyncio == 1.0.0",
-    "pytest-cov == 6.2.1",
-    "pytest-doctestplus == 1.4.0",
+    "pytest >= 8.4",
+    "pytest-asyncio >= 1.0",
+    "pytest-cov >= 6.2",
+    "pytest-doctestplus >= 1.4",
 ]
 
 [project]
@@ -60,8 +60,8 @@ readme = "README.md"
 requires-python = ">=3.9"
 
 [project.optional-dependencies]
-compatible-mypy = ["mypy >= 1.16.1"]
-compatible-pyright = ["pyright >= 1.1.403"]
+compatible-mypy = ["mypy >= 1.7"]
+compatible-pyright = ["pyright >= 1.1.387"]
 
 [project.urls]
 Documentation = "https://christophgietl.github.io/trcks/"
