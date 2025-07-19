@@ -9,6 +9,7 @@ The following section describes how to set up and use a development environment.
 
 - [mypy](https://mypy.readthedocs.io) for static type checking
 - [pre-commit](https://pre-commit.com) for managing pre-commit and pre-push hooks
+- [pydoctor](https://pydoctor.readthedocs.io) for generating API documentation
 - [pyright](https://microsoft.github.io/pyright/) for static type checking
 - [pytest](https://pytest.org) for unit testing and doctests
 - [uv](https://docs.astral.sh/uv/) for dependency management and packaging
@@ -47,4 +48,16 @@ Run pre-commit hooks:
 
 ```shell
 uv run pre-commit run --all-files
+```
+
+Generate API documentation:
+
+```shell
+uv run pydoctor
+```
+
+Build distribution package:
+
+```shell
+uv build
 ```
