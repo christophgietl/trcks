@@ -766,6 +766,14 @@ dependencies = [
     { name = "typing-extensions", marker = "python_full_version < '3.13'" },
 ]
 
+[package.optional-dependencies]
+compatible-mypy = [
+    { name = "mypy" },
+]
+compatible-pyright = [
+    { name = "pyright" },
+]
+
 [package.dev-dependencies]
 dev = [
     { name = "mypy" },
@@ -779,14 +787,19 @@ dev = [
 ]
 
 [package.metadata]
-requires-dist = [{ name = "typing-extensions", marker = "python_full_version < '3.13'", specifier = ">=4.12" }]
+requires-dist = [
+    { name = "mypy", marker = "extra == 'compatible-mypy'", specifier = ">=1.16.1" },
+    { name = "pyright", marker = "extra == 'compatible-pyright'", specifier = ">=1.1.403" },
+    { name = "typing-extensions", marker = "python_full_version < '3.13'", specifier = ">=4.12" },
+]
+provides-extras = ["compatible-mypy", "compatible-pyright"]
 
 [package.metadata.requires-dev]
 dev = [
-    { name = "mypy", specifier = "==1.16.1" },
+    { name = "mypy" },
     { name = "pre-commit", specifier = "==4.2.0" },
     { name = "pydoctor", specifier = "==25.4.0" },
-    { name = "pyright", extras = ["nodejs"], specifier = "==1.1.403" },
+    { name = "pyright", extras = ["nodejs"] },
     { name = "pytest", specifier = "==8.4.1" },
     { name = "pytest-asyncio", specifier = "==1.0.0" },
     { name = "pytest-cov", specifier = "==6.2.1" },
