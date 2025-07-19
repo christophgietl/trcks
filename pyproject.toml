@@ -114,8 +114,8 @@ doctest_plus = "enabled"
 
 [tool.ruff.lint]
 ignore = [
-    "COM812",   # "may cause conflicts when used with the formatter"
-    "D205",     # forbids multiple lines at the beginning of a docstring
+    "COM812", # "may cause conflicts when used with the formatter"
+    "D205", # forbids multiple lines at the beginning of a docstring
 ]
 select = ["ALL"]
 
@@ -124,3 +124,10 @@ select = ["ALL"]
 
 [tool.ruff.lint.pydocstyle]
 convention = "google"
+
+[tool.uv]
+cache-keys = [
+    { dir = "src" },
+    { file = "pyproject.toml" },
+    { git = { commit = true, tags = true } }, # needed by pdm-backend to correctly derive package version from Git tags
+]
