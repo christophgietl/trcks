@@ -25,6 +25,8 @@ repos:
     rev: 64f75ae7f8a6b1372c684abbe3301ed95aca267b  # frozen: v0.9.31
     hooks:
       - id: pymarkdown
+        args:
+          - fix
   - repo: https://github.com/jorisroovers/gitlint
     rev: acc9d9de6369b76d22cb4167029d2035e8730b98  # frozen: v0.19.1
     hooks:
