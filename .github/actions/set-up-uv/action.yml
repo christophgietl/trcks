@@ -7,10 +7,6 @@ inputs:
     required: true
   python-version:
     description: Python version to be installed
-  uv-version:
-    default: 0.8.x
-    description: uv version to be installed
-    required: true
 runs:
   using: composite
   steps:
@@ -18,7 +14,6 @@ runs:
       with:
         enable-cache: fromJSON(inputs.install-and-cache-dependencies)
         python-version: ${{ inputs.python-version }}
-        version: ${{ inputs.uv-version }}
     - if: fromJSON(inputs.install-and-cache-dependencies)
       run: uv sync --locked
       shell: bash
