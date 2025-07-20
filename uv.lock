@@ -767,43 +767,45 @@ dependencies = [
 ]
 
 [package.optional-dependencies]
-compatible-mypy = [
+mypy = [
     { name = "mypy" },
 ]
-compatible-pyright = [
+pyright = [
     { name = "pyright" },
+]
+pyright-nodejs = [
+    { name = "pyright", extra = ["nodejs"] },
 ]
 
 [package.dev-dependencies]
 dev = [
-    { name = "mypy" },
     { name = "pre-commit" },
     { name = "pydoctor" },
-    { name = "pyright", extra = ["nodejs"] },
     { name = "pytest" },
     { name = "pytest-asyncio" },
     { name = "pytest-cov" },
     { name = "pytest-doctestplus" },
+    { name = "trcks", extra = ["mypy", "pyright", "pyright-nodejs"] },
 ]
 
 [package.metadata]
 requires-dist = [
-    { name = "mypy", marker = "extra == 'compatible-mypy'", specifier = ">=1.7" },
-    { name = "pyright", marker = "extra == 'compatible-pyright'", specifier = ">=1.1.387" },
+    { name = "mypy", marker = "extra == 'mypy'", specifier = ">=1.7" },
+    { name = "pyright", marker = "extra == 'pyright'", specifier = ">=1.1.387" },
+    { name = "pyright", extras = ["nodejs"], marker = "extra == 'pyright-nodejs'", specifier = ">=1.1.387" },
     { name = "typing-extensions", marker = "python_full_version < '3.13'", specifier = ">=4.12" },
 ]
-provides-extras = ["compatible-mypy", "compatible-pyright"]
+provides-extras = ["mypy", "pyright", "pyright-nodejs"]
 
 [package.metadata.requires-dev]
 dev = [
-    { name = "mypy" },
     { name = "pre-commit", specifier = ">=4.2" },
     { name = "pydoctor", specifier = ">=25.4" },
-    { name = "pyright", extras = ["nodejs"] },
     { name = "pytest", specifier = ">=8.4" },
     { name = "pytest-asyncio", specifier = ">=1.0" },
     { name = "pytest-cov", specifier = ">=6.2" },
     { name = "pytest-doctestplus", specifier = ">=1.4" },
+    { name = "trcks", extras = ["mypy", "pyright", "pyright-nodejs"], specifier = ">=0" },
 ]
 
 [[package]]
