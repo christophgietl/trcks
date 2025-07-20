@@ -14,6 +14,11 @@ The following section describes how to set up and use a development environment.
 - [pytest](https://pytest.org) for unit testing and doctests
 - [uv](https://docs.astral.sh/uv/) for dependency management and packaging
 
+Moreover, `trcks` uses [GitHub Actions](https://github.com/features/actions) for:
+
+- continuous integration (CI)
+- publication
+
 ### Setup
 
 Please follow these steps to set up your development environment:
