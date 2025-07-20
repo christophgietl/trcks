@@ -8,7 +8,7 @@ The following section describes how to set up and use a development environment.
 `trcks` uses the following developer tools:
 
 - [mypy](https://mypy.readthedocs.io) for static type checking
-- [pre-commit](https://pre-commit.com) for managing pre-commit and pre-push hooks
+- [pre-commit](https://pre-commit.com) for managing pre-commit hooks (particularly for code formatting and linting)
 - [pydoctor](https://pydoctor.readthedocs.io) for generating API documentation
 - [pyright](https://microsoft.github.io/pyright/) for static type checking
 - [pytest](https://pytest.org) for unit testing and doctests
