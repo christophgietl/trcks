@@ -133,6 +133,6 @@ convention = "google"
 cache-keys = [
     { dir = "src" },
     { file = "pyproject.toml" },
-    { git = { commit = true, tags = true } }, # needed by pdm-backend to correctly derive package version from Git tags
+    { git = { commit = true, tags = true } }, # needed by build-backend to derive package version from Git tags
 ]
 required-version = ">= 0.8, < 0.9"

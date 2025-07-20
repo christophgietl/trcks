@@ -11,7 +11,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # needed by pdm-backend to correctly derive package version from Git tags
+          fetch-depth: 0  # needed by build-backend to derive package version from Git tags
       - uses: ./.github/actions/set-up-uv
         with:
           install-and-cache-dependencies: true
@@ -24,7 +24,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # needed by pdm-backend to correctly derive package version from Git tags
+          fetch-depth: 0  # needed by build-backend to derive package version from Git tags
       - uses: ./.github/actions/set-up-uv
       - run: uv build
       - uses: actions/upload-artifact@v4
@@ -51,7 +51,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # needed by pdm-backend to correctly derive package version from Git tags
+          fetch-depth: 0  # needed by build-backend to derive package version from Git tags
       - uses: ./.github/actions/set-up-uv
         with:
           install-and-cache-dependencies: true
@@ -95,7 +95,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # needed by pdm-backend to correctly derive package version from Git tags
+          fetch-depth: 0  # needed by build-backend to derive package version from Git tags
       - uses: actions/download-artifact@v4
         with:
           name: package-files
