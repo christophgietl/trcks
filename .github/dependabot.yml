@@ -6,6 +6,10 @@ updates:
       - /.github/actions/*/
     schedule:
       interval: daily
+  - package-ecosystem: pip
+    directory: /
+    schedule:
+      interval: daily
   - package-ecosystem: uv
     directory: /
     schedule:
