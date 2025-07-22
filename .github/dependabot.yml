@@ -10,6 +10,14 @@ updates:
     package-ecosystem: uv
     schedule:
       interval: daily
+  - directory: /.github/actions/run-pre-commit/
+    package-ecosystem: github-actions
+    schedule:
+      interval: daily
+  - directory: /.github/actions/run-tests-and-type-checks/
+    package-ecosystem: github-actions
+    schedule:
+      interval: daily
   - directory: /.github/actions/set-up-uv/
     package-ecosystem: github-actions
     schedule:
