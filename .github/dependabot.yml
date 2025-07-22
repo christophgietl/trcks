@@ -1,22 +1,12 @@
 version: 2
 updates:
-  - directory: /
-    package-ecosystem: github-actions
+  - package-ecosystem: github-actions
+    directories:
+      - /
+      - /.github/actions/*/
     schedule:
       interval: daily
-  - directory: /
-    package-ecosystem: uv
-    schedule:
-      interval: daily
-  - directory: /.github/actions/run-pre-commit/
-    package-ecosystem: github-actions
-    schedule:
-      interval: daily
-  - directory: /.github/actions/run-tests-and-type-checks/
-    package-ecosystem: github-actions
-    schedule:
-      interval: daily
-  - directory: /.github/actions/set-up-uv/
-    package-ecosystem: github-actions
+  - package-ecosystem: uv
+    directory: /
     schedule:
       interval: daily
