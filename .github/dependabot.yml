@@ -4,9 +4,7 @@ updates:
     package-ecosystem: github-actions
     schedule:
       interval: daily
-  - allow:
-      - dependency-type: all
-    directory: /
+  - directory: /
     package-ecosystem: uv
     schedule:
       interval: daily
