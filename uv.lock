@@ -809,12 +809,12 @@ provides-extras = ["mypy", "pyright", "pyright-nodejs"]
 
 [package.metadata.requires-dev]
 dev = [
-    { name = "pre-commit", specifier = ">=4.2" },
-    { name = "pydoctor", specifier = ">=25.4" },
-    { name = "pytest", specifier = ">=8.4" },
-    { name = "pytest-asyncio", specifier = ">=1.0" },
-    { name = "pytest-cov", specifier = ">=6.2" },
-    { name = "pytest-doctestplus", specifier = ">=1.4" },
+    { name = "pre-commit", specifier = ">=4.2.0" },
+    { name = "pydoctor", specifier = ">=25.4.0" },
+    { name = "pytest", specifier = ">=8.4.1" },
+    { name = "pytest-asyncio", specifier = ">=1.1.0" },
+    { name = "pytest-cov", specifier = ">=6.2.1" },
+    { name = "pytest-doctestplus", specifier = ">=1.4.0" },
     { name = "trcks", extras = ["mypy", "pyright", "pyright-nodejs"], specifier = ">=0" },
 ]
 
