@@ -26,10 +26,10 @@ def tap(f: Callable[[_T], object]) -> Callable[[_T], _T]:
         >>> from collections.abc import Callable
         >>> from trcks.fp.monads import identity as i
         >>> log_and_pass_on: Callable[[object], object] = i.tap(
-        ...     lambda o: print(f"Received object{o}.")
+        ...     lambda o: print(f"Received object {o}.")
         ... )
         >>> output = log_and_pass_on(42)
-        Received object42.
+        Received object 42.
         >>> output
         42
     """
