@@ -79,6 +79,7 @@ from trcks import AwaitableResult, Result
 from trcks._typing import Never, TypeVar, override
 from trcks.fp.monads import awaitable as a
 from trcks.fp.monads import awaitable_result as ar
+from trcks.fp.monads import identity as i
 from trcks.fp.monads import result as r
 
 __docformat__ = "google"
@@ -357,8 +358,9 @@ class AwaitableResultWrapper(_AwaitableWrapper[Result[_F_default_co, _S_default_
     def map_failure(
         self, f: Callable[[_F_default_co], _F]
     ) -> AwaitableResultWrapper[_F, _S_default_co]:
-        """Apply synchronous function to the wrapped `trcks.AwaitableResult` object
-        if it is a failure.
+        """Apply a synchronous function to the wrapped `trcks.Failure` object.
+
+        Wrapped `trcks.Success` objects are passed on unchanged.
 
         Args:
             f: The synchronous function to be applied.
@@ -399,8 +401,9 @@ class AwaitableResultWrapper(_AwaitableWrapper[Result[_F_default_co, _S_default_
     def map_failure_to_awaitable(
         self, f: Callable[[_F_default_co], Awaitable[_F]]
     ) -> AwaitableResultWrapper[_F, _S_default_co]:
-        """Apply asynchronous function to the wrapped `trcks.AwaitableResult` object
-        if it is a failure.
+        """Apply an asynchronous function to the wrapped `trcks.Failure` object.
+
+        Wrapped `trcks.Success` objects are passed on unchanged.
 
         Args:
             f: The asynchronous function to be applied.
@@ -445,8 +448,10 @@ class AwaitableResultWrapper(_AwaitableWrapper[Result[_F_default_co, _S_default_
     def map_failure_to_awaitable_result(
         self, f: Callable[[_F_default_co], AwaitableResult[_F, _S]]
     ) -> AwaitableResultWrapper[_F, _S_default_co | _S]:
-        """Apply asynchronous `trcks.Result` function to `trcks.AwaitableResult`
-        if it is a failure.
+        """Apply an asynchronous function with return type `trcks.Result`
+        to the wrapped `trcks.Failure` object.
+
+        Wrapped `trcks.Success` objects are passed on unchanged.
 
         Args:
             f: The asynchronous function to be applied.
@@ -504,8 +509,10 @@ class AwaitableResultWrapper(_AwaitableWrapper[Result[_F_default_co, _S_default_
     def map_failure_to_result(
         self, f: Callable[[_F_default_co], Result[_F, _S]]
     ) -> AwaitableResultWrapper[_F, _S_default_co | _S]:
-        """Apply synchronous `trcks.Result` function to `trcks.AwaitableResult`
-        if it is a failure.
+        """Apply a synchronous function with return type `trcks.Result`
+        to the wrapped `trcks.Failure` object.
+
+        Wrapped `trcks.Success` objects are passed on unchanged.
 
         Args:
             f: The synchronous function to be applied.
@@ -562,8 +569,9 @@ class AwaitableResultWrapper(_AwaitableWrapper[Result[_F_default_co, _S_default_
     def map_success(
         self, f: Callable[[_S_default_co], _S]
     ) -> AwaitableResultWrapper[_F_default_co, _S]:
-        """Apply synchronous function to the wrapped `trcks.AwaitableResult` object
-        if it is a success.
+        """Apply a synchronous function to the wrapped `trcks.Success` object.
+
+        Wrapped `trcks.Failure` objects are passed on unchanged.
 
         Args:
             f: The synchronous function to be applied.
@@ -605,8 +613,9 @@ class AwaitableResultWrapper(_AwaitableWrapper[Result[_F_default_co, _S_default_
     def map_success_to_awaitable(
         self, f: Callable[[_S_default_co], Awaitable[_S]]
     ) -> AwaitableResultWrapper[_F_default_co, _S]:
-        """Apply asynchronous function to the wrapped `trcks.AwaitableResult` object
-        if it is a success.
+        """Apply an asynchronous function to the wrapped `trcks.Success` object.
+
+        Wrapped `trcks.Failure` objects are passed on unchanged.
 
         Args:
             f: The asynchronous function to be applied.
@@ -651,8 +660,10 @@ class AwaitableResultWrapper(_AwaitableWrapper[Result[_F_default_co, _S_default_
     def map_success_to_awaitable_result(
         self, f: Callable[[_S_default_co], AwaitableResult[_F, _S]]
     ) -> AwaitableResultWrapper[_F_default_co | _F, _S]:
-        """Apply asynchronous `trcks.Result` function to `trcks.AwaitableResult`
-        if it is a success.
+        """Apply an asynchronous function with return type `trcks.Result`
+        to the wrapped `trcks.Success` object.
+
+        Wrapped `trcks.Failure` objects are passed on unchanged.
 
         Args:
             f: The asynchronous function to be applied.
@@ -711,8 +722,10 @@ class AwaitableResultWrapper(_AwaitableWrapper[Result[_F_default_co, _S_default_
     def map_success_to_result(
         self, f: Callable[[_S_default_co], Result[_F, _S]]
     ) -> AwaitableResultWrapper[_F_default_co | _F, _S]:
-        """Apply synchronous `trcks.Result` function to `trcks.AwaitableResult`
-        if it is a success.
+        """Apply a synchronous function with return type `trcks.Result`
+        to the wrapped `trcks.Success` object.
+
+        Wrapped `trcks.Failure` objects are passed on unchanged.
 
         Args:
             f: The synchronous function to be applied.
@@ -767,6 +780,354 @@ class AwaitableResultWrapper(_AwaitableWrapper[Result[_F_default_co, _S_default_
         mapped_f = ar.map_success_to_result(f)
         return AwaitableResultWrapper(mapped_f(self.core))
 
+    def tap_failure(
+        self, f: Callable[[_F_default_co], object]
+    ) -> AwaitableResultWrapper[_F_default_co, _S_default_co]:
+        """Apply a synchronous side effect to the wrapped `trcks.Failure` object.
+
+        Wrapped `trcks.Success` objects are passed on without side effects.
+
+        Args:
+            f: The synchronous side effect to be applied.
+
+        Returns:
+            A new `AwaitableResultWrapper` instance
+            with the original `trcks.Result` object,
+            allowing for further method chaining.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks.oop import AwaitableResultWrapper
+            >>> awaitable_result_wrapper_1 = AwaitableResultWrapper.construct_failure(
+            ...     "not found"
+            ... ).tap_failure(lambda f: print(f"Failure: {f}"))
+            >>> awaitable_result_wrapper_1
+            AwaitableResultWrapper(core=<coroutine object ...>)
+            >>> result_1 = asyncio.run(awaitable_result_wrapper_1.core_as_coroutine)
+            Failure: not found
+            >>> result_1
+            ('failure', 'not found')
+            >>> awaitable_result_wrapper_2 = AwaitableResultWrapper.construct_success(
+            ...     42
+            ... ).tap_failure(lambda f: print(f"Failure: {f}"))
+            >>> awaitable_result_wrapper_2
+            AwaitableResultWrapper(core=<coroutine object ...>)
+            >>> result_2 = asyncio.run(awaitable_result_wrapper_2.core_as_coroutine)
+            >>> result_2
+            ('success', 42)
+        """
+        tapped_f = ar.tap_failure(f)
+        return AwaitableResultWrapper(tapped_f(self.core))
+
+    def tap_failure_to_awaitable(
+        self, f: Callable[[_F_default_co], Awaitable[object]]
+    ) -> AwaitableResultWrapper[_F_default_co, _S_default_co]:
+        """Apply an asynchronous side effect to the wrapped `trcks.Failure` object.
+
+        Wrapped `trcks.Success` objects are passed on without side effects.
+
+        Args:
+            f: The asynchronous side effect to be applied.
+
+        Returns:
+            A new `AwaitableResultWrapper` instance
+            with the original `trcks.Result` object,
+            allowing for further method chaining.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks.oop import AwaitableResultWrapper
+            >>> async def write_to_disk(output: str) -> None:
+            ...     await asyncio.sleep(0.001)
+            ...     print(f"Wrote '{output}' to disk.")
+            ...
+            >>> awaitable_result_wrapper_1 = AwaitableResultWrapper.construct_failure(
+            ...     "not found"
+            ... ).tap_failure_to_awaitable(write_to_disk)
+            >>> awaitable_result_wrapper_1
+            AwaitableResultWrapper(core=<coroutine object ...>)
+            >>> result_1 = asyncio.run(awaitable_result_wrapper_1.core_as_coroutine)
+            Wrote 'not found' to disk.
+            >>> result_1
+            ('failure', 'not found')
+            >>> awaitable_result_wrapper_2 = AwaitableResultWrapper.construct_success(
+            ...     42
+            ... ).tap_failure_to_awaitable(write_to_disk)
+            >>> awaitable_result_wrapper_2
+            AwaitableResultWrapper(core=<coroutine object ...>)
+            >>> result_2 = asyncio.run(awaitable_result_wrapper_2.core_as_coroutine)
+            >>> result_2
+            ('success', 42)
+        """
+        tapped_f = ar.tap_failure_to_awaitable(f)
+        return AwaitableResultWrapper(tapped_f(self.core))
+
+    def tap_failure_to_awaitable_result(
+        self, f: Callable[[_F_default_co], AwaitableResult[object, _S]]
+    ) -> AwaitableResultWrapper[_F_default_co, _S_default_co | _S]:
+        """Apply an asynchronous side effect with return type `trcks.Result`
+        to the wrapped `trcks.Failure` object.
+
+        Wrapped `trcks.Success` objects are passed on without side effects.
+
+        Args:
+            f: The asynchronous side effect to be applied.
+
+        Returns:
+            A new `AwaitableResultWrapper` instance with
+
+            - *the original* `trcks.Failure`
+              if the applied side effect returns a `trcks.Failure`,
+            - *the returned* `trcks.Success`
+              if the applied side effect returns a `trcks.Success` and
+            - *the original* `trcks.Success` if no side effect was applied.
+        """
+        tapped_f = ar.tap_failure_to_awaitable_result(f)
+        return AwaitableResultWrapper(tapped_f(self.core))
+
+    def tap_failure_to_result(
+        self, f: Callable[[_F_default_co], Result[object, _S]]
+    ) -> AwaitableResultWrapper[_F_default_co, _S_default_co | _S]:
+        """Apply a synchronous side effect with return type `trcks.Result`
+        to the wrapped `trcks.Failure` object.
+
+        Wrapped `trcks.Success` objects are passed on without side effects.
+
+        Args:
+            f: The synchronous side effect to be applied.
+
+        Returns:
+            A new `AwaitableResultWrapper` instance with
+
+            - *the original* `trcks.Failure`
+              if the applied side effect returns a `trcks.Failure`,
+            - *the returned* `trcks.Success`
+              if the applied side effect returns a `trcks.Success` and
+            - *the original* `trcks.Success` if no side effect was applied.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks import Result
+            >>> from trcks.oop import AwaitableResultWrapper
+            >>> def replace_not_found_with_default(s: str) -> Result[object, float]:
+            ...     if s == "not found":
+            ...         return "success", 0.0
+            ...     return "failure", s
+            ...
+            >>> awaitable_result_wrapper_1 = (
+            ...     AwaitableResultWrapper
+            ...     .construct_failure("not found")
+            ...     .tap_failure_to_result(replace_not_found_with_default)
+            ... )
+            >>> awaitable_result_wrapper_1
+            AwaitableResultWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(awaitable_result_wrapper_1.core_as_coroutine)
+            ('success', 0.0)
+            >>>
+            >>> awaitable_result_wrapper_2 = (
+            ...     AwaitableResultWrapper
+            ...     .construct_failure("other error")
+            ...     .tap_failure_to_result(replace_not_found_with_default)
+            ... )
+            >>> awaitable_result_wrapper_2
+            AwaitableResultWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(awaitable_result_wrapper_2.core_as_coroutine)
+            ('failure', 'other error')
+            >>>
+            >>> awaitable_result_wrapper_3 = (
+            ...     AwaitableResultWrapper
+            ...     .construct_success(42)
+            ...     .tap_failure_to_result(replace_not_found_with_default)
+            ... )
+            >>> awaitable_result_wrapper_3
+            AwaitableResultWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(awaitable_result_wrapper_3.core_as_coroutine)
+            ('success', 42)
+        """
+        tapped_f = ar.tap_failure_to_result(f)
+        return AwaitableResultWrapper(tapped_f(self.core))
+
+    def tap_success(
+        self, f: Callable[[_S_default_co], object]
+    ) -> AwaitableResultWrapper[_F_default_co, _S_default_co]:
+        """Apply a synchronous side effect to the wrapped `trcks.Success` object.
+
+        Wrapped `trcks.Failure` objects are passed on without side effects.
+
+        Args:
+            f: The synchronous side effect to be applied.
+
+        Returns:
+            A new `AwaitableResultWrapper` instance
+            with the original `trcks.Result` object,
+            allowing for further method chaining.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks.oop import AwaitableResultWrapper
+            >>> awaitable_result_wrapper_1 = AwaitableResultWrapper.construct_failure(
+            ...     "not found"
+            ... ).tap_success(lambda n: print(f"Number: {n}"))
+            >>> awaitable_result_wrapper_1
+            AwaitableResultWrapper(core=<coroutine object ...>)
+            >>> result_1 = asyncio.run(awaitable_result_wrapper_1.core_as_coroutine)
+            >>> result_1
+            ('failure', 'not found')
+            >>> awaitable_result_wrapper_2 = AwaitableResultWrapper.construct_success(
+            ...     42
+            ... ).tap_success(lambda n: print(f"Number: {n}"))
+            >>> awaitable_result_wrapper_2
+            AwaitableResultWrapper(core=<coroutine object ...>)
+            >>> result_2 = asyncio.run(awaitable_result_wrapper_2.core_as_coroutine)
+            Number: 42
+            >>> result_2
+            ('success', 42)
+        """
+        tapped_f = ar.tap_success(f)
+        return AwaitableResultWrapper(tapped_f(self.core))
+
+    def tap_success_to_awaitable(
+        self, f: Callable[[_S_default_co], Awaitable[object]]
+    ) -> AwaitableResultWrapper[_F_default_co, _S_default_co]:
+        """Apply an asynchronous side effect to the wrapped `trcks.Success` object.
+
+        Wrapped `trcks.Failure` objects are passed on without side effects.
+
+        Args:
+            f: The asynchronous side effect to be applied.
+
+        Returns:
+            A new `AwaitableResultWrapper` instance
+            with the original `trcks.Result` object,
+            allowing for further method chaining.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks.oop import AwaitableResultWrapper
+            >>> async def write_to_disk(output: str) -> None:
+            ...     await asyncio.sleep(0.001)
+            ...     print(f"Wrote '{output}' to disk.")
+            ...
+            >>> awaitable_result_wrapper_1 = AwaitableResultWrapper.construct_failure(
+            ...     "not found"
+            ... ).tap_success_to_awaitable(write_to_disk)
+            >>> awaitable_result_wrapper_1
+            AwaitableResultWrapper(core=<coroutine object ...>)
+            >>> result_1 = asyncio.run(awaitable_result_wrapper_1.core_as_coroutine)
+            >>> result_1
+            ('failure', 'not found')
+            >>> awaitable_result_wrapper_2 = AwaitableResultWrapper.construct_success(
+            ...     "Hello, world!"
+            ... ).tap_success_to_awaitable(write_to_disk)
+            >>> awaitable_result_wrapper_2
+            AwaitableResultWrapper(core=<coroutine object ...>)
+            >>> result_2 = asyncio.run(awaitable_result_wrapper_2.core_as_coroutine)
+            Wrote 'Hello, world!' to disk.
+            >>> result_2
+            ('success', 'Hello, world!')
+        """
+        tapped_f = ar.tap_success_to_awaitable(f)
+        return AwaitableResultWrapper(tapped_f(self.core))
+
+    def tap_success_to_awaitable_result(
+        self, f: Callable[[_S_default_co], AwaitableResult[_F, object]]
+    ) -> AwaitableResultWrapper[_F_default_co | _F, _S_default_co]:
+        """Apply an asynchronous side effect with return type `trcks.Result`
+        to the wrapped `trcks.Success` object.
+
+        Wrapped `trcks.Failure` objects are passed on without side effects.
+
+        Args:
+            f: The asynchronous side effect to be applied.
+
+        Returns:
+            A new `AwaitableResultWrapper` instance with
+
+            - *the original* `trcks.Failure` if no side effect was applied,
+            - *the returned* `trcks.Failure`
+              if the applied side effect returns a `trcks.Failure` and
+            - *the original* `trcks.Success`
+              if the applied side effect returns a `trcks.Success`.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks import Result
+            >>> from trcks.oop import AwaitableResultWrapper
+            >>> async def write_to_disk(s: str, path: str) -> Result[str, None]:
+            ...     if path != "output.txt":
+            ...         return "failure", "write error"
+            ...     await asyncio.sleep(0.001)
+            ...     print(f"Wrote '{s}' to file {path}.")
+            ...     return "success", None
+            ...
+            >>> awaitable_result_wrapper_1 = AwaitableResultWrapper.construct_failure(
+            ...     "missing text"
+            ... ).tap_success_to_awaitable_result(
+            ...     lambda s: write_to_disk(s, "destination.txt")
+            ... )
+            >>> awaitable_result_wrapper_1
+            AwaitableResultWrapper(core=<coroutine object ...>)
+            >>> result_1 = asyncio.run(awaitable_result_wrapper_1.core_as_coroutine)
+            >>> result_1
+            ('failure', 'missing text')
+            >>> awaitable_result_wrapper_2 = AwaitableResultWrapper.construct_failure(
+            ...     "missing text"
+            ... ).tap_success_to_awaitable_result(
+            ...     lambda s: write_to_disk(s, "output.txt")
+            ... )
+            >>> awaitable_result_wrapper_2
+            AwaitableResultWrapper(core=<coroutine object ...>)
+            >>> result_2 = asyncio.run(awaitable_result_wrapper_2.core_as_coroutine)
+            >>> result_2
+            ('failure', 'missing text')
+            >>> awaitable_result_wrapper_3 = AwaitableResultWrapper.construct_success(
+            ...     "Hello, world!"
+            ... ).tap_success_to_awaitable_result(
+            ...     lambda s: write_to_disk(s, "destination.txt")
+            ... )
+            >>> awaitable_result_wrapper_3
+            AwaitableResultWrapper(core=<coroutine object ...>)
+            >>> result_3 = asyncio.run(awaitable_result_wrapper_3.core_as_coroutine)
+            >>> result_3
+            ('failure', 'write error')
+            >>> awaitable_result_wrapper_4 = AwaitableResultWrapper.construct_success(
+            ...     "Hello, world!"
+            ... ).tap_success_to_awaitable_result(
+            ...     lambda s: write_to_disk(s, "output.txt")
+            ... )
+            >>> awaitable_result_wrapper_4
+            AwaitableResultWrapper(core=<coroutine object ...>)
+            >>> result_4 = asyncio.run(awaitable_result_wrapper_4.core_as_coroutine)
+            Wrote 'Hello, world!' to file output.txt.
+            >>> result_4
+            ('success', 'Hello, world!')
+        """
+        tapped_f = ar.tap_success_to_awaitable_result(f)
+        return AwaitableResultWrapper(tapped_f(self.core))
+
+    def tap_success_to_result(
+        self, f: Callable[[_S_default_co], Result[_F, object]]
+    ) -> AwaitableResultWrapper[_F_default_co | _F, _S_default_co]:
+        """Apply a synchronous side effect with return type `trcks.Result`
+        to the wrapped `trcks.Success` object.
+
+        Wrapped `trcks.Failure` objects are passed on without side effects.
+
+        Args:
+            f: The synchronous side effect to be applied.
+
+        Returns:
+            A new `AwaitableResultWrapper` instance with
+
+            - *the original* `trcks.Failure` if no side effect was applied,
+            - *the returned* `trcks.Failure`
+              if the applied side effect returns a `trcks.Failure` and
+            - *the original* `trcks.Success`
+              if the applied side effect returns a `trcks.Success`.
+        """
+        tapped_f = ar.tap_success_to_result(f)
+        return AwaitableResultWrapper(tapped_f(self.core))
+
     @property
     async def track(self) -> Literal["failure", "success"]:
         """First element of the awaited attribute `AwaitableResultWrapper.core`.
@@ -804,6 +1165,8 @@ class AwaitableWrapper(_AwaitableWrapper[_T_co]):
     The wrapped `collections.abc.Awaitable` can be accessed
     via the attribute `AwaitableWrapper.core`.
     The ``AwaitableWrapper.map*`` methods allow method chaining.
+    The ``AwaitableWrapper.tap*`` methods allow for side effects
+    without changing the wrapped object.
 
     Example:
         >>> import asyncio
@@ -817,23 +1180,25 @@ class AwaitableWrapper(_AwaitableWrapper[_T_co]):
         >>> def transform(s: str) -> str:
         ...     return f"Length: {len(s)}"
         ...
-        >>> async def write_to_disk(output: str) -> None:
+        >>> async def write_to_disk(s: str) -> None:
         ...     await asyncio.sleep(0.001)
-        ...     print(f"Wrote '{output}' to disk.")
+        ...     print(f"Wrote '{s}' to disk.")
         ...
-        >>> async def main() -> None:
+        >>> async def main() -> str:
         ...     awaitable_str = read_from_disk()
         ...     return await (
         ...         AwaitableWrapper
         ...         .construct_from_awaitable(awaitable_str)
         ...         .map(transform)
-        ...         .map_to_awaitable(write_to_disk)
+        ...         .tap_to_awaitable(write_to_disk)
         ...         .core
         ...     )
         ...
-        >>> asyncio.run(main())
+        >>> output = asyncio.run(main())
         Read 'Hello, world!' from disk.
         Wrote 'Length: 13' to disk.
+        >>> output
+        'Length: 13'
     """
 
     @staticmethod
@@ -1008,9 +1373,9 @@ class AwaitableWrapper(_AwaitableWrapper[_T_co]):
             ...     AwaitableWrapper
             ...     .construct(-1)
             ...     .map_to_result(
-            ...         lambda x: ("success", x)
-            ...         if x >= 0
-            ...         else ("failure", "negative value")
+            ...         lambda x: (
+            ...             ("success", x) if x >= 0 else ("failure", "negative value")
+            ...         )
             ...     )
             ... )
             >>> awaitable_result_wrapper
@@ -1022,12 +1387,161 @@ class AwaitableWrapper(_AwaitableWrapper[_T_co]):
             self.core
         ).map_success_to_result(f)
 
+    def tap(self, f: Callable[[_T_co], object]) -> AwaitableWrapper[_T_co]:
+        """Apply a synchronous side effect
+        to the wrapped `collections.abc.Awaitable` object.
+
+        Args:
+            f: The synchronous side effect to be applied.
+
+        Returns:
+            A new `AwaitableWrapper` instance with
+            the original `collections.abc.Awaitable` object.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks.oop import AwaitableWrapper
+            >>> awaitable_wrapper = AwaitableWrapper.construct("Hello, world!").tap(
+            ...     lambda s: print(f"String: {s}")
+            ... )
+            >>> value = asyncio.run(awaitable_wrapper.core_as_coroutine)
+            String: Hello, world!
+            >>> value
+            'Hello, world!'
+        """
+        tapped_f = a.tap(f)
+        return AwaitableWrapper(tapped_f(self.core))
+
+    def tap_to_awaitable(
+        self, f: Callable[[_T_co], Awaitable[object]]
+    ) -> AwaitableWrapper[_T_co]:
+        """Apply an asynchronous side effect
+        to the wrapped `collections.abc.Awaitable` object.
+
+        Args:
+            f: The asynchronous side effect to be applied.
+
+        Returns:
+            An `AwaitableWrapper` instance with the original wrapped object.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks.oop import AwaitableWrapper
+            >>> async def write_to_disk(output: str) -> None:
+            ...     await asyncio.sleep(0.001)
+            ...     print(f"Wrote '{output}' to disk.")
+            ...
+            >>> awaitable_wrapper = AwaitableWrapper.construct(
+            ...     "Hello, world!"
+            ... ).tap_to_awaitable(write_to_disk)
+            >>> value = asyncio.run(awaitable_wrapper.core_as_coroutine)
+            Wrote 'Hello, world!' to disk.
+            >>> value
+            'Hello, world!'
+        """
+        tapped_f = a.tap_to_awaitable(f)
+        return AwaitableWrapper(tapped_f(self.core))
+
+    def tap_to_awaitable_result(
+        self, f: Callable[[_T_co], AwaitableResult[_F, object]]
+    ) -> AwaitableResultWrapper[_F, _T_co]:
+        """Apply an asynchronous side effect with return type `trcks.Result`
+        to the wrapped object.
+
+        Args:
+            f: The asynchronous side effect to be applied.
+
+        Returns:
+            An `AwaitableResultWrapper` instance with
+
+            - *the returned* `Failure` if the given side effect returns a `Failure` or
+            - a `Success` instance containing *the original* wrapped object
+              if the given side effect returns a `Success`.
+
+        Example:
+            >>> import asyncio
+            >>> from typing import Literal
+            >>> from trcks import Result
+            >>> from trcks.oop import AwaitableWrapper
+            >>> WriteErrorLiteral = Literal["write error"]
+            >>> async def write_to_disk(s: str, path: str) -> Result[
+            ...     WriteErrorLiteral, None
+            ... ]:
+            ...     if path != "output.txt":
+            ...         return "failure", "write error"
+            ...     await asyncio.sleep(0.001)
+            ...     print(f"Wrote '{s}' to file {path}.")
+            ...     return "success", None
+            ...
+            >>> awaitable_wrapper_1 = AwaitableWrapper.construct(
+            ...     "Hello, world!"
+            ... ).tap_to_awaitable_result(lambda s: write_to_disk(s, "destination.txt"))
+            >>> result_1 = asyncio.run(awaitable_wrapper_1.core_as_coroutine)
+            >>> result_1
+            ('failure', 'write error')
+            >>> awaitable_wrapper_2 = AwaitableWrapper.construct(
+            ...     "Hello, world!"
+            ... ).tap_to_awaitable_result(lambda s: write_to_disk(s, "output.txt"))
+            >>> result_2 = asyncio.run(awaitable_wrapper_2.core_as_coroutine)
+            Wrote 'Hello, world!' to file output.txt.
+            >>> result_2
+            ('success', 'Hello, world!')
+        """
+        return AwaitableResultWrapper.construct_success_from_awaitable(
+            self.core
+        ).tap_success_to_awaitable_result(f)
+
+    def tap_to_result(
+        self, f: Callable[[_T_co], Result[_F, object]]
+    ) -> AwaitableResultWrapper[_F, _T_co]:
+        """Apply a synchronous side effect with return type `trcks.Result`
+        to the wrapped object.
+
+        Args:
+            f: The synchronous side effect to be applied.
+
+        Returns:
+            An `AwaitableResultWrapper` instance with
+
+            - *the returned* `Failure` if the given side effect returns a `Failure` or
+            - a `Success` instance containing *the original* wrapped object
+              if the given side effect returns a `Success`.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks import Result
+            >>> from trcks.oop import AwaitableWrapper
+            >>> def print_positive_float(x: float) -> Result[str, None]:
+            ...     if x <= 0:
+            ...         return "failure", "not positive"
+            ...     return "success", print(f"Positive float: {x}")
+            ...
+            >>>
+            >>> awaitable_result_wrapper_1 = AwaitableWrapper.construct(
+            ...     -2.3
+            ... ).tap_to_result(print_positive_float)
+            >>> result_1 = asyncio.run(awaitable_result_wrapper_1.core_as_coroutine)
+            >>> result_1
+            ('failure', 'not positive')
+            >>> awaitable_result_wrapper_2 = AwaitableWrapper.construct(
+            ...     3.5
+            ... ).tap_to_result(print_positive_float)
+            >>> result_2 = asyncio.run(awaitable_result_wrapper_2.core_as_coroutine)
+            Positive float: 3.5
+            >>> result_2
+            ('success', 3.5)
+        """
+        return AwaitableResultWrapper.construct_success_from_awaitable(
+            self.core
+        ).tap_success_to_result(f)
+
 
 class ResultWrapper(_Wrapper[Result[_F_default_co, _S_default_co]]):
     """Typesafe and immutable wrapper for `trcks.Result` objects.
 
     The wrapped object can be accessed via the attribute `ResultWrapper.core`.
     The ``ResultWrapper.map*`` methods allow method chaining.
+    The ``ResultWrapper.tap*`` methods allow for side effects.
 
     Example:
         >>> import math
@@ -1036,12 +1550,14 @@ class ResultWrapper(_Wrapper[Result[_F_default_co, _S_default_co]]):
         ...     ResultWrapper
         ...     .construct_success(-5.0)
         ...     .map_success_to_result(
-        ...         lambda x: ("success", x)
-        ...         if x >= 0
-        ...         else ("failure", "negative value")
+        ...         lambda x: (
+        ...             ("success", x) if x >= 0 else ("failure", "negative value")
+        ...         )
         ...     )
+        ...     .tap_failure(lambda flr: print(f"Failure '{flr}' occurred."))
         ...     .map_success(math.sqrt)
         ... )
+        Failure 'negative value' occurred.
         >>> result_wrapper
         ResultWrapper(core=('failure', 'negative value'))
         >>> result_wrapper.core
@@ -1101,8 +1617,9 @@ class ResultWrapper(_Wrapper[Result[_F_default_co, _S_default_co]]):
     def map_failure(
         self, f: Callable[[_F_default_co], _F]
     ) -> ResultWrapper[_F, _S_default_co]:
-        """Apply synchronous function to the wrapped `trcks.Result` object
-        if it is a failure.
+        """Apply a synchronous function to the wrapped `trcks.Failure` object.
+
+        Wrapped `trcks.Success` objects are passed on unchanged.
 
         Args:
             f: The synchronous function to be applied.
@@ -1131,8 +1648,9 @@ class ResultWrapper(_Wrapper[Result[_F_default_co, _S_default_co]]):
     def map_failure_to_awaitable(
         self, f: Callable[[_F_default_co], Awaitable[_F]]
     ) -> AwaitableResultWrapper[_F, _S_default_co]:
-        """Apply asynchronous function to the wrapped `trcks.Result` object
-        if it is a failure.
+        """Apply an asynchronous function to the wrapped `trcks.Failure` object.
+
+        Wrapped `trcks.Success` objects are passed on unchanged.
 
         Args:
             f: The asynchronous function to be applied.
@@ -1178,9 +1696,10 @@ class ResultWrapper(_Wrapper[Result[_F_default_co, _S_default_co]]):
     def map_failure_to_awaitable_result(
         self, f: Callable[[_F_default_co], AwaitableResult[_F, _S]]
     ) -> AwaitableResultWrapper[_F, _S_default_co | _S]:
-        """Apply asynchronous `trcks.Result` function
-        to the wrapped `trcks.Result` object
-        if it is a failure.
+        """Apply an asynchronous function with return type `trcks.Result`
+        to the wrapped `trcks.Failure` object.
+
+        Wrapped `trcks.Success` objects are passed on unchanged.
 
         Args:
             f: The asynchronous function to be applied.
@@ -1239,9 +1758,10 @@ class ResultWrapper(_Wrapper[Result[_F_default_co, _S_default_co]]):
     def map_failure_to_result(
         self, f: Callable[[_F_default_co], Result[_F, _S]]
     ) -> ResultWrapper[_F, _S_default_co | _S]:
-        """Apply synchronous `trcks.Result` function
-        to the wrapped `trcks.Result` object
-        if it is a failure.
+        """Apply a synchronous function with return type `trcks.Result`
+        to the wrapped `trcks.Failure` object.
+
+        Wrapped `trcks.Success` objects are passed on unchanged.
 
         Args:
             f: The synchronous function to be applied.
@@ -1288,8 +1808,9 @@ class ResultWrapper(_Wrapper[Result[_F_default_co, _S_default_co]]):
     def map_success(
         self, f: Callable[[_S_default_co], _S]
     ) -> ResultWrapper[_F_default_co, _S]:
-        """Apply synchronous function to the wrapped `trcks.Result` object
-        if it is a success.
+        """Apply a synchronous function to the wrapped `trcks.Success` object.
+
+        Wrapped `trcks.Failure` objects are passed on unchanged.
 
         Args:
             f: The synchronous function to be applied.
@@ -1314,8 +1835,9 @@ class ResultWrapper(_Wrapper[Result[_F_default_co, _S_default_co]]):
     def map_success_to_awaitable(
         self, f: Callable[[_S_default_co], Awaitable[_S]]
     ) -> AwaitableResultWrapper[_F_default_co, _S]:
-        """Apply asynchronous function to the wrapped `trcks.Result` object
-        if it is a success.
+        """Apply an asynchronous function to the wrapped `trcks.Success` object.
+
+        Wrapped `trcks.Failure` objects are passed on unchanged.
 
         Args:
             f: The asynchronous function to be applied.
@@ -1361,9 +1883,10 @@ class ResultWrapper(_Wrapper[Result[_F_default_co, _S_default_co]]):
     def map_success_to_awaitable_result(
         self, f: Callable[[_S_default_co], AwaitableResult[_F, _S]]
     ) -> AwaitableResultWrapper[_F_default_co | _F, _S]:
-        """Apply asynchronous `trcks.Result` function
-        to the wrapped `trcks.Result` object
-        if it is a success.
+        """Apply an asynchronous function with return type `trcks.Result`
+        to the wrapped `trcks.Success` object.
+
+        Wrapped `trcks.Failure` objects are passed on unchanged.
 
         Args:
             f: The asynchronous function to be applied.
@@ -1423,9 +1946,10 @@ class ResultWrapper(_Wrapper[Result[_F_default_co, _S_default_co]]):
     def map_success_to_result(
         self, f: Callable[[_S_default_co], Result[_F, _S]]
     ) -> ResultWrapper[_F_default_co | _F, _S]:
-        """Apply synchronous `trcks.Result` function
-        to the wrapped `trcks.Result` object
-        if it is a success.
+        """Apply a synchronous function with return type `trcks.Result`
+        to the wrapped `trcks.Success` object.
+
+        Wrapped `trcks.Failure` objects are passed on unchanged.
 
         Args:
             f: The synchronous function to be applied.
@@ -1464,6 +1988,362 @@ class ResultWrapper(_Wrapper[Result[_F_default_co, _S_default_co]]):
         mapped_f = r.map_success_to_result(f)
         return ResultWrapper(mapped_f(self.core))
 
+    def tap_failure(
+        self, f: Callable[[_F_default_co], object]
+    ) -> ResultWrapper[_F_default_co, _S_default_co]:
+        """Apply a synchronous side effect to the wrapped `trcks.Failure` object.
+
+        Wrapped `trcks.Success` objects are passed on without side effects.
+
+        Args:
+            f: The synchronous side effect to be applied.
+
+        Returns:
+            A new `ResultWrapper` instance with the original `trcks.Result` object,
+            allowing for further method chaining.
+
+        Example:
+            >>> result_wrapper_1 = ResultWrapper.construct_failure(
+            ...     "not found"
+            ... ).tap_failure(lambda f: print(f"Failure: {f}"))
+            Failure: not found
+            >>> result_wrapper_1
+            ResultWrapper(core=('failure', 'not found'))
+            >>> result_wrapper_2 = ResultWrapper.construct_success(42).tap_failure(
+            ...     lambda f: print(f"Failure: {f}")
+            ... )
+            >>> result_wrapper_2
+            ResultWrapper(core=('success', 42))
+        """
+        tapped_f = r.tap_failure(f)
+        return ResultWrapper(tapped_f(self.core))
+
+    def tap_failure_to_awaitable(
+        self, f: Callable[[_F_default_co], Awaitable[object]]
+    ) -> AwaitableResultWrapper[_F_default_co, _S_default_co]:
+        """Apply an asynchronous side effect to the wrapped `trcks.Failure` object.
+
+        Wrapped `trcks.Success` objects are passed on without side effects.
+
+        Args:
+            f: The asynchronous side effect to be applied.
+
+        Returns:
+            An `AwaitableResultWrapper` instance
+            with the original `trcks.Result` object,
+            allowing for further method chaining.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks.oop import ResultWrapper
+            >>> async def write_to_disk(output: str) -> None:
+            ...     await asyncio.sleep(0.001)
+            ...     print(f"Wrote '{output}' to disk.")
+            ...
+            >>> awaitable_result_wrapper_1 = ResultWrapper.construct_failure(
+            ...     "not found"
+            ... ).tap_failure_to_awaitable(write_to_disk)
+            >>> awaitable_result_wrapper_1
+            AwaitableResultWrapper(core=<coroutine object ...>)
+            >>> result_1 = asyncio.run(awaitable_result_wrapper_1.core_as_coroutine)
+            Wrote 'not found' to disk.
+            >>> result_1
+            ('failure', 'not found')
+            >>> awaitable_result_wrapper_2 = ResultWrapper.construct_success(
+            ...     42
+            ... ).tap_failure_to_awaitable(write_to_disk)
+            >>> awaitable_result_wrapper_2
+            AwaitableResultWrapper(core=<coroutine object ...>)
+            >>> result_2 = asyncio.run(awaitable_result_wrapper_2.core_as_coroutine)
+            >>> result_2
+            ('success', 42)
+        """
+        return AwaitableResultWrapper.construct_from_result(
+            self.core
+        ).tap_failure_to_awaitable(f)
+
+    def tap_failure_to_awaitable_result(
+        self, f: Callable[[_F_default_co], AwaitableResult[object, _S]]
+    ) -> AwaitableResultWrapper[_F_default_co, _S_default_co | _S]:
+        """Apply an asynchronous side effect with return type `trcks.Result`
+        to the wrapped `trcks.Failure` object.
+
+        Wrapped `trcks.Success` objects are passed on without side effects.
+
+        Args:
+            f: The asynchronous side effect to be applied.
+
+        Returns:
+            An `AwaitableResultWrapper` instance with
+
+            - *the original* `trcks.Failure`
+              if the applied side effect returns a `trcks.Failure`,
+            - *the returned* `trcks.Success`
+              if the applied side effect returns a `trcks.Success` and
+            - *the original* `trcks.Success` if no side effect was applied.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks import Result
+            >>> from trcks.oop import ResultWrapper
+            >>> async def replace_not_found_with_default(
+            ...     s: str
+            ... ) -> Result[object, float]:
+            ...     await asyncio.sleep(0.001)
+            ...     if s == "not found":
+            ...         return "success", 0.0
+            ...     return "failure", s
+            ...
+            >>> awaitable_result_wrapper_1 = (
+            ...     ResultWrapper
+            ...     .construct_failure("not found")
+            ...     .tap_failure_to_awaitable_result(replace_not_found_with_default)
+            ... )
+            >>> result_1 = asyncio.run(awaitable_result_wrapper_1.core_as_coroutine)
+            >>> result_1
+            ('success', 0.0)
+            >>> awaitable_result_wrapper_2 = (
+            ...     ResultWrapper
+            ...     .construct_failure("other error")
+            ...     .tap_failure_to_awaitable_result(replace_not_found_with_default)
+            ... )
+            >>> result_2 = asyncio.run(awaitable_result_wrapper_2.core_as_coroutine)
+            >>> result_2
+            ('failure', 'other error')
+            >>> awaitable_result_wrapper_3 = (
+            ...     ResultWrapper
+            ...     .construct_success(42)
+            ...     .tap_failure_to_awaitable_result(replace_not_found_with_default)
+            ... )
+            >>> result_3 = asyncio.run(awaitable_result_wrapper_3.core_as_coroutine)
+            >>> result_3
+            ('success', 42)
+        """
+        return AwaitableResultWrapper.construct_from_result(
+            self.core
+        ).tap_failure_to_awaitable_result(f)
+
+    def tap_failure_to_result(
+        self, f: Callable[[_F_default_co], Result[object, _S]]
+    ) -> ResultWrapper[_F_default_co, _S_default_co | _S]:
+        """Apply a synchronous side effect with return type `trcks.Result`
+        to the wrapped `trcks.Failure` object.
+
+        Wrapped `trcks.Success` objects are passed on without side effects.
+
+        Args:
+            f: The synchronous side effect to be applied.
+
+        Returns:
+            A new `ResultWrapper` instance with
+
+            - *the original* `trcks.Failure`
+              if the applied side effect returns a `trcks.Failure`,
+            - *the returned* `trcks.Success`
+              if the applied side effect returns a `trcks.Success` and
+            - *the original* `trcks.Success` if no side effect was applied.
+
+        Example:
+            >>> from trcks import Result
+            >>> from trcks.oop import ResultWrapper
+            >>> def replace_not_found_with_default(s: str) -> Result[object, float]:
+            ...     if s == "not found":
+            ...         return "success", 0.0
+            ...     return "failure", s
+            ...
+            >>> result_wrapper_1 = ResultWrapper.construct_failure(
+            ...     "not found"
+            ... ).tap_failure_to_result(replace_not_found_with_default)
+            >>> result_wrapper_1
+            ResultWrapper(core=('success', 0.0))
+            >>> result_wrapper_2 = ResultWrapper.construct_failure(
+            ...     "other error"
+            ... ).tap_failure_to_result(replace_not_found_with_default)
+            >>> result_wrapper_2
+            ResultWrapper(core=('failure', 'other error'))
+            >>> result_wrapper_3 = ResultWrapper.construct_success(
+            ...     42
+            ... ).tap_failure_to_result(replace_not_found_with_default)
+            >>> result_wrapper_3
+            ResultWrapper(core=('success', 42))
+        """
+        tapped_f = r.tap_failure_to_result(f)
+        return ResultWrapper(tapped_f(self.core))
+
+    def tap_success(
+        self, f: Callable[[_S_default_co], object]
+    ) -> ResultWrapper[_F_default_co, _S_default_co]:
+        """Apply a synchronous side effect to the wrapped `trcks.Success` object.
+
+        Wrapped `trcks.Failure` objects are passed on without side effects.
+
+        Args:
+            f: The synchronous side effect to be applied.
+
+        Returns:
+            A new `ResultWrapper` instance with the original `trcks.Result` object,
+            allowing for further method chaining.
+
+        Example:
+            >>> result_wrapper_1 = ResultWrapper.construct_failure(
+            ...     "not found"
+            ... ).tap_success(lambda n: print(f"Number: {n}"))
+            >>> result_wrapper_1
+            ResultWrapper(core=('failure', 'not found'))
+            >>> result_wrapper_2 = ResultWrapper.construct_success(42).tap_success(
+            ...     lambda n: print(f"Number: {n}")
+            ... )
+            Number: 42
+            >>> result_wrapper_2
+            ResultWrapper(core=('success', 42))
+        """
+        tapped_f = r.tap_success(f)
+        return ResultWrapper(tapped_f(self.core))
+
+    def tap_success_to_awaitable(
+        self, f: Callable[[_S_default_co], Awaitable[object]]
+    ) -> AwaitableResultWrapper[_F_default_co, _S_default_co]:
+        """Apply an asynchronous side effect to the wrapped `trcks.Success` object.
+
+        Wrapped `trcks.Failure` objects are passed on without side effects.
+
+        Args:
+            f: The asynchronous side effect to be applied.
+
+        Returns:
+            An `AwaitableResultWrapper` instance
+            with the original `trcks.Result` object,
+            allowing for further method chaining.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks.oop import ResultWrapper
+            >>> async def write_to_disk(s: str) -> None:
+            ...     await asyncio.sleep(0.001)
+            ...     print(f"Wrote '{s}' to disk.")
+            ...
+            >>> awaitable_result_wrapper_1 = ResultWrapper.construct_failure(
+            ...     "missing text"
+            ... ).tap_success_to_awaitable(write_to_disk)
+            >>> awaitable_result_wrapper_1
+            AwaitableResultWrapper(core=<coroutine object ...>)
+            >>> result_1 = asyncio.run(awaitable_result_wrapper_1.core_as_coroutine)
+            >>> result_1
+            ('failure', 'missing text')
+            >>> awaitable_result_wrapper_2 = ResultWrapper.construct_success(
+            ...     "Hello, world!"
+            ... ).tap_success_to_awaitable(write_to_disk)
+            >>> awaitable_result_wrapper_2
+            AwaitableResultWrapper(core=<coroutine object ...>)
+            >>> result_2 = asyncio.run(awaitable_result_wrapper_2.core_as_coroutine)
+            Wrote 'Hello, world!' to disk.
+            >>> result_2
+            ('success', 'Hello, world!')
+        """
+        return AwaitableResultWrapper.construct_from_result(
+            self.core
+        ).tap_success_to_awaitable(f)
+
+    def tap_success_to_awaitable_result(
+        self, f: Callable[[_S_default_co], AwaitableResult[_F, object]]
+    ) -> AwaitableResultWrapper[_F_default_co | _F, _S_default_co]:
+        """Apply an asynchronous side effect with return type `trcks.Result`
+        to the wrapped `trcks.Success` object.
+
+        Wrapped `trcks.Failure` objects are passed on without side effects.
+
+        Args:
+            f: The asynchronous side effect to be applied.
+
+        Returns:
+            An `AwaitableResultWrapper` instance with
+
+            - *the original* `trcks.Failure` if no side effect was applied,
+            - *the returned* `trcks.Failure`
+              if the applied side effect returns a `trcks.Failure` and
+            - *the original* `trcks.Success`
+              if the applied side effect returns a `trcks.Success`.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks import Result
+            >>> from trcks.oop import ResultWrapper
+            >>> async def write_to_disk(s: str, path: str) -> Result[str, None]:
+            ...     if path != "output.txt":
+            ...         return "failure", "write error"
+            ...     await asyncio.sleep(0.001)
+            ...     print(f"Wrote '{s}' to file {path}.")
+            ...     return "success", None
+            ...
+            >>> awaitable_result_wrapper_1 = ResultWrapper.construct_failure(
+            ...     "missing text"
+            ... ).tap_success_to_awaitable_result(
+            ...     lambda s: write_to_disk(s, "destination.txt")
+            ... )
+            >>> awaitable_result_wrapper_1
+            AwaitableResultWrapper(core=<coroutine object ...>)
+            >>> result_1 = asyncio.run(awaitable_result_wrapper_1.core_as_coroutine)
+            >>> result_1
+            ('failure', 'missing text')
+            >>> awaitable_result_wrapper_2 = ResultWrapper.construct_failure(
+            ...     "missing text"
+            ... ).tap_success_to_awaitable_result(
+            ...     lambda s: write_to_disk(s, "output.txt")
+            ... )
+            >>> awaitable_result_wrapper_2
+            AwaitableResultWrapper(core=<coroutine object ...>)
+            >>> result_2 = asyncio.run(awaitable_result_wrapper_2.core_as_coroutine)
+            >>> result_2
+            ('failure', 'missing text')
+            >>> awaitable_result_wrapper_3 = ResultWrapper.construct_success(
+            ...     "Hello, world!"
+            ... ).tap_success_to_awaitable_result(
+            ...     lambda s: write_to_disk(s, "destination.txt")
+            ... )
+            >>> awaitable_result_wrapper_3
+            AwaitableResultWrapper(core=<coroutine object ...>)
+            >>> result_3 = asyncio.run(awaitable_result_wrapper_3.core_as_coroutine)
+            >>> result_3
+            ('failure', 'write error')
+            >>> awaitable_result_wrapper_4 = ResultWrapper.construct_success(
+            ...     "Hello, world!"
+            ... ).tap_success_to_awaitable_result(
+            ...     lambda s: write_to_disk(s, "output.txt")
+            ... )
+            >>> awaitable_result_wrapper_4
+            AwaitableResultWrapper(core=<coroutine object ...>)
+            >>> result_4 = asyncio.run(awaitable_result_wrapper_4.core_as_coroutine)
+            Wrote 'Hello, world!' to file output.txt.
+            >>> result_4
+            ('success', 'Hello, world!')
+        """
+        return AwaitableResultWrapper.construct_from_result(
+            self.core
+        ).tap_success_to_awaitable_result(f)
+
+    def tap_success_to_result(
+        self, f: Callable[[_S_default_co], Result[_F, object]]
+    ) -> ResultWrapper[_F_default_co | _F, _S_default_co]:
+        """Apply a synchronous side effect with return type `trcks.Result`
+        to the wrapped `trcks.Success` object.
+
+        Wrapped `trcks.Failure` objects are passed on without side effects.
+
+        Args:
+            f: The synchronous side effect to be applied.
+
+        Returns:
+            A new `ResultWrapper` instance with
+
+            - *the original* `trcks.Failure` if no side effect was applied,
+            - *the returned* `trcks.Failure`
+              if the applied side effect returns a `trcks.Failure` and
+            - *the original* `trcks.Success`
+              if the applied side effect returns a `trcks.Success`.
+        """
+        tapped_f = r.tap_success_to_result(f)
+        return ResultWrapper(tapped_f(self.core))
+
     @property
     def track(self) -> Literal["failure", "success"]:
         """First element of the attribute `ResultWrapper.core`.
@@ -1490,14 +2370,20 @@ class Wrapper(_Wrapper[_T_co]):
 
     The wrapped object can be accessed via the attribute `Wrapper.core`.
     The ``Wrapper.map*`` methods allow method chaining.
+    The ``Wrapper.tap*`` methods allow for side effects
+    without changing the wrapped object.
 
     Example:
         The string ``"Hello"`` is wrapped and manipulated in the following example.
         Finally, the result is unwrapped:
 
             >>> wrapper = (
-            ...     Wrapper(core="Hello").map(len).map(lambda n: f"Length: {n}")
+            ...     Wrapper(core="Hello")
+            ...     .map(len)
+            ...     .tap(lambda n: print(f"Received {n}."))
+            ...     .map(lambda n: f"Length: {n}")
             ... )
+            Received 5.
             >>> wrapper
             Wrapper(core='Length: 5')
             >>> wrapper.core
@@ -1621,3 +2507,142 @@ class Wrapper(_Wrapper[_T_co]):
             ResultWrapper(core=('failure', 'negative value'))
         """
         return ResultWrapper(f(self.core))
+
+    def tap(self, f: Callable[[_T_co], object]) -> Wrapper[_T_co]:
+        """Apply a synchronous side effect to the wrapped object.
+
+        Args:
+            f: The synchronous side effect to be applied.
+
+        Returns:
+            A new `Wrapper` instance with the original wrapped object,
+            allowing for further method chaining.
+
+        Example:
+            >>> wrapper = Wrapper.construct(5).tap(lambda n: print(f"Number: {n}"))
+            Number: 5
+            >>> wrapper
+            Wrapper(core=5)
+        """
+        return self.map(i.tap(f))
+
+    def tap_to_awaitable(
+        self, f: Callable[[_T_co], Awaitable[object]]
+    ) -> AwaitableWrapper[_T_co]:
+        """Apply an asynchronous side effect to the wrapped object.
+
+        Args:
+            f: The asynchronous side effect to be applied.
+
+        Returns:
+            An `AwaitableWrapper` instance with the original wrapped object.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks.oop import Wrapper
+            >>> async def write_to_disk(s: str) -> None:
+            ...     await asyncio.sleep(0.001)
+            ...     print(f"Wrote '{s}' to disk.")
+            ...
+            >>> awaitable_wrapper = Wrapper.construct(
+            ...     "Hello, world!"
+            ... ).tap_to_awaitable(write_to_disk)
+            >>> awaitable_wrapper
+            AwaitableWrapper(core=<coroutine object ...>)
+            >>> value = asyncio.run(awaitable_wrapper.core_as_coroutine)
+            Wrote 'Hello, world!' to disk.
+            >>> value
+            'Hello, world!'
+        """
+        return AwaitableWrapper.construct(self.core).tap_to_awaitable(f)
+
+    def tap_to_awaitable_result(
+        self, f: Callable[[_T_co], AwaitableResult[_F, object]]
+    ) -> AwaitableResultWrapper[_F, _T_co]:
+        """Apply an asynchronous side effect with return type `trcks.Result`
+        to the wrapped object.
+
+        Args:
+            f: The asynchronous side effect to be applied.
+
+        Returns:
+            An `AwaitableResultWrapper` instance with
+
+            - *the returned* `Failure` if the given side effect returns a `Failure` or
+            - a `Success` instance containing *the original* wrapped object
+              if the given side effect returns a `Success`.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks import Result
+            >>> from trcks.oop import Wrapper
+            >>> async def write_to_disk(s: str, path: str) -> Result[str, None]:
+            ...     if path != "output.txt":
+            ...         return "failure", "write error"
+            ...     await asyncio.sleep(0.001)
+            ...     print(f"Wrote '{s}' to file {path}.")
+            ...     return "success", None
+            ...
+            >>> awaitable_result_wrapper_1 = Wrapper.construct(
+            ...     "Hello, world!"
+            ... ).tap_to_awaitable_result(
+            ...     lambda s: write_to_disk(s, "destination.txt")
+            ... )
+            >>> awaitable_result_wrapper_1
+            AwaitableResultWrapper(core=<coroutine object ...>)
+            >>> result_1 = asyncio.run(awaitable_result_wrapper_1.core_as_coroutine)
+            >>> result_1
+            ('failure', 'write error')
+            >>> awaitable_result_wrapper_2 = Wrapper.construct(
+            ...     "Hello, world!"
+            ... ).tap_to_awaitable_result(
+            ...     lambda s: write_to_disk(s, "output.txt")
+            ... )
+            >>> awaitable_result_wrapper_2
+            AwaitableResultWrapper(core=<coroutine object ...>)
+            >>> result_2 = asyncio.run(awaitable_result_wrapper_2.core_as_coroutine)
+            Wrote 'Hello, world!' to file output.txt.
+            >>> result_2
+            ('success', 'Hello, world!')
+        """
+        return AwaitableResultWrapper.construct_success(
+            self.core
+        ).tap_success_to_awaitable_result(f)
+
+    def tap_to_result(
+        self, f: Callable[[_T_co], Result[_F, object]]
+    ) -> ResultWrapper[_F, _T_co]:
+        """Apply a synchronous side effect with return type `trcks.Result`
+        to the wrapped object.
+
+        Args:
+            f: The synchronous side effect to be applied.
+
+        Returns:
+            A `ResultWrapper` instance with
+
+            - *the returned* `Failure` if the given side effect returns a `Failure` or
+            - a `Success` instance containing *the original* wrapped object
+              if the given side effect returns a `Success`.
+
+        Example:
+            >>> from trcks import Result
+            >>> from trcks.oop import Wrapper
+            >>> def print_positive_float(x: float) -> Result[str, None]:
+            ...     if x <= 0:
+            ...         return "failure", "not positive"
+            ...     return "success", print(f"Positive float: {x}")
+            ...
+            >>> result_wrapper_1 = Wrapper.construct(-2.3).tap_to_result(
+            ...     print_positive_float
+            ... )
+            >>> result_wrapper_1
+            ResultWrapper(core=('failure', 'not positive'))
+            >>> result_wrapper_2 = Wrapper.construct(3.5).tap_to_result(
+            ...     print_positive_float
+            ... )
+            Positive float: 3.5
+            >>> result_wrapper_2
+            ResultWrapper(core=('success', 3.5))
+        """
+        return ResultWrapper.construct_success(self.core).tap_success_to_result(f)
