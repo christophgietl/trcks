@@ -1,6 +1,7 @@
 """Monadic functions for `trcks.Result`.
 
-Provides utilities for functional composition of `trcks.Result`-returning functions.
+Provides utilities for functional composition of
+synchronous `trcks.Result`-returning functions.
 
 Example:
     Create and process a value of type `trcks.Result`:
@@ -74,6 +75,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from trcks._typing import TypeVar, assert_never
+from trcks.fp.monads import identity as i
 
 if TYPE_CHECKING:  # pragma: no cover
     from collections.abc import Callable
@@ -283,12 +285,7 @@ def tap_failure(
         returns the original `Failure` value.
         Passes on `Success` values without side effects.
     """
-
-    def bypassed_f(value: _F1) -> _F1:
-        _ = f(value)
-        return value
-
-    return map_failure(bypassed_f)
+    return map_failure(i.tap(f))
 
 
 def tap_failure_to_result(
@@ -336,12 +333,7 @@ def tap_success(
         Applies the given side effect to `Success` values and
         returns the original `Success` value.
     """
-
-    def bypassed_f(value: _S1) -> _S1:
-        _ = f(value)
-        return value
-
-    return map_success(bypassed_f)
+    return map_success(i.tap(f))
 
 
 def tap_success_to_result(

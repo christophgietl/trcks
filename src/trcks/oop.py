@@ -79,6 +79,7 @@ from trcks import AwaitableResult, Result
 from trcks._typing import Never, TypeVar, override
 from trcks.fp.monads import awaitable as a
 from trcks.fp.monads import awaitable_result as ar
+from trcks.fp.monads import identity as i
 from trcks.fp.monads import result as r
 
 __docformat__ = "google"
@@ -2514,7 +2515,8 @@ class Wrapper(_Wrapper[_T_co]):
             f: The synchronous side effect to be applied.
 
         Returns:
-            This `Wrapper` instance.
+            A new `Wrapper` instance with the original wrapped object,
+            allowing for further method chaining.
 
         Example:
             >>> wrapper = Wrapper.construct(5).tap(lambda n: print(f"Number: {n}"))
@@ -2522,8 +2524,7 @@ class Wrapper(_Wrapper[_T_co]):
             >>> wrapper
             Wrapper(core=5)
         """
-        _ = f(self.core)
-        return self
+        return self.map(i.tap(f))
 
     def tap_to_awaitable(
         self, f: Callable[[_T_co], Awaitable[object]]

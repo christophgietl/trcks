@@ -40,6 +40,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from trcks._typing import TypeVar
+from trcks.fp.monads import identity as i
 
 if TYPE_CHECKING:  # pragma: no cover
     from collections.abc import Awaitable, Callable
@@ -185,12 +186,7 @@ def tap(f: Callable[[_T1], object]) -> Callable[[Awaitable[_T1]], Awaitable[_T1]
         >>> value
         'Hello, world!'
     """
-
-    def bypassed_f(value: _T1) -> _T1:
-        _ = f(value)
-        return value
-
-    return map_(bypassed_f)
+    return map_(i.tap(f))
 
 
 def tap_to_awaitable(
