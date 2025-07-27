@@ -395,8 +395,7 @@ class AwaitableResultWrapper(_AwaitableWrapper[Result[_F_default_co, _S_default_
             >>> asyncio.run(awaitable_result_wrapper_2.core_as_coroutine)
             ('success', 25.0)
         """
-        mapped_f = ar.map_failure(f)
-        return AwaitableResultWrapper(mapped_f(self.core))
+        return AwaitableResultWrapper(ar.map_failure(f)(self.core))
 
     def map_failure_to_awaitable(
         self, f: Callable[[_F_default_co], Awaitable[_F]]
@@ -442,8 +441,7 @@ class AwaitableResultWrapper(_AwaitableWrapper[Result[_F_default_co, _S_default_
             >>> asyncio.run(awaitable_result_wrapper_2.core_as_coroutine)
             ('success', 42)
         """
-        mapped_f = ar.map_failure_to_awaitable(f)
-        return AwaitableResultWrapper(mapped_f(self.core))
+        return AwaitableResultWrapper(ar.map_failure_to_awaitable(f)(self.core))
 
     def map_failure_to_awaitable_result(
         self, f: Callable[[_F_default_co], AwaitableResult[_F, _S]]
@@ -503,8 +501,7 @@ class AwaitableResultWrapper(_AwaitableWrapper[Result[_F_default_co, _S_default_
             >>> asyncio.run(awaitable_result_wrapper_3.core_as_coroutine)
             ('success', 25.0)
         """
-        mapped_f = ar.map_failure_to_awaitable_result(f)
-        return AwaitableResultWrapper(mapped_f(self.core))
+        return AwaitableResultWrapper(ar.map_failure_to_awaitable_result(f)(self.core))
 
     def map_failure_to_result(
         self, f: Callable[[_F_default_co], Result[_F, _S]]
@@ -563,8 +560,7 @@ class AwaitableResultWrapper(_AwaitableWrapper[Result[_F_default_co, _S_default_
             >>> asyncio.run(awaitable_result_wrapper_3.core_as_coroutine)
             ('success', 25.0)
         """
-        mapped_f = ar.map_failure_to_result(f)
-        return AwaitableResultWrapper(mapped_f(self.core))
+        return AwaitableResultWrapper(ar.map_failure_to_result(f)(self.core))
 
     def map_success(
         self, f: Callable[[_S_default_co], _S]
@@ -607,8 +603,7 @@ class AwaitableResultWrapper(_AwaitableWrapper[Result[_F_default_co, _S_default_
             >>> asyncio.run(awaitable_result_wrapper_2.core_as_coroutine)
             ('success', 43)
         """
-        mapped_f = ar.map_success(f)
-        return AwaitableResultWrapper(mapped_f(self.core))
+        return AwaitableResultWrapper(ar.map_success(f)(self.core))
 
     def map_success_to_awaitable(
         self, f: Callable[[_S_default_co], Awaitable[_S]]
@@ -654,8 +649,7 @@ class AwaitableResultWrapper(_AwaitableWrapper[Result[_F_default_co, _S_default_
             >>> asyncio.run(awaitable_result_wrapper_2.core_as_coroutine)
             ('success', 43)
         """
-        mapped_f = ar.map_success_to_awaitable(f)
-        return AwaitableResultWrapper(mapped_f(self.core))
+        return AwaitableResultWrapper(ar.map_success_to_awaitable(f)(self.core))
 
     def map_success_to_awaitable_result(
         self, f: Callable[[_S_default_co], AwaitableResult[_F, _S]]
@@ -716,8 +710,7 @@ class AwaitableResultWrapper(_AwaitableWrapper[Result[_F_default_co, _S_default_
             >>> asyncio.run(awaitable_result_wrapper_3.core_as_coroutine)
             ('success', 5.0)
         """
-        mapped_f = ar.map_success_to_awaitable_result(f)
-        return AwaitableResultWrapper(mapped_f(self.core))
+        return AwaitableResultWrapper(ar.map_success_to_awaitable_result(f)(self.core))
 
     def map_success_to_result(
         self, f: Callable[[_S_default_co], Result[_F, _S]]
@@ -777,8 +770,7 @@ class AwaitableResultWrapper(_AwaitableWrapper[Result[_F_default_co, _S_default_
             >>> asyncio.run(awaitable_result_3.core_as_coroutine)
             ('success', 5.0)
         """
-        mapped_f = ar.map_success_to_result(f)
-        return AwaitableResultWrapper(mapped_f(self.core))
+        return AwaitableResultWrapper(ar.map_success_to_result(f)(self.core))
 
     def tap_failure(
         self, f: Callable[[_F_default_co], object]
@@ -816,8 +808,7 @@ class AwaitableResultWrapper(_AwaitableWrapper[Result[_F_default_co, _S_default_
             >>> result_2
             ('success', 42)
         """
-        tapped_f = ar.tap_failure(f)
-        return AwaitableResultWrapper(tapped_f(self.core))
+        return AwaitableResultWrapper(ar.tap_failure(f)(self.core))
 
     def tap_failure_to_awaitable(
         self, f: Callable[[_F_default_co], Awaitable[object]]
@@ -859,8 +850,7 @@ class AwaitableResultWrapper(_AwaitableWrapper[Result[_F_default_co, _S_default_
             >>> result_2
             ('success', 42)
         """
-        tapped_f = ar.tap_failure_to_awaitable(f)
-        return AwaitableResultWrapper(tapped_f(self.core))
+        return AwaitableResultWrapper(ar.tap_failure_to_awaitable(f)(self.core))
 
     def tap_failure_to_awaitable_result(
         self, f: Callable[[_F_default_co], AwaitableResult[object, _S]]
@@ -882,8 +872,7 @@ class AwaitableResultWrapper(_AwaitableWrapper[Result[_F_default_co, _S_default_
               if the applied side effect returns a `trcks.Success` and
             - *the original* `trcks.Success` if no side effect was applied.
         """
-        tapped_f = ar.tap_failure_to_awaitable_result(f)
-        return AwaitableResultWrapper(tapped_f(self.core))
+        return AwaitableResultWrapper(ar.tap_failure_to_awaitable_result(f)(self.core))
 
     def tap_failure_to_result(
         self, f: Callable[[_F_default_co], Result[object, _S]]
@@ -944,8 +933,7 @@ class AwaitableResultWrapper(_AwaitableWrapper[Result[_F_default_co, _S_default_
             >>> asyncio.run(awaitable_result_wrapper_3.core_as_coroutine)
             ('success', 42)
         """
-        tapped_f = ar.tap_failure_to_result(f)
-        return AwaitableResultWrapper(tapped_f(self.core))
+        return AwaitableResultWrapper(ar.tap_failure_to_result(f)(self.core))
 
     def tap_success(
         self, f: Callable[[_S_default_co], object]
@@ -983,8 +971,7 @@ class AwaitableResultWrapper(_AwaitableWrapper[Result[_F_default_co, _S_default_
             >>> result_2
             ('success', 42)
         """
-        tapped_f = ar.tap_success(f)
-        return AwaitableResultWrapper(tapped_f(self.core))
+        return AwaitableResultWrapper(ar.tap_success(f)(self.core))
 
     def tap_success_to_awaitable(
         self, f: Callable[[_S_default_co], Awaitable[object]]
@@ -1026,8 +1013,7 @@ class AwaitableResultWrapper(_AwaitableWrapper[Result[_F_default_co, _S_default_
             >>> result_2
             ('success', 'Hello, world!')
         """
-        tapped_f = ar.tap_success_to_awaitable(f)
-        return AwaitableResultWrapper(tapped_f(self.core))
+        return AwaitableResultWrapper(ar.tap_success_to_awaitable(f)(self.core))
 
     def tap_success_to_awaitable_result(
         self, f: Callable[[_S_default_co], AwaitableResult[_F, object]]
@@ -1102,8 +1088,7 @@ class AwaitableResultWrapper(_AwaitableWrapper[Result[_F_default_co, _S_default_
             >>> result_4
             ('success', 'Hello, world!')
         """
-        tapped_f = ar.tap_success_to_awaitable_result(f)
-        return AwaitableResultWrapper(tapped_f(self.core))
+        return AwaitableResultWrapper(ar.tap_success_to_awaitable_result(f)(self.core))
 
     def tap_success_to_result(
         self, f: Callable[[_S_default_co], Result[_F, object]]
@@ -1125,8 +1110,7 @@ class AwaitableResultWrapper(_AwaitableWrapper[Result[_F_default_co, _S_default_
             - *the original* `trcks.Success`
               if the applied side effect returns a `trcks.Success`.
         """
-        tapped_f = ar.tap_success_to_result(f)
-        return AwaitableResultWrapper(tapped_f(self.core))
+        return AwaitableResultWrapper(ar.tap_success_to_result(f)(self.core))
 
     @property
     async def track(self) -> Literal["failure", "success"]:
@@ -1278,8 +1262,7 @@ class AwaitableWrapper(_AwaitableWrapper[_T_co]):
             >>> asyncio.run(awaitable_wrapper.core_as_coroutine)
             'Length: 13'
         """
-        mapped_f = a.map_(f)
-        return AwaitableWrapper(mapped_f(self.core))
+        return AwaitableWrapper(a.map_(f)(self.core))
 
     def map_to_awaitable(
         self, f: Callable[[_T_co], Awaitable[_T]]
@@ -1311,8 +1294,7 @@ class AwaitableWrapper(_AwaitableWrapper[_T_co]):
             >>> asyncio.run(awaitable_wrapper.core_as_coroutine)
             Wrote 'Hello, world!' to disk.
         """
-        mapped_f = a.map_to_awaitable(f)
-        return AwaitableWrapper(mapped_f(self.core))
+        return AwaitableWrapper(a.map_to_awaitable(f)(self.core))
 
     def map_to_awaitable_result(
         self, f: Callable[[_T_co], AwaitableResult[_F, _S]]
@@ -1409,8 +1391,7 @@ class AwaitableWrapper(_AwaitableWrapper[_T_co]):
             >>> value
             'Hello, world!'
         """
-        tapped_f = a.tap(f)
-        return AwaitableWrapper(tapped_f(self.core))
+        return AwaitableWrapper(a.tap(f)(self.core))
 
     def tap_to_awaitable(
         self, f: Callable[[_T_co], Awaitable[object]]
@@ -1439,8 +1420,7 @@ class AwaitableWrapper(_AwaitableWrapper[_T_co]):
             >>> value
             'Hello, world!'
         """
-        tapped_f = a.tap_to_awaitable(f)
-        return AwaitableWrapper(tapped_f(self.core))
+        return AwaitableWrapper(a.tap_to_awaitable(f)(self.core))
 
     def tap_to_awaitable_result(
         self, f: Callable[[_T_co], AwaitableResult[_F, object]]
@@ -1642,8 +1622,7 @@ class ResultWrapper(_Wrapper[Result[_F_default_co, _S_default_co]]):
             ... )
             ResultWrapper(core=('success', 25.0))
         """
-        mapped_f = r.map_failure(f)
-        return ResultWrapper(mapped_f(self.core))
+        return ResultWrapper(r.map_failure(f)(self.core))
 
     def map_failure_to_awaitable(
         self, f: Callable[[_F_default_co], Awaitable[_F]]
@@ -1802,8 +1781,7 @@ class ResultWrapper(_Wrapper[Result[_F_default_co, _S_default_co]]):
             ... )
             ResultWrapper(core=('success', 25.0))
         """
-        mapped_f = r.map_failure_to_result(f)
-        return ResultWrapper(mapped_f(self.core))
+        return ResultWrapper(r.map_failure_to_result(f)(self.core))
 
     def map_success(
         self, f: Callable[[_S_default_co], _S]
@@ -1829,8 +1807,7 @@ class ResultWrapper(_Wrapper[Result[_F_default_co, _S_default_co]]):
             >>> ResultWrapper.construct_success(42).map_success(lambda n: n+1)
             ResultWrapper(core=('success', 43))
         """
-        mapped_f = r.map_success(f)
-        return ResultWrapper(mapped_f(self.core))
+        return ResultWrapper(r.map_success(f)(self.core))
 
     def map_success_to_awaitable(
         self, f: Callable[[_S_default_co], Awaitable[_S]]
@@ -1985,8 +1962,7 @@ class ResultWrapper(_Wrapper[Result[_F_default_co, _S_default_co]]):
             ... )
             ResultWrapper(core=('success', 5.0))
         """
-        mapped_f = r.map_success_to_result(f)
-        return ResultWrapper(mapped_f(self.core))
+        return ResultWrapper(r.map_success_to_result(f)(self.core))
 
     def tap_failure(
         self, f: Callable[[_F_default_co], object]
@@ -2015,8 +1991,7 @@ class ResultWrapper(_Wrapper[Result[_F_default_co, _S_default_co]]):
             >>> result_wrapper_2
             ResultWrapper(core=('success', 42))
         """
-        tapped_f = r.tap_failure(f)
-        return ResultWrapper(tapped_f(self.core))
+        return ResultWrapper(r.tap_failure(f)(self.core))
 
     def tap_failure_to_awaitable(
         self, f: Callable[[_F_default_co], Awaitable[object]]
@@ -2167,8 +2142,7 @@ class ResultWrapper(_Wrapper[Result[_F_default_co, _S_default_co]]):
             >>> result_wrapper_3
             ResultWrapper(core=('success', 42))
         """
-        tapped_f = r.tap_failure_to_result(f)
-        return ResultWrapper(tapped_f(self.core))
+        return ResultWrapper(r.tap_failure_to_result(f)(self.core))
 
     def tap_success(
         self, f: Callable[[_S_default_co], object]
@@ -2197,8 +2171,7 @@ class ResultWrapper(_Wrapper[Result[_F_default_co, _S_default_co]]):
             >>> result_wrapper_2
             ResultWrapper(core=('success', 42))
         """
-        tapped_f = r.tap_success(f)
-        return ResultWrapper(tapped_f(self.core))
+        return ResultWrapper(r.tap_success(f)(self.core))
 
     def tap_success_to_awaitable(
         self, f: Callable[[_S_default_co], Awaitable[object]]
@@ -2341,8 +2314,7 @@ class ResultWrapper(_Wrapper[Result[_F_default_co, _S_default_co]]):
             - *the original* `trcks.Success`
               if the applied side effect returns a `trcks.Success`.
         """
-        tapped_f = r.tap_success_to_result(f)
-        return ResultWrapper(tapped_f(self.core))
+        return ResultWrapper(r.tap_success_to_result(f)(self.core))
 
     @property
     def track(self) -> Literal["failure", "success"]:
