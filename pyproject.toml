@@ -31,6 +31,7 @@ classifiers = [
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
     "Topic :: Software Development :: Libraries :: Python Modules",
     "Typing :: Typed",
 ]
@@ -64,7 +65,12 @@ requires-python = ">=3.9"
 
 [project.optional-dependencies]
 mypy = ["mypy >= 1.7"]
-pyright = ["pyright >= 1.1.387"]
+pyright = [
+    "pyright >= 1.1.387",
+    # pyright 1.1.406 and older report false positives for Python 3.14
+    # (cf. https://github.com/microsoft/pyright/issues/11003):
+    "pyright >= 1.1.407 ; python_full_version >= '3.14'",
+]
 
 [project.urls]
 Documentation = "https://christophgietl.github.io/trcks/"
