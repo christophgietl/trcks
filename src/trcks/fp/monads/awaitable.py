@@ -248,14 +248,14 @@ async def to_coroutine(awtbl: Awaitable[_T]) -> _T:
 
     Returns:
         The given [collections.abc.Awaitable][] transformed
-        into a [collections.abc.Coroutine][].
+            into a [collections.abc.Coroutine][].
 
     Note:
         The type [collections.abc.Awaitable][] is
         a supertype of [collections.abc.Coroutine][].
 
     Example:
-        Transform an `asyncio.Future` into a [collections.abc.Coroutine][] and run it:
+        Transform an [asyncio.Future][] into a [collections.abc.Coroutine][] and run it:
 
             >>> import asyncio
             >>> from trcks.fp.monads import awaitable as a
