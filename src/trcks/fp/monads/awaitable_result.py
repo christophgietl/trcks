@@ -60,10 +60,10 @@ _S2 = TypeVar("_S2")
 
 
 def construct_failure(value: _F) -> AwaitableFailure[_F]:
-    """Create A [trcks.AwaitableFailure][] object from a value.
+    """Create a [trcks.AwaitableFailure][] object from a value.
 
     Args:
-        value: Value to be wrapped in A [trcks.AwaitableFailure][] object.
+        value: Value to be wrapped in a [trcks.AwaitableFailure][] object.
 
     Returns:
         A new [trcks.AwaitableFailure][] instance containing the given value.
@@ -113,7 +113,7 @@ def construct_failure_from_awaitable(awtbl: Awaitable[_F]) -> AwaitableFailure[_
 
 
 def construct_from_result(rslt: Result[_F, _S]) -> AwaitableResult[_F, _S]:
-    """Create A [trcks.AwaitableResult][] object from a [trcks.Result][] object.
+    """Create a [trcks.AwaitableResult][] object from a [trcks.Result][] object.
 
     Args:
         rslt: [trcks.Result][] object to be wrapped
@@ -137,10 +137,10 @@ def construct_from_result(rslt: Result[_F, _S]) -> AwaitableResult[_F, _S]:
 
 
 def construct_success(value: _S) -> AwaitableSuccess[_S]:
-    """Create A [trcks.AwaitableSuccess][] object from a value.
+    """Create a [trcks.AwaitableSuccess][] object from a value.
 
     Args:
-        value: Value to be wrapped in A [trcks.AwaitableSuccess][] object.
+        value: Value to be wrapped in a [trcks.AwaitableSuccess][] object.
 
     Returns:
         A new [trcks.AwaitableSuccess][] instance containing the given value.
@@ -159,7 +159,7 @@ def construct_success(value: _S) -> AwaitableSuccess[_S]:
 
 
 def construct_success_from_awaitable(awtbl: Awaitable[_S]) -> AwaitableSuccess[_S]:
-    """Create A [trcks.AwaitableSuccess][] object
+    """Create a [trcks.AwaitableSuccess][] object
     from a [collections.abc.Awaitable][] object.
 
     Args:
@@ -602,9 +602,9 @@ def tap_failure_to_awaitable_result(
 
     Returns:
         Applies the given side effect to [trcks.AwaitableFailure][] values.
-            If the given side effect returns A [trcks.AwaitableFailure][],
+            If the given side effect returns a [trcks.AwaitableFailure][],
             *the original* [trcks.AwaitableFailure][] value is returned.
-            If the given side effect returns A [trcks.AwaitableSuccess][],
+            If the given side effect returns a [trcks.AwaitableSuccess][],
             *this* [trcks.AwaitableSuccess][] is returned.
             Passes on [trcks.AwaitableSuccess][] values without side effects.
     """
@@ -699,9 +699,9 @@ def tap_success_to_awaitable_result(
     Returns:
         Passes on [trcks.AwaitableFailure][] values without side effects.
             Applies the given side effect to [trcks.AwaitableSuccess][] values.
-            If the given side effect returns A [trcks.AwaitableFailure][],
+            If the given side effect returns a [trcks.AwaitableFailure][],
             *this* [trcks.AwaitableFailure][] is returned.
-            If the given side effect returns A [trcks.AwaitableSuccess][],
+            If the given side effect returns a [trcks.AwaitableSuccess][],
             *the original* [trcks.AwaitableSuccess][] value is returned.
     """
 
@@ -739,7 +739,7 @@ def tap_success_to_result(
 
 
 async def to_coroutine_result(a_rslt: AwaitableResult[_F, _S]) -> Result[_F, _S]:
-    """Turn A [trcks.AwaitableResult][] into a [collections.abc.Coroutine][].
+    """Turn a [trcks.AwaitableResult][] into a [collections.abc.Coroutine][].
 
     This is useful for functions that expect a coroutine (e.g. [asyncio.run][]).
 
