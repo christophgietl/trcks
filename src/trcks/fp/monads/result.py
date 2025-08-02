@@ -1,10 +1,10 @@
-"""Monadic functions for `trcks.Result`.
+"""Monadic functions for [trcks.Result][].
 
 Provides utilities for functional composition of
-synchronous `trcks.Result`-returning functions.
+synchronous [trcks.Result][]-returning functions.
 
 Example:
-    Create and process a value of type `trcks.Result`:
+    Create and process a value of type [trcks.Result][]:
 
         >>> import math
         >>> from trcks.fp.composition import pipe
@@ -34,7 +34,7 @@ Example:
         ('failure', 'out of disk space')
 
     If your static type checker cannot infer the type of
-    the argument passed to `trcks.fp.composition.pipe`,
+    the argument passed to [trcks.fp.composition.pipe][],
     you can explicitly assign a type:
 
         >>> import math
@@ -94,13 +94,13 @@ _S2 = TypeVar("_S2")
 
 
 def construct_failure(value: _F) -> Failure[_F]:
-    """Create a `Failure` object from a value.
+    """Create a [trcks.Failure][] object from a value.
 
     Args:
-        value: Value to be wrapped in a `Failure` object.
+        value: Value to be wrapped in a [trcks.Failure][] object.
 
     Returns:
-        `Failure` object containing the given value.
+        [trcks.Failure][] object containing the given value.
 
     Example:
         >>> from trcks.fp.monads import result as r
@@ -111,13 +111,13 @@ def construct_failure(value: _F) -> Failure[_F]:
 
 
 def construct_success(value: _S) -> Success[_S]:
-    """Create a `Success` object from a value.
+    """Create a [trcks.Success][] object from a value.
 
     Args:
-        value: Value to be wrapped in a `Success` object.
+        value: Value to be wrapped in a [trcks.Success][] object.
 
     Returns:
-        `Success` object containing the given value.
+        [trcks.Success][] object containing the given value.
 
     Example:
         >>> from trcks.fp.monads import result as r
@@ -130,17 +130,17 @@ def construct_success(value: _S) -> Success[_S]:
 def map_failure(
     f: Callable[[_F1], _F2],
 ) -> Callable[[Result[_F1, _S1]], Result[_F2, _S1]]:
-    """Create function that maps `Failure` values to `Failure` values.
+    """Create function that maps [trcks.Failure][] values to [trcks.Failure][] values.
 
-    `Success` values are left unchanged.
+    [trcks.Success][] values are left unchanged.
 
     Args:
-        f: Function to apply to the `Failure` values.
+        f: Function to apply to the [trcks.Failure][] values.
 
     Returns:
-        Maps `Failure` values to new `Failure` values
-        according to the given function and
-        leaves `Success` values unchanged.
+        Maps [trcks.Failure][] values to new [trcks.Failure][] values
+            according to the given function and
+            leaves [trcks.Success][] values unchanged.
 
     Example:
         >>> from trcks.fp.monads import result as r
@@ -160,17 +160,18 @@ def map_failure(
 def map_failure_to_result(
     f: Callable[[_F1], Result[_F2, _S2]],
 ) -> Callable[[Result[_F1, _S1]], Result[_F2, _S1 | _S2]]:
-    """Create function that maps `Failure` values to `Failure` and `Success` values.
+    """Create function that maps [trcks.Failure][] values
+    to [trcks.Failure][] and [trcks.Success][] values.
 
-    `Success` values are left unchanged.
+    [trcks.Success][] values are left unchanged.
 
     Args:
-        f: Function to apply to the `Failure` values.
+        f: Function to apply to the [trcks.Failure][] values.
 
     Returns:
-        Maps `Failure` values to `Failure` and `Success` values
-        according to the given function and
-        leaves `Success` values unchanged.
+        Maps [trcks.Failure][] values to [trcks.Failure][] and [trcks.Success][] values
+            according to the given function and
+            leaves [trcks.Success][] values unchanged.
 
     Example:
         >>> from trcks.fp.monads import result as r
@@ -198,16 +199,17 @@ def map_failure_to_result(
 def map_success(
     f: Callable[[_S1], _S2],
 ) -> Callable[[Result[_F1, _S1]], Result[_F1, _S2]]:
-    """Create function that maps `Success` values to `Success` values.
+    """Create function that maps [trcks.Success][] values to [trcks.Success][] values.
 
-    `Failure` values are left unchanged.
+    [trcks.Failure][] values are left unchanged.
 
     Args:
-        f: Function to apply to the `Success` value.
+        f: Function to apply to the [trcks.Success][] value.
 
     Returns:
-        Leaves `Failure` values unchanged and
-        maps `Success` values to new `Success` values according to the given function.
+        Leaves [trcks.Failure][] values unchanged and
+            maps [trcks.Success][] values to new [trcks.Success][] values
+            according to the given function.
 
     Example:
         >>> from trcks.fp.monads import result as r
@@ -230,17 +232,18 @@ def map_success(
 def map_success_to_result(
     f: Callable[[_S1], Result[_F2, _S2]],
 ) -> Callable[[Result[_F1, _S1]], Result[_F1 | _F2, _S2]]:
-    """Create function that maps `Success` values to `Failure` and `Success` values.
+    """Create function that maps [trcks.Success][] values
+    to [trcks.Failure][] and [trcks.Success][] values.
 
-    `Failure` values are left unchanged.
+    [trcks.Failure][] values are left unchanged.
 
     Args:
-        f: Function to apply to the `Success` value.
+        f: Function to apply to the [trcks.Success][] value.
 
     Returns:
-        Leaves `Failure` values unchanged and
-        maps `Success` values to `Failure` and `Success` values
-        according to the given function.
+        Leaves [trcks.Failure][] values unchanged and
+            maps [trcks.Success][] values to [trcks.Failure][] and
+            [trcks.Success][] values according to the given function.
 
     Example:
         >>> import math
@@ -273,17 +276,17 @@ def map_success_to_result(
 def tap_failure(
     f: Callable[[_F1], object],
 ) -> Callable[[Result[_F1, _S1]], Result[_F1, _S1]]:
-    """Create function that applies a side effect to `Failure` values.
+    """Create function that applies a side effect to [trcks.Failure][] values.
 
-    `Success` values are passed on without side effects.
+    [trcks.Success][] values are passed on without side effects.
 
     Args:
-        f: Side effect to apply to the `Failure` value.
+        f: Side effect to apply to the [trcks.Failure][] value.
 
     Returns:
-        Applies the given side effect to `Failure` values and
-        returns the original `Failure` value.
-        Passes on `Success` values without side effects.
+        Applies the given side effect to [trcks.Failure][] values and
+            returns the original [trcks.Failure][] value.
+            Passes on [trcks.Success][] values without side effects.
     """
     return map_failure(i.tap(f))
 
@@ -291,20 +294,21 @@ def tap_failure(
 def tap_failure_to_result(
     f: Callable[[_F1], Result[object, _S2]],
 ) -> Callable[[Result[_F1, _S1]], Result[_F1, _S1 | _S2]]:
-    """Create function that applies a side effect with return type `Result`
-    to `Failure` values.
+    """Create function that applies a side effect with return type [trcks.Result][]
+    to [trcks.Failure][] values.
 
-    `Success` values are passed on without side effects.
+    [trcks.Success][] values are passed on without side effects.
 
     Args:
-        f: Side effect to apply to the `Failure` value.
+        f: Side effect to apply to the [trcks.Failure][] value.
 
     Returns:
-        Applies the given side effect to `Failure` values.
-        If the given side effect returns a `Failure`,
-        *the original* `Failure` value is returned.
-        If the given side effect returns a `Success`, *this* `Success` is returned.
-        Passes on `Success` values without side effects.
+        Applies the given side effect to [trcks.Failure][] values.
+            If the given side effect returns a [trcks.Failure][],
+            *the original* [trcks.Failure][] value is returned.
+            If the given side effect returns a [trcks.Success][],
+            *this* [trcks.Success][] is returned.
+            Passes on [trcks.Success][] values without side effects.
     """
 
     def bypassed_f(value: _F1) -> Result[_F1, _S2]:
@@ -321,17 +325,17 @@ def tap_failure_to_result(
 def tap_success(
     f: Callable[[_S1], object],
 ) -> Callable[[Result[_F1, _S1]], Result[_F1, _S1]]:
-    """Create function that applies a side effect to `Success` values.
+    """Create function that applies a side effect to [trcks.Success][] values.
 
-    `Failure` values are passed on without side effects.
+    [trcks.Failure][] values are passed on without side effects.
 
     Args:
-        f: Side effect to apply to the `Success` value.
+        f: Side effect to apply to the [trcks.Success][] value.
 
     Returns:
-        Passes on `Failure` values without side effects.
-        Applies the given side effect to `Success` values and
-        returns the original `Success` value.
+        Passes on [trcks.Failure][] values without side effects.
+            Applies the given side effect to [trcks.Success][] values and
+            returns the original [trcks.Success][] value.
     """
     return map_success(i.tap(f))
 
@@ -339,20 +343,21 @@ def tap_success(
 def tap_success_to_result(
     f: Callable[[_S1], Result[_F2, object]],
 ) -> Callable[[Result[_F1, _S1]], Result[_F1 | _F2, _S1]]:
-    """Create function that applies a side effect with return type `Result`
-    to `Success` values.
+    """Create function that applies a side effect with return type [trcks.Result][]
+    to [trcks.Success][] values.
 
-    `Failure` values are passed on without side effects.
+    [trcks.Failure][] values are passed on without side effects.
 
     Args:
-        f: Side effect to apply to the `Success` value.
+        f: Side effect to apply to the [trcks.Success][] value.
 
     Returns:
-        Passes on `Failure` values without side effects.
-        Applies the given side effect to `Success` values.
-        If the given side effect returns a `Failure`, *this* `Failure` is returned.
-        If the given side effect returns a `Success`,
-        *the original* `Success` value is returned.
+        Passes on [trcks.Failure][] values without side effects.
+            Applies the given side effect to [trcks.Success][] values.
+            If the given side effect returns a [trcks.Failure][],
+            *this* [trcks.Failure][] is returned.
+            If the given side effect returns a [trcks.Success][],
+            *the original* [trcks.Success][] value is returned.
     """
 
     def bypassed_f(value: _S1) -> Result[_F2, _S1]:

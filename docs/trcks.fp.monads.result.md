@@ -1,0 +1,1 @@
+### ::: trcks.fp.monads.result

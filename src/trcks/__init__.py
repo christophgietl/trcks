@@ -2,12 +2,12 @@
 
 This package provides
 
-- the generic (return) types `trcks.Result` and `trcks.AwaitableResult` and
-- the subpackages `trcks.fp` and `trcks.oop` for working with these types
+- the generic (return) types [trcks.Result][] and [trcks.AwaitableResult][] and
+- the subpackages [trcks.fp][] and [trcks.oop][] for working with these types
   in a functional and object-oriented way, respectively.
 
 See:
-    https://fsharpforfunandprofit.com/posts/recipe-part2/
+    [Railway oriented programming | F# for fun and profit](https://fsharpforfunandprofit.com/posts/recipe-part2/)
 """
 
 from collections.abc import Awaitable
@@ -23,7 +23,7 @@ _S_co = TypeVar("_S_co", covariant=True)
 
 
 Failure: TypeAlias = tuple[Literal["failure"], _F_co]
-"""`tuple` of length 2 containing ``"failure"`` followed by a value of type `_F_co`.
+"""[tuple][] of length 2 containing ``"failure"`` followed by a value of type `_F_co`.
 
 Example:
     >>> failure: Failure[str] = ("failure", "File does not exist")
@@ -34,7 +34,7 @@ Note:
 """
 
 Success: TypeAlias = tuple[Literal["success"], _S_co]
-"""`tuple` of length 2 containing ``"success"`` followed by a value of type `_S_co`.
+"""[tuple][] of length 2 containing ``"success"`` followed by a value of type `_S_co`.
 
 Example:
     >>> success: Success[int] = ("success", 42)
@@ -68,21 +68,21 @@ Note:
 """
 
 AwaitableFailure: TypeAlias = Awaitable[Failure[_F_co]]
-"""`collections.abc.Awaitable` that returns a `Failure`
-when used in an ``await`` expression.
+"""[collections.abc.Awaitable][] that returns a [trcks.Failure][]
+when used in an `await` expression.
 """
 
 AwaitableSuccess: TypeAlias = Awaitable[Success[_S_co]]
-"""`collections.abc.Awaitable` that returns a `Success`
-when used in an ``await`` expression.
+"""[collections.abc.Awaitable][] that returns a [trcks.Success][]
+when used in an `await` expression.
 """
 
 AwaitableResult: TypeAlias = Awaitable[Result[_F_co, _S_co]]
-"""`collections.abc.Awaitable` that returns a `Result`
-when used in an ``await`` expression.
+"""[collections.abc.Awaitable][] that returns a [trcks.Result][]
+when used in an `await` expression.
 
 Examples:
-    Can be used to annotate the non-awaited return value of an async function:
+    Can be used to annotate the non-awaited return value of an `async` function:
 
         >>> import asyncio
         >>> async def divide_slowly(
@@ -104,7 +104,7 @@ Examples:
         >>> asyncio.run(main())
         ('failure', ZeroDivisionError('float division by zero'))
 
-    Can also be used to annotate an async function:
+    Can also be used to annotate an `async` function:
 
         >>> import asyncio
         >>> from collections.abc import Callable

@@ -257,7 +257,7 @@ def pipe(p: Pipeline[_T0, _T1, _T2, _T3, _T4, _T5, _T6, _OUT]) -> _OUT:
 
     Returns:
         Result of sequentially applying the given functions from first to last
-        to the given value.
+            to the given value.
 
     Example:
         >>> pipe(("Hello, world!", len, lambda n: f"Length: {n}"))

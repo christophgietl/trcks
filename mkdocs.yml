@@ -1,0 +1,40 @@
+markdown_extensions:
+  - pycon
+
+nav:
+  - trcks: index.md
+  - trcks.fp: trcks.fp.md
+  - trcks.fp.composition: trcks.fp.composition.md
+  - trcks.fp.monads: trcks.fp.monads.md
+  - trcks.fp.monads.awaitable: trcks.fp.monads.awaitable.md
+  - trcks.fp.monads.awaitable_result: trcks.fp.monads.awaitable_result.md
+  - trcks.fp.monads.identity: trcks.fp.monads.identity.md
+  - trcks.fp.monads.result: trcks.fp.monads.result.md
+  - trcks.oop: trcks.oop.md
+
+plugins:
+  - mkdocstrings:
+      handlers:
+        python:
+          inventories:
+            - https://docs.python.org/3/objects.inv
+  - search
+
+repo_url: https://github.com/christophgietl/trcks
+
+site_description: Typesafe railway-oriented programming (ROP) in Python
+
+site_name: trcks 🚂
+
+site_url: https://christophgietl.github.io/trcks/
+
+strict: true
+
+theme:
+  name: material
+
+validation:
+  absolute_links: warn
+  anchors: warn
+  omitted_files: warn
+  unrecognized_links: warn

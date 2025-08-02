@@ -1,14 +1,14 @@
 # macOS-generated files
 .DS_Store
 
+# mkdocs-generated files
+/site/
+
 # pdm-generated files
 /.pdm-build/
 
 # PyCharm-generated files
 /.idea/
-
-# pydoctor-generated files
-/apidocs/
 
 # pytest-generated files
 .coverage
