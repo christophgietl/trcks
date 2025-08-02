@@ -18,6 +18,8 @@ plugins:
         python:
           inventories:
             - https://docs.python.org/3/objects.inv
+          paths:
+            - src
   - search
 
 repo_url: https://github.com/christophgietl/trcks
