@@ -33,14 +33,19 @@ repo_url: https://github.com/christophgietl/trcks
 
 site_description: Typesafe railway-oriented programming (ROP) in Python
 
-site_name: trcks 🚂
+site_name: trcks
 
 site_url: https://christophgietl.github.io/trcks/
 
 strict: true
 
 theme:
+  icon:
+    logo: material/directions-fork
   name: material
+  palette:
+    accent: teal
+    primary: teal
 
 validation:
   absolute_links: warn
