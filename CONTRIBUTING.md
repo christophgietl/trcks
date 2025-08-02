@@ -7,9 +7,9 @@ The following section describes how to set up and use a development environment.
 
 `trcks` uses the following developer tools:
 
+- [MkDocs](https://www.mkdocs.org) for generating API documentation
 - [mypy](https://mypy.readthedocs.io) for static type checking
 - [pre-commit](https://pre-commit.com) for managing pre-commit hooks (particularly for code formatting and linting)
-- [pydoctor](https://pydoctor.readthedocs.io) for generating API documentation
 - [pyright](https://microsoft.github.io/pyright/) for static type checking
 - [pytest](https://pytest.org) for unit testing and doctests
 - [uv](https://docs.astral.sh/uv/) for dependency management and packaging
@@ -58,7 +58,7 @@ uv run pre-commit run --all-files
 Generate API documentation:
 
 ```shell
-uv run pydoctor
+uv run mkdocs build
 ```
 
 Build distribution package:

@@ -15,10 +15,10 @@ jobs:
       - uses: ./.github/actions/set-up-uv
         with:
           install-and-cache-dependencies: true
-      - run: uv run --no-sync pydoctor
+      - run: uv run --no-sync mkdocs build
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: apidocs
+          path: site
   build-package:
     runs-on: ubuntu-latest
     steps:

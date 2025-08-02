@@ -1,4 +1,4 @@
-"""Monadic functions for `collections.abc.Awaitable`.
+"""Monadic functions for [collections.abc.Awaitable][].
 
 Provides utilities for functional composition of asynchronous functions.
 
@@ -57,13 +57,13 @@ async def _construct(value: _T) -> _T:
 
 
 def construct(value: _T) -> Awaitable[_T]:
-    """Create an `Awaitable` from a value.
+    """Create a [collections.abc.Awaitable][] from a value.
 
     Args:
-        value: The value to create the `Awaitable` from.
+        value: The value to create the [collections.abc.Awaitable][] from.
 
     Returns:
-        The `Awaitable` created from the value.
+        The [collections.abc.Awaitable][] created from the value.
 
     Example:
         >>> import asyncio
@@ -79,20 +79,21 @@ def construct(value: _T) -> Awaitable[_T]:
 
 
 def map_(f: Callable[[_T1], _T2]) -> Callable[[Awaitable[_T1]], Awaitable[_T2]]:
-    """Turn synchronous function into function expecting and returning `Awaitable`.
+    """Turn synchronous function into a function
+    expecting and returning [collections.abc.Awaitable][].
 
     Args:
         f:
             The synchronous function to be transformed into
-            a function expecting and returning an `Awaitable`.
+            a function expecting and returning a [collections.abc.Awaitable][].
 
     Returns:
         The given function transformed into
-        a function expecting and returning an `Awaitable`.
+            a function expecting and returning a [collections.abc.Awaitable][].
 
     Note:
         The underscore in the function name helps to avoid collisions
-        with the built-in function `map`.
+        with the built-in function [map][].
 
     Example:
         >>> import asyncio
@@ -120,17 +121,17 @@ def map_(f: Callable[[_T1], _T2]) -> Callable[[Awaitable[_T1]], Awaitable[_T2]]:
 def map_to_awaitable(
     f: Callable[[_T1], Awaitable[_T2]],
 ) -> Callable[[Awaitable[_T1]], Awaitable[_T2]]:
-    """Turn `Awaitable`-returning function into
-    function expecting and returning `Awaitable`.
+    """Turn [collections.abc.Awaitable][]-returning function into
+    function expecting and returning [collections.abc.Awaitable][].
 
     Args:
         f:
-            The `Awaitable`-returning function to be transformed into
-            a function expecting and returning an `Awaitable`.
+            The [collections.abc.Awaitable][]-returning function to be transformed into
+            a function expecting and returning a [collections.abc.Awaitable][].
 
     Returns:
         The given function transformed into
-        a function expecting and returning an `Awaitable`.
+            a function expecting and returning a [collections.abc.Awaitable][].
 
 
     Example:
@@ -157,17 +158,20 @@ def map_to_awaitable(
 
 
 def tap(f: Callable[[_T1], object]) -> Callable[[Awaitable[_T1]], Awaitable[_T1]]:
-    """Turn synchronous function into
-    function expecting an `Awaitable` and returning the same `Awaitable`.
+    """Turn synchronous function into a function
+    expecting a [collections.abc.Awaitable][] and
+    returning the same [collections.abc.Awaitable][].
 
     Args:
         f:
-            The synchronous function to be transformed into
-            a function expecting an `Awaitable` and returning the same `Awaitable`.
+            The synchronous function to be transformed into a function
+            expecting a [collections.abc.Awaitable][] and
+            returning the same [collections.abc.Awaitable][].
 
     Returns:
-        The given function transformed into
-        a function expecting an `Awaitable` and returning the same `Awaitable`.
+        The given function transformed into a function
+            expecting a [collections.abc.Awaitable][] and
+            returning the same [collections.abc.Awaitable][].
 
     Example:
         >>> import asyncio
@@ -192,17 +196,20 @@ def tap(f: Callable[[_T1], object]) -> Callable[[Awaitable[_T1]], Awaitable[_T1]
 def tap_to_awaitable(
     f: Callable[[_T1], Awaitable[object]],
 ) -> Callable[[Awaitable[_T1]], Awaitable[_T1]]:
-    """Turn `Awaitable`-returning function into
-    function expecting an `Awaitable` and returning the same `Awaitable`.
+    """Turn [collections.abc.Awaitable][]-returning function into a function
+    expecting a [collections.abc.Awaitable][] and
+    returning the same [collections.abc.Awaitable][].
 
     Args:
         f:
-            The asynchronous function to be transformed into
-            a function expecting an `Awaitable` and returning the same `Awaitable`.
+            The asynchronous function to be transformed into a function
+            expecting a [collections.abc.Awaitable][] and
+            returning the same [collections.abc.Awaitable][].
 
     Returns:
-        The given function transformed into
-        a function expecting an `Awaitable` and returning the same `Awaitable`.
+        The given function transformed into a function
+            expecting a [collections.abc.Awaitable][] and
+            returning the same [collections.abc.Awaitable][].
 
     Example:
         >>> import asyncio
@@ -231,21 +238,24 @@ def tap_to_awaitable(
 
 
 async def to_coroutine(awtbl: Awaitable[_T]) -> _T:
-    """Turn an `Awaitable` into a `collections.abc.Coroutine`.
+    """Turn a [collections.abc.Awaitable][] into a [collections.abc.Coroutine][].
 
-    This is useful for functions that expect a coroutine (e.g. `asyncio.run`).
+    This is useful for functions that expect a coroutine (e.g. [asyncio.run][]).
 
     Args:
-        awtbl: The `Awaitable` to be transformed into a `collections.abc.Coroutine`.
+        awtbl: The [collections.abc.Awaitable][] to be transformed
+            into a [collections.abc.Coroutine][].
 
     Returns:
-        The given `Awaitable` transformed into a `collections.abc.Coroutine`.
+        The given [collections.abc.Awaitable][] transformed
+        into a [collections.abc.Coroutine][].
 
     Note:
-        The type `Awaitable` is a supertype of `collections.abc.Coroutine`.
+        The type [collections.abc.Awaitable][] is
+        a supertype of [collections.abc.Coroutine][].
 
     Example:
-        Transform an `asyncio.Future` into a `collections.abc.Coroutine` and run it:
+        Transform an `asyncio.Future` into a [collections.abc.Coroutine][] and run it:
 
             >>> import asyncio
             >>> from trcks.fp.monads import awaitable as a

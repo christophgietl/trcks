@@ -4,8 +4,11 @@ requires = ["pdm-backend >= 2.4, < 3"]  # pdm-backend 2.4 supports project.licen
 
 [dependency-groups]
 dev = [
+    "markdown-pycon >= 1.0.1",
+    "mkdocs >= 1.6.1",
+    "mkdocs-material >= 9.6.16",
+    "mkdocstrings[python] >= 0.30.0",
     "pre-commit >= 4.2.0",
-    "pydoctor >= 25.4.0",
     "pytest >= 8.4.1",
     "pytest-asyncio >= 1.1.0",
     "pytest-cov >= 6.2.1",
@@ -82,18 +85,6 @@ warn_unreachable = true
 
 [tool.pdm.version]
 source = "scm"
-
-[tool.pydoctor]
-add-package = ["src/trcks"]
-html-base-url = "https://christophgietl.github.io/trcks"
-html-viewsource-base = "https://github.com/christophgietl/trcks/blob/main"
-intersphinx = [
-    "https://docs.python.org/3/objects.inv",
-    "https://typing-extensions.readthedocs.io/en/latest/objects.inv",
-]
-project-name = "trcks"
-project-url = "https://github.com/christophgietl/trcks"
-warnings-as-errors = true
 
 [tool.pyright]
 deprecateTypingAliases = true
