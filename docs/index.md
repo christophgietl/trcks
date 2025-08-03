@@ -1,3 +1,1 @@
-# trcks
-
-::: trcks
+../README.md
