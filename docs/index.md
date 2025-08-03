@@ -1,4 +1,4 @@
-# trcks 🚂
+# Introduction
 
 `trcks` is a Python library.
 It allows
