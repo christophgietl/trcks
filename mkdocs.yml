@@ -3,6 +3,7 @@ markdown_extensions:
 
 nav:
   - index.md
+  - setup.md
   - usage.md
   - frequently-asked-questions.md
   - Reference:
