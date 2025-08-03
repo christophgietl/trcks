@@ -50,6 +50,9 @@ site_url: https://christophgietl.github.io/trcks/
 strict: true
 
 theme:
+  features:
+    - navigation.tabs
+    - navigation.tabs.sticky
   icon:
     logo: material/directions-fork
   name: material
