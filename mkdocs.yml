@@ -2,15 +2,15 @@ markdown_extensions:
   - pycon
 
 nav:
-  - trcks: index.md
-  - trcks.fp: trcks.fp.md
-  - trcks.fp.composition: trcks.fp.composition.md
-  - trcks.fp.monads: trcks.fp.monads.md
-  - trcks.fp.monads.awaitable: trcks.fp.monads.awaitable.md
-  - trcks.fp.monads.awaitable_result: trcks.fp.monads.awaitable_result.md
-  - trcks.fp.monads.identity: trcks.fp.monads.identity.md
-  - trcks.fp.monads.result: trcks.fp.monads.result.md
-  - trcks.oop: trcks.oop.md
+  - index.md
+  - trcks.fp.md
+  - trcks.fp.composition.md
+  - trcks.fp.monads.md
+  - trcks.fp.monads.awaitable.md
+  - trcks.fp.monads.awaitable_result.md
+  - trcks.fp.monads.identity.md
+  - trcks.fp.monads.result.md
+  - trcks.oop.md
   - trcks.oop.AwaitableResultWrapper.md
   - trcks.oop.AwaitableWrapper.md
   - trcks.oop.ResultWrapper.md
