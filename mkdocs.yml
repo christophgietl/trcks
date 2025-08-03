@@ -3,18 +3,20 @@ markdown_extensions:
 
 nav:
   - index.md
-  - trcks.fp.md
-  - trcks.fp.composition.md
-  - trcks.fp.monads.md
-  - trcks.fp.monads.awaitable.md
-  - trcks.fp.monads.awaitable_result.md
-  - trcks.fp.monads.identity.md
-  - trcks.fp.monads.result.md
-  - trcks.oop.md
-  - trcks.oop.AwaitableResultWrapper.md
-  - trcks.oop.AwaitableWrapper.md
-  - trcks.oop.ResultWrapper.md
-  - trcks.oop.Wrapper.md
+  - Reference:
+      - reference/trcks.md
+      - reference/trcks.fp.md
+      - reference/trcks.fp.composition.md
+      - reference/trcks.fp.monads.md
+      - reference/trcks.fp.monads.awaitable.md
+      - reference/trcks.fp.monads.awaitable_result.md
+      - reference/trcks.fp.monads.identity.md
+      - reference/trcks.fp.monads.result.md
+      - reference/trcks.oop.md
+      - reference/trcks.oop.AwaitableResultWrapper.md
+      - reference/trcks.oop.AwaitableWrapper.md
+      - reference/trcks.oop.ResultWrapper.md
+      - reference/trcks.oop.Wrapper.md
 
 plugins:
   - mkdocstrings:
