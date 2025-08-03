@@ -35,9 +35,13 @@ plugins:
 
 repo_url: https://github.com/christophgietl/trcks
 
-site_description: Typesafe railway-oriented programming (ROP) in Python
+site_description: >
+  trcks is a Python library.
+  It allows railway-oriented programming (ROP) in two different programming styles:
+  an object-oriented style based on method chaining and
+  a functional style based on function composition.
 
-site_name: trcks
+site_name: trcks - Typesafe railway-oriented programming (ROP) in Python
 
 site_url: https://christophgietl.github.io/trcks/
 
