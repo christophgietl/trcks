@@ -4,7 +4,9 @@ markdown_extensions:
 nav:
   - index.md
   - setup.md
-  - motivation.md
+  - Motivation:
+    - motivation/railway-oriented-programming.md
+    - motivation/trcks.md
   - usage.md
   - frequently-asked-questions.md
   - Reference:
