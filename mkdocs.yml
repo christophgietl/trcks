@@ -4,6 +4,7 @@ markdown_extensions:
 nav:
   - index.md
   - usage.md
+  - frequently-asked-questions.md
   - Reference:
       - reference/trcks.md
       - reference/trcks.fp.md
