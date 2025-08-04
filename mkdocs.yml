@@ -1,7 +1,9 @@
 # yaml-language-server: $schema=https://squidfunk.github.io/mkdocs-material/schema.json
 
 markdown_extensions:
+  - admonition
   - pycon
+  - pymdownx.details
   - pymdownx.highlight
   - pymdownx.superfences
 
