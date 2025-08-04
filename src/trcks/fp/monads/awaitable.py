@@ -257,17 +257,17 @@ async def to_coroutine(awtbl: Awaitable[_T]) -> _T:
     Example:
         Transform an [asyncio.Future][] into a [collections.abc.Coroutine][] and run it:
 
-            >>> import asyncio
-            >>> from trcks.fp.monads import awaitable as a
-            >>> asyncio.set_event_loop(asyncio.new_event_loop())
-            >>> future = asyncio.Future[str]()
-            >>> future.set_result("Hello, world!")
-            >>> future
-            <Future finished result='Hello, world!'>
-            >>> coro = a.to_coroutine(future)
-            >>> coro
-            <coroutine object to_coroutine at 0x...>
-            >>> asyncio.run(coro)
-            'Hello, world!'
+        >>> import asyncio
+        >>> from trcks.fp.monads import awaitable as a
+        >>> asyncio.set_event_loop(asyncio.new_event_loop())
+        >>> future = asyncio.Future[str]()
+        >>> future.set_result("Hello, world!")
+        >>> future
+        <Future finished result='Hello, world!'>
+        >>> coro = a.to_coroutine(future)
+        >>> coro
+        <coroutine object to_coroutine at 0x...>
+        >>> asyncio.run(coro)
+        'Hello, world!'
     """
     return await awtbl

@@ -84,41 +84,41 @@ when used in an `await` expression.
 Example:
     Can be used to annotate the non-awaited return value of an `async` function:
 
-        >>> import asyncio
-        >>> async def divide_slowly(
-        ...     a: float, b: float
-        ... ) -> Result[ZeroDivisionError, float]:
-        ...     await asyncio.sleep(0.001)
-        ...     try:
-        ...         return ("success", a / b)
-        ...     except ZeroDivisionError as e:
-        ...         return ("failure", e)
-        ...
-        >>> async def main() -> None:
-        ...     a_rslt: AwaitableResult[ZeroDivisionError, float] = (
-        ...         divide_slowly(3.0, 0.0)
-        ...     )
-        ...     rslt: Result[ZeroDivisionError, float] = await a_rslt
-        ...     print(rslt)
-        ...
-        >>> asyncio.run(main())
-        ('failure', ZeroDivisionError('float division by zero'))
+    >>> import asyncio
+    >>> async def divide_slowly(
+    ...     a: float, b: float
+    ... ) -> Result[ZeroDivisionError, float]:
+    ...     await asyncio.sleep(0.001)
+    ...     try:
+    ...         return ("success", a / b)
+    ...     except ZeroDivisionError as e:
+    ...         return ("failure", e)
+    ...
+    >>> async def main() -> None:
+    ...     a_rslt: AwaitableResult[ZeroDivisionError, float] = (
+    ...         divide_slowly(3.0, 0.0)
+    ...     )
+    ...     rslt: Result[ZeroDivisionError, float] = await a_rslt
+    ...     print(rslt)
+    ...
+    >>> asyncio.run(main())
+    ('failure', ZeroDivisionError('float division by zero'))
 
     Can also be used to annotate an `async` function:
 
-        >>> import asyncio
-        >>> from collections.abc import Callable
-        >>>
-        >>> async def divide_slowly(
-        ...     a: float, b: float
-        ... ) -> Result[ZeroDivisionError, float]:
-        ...     await asyncio.sleep(0.001)
-        ...     try:
-        ...         return ("success", a / b)
-        ...     except ZeroDivisionError as e:
-        ...         return ("failure", e)
-        ...
-        >>> copy_of_divide_slowly: Callable[
-        ...     [float, float], AwaitableResult[ZeroDivisionError, float]
-        ... ] = divide_slowly
+    >>> import asyncio
+    >>> from collections.abc import Callable
+    >>>
+    >>> async def divide_slowly(
+    ...     a: float, b: float
+    ... ) -> Result[ZeroDivisionError, float]:
+    ...     await asyncio.sleep(0.001)
+    ...     try:
+    ...         return ("success", a / b)
+    ...     except ZeroDivisionError as e:
+    ...         return ("failure", e)
+    ...
+    >>> copy_of_divide_slowly: Callable[
+    ...     [float, float], AwaitableResult[ZeroDivisionError, float]
+    ... ] = divide_slowly
 """
