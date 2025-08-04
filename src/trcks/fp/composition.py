@@ -1,50 +1,5 @@
 """Types and higher order functions for function composition.
 
-Attributes:
-    Composable:
-        Up to seven compatible functions that can be applied sequentially
-        from first to last.
-    Composable1:
-        A single function.
-    Composable2:
-        Two compatible functions that can be applied sequentially from first to last.
-    Composable3:
-        Three compatible functions that can be applied sequentially from first to last.
-    Composable4:
-        Four compatible functions that can be applied sequentially from first to last.
-    Composable5:
-        Five compatible functions that can be applied sequentially from first to last.
-    Composable6:
-        Six compatible functions that can be applied sequentially from first to last.
-    Composable7:
-        Seven compatible functions that can be applied sequentially from first to last.
-    Pipeline:
-        A single value followed by up to seven compatible functions
-        that can be applied sequentially from first to last.
-    Pipeline0:
-        A single value.
-    Pipeline1:
-        A single value followed by a single compatible function
-        that can be applied.
-    Pipeline2:
-        A single value followed by two compatible functions
-        that can be applied sequentially from first to last.
-    Pipeline3:
-        A single value followed by three compatible functions
-        that can be applied sequentially from first to last.
-    Pipeline4:
-        A single value followed by four compatible functions
-        that can be applied sequentially from first to last.
-    Pipeline5:
-        A single value followed by five compatible functions
-        that can be applied sequentially from first to last.
-    Pipeline6:
-        A single value followed by six compatible functions
-        that can be applied sequentially from first to last.
-    Pipeline7:
-        A single value followed by seven compatible functions
-        that can be applied sequentially from first to last.
-
 Example:
     Sequentially apply two functions to one input value
     in three different ways:
@@ -88,17 +43,20 @@ _T7 = TypeVar("_T7")
 # Therefore, the following tuple type definitions contain a lot of repetitions:
 
 Composable1: TypeAlias = tuple[Callable[[_T0], _T1],]
+"""A single function."""
 
 Composable2: TypeAlias = tuple[
     Callable[[_T0], _T1],
     Callable[[_T1], _T2],
 ]
+"""Two compatible functions that can be applied sequentially from first to last."""
 
 Composable3: TypeAlias = tuple[
     Callable[[_T0], _T1],
     Callable[[_T1], _T2],
     Callable[[_T2], _T3],
 ]
+"""Three compatible functions that can be applied sequentially from first to last."""
 
 Composable4: TypeAlias = tuple[
     Callable[[_T0], _T1],
@@ -106,6 +64,7 @@ Composable4: TypeAlias = tuple[
     Callable[[_T2], _T3],
     Callable[[_T3], _T4],
 ]
+"""Four compatible functions that can be applied sequentially from first to last."""
 
 Composable5: TypeAlias = tuple[
     Callable[[_T0], _T1],
@@ -114,6 +73,7 @@ Composable5: TypeAlias = tuple[
     Callable[[_T3], _T4],
     Callable[[_T4], _T5],
 ]
+"""Five compatible functions that can be applied sequentially from first to last."""
 
 Composable6: TypeAlias = tuple[
     Callable[[_T0], _T1],
@@ -123,6 +83,7 @@ Composable6: TypeAlias = tuple[
     Callable[[_T4], _T5],
     Callable[[_T5], _T6],
 ]
+"""Six compatible functions that can be applied sequentially from first to last."""
 
 Composable7: TypeAlias = tuple[
     Callable[[_T0], _T1],
@@ -133,6 +94,7 @@ Composable7: TypeAlias = tuple[
     Callable[[_T5], _T6],
     Callable[[_T6], _T7],
 ]
+"""Seven compatible functions that can be applied sequentially from first to last."""
 
 Composable: TypeAlias = Union[
     Composable7[_IN, _T1, _T2, _T3, _T4, _T5, _T6, _OUT],
@@ -143,19 +105,25 @@ Composable: TypeAlias = Union[
     Composable2[_IN, _T1, _OUT],
     Composable1[_IN, _OUT],
 ]
+"""Up to seven compatible functions
+that can be applied sequentially from first to last."""
 
 Pipeline0: TypeAlias = tuple[_T0,]
+"""A single value."""
 
 Pipeline1: TypeAlias = tuple[
     _T0,
     Callable[[_T0], _T1],
 ]
+"""A single value followed by a single compatible function that can be applied."""
 
 Pipeline2: TypeAlias = tuple[
     _T0,
     Callable[[_T0], _T1],
     Callable[[_T1], _T2],
 ]
+"""A single value followed by two compatible functions
+that can be applied sequentially from first to last."""
 
 Pipeline3: TypeAlias = tuple[
     _T0,
@@ -163,6 +131,8 @@ Pipeline3: TypeAlias = tuple[
     Callable[[_T1], _T2],
     Callable[[_T2], _T3],
 ]
+"""A single value followed by three compatible functions
+that can be applied sequentially from first to last."""
 
 Pipeline4: TypeAlias = tuple[
     _T0,
@@ -171,6 +141,8 @@ Pipeline4: TypeAlias = tuple[
     Callable[[_T2], _T3],
     Callable[[_T3], _T4],
 ]
+"""A single value followed by four compatible functions
+that can be applied sequentially from first to last."""
 
 Pipeline5: TypeAlias = tuple[
     _T0,
@@ -180,6 +152,8 @@ Pipeline5: TypeAlias = tuple[
     Callable[[_T3], _T4],
     Callable[[_T4], _T5],
 ]
+"""A single value followed by five compatible functions
+that can be applied sequentially from first to last."""
 
 Pipeline6: TypeAlias = tuple[
     _T0,
@@ -190,6 +164,8 @@ Pipeline6: TypeAlias = tuple[
     Callable[[_T4], _T5],
     Callable[[_T5], _T6],
 ]
+"""A single value followed by six compatible functions
+that can be applied sequentially from first to last."""
 
 Pipeline7: TypeAlias = tuple[
     _T0,
@@ -201,6 +177,8 @@ Pipeline7: TypeAlias = tuple[
     Callable[[_T5], _T6],
     Callable[[_T6], _T7],
 ]
+"""A single value followed by seven compatible functions
+that can be applied sequentially from first to last."""
 
 Pipeline: TypeAlias = Union[
     Pipeline7[_T0, _T1, _T2, _T3, _T4, _T5, _T6, _OUT],
@@ -212,6 +190,8 @@ Pipeline: TypeAlias = Union[
     Pipeline1[_T0, _OUT],
     Pipeline0[_OUT],
 ]
+"""A single value followed by up to seven compatible functions
+that can be applied sequentially from first to last."""
 
 
 def compose(  # noqa: PLR0911
