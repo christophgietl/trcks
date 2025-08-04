@@ -7,7 +7,10 @@ nav:
   - Motivation:
     - motivation/railway-oriented-programming.md
     - motivation/trcks.md
-  - usage.md
+  - Usage:
+    - usage/tuple-types-provided-by-trcks.md
+    - usage/railway-oriented-programming-with-trcks-oop.md
+    - usage/railway-oriented-programming-with-trcks-fp.md
   - frequently-asked-questions.md
   - Reference:
       - reference/trcks.md
