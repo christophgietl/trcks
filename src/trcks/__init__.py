@@ -81,7 +81,7 @@ AwaitableResult: TypeAlias = Awaitable[Result[_F_co, _S_co]]
 """[collections.abc.Awaitable][] that returns a [trcks.Result][]
 when used in an `await` expression.
 
-Examples:
+Example:
     Can be used to annotate the non-awaited return value of an `async` function:
 
         >>> import asyncio
