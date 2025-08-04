@@ -58,6 +58,7 @@ strict: true
 
 theme:
   features:
+    - navigation.footer
     - navigation.tabs
     - navigation.tabs.sticky
   icon:
