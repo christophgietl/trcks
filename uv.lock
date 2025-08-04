@@ -996,7 +996,6 @@ pyright-nodejs = [
 [package.dev-dependencies]
 dev = [
     { name = "markdown-pycon" },
-    { name = "mkdocs" },
     { name = "mkdocs-material" },
     { name = "mkdocstrings", extra = ["python"] },
     { name = "pre-commit" },
@@ -1019,7 +1018,6 @@ provides-extras = ["mypy", "pyright", "pyright-nodejs"]
 [package.metadata.requires-dev]
 dev = [
     { name = "markdown-pycon", specifier = ">=1.0.1" },
-    { name = "mkdocs", specifier = ">=1.6.1" },
     { name = "mkdocs-material", specifier = ">=9.6.16" },
     { name = "mkdocstrings", extras = ["python"], specifier = ">=0.30.0" },
     { name = "pre-commit", specifier = ">=4.2.0" },
