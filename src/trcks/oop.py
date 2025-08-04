@@ -11,59 +11,59 @@ Example:
     This example uses the classes [trcks.oop.Wrapper][] and [trcks.oop.ResultWrapper][]
     to create and further process a value of type [trcks.Result][]:
 
-        >>> import enum
-        >>> import math
-        >>> from trcks import Result
-        >>> from trcks.oop import Wrapper
-        >>> class GetSquareRootError(enum.Enum):
-        ...     NEGATIVE_INPUT = enum.auto()
-        ...
-        >>> def get_square_root(x: float) -> Result[GetSquareRootError, float]:
-        ...     return (
-        ...         Wrapper(core=x)
-        ...         .map_to_result(
-        ...             lambda xx: ("success", xx)
-        ...             if xx >= 0
-        ...             else ("failure", GetSquareRootError.NEGATIVE_INPUT)
-        ...         )
-        ...         .map_success(math.sqrt)
-        ...         .core
-        ...     )
-        ...
-        >>> get_square_root(25.0)
-        ('success', 5.0)
-        >>> get_square_root(-25.0)
-        ('failure', <GetSquareRootError.NEGATIVE_INPUT: 1>)
+    >>> import enum
+    >>> import math
+    >>> from trcks import Result
+    >>> from trcks.oop import Wrapper
+    >>> class GetSquareRootError(enum.Enum):
+    ...     NEGATIVE_INPUT = enum.auto()
+    ...
+    >>> def get_square_root(x: float) -> Result[GetSquareRootError, float]:
+    ...     return (
+    ...         Wrapper(core=x)
+    ...         .map_to_result(
+    ...             lambda xx: ("success", xx)
+    ...             if xx >= 0
+    ...             else ("failure", GetSquareRootError.NEGATIVE_INPUT)
+    ...         )
+    ...         .map_success(math.sqrt)
+    ...         .core
+    ...     )
+    ...
+    >>> get_square_root(25.0)
+    ('success', 5.0)
+    >>> get_square_root(-25.0)
+    ('failure', <GetSquareRootError.NEGATIVE_INPUT: 1>)
 
     Variable and type assignments for intermediate values might help  to clarify
     what is going on:
 
-        >>> import enum
-        >>> import math
-        >>> from trcks import Result
-        >>> from trcks.oop import ResultWrapper, Wrapper
-        >>> class GetSquareRootError(enum.Enum):
-        ...     NEGATIVE_INPUT = enum.auto()
-        ...
-        >>> def get_square_root(x: float) -> Result[GetSquareRootError, float]:
-        ...     wrapper: Wrapper[float] = Wrapper(core=x)
-        ...     result_wrapper: ResultWrapper[
-        ...         GetSquareRootError, float
-        ...     ] = wrapper.map_to_result(
-        ...         lambda xx: ("success", xx)
-        ...         if xx >= 0
-        ...         else ("failure", GetSquareRootError.NEGATIVE_INPUT)
-        ...     )
-        ...     mapped_result_wrapper: ResultWrapper[GetSquareRootError, float] = (
-        ...         result_wrapper.map_success(math.sqrt)
-        ...     )
-        ...     result: Result[GetSquareRootError, float] = mapped_result_wrapper.core
-        ...     return result
-        ...
-        >>> get_square_root(25.0)
-        ('success', 5.0)
-        >>> get_square_root(-25.0)
-        ('failure', <GetSquareRootError.NEGATIVE_INPUT: 1>)
+    >>> import enum
+    >>> import math
+    >>> from trcks import Result
+    >>> from trcks.oop import ResultWrapper, Wrapper
+    >>> class GetSquareRootError(enum.Enum):
+    ...     NEGATIVE_INPUT = enum.auto()
+    ...
+    >>> def get_square_root(x: float) -> Result[GetSquareRootError, float]:
+    ...     wrapper: Wrapper[float] = Wrapper(core=x)
+    ...     result_wrapper: ResultWrapper[
+    ...         GetSquareRootError, float
+    ...     ] = wrapper.map_to_result(
+    ...         lambda xx: ("success", xx)
+    ...         if xx >= 0
+    ...         else ("failure", GetSquareRootError.NEGATIVE_INPUT)
+    ...     )
+    ...     mapped_result_wrapper: ResultWrapper[GetSquareRootError, float] = (
+    ...         result_wrapper.map_success(math.sqrt)
+    ...     )
+    ...     result: Result[GetSquareRootError, float] = mapped_result_wrapper.core
+    ...     return result
+    ...
+    >>> get_square_root(25.0)
+    ('success', 5.0)
+    >>> get_square_root(-25.0)
+    ('failure', <GetSquareRootError.NEGATIVE_INPUT: 1>)
 
 See:
     - [Method chaining - Wikipedia](https://en.wikipedia.org/w/index.php?title=Method_chaining&oldid=1262555147)
@@ -2360,17 +2360,17 @@ class Wrapper(_Wrapper[_T_co]):
         The string `"Hello"` is wrapped and manipulated in the following example.
         Finally, the result is unwrapped:
 
-            >>> wrapper = (
-            ...     Wrapper(core="Hello")
-            ...     .map(len)
-            ...     .tap(lambda n: print(f"Received {n}."))
-            ...     .map(lambda n: f"Length: {n}")
-            ... )
-            Received 5.
-            >>> wrapper
-            Wrapper(core='Length: 5')
-            >>> wrapper.core
-            'Length: 5'
+        >>> wrapper = (
+        ...     Wrapper(core="Hello")
+        ...     .map(len)
+        ...     .tap(lambda n: print(f"Received {n}."))
+        ...     .map(lambda n: f"Length: {n}")
+        ... )
+        Received 5.
+        >>> wrapper
+        Wrapper(core='Length: 5')
+        >>> wrapper.core
+        'Length: 5'
     """
 
     @staticmethod

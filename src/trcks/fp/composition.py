@@ -4,17 +4,17 @@ Example:
     Sequentially apply two functions to one input value
     in three different ways:
 
-        >>> def to_length_string(n: int) -> str:
-        ...     return f"Length: {n}"
-        ...
-        >>> input_ = "Hello, world!"
-        >>> to_length_string(len(input_))
-        'Length: 13'
-        >>> get_length_string = compose((len, to_length_string))
-        >>> get_length_string(input_)
-        'Length: 13'
-        >>> pipe((input_, len, to_length_string))
-        'Length: 13'
+    >>> def to_length_string(n: int) -> str:
+    ...     return f"Length: {n}"
+    ...
+    >>> input_ = "Hello, world!"
+    >>> to_length_string(len(input_))
+    'Length: 13'
+    >>> get_length_string = compose((len, to_length_string))
+    >>> get_length_string(input_)
+    'Length: 13'
+    >>> pipe((input_, len, to_length_string))
+    'Length: 13'
 """
 
 from __future__ import annotations
