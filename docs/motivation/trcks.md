@@ -11,6 +11,7 @@ Moreover, it can lead to repetitive code patterns:
 
 ???+ example
 
+    ``` pycon hl_lines="28-39"
     >>> from typing import Literal, Union
     >>> from trcks import Result
     >>>
@@ -59,6 +60,8 @@ Moreover, it can lead to repetitive code patterns:
     ('failure', 'User does not have a subscription')
     >>> get_subscription_fee_by_email("jane_doe@provider.com")
     ('failure', 'User does not exist')
+
+    ```
 
 Therefore, we need a library that helps us combine functions.
 
