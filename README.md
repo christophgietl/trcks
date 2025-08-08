@@ -4,7 +4,7 @@
 [railway-oriented programming (ROP)](https://fsharpforfunandprofit.com/rop/)
 in two different type-safe programming styles.
 
-## Programming styles
+## Railway-oriented programming (ROP) styles
 
 ### Object-oriented style
 
