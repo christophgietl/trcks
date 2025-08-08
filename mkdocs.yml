@@ -39,6 +39,8 @@ plugins:
         python:
           inventories:
             - https://docs.python.org/3/objects.inv
+            - https://returns.readthedocs.io/en/0.26.0/objects.inv
+            - https://expression.readthedocs.io/en/latest/objects.inv
           options:
             docstring_section_style: list
             members_order: source
