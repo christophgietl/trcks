@@ -1,4 +1,4 @@
-"""Typesafe railway-oriented programming (ROP).
+"""Type-safe railway-oriented programming (ROP).
 
 This package provides
 

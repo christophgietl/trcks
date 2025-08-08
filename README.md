@@ -2,7 +2,7 @@
 
 `trcks` is a Python library that allows
 [railway-oriented programming (ROP)](https://fsharpforfunandprofit.com/rop/)
-in two different typesafe programming styles.
+in two different type-safe programming styles.
 
 ## Programming styles
 
@@ -14,7 +14,7 @@ In the following example,
 - the generic type `trcks.Result` allows domain errors to become part of
   a function's return type (subject to static type checking) while
 - the class `trcks.oop.Wrapper` provides a convenient way to chain
-  `trcks.Result`-returning functions and "regular" functions (in a typesafe way).
+  `trcks.Result`-returning functions and "regular" functions (in a type-safe way).
 
 ```pycon
 >>> from typing import Literal, Union
@@ -70,7 +70,7 @@ In the following example,
 - the generic type `trcks.Result` allows domain errors to become part of
   a function's return type (subject to static type checking) while
 - the modules `trcks.fp.composition` and `trcks.fp.monads.result` provide a convenient way to chain
-  `trcks.Result`-returning functions and "regular" functions (in a typesafe way).
+  `trcks.Result`-returning functions and "regular" functions (in a type-safe way).
 
 ```pycon
 >>> from typing import Literal, Union

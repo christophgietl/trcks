@@ -35,7 +35,7 @@ classifiers = [
 dependencies = [
     "typing-extensions >= 4.12 ; python_full_version < '3.13'",
 ]
-description = "Typesafe railway-oriented programming (ROP)"
+description = "Type-safe railway-oriented programming (ROP)"
 dynamic = ["version"]
 keywords = [
     "composition",

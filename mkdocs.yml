@@ -56,7 +56,7 @@ site_description: >
   an object-oriented style based on method chaining and
   a functional style based on function composition.
 
-site_name: trcks - Typesafe railway-oriented programming (ROP) in Python
+site_name: trcks - Type-safe railway-oriented programming (ROP) in Python
 
 site_url: https://christophgietl.github.io/trcks/
 
