@@ -1,4 +1,4 @@
-# trcks 🚂
+# trcks 🚂🐍
 
 `trcks` is a Python library that allows
 [railway-oriented programming (ROP)](https://fsharpforfunandprofit.com/rop/)
@@ -6,15 +6,14 @@ in two different type-safe programming styles.
 
 ## Railway-oriented programming (ROP) styles
 
+The following subsections demonstrate both styles of railway-oriented programming (ROP)
+supported by `trcks`.
+
 ### Object-oriented style
 
-The object-oriented style is based on method chaining.
-In the following example,
-
-- the generic type `trcks.Result` allows domain errors to become part of
-  a function's return type (subject to static type checking) while
-- the class `trcks.oop.Wrapper` provides a convenient way to chain
-  `trcks.Result`-returning functions and "regular" functions (in a type-safe way).
+The object-oriented style is based on method chaining,
+as demonstrated by the `get_subscription_fee_by_email` function
+in the following example.
 
 ```pycon
 >>> from typing import Literal, Union
@@ -62,15 +61,19 @@ In the following example,
 
 ```
 
+#### Notes
+
+1. The generic type `trcks.Result` allows domain errors to become
+   part of a function's return type (subject to static type checking).
+2. The class `trcks.oop.Wrapper` provides a convenient way to chain
+   `trcks.Result`-returning functions and "regular" functions
+   (in a type-safe way).
+
 ### Functional style
 
-The functional style is based on function composition.
-In the following example,
-
-- the generic type `trcks.Result` allows domain errors to become part of
-  a function's return type (subject to static type checking) while
-- the modules `trcks.fp.composition` and `trcks.fp.monads.result` provide a convenient way to chain
-  `trcks.Result`-returning functions and "regular" functions (in a type-safe way).
+The functional style is based on function composition,
+as demonstrated by the `get_subscription_fee_by_email` function
+in the following example.
 
 ```pycon
 >>> from typing import Literal, Union
@@ -126,6 +129,15 @@ In the following example,
 ('failure', 'User does not exist')
 
 ```
+
+#### Notes
+
+1. The generic type `trcks.Result` allows domain errors to become
+   part of a function's return type (subject to static type checking).
+2. The modules `trcks.fp.composition` and `trcks.fp.monads.result`
+   provide a convenient way to chain
+   `trcks.Result`-returning functions and "regular" functions
+   (in a type-safe way).
 
 ## Setup
 
