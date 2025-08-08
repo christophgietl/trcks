@@ -8,8 +8,9 @@ markdown_extensions:
   - pymdownx.superfences
 
 nav:
-  - index.md
-  - setup.md
+  - Introduction:
+    - index.md
+    - setup.md
   - Motivation:
     - motivation/railway-oriented-programming.md
     - motivation/trcks.md
