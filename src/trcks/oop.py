@@ -147,7 +147,7 @@ class _AwaitableWrapper(_Wrapper[Awaitable[_T_co]]):
 
 
 class AwaitableResultWrapper(_AwaitableWrapper[Result[_F_default_co, _S_default_co]]):
-    """Typesafe and immutable wrapper for [trcks.AwaitableResult][] objects.
+    """Type-safe and immutable wrapper for [trcks.AwaitableResult][] objects.
 
     The wrapped object can be accessed
     via the attribute `trcks.oop.AwaitableResultWrapper.core`.
@@ -1148,7 +1148,7 @@ class AwaitableResultWrapper(_AwaitableWrapper[Result[_F_default_co, _S_default_
 
 
 class AwaitableWrapper(_AwaitableWrapper[_T_co]):
-    """Typesafe and immutable wrapper for [collections.abc.Awaitable][] objects.
+    """Type-safe and immutable wrapper for [collections.abc.Awaitable][] objects.
 
     The wrapped [collections.abc.Awaitable][] can be accessed
     via the attribute `trcks.oop.AwaitableWrapper.core`.
@@ -1523,7 +1523,7 @@ class AwaitableWrapper(_AwaitableWrapper[_T_co]):
 
 
 class ResultWrapper(_Wrapper[Result[_F_default_co, _S_default_co]]):
-    """Typesafe and immutable wrapper for [trcks.Result][] objects.
+    """Type-safe and immutable wrapper for [trcks.Result][] objects.
 
     The wrapped object can be accessed via the attribute `trcks.oop.ResultWrapper.core`.
     The `trcks.oop.ResultWrapper.map*` methods allow method chaining.
@@ -2349,7 +2349,7 @@ class ResultWrapper(_Wrapper[Result[_F_default_co, _S_default_co]]):
 
 
 class Wrapper(_Wrapper[_T_co]):
-    """Typesafe and immutable wrapper for arbitrary objects.
+    """Type-safe and immutable wrapper for arbitrary objects.
 
     The wrapped object can be accessed via the attribute `trcks.oop.Wrapper.core`.
     The `trcks.oop.Wrapper.map*` methods allow method chaining.
