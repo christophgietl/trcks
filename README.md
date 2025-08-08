@@ -102,9 +102,9 @@ In the following example,
 >>> def get_subscription_fee_by_email(
 ...     user_email: str
 ... ) -> Result[FailureDescription, float]:
-...     # If your static type checker cannot infer
-...     # the type of the argument passed to `pipe`,
-...     # explicit type assignment can help:
+...     # Explicitly assigning a type to `pipeline` might
+...     # help your static type checker understand that
+...     # `pipeline` is a valid argument for `pipe`:
 ...     pipeline: Pipeline3[
 ...         str,
 ...         Result[UserDoesNotExist, int],
