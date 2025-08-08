@@ -7,7 +7,7 @@ The following section describes how to set up and use a development environment.
 
 `trcks` uses the following developer tools:
 
-- [MkDocs](https://www.mkdocs.org) for generating API documentation
+- [Material for MkDocs](https://squidfunk.github.io/mkdocs-material/) for generating documentation
 - [mypy](https://mypy.readthedocs.io) for static type checking
 - [pre-commit](https://pre-commit.com) for managing pre-commit hooks (particularly for code formatting and linting)
 - [pyright](https://microsoft.github.io/pyright/) for static type checking
@@ -55,7 +55,7 @@ Run pre-commit hooks:
 uv run pre-commit run --all-files
 ```
 
-Generate API documentation:
+Generate documentation:
 
 ```shell
 uv run mkdocs build
