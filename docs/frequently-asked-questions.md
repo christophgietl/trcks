@@ -9,7 +9,7 @@ Scott Wlaschin's blog post
 comes with lots of examples and illustrations as well as
 videos and slides from his talks.
 
-## Should I replace all raised exceptions with `trcks.Result`?
+## Should I replace all raised exceptions with [trcks.Result][]?
 
 No, you should not.
 Scott Wlaschin's blog post
@@ -29,9 +29,9 @@ object-oriented style and functional style (like `trcks`).
 It provides
 a `Result` container (and multiple other containers) for synchronous code and
 a `Future` and a `FutureResult` container for asynchronous code.
-Whereas the `Result` container is pretty similar to `trcks.Result`,
+Whereas the `Result` container is pretty similar to [trcks.Result][],
 the `Future` container and the `FutureResult` container deviate
-from `collections.abc.Awaitable` and `trcks.AwaitableResult`.
+from [collections.abc.Awaitable][] and [trcks.AwaitableResult][].
 Other major differences are:
 
 - `returns` provides
@@ -50,8 +50,8 @@ object-oriented style ("fluent syntax") and
 functional style (like `trcks`).
 It provides a `Result` class (and multiple other container classes)
 for synchronous code.
-The `Result` class is pretty similar to `trcks.Result` and `trcks.oop.ResultWrapper`.
-An `AsyncResult` type based on `collections.abc.AsyncGenerator`
+The `Result` class is pretty similar to [trcks.Result][] and [trcks.oop.ResultWrapper][].
+An `AsyncResult` type based on [collections.abc.AsyncGenerator][]
 [will be added in a future version](https://github.com/dbrattli/Expression/pull/247).
 
 ## Which libraries inspired `trcks`?
