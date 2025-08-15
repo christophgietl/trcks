@@ -97,6 +97,7 @@ reportPropertyTypeMismatch = true
 reportShadowedImports = true
 reportUninitializedInstanceVariable = true
 reportUnnecessaryTypeIgnoreComment = true
+reportUnreachable = true
 reportUnusedCallResult = true
 typeCheckingMode = "strict"
 
