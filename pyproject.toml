@@ -5,9 +5,9 @@ requires = ["pdm-backend >= 2.4, < 3"]  # pdm-backend 2.4 supports project.licen
 [dependency-groups]
 dev = [
     "markdown-pycon >= 1.0.1",
-    "mkdocs-material >= 9.6.16",
+    "mkdocs-material >= 9.6.17",
     "mkdocstrings[python] >= 0.30.0",
-    "pre-commit >= 4.2.0",
+    "pre-commit >= 4.3.0",
     "pytest >= 8.4.1",
     "pytest-asyncio >= 1.1.0",
     "pytest-cov >= 6.2.1",
