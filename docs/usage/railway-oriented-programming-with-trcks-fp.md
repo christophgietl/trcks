@@ -34,7 +34,8 @@ let us have a look at the individual steps of the chain:
     The function [trcks.fp.composition.pipe][] expects a [trcks.fp.composition.Pipeline][],
     i.e. a tuple consisting of a start value followed by up to seven compatible functions.
 
-Side effects like logging or writing to a file tend to "consume" their input and return [None][] instead.
+Side effects like logging or writing to a file tend to
+"consume" their input and return [None][] instead.
 To avoid this, we can use the higher-order function [trcks.fp.monads.identity.tap][].
 This higher-order function turns each function into a function
 that behaves like the original function but returns the input value.
@@ -178,7 +179,9 @@ allow us to execute side effects in the failure case or in the success case, res
 
     >>> from trcks.fp.composition import Pipeline6
     >>>
-    >>> def get_subscription_fee_by_email(user_email: str) -> Result[FailureDescription, float]:
+    >>> def get_subscription_fee_by_email(
+    ...     user_email: str
+    ... ) -> Result[FailureDescription, float]:
     ...     pipeline: Pipeline6[
     ...         str,
     ...         Result[UserDoesNotExist, int],
@@ -215,7 +218,8 @@ allow us to execute side effects in the failure case or in the success case, res
     >>> fee_jane
     ('failure', 'User does not exist')
 
-Sometimes, side effects themselves can fail and need to return a [trcks.Result][] value.
+Sometimes, side effects themselves can fail and
+need to return a [trcks.Result][] value.
 The higher-order function [trcks.fp.monads.result.tap_success_to_result][]
 allows us to execute such side effects in the success case.
 If the side effect returns a [trcks.Failure][], that failure is propagated.
@@ -292,7 +296,9 @@ into functions with input type `collections.abc.Awaitable[T]`.
     >>> async def read_and_transform_and_write(
     ...     input_path: str, output_path: str
     ... ) -> None:
-    ...     p: Pipeline3[str, Awaitable[str], Awaitable[str], Awaitable[None]] = (
+    ...     p: Pipeline3[
+    ...         str, Awaitable[str], Awaitable[str], Awaitable[None]
+    ...     ] = (
     ...         input_path,
     ...         read_from_disk,
     ...         a.map_(transform),
@@ -356,7 +362,9 @@ allows us to execute asynchronous side effects.
     >>> async def write_to_disk(s: str, path: str) -> None:
     ...     await asyncio.sleep(0.001)
     ...
-    >>> async def read_and_transform_and_write(input_path: str, output_path: str) -> str:
+    >>> async def read_and_transform_and_write(
+    ...     input_path: str, output_path: str
+    ... ) -> str:
     ...     p: Pipeline5[
     ...         str,
     ...         Awaitable[str],
@@ -484,13 +492,16 @@ let us have a look at the individual steps of the chain:
     ('success', None)
 
 ???+ note
-    The values `pipe(p1)`, `pipe(p2)` and `pipe(p3)` are all of type [trcks.AwaitableResult][].
+    The values `pipe(p1)`, `pipe(p2)` and `pipe(p3)` all are
+    of type [trcks.AwaitableResult][].
     Since [asyncio.run][] expects the input type [collections.abc.Coroutine][],
-    we use the function [trcks.fp.monads.awaitable_result.to_coroutine_result][] to convert
-    the [trcks.AwaitableResult][]s to [collections.abc.Coroutine][]s.
+    we use the function [trcks.fp.monads.awaitable_result.to_coroutine_result][]
+    to convert the [trcks.AwaitableResult][]s to [collections.abc.Coroutine][]s.
 
-The higher-order functions [trcks.fp.monads.awaitable_result.tap_failure][] and [trcks.fp.monads.awaitable_result.tap_success][]
-allow us to execute synchronous side effects in the failure case or in the success case, respectively:
+The higher-order functions [trcks.fp.monads.awaitable_result.tap_failure][]
+and [trcks.fp.monads.awaitable_result.tap_success][]
+allow us to execute synchronous side effects
+in the failure case or in the success case, respectively:
 
 ???+ example
 
@@ -539,11 +550,13 @@ allow us to execute synchronous side effects in the failure case or in the succe
     >>> result_2
     ('failure', 'read error')
 
-Sometimes, side effects themselves can fail and need to return an [trcks.AwaitableResult][] type.
+Sometimes, side effects themselves can fail and
+need to return an [trcks.AwaitableResult][] type.
 The higher-order function [trcks.fp.monads.awaitable_result.tap_success_to_awaitable_result][]
 allows us to execute such asynchronous side effects in the success case.
 If the side effect returns an [trcks.AwaitableFailure][], that failure is propagated.
-If the side effect returns an [trcks.AwaitableSuccess][], the original success value is preserved:
+If the side effect returns an [trcks.AwaitableSuccess][],
+the original success value is preserved:
 
 ???+ example
 
@@ -553,7 +566,9 @@ If the side effect returns an [trcks.AwaitableSuccess][], the original success v
     ...         return "failure", "Out of disk space"
     ...     return "success", None
     ...
-    >>> async def read_and_persist(input_path: str) -> Result[Union[ReadErrorLiteral, OutOfDiskSpace], str]:
+    >>> async def read_and_persist(
+    ...     input_path: str
+    ... ) -> Result[Union[ReadErrorLiteral, OutOfDiskSpace], str]:
     ...     pipeline: Pipeline3[
     ...         str,
     ...         AwaitableResult[ReadErrorLiteral, str],

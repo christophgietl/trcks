@@ -6,7 +6,8 @@ in two different type-safe programming styles.
 
 ## Railway-oriented programming (ROP) styles
 
-The following subsections demonstrate both styles of railway-oriented programming (ROP)
+The following subsections demonstrate
+both styles of railway-oriented programming (ROP)
 supported by `trcks`.
 
 ### Object-oriented style
@@ -61,7 +62,7 @@ in the following example.
 
 ```
 
-#### Notes
+#### Notes w.r.t. object-oriented style
 
 1. The generic type `trcks.Result` allows domain errors to become
    part of a function's return type (subject to static type checking).
@@ -130,7 +131,7 @@ in the following example.
 
 ```
 
-#### Notes
+#### Notes w.r.t. functional style
 
 1. The generic type `trcks.Result` allows domain errors to become
    part of a function's return type (subject to static type checking).

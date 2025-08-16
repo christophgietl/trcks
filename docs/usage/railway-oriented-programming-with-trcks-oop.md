@@ -49,8 +49,10 @@ By following the pattern of wrapping, mapping and unwrapping,
 we can write code that resembles a single-track railway
 (or maybe a single-pipe pipeline).
 
-Side effects like logging or writing to a file tend to "consume" their input and return [None][] instead.
-To avoid this, we can use the `tap` method available in the [trcks.oop.Wrapper][] class.
+Side effects like logging or writing to a file tend to
+"consume" their input and return [None][] instead.
+To avoid this, we can use the `tap` method available in
+the [trcks.oop.Wrapper][] class.
 This method allows executing side effects while preserving the original value:
 
 ???+ example
@@ -215,8 +217,10 @@ in the success case or in the failure case, respectively:
     >>> fee_jane
     ('failure', 'User does not exist')
 
-Sometimes, side effects themselves can fail and need to return a [trcks.Result][] type.
-The `tap_success_to_result` method allows us to execute such side effects in the success case.
+Sometimes, side effects themselves can fail and
+need to return a [trcks.Result][] type.
+The `tap_success_to_result` method allows us to execute such side effects
+in the success case.
 If the side effect returns a [trcks.Failure][], that failure is propagated.
 If the side effect returns a [trcks.Success][], the original success value is preserved.
 
@@ -366,7 +370,9 @@ allows us to execute asynchronous side effects.
     >>> async def write_to_disk(s: str, path: str) -> None:
     ...     await asyncio.sleep(0.001)
     ...
-    >>> async def read_and_transform_and_write(input_path: str, output_path: str) -> str:
+    >>> async def read_and_transform_and_write(
+    ...     input_path: str, output_path: str
+    ... ) -> str:
     ...     return await (
     ...         Wrapper(core=input_path)
     ...         .map_to_awaitable(read_from_disk)
@@ -477,8 +483,10 @@ let us have a look at the individual steps of the chain:
     Wrote 'Length: 13' to file output.txt.
     ('success', None)
 
-The methods [trcks.oop.AwaitableResultWrapper.tap_failure][] and [trcks.oop.AwaitableResultWrapper.tap_success][]
-allow us to execute synchronous side effects in the failure case or in the success case, respectively:
+The methods [trcks.oop.AwaitableResultWrapper.tap_failure][] and
+[trcks.oop.AwaitableResultWrapper.tap_success][]
+allow us to execute synchronous side effects
+in the failure case or in the success case, respectively:
 
 ???+ example
 
@@ -518,11 +526,13 @@ allow us to execute synchronous side effects in the failure case or in the succe
     >>> result_2
     ('failure', 'read error')
 
-Sometimes, side effects themselves can fail and need to return an [trcks.AwaitableResult][] type.
+Sometimes, side effects themselves can fail and
+need to return an [trcks.AwaitableResult][] type.
 The method [trcks.oop.AwaitableResultWrapper.tap_success_to_awaitable_result][]
 allows us to execute such asynchronous side effects in the success case.
 If the side effect returns a [trcks.AwaitableFailure][], that failure is propagated.
-If the side effect returns a [trcks.AwaitableSuccess][], the original success value is preserved:
+If the side effect returns a [trcks.AwaitableSuccess][],
+the original success value is preserved:
 
 ???+ example
 
@@ -532,7 +542,9 @@ If the side effect returns a [trcks.AwaitableSuccess][], the original success va
     ...         return "failure", "Out of disk space"
     ...     return "success", None
     ...
-    >>> async def read_and_persist(input_path: str) -> Result[Union[ReadErrorLiteral, OutOfDiskSpace], str]:
+    >>> async def read_and_persist(
+    ...     input_path: str
+    ... ) -> Result[Union[ReadErrorLiteral, OutOfDiskSpace], str]:
     ...     return await (
     ...         Wrapper(core=input_path)
     ...         .map_to_awaitable_result(read_from_disk)
