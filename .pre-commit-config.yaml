@@ -27,6 +27,11 @@ repos:
       - id: pymarkdown
         args:
           - fix
+        name: pymarkdown fix
+      - id: pymarkdown
+        args:
+          - scan
+        name: pymarkdown scan
   - repo: https://github.com/jorisroovers/gitlint
     rev: acc9d9de6369b76d22cb4167029d2035e8730b98  # frozen: v0.19.1
     hooks:

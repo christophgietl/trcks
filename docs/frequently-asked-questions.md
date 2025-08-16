@@ -27,11 +27,13 @@ Other type checkers may work as well.
 [returns](https://pypi.org/project/returns/) supports
 object-oriented style and functional style (like `trcks`).
 It provides
-the [returns.result.Result][] container (and multiple other containers) for synchronous code and
-the [returns.future.Future][] and the [returns.future.FutureResult][] container for asynchronous code.
+the [returns.result.Result][] container (and multiple other containers)
+for synchronous code and
+the [returns.future.Future][] and the [returns.future.FutureResult][] container
+for asynchronous code.
 Whereas the [returns.result.Result][] container is pretty similar to [trcks.Result][],
-the [returns.future.Future][] container and the [returns.future.FutureResult][] container deviate
-from [collections.abc.Awaitable][] and [trcks.AwaitableResult][].
+the [returns.future.Future][] container and the [returns.future.FutureResult][] container
+deviate from [collections.abc.Awaitable][] and [trcks.AwaitableResult][].
 Other major differences are:
 
 - `returns` provides
@@ -48,9 +50,11 @@ Other major differences are:
 [Expression](https://pypi.org/project/Expression/) supports
 object-oriented style ("fluent syntax") and
 functional style (like `trcks`).
-It provides the [expression.core.result.Result][] class (and multiple other container classes)
+It provides the [expression.core.result.Result][] class
+(and multiple other container classes)
 for synchronous code.
-The [expression.core.result.Result][] class is pretty similar to [trcks.Result][] and [trcks.oop.ResultWrapper][].
+The [expression.core.result.Result][] class is pretty similar to
+[trcks.Result][] and [trcks.oop.ResultWrapper][].
 An `AsyncResult` type based on [collections.abc.AsyncGenerator][]
 [will be added in a future version](https://github.com/dbrattli/Expression/pull/247).
 
