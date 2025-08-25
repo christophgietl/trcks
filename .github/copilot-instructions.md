@@ -19,6 +19,29 @@ a discriminated union of `("success", value)` and `("failure", error)` tuples.
 - `AwaitableResult[F, S]` for async operations
 - All types are strict tuples with literal "success"/"failure" discriminants
 - Type aliases in `_typing.py` handle Python version compatibility (3.9-3.13)
+- Core types are intentionally simple tuples for maximum interoperability
+- No inheritance hierarchy - composition over inheritance throughout
+
+### Architecture decisions
+
+**Type safety philosophy**: The library encourages encoding domain errors
+in function signatures via `Result[ErrorType, SuccessType]`.
+This makes expected failures explicit and type-checkable rather than using exceptions.
+
+**Dual API design**: The library intentionally provides two equivalent ways
+to work with railway-oriented programming:
+- OOP style for developers comfortable with method chaining (similar to pandas, requests)
+- FP style for developers preferring function composition (similar to toolz, returns)
+
+**Wrapper pattern**:
+All OOP classes (`Wrapper`, `ResultWrapper`, `AwaitableWrapper`, etc.) are
+lightweight containers that hold a `core` value and provide type-safe method chaining.
+They never mutate - each method returns a new wrapper instance.
+
+**Pipeline composition**:
+FP style uses explicit pipeline tuples `(input, func1, func2, ...)`
+rather than function decorators or complex combinators.
+This makes type inference easier and debugging more transparent.
 
 ### Dual programming models
 
@@ -40,13 +63,46 @@ pipeline = (input_value, func1, r.map_success(func2), r.map_success_to_result(fu
 result = pipe(pipeline)
 ```
 
-### Module organization
+### Module organization and import patterns
 
-- `src/trcks/__init__.py`: Core types and type aliases
-- `src/trcks/oop.py`: Wrapper classes (2600+ lines, extensive method chaining API)
-- `src/trcks/fp/composition.py`: Pipeline types and `pipe()`/`compose()` functions
-- `src/trcks/fp/monads/`:
-    Monad operations for different types (result, awaitable, etc.)
+**Core imports** (always needed):
+
+```python
+from trcks import Result, AwaitableResult  # Core types
+```
+
+**OOP style imports**:
+
+```python
+from trcks.oop import Wrapper, ResultWrapper, AwaitableWrapper, AwaitableResultWrapper
+# Use Wrapper(core=value) as entry point for method chaining
+```
+
+**FP style imports**:
+
+```python
+from trcks.fp.composition import pipe, compose, Pipeline2, Pipeline3  # etc.
+from trcks.fp.monads import result as r, awaitable as a, awaitable_result as ar
+# Convention: alias monad modules with single letters for conciseness
+```
+
+**Module responsibilities**:
+- `src/trcks/__init__.py`: Core types (`Result`, `Success`, `Failure`) and type aliases
+- `src/trcks/_typing.py`: Python version compatibility shims for typing features
+- `src/trcks/oop.py`:
+    All wrapper classes with extensive method chaining API (2600+ lines)
+- `src/trcks/fp/composition.py`:
+    Pipeline types (`Pipeline1` through `Pipeline8`) and composition functions
+- `src/trcks/fp/monads/result.py`:
+    Functional operations on `Result` types (`map_success`, `map_failure`, etc.)
+- `src/trcks/fp/monads/awaitable.py`: Operations on `Awaitable` types
+- `src/trcks/fp/monads/awaitable_result.py`: Operations on `AwaitableResult` types
+
+**Import conventions**:
+- Never import `*` - all imports are explicit
+- Type imports typically use `TypeAlias` annotations
+- Monad modules conventionally aliased as single letters in FP style
+- Pipeline types are numbered by arity: `Pipeline2[T0, T1, T2]` for input + 2 functions
 
 ## Development workflow
 
