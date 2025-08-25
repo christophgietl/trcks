@@ -15,5 +15,5 @@ runs:
         enable-cache: fromJSON(inputs.install-and-cache-dependencies)
         python-version: ${{ inputs.python-version }}
     - if: fromJSON(inputs.install-and-cache-dependencies)
-      run: uv sync --locked
+      run: uv sync --all-extras --locked
       shell: bash

@@ -47,8 +47,8 @@ uv run pytest
 Run static type checks:
 
 ```shell
-uv run mypy
-uv run pyright
+uv run --all-extras mypy
+uv run --all-extras pyright
 ```
 
 Run pre-commit hooks:

@@ -12,7 +12,6 @@ dev = [
     "pytest-asyncio >= 1.1.0",
     "pytest-cov >= 6.2.1",
     "pytest-doctestplus >= 1.4.0",
-    "trcks[mypy, pyright, pyright-nodejs] >= 0", # Lower bound avoids "unpinned" warning.
 ]
 
 [project]
