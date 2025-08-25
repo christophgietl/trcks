@@ -12,7 +12,7 @@ inputs:
 runs:
   using: composite
   steps:
-    - run: uv sync${{ fromJSON(inputs.locked) && ' --locked' || '' }} --resolution=${{ inputs.resolution-strategy }}
+    - run: uv sync --all-extras${{ fromJSON(inputs.locked) && ' --locked' || '' }} --resolution=${{ inputs.resolution-strategy }}
       shell: bash
     - run: uv run --no-sync mypy
       shell: bash

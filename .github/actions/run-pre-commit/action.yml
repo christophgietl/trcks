@@ -12,7 +12,7 @@ runs:
       with:
         key: pre-commit--${{ hashFiles('.pre-commit-config.yaml') }}-${{ inputs.cache-key-suffix }}
         path: ~/.cache/pre-commit
-    - run: uv sync --locked
+    - run: uv sync --all-extras --locked
       shell: bash
     - run: uv run --no-sync pre-commit run --all-files --show-diff-on-failure
       shell: bash
