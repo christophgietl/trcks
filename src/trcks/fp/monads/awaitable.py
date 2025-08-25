@@ -40,6 +40,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from trcks._typing import TypeVar
+from trcks.fp.composition import compose2
 from trcks.fp.monads import identity as i
 
 if TYPE_CHECKING:  # pragma: no cover
@@ -111,11 +112,7 @@ def map_(f: Callable[[_T1], _T2]) -> Callable[[Awaitable[_T1]], Awaitable[_T2]]:
         'Length: 13'
 
     """
-
-    def composed_f(value: _T1) -> Awaitable[_T2]:
-        return construct(f(value))
-
-    return map_to_awaitable(composed_f)
+    return map_to_awaitable(compose2((f, construct)))
 
 
 def map_to_awaitable(

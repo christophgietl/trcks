@@ -75,6 +75,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from trcks._typing import TypeVar, assert_never
+from trcks.fp.composition import compose2
 from trcks.fp.monads import identity as i
 
 if TYPE_CHECKING:  # pragma: no cover
@@ -150,11 +151,7 @@ def map_failure(
         >>> add_prefix_to_failure(("success", 25.0))
         ('success', 25.0)
     """
-
-    def composed_f(value: _F1) -> Failure[_F2]:
-        return construct_failure(f(value))
-
-    return map_failure_to_result(composed_f)
+    return map_failure_to_result(compose2((f, construct_failure)))
 
 
 def map_failure_to_result(
@@ -222,11 +219,7 @@ def map_success(
         >>> increase_success(("success", 42))
         ('success', 43)
     """
-
-    def composed_f(value: _S1) -> Success[_S2]:
-        return construct_success(f(value))
-
-    return map_success_to_result(composed_f)
+    return map_success_to_result(compose2((f, construct_success)))
 
 
 def map_success_to_result(
