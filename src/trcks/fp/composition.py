@@ -194,6 +194,162 @@ Pipeline: TypeAlias = Union[
 that can be applied sequentially from first to last."""
 
 
+def compose1(c: Composable1[_T0, _T1]) -> Callable[[_T0], _T1]:
+    """Compose a single function.
+
+    Args:
+        c: A single function.
+
+    Returns:
+        Function that applies the given function.
+
+    Example:
+        >>> get_length = compose1((len,))
+        >>> get_length("Hello, world!")
+        13
+    """
+    return lambda t0: c[0](t0)
+
+
+def compose2(c: Composable2[_T0, _T1, _T2]) -> Callable[[_T0], _T2]:
+    """Compose two compatible functions from first to last.
+
+    Args:
+        c: Two compatible functions that can be applied sequentially from first to last.
+
+    Returns:
+        Function that applies the given functions from first to last.
+
+    Example:
+        >>> get_length_string = compose2((len, lambda n: f"Length: {n}"))
+        >>> get_length_string("Hello, world!")
+        'Length: 13'
+    """
+    return lambda t0: c[1](c[0](t0))
+
+
+def compose3(c: Composable3[_T0, _T1, _T2, _T3]) -> Callable[[_T0], _T3]:
+    """Compose three compatible functions from first to last.
+
+    Args:
+        c:
+            Three compatible functions that can be applied sequentially
+            from first to last.
+
+    Returns:
+        Function that applies the given functions from first to last.
+
+    Example:
+        >>> add_one = lambda n: n + 1
+        >>> square = lambda n: n * n
+        >>> to_string = lambda n: f"Result: {n}"
+        >>> compute = compose3((add_one, square, to_string))
+        >>> compute(3)
+        'Result: 16'
+    """
+    return lambda t0: c[2](c[1](c[0](t0)))
+
+
+def compose4(c: Composable4[_T0, _T1, _T2, _T3, _T4]) -> Callable[[_T0], _T4]:
+    """Compose four compatible functions from first to last.
+
+    Args:
+        c:
+            Four compatible functions that can be applied sequentially
+            from first to last.
+
+    Returns:
+        Function that applies the given functions from first to last.
+
+    Example:
+        >>> add_one = lambda n: n + 1
+        >>> square = lambda n: n * n
+        >>> halve = lambda n: n / 2
+        >>> to_string = lambda n: f"Result: {n}"
+        >>> compute = compose4((add_one, square, halve, to_string))
+        >>> compute(3)
+        'Result: 8.0'
+    """
+    return lambda t0: c[3](c[2](c[1](c[0](t0))))
+
+
+def compose5(c: Composable5[_T0, _T1, _T2, _T3, _T4, _T5]) -> Callable[[_T0], _T5]:
+    """Compose five compatible functions from first to last.
+
+    Args:
+        c:
+            Five compatible functions that can be applied sequentially
+            from first to last.
+
+    Returns:
+        Function that applies the given functions from first to last.
+
+    Example:
+        >>> add_one = lambda n: n + 1
+        >>> square = lambda n: n * n
+        >>> halve = lambda n: n / 2
+        >>> to_string = lambda n: f"Result: {n}"
+        >>> exclaim = lambda s: s + "!"
+        >>> compute = compose5((add_one, square, halve, to_string, exclaim))
+        >>> compute(3)
+        'Result: 8.0!'
+    """
+    return lambda t0: c[4](c[3](c[2](c[1](c[0](t0)))))
+
+
+def compose6(c: Composable6[_T0, _T1, _T2, _T3, _T4, _T5, _T6]) -> Callable[[_T0], _T6]:
+    """Compose six compatible functions from first to last.
+
+    Args:
+        c: Six compatible functions that can be applied sequentially from first to last.
+
+    Returns:
+        Function that applies the given functions from first to last.
+
+    Example:
+        >>> add_one = lambda n: n + 1
+        >>> square = lambda n: n * n
+        >>> halve = lambda n: n / 2
+        >>> to_string = lambda n: f"Result: {n}"
+        >>> exclaim = lambda s: s + "!"
+        >>> to_list = lambda s: [s]
+        >>> compute = compose6((add_one, square, halve, to_string, exclaim, to_list))
+        >>> compute(3)
+        ['Result: 8.0!']
+    """
+    return lambda t0: c[5](c[4](c[3](c[2](c[1](c[0](t0))))))
+
+
+def compose7(
+    c: Composable7[_T0, _T1, _T2, _T3, _T4, _T5, _T6, _T7],
+) -> Callable[[_T0], _T7]:
+    """Compose seven compatible functions from first to last.
+
+    Args:
+        c:
+            Seven compatible functions that can be applied sequentially
+            from first to last.
+
+    Returns:
+        Function that applies the given functions from first to last.
+
+    Example:
+        >>> add_one = lambda n: n + 1
+        >>> square = lambda n: n * n
+        >>> halve = lambda n: n / 2
+        >>> to_string = lambda n: f"Result: {n}"
+        >>> exclaim = lambda s: s + "!"
+        >>> to_list = lambda s: [s]
+        >>> wrap_in_dict = lambda lst: {"result": lst}
+        >>> compute = compose7(
+        ...     (add_one, square, halve, to_string, exclaim, to_list, wrap_in_dict)
+        ... )
+        >>> compute(3)
+        {'result': ['Result: 8.0!']}
+    """
+    return lambda t0: c[6](c[5](c[4](c[3](c[2](c[1](c[0](t0)))))))
+
+
 def compose(  # noqa: PLR0911
     c: Composable[_IN, _T1, _T2, _T3, _T4, _T5, _T6, _OUT],
 ) -> Callable[[_IN], _OUT]:
@@ -211,19 +367,19 @@ def compose(  # noqa: PLR0911
         'Length: 13'
     """
     if len(c) == 1:
-        return lambda in_: c[0](in_)
+        return compose1(c)
     if len(c) == 2:  # noqa: PLR2004
-        return lambda in_: c[1](c[0](in_))
+        return compose2(c)
     if len(c) == 3:  # noqa: PLR2004
-        return lambda in_: c[2](c[1](c[0](in_)))
+        return compose3(c)
     if len(c) == 4:  # noqa: PLR2004
-        return lambda in_: c[3](c[2](c[1](c[0](in_))))
+        return compose4(c)
     if len(c) == 5:  # noqa: PLR2004
-        return lambda in_: c[4](c[3](c[2](c[1](c[0](in_)))))
+        return compose5(c)
     if len(c) == 6:  # noqa: PLR2004
-        return lambda in_: c[5](c[4](c[3](c[2](c[1](c[0](in_))))))
+        return compose6(c)
     if len(c) == 7:  # noqa: PLR2004
-        return lambda in_: c[6](c[5](c[4](c[3](c[2](c[1](c[0](in_)))))))
+        return compose7(c)
     return assert_never(c)  # type: ignore [unreachable]  # pragma: no cover
 
 

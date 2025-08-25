@@ -41,6 +41,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from trcks._typing import TypeVar, assert_never
+from trcks.fp.composition import compose2
 from trcks.fp.monads import awaitable as a
 from trcks.fp.monads import result as r
 
@@ -261,11 +262,9 @@ def map_failure_to_awaitable(
         >>> asyncio.run(ar.to_coroutine_result(a_rslt_2))
         ('success', 25.0)
     """
-
-    def composed_f(value: _F1) -> AwaitableFailure[_F2]:
-        return construct_failure_from_awaitable(f(value))
-
-    return map_failure_to_awaitable_result(composed_f)
+    return map_failure_to_awaitable_result(
+        compose2((f, construct_failure_from_awaitable))
+    )
 
 
 def map_failure_to_awaitable_result(
@@ -442,11 +441,9 @@ def map_success_to_awaitable(
         >>> asyncio.run(ar.to_coroutine_result(a_rslt_2))
         ('success', 43)
     """
-
-    def composed_f(value: _S1) -> AwaitableSuccess[_S2]:
-        return construct_success_from_awaitable(f(value))
-
-    return map_success_to_awaitable_result(composed_f)
+    return map_success_to_awaitable_result(
+        compose2((f, construct_success_from_awaitable))
+    )
 
 
 def map_success_to_awaitable_result(
