@@ -6,7 +6,7 @@ default_stages:
 minimum_pre_commit_version: 4.2.0
 repos:
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: 54a455f7ce629598b7535ff828fd5fb796f4b83f  # frozen: v0.12.9
+    rev: 0acff885bcb16381b67930fefb91e460202f172c  # frozen: v0.12.10
     hooks:
       - id: ruff-check
         args:
@@ -14,7 +14,7 @@ repos:
           - --fix
       - id: ruff-format
   - repo: https://github.com/astral-sh/uv-pre-commit
-    rev: 1fbedf73c5ee2f6d6cbe1e9ba9c738b0458f29ce  # frozen: 0.8.11
+    rev: 2d951338ec8cdf4fc958b42681c5e1b5ccda7b30  # frozen: 0.8.13
     hooks:
       - id: uv-lock
   - repo: https://github.com/codespell-project/codespell
