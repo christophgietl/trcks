@@ -996,16 +996,15 @@ mypy = [
 pyright = [
     { name = "pyright" },
 ]
-pyright-nodejs = [
-    { name = "pyright", extra = ["nodejs"] },
-]
 
 [package.dev-dependencies]
 dev = [
     { name = "markdown-pycon" },
     { name = "mkdocs-material" },
     { name = "mkdocstrings", extra = ["python"] },
+    { name = "mypy" },
     { name = "pre-commit" },
+    { name = "pyright", extra = ["nodejs"] },
     { name = "pytest" },
     { name = "pytest-asyncio" },
     { name = "pytest-cov" },
@@ -1016,17 +1015,18 @@ dev = [
 requires-dist = [
     { name = "mypy", marker = "extra == 'mypy'", specifier = ">=1.7" },
     { name = "pyright", marker = "extra == 'pyright'", specifier = ">=1.1.387" },
-    { name = "pyright", extras = ["nodejs"], marker = "extra == 'pyright-nodejs'", specifier = ">=1.1.387" },
     { name = "typing-extensions", marker = "python_full_version < '3.13'", specifier = ">=4.12" },
 ]
-provides-extras = ["mypy", "pyright", "pyright-nodejs"]
+provides-extras = ["mypy", "pyright"]
 
 [package.metadata.requires-dev]
 dev = [
     { name = "markdown-pycon", specifier = ">=1.0.1" },
     { name = "mkdocs-material", specifier = ">=9.6.19" },
     { name = "mkdocstrings", extras = ["python"], specifier = ">=0.30.0" },
+    { name = "mypy", specifier = ">=1" },
     { name = "pre-commit", specifier = ">=4.3.0" },
+    { name = "pyright", extras = ["nodejs"], specifier = ">=1" },
     { name = "pytest", specifier = ">=8.4.2" },
     { name = "pytest-asyncio", specifier = ">=1.1.0" },
     { name = "pytest-cov", specifier = ">=7.0.0" },
