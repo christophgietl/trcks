@@ -347,7 +347,7 @@ name = "importlib-metadata"
 version = "8.7.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "zipp" },
+    { name = "zipp", marker = "python_full_version < '3.10'" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/76/66/650a33bd90f786193e4de4b3ad86ea60b53c89b669a5c7be931fac31cdb0/importlib_metadata-8.7.0.tar.gz", hash = "sha256:d13b81ad223b890aa16c5471f2ac3056cf76c5f10f82d6f9292f0b415f389000", size = 56641, upload-time = "2025-04-27T15:29:01.736Z" }
 wheels = [
@@ -530,7 +530,7 @@ wheels = [
 
 [[package]]
 name = "mkdocs-material"
-version = "9.6.19"
+version = "9.6.20"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "babel" },
@@ -547,9 +547,9 @@ dependencies = [
     { name = "pymdown-extensions" },
     { name = "requests" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/44/94/eb0fca39b19c2251b16bc759860a50f232655c4377116fa9c0e7db11b82c/mkdocs_material-9.6.19.tar.gz", hash = "sha256:80e7b3f9acabfee9b1f68bd12c26e59c865b3d5bbfb505fd1344e970db02c4aa", size = 4038202, upload-time = "2025-09-07T17:46:40.468Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/ba/ee/6ed7fc739bd7591485c8bec67d5984508d3f2733e708f32714c21593341a/mkdocs_material-9.6.20.tar.gz", hash = "sha256:e1f84d21ec5fb730673c4259b2e0d39f8d32a3fef613e3a8e7094b012d43e790", size = 4037822, upload-time = "2025-09-15T08:48:01.816Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/02/23/a2551d1038bedc2771366f65ff3680bb3a89674cd7ca6140850c859f1f71/mkdocs_material-9.6.19-py3-none-any.whl", hash = "sha256:7492d2ac81952a467ca8a10cac915d6ea5c22876932f44b5a0f4f8e7d68ac06f", size = 9240205, upload-time = "2025-09-07T17:46:36.484Z" },
+    { url = "https://files.pythonhosted.org/packages/67/d8/a31dd52e657bf12b20574706d07df8d767e1ab4340f9bfb9ce73950e5e59/mkdocs_material-9.6.20-py3-none-any.whl", hash = "sha256:b8d8c8b0444c7c06dd984b55ba456ce731f0035c5a1533cc86793618eb1e6c82", size = 9193367, upload-time = "2025-09-15T08:47:58.722Z" },
 ]
 
 [[package]]
@@ -803,16 +803,16 @@ wheels = [
 
 [[package]]
 name = "pytest-asyncio"
-version = "1.1.0"
+version = "1.2.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "backports-asyncio-runner", marker = "python_full_version < '3.11'" },
     { name = "pytest" },
-    { name = "typing-extensions", marker = "python_full_version < '3.10'" },
+    { name = "typing-extensions", marker = "python_full_version < '3.13'" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/4e/51/f8794af39eeb870e87a8c8068642fc07bce0c854d6865d7dd0f2a9d338c2/pytest_asyncio-1.1.0.tar.gz", hash = "sha256:796aa822981e01b68c12e4827b8697108f7205020f24b5793b3c41555dab68ea", size = 46652, upload-time = "2025-07-16T04:29:26.393Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/42/86/9e3c5f48f7b7b638b216e4b9e645f54d199d7abbbab7a64a13b4e12ba10f/pytest_asyncio-1.2.0.tar.gz", hash = "sha256:c609a64a2a8768462d0c99811ddb8bd2583c33fd33cf7f21af1c142e824ffb57", size = 50119, upload-time = "2025-09-12T07:33:53.816Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/c7/9d/bf86eddabf8c6c9cb1ea9a869d6873b46f105a5d292d3a6f7071f5b07935/pytest_asyncio-1.1.0-py3-none-any.whl", hash = "sha256:5fe2d69607b0bd75c656d1211f969cadba035030156745ee09e7d71740e58ecf", size = 15157, upload-time = "2025-07-16T04:29:24.929Z" },
+    { url = "https://files.pythonhosted.org/packages/04/93/2fa34714b7a4ae72f2f8dad66ba17dd9a2c793220719e736dda28b7aec27/pytest_asyncio-1.2.0-py3-none-any.whl", hash = "sha256:8e17ae5e46d8e7efe51ab6494dd2010f4ca8dae51652aa3c8d55acf50bfb2e99", size = 15095, upload-time = "2025-09-12T07:33:52.639Z" },
 ]
 
 [[package]]
@@ -1022,13 +1022,13 @@ provides-extras = ["mypy", "pyright"]
 [package.metadata.requires-dev]
 dev = [
     { name = "markdown-pycon", specifier = ">=1.0.1" },
-    { name = "mkdocs-material", specifier = ">=9.6.19" },
+    { name = "mkdocs-material", specifier = ">=9.6.20" },
     { name = "mkdocstrings", extras = ["python"], specifier = ">=0.30.0" },
     { name = "mypy", specifier = ">=1" },
     { name = "pre-commit", specifier = ">=4.3.0" },
     { name = "pyright", extras = ["nodejs"], specifier = ">=1" },
     { name = "pytest", specifier = ">=8.4.2" },
-    { name = "pytest-asyncio", specifier = ">=1.1.0" },
+    { name = "pytest-asyncio", specifier = ">=1.2.0" },
     { name = "pytest-cov", specifier = ">=7.0.0" },
     { name = "pytest-doctestplus", specifier = ">=1.4.0" },
 ]

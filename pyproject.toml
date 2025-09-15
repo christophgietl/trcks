@@ -5,13 +5,13 @@ requires = ["pdm-backend >= 2.4, < 3"]  # pdm-backend 2.4 supports project.licen
 [dependency-groups]
 dev = [
     "markdown-pycon >= 1.0.1",
-    "mkdocs-material >= 9.6.19",
+    "mkdocs-material >= 9.6.20",
     "mkdocstrings[python] >= 0.30.0",
     "mypy >= 1", # check project.optional-dependencies for lower bound
     "pre-commit >= 4.3.0",
     "pyright[nodejs] >= 1", # check project.optional-dependencies for lower bound
     "pytest >= 8.4.2",
-    "pytest-asyncio >= 1.1.0",
+    "pytest-asyncio >= 1.2.0",
     "pytest-cov >= 7.0.0",
     "pytest-doctestplus >= 1.4.0",
 ]
