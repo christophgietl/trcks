@@ -12,7 +12,7 @@ runs:
   steps:
     - uses: astral-sh/setup-uv@v7
       with:
-        enable-cache: fromJSON(inputs.install-and-cache-dependencies)
+        enable-cache: ${{ fromJSON(inputs.install-and-cache-dependencies) }}
         python-version: ${{ inputs.python-version }}
     - if: fromJSON(inputs.install-and-cache-dependencies)
       run: uv sync --all-extras --locked
