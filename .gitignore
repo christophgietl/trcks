@@ -1,3 +1,6 @@
+# import-linter-generated files
+/.import_linter_cache/
+
 # macOS-generated files
 .DS_Store
 

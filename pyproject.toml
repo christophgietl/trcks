@@ -4,6 +4,7 @@ requires = ["pdm-backend >= 2.4, < 3"]  # pdm-backend 2.4 supports project.licen
 
 [dependency-groups]
 dev = [
+    "import-linter>=2.5.2",
     "markdown-pycon >= 1.0.1",
     "mkdocs-material >= 9.6.21",
     "mkdocstrings[python] >= 0.30.1",
@@ -69,6 +70,68 @@ pyright = ["pyright >= 1.1.387"]
 Documentation = "https://christophgietl.github.io/trcks/"
 Issues = "https://github.com/christophgietl/trcks/issues"
 Repository = "https://github.com/christophgietl/trcks.git"
+
+[tool.importlinter]
+exclude_type_checking_imports = false
+include_external_packages = true
+root_package = "trcks"
+
+[[tool.importlinter.contracts]]
+name = "Layers within trcks.*"
+type = "layers"
+containers = [
+    "trcks",
+]
+exhaustive = true
+layers = [
+    "oop",
+    "fp",
+    "_typing",
+]
+
+[[tool.importlinter.contracts]]
+name = "Layers within trcks.fp.*"
+type = "layers"
+containers = [
+    "trcks.fp",
+]
+exhaustive = true
+layers = [
+    "monads",
+    "composition",
+]
+
+[[tool.importlinter.contracts]]
+name = "Layers within trcks.fp.monads.*"
+type = "layers"
+containers = [
+    "trcks.fp.monads",
+]
+exhaustive = true
+layers = [
+    "awaitable_result",
+    "awaitable",
+    "result",
+    "identity",
+]
+
+[[tool.importlinter.contracts]]
+name = "Independence within trcks.fp.monads.*"
+type = "independence"
+modules = [
+    "trcks.fp.monads.awaitable",
+    "trcks.fp.monads.result",
+]
+
+[[tool.importlinter.contracts]]
+name = "Import typing_extensions via trcks._typing only"
+type = "protected"
+allowed_importers = [
+    "trcks._typing",
+]
+protected_modules = [
+    "typing_extensions",
+]
 
 [tool.mypy]
 disallow_any_decorated = true
