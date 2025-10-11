@@ -12,13 +12,13 @@ in the following example.
 
 ???+ example
 
-    >>> from typing import Literal, Union
+    >>> from typing import Literal
     >>> from trcks import Result
     >>> from trcks.oop import Wrapper
     >>>
     >>> UserDoesNotExist = Literal["User does not exist"]
     >>> UserDoesNotHaveASubscription = Literal["User does not have a subscription"]
-    >>> FailureDescription = Union[UserDoesNotExist, UserDoesNotHaveASubscription]
+    >>> FailureDescription = UserDoesNotExist | UserDoesNotHaveASubscription
     >>>
     >>> def get_user_id(user_email: str) -> Result[UserDoesNotExist, int]:
     ...     if user_email == "erika.mustermann@domain.org":
@@ -71,14 +71,14 @@ in the following example.
 
 ???+ example
 
-    >>> from typing import Literal, Union
+    >>> from typing import Literal
     >>> from trcks import Result
     >>> from trcks.fp.composition import Pipeline3, pipe
     >>> from trcks.fp.monads import result as r
     >>>
     >>> UserDoesNotExist = Literal["User does not exist"]
     >>> UserDoesNotHaveASubscription = Literal["User does not have a subscription"]
-    >>> FailureDescription = Union[UserDoesNotExist, UserDoesNotHaveASubscription]
+    >>> FailureDescription = UserDoesNotExist | UserDoesNotHaveASubscription
     >>>
     >>> def get_user_id(user_email: str) -> Result[UserDoesNotExist, int]:
     ...     if user_email == "erika.mustermann@domain.org":
