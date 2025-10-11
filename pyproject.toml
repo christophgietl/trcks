@@ -26,7 +26,6 @@ classifiers = [
     "Programming Language :: Python",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3 :: Only",
-    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
@@ -61,7 +60,7 @@ license-files = ["LICEN[CS]E*"]
 maintainers = [{ name = "Christoph Gietl" }]
 name = "trcks"
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 
 [project.optional-dependencies]
 mypy = ["mypy >= 1.7"]
@@ -156,7 +155,7 @@ source = "scm"
 
 [tool.pyright]
 deprecateTypingAliases = true
-pythonVersion = "3.9"
+pythonVersion = "3.10"
 reportCallInDefaultInitializer = true
 reportImplicitOverride = true
 reportImplicitStringConcatenation = true

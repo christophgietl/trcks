@@ -11,9 +11,9 @@ See:
 """
 
 from collections.abc import Awaitable
-from typing import Literal, Union
+from typing import Literal, TypeAlias
 
-from trcks._typing import TypeAlias, TypeVar
+from trcks._typing import TypeVar
 
 __docformat__ = "google"
 
@@ -44,7 +44,7 @@ Note:
     some functional programming languages and packages (e.g. Haskell and fp-ts).
 """
 
-Result: TypeAlias = Union[Failure[_F_co], Success[_S_co]]
+Result: TypeAlias = Failure[_F_co] | Success[_S_co]
 """Discriminated union of the generic types `_F_co` and `_S_co`.
 
 Can be used as a return type of a function
