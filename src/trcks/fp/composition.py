@@ -20,9 +20,9 @@ Example:
 from __future__ import annotations
 
 from collections.abc import Callable
-from typing import Union
+from typing import TypeAlias
 
-from trcks._typing import TypeAlias, TypeVar, assert_never
+from trcks._typing import TypeVar, assert_never
 
 __docformat__ = "google"
 
@@ -38,7 +38,7 @@ _T5 = TypeVar("_T5")
 _T6 = TypeVar("_T6")
 _T7 = TypeVar("_T7")
 
-# Tuple type unpacking does not work correctly in Python 3.9 and 3.10
+# Tuple type unpacking does not work correctly in Python 3.10
 # (see https://github.com/python/typing_extensions/issues/103).
 # Therefore, the following tuple type definitions contain a lot of repetitions:
 
@@ -96,15 +96,15 @@ Composable7: TypeAlias = tuple[
 ]
 """Seven compatible functions that can be applied sequentially from first to last."""
 
-Composable: TypeAlias = Union[
-    Composable7[_IN, _T1, _T2, _T3, _T4, _T5, _T6, _OUT],
-    Composable6[_IN, _T1, _T2, _T3, _T4, _T5, _OUT],
-    Composable5[_IN, _T1, _T2, _T3, _T4, _OUT],
-    Composable4[_IN, _T1, _T2, _T3, _OUT],
-    Composable3[_IN, _T1, _T2, _OUT],
-    Composable2[_IN, _T1, _OUT],
-    Composable1[_IN, _OUT],
-]
+Composable: TypeAlias = (
+    Composable7[_IN, _T1, _T2, _T3, _T4, _T5, _T6, _OUT]
+    | Composable6[_IN, _T1, _T2, _T3, _T4, _T5, _OUT]
+    | Composable5[_IN, _T1, _T2, _T3, _T4, _OUT]
+    | Composable4[_IN, _T1, _T2, _T3, _OUT]
+    | Composable3[_IN, _T1, _T2, _OUT]
+    | Composable2[_IN, _T1, _OUT]
+    | Composable1[_IN, _OUT]
+)
 """Up to seven compatible functions
 that can be applied sequentially from first to last."""
 
@@ -180,16 +180,16 @@ Pipeline7: TypeAlias = tuple[
 """A single value followed by seven compatible functions
 that can be applied sequentially from first to last."""
 
-Pipeline: TypeAlias = Union[
-    Pipeline7[_T0, _T1, _T2, _T3, _T4, _T5, _T6, _OUT],
-    Pipeline6[_T0, _T1, _T2, _T3, _T4, _T5, _OUT],
-    Pipeline5[_T0, _T1, _T2, _T3, _T4, _OUT],
-    Pipeline4[_T0, _T1, _T2, _T3, _OUT],
-    Pipeline3[_T0, _T1, _T2, _OUT],
-    Pipeline2[_T0, _T1, _OUT],
-    Pipeline1[_T0, _OUT],
-    Pipeline0[_OUT],
-]
+Pipeline: TypeAlias = (
+    Pipeline7[_T0, _T1, _T2, _T3, _T4, _T5, _T6, _OUT]
+    | Pipeline6[_T0, _T1, _T2, _T3, _T4, _T5, _OUT]
+    | Pipeline5[_T0, _T1, _T2, _T3, _T4, _OUT]
+    | Pipeline4[_T0, _T1, _T2, _T3, _OUT]
+    | Pipeline3[_T0, _T1, _T2, _OUT]
+    | Pipeline2[_T0, _T1, _OUT]
+    | Pipeline1[_T0, _OUT]
+    | Pipeline0[_OUT]
+)
 """A single value followed by up to seven compatible functions
 that can be applied sequentially from first to last."""
 

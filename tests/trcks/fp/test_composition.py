@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import sys
 from collections.abc import Callable
-from typing import TypeVar
+from typing import TypeAlias, TypeVar
 
 import pytest
 
@@ -13,11 +13,6 @@ if sys.version_info >= (3, 13):
     from typing import assert_type
 else:
     from typing_extensions import assert_type
-
-if sys.version_info >= (3, 11):
-    from typing import TypeAlias
-else:
-    from typing_extensions import TypeAlias
 
 _T = TypeVar("_T")
 

@@ -75,13 +75,13 @@ into functions with input type `trcks.Result[F, S]`.
 
 ???+ example
 
-    >>> from typing import Literal, Union
+    >>> from typing import Literal
     >>> from trcks import Result
     >>> from trcks.fp.monads import result as r
     >>>
     >>> UserDoesNotExist = Literal["User does not exist"]
     >>> UserDoesNotHaveASubscription = Literal["User does not have a subscription"]
-    >>> FailureDescription = Union[UserDoesNotExist, UserDoesNotHaveASubscription]
+    >>> FailureDescription = UserDoesNotExist | UserDoesNotHaveASubscription
     >>>
     >>> def get_user_id(user_email: str) -> Result[UserDoesNotExist, int]:
     ...     if user_email == "erika.mustermann@domain.org":
@@ -236,11 +236,11 @@ If the side effect returns a [trcks.Success][], the original success value is pr
     ...
     >>> def get_and_persist_user_id(
     ...     user_email: str
-    ... ) -> Result[Union[UserDoesNotExist, OutOfDiskSpace], int]:
+    ... ) -> Result[UserDoesNotExist | OutOfDiskSpace, int]:
     ...     pipeline: Pipeline2[
     ...         str,
     ...         Result[UserDoesNotExist, int],
-    ...         Result[Union[UserDoesNotExist, OutOfDiskSpace], int],
+    ...         Result[UserDoesNotExist | OutOfDiskSpace, int],
     ...     ] = (
     ...         user_email,
     ...         get_user_id,
@@ -428,12 +428,12 @@ into functions with input type `trcks.AwaitableResult[F, S]`.
     ...
     >>> async def read_and_transform_and_write(
     ...     input_path: str, output_path: str
-    ... ) -> Result[Union[ReadErrorLiteral, WriteErrorLiteral], None]:
+    ... ) -> Result[ReadErrorLiteral | WriteErrorLiteral, None]:
     ...     p: Pipeline3[
     ...         str,
     ...         AwaitableResult[ReadErrorLiteral, str],
     ...         AwaitableResult[ReadErrorLiteral, str],
-    ...         AwaitableResult[Union[ReadErrorLiteral, WriteErrorLiteral], None],
+    ...         AwaitableResult[ReadErrorLiteral | WriteErrorLiteral, None],
     ...     ] = (
     ...         input_path,
     ...         read_from_disk,
@@ -479,7 +479,7 @@ let us have a look at the individual steps of the chain:
     ...     str,
     ...     AwaitableResult[ReadErrorLiteral, str],
     ...     AwaitableResult[ReadErrorLiteral, str],
-    ...     AwaitableResult[Union[ReadErrorLiteral, WriteErrorLiteral], None],
+    ...     AwaitableResult[ReadErrorLiteral | WriteErrorLiteral, None],
     ... ] = (
     ...     "input.txt",
     ...     read_from_disk,
@@ -519,15 +519,15 @@ in the failure case or in the success case, respectively:
     ...
     >>> async def read_and_transform_and_write(
     ...     input_path: str, output_path: str
-    ... ) -> Result[Union[ReadErrorLiteral, WriteErrorLiteral], None]:
+    ... ) -> Result[ReadErrorLiteral | WriteErrorLiteral, None]:
     ...     pipeline: Pipeline6[
     ...         str,
     ...         AwaitableResult[ReadErrorLiteral, str],
     ...         AwaitableResult[ReadErrorLiteral, str],
     ...         AwaitableResult[ReadErrorLiteral, str],
-    ...         AwaitableResult[Union[ReadErrorLiteral, WriteErrorLiteral], None],
-    ...         AwaitableResult[Union[ReadErrorLiteral, WriteErrorLiteral], None],
-    ...         AwaitableResult[Union[ReadErrorLiteral, WriteErrorLiteral], None],
+    ...         AwaitableResult[ReadErrorLiteral | WriteErrorLiteral, None],
+    ...         AwaitableResult[ReadErrorLiteral | WriteErrorLiteral, None],
+    ...         AwaitableResult[ReadErrorLiteral | WriteErrorLiteral, None],
     ...     ] = (
     ...         input_path,
     ...         read_from_disk,
@@ -568,12 +568,12 @@ the original success value is preserved:
     ...
     >>> async def read_and_persist(
     ...     input_path: str
-    ... ) -> Result[Union[ReadErrorLiteral, OutOfDiskSpace], str]:
+    ... ) -> Result[ReadErrorLiteral | OutOfDiskSpace, str]:
     ...     pipeline: Pipeline3[
     ...         str,
     ...         AwaitableResult[ReadErrorLiteral, str],
     ...         AwaitableResult[ReadErrorLiteral, str],
-    ...         AwaitableResult[Union[ReadErrorLiteral, OutOfDiskSpace], str],
+    ...         AwaitableResult[ReadErrorLiteral | OutOfDiskSpace, str],
     ...     ] = (
     ...         input_path,
     ...         read_from_disk,

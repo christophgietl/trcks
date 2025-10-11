@@ -99,13 +99,13 @@ the implementation of the parallel code tracks.
 
 ???+ example
 
-    >>> from typing import Literal, Union
+    >>> from typing import Literal
     >>> from trcks import Result
     >>> from trcks.oop import Wrapper
     >>>
     >>> UserDoesNotExist = Literal["User does not exist"]
     >>> UserDoesNotHaveASubscription = Literal["User does not have a subscription"]
-    >>> FailureDescription = Union[UserDoesNotExist, UserDoesNotHaveASubscription]
+    >>> FailureDescription = UserDoesNotExist | UserDoesNotHaveASubscription
     >>>
     >>> def get_user_id(user_email: str) -> Result[UserDoesNotExist, int]:
     ...     if user_email == "erika.mustermann@domain.org":
@@ -234,7 +234,7 @@ If the side effect returns a [trcks.Success][], the original success value is pr
     ...
     >>> def get_and_persist_user_id(
     ...     user_email: str
-    ... ) -> Result[Union[UserDoesNotExist, OutOfDiskSpace], int]:
+    ... ) -> Result[UserDoesNotExist | OutOfDiskSpace, int]:
     ...     return (
     ...         Wrapper(core=user_email)
     ...         .map_to_result(get_user_id)
@@ -427,7 +427,7 @@ with "regular" functions:
     >>>
     >>> async def read_and_transform_and_write(
     ...     input_path: str, output_path: str
-    ... ) -> Result[Union[ReadErrorLiteral, WriteErrorLiteral], None]:
+    ... ) -> Result[ReadErrorLiteral | WriteErrorLiteral, None]:
     ...     return await (
     ...         Wrapper(core=input_path)
     ...         .map_to_awaitable_result(read_from_disk)
@@ -465,7 +465,7 @@ let us have a look at the individual steps of the chain:
     AwaitableResultWrapper(core=<coroutine object ...>)
     >>> # 4. Apply the AwaitableResult function write_to_disk in the success case:
     >>> mapped_thrice: AwaitableResultWrapper[
-    ...     Union[ReadErrorLiteral, WriteErrorLiteral], None
+    ...     ReadErrorLiteral | WriteErrorLiteral, None
     ... ] = mapped_twice.map_success_to_awaitable_result(
     ...     lambda s: write_to_disk(s, "output.txt")
     ... )
@@ -473,7 +473,7 @@ let us have a look at the individual steps of the chain:
     AwaitableResultWrapper(core=<coroutine object ...>)
     >>> # 5. Unwrap the output coroutine:
     >>> unwrapped: Coroutine[
-    ...     Any, Any, Result[Union[ReadErrorLiteral, WriteErrorLiteral], None]
+    ...     Any, Any, Result[ReadErrorLiteral | WriteErrorLiteral, None]
     ... ] = mapped_thrice.core_as_coroutine
     >>> unwrapped
     <coroutine object ...>
@@ -504,7 +504,7 @@ in the failure case or in the success case, respectively:
     ...
     >>> async def read_and_transform_and_write(
     ...     input_path: str, output_path: str
-    ... ) -> Result[Union[ReadErrorLiteral, WriteErrorLiteral], None]:
+    ... ) -> Result[ReadErrorLiteral | WriteErrorLiteral, None]:
     ...     return await (
     ...         Wrapper(core=input_path)
     ...         .map_to_awaitable_result(read_from_disk)
@@ -544,7 +544,7 @@ the original success value is preserved:
     ...
     >>> async def read_and_persist(
     ...     input_path: str
-    ... ) -> Result[Union[ReadErrorLiteral, OutOfDiskSpace], str]:
+    ... ) -> Result[ReadErrorLiteral | OutOfDiskSpace, str]:
     ...     return await (
     ...         Wrapper(core=input_path)
     ...         .map_to_awaitable_result(read_from_disk)
