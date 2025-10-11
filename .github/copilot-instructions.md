@@ -111,6 +111,9 @@ from trcks.fp.monads import result as r, awaitable as a, awaitable_result as ar
 - **Package manager**: `uv` (required version >= 0.8, < 0.9)
 - **Build backend**: `pdm-backend` with SCM versioning from Git tags
 - **Dev dependencies**: All in `[dependency-groups.dev]` in `pyproject.toml`
+- **Import linter**: `import-linter` is used to enforce
+    import rules within and between Python packages.
+    Its contracts are configured in `pyproject.toml`.
 
 ### Key commands
 
@@ -131,6 +134,9 @@ uv run ruff format
 # Type checking
 uv run mypy
 uv run pyright
+
+# Enforce import rules
+uv run lint-imports
 ```
 
 ### Testing conventions

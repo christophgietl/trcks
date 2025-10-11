@@ -1,5 +1,5 @@
 name: Run tests and type checks
-description: Executes the test suite and static type checkers.
+description: Executes import-linter, the test suite and static type checkers.
 inputs:
   locked:
     default: "true"
@@ -13,6 +13,8 @@ runs:
   using: composite
   steps:
     - run: uv sync --all-extras${{ fromJSON(inputs.locked) && ' --locked' || '' }} --resolution=${{ inputs.resolution-strategy }}
+      shell: bash
+    - run: uv run lint-imports
       shell: bash
     - run: uv run --no-sync mypy
       shell: bash

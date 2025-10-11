@@ -7,6 +7,8 @@ The following section describes how to set up and use a development environment.
 
 `trcks` uses the following developer tools:
 
+- [import-linter](https://import-linter.readthedocs.io)
+  for enforcing rules for the imports within and between Python packages
 - [Material for MkDocs](https://squidfunk.github.io/mkdocs-material/)
   for generating documentation
 - [mypy](https://mypy.readthedocs.io) for static type checking
@@ -49,6 +51,12 @@ Run static type checks:
 ```shell
 uv run --all-extras mypy
 uv run --all-extras pyright
+```
+
+Enforce rules for the imports within and between Python packages:
+
+```shell
+uv run lint-imports
 ```
 
 Run pre-commit hooks:
