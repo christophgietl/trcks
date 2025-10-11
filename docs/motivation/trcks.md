@@ -12,12 +12,12 @@ Moreover, it can lead to repetitive code patterns:
 ???+ example
 
     ``` pycon hl_lines="28-39"
-    >>> from typing import Literal, Union
+    >>> from typing import Literal
     >>> from trcks import Result
     >>>
     >>> UserDoesNotExist = Literal["User does not exist"]
     >>> UserDoesNotHaveASubscription = Literal["User does not have a subscription"]
-    >>> FailureDescription = Union[UserDoesNotExist, UserDoesNotHaveASubscription]
+    >>> FailureDescription = UserDoesNotExist | UserDoesNotHaveASubscription
     >>>
     >>> def get_user_id(user_email: str) -> Result[UserDoesNotExist, int]:
     ...     if user_email == "erika.mustermann@domain.org":
