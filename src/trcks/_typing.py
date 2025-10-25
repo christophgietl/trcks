@@ -17,13 +17,12 @@ else:  # pragma: no cover
     from typing_extensions import override
 
 if sys.version_info >= (3, 11):  # pragma: no cover
-    from typing import Never, TypeAlias, assert_never
+    from typing import Never, assert_never
 else:  # pragma: no cover
-    from typing_extensions import Never, TypeAlias, assert_never
+    from typing_extensions import Never, assert_never
 
 __all__ = [
     "Never",
-    "TypeAlias",
     "TypeVar",
     "assert_never",
     "override",

@@ -18,7 +18,7 @@ a discriminated union of `("success", value)` and `("failure", error)` tuples.
 - `Result[F, S]` is the fundamental type: `Union[("failure", F), ("success", S)]`
 - `AwaitableResult[F, S]` for async operations
 - All types are strict tuples with literal "success"/"failure" discriminants
-- Type aliases in `_typing.py` handle Python version compatibility (3.9-3.13)
+- Type aliases in `_typing.py` handle Python version compatibility (3.10-3.14)
 - Core types are intentionally simple tuples for maximum interoperability
 - No inheritance hierarchy - composition over inheritance throughout
 
