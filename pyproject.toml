@@ -163,7 +163,6 @@ reportImplicitStringConcatenation = true
 reportImportCycles = true
 reportMissingSuperCall = true
 reportPropertyTypeMismatch = true
-reportShadowedImports = true
 reportUninitializedInstanceVariable = true
 reportUnnecessaryTypeIgnoreComment = true
 reportUnreachable = true
