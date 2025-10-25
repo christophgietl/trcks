@@ -184,11 +184,13 @@ def map_failure_to_result(
     """
 
     def mapped_f(rslt: Result[_F1, _S1]) -> Result[_F2, _S1 | _S2]:
-        if rslt[0] == "failure":
-            return f(rslt[1])
-        if rslt[0] == "success":
-            return rslt
-        return assert_never(rslt)  # type: ignore [unreachable]  # pragma: no cover
+        match rslt[0]:
+            case "failure":
+                return f(rslt[1])
+            case "success":
+                return rslt
+            case _:  # pragma: no cover
+                return assert_never(rslt)  # type: ignore [unreachable]
 
     return mapped_f
 
@@ -257,11 +259,13 @@ def map_success_to_result(
     """
 
     def mapped_f(rslt: Result[_F1, _S1]) -> Result[_F1 | _F2, _S2]:
-        if rslt[0] == "failure":
-            return rslt
-        if rslt[0] == "success":
-            return f(rslt[1])
-        return assert_never(rslt)  # type: ignore [unreachable]  # pragma: no cover
+        match rslt[0]:
+            case "failure":
+                return rslt
+            case "success":
+                return f(rslt[1])
+            case _:  # pragma: no cover
+                return assert_never(rslt)  # type: ignore [unreachable]
 
     return mapped_f
 
@@ -306,11 +310,13 @@ def tap_failure_to_result(
 
     def bypassed_f(value: _F1) -> Result[_F1, _S2]:
         rslt: Result[object, _S2] = f(value)
-        if rslt[0] == "failure":
-            return construct_failure(value)
-        if rslt[0] == "success":
-            return rslt
-        return assert_never(rslt)  # type: ignore [unreachable]  # pragma: no cover
+        match rslt[0]:
+            case "failure":
+                return construct_failure(value)
+            case "success":
+                return rslt
+            case _:  # pragma: no cover
+                return assert_never(rslt)  # type: ignore [unreachable]
 
     return map_failure_to_result(bypassed_f)
 
@@ -355,10 +361,12 @@ def tap_success_to_result(
 
     def bypassed_f(value: _S1) -> Result[_F2, _S1]:
         rslt: Result[_F2, object] = f(value)
-        if rslt[0] == "failure":
-            return rslt
-        if rslt[0] == "success":
-            return construct_success(value)
-        return assert_never(rslt)  # type: ignore [unreachable]  # pragma: no cover
+        match rslt[0]:
+            case "failure":
+                return rslt
+            case "success":
+                return construct_success(value)
+            case _:  # pragma: no cover
+                return assert_never(rslt)  # type: ignore [unreachable]
 
     return map_success_to_result(bypassed_f)

@@ -310,11 +310,13 @@ def map_failure_to_awaitable_result(
     """
 
     async def partially_mapped_f(rslt: Result[_F1, _S1]) -> Result[_F2, _S1 | _S2]:
-        if rslt[0] == "failure":
-            return await f(rslt[1])
-        if rslt[0] == "success":
-            return rslt
-        return assert_never(rslt)  # type: ignore [unreachable]  # pragma: no cover
+        match rslt[0]:
+            case "failure":
+                return await f(rslt[1])
+            case "success":
+                return rslt
+            case _:  # pragma: no cover
+                return assert_never(rslt)  # type: ignore [unreachable]
 
     return a.map_to_awaitable(partially_mapped_f)
 
@@ -490,11 +492,13 @@ def map_success_to_awaitable_result(
     """
 
     async def partially_mapped_f(rslt: Result[_F1, _S1]) -> Result[_F1 | _F2, _S2]:
-        if rslt[0] == "failure":
-            return rslt
-        if rslt[0] == "success":
-            return await f(rslt[1])
-        return assert_never(rslt)  # type: ignore [unreachable]  # pragma: no cover
+        match rslt[0]:
+            case "failure":
+                return rslt
+            case "success":
+                return await f(rslt[1])
+            case _:  # pragma: no cover
+                return assert_never(rslt)  # type: ignore [unreachable]
 
     return a.map_to_awaitable(partially_mapped_f)
 
@@ -608,11 +612,13 @@ def tap_failure_to_awaitable_result(
 
     async def bypassed_f(value: _F1) -> Result[_F1, _S2]:
         rslt: Result[object, _S2] = await f(value)
-        if rslt[0] == "failure":
-            return r.construct_failure(value)
-        if rslt[0] == "success":
-            return rslt
-        return assert_never(rslt)  # type: ignore [unreachable]  # pragma: no cover
+        match rslt[0]:
+            case "failure":
+                return r.construct_failure(value)
+            case "success":
+                return rslt
+            case _:  # pragma: no cover
+                return assert_never(rslt)  # type: ignore [unreachable]
 
     return map_failure_to_awaitable_result(bypassed_f)
 
@@ -704,11 +710,13 @@ def tap_success_to_awaitable_result(
 
     async def bypassed_f(value: _S1) -> Result[_F2, _S1]:
         rslt: Result[_F2, object] = await f(value)
-        if rslt[0] == "failure":
-            return rslt
-        if rslt[0] == "success":
-            return r.construct_success(value)
-        return assert_never(rslt)  # type: ignore [unreachable]  # pragma: no cover
+        match rslt[0]:
+            case "failure":
+                return rslt
+            case "success":
+                return r.construct_success(value)
+            case _:  # pragma: no cover
+                return assert_never(rslt)  # type: ignore [unreachable]
 
     return map_success_to_awaitable_result(bypassed_f)
 
