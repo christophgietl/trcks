@@ -659,7 +659,7 @@ name = "importlib-metadata"
 version = "8.7.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "zipp", marker = "python_full_version < '3.10'" },
+    { name = "zipp", marker = "python_full_version < '3.14'" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/76/66/650a33bd90f786193e4de4b3ad86ea60b53c89b669a5c7be931fac31cdb0/importlib_metadata-8.7.0.tar.gz", hash = "sha256:d13b81ad223b890aa16c5471f2ac3056cf76c5f10f82d6f9292f0b415f389000", size = 56641, upload-time = "2025-04-27T15:29:01.736Z" }
 wheels = [
@@ -1140,36 +1140,11 @@ wheels = [
 
 [[package]]
 name = "pyright"
-version = "1.1.406"
-source = { registry = "https://pypi.org/simple" }
-resolution-markers = [
-    "python_full_version >= '3.10' and python_full_version < '3.14'",
-    "python_full_version < '3.10'",
-]
-dependencies = [
-    { name = "nodeenv", marker = "python_full_version < '3.14'" },
-    { name = "typing-extensions", marker = "python_full_version < '3.14'" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/f7/16/6b4fbdd1fef59a0292cbb99f790b44983e390321eccbc5921b4d161da5d1/pyright-1.1.406.tar.gz", hash = "sha256:c4872bc58c9643dac09e8a2e74d472c62036910b3bd37a32813989ef7576ea2c", size = 4113151, upload-time = "2025-10-02T01:04:45.488Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/f6/a2/e309afbb459f50507103793aaef85ca4348b66814c86bc73908bdeb66d12/pyright-1.1.406-py3-none-any.whl", hash = "sha256:1d81fb43c2407bf566e97e57abb01c811973fdb21b2df8df59f870f688bdca71", size = 5980982, upload-time = "2025-10-02T01:04:43.137Z" },
-]
-
-[package.optional-dependencies]
-nodejs = [
-    { name = "nodejs-wheel-binaries", marker = "python_full_version < '3.14'" },
-]
-
-[[package]]
-name = "pyright"
 version = "1.1.407"
 source = { registry = "https://pypi.org/simple" }
-resolution-markers = [
-    "python_full_version >= '3.14'",
-]
 dependencies = [
-    { name = "nodeenv", marker = "python_full_version >= '3.14'" },
-    { name = "typing-extensions", marker = "python_full_version >= '3.14'" },
+    { name = "nodeenv" },
+    { name = "typing-extensions" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/a6/1b/0aa08ee42948b61745ac5b5b5ccaec4669e8884b53d31c8ec20b2fcd6b6f/pyright-1.1.407.tar.gz", hash = "sha256:099674dba5c10489832d4a4b2d302636152a9a42d317986c38474c76fe562262", size = 4122872, upload-time = "2025-10-24T23:17:15.145Z" }
 wheels = [
@@ -1178,7 +1153,7 @@ wheels = [
 
 [package.optional-dependencies]
 nodejs = [
-    { name = "nodejs-wheel-binaries", marker = "python_full_version >= '3.14'" },
+    { name = "nodejs-wheel-binaries" },
 ]
 
 [[package]]
@@ -1424,8 +1399,7 @@ mypy = [
     { name = "mypy" },
 ]
 pyright = [
-    { name = "pyright", version = "1.1.406", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.14'" },
-    { name = "pyright", version = "1.1.407", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.14'" },
+    { name = "pyright" },
 ]
 
 [package.dev-dependencies]
@@ -1436,8 +1410,7 @@ dev = [
     { name = "mkdocstrings", extra = ["python"] },
     { name = "mypy" },
     { name = "pre-commit" },
-    { name = "pyright", version = "1.1.406", source = { registry = "https://pypi.org/simple" }, extra = ["nodejs"], marker = "python_full_version < '3.14'" },
-    { name = "pyright", version = "1.1.407", source = { registry = "https://pypi.org/simple" }, extra = ["nodejs"], marker = "python_full_version >= '3.14'" },
+    { name = "pyright", extra = ["nodejs"] },
     { name = "pytest" },
     { name = "pytest-asyncio" },
     { name = "pytest-cov" },
