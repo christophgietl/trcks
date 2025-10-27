@@ -27,7 +27,7 @@ jobs:
           fetch-depth: 0  # needed by build-backend to derive package version from Git tags
       - uses: ./.github/actions/set-up-uv
       - run: uv build
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v5
         with:
           name: package-files
           path: |
