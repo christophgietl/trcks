@@ -9,7 +9,7 @@ jobs:
   build-docs:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0  # needed by build-backend to derive package version from Git tags
       - uses: ./.github/actions/set-up-uv
@@ -22,7 +22,7 @@ jobs:
   build-package:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0  # needed by build-backend to derive package version from Git tags
       - uses: ./.github/actions/set-up-uv
@@ -49,7 +49,7 @@ jobs:
           - "3.14"
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0  # needed by build-backend to derive package version from Git tags
       - uses: ./.github/actions/set-up-uv
@@ -93,7 +93,7 @@ jobs:
       id-token: write
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0  # needed by build-backend to derive package version from Git tags
       - uses: actions/download-artifact@v6
