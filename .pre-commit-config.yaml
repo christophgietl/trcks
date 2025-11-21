@@ -6,7 +6,7 @@ default_stages:
 minimum_pre_commit_version: 4.2.0
 repos:
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: 3db93a2be6f214ed722bf7bce095ec1b1715422a  # frozen: v0.14.2
+    rev: fa1ed65ba95bfa7771a71003a9d74402541f5a5c  # frozen: v0.14.6
     hooks:
       - id: ruff-check
         args:
@@ -14,7 +14,7 @@ repos:
           - --fix
       - id: ruff-format
   - repo: https://github.com/astral-sh/uv-pre-commit
-    rev: 571189337017c8bdbf22a0977b9e44d33b5e5ae9  # frozen: 0.9.5
+    rev: 88cb1bdc3f975bf753e85082b4784f6119fd3b15  # frozen: 0.9.11
     hooks:
       - id: uv-lock
   - repo: https://github.com/codespell-project/codespell
@@ -64,6 +64,6 @@ repos:
       - id: pretty-format-json
       - id: trailing-whitespace
   - repo: https://github.com/rhysd/actionlint
-    rev: e7d448ef7507c20fc4c88a95d0c448b848cd6127  # frozen: v1.7.8
+    rev: a443f344ff32813837fa49f7aa6cbc478d770e62  # frozen: v1.7.9
     hooks:
       - id: actionlint
