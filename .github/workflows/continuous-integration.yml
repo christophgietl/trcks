@@ -96,7 +96,7 @@ jobs:
       - uses: actions/checkout@v6
         with:
           fetch-depth: 0  # needed by build-backend to derive package version from Git tags
-      - uses: actions/download-artifact@v6
+      - uses: actions/download-artifact@v7
         with:
           name: package-files
       - uses: ./.github/actions/set-up-uv
