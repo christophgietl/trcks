@@ -20,6 +20,8 @@ runs:
       shell: bash
     - run: uv run --no-sync mypy
       shell: bash
+    - run: uv run --no-sync pyrefly check
+      shell: bash
     - run: uv run --no-sync pyright
       shell: bash
     - run: uv run --no-sync pyright --verifytypes trcks
