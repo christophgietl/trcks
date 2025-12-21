@@ -380,7 +380,7 @@ def compose(  # noqa: PLR0911
         return compose6(c)
     if len(c) == 7:  # noqa: PLR2004
         return compose7(c)
-    return assert_never(c)  # type: ignore [unreachable]  # pragma: no cover
+    return assert_never(c)  # type: ignore [unreachable]  # pyright: ignore [reportUnreachable]  # pragma: no cover
 
 
 def pipe(p: Pipeline[_T0, _T1, _T2, _T3, _T4, _T5, _T6, _OUT]) -> _OUT:
