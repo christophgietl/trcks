@@ -95,6 +95,7 @@
 uv run pre-commit run --all-files
 # Run static type checks:
 uv run --all-extras mypy
+uv run --all-extras pyrefly check
 uv run --all-extras pyright
 # Run unit tests and doctests:
 uv run pytest

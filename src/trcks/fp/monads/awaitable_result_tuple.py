@@ -404,7 +404,7 @@ def map_failure_to_awaitable_result_tuple(
     ) -> ResultTuple[_F2, _S1 | _S2]:
         match rslt_tpl:
             case ("failure", value):
-                return await f(value)
+                return await f(value)  # pyrefly: ignore[bad-argument-type]
             case ("success", _):
                 return rslt_tpl
             case _:  # pragma: no cover
@@ -734,12 +734,12 @@ def map_successes_to_awaitable_result_tuple(
                 return rslt_tpl
             case ("success", s1s):
                 s2s: list[_S2] = []
-                for s1 in s1s:
+                for s1 in s1s:  # pyrefly: ignore[not-iterable]
                     match await f(s1):
                         case ("failure", _) as inner:
                             return inner
                         case ("success", s2_batch):
-                            s2s.extend(s2_batch)
+                            s2s.extend(s2_batch)  # pyrefly: ignore[bad-argument-type]
                         case _ as inner:  # pragma: no cover
                             raise TrcksTypeError.construct_from_offending_object(  # pyright: ignore[reportUnreachable]
                                 inner, "ResultTuple"
@@ -996,7 +996,7 @@ def tap_failure_to_awaitable_result(
             case ("failure", _):
                 return r.construct_failure(value)
             case ("success", s2):
-                return rt.construct_successes(s2)
+                return rt.construct_successes(s2)  # pyrefly: ignore[bad-return]
             case _ as rslt:  # pragma: no cover
                 raise TrcksTypeError.construct_from_offending_object(  # pyright: ignore[reportUnreachable]
                     rslt, "ResultTuple"
@@ -1389,7 +1389,7 @@ def tap_successes_to_awaitable_result_tuple(
             case ("failure", _) as rslt_tpl:
                 return rslt_tpl
             case ("success", objs):
-                return "success", tuple(s1 for _ in objs)
+                return "success", tuple(s1 for _ in objs)  # pyrefly: ignore[not-iterable]
             case _ as rslt_tpl:  # pragma: no cover
                 raise TrcksTypeError.construct_from_offending_object(  # pyright: ignore[reportUnreachable]
                     rslt_tpl, "ResultTuple"

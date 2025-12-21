@@ -187,7 +187,7 @@ def map_failure_to_result(
     def mapped_f(rslt: Result[_F1, _S1]) -> Result[_F2, _S1 | _S2]:
         match rslt:
             case ("failure", value):
-                return f(value)
+                return f(value)  # pyrefly: ignore[bad-argument-type]
             case ("success", _):
                 return rslt
             case _:  # pragma: no cover
@@ -264,7 +264,7 @@ def map_success_to_result(
             case ("failure", _):
                 return rslt
             case ("success", value):
-                return f(value)
+                return f(value)  # pyrefly: ignore[bad-argument-type]
             case _:  # pragma: no cover
                 raise TrcksTypeError.construct_from_offending_object(rslt, "Result")  # pyright: ignore[reportUnreachable]
 

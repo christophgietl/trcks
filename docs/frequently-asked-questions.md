@@ -19,11 +19,47 @@ where raising or not catching an exception is the better choice.
 
 ## Which static type checkers does `trcks` support?
 
-`trcks` is compatible with current versions of `mypy` and `pyright`.
+`trcks` is compatible with current versions of `mypy`, `pyrefly` and `pyright`.
 For setup instructions, see
 [Setting up a compatible static type checker](setup.md#setting-up-a-compatible-static-type-checker).
 
 Other type checkers may also work.
+
+???+ note
+
+    Unlike `mypy` and `pyright`, `pyrefly` (as of version 1.0.0)
+    does not reliably narrow [trcks.Result][] types in `match` statements:
+
+    ```python
+    from typing_extensions import reveal_type
+
+    from trcks import Result
+
+
+    def f(rslt: Result[str, int]) -> None:
+        match rslt:
+            case "failure", description:
+                reveal_type(description)  # revealed type: int | str
+            case "success", n:
+                reveal_type(n)  # revealed type: int | str
+    ```
+
+    This can be resolved by adopting a different pattern matching style
+    (or by using `if` statements):
+
+    ```python
+    from typing_extensions import reveal_type
+
+    from trcks import Result
+
+
+    def f(rslt: Result[str, int]) -> None:
+        match rslt[0]:
+            case "failure":
+                reveal_type(rslt[1])  # revealed type: str
+            case "success":
+                reveal_type(rslt[1])  # revealed type: int
+    ```
 
 ## Which alternatives to `trcks` are there?
 
