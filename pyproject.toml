@@ -8,9 +8,10 @@ dev = [
     "markdown-pycon >= 1.0.1",
     "mkdocs-material >= 9.7.1",
     "mkdocstrings[python] >= 1.0.0",
-    "mypy >= 1", # Check project.optional-dependencies for lower bound.
+    "mypy >= 0", # Check project.optional-dependencies for lower bound.
     "pre-commit >= 4.5.1",
-    "pyright[nodejs] >= 1", # Check project.optional-dependencies for lower bound.
+    "pyrefly >= 0", # Check project.optional-dependencies for lower bound.
+    "pyright[nodejs] >= 0", # Check project.optional-dependencies for lower bound.
     "pytest >= 9.0.2",
     "pytest-asyncio >= 1.3.0",
     "pytest-cov >= 7.0.0",
@@ -64,6 +65,7 @@ requires-python = ">=3.10"
 
 [project.optional-dependencies]
 mypy = ["mypy >= 1.7"]
+pyrefly = ["pyrefly >= 0.1.0"]
 pyright = [
     "pyright >= 1.1.387",
     # pyright 1.1.406 and older report false positives for Python 3.14
@@ -152,6 +154,10 @@ warn_unreachable = true
 
 [tool.pdm.version]
 source = "scm"
+
+[tool.pyrefly]
+enabled-ignores = ["pyrefly"]
+project-includes = ["."]
 
 [tool.pyright]
 deprecateTypingAliases = true
