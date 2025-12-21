@@ -41,13 +41,13 @@ _COMPOSABLES: _Tuple7[_IntComposable] = (
 
 _PIPELINES: _Tuple8[_IntPipeline] = (
     (0,),
-    (0, *_COMPOSABLES[0]),
-    (0, *_COMPOSABLES[1]),
-    (0, *_COMPOSABLES[2]),
-    (0, *_COMPOSABLES[3]),
-    (0, *_COMPOSABLES[4]),
-    (0, *_COMPOSABLES[5]),
-    (0, *_COMPOSABLES[6]),
+    (0, _incr),
+    (0, _incr, _incr),
+    (0, _incr, _incr, _incr),
+    (0, _incr, _incr, _incr, _incr),
+    (0, _incr, _incr, _incr, _incr, _incr),
+    (0, _incr, _incr, _incr, _incr, _incr, _incr),
+    (0, _incr, _incr, _incr, _incr, _incr, _incr, _incr),
 )
 
 

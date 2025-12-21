@@ -5,7 +5,7 @@ from typing import Final, Literal
 
 import pytest
 
-from trcks import Result
+from trcks import AwaitableResult, Result
 from trcks.oop import AwaitableResultWrapper, AwaitableWrapper, ResultWrapper, Wrapper
 
 _TO_PAIR: Callable[[int], tuple[int, int]] = lambda n: (n, n)  # noqa: E731
@@ -108,7 +108,9 @@ class TestAwaitableResultWrapper:
     async def test_awaitable_result_wrapper_wraps_awaitable_result(
         self, result: Result[object, object]
     ) -> None:
-        awaitable_result = asyncio.create_task(asyncio.sleep(0.001, result=result))
+        awaitable_result: AwaitableResult[object, object] = asyncio.create_task(
+            asyncio.sleep(0.001, result=result)
+        )
         assert AwaitableResultWrapper(awaitable_result).core is awaitable_result
 
     @pytest.mark.parametrize("value", _OBJECTS)
@@ -131,7 +133,9 @@ class TestAwaitableResultWrapper:
     async def test_construct_from_awaitable_result_wraps_awaitable_result(
         self, result: Result[object, object]
     ) -> None:
-        awaitable_result = asyncio.create_task(asyncio.sleep(0.001, result=result))
+        awaitable_result: AwaitableResult[object, object] = asyncio.create_task(
+            asyncio.sleep(0.001, result=result)
+        )
         assert (
             AwaitableResultWrapper.construct_from_awaitable_result(
                 awaitable_result
