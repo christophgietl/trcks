@@ -190,7 +190,7 @@ def map_failure_to_result(
             case "success":
                 return rslt
             case _:  # pragma: no cover
-                return assert_never(rslt)  # type: ignore [unreachable]
+                return assert_never(rslt)  # type: ignore [unreachable]  # pyright: ignore [reportUnreachable]
 
     return mapped_f
 
@@ -265,7 +265,7 @@ def map_success_to_result(
             case "success":
                 return f(rslt[1])
             case _:  # pragma: no cover
-                return assert_never(rslt)  # type: ignore [unreachable]
+                return assert_never(rslt)  # type: ignore [unreachable]  # pyright: ignore [reportUnreachable]
 
     return mapped_f
 
@@ -316,7 +316,7 @@ def tap_failure_to_result(
             case "success":
                 return rslt
             case _:  # pragma: no cover
-                return assert_never(rslt)  # type: ignore [unreachable]
+                return assert_never(rslt)  # type: ignore [unreachable]  # pyright: ignore [reportUnreachable]
 
     return map_failure_to_result(bypassed_f)
 
@@ -367,6 +367,6 @@ def tap_success_to_result(
             case "success":
                 return construct_success(value)
             case _:  # pragma: no cover
-                return assert_never(rslt)  # type: ignore [unreachable]
+                return assert_never(rslt)  # type: ignore [unreachable]  # pyright: ignore [reportUnreachable]
 
     return map_success_to_result(bypassed_f)
