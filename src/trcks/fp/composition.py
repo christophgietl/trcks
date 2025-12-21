@@ -405,7 +405,7 @@ def pipe(p: Pipeline[_T0, _T1, _T2, _T3, _T4, _T5, _T6, _OUT]) -> _OUT:
     match p:
         case (value,):
             return value
-        case (value, *_):
+        case (value, _, *_):
             composable = p[1:]
             return compose(composable)(value)
         case _:  # pragma: no cover

@@ -4916,8 +4916,8 @@ class ResultWrapper(_ResultWrapper[_F_default_co, _S_default_co]):
             >>> asyncio.run(wrapper_2.core_as_coroutine)
             ('success', (25.0,))
         """
-        return AwaitableResultTupleWrapper.construct_from_result_tuple(
-            rt.construct_from_result(self.core)
+        return AwaitableResultTupleWrapper.construct_from_result(
+            self.core
         ).map_failure_to_awaitable_result_tuple(f)
 
     def map_failure_to_result(
@@ -5250,8 +5250,8 @@ class ResultWrapper(_ResultWrapper[_F_default_co, _S_default_co]):
             >>> asyncio.run(wrapper_2.core_as_coroutine)
             ('success', (5.0, 10.0))
         """
-        return AwaitableResultTupleWrapper.construct_from_result_tuple(
-            rt.construct_from_result(self.core)
+        return AwaitableResultTupleWrapper.construct_from_result(
+            self.core
         ).map_successes_to_awaitable_result_tuple(f)
 
     def map_success_to_result(
@@ -5570,8 +5570,8 @@ class ResultWrapper(_ResultWrapper[_F_default_co, _S_default_co]):
             >>> asyncio.run(wrapper_2.core_as_coroutine)
             ('success', (42,))
         """
-        return AwaitableResultTupleWrapper.construct_from_result_tuple(
-            rt.construct_from_result(self.core)
+        return AwaitableResultTupleWrapper.construct_from_result(
+            self.core
         ).tap_failure_to_awaitable_result_tuple(f)
 
     def tap_failure_to_result(
@@ -5922,8 +5922,8 @@ class ResultWrapper(_ResultWrapper[_F_default_co, _S_default_co]):
             >>> result_2
             ('success', ('Hello, world!', 'Hello, world!'))
         """
-        return AwaitableResultTupleWrapper.construct_from_result_tuple(
-            rt.construct_from_result(self.core)
+        return AwaitableResultTupleWrapper.construct_from_result(
+            self.core
         ).tap_successes_to_awaitable_result_tuple(f)
 
     def tap_success_to_result(

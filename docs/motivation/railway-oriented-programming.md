@@ -9,7 +9,7 @@ return type annotations are extremely helpful.
 They help humans
 (and maybe [LLMs](https://en.wikipedia.org/w/index.php?title=Large_language_model&oldid=1283157830))
 to understand the purpose of a function.
-And they allow static type checkers (e.g. `mypy` or `pyright`)
+And they allow static type checkers (e.g. `mypy`, `pyrefly` or `pyright`)
 to check whether functions fit together:
 
 ???+ example

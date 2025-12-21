@@ -19,10 +19,10 @@ uv add trcks
 
 ## Setting up a compatible static type checker
 
-`trcks` is compatible with current versions of `mypy` and `pyright`.
+`trcks` is compatible with current versions of `mypy`, `pyrefly` and `pyright`.
 For convenience,
 `trcks` provides optional dependencies (extras)
-for installing compatible versions of both tools.
+for installing compatible versions of these tools.
 
 Since `trcks` is already a production dependency,
 you can add the type checker extras as separate dev dependencies.
@@ -34,6 +34,13 @@ run the following command in your terminal:
 
 ```shell
 uv add --dev "trcks[mypy]"
+```
+
+If you use `uv` and want to use `pyrefly` as your static type checker,
+run the following command in your terminal:
+
+```shell
+uv add --dev "trcks[pyrefly]"
 ```
 
 If you use `uv` and want to use `pyright` as your static type checker,
