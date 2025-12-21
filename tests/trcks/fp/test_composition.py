@@ -1,4 +1,3 @@
-# pyright: reportUnusedCallResult=none
 from __future__ import annotations
 
 import sys
@@ -55,28 +54,28 @@ _PIPELINES: _Tuple8[_IntPipeline] = (
 @pytest.mark.parametrize("composable", _COMPOSABLES)
 def test_compose_correctly_composes_composable(composable: _IntComposable) -> None:
     composed = compose(composable)
-    assert_type(composed, Callable[[int], int])
+    _ = assert_type(composed, Callable[[int], int])
     assert composed(0) == len(composable)
 
 
 @pytest.mark.parametrize("value", [23, 42, 100, -1, 0, 1])
 def test_compose_with_1_argument_returns_equivalent_function(value: int) -> None:
     composed = compose((_foo,))
-    assert_type(composed, Callable[[int], str])
+    _ = assert_type(composed, Callable[[int], str])
     assert composed(value) == _foo(value)
 
 
 @pytest.mark.parametrize("value", [0, 1, -1, 10, 100, 1000])
 def test_compose_with_2_arguments_returns_composed_function(value: int) -> None:
     composed = compose((_foo, len))
-    assert_type(composed, Callable[[int], int])
+    _ = assert_type(composed, Callable[[int], int])
     assert composed(value) == len(_foo(value))
 
 
 @pytest.mark.parametrize("p", _PIPELINES)
 def test_pipe_correctly_applies_pipeline(p: _IntPipeline) -> None:
     piped = pipe(p)
-    assert_type(piped, int)
+    _ = assert_type(piped, int)
     assert piped == len(p) - 1
 
 
