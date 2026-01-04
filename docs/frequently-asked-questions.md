@@ -58,8 +58,14 @@ The [expression.core.result.Result][] class is pretty similar to
 An `AsyncResult` type based on [collections.abc.AsyncGenerator][]
 [will be added in a future version](https://github.com/dbrattli/Expression/pull/247).
 
-## Which libraries inspired `trcks`?
+## Which libraries have inspired `trcks`?
 
 `trcks` is mostly inspired
 by the Python libraries mentioned in the previous section and
 by the TypeScript library [fp-ts](https://www.npmjs.com/package/fp-ts).
+
+## Where can I find examples for using `trcks`?
+
+The repository [trcks-example-cyclopts](https://github.com/christophgietl/trcks-example-cyclopts)
+contains an example CLI application that uses `trcks` along with
+[cyclopts](https://pypi.org/project/cyclopts/).
