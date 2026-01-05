@@ -14,7 +14,7 @@ repos:
           - --fix
       - id: ruff-format
   - repo: https://github.com/astral-sh/uv-pre-commit
-    rev: e90530d2cface051bb46cbd33f2362558e5ee9fb  # frozen: 0.9.18
+    rev: 5ccbe86b8ad6bd7c28b6944a7553c075ae833637  # frozen: 0.9.21
     hooks:
       - id: uv-lock
   - repo: https://github.com/codespell-project/codespell
@@ -22,7 +22,7 @@ repos:
     hooks:
       - id: codespell
   - repo: https://github.com/jackdewinter/pymarkdown
-    rev: 0b4ac197f67f6ed75e27a10fad70ddc8014cb2e2  # frozen: v0.9.33
+    rev: 6d356e098eda1e0bb80b8180d408feb0cb296d65  # frozen: v0.9.34
     hooks:
       - id: pymarkdown
         args:
@@ -64,6 +64,6 @@ repos:
       - id: pretty-format-json
       - id: trailing-whitespace
   - repo: https://github.com/rhysd/actionlint
-    rev: a443f344ff32813837fa49f7aa6cbc478d770e62  # frozen: v1.7.9
+    rev: 0933c147c9d6587653d45fdcb4c497c57a65f9af  # frozen: v1.7.10
     hooks:
       - id: actionlint
