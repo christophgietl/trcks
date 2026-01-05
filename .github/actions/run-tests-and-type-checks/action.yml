@@ -22,5 +22,7 @@ runs:
       shell: bash
     - run: uv run --no-sync pyright
       shell: bash
+    - run: uv run --no-sync pyright --verifytypes trcks
+      shell: bash
     - run: uv run --no-sync pytest
       shell: bash
