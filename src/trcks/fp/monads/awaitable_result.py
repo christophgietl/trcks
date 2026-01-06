@@ -110,7 +110,10 @@ def construct_failure_from_awaitable(awtbl: Awaitable[_F]) -> AwaitableFailure[_
         >>> asyncio.run(ar.to_coroutine_result(a_rslt))
         ('failure', <HTTPStatus.NOT_FOUND: 404>)
     """
-    return a.map_(r.construct_failure)(awtbl)
+    _construct_failure_from_awaitable: Callable[
+        [Awaitable[_F]], AwaitableFailure[_F]
+    ] = a.map_(r.construct_failure)
+    return _construct_failure_from_awaitable(awtbl)
 
 
 def construct_from_result(rslt: Result[_F, _S]) -> AwaitableResult[_F, _S]:
@@ -186,7 +189,10 @@ def construct_success_from_awaitable(awtbl: Awaitable[_S]) -> AwaitableSuccess[_
         >>> asyncio.run(ar.to_coroutine_result(a_rslt))
         ('success', 'Hello, world!')
     """
-    return a.map_(r.construct_success)(awtbl)
+    _construct_success_from_awaitable: Callable[
+        [Awaitable[_S]], AwaitableSuccess[_S]
+    ] = a.map_(r.construct_success)
+    return _construct_success_from_awaitable(awtbl)
 
 
 def map_failure(
@@ -221,6 +227,7 @@ def map_failure(
         >>> asyncio.run(ar.to_coroutine_result(a_rslt_2))
         ('success', 25.0)
     """
+    # pyrefly: ignore [bad-argument-type]
     return a.map_(r.map_failure(f))
 
 
@@ -318,6 +325,7 @@ def map_failure_to_awaitable_result(
             case _:  # pragma: no cover
                 return assert_never(rslt)  # type: ignore [unreachable]  # pyright: ignore [reportUnreachable]
 
+    # pyrefly: ignore [bad-argument-type]
     return a.map_to_awaitable(partially_mapped_f)
 
 
@@ -360,6 +368,7 @@ def map_failure_to_result(
         >>> asyncio.run(ar.to_coroutine_result(a_rslt_3))
         ('success', 25.0)
     """
+    # pyrefly: ignore [bad-argument-type]
     return a.map_(r.map_failure_to_result(f))
 
 
@@ -399,6 +408,7 @@ def map_success(
         >>> asyncio.run(ar.to_coroutine_result(a_rslt_2))
         ('success', 43)
     """
+    # pyrefly: ignore [bad-argument-type]
     return a.map_(r.map_success(f))
 
 
@@ -500,6 +510,7 @@ def map_success_to_awaitable_result(
             case _:  # pragma: no cover
                 return assert_never(rslt)  # type: ignore [unreachable]  # pyright: ignore [reportUnreachable]
 
+    # pyrefly: ignore [bad-argument-type]
     return a.map_to_awaitable(partially_mapped_f)
 
 
@@ -544,6 +555,7 @@ def map_success_to_result(
         >>> asyncio.run(ar.to_coroutine_result(a_rslt_2))
         ('success', 5.0)
     """
+    # pyrefly: ignore [bad-argument-type]
     return a.map_(r.map_success_to_result(f))
 
 
@@ -563,6 +575,7 @@ def tap_failure(
             returns the original [trcks.AwaitableFailure][] value.
             Passes on [trcks.AwaitableSuccess][] values without side effects.
     """
+    # pyrefly: ignore [bad-argument-type]
     return a.map_(r.tap_failure(f))
 
 
@@ -642,6 +655,7 @@ def tap_failure_to_result(
             *this* [trcks.Success][] is returned.
             Passes on [trcks.AwaitableSuccess][] values without side effects.
     """
+    # pyrefly: ignore [bad-argument-type]
     return a.map_(r.tap_failure_to_result(f))
 
 
@@ -661,6 +675,7 @@ def tap_success(
             Applies the given side effect to [trcks.AwaitableSuccess][] values and
             returns the original [trcks.AwaitableSuccess][] value.
     """
+    # pyrefly: ignore [bad-argument-type]
     return a.map_(r.tap_success(f))
 
 
@@ -740,6 +755,7 @@ def tap_success_to_result(
             If the given side effect returns a [trcks.Success][],
             *the original* [trcks.AwaitableSuccess][] value is returned.
     """
+    # pyrefly: ignore [bad-argument-type]
     return a.map_(r.tap_success_to_result(f))
 
 
