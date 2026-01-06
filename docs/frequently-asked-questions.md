@@ -69,3 +69,7 @@ by the TypeScript library [fp-ts](https://www.npmjs.com/package/fp-ts).
 The repository [trcks-example-cyclopts](https://github.com/christophgietl/trcks-example-cyclopts)
 contains an example CLI application that uses `trcks` along with
 [cyclopts](https://pypi.org/project/cyclopts/).
+
+The repository [trcks-example-fastapi](https://github.com/christophgietl/trcks-example-fastapi)
+contains an example backend application that uses `trcks` along with
+[FastAPI](https://pypi.org/project/fastapi/).
