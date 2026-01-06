@@ -63,9 +63,15 @@ readme = "README.md"
 requires-python = ">=3.10"
 
 [project.optional-dependencies]
-mypy = ["mypy >= 1.7"]
+mypy = [
+    # mypy versions older than 1.16 seem to have issues
+    # with type narrowing in match statements:
+    "mypy >= 1.16",
+]
 pyright = [
-    "pyright >= 1.1.387",
+    # pyright versions older than 1.1.391 seem to have issues
+    # with reachability analysis in match statements:
+    "pyright >= 1.1.391",
     # pyright 1.1.406 and older report false positives for Python 3.14
     # (cf. https://github.com/microsoft/pyright/issues/11003):
     "pyright >= 1.1.407 ; python_full_version >= '3.14'",
