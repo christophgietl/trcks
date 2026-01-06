@@ -63,6 +63,16 @@ in the following example.
        `trcks.Result`-returning functions and "regular" functions
        (in a type-safe way).
 
+???+ tip
+
+    For more examples regarding the usage of `trcks` and `trcks.oop.Wrapper`,
+    please check the following repositories:
+
+    1. [trcks-example-cyclopts](https://github.com/christophgietl/trcks-example-cyclopts)
+       (CLI application)
+    2. [trcks-example-fastapi](https://github.com/christophgietl/trcks-example-fastapi)
+       (REST backend application)
+
 ## Functional style
 
 The functional style is based on function composition,
