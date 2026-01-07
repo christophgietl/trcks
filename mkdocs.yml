@@ -26,6 +26,7 @@ nav:
       - reference/trcks.fp.monads.awaitable_result.md
       - reference/trcks.fp.monads.identity.md
       - reference/trcks.fp.monads.result.md
+      - reference/trcks.fp.monads.sequence.md
       - reference/trcks.oop.md
       - reference/trcks.oop.AwaitableResultWrapper.md
       - reference/trcks.oop.AwaitableWrapper.md
