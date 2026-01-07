@@ -4,6 +4,7 @@ This module provides wrapper classes for processing values of the following type
 in a method-chaining style:
 
 - [collections.abc.Awaitable][]
+- [collections.abc.Sequence][]
 - [trcks.AwaitableResult][]
 - [trcks.Result][]
 
@@ -72,7 +73,7 @@ See:
 
 from __future__ import annotations
 
-from collections.abc import Awaitable, Callable
+from collections.abc import Awaitable, Callable, Sequence
 from typing import Generic, Literal
 
 from trcks import AwaitableResult, Result
@@ -81,6 +82,7 @@ from trcks.fp.monads import awaitable as a
 from trcks.fp.monads import awaitable_result as ar
 from trcks.fp.monads import identity as i
 from trcks.fp.monads import result as r
+from trcks.fp.monads import sequence as s
 
 __docformat__ = "google"
 
@@ -2348,6 +2350,187 @@ class ResultWrapper(_Wrapper[Result[_F_default_co, _S_default_co]]):
         return self.core[1]
 
 
+class SequenceWrapper(_Wrapper[Sequence[_T_co]]):
+    """Type-safe and immutable wrapper for [collections.abc.Sequence][] objects.
+
+    The wrapped [collections.abc.Sequence][] can be accessed
+    via the attribute `trcks.oop.SequenceWrapper.core`.
+    The `trcks.oop.SequenceWrapper.map*` methods allow method chaining.
+    The `trcks.oop.SequenceWrapper.tap*` methods allow for side effects
+    without changing the wrapped sequence.
+
+    Example:
+        >>> from trcks.oop import SequenceWrapper
+        >>> def double(x: int) -> int:
+        ...     return x * 2
+        ...
+        >>> sequence_wrapper = (
+        ...     SequenceWrapper
+        ...     .construct_from_sequence((1, 2, 3))
+        ...     .map(double)
+        ...     .tap(lambda x: print(f"Processing: {x}"))
+        ... )
+        Processing: 2
+        Processing: 4
+        Processing: 6
+        >>> sequence_wrapper
+        SequenceWrapper(core=[2, 4, 6])
+    """
+
+    @staticmethod
+    def construct(value: _T) -> SequenceWrapper[_T]:
+        """Construct and wrap a [collections.abc.Sequence][] from a single value.
+
+        Args:
+            value: The value to be wrapped in a [collections.abc.Sequence][].
+
+        Returns:
+            A new [trcks.oop.SequenceWrapper][] instance with
+                a [collections.abc.Sequence][] containing the single value.
+
+        Example:
+            >>> from trcks.oop import SequenceWrapper
+            >>> sequence_wrapper = SequenceWrapper.construct(42)
+            >>> sequence_wrapper
+            SequenceWrapper(core=[42])
+        """
+        return SequenceWrapper(s.construct(value))
+
+    @staticmethod
+    def construct_from_sequence(seq: Sequence[_T]) -> SequenceWrapper[_T]:
+        """Wrap a [collections.abc.Sequence][] object.
+
+        Args:
+            seq: The [collections.abc.Sequence][] to be wrapped.
+
+        Returns:
+            A new [trcks.oop.SequenceWrapper][] instance with
+                the wrapped [collections.abc.Sequence][].
+
+        Example:
+            >>> from trcks.oop import SequenceWrapper
+            >>> sequence_wrapper = SequenceWrapper.construct_from_sequence([1, 2, 3])
+            >>> sequence_wrapper
+            SequenceWrapper(core=[1, 2, 3])
+        """
+        return SequenceWrapper(seq)
+
+    def map(self, f: Callable[[_T_co], _T]) -> SequenceWrapper[_T]:
+        """Apply a synchronous function to each element in the wrapped
+        [collections.abc.Sequence][].
+
+        Args:
+            f: The synchronous function to be applied to each element.
+
+        Returns:
+            A new [trcks.oop.SequenceWrapper][] instance with
+                a [collections.abc.Sequence][] containing
+                the results of applying the function to each element.
+
+        Example:
+            >>> from trcks.oop import SequenceWrapper
+            >>> def triple(x: int) -> int:
+            ...     return x * 3
+            ...
+            >>> sequence_wrapper = (
+            ...     SequenceWrapper
+            ...     .construct_from_sequence((1, 2, 3))
+            ...     .map(triple)
+            ... )
+            >>> sequence_wrapper
+            SequenceWrapper(core=[3, 6, 9])
+        """
+        return SequenceWrapper(s.map_(f)(self.core))
+
+    def map_to_sequence(
+        self, f: Callable[[_T_co], Sequence[_T]]
+    ) -> SequenceWrapper[_T]:
+        """Apply a function returning a [collections.abc.Sequence][] to each element
+        in the wrapped [collections.abc.Sequence][] and flatten the result.
+
+        Args:
+            f: The function to be applied to each element,
+                returning a [collections.abc.Sequence][].
+
+        Returns:
+            A new [trcks.oop.SequenceWrapper][] instance with
+                the flattened [collections.abc.Sequence][].
+
+        Example:
+            >>> from trcks.oop import SequenceWrapper
+            >>> def duplicate(x: int) -> list[int]:
+            ...     return [x, x]
+            ...
+            >>> sequence_wrapper = (
+            ...     SequenceWrapper
+            ...     .construct_from_sequence((1, 2, 3))
+            ...     .map_to_sequence(duplicate)
+            ... )
+            >>> sequence_wrapper
+            SequenceWrapper(core=[1, 1, 2, 2, 3, 3])
+        """
+        return SequenceWrapper(s.map_to_sequence(f)(self.core))
+
+    def tap(self, f: Callable[[_T_co], object]) -> SequenceWrapper[_T_co]:
+        """Apply a synchronous side effect to each element in the wrapped
+        [collections.abc.Sequence][].
+
+        Args:
+            f: The synchronous side effect to be applied to each element.
+
+        Returns:
+            A new [trcks.oop.SequenceWrapper][] instance with
+                the original [collections.abc.Sequence][].
+
+        Example:
+            >>> from trcks.oop import SequenceWrapper
+            >>> sequence_wrapper = (
+            ...     SequenceWrapper
+            ...     .construct_from_sequence((1, 2, 3))
+            ...     .tap(lambda x: print(f"Value: {x}"))
+            ... )
+            Value: 1
+            Value: 2
+            Value: 3
+            >>> sequence_wrapper
+            SequenceWrapper(core=[1, 2, 3])
+        """
+        return SequenceWrapper(s.tap(f)(self.core))
+
+    def tap_to_sequence(
+        self, f: Callable[[_T_co], Sequence[object]]
+    ) -> SequenceWrapper[_T_co]:
+        """Apply a side effect returning a [collections.abc.Sequence][] to each element
+        in the wrapped [collections.abc.Sequence][].
+
+        Args:
+            f: The side effect to be applied to each element,
+                returning a [collections.abc.Sequence][].
+
+        Returns:
+            A new [trcks.oop.SequenceWrapper][] instance with
+                the original [collections.abc.Sequence][].
+
+        Example:
+            >>> from trcks.oop import SequenceWrapper
+            >>> def write_to_disk(x: int) -> list[str]:
+            ...     print(f"Wrote {x} to disk.")
+            ...     return [str(x), str(x)]
+            ...
+            >>> sequence_wrapper = (
+            ...     SequenceWrapper
+            ...     .construct_from_sequence((1, 2, 3))
+            ...     .tap_to_sequence(write_to_disk)
+            ... )
+            Wrote 1 to disk.
+            Wrote 2 to disk.
+            Wrote 3 to disk.
+            >>> sequence_wrapper
+            SequenceWrapper(core=[1, 1, 2, 2, 3, 3])
+        """
+        return SequenceWrapper(s.tap_to_sequence(f)(self.core))
+
+
 class Wrapper(_Wrapper[_T_co]):
     """Type-safe and immutable wrapper for arbitrary objects.
 
@@ -2494,6 +2677,29 @@ class Wrapper(_Wrapper[_T_co]):
         """
         return ResultWrapper(f(self.core))
 
+    def map_to_sequence(
+        self, f: Callable[[_T_co], Sequence[_T]]
+    ) -> SequenceWrapper[_T]:
+        """Apply a function returning a [collections.abc.Sequence][]
+        to the wrapped object.
+
+        Args:
+            f: The function to be applied, returning a [collections.abc.Sequence][].
+
+        Returns:
+            A [trcks.oop.SequenceWrapper][] instance with
+                the result of the function application.
+
+        Example:
+            >>> from trcks.oop import Wrapper
+            >>> def duplicate(x: int) -> list[int]:
+            ...     return [x, x]
+            ...
+            >>> Wrapper.construct(3).map_to_sequence(duplicate)
+            SequenceWrapper(core=[3, 3])
+        """
+        return SequenceWrapper(f(self.core))
+
     def tap(self, f: Callable[[_T_co], object]) -> Wrapper[_T_co]:
         """Apply a synchronous side effect to the wrapped object.
 
@@ -2634,3 +2840,29 @@ class Wrapper(_Wrapper[_T_co]):
             ResultWrapper(core=('success', 3.5))
         """
         return ResultWrapper.construct_success(self.core).tap_success_to_result(f)
+
+    def tap_to_sequence(
+        self, f: Callable[[_T_co], Sequence[object]]
+    ) -> SequenceWrapper[_T_co]:
+        """Apply a side effect returning a [collections.abc.Sequence][] to the
+        wrapped object.
+
+        Args:
+            f: The side effect to be applied, returning a
+                [collections.abc.Sequence][].
+
+        Returns:
+            A [trcks.oop.SequenceWrapper][] instance with the original wrapped
+                object repeated once per item returned by the side effect.
+
+        Example:
+            >>> from trcks.oop import Wrapper
+            >>> def write_to_disk(x: int) -> list[str]:
+            ...     print(f"Wrote {x} to disk.")
+            ...     return ["left", "right"]
+            ...
+            >>> Wrapper.construct(3).tap_to_sequence(write_to_disk)
+            Wrote 3 to disk.
+            SequenceWrapper(core=[3, 3])
+        """
+        return SequenceWrapper.construct(self.core).tap_to_sequence(f)
