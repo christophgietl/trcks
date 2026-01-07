@@ -4,6 +4,7 @@ This package provides functions for processing values of the following generic t
 in a functional style:
 
 - [collections.abc.Awaitable][]
+- [collections.abc.Sequence][]
 - [trcks.AwaitableResult][]
 - [trcks.Result][]
 

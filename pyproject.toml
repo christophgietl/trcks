@@ -123,6 +123,7 @@ layers = [
     "awaitable_result",
     "awaitable",
     "result",
+    "sequence",
     "identity",
 ]
 
