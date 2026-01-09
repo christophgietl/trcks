@@ -128,3 +128,9 @@ Example:
     ...     [float, float], AwaitableResult[ZeroDivisionError, float]
     ... ] = divide_slowly
 """
+
+ResultSequence: TypeAlias = Result[_F_co, Sequence[_S_co]]
+"""[trcks.Result][] where the success value is a [collections.abc.Sequence][]."""
+
+SuccessSequence: TypeAlias = Success[Sequence[_S_co]]
+"""[trcks.Success][] that contains a [collections.abc.Sequence][]."""
