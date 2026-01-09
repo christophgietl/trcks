@@ -30,6 +30,7 @@ nav:
       - reference/trcks.fp.monads.sequence.md
       - reference/trcks.oop.md
       - reference/trcks.oop.AwaitableResultWrapper.md
+      - reference/trcks.oop.AwaitableSequenceWrapper.md
       - reference/trcks.oop.AwaitableWrapper.md
       - reference/trcks.oop.ResultWrapper.md
       - reference/trcks.oop.SequenceWrapper.md

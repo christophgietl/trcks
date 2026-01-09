@@ -6,6 +6,7 @@ in a method-chaining style:
 - [collections.abc.Awaitable][]
 - [collections.abc.Sequence][]
 - [trcks.AwaitableResult][]
+- [trcks.AwaitableSequence][]
 - [trcks.Result][]
 
 Example:
@@ -76,10 +77,11 @@ from __future__ import annotations
 from collections.abc import Awaitable, Callable, Sequence
 from typing import Generic, Literal
 
-from trcks import AwaitableResult, Result
+from trcks import AwaitableResult, AwaitableSequence, Result
 from trcks._typing import Never, TypeVar, override
 from trcks.fp.monads import awaitable as a
 from trcks.fp.monads import awaitable_result as ar
+from trcks.fp.monads import awaitable_sequence as as_
 from trcks.fp.monads import identity as i
 from trcks.fp.monads import result as r
 from trcks.fp.monads import sequence as s
@@ -1149,6 +1151,379 @@ class AwaitableResultWrapper(_AwaitableWrapper[Result[_F_default_co, _S_default_
         return (await self.core)[1]
 
 
+class AwaitableSequenceWrapper(_AwaitableWrapper[Sequence[_T_co]]):
+    """Type-safe and immutable wrapper for [trcks.AwaitableSequence][] objects.
+
+    The wrapped object can be accessed
+    via the attribute `trcks.oop.AwaitableSequenceWrapper.core`.
+    The `trcks.oop.AwaitableSequenceWrapper.map*` methods allow method chaining.
+    The `trcks.oop.AwaitableSequenceWrapper.tap*` methods allow for side effects
+    without changing the wrapped sequence.
+
+    Example:
+        >>> import asyncio
+        >>> from collections.abc import Sequence
+        >>> from trcks.oop import AwaitableSequenceWrapper
+        >>> async def double(x: int) -> int:
+        ...     await asyncio.sleep(0.001)
+        ...     return x * 2
+        ...
+        >>> async def main() -> Sequence[int]:
+        ...     awaitable_sequence_wrapper = (
+        ...         AwaitableSequenceWrapper
+        ...         .construct_from_sequence((1, 2, 3))
+        ...         .map_to_awaitable(double)
+        ...     )
+        ...     return await awaitable_sequence_wrapper.core_as_coroutine
+        ...
+        >>> asyncio.run(main())
+        [2, 4, 6]
+    """
+
+    @staticmethod
+    def construct(value: _T) -> AwaitableSequenceWrapper[_T]:
+        """Construct and wrap a [trcks.AwaitableSequence][] object from a value.
+
+        Args:
+            value: The value to be wrapped.
+
+        Returns:
+            A new [trcks.oop.AwaitableSequenceWrapper][] instance with
+                the wrapped [trcks.AwaitableSequence][] object.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks.oop import AwaitableSequenceWrapper
+            >>> awaitable_sequence_wrapper = AwaitableSequenceWrapper.construct(42)
+            >>> awaitable_sequence_wrapper
+            AwaitableSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(awaitable_sequence_wrapper.core_as_coroutine)
+            [42]
+        """
+        return AwaitableSequenceWrapper(as_.construct(value))
+
+    @staticmethod
+    def construct_from_awaitable(
+        awtbl: Awaitable[_T],
+    ) -> AwaitableSequenceWrapper[_T]:
+        """Construct and wrap a [trcks.AwaitableSequence][] from an awaitable value.
+
+        Args:
+            awtbl: The awaitable value to be wrapped.
+
+        Returns:
+            A new [trcks.oop.AwaitableSequenceWrapper][] instance with
+                the wrapped [trcks.AwaitableSequence][] object.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks.oop import AwaitableSequenceWrapper
+            >>> async def get_value() -> int:
+            ...     await asyncio.sleep(0.001)
+            ...     return 7
+            ...
+            >>> awaitable_sequence_wrapper = (
+            ...     AwaitableSequenceWrapper
+            ...     .construct_from_awaitable(get_value())
+            ... )
+            >>> awaitable_sequence_wrapper
+            AwaitableSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(awaitable_sequence_wrapper.core_as_coroutine)
+            [7]
+        """
+        return AwaitableSequenceWrapper(as_.construct_from_awaitable(awtbl))
+
+    @staticmethod
+    def construct_from_sequence(
+        seq: Sequence[_T],
+    ) -> AwaitableSequenceWrapper[_T]:
+        """Construct and wrap a [trcks.AwaitableSequence][] from a sequence.
+
+        Args:
+            seq: The sequence to be wrapped.
+
+        Returns:
+            A new [trcks.oop.AwaitableSequenceWrapper][] instance with
+                the wrapped [trcks.AwaitableSequence][] object.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks.oop import AwaitableSequenceWrapper
+            >>> awaitable_sequence_wrapper = (
+            ...     AwaitableSequenceWrapper
+            ...     .construct_from_sequence((1, 2, 3))
+            ... )
+            >>> awaitable_sequence_wrapper
+            AwaitableSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(awaitable_sequence_wrapper.core_as_coroutine)
+            (1, 2, 3)
+        """
+        return AwaitableSequenceWrapper(as_.construct_from_sequence(seq))
+
+    def map(self, f: Callable[[_T_co], _T]) -> AwaitableSequenceWrapper[_T]:
+        """Apply a synchronous function to each element in the wrapped
+        [trcks.AwaitableSequence][] object.
+
+        Args:
+            f: The synchronous function to be applied to each element.
+
+        Returns:
+            A new [trcks.oop.AwaitableSequenceWrapper][] instance with
+                the wrapped [trcks.AwaitableSequence][] object containing
+                the results of applying the function to each element.
+
+        Example:
+            >>> import asyncio
+            >>> from collections.abc import Sequence
+            >>> from trcks.oop import AwaitableSequenceWrapper
+            >>> async def main() -> Sequence[int]:
+            ...     return await (
+            ...         AwaitableSequenceWrapper
+            ...         .construct_from_sequence((1, 2, 3))
+            ...         .map(lambda x: x * 2)
+            ...         .core_as_coroutine
+            ...     )
+            ...
+            >>> asyncio.run(main())
+            [2, 4, 6]
+        """
+        return AwaitableSequenceWrapper(as_.map_(f)(self.core))
+
+    def map_to_awaitable(
+        self, f: Callable[[_T_co], Awaitable[_T]]
+    ) -> AwaitableSequenceWrapper[_T]:
+        """Apply an asynchronous function to each element in the wrapped
+        [trcks.AwaitableSequence][] object.
+
+        Args:
+            f: The asynchronous function to be applied to each element.
+
+        Returns:
+            A new [trcks.oop.AwaitableSequenceWrapper][] instance with
+                the wrapped [trcks.AwaitableSequence][] object containing
+                the results of applying the function to each element.
+
+        Example:
+            >>> import asyncio
+            >>> from collections.abc import Sequence
+            >>> from trcks.oop import AwaitableSequenceWrapper
+            >>> async def add_one(x: int) -> int:
+            ...     await asyncio.sleep(0.001)
+            ...     return x + 1
+            ...
+            >>> async def main() -> Sequence[int]:
+            ...     return await (
+            ...         AwaitableSequenceWrapper
+            ...         .construct_from_sequence((1, 2, 3))
+            ...         .map_to_awaitable(add_one)
+            ...         .core_as_coroutine
+            ...     )
+            ...
+            >>> asyncio.run(main())
+            [2, 3, 4]
+        """
+        return AwaitableSequenceWrapper(as_.map_to_awaitable(f)(self.core))
+
+    def map_to_awaitable_sequence(
+        self, f: Callable[[_T_co], AwaitableSequence[_T]]
+    ) -> AwaitableSequenceWrapper[_T]:
+        """Apply an asynchronous function returning a [collections.abc.Sequence][]
+        to each element in the wrapped [trcks.AwaitableSequence][] and flatten.
+
+        Args:
+            f: The asynchronous function to be applied to each element,
+                returning a [trcks.AwaitableSequence][].
+
+        Returns:
+            A new [trcks.oop.AwaitableSequenceWrapper][] instance with
+                the flattened [trcks.AwaitableSequence][] object.
+
+        Example:
+            >>> import asyncio
+            >>> from collections.abc import Sequence
+            >>> from trcks.oop import AwaitableSequenceWrapper
+            >>> async def duplicate(x: int) -> list[int]:
+            ...     await asyncio.sleep(0.001)
+            ...     return [x, x]
+            ...
+            >>> async def main() -> Sequence[int]:
+            ...     return await (
+            ...         AwaitableSequenceWrapper
+            ...         .construct_from_sequence((1, 2))
+            ...         .map_to_awaitable_sequence(duplicate)
+            ...         .core_as_coroutine
+            ...     )
+            ...
+            >>> asyncio.run(main())
+            [1, 1, 2, 2]
+        """
+        return AwaitableSequenceWrapper(as_.map_to_awaitable_sequence(f)(self.core))
+
+    def map_to_sequence(
+        self, f: Callable[[_T_co], Sequence[_T]]
+    ) -> AwaitableSequenceWrapper[_T]:
+        """Apply a synchronous function returning a sequence to each element in
+        the wrapped [trcks.AwaitableSequence][] object and flatten.
+
+        Args:
+            f: The synchronous function to be applied to each element,
+                returning a sequence.
+
+        Returns:
+            A new [trcks.oop.AwaitableSequenceWrapper][] instance with
+                the flattened [trcks.AwaitableSequence][] object.
+
+        Example:
+            >>> import asyncio
+            >>> from collections.abc import Sequence
+            >>> from trcks.oop import AwaitableSequenceWrapper
+            >>> async def main() -> Sequence[int]:
+            ...     return await (
+            ...         AwaitableSequenceWrapper
+            ...         .construct_from_sequence((1, 2, 3))
+            ...         .map_to_sequence(lambda x: (x, -x))
+            ...         .core_as_coroutine
+            ...     )
+            ...
+            >>> asyncio.run(main())
+            [1, -1, 2, -2, 3, -3]
+        """
+        return AwaitableSequenceWrapper(as_.map_to_sequence(f)(self.core))
+
+    def tap(self, f: Callable[[_T_co], object]) -> AwaitableSequenceWrapper[_T_co]:
+        """Apply a synchronous side effect to each element in the wrapped
+        [trcks.AwaitableSequence][] object.
+
+        Args:
+            f: The synchronous side effect to be applied to each element.
+
+        Returns:
+            A new [trcks.oop.AwaitableSequenceWrapper][] instance with
+                the original [trcks.AwaitableSequence][] object.
+
+        Example:
+            >>> import asyncio
+            >>> from collections.abc import Sequence
+            >>> from trcks.oop import AwaitableSequenceWrapper
+            >>> async def main() -> Sequence[int]:
+            ...     return await (
+            ...         AwaitableSequenceWrapper
+            ...         .construct_from_sequence((1, 2, 3))
+            ...         .tap(lambda x: print(f"Processing: {x}"))
+            ...         .core_as_coroutine
+            ...     )
+            ...
+            >>> asyncio.run(main())
+            Processing: 1
+            Processing: 2
+            Processing: 3
+            [1, 2, 3]
+        """
+        return AwaitableSequenceWrapper(as_.tap(f)(self.core))
+
+    def tap_to_awaitable(
+        self, f: Callable[[_T_co], Awaitable[object]]
+    ) -> AwaitableSequenceWrapper[_T_co]:
+        """Apply an asynchronous side effect to each element in the wrapped
+        [trcks.AwaitableSequence][] object.
+
+        Args:
+            f: The asynchronous side effect to be applied to each element.
+
+        Returns:
+            A new [trcks.oop.AwaitableSequenceWrapper][] instance with
+                the original [trcks.AwaitableSequence][] object.
+
+        Example:
+            >>> import asyncio
+            >>> from collections.abc import Sequence
+            >>> from trcks.oop import AwaitableSequenceWrapper
+            >>> async def log_async(x: int) -> None:
+            ...     await asyncio.sleep(0.001)
+            ...     print(f"Logged: {x}")
+            ...
+            >>> async def main() -> Sequence[int]:
+            ...     return await (
+            ...         AwaitableSequenceWrapper
+            ...         .construct_from_sequence((1, 2))
+            ...         .tap_to_awaitable(log_async)
+            ...         .core_as_coroutine
+            ...     )
+            ...
+            >>> asyncio.run(main())
+            Logged: 1
+            Logged: 2
+            [1, 2]
+        """
+        return AwaitableSequenceWrapper(as_.tap_to_awaitable(f)(self.core))
+
+    def tap_to_awaitable_sequence(
+        self, f: Callable[[_T_co], AwaitableSequence[object]]
+    ) -> AwaitableSequenceWrapper[_T_co]:
+        """Apply an asynchronous side effect returning a [trcks.AwaitableSequence][]
+        to each element in the wrapped [trcks.AwaitableSequence][] object.
+
+        Args:
+            f: The asynchronous side effect to be applied to each element,
+                returning a [trcks.AwaitableSequence][].
+
+        Returns:
+            A new [trcks.oop.AwaitableSequenceWrapper][] instance with
+                the original [trcks.AwaitableSequence][] object.
+
+        Example:
+            >>> import asyncio
+            >>> from collections.abc import Sequence
+            >>> from trcks.oop import AwaitableSequenceWrapper
+            >>> async def echo_twice(x: int) -> list[str]:
+            ...     await asyncio.sleep(0.001)
+            ...     return [str(x), str(x)]
+            ...
+            >>> async def main() -> Sequence[int]:
+            ...     return await (
+            ...         AwaitableSequenceWrapper
+            ...         .construct_from_sequence((1, 2))
+            ...         .tap_to_awaitable_sequence(echo_twice)
+            ...         .core_as_coroutine
+            ...     )
+            ...
+            >>> asyncio.run(main())
+            [1, 1, 2, 2]
+        """
+        return AwaitableSequenceWrapper(as_.tap_to_awaitable_sequence(f)(self.core))
+
+    def tap_to_sequence(
+        self, f: Callable[[_T_co], Sequence[object]]
+    ) -> AwaitableSequenceWrapper[_T_co]:
+        """Apply a synchronous side effect returning a sequence to each element in
+        the wrapped [trcks.AwaitableSequence][] object.
+
+        Args:
+            f: The synchronous side effect to be applied to each element,
+                returning a sequence.
+
+        Returns:
+            A new [trcks.oop.AwaitableSequenceWrapper][] instance with
+                the original [trcks.AwaitableSequence][] object.
+
+        Example:
+            >>> import asyncio
+            >>> from collections.abc import Sequence
+            >>> from trcks.oop import AwaitableSequenceWrapper
+            >>> async def main() -> Sequence[int]:
+            ...     return await (
+            ...         AwaitableSequenceWrapper
+            ...         .construct_from_sequence((1, 2))
+            ...         .tap_to_sequence(lambda x: (x, x))
+            ...         .core_as_coroutine
+            ...     )
+            ...
+            >>> asyncio.run(main())
+            [1, 1, 2, 2]
+        """
+        return AwaitableSequenceWrapper(as_.tap_to_sequence(f)(self.core))
+
+
 class AwaitableWrapper(_AwaitableWrapper[_T_co]):
     """Type-safe and immutable wrapper for [collections.abc.Awaitable][] objects.
 
@@ -1341,6 +1716,40 @@ class AwaitableWrapper(_AwaitableWrapper[_T_co]):
             self.core
         ).map_success_to_awaitable_result(f)
 
+    def map_to_awaitable_sequence(
+        self, f: Callable[[_T_co], AwaitableSequence[_T]]
+    ) -> AwaitableSequenceWrapper[_T]:
+        """Apply an asynchronous function returning a [collections.abc.Sequence][]
+        to the wrapped [collections.abc.Awaitable][] object.
+
+        Args:
+            f: The asynchronous function to be applied, returning an awaitable
+                [collections.abc.Sequence][].
+
+        Returns:
+            A new [trcks.oop.AwaitableSequenceWrapper][] instance with
+                the result of the function application.
+
+        Example:
+            >>> import asyncio
+            >>> from collections.abc import Sequence
+            >>> from trcks.oop import AwaitableWrapper
+            >>> async def duplicate_async(x: int) -> Sequence[int]:
+            ...     await asyncio.sleep(0.001)
+            ...     return [x, x]
+            ...
+            >>> awaitable_sequence_wrapper = (
+            ...     AwaitableWrapper
+            ...     .construct(21)
+            ...     .map_to_awaitable_sequence(duplicate_async)
+            ... )
+            >>> awaitable_sequence_wrapper
+            AwaitableSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(awaitable_sequence_wrapper.core_as_coroutine)
+            [21, 21]
+        """
+        return AwaitableSequenceWrapper(a.map_to_awaitable(f)(self.core))
+
     def map_to_result(
         self, f: Callable[[_T_co], Result[_F, _S]]
     ) -> AwaitableResultWrapper[_F, _S]:
@@ -1374,6 +1783,35 @@ class AwaitableWrapper(_AwaitableWrapper[_T_co]):
         return AwaitableResultWrapper.construct_success_from_awaitable(
             self.core
         ).map_success_to_result(f)
+
+    def map_to_sequence(
+        self, f: Callable[[_T_co], Sequence[_T]]
+    ) -> AwaitableSequenceWrapper[_T]:
+        """Apply a synchronous function returning a [collections.abc.Sequence][]
+        to the wrapped [collections.abc.Awaitable][] object.
+
+        Args:
+            f: The synchronous function to be applied.
+
+        Returns:
+            A new [trcks.oop.AwaitableSequenceWrapper][] instance with
+                the result of the function application.
+
+        Example:
+            >>> import asyncio
+            >>> from collections.abc import Sequence
+            >>> from trcks.oop import AwaitableWrapper
+            >>> awaitable_sequence_wrapper = (
+            ...     AwaitableWrapper
+            ...     .construct(3)
+            ...     .map_to_sequence(lambda x: [x, -x])
+            ... )
+            >>> awaitable_sequence_wrapper
+            AwaitableSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(awaitable_sequence_wrapper.core_as_coroutine)
+            [3, -3]
+        """
+        return AwaitableSequenceWrapper(a.map_(f)(self.core))
 
     def tap(self, f: Callable[[_T_co], object]) -> AwaitableWrapper[_T_co]:
         """Apply a synchronous side effect
@@ -1478,6 +1916,46 @@ class AwaitableWrapper(_AwaitableWrapper[_T_co]):
             self.core
         ).tap_success_to_awaitable_result(f)
 
+    def tap_to_awaitable_sequence(
+        self, f: Callable[[_T_co], AwaitableSequence[object]]
+    ) -> AwaitableSequenceWrapper[_T_co]:
+        """Apply an asynchronous side effect returning a [collections.abc.Sequence][]
+        to the wrapped [collections.abc.Awaitable][] object.
+
+        Args:
+            f: The asynchronous side effect to be applied,
+                returning an awaitable [collections.abc.Sequence][].
+
+        Returns:
+            A new [trcks.oop.AwaitableSequenceWrapper][] instance with
+                the original awaitable wrapped object repeated
+                according to the number of items returned by the side effect.
+
+        Example:
+            >>> import asyncio
+            >>> from collections.abc import Sequence
+            >>> from trcks.oop import AwaitableWrapper
+            >>> async def duplicate_with_log_async(x: int) -> Sequence[int]:
+            ...     await asyncio.sleep(0.001)
+            ...     print(f"Processing: {x}")
+            ...     return [x, x]
+            ...
+            >>> async def main() -> Sequence[int]:
+            ...     return await (
+            ...         AwaitableWrapper
+            ...         .construct(21)
+            ...         .tap_to_awaitable_sequence(duplicate_with_log_async)
+            ...         .core_as_coroutine
+            ...     )
+            ...
+            >>> asyncio.run(main())
+            Processing: 21
+            [21, 21]
+        """
+        return AwaitableSequenceWrapper.construct_from_awaitable(
+            self.core
+        ).tap_to_awaitable_sequence(f)
+
     def tap_to_result(
         self, f: Callable[[_T_co], Result[_F, object]]
     ) -> AwaitableResultWrapper[_F, _T_co]:
@@ -1522,6 +2000,45 @@ class AwaitableWrapper(_AwaitableWrapper[_T_co]):
         return AwaitableResultWrapper.construct_success_from_awaitable(
             self.core
         ).tap_success_to_result(f)
+
+    def tap_to_sequence(
+        self, f: Callable[[_T_co], Sequence[object]]
+    ) -> AwaitableSequenceWrapper[_T_co]:
+        """Apply a synchronous side effect returning a [collections.abc.Sequence][]
+        to the wrapped [collections.abc.Awaitable][] object.
+
+        Args:
+            f: The synchronous side effect to be applied,
+                returning a [collections.abc.Sequence][].
+
+        Returns:
+            A new [trcks.oop.AwaitableSequenceWrapper][] instance with
+                the original awaitable wrapped object repeated
+                according to the number of items returned by the side effect.
+
+        Example:
+            >>> import asyncio
+            >>> from collections.abc import Sequence
+            >>> from trcks.oop import AwaitableWrapper
+            >>> def duplicate_with_log(x: int) -> Sequence[object]:
+            ...     print(f"Processing: {x}")
+            ...     return [x, x]
+            ...
+            >>> async def main() -> Sequence[int]:
+            ...     return await (
+            ...         AwaitableWrapper
+            ...         .construct(42)
+            ...         .tap_to_sequence(duplicate_with_log)
+            ...         .core_as_coroutine
+            ...     )
+            ...
+            >>> asyncio.run(main())
+            Processing: 42
+            [42, 42]
+        """
+        return AwaitableSequenceWrapper.construct_from_awaitable(
+            self.core
+        ).tap_to_sequence(f)
 
 
 class ResultWrapper(_Wrapper[Result[_F_default_co, _S_default_co]]):
@@ -2442,6 +2959,80 @@ class SequenceWrapper(_Wrapper[Sequence[_T_co]]):
         """
         return SequenceWrapper(s.map_(f)(self.core))
 
+    def map_to_awaitable(
+        self, f: Callable[[_T_co], Awaitable[_T]]
+    ) -> AwaitableSequenceWrapper[_T]:
+        """Apply an asynchronous function to each element in the wrapped
+        [collections.abc.Sequence][].
+
+        Args:
+            f: The asynchronous function to be applied to each element.
+
+        Returns:
+            An [trcks.oop.AwaitableSequenceWrapper][] instance with
+                an awaitable [collections.abc.Sequence][] containing
+                the results of applying the function to each element.
+
+        Example:
+            >>> import asyncio
+            >>> from collections.abc import Sequence
+            >>> from trcks.oop import SequenceWrapper
+            >>> async def add_one(x: int) -> int:
+            ...     await asyncio.sleep(0.001)
+            ...     return x + 1
+            ...
+            >>> async def main() -> Sequence[int]:
+            ...     return await (
+            ...         SequenceWrapper
+            ...         .construct_from_sequence((1, 2, 3))
+            ...         .map_to_awaitable(add_one)
+            ...         .core_as_coroutine
+            ...     )
+            ...
+            >>> asyncio.run(main())
+            [2, 3, 4]
+        """
+        return AwaitableSequenceWrapper.construct_from_sequence(
+            self.core
+        ).map_to_awaitable(f)
+
+    def map_to_awaitable_sequence(
+        self, f: Callable[[_T_co], AwaitableSequence[_T]]
+    ) -> AwaitableSequenceWrapper[_T]:
+        """Apply an asynchronous function returning a [collections.abc.Sequence][]
+        to each element in the wrapped [collections.abc.Sequence][] and flatten.
+
+        Args:
+            f: The asynchronous function to be applied to each element,
+                returning an awaitable [collections.abc.Sequence][].
+
+        Returns:
+            An [trcks.oop.AwaitableSequenceWrapper][] instance with
+                the flattened awaitable [collections.abc.Sequence][].
+
+        Example:
+            >>> import asyncio
+            >>> from collections.abc import Sequence
+            >>> from trcks.oop import SequenceWrapper
+            >>> async def duplicate(x: int) -> list[int]:
+            ...     await asyncio.sleep(0.001)
+            ...     return [x, x]
+            ...
+            >>> async def main() -> Sequence[int]:
+            ...     return await (
+            ...         SequenceWrapper
+            ...         .construct_from_sequence((1, 2))
+            ...         .map_to_awaitable_sequence(duplicate)
+            ...         .core_as_coroutine
+            ...     )
+            ...
+            >>> asyncio.run(main())
+            [1, 1, 2, 2]
+        """
+        return AwaitableSequenceWrapper.construct_from_sequence(
+            self.core
+        ).map_to_awaitable_sequence(f)
+
     def map_to_sequence(
         self, f: Callable[[_T_co], Sequence[_T]]
     ) -> SequenceWrapper[_T]:
@@ -2496,6 +3087,86 @@ class SequenceWrapper(_Wrapper[Sequence[_T_co]]):
             SequenceWrapper(core=[1, 2, 3])
         """
         return SequenceWrapper(s.tap(f)(self.core))
+
+    def tap_to_awaitable(
+        self, f: Callable[[_T_co], Awaitable[object]]
+    ) -> AwaitableSequenceWrapper[_T_co]:
+        """Apply an asynchronous side effect to each element in the wrapped
+        [collections.abc.Sequence][].
+
+        Args:
+            f: The asynchronous side effect to be applied to each element.
+
+        Returns:
+            An [trcks.oop.AwaitableSequenceWrapper][] instance with
+                the original awaitable [collections.abc.Sequence][].
+
+        Example:
+            >>> import asyncio
+            >>> from collections.abc import Sequence
+            >>> from trcks.oop import SequenceWrapper
+            >>> async def print_value(x: int) -> None:
+            ...     await asyncio.sleep(0.001)
+            ...     print(f"Value: {x}")
+            ...
+            >>> async def main() -> Sequence[int]:
+            ...     return await (
+            ...         SequenceWrapper
+            ...         .construct_from_sequence((1, 2, 3))
+            ...         .tap_to_awaitable(print_value)
+            ...         .core_as_coroutine
+            ...     )
+            ...
+            >>> asyncio.run(main())
+            Value: 1
+            Value: 2
+            Value: 3
+            [1, 2, 3]
+        """
+        return AwaitableSequenceWrapper.construct_from_sequence(
+            self.core
+        ).tap_to_awaitable(f)
+
+    def tap_to_awaitable_sequence(
+        self, f: Callable[[_T_co], AwaitableSequence[object]]
+    ) -> AwaitableSequenceWrapper[_T_co]:
+        """Apply an asynchronous side effect returning a [collections.abc.Sequence][]
+        to each element in the wrapped [collections.abc.Sequence][].
+
+        Args:
+            f: The asynchronous side effect to be applied to each element,
+                returning an awaitable [collections.abc.Sequence][].
+
+        Returns:
+            An [trcks.oop.AwaitableSequenceWrapper][] instance with
+                the original awaitable [collections.abc.Sequence][].
+
+        Example:
+            >>> import asyncio
+            >>> from collections.abc import Sequence
+            >>> from trcks.oop import SequenceWrapper
+            >>> async def write_to_disk(x: int) -> list[str]:
+            ...     await asyncio.sleep(0.001)
+            ...     print(f"Wrote {x} to disk.")
+            ...     return [str(x), str(x)]
+            ...
+            >>> async def main() -> Sequence[int]:
+            ...     return await (
+            ...         SequenceWrapper
+            ...         .construct_from_sequence((1, 2, 3))
+            ...         .tap_to_awaitable_sequence(write_to_disk)
+            ...         .core_as_coroutine
+            ...     )
+            ...
+            >>> asyncio.run(main())
+            Wrote 1 to disk.
+            Wrote 2 to disk.
+            Wrote 3 to disk.
+            [1, 1, 2, 2, 3, 3]
+        """
+        return AwaitableSequenceWrapper.construct_from_sequence(
+            self.core
+        ).tap_to_awaitable_sequence(f)
 
     def tap_to_sequence(
         self, f: Callable[[_T_co], Sequence[object]]
@@ -2654,6 +3325,41 @@ class Wrapper(_Wrapper[_T_co]):
         """
         return AwaitableResultWrapper(f(self.core))
 
+    def map_to_awaitable_sequence(
+        self, f: Callable[[_T_co], AwaitableSequence[_T]]
+    ) -> AwaitableSequenceWrapper[_T]:
+        """Apply an asynchronous function returning a [collections.abc.Sequence][]
+        to the wrapped object.
+
+        Args:
+            f: The asynchronous function to be applied, returning a
+                [collections.abc.Sequence][].
+
+        Returns:
+            A [trcks.oop.AwaitableSequenceWrapper][] instance with
+                the result of the function application.
+
+        Example:
+            >>> import asyncio
+            >>> from collections.abc import Sequence
+            >>> from trcks.oop import Wrapper
+            >>> async def duplicate(x: int) -> list[int]:
+            ...     await asyncio.sleep(0.001)
+            ...     return [x, x]
+            ...
+            >>> async def main() -> Sequence[int]:
+            ...     awaitable_sequence_wrapper = (
+            ...         Wrapper.construct(7).map_to_awaitable_sequence(duplicate)
+            ...     )
+            ...     sequence = await awaitable_sequence_wrapper.core_as_coroutine
+            ...     assert len(sequence) == 2
+            ...     return sequence
+            ...
+            >>> asyncio.run(main())
+            [7, 7]
+        """
+        return AwaitableSequenceWrapper(f(self.core))
+
     def map_to_result(
         self, f: Callable[[_T_co], Result[_F, _S]]
     ) -> ResultWrapper[_F, _S]:
@@ -2801,6 +3507,40 @@ class Wrapper(_Wrapper[_T_co]):
         return AwaitableResultWrapper.construct_success(
             self.core
         ).tap_success_to_awaitable_result(f)
+
+    def tap_to_awaitable_sequence(
+        self, f: Callable[[_T_co], AwaitableSequence[object]]
+    ) -> AwaitableSequenceWrapper[_T_co]:
+        """Apply an asynchronous side effect returning a [collections.abc.Sequence][]
+        to the wrapped object.
+
+        Args:
+            f: The asynchronous side effect to be applied,
+                returning a [collections.abc.Sequence][].
+
+        Returns:
+            A [trcks.oop.AwaitableSequenceWrapper][] instance with
+                the original wrapped object repeated once per item returned by the
+                side effect.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks.oop import Wrapper
+            >>> async def write_to_disk(x: int) -> list[str]:
+            ...     await asyncio.sleep(0.001)
+            ...     print(f"Wrote {x} to disk.")
+            ...     return ["left", "right"]
+            ...
+            >>> awaitable_sequence_wrapper = Wrapper.construct(
+            ...     3
+            ... ).tap_to_awaitable_sequence(write_to_disk)
+            >>> asyncio.run(awaitable_sequence_wrapper.core_as_coroutine)
+            Wrote 3 to disk.
+            [3, 3]
+        """
+        return AwaitableSequenceWrapper.construct(self.core).tap_to_awaitable_sequence(
+            f
+        )
 
     def tap_to_result(
         self, f: Callable[[_T_co], Result[_F, object]]
