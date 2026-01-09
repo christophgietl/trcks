@@ -8,6 +8,7 @@ in a functional style:
 - [trcks.AwaitableResult][]
 - [trcks.AwaitableSequence][]
 - [trcks.Result][]
+- [trcks.ResultSequence][]
 
 Example:
     This example uses the modules
