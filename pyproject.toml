@@ -122,6 +122,7 @@ exhaustive = true
 layers = [
     "awaitable_result",
     "awaitable_sequence",
+    "result_sequence",
     "awaitable",
     "result",
     "sequence",
