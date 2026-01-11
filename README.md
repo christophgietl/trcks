@@ -153,3 +153,8 @@ Explore these repositories for more ways to use `trcks`:
    (CLI application)
 2. [trcks-example-fastapi](https://github.com/christophgietl/trcks-example-fastapi)
    (REST backend application)
+
+Or check the motivation
+[for railway-oriented programming](https://christophgietl.github.io/trcks/motivation/railway-oriented-programming/)
+and
+[for `trcks`](https://christophgietl.github.io/trcks/motivation/trcks/).
