@@ -6,13 +6,6 @@ updates:
       - /.github/actions/*/
     schedule:
       interval: daily
-#  - package-ecosystem: pip
-#    allow:
-#      - dependency-type: all
-#    directory: /
-#    schedule:
-#      interval: daily
-#    versioning-strategy: increase
   - package-ecosystem: uv
     directory: /
     schedule:
