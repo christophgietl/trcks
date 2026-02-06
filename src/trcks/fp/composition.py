@@ -208,7 +208,7 @@ def compose1(c: Composable1[_T0, _T1]) -> Callable[[_T0], _T1]:
         >>> get_length("Hello, world!")
         13
     """
-    return lambda t0: c[0](t0)
+    return lambda t0: c[0](t0)  # noqa: PLW0108 # for uniformity with other compose* functions
 
 
 def compose2(c: Composable2[_T0, _T1, _T2]) -> Callable[[_T0], _T2]:

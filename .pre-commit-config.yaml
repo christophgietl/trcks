@@ -6,7 +6,7 @@ default_stages:
 minimum_pre_commit_version: 4.2.0
 repos:
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: 9b1e9a33f1b33f6ecc2fdbb8d7cc894e951106e4  # frozen: v0.14.13
+    rev: 0470f7c8a653e950f7cc5a653204ceb3fde4c02a  # frozen: v0.15.0
     hooks:
       - id: ruff-check
         args:
@@ -22,7 +22,7 @@ repos:
     hooks:
       - id: codespell
   - repo: https://github.com/jackdewinter/pymarkdown
-    rev: 6d356e098eda1e0bb80b8180d408feb0cb296d65  # frozen: v0.9.34
+    rev: c5755e272a13da06be38d74052658af46c1ee447  # frozen: v0.9.35
     hooks:
       - id: pymarkdown
         args:
