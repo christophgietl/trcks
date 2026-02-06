@@ -1,6 +1,6 @@
 [build-system]
 build-backend = "pdm.backend"
-requires = ["pdm-backend >= 2.4, < 3"]  # pdm-backend 2.4 supports project.license-files.
+requires = ["pdm-backend ~= 2.4"]  # pdm-backend 2.4 supports project.license-files.
 
 [dependency-groups]
 dev = [
