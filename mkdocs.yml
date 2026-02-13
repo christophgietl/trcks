@@ -33,6 +33,7 @@ nav:
       - reference/trcks.oop.AwaitableResultWrapper.md
       - reference/trcks.oop.AwaitableSequenceWrapper.md
       - reference/trcks.oop.AwaitableWrapper.md
+      - reference/trcks.oop.ResultSequenceWrapper.md
       - reference/trcks.oop.ResultWrapper.md
       - reference/trcks.oop.SequenceWrapper.md
       - reference/trcks.oop.Wrapper.md
