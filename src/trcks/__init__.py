@@ -10,7 +10,7 @@ See:
     [Railway oriented programming | F# for fun and profit](https://fsharpforfunandprofit.com/posts/recipe-part2/)
 """
 
-from collections.abc import Awaitable
+from collections.abc import Awaitable, Sequence
 from typing import Literal, TypeAlias
 
 from trcks._typing import TypeVar
@@ -20,6 +20,7 @@ __docformat__ = "google"
 
 _F_co = TypeVar("_F_co", covariant=True)
 _S_co = TypeVar("_S_co", covariant=True)
+_T_co = TypeVar("_T_co", covariant=True)
 
 
 Failure: TypeAlias = tuple[Literal["failure"], _F_co]
@@ -69,6 +70,11 @@ Note:
 
 AwaitableFailure: TypeAlias = Awaitable[Failure[_F_co]]
 """[collections.abc.Awaitable][] that returns a [trcks.Failure][]
+when used in an `await` expression.
+"""
+
+AwaitableSequence: TypeAlias = Awaitable[Sequence[_T_co]]
+"""[collections.abc.Awaitable][] that returns a [collections.abc.Sequence][]
 when used in an `await` expression.
 """
 
@@ -122,3 +128,9 @@ Example:
     ...     [float, float], AwaitableResult[ZeroDivisionError, float]
     ... ] = divide_slowly
 """
+
+ResultSequence: TypeAlias = Result[_F_co, Sequence[_S_co]]
+"""[trcks.Result][] where the success value is a [collections.abc.Sequence][]."""
+
+SuccessSequence: TypeAlias = Success[Sequence[_S_co]]
+"""[trcks.Success][] that contains a [collections.abc.Sequence][]."""
