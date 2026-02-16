@@ -200,4 +200,4 @@ cache-keys = [
     { file = "pyproject.toml" },
     { git = { commit = true, tags = true } }, # needed by build-backend to derive package version from Git tags
 ]
-required-version = "~=0.10.0"
+required-version = ">=0.9, <0.11"   # Dependabot seems to use uv 0.9 (as of February 2026).
