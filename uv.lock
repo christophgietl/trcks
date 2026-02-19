@@ -1487,7 +1487,7 @@ provides-extras = ["mypy", "pyright"]
 dev = [
     { name = "import-linter", specifier = ">=2.9" },
     { name = "markdown-pycon", specifier = ">=1.0.1" },
-    { name = "mkdocs-material", specifier = ">=9.7.1" },
+    { name = "mkdocs-material", specifier = ">=9.7.2" },
     { name = "mkdocstrings", extras = ["python"], specifier = ">=1.0.1" },
     { name = "mypy", specifier = ">=1" },
     { name = "pre-commit", specifier = ">=4.5.1" },
