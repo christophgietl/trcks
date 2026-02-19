@@ -6,7 +6,7 @@ requires = ["pdm-backend ~= 2.4"]  # pdm-backend 2.4 supports project.license-fi
 dev = [
     "import-linter >= 2.9",
     "markdown-pycon >= 1.0.1",
-    "mkdocs-material >= 9.7.1",
+    "mkdocs-material >= 9.7.2",
     "mkdocstrings[python] >= 1.0.1",
     "mypy >= 1", # Check project.optional-dependencies for lower bound.
     "pre-commit >= 4.5.1",
