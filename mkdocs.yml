@@ -24,12 +24,18 @@ nav:
       - reference/trcks.fp.monads.md
       - reference/trcks.fp.monads.awaitable.md
       - reference/trcks.fp.monads.awaitable_result.md
+      - reference/trcks.fp.monads.awaitable_sequence.md
       - reference/trcks.fp.monads.identity.md
       - reference/trcks.fp.monads.result.md
+      - reference/trcks.fp.monads.result_sequence.md
+      - reference/trcks.fp.monads.sequence.md
       - reference/trcks.oop.md
       - reference/trcks.oop.AwaitableResultWrapper.md
+      - reference/trcks.oop.AwaitableSequenceWrapper.md
       - reference/trcks.oop.AwaitableWrapper.md
+      - reference/trcks.oop.ResultSequenceWrapper.md
       - reference/trcks.oop.ResultWrapper.md
+      - reference/trcks.oop.SequenceWrapper.md
       - reference/trcks.oop.Wrapper.md
 
 plugins:
