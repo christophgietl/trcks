@@ -8,7 +8,7 @@ import pytest
 from trcks import Result
 from trcks.oop import AwaitableResultWrapper, AwaitableWrapper, ResultWrapper, Wrapper
 
-_TO_PAIR: Callable[[int], tuple[int, int]] = lambda n: (n, n)  # noqa: E731
+_TO_PAIR: Final[Callable[[int], tuple[int, int]]] = lambda n: (n, n)  # noqa: E731
 
 _FLOATS: Final[tuple[float, ...]] = (0.0, 1.5, -2.3, 100.75, math.pi, -math.e)
 _OBJECTS: Final[tuple[object, ...]] = (

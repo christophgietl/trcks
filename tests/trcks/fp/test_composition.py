@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import sys
 from collections.abc import Callable
-from typing import TypeAlias, TypeVar
+from typing import Final, TypeAlias, TypeVar
 
 import pytest
 
@@ -29,7 +29,7 @@ def _incr(x: int) -> int:
     return x + 1
 
 
-_COMPOSABLES: _Tuple7[_IntComposable] = (
+_COMPOSABLES: Final[_Tuple7[_IntComposable]] = (
     (_incr,),
     (_incr, _incr),
     (_incr, _incr, _incr),
@@ -39,7 +39,7 @@ _COMPOSABLES: _Tuple7[_IntComposable] = (
     (_incr, _incr, _incr, _incr, _incr, _incr, _incr),
 )
 
-_PIPELINES: _Tuple8[_IntPipeline] = (
+_PIPELINES: Final[_Tuple8[_IntPipeline]] = (
     (0,),
     (0, *_COMPOSABLES[0]),
     (0, *_COMPOSABLES[1]),
