@@ -134,3 +134,13 @@ ResultSequence: TypeAlias = Result[_F_co, Sequence[_S_co]]
 
 SuccessSequence: TypeAlias = Success[Sequence[_S_co]]
 """[trcks.Success][] that contains a [collections.abc.Sequence][]."""
+
+AwaitableResultSequence: TypeAlias = Awaitable[ResultSequence[_F_co, _S_co]]
+"""[collections.abc.Awaitable][] that returns a [trcks.ResultSequence][]
+when used in an `await` expression.
+"""
+
+AwaitableSuccessSequence: TypeAlias = Awaitable[SuccessSequence[_S_co]]
+"""[collections.abc.Awaitable][] that returns a [trcks.SuccessSequence][]
+when used in an `await` expression.
+"""
