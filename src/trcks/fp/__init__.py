@@ -6,6 +6,7 @@ in a functional style:
 - [collections.abc.Awaitable][]
 - [collections.abc.Sequence][]
 - [trcks.AwaitableResult][]
+- [trcks.AwaitableResultSequence][]
 - [trcks.AwaitableSequence][]
 - [trcks.Result][]
 - [trcks.ResultSequence][]
