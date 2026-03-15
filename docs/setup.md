@@ -26,7 +26,7 @@ for installing compatible versions of both tools.
 
 Since `trcks` is already a production dependency,
 you can add the type checker extras as separate dev dependencies.
-This way, `trcks` remains in `[project].dependencies`
+This way, `trcks` remains in `project.dependencies`
 while the type checker is only installed in development environments.
 
 If you use `uv` and want to use `mypy` as your static type checker,
@@ -44,12 +44,12 @@ uv add --dev "trcks[pyright]"
 ```
 
 Your `pyproject.toml` will then look similar to this
-(with `trcks` in both `[project].dependencies` and `[dependency-groups].dev`):
+(with `trcks` in both `project.dependencies` and `dependency-groups.dev`):
 
 ```toml
 [dependency-groups]
 dev = [
-    "trcks[pyright]",  # check [project].dependencies for the version
+    "trcks[pyright]",
 ]
 
 [project]
