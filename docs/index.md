@@ -138,11 +138,6 @@ in the following example.
        `trcks.Result`-returning functions and "regular" functions
        (in a type-safe way).
 
-## Setup
-
-`trcks` is [available on PyPI](https://pypi.org/project/trcks/).
-Use your favorite package manager (e.g. `pip`, `poetry` or `uv`) to install it.
-
 ## Still not convinced?
 
 Explore these repositories for more ways to use `trcks`:

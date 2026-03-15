@@ -144,6 +144,8 @@ in the following example.
 
 `trcks` is [available on PyPI](https://pypi.org/project/trcks/).
 Use your favorite package manager (e.g. `pip`, `poetry` or `uv`) to install it.
+Check the documentation for
+[detailed setup instructions](https://christophgietl.github.io/trcks/setup/).
 
 ## Still not convinced?
 
