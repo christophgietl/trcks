@@ -1,0 +1,39 @@
+# Setup
+
+This section explains
+how to add `trcks` to your project
+and how to set up a compatible static type checker.
+
+## Adding `trcks` to your project
+
+`trcks` is [available on PyPI](https://pypi.org/project/trcks/).
+To be able to import it at runtime (e.g. `import trcks`),
+you need to add it to your project as a production dependency.
+
+If you use `uv` to manage your dependencies,
+run the following command in your terminal:
+
+```shell
+uv add trcks
+```
+
+## Setting up a compatible static type checker
+
+`trcks` is compatible with current versions of `mypy` and `pyright`.
+For convenience,
+`trcks` provides optional dependencies (extras)
+for installing compatible versions of both tools.
+
+If you use `uv` and want to use `mypy` as your static type checker,
+run the following command in your terminal:
+
+```shell
+uv add --dev "trcks[mypy]"
+```
+
+If you use `uv` and want to use `pyright` as your static type checker,
+run the following command in your terminal:
+
+```shell
+uv add --dev "trcks[pyright]"
+```
