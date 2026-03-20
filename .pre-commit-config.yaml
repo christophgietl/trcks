@@ -14,7 +14,7 @@ repos:
           - --fix
       - id: ruff-format
   - repo: https://github.com/astral-sh/uv-pre-commit
-    rev: 7dea33a7ce1fe70356565dda0c7c304e7cab73d1  # frozen: 0.10.11
+    rev: e3daa3b1abb0f966fc89f674fdf01eebd84c2eec  # frozen: 0.10.12
     hooks:
       - id: uv-lock
   - repo: https://github.com/codespell-project/codespell
