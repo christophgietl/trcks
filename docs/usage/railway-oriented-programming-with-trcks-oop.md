@@ -5,7 +5,7 @@ for railway-oriented programming.
 Single-track and double-track code are both discussed.
 So are synchronous and asynchronous code.
 
-## Synchronous single-track code with [trcks.oop.Wrapper][]
+## Synchronous single-track code for a single value with [trcks.oop.Wrapper][]
 
 The generic class [trcks.oop.Wrapper][][T] allows us to chain functions:
 
@@ -82,7 +82,7 @@ This method allows executing side effects while preserving the original value:
 
     ```
 
-## Synchronous double-track code with [trcks.Result][] and [trcks.oop.ResultWrapper][]
+## Synchronous double-track code for a single value with [trcks.Result][] and [trcks.oop.ResultWrapper][]
 
 Whenever we encounter something exceptional in conventional Python programming
 (e.g. something not working as expected or some edge case in our business logic),
@@ -274,7 +274,7 @@ If the side effect returns a [trcks.Success][], the original success value is pr
 
     ```
 
-## Asynchronous single-track code with [collections.abc.Awaitable][] and [trcks.oop.AwaitableWrapper][]
+## Asynchronous single-track code for a single value with [collections.abc.Awaitable][] and [trcks.oop.AwaitableWrapper][]
 
 While the class [trcks.oop.Wrapper][] and its method `map` allow
 the chaining of synchronous functions,
@@ -424,7 +424,7 @@ allows us to execute asynchronous side effects.
 
     ```
 
-## Asynchronous double-track code with [trcks.AwaitableResult][] and [trcks.oop.AwaitableResultWrapper][]
+## Asynchronous double-track code for a single value with [trcks.AwaitableResult][] and [trcks.oop.AwaitableResultWrapper][]
 
 Whenever we define a function using the `async def ... -> Result[F, S]` syntax,
 we actually get a function with
@@ -611,7 +611,7 @@ the original success value is preserved:
 
     ```
 
-## Synchronous single-track code with [collections.abc.Sequence][] and [trcks.oop.SequenceWrapper][]
+## Synchronous single-track code for a sequence with [collections.abc.Sequence][] and [trcks.oop.SequenceWrapper][]
 
 While the class [trcks.oop.Wrapper][] wraps and operates on a single value,
 the class [trcks.oop.SequenceWrapper][] wraps a [collections.abc.Sequence][]
@@ -707,7 +707,7 @@ while preserving the original sequence:
 
     ```
 
-## Synchronous double-track code with [trcks.ResultSequence][] and [trcks.oop.ResultSequenceWrapper][]
+## Synchronous double-track code for a sequence with [trcks.ResultSequence][] and [trcks.oop.ResultSequenceWrapper][]
 
 When applying a failable function to each element in a sequence,
 we need the [trcks.oop.ResultSequenceWrapper][] class.
@@ -900,7 +900,7 @@ the original success values are preserved.
 
     ```
 
-## Asynchronous single-track code with [trcks.AwaitableSequence][] and [trcks.oop.AwaitableSequenceWrapper][]
+## Asynchronous single-track code for a sequence with [trcks.AwaitableSequence][] and [trcks.oop.AwaitableSequenceWrapper][]
 
 While the class [trcks.oop.SequenceWrapper][] and its method `map`
 allow the chaining of synchronous functions for each element,
@@ -1013,7 +1013,7 @@ allows us to execute asynchronous side effects for each element.
 
     ```
 
-## Asynchronous double-track code with [trcks.AwaitableResultSequence][] and [trcks.oop.AwaitableResultSequenceWrapper][]
+## Asynchronous double-track code for a sequence with [trcks.AwaitableResultSequence][] and [trcks.oop.AwaitableResultSequenceWrapper][]
 
 Whenever we define a function using
 the `async def ... -> Result[F, S]` syntax
