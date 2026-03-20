@@ -4,7 +4,7 @@ This page describes how to use [trcks.fp][] for railway-oriented programming.
 Single-track and double-track code are both discussed.
 So are synchronous and asynchronous code.
 
-## Synchronous single-track code with [trcks.fp.composition][]
+## Synchronous single-track code for a single value with [trcks.fp.composition][]
 
 The function [trcks.fp.composition.pipe][] allows us to chain functions:
 
@@ -71,7 +71,7 @@ that behaves like the original function but returns the input value.
 
     ```
 
-## Synchronous double-track code with [trcks.fp.composition][] and [trcks.fp.monads.result][]
+## Synchronous double-track code for a single value with [trcks.fp.composition][] and [trcks.fp.monads.result][]
 
 If one of the functions in a [trcks.fp.composition.Pipeline][]
 returns a `trcks.Result[F, S]` type,
@@ -283,7 +283,7 @@ If the side effect returns a [trcks.Success][], the original success value is pr
 
     ```
 
-## Asynchronous single-track code with [trcks.fp.composition][] and [trcks.fp.monads.awaitable][]
+## Asynchronous single-track code for a single value with [trcks.fp.composition][] and [trcks.fp.monads.awaitable][]
 
 If one of the functions in a [trcks.fp.composition.Pipeline][] returns
 a `collections.abc.Awaitable[T]` type,
@@ -418,7 +418,7 @@ allows us to execute asynchronous side effects.
 
     ```
 
-## Asynchronous double-track code with [trcks.fp.composition][] and [trcks.fp.monads.awaitable_result][]
+## Asynchronous double-track code for a single value with [trcks.fp.composition][] and [trcks.fp.monads.awaitable_result][]
 
 If one of the functions in a [trcks.fp.composition.Pipeline][] returns
 a `trcks.AwaitableResult[F, S]` type,
@@ -634,7 +634,7 @@ the original success value is preserved:
 
     ```
 
-## Synchronous single-track code with [trcks.fp.composition][] and [trcks.fp.monads.sequence][]
+## Synchronous single-track code for a sequence with [trcks.fp.composition][] and [trcks.fp.monads.sequence][]
 
 If we want to apply a pipeline of functions to each element
 in a [collections.abc.Sequence][],
@@ -747,7 +747,7 @@ allows us to execute side effects for each element:
 
     ```
 
-## Synchronous double-track code with [trcks.fp.composition][] and [trcks.fp.monads.result_sequence][]
+## Synchronous double-track code for a sequence with [trcks.fp.composition][] and [trcks.fp.monads.result_sequence][]
 
 If one of the functions in a [trcks.fp.composition.Pipeline][]
 returns a [trcks.ResultSequence][][F, S] type,
@@ -1000,7 +1000,7 @@ the original success values are preserved.
 
     ```
 
-## Asynchronous single-track code with [trcks.fp.composition][] and [trcks.fp.monads.awaitable_sequence][]
+## Asynchronous single-track code for a sequence with [trcks.fp.composition][] and [trcks.fp.monads.awaitable_sequence][]
 
 If one of the functions in a [trcks.fp.composition.Pipeline][] returns
 a [trcks.AwaitableSequence][][T] type,
@@ -1146,7 +1146,7 @@ allows us to execute asynchronous side effects for each element.
 
     ```
 
-## Asynchronous double-track code with [trcks.fp.composition][] and [trcks.fp.monads.awaitable_result_sequence][]
+## Asynchronous double-track code for a sequence with [trcks.fp.composition][] and [trcks.fp.monads.awaitable_result_sequence][]
 
 If one of the functions in a [trcks.fp.composition.Pipeline][] returns
 a [trcks.AwaitableResultSequence][][F, S] type,
