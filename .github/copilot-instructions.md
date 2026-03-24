@@ -108,7 +108,7 @@ from trcks.fp.monads import result as r, awaitable as a, awaitable_result as ar
 
 ### Build system & dependencies
 
-- **Package manager**: `uv` (required version >= 0.8, < 0.9)
+- **Package manager**: `uv`
 - **Build backend**: `pdm-backend` with SCM versioning from Git tags
 - **Dev dependencies**: All in `[dependency-groups.dev]` in `pyproject.toml`
 - **Import linter**: `import-linter` is used to enforce
@@ -128,8 +128,7 @@ uv run pytest
 uv run mkdocs build
 
 # Lint and format
-uv run ruff check
-uv run ruff format
+uv run pre-commit run --all-files
 
 # Type checking
 uv run mypy
@@ -210,4 +209,4 @@ async def test_async_wrapper():
 
 - Cross-references to functional programming libraries (returns, expression) in docs
 - Designed for interoperability with standard Python async patterns
-- Compatible with static type checkers (mypy, pyright, pylance)
+- Compatible with static type checkers (mypy, pyright)
