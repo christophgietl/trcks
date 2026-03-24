@@ -35,7 +35,7 @@ Example:
     >>> get_square_root(-25.0)
     ('failure', <GetSquareRootError.NEGATIVE_INPUT: 1>)
 
-    Variable and type assignments for intermediate values might help  to clarify
+    Variable and type assignments for intermediate values might help to clarify
     what is going on:
 
     >>> import enum
