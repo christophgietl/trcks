@@ -75,7 +75,8 @@ def construct(value: _T) -> Sequence[_T]:
 
 
 def map_(f: Callable[[_T1], _T2]) -> Callable[[Sequence[_T1]], Sequence[_T2]]:
-    """Create function that maps a function over each element in a [collections.abc.Sequence][].
+    """Create function that maps a function over each element in a
+    [collections.abc.Sequence][].
 
     Args:
         f: Function to apply to each element.
@@ -103,7 +104,8 @@ def map_to_sequence(
     over each element and flattens the result.
 
     Args:
-        f: Function to apply to each element that returns a [collections.abc.Sequence][].
+        f: Function to apply to each element that returns a
+            [collections.abc.Sequence][].
 
     Returns:
         A function that takes a [collections.abc.Sequence][] and returns
@@ -126,7 +128,8 @@ def map_to_sequence(
 def tap(
     f: Callable[[_T1], object],
 ) -> Callable[[Sequence[_T1]], Sequence[_T1]]:
-    """Create function that applies a side effect to each element in a [collections.abc.Sequence][].
+    """Create function that applies a side effect to each element in a
+    [collections.abc.Sequence][].
 
     Args:
         f: Side effect to apply to each element.
@@ -155,11 +158,12 @@ def tap(
 def tap_to_sequence(
     f: Callable[[_T1], Sequence[object]],
 ) -> Callable[[Sequence[_T1]], Sequence[_T1]]:
-    """Create function that applies a side effect returning a [collections.abc.Sequence][]
-    to each element in a [collections.abc.Sequence][].
+    """Create function that applies a side effect returning a
+    [collections.abc.Sequence][] to each element in a [collections.abc.Sequence][].
 
     Args:
-        f: Side effect to apply to each element that returns a [collections.abc.Sequence][].
+        f: Side effect to apply to each element that returns a
+            [collections.abc.Sequence][].
 
     Returns:
         A function that takes a [collections.abc.Sequence][] and returns
