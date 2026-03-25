@@ -14,19 +14,20 @@ Example:
     ...     return x * 2
     ...
     >>> async def main() -> Sequence[int]:
-    ...     a_seq = as_.construct(1)
     ...     return await pipe(
     ...         (
-    ...             a_seq,
+    ...             as_.construct_from_sequence((4, 2, 0)),
     ...             as_.map_(double),
     ...             as_.tap(lambda x: print(f"Processed: {x}")),
     ...         )
     ...     )
     ...
     >>> result = asyncio.run(main())
-    Processed: 2
+    Processed: 8
+    Processed: 4
+    Processed: 0
     >>> result
-    [2]
+    [8, 4, 0]
 
     Map each element to an awaitable sequence and flatten the result:
 
@@ -38,16 +39,15 @@ Example:
     ...     await asyncio.sleep(0.001)
     ...     return [x, x]
     ...
-    >>> async def main2() -> Sequence[int]:
-    ...     a_seq = as_.construct_from_sequence((1, 2, 3))
+    >>> async def main() -> Sequence[int]:
     ...     return await pipe(
     ...         (
-    ...             a_seq,
+    ...             as_.construct_from_sequence((1, 2, 3)),
     ...             as_.map_to_awaitable_sequence(duplicate),
     ...         )
     ...     )
     ...
-    >>> asyncio.run(main2())
+    >>> asyncio.run(main())
     [1, 1, 2, 2, 3, 3]
 """
 
@@ -79,12 +79,13 @@ def construct(value: _T) -> AwaitableSequence[_T]:
         value: A single value.
 
     Returns:
-        A new [trcks.AwaitableSequence][] instance containing the single value.
+        A [trcks.AwaitableSequence][] instance containing the single value.
 
     Example:
         >>> import asyncio
+        >>> from trcks import AwaitableSequence
         >>> from trcks.fp.monads import awaitable_sequence as as_
-        >>> a_seq = as_.construct(42)
+        >>> a_seq: AwaitableSequence[int] = as_.construct(42)
         >>> asyncio.run(as_.to_coroutine_sequence(a_seq))
         [42]
     """
@@ -98,18 +99,20 @@ def construct_from_awaitable(awtbl: Awaitable[_T]) -> AwaitableSequence[_T]:
         awtbl: Awaitable value to be wrapped in a [trcks.AwaitableSequence][].
 
     Returns:
-        A new [trcks.AwaitableSequence][] instance containing
+        A [trcks.AwaitableSequence][] instance containing
         the value of the given awaitable.
 
     Example:
         >>> import asyncio
+        >>> from collections.abc import Sequence
+        >>> from trcks import AwaitableSequence
         >>> from trcks.fp.monads import awaitable_sequence as as_
-        >>> async def get_value() -> int:
-        ...     return 7
-        ...
-        >>> a_seq = as_.construct_from_awaitable(get_value())
+        >>> awtbl: AwaitableSequence[int] = as_.construct(7)
+        >>> a_seq: AwaitableSequence[Sequence[int]] = (
+        ...     as_.construct_from_awaitable(awtbl)
+        ... )
         >>> asyncio.run(as_.to_coroutine_sequence(a_seq))
-        [7]
+        [[7]]
     """
     return a.map_(s.construct)(awtbl)
 
@@ -121,12 +124,16 @@ def construct_from_sequence(seq: Sequence[_T]) -> AwaitableSequence[_T]:
         seq: Sequence to be wrapped in a [trcks.AwaitableSequence][].
 
     Returns:
-        A new [trcks.AwaitableSequence][] instance containing the given sequence.
+        A [trcks.AwaitableSequence][] instance containing the given sequence.
 
     Example:
         >>> import asyncio
+        >>> from collections.abc import Sequence
+        >>> from trcks import AwaitableSequence
         >>> from trcks.fp.monads import awaitable_sequence as as_
-        >>> asyncio.run(as_.to_coroutine_sequence(as_.construct_from_sequence([1, 2])))
+        >>> seq: Sequence[int] = [1, 2]
+        >>> a_seq: AwaitableSequence[int] = as_.construct_from_sequence(seq)
+        >>> asyncio.run(as_.to_coroutine_sequence(a_seq))
         [1, 2]
     """
     return a.construct(seq)
