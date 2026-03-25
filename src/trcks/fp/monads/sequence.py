@@ -75,16 +75,15 @@ def construct(value: _T) -> Sequence[_T]:
 
 
 def map_(f: Callable[[_T1], _T2]) -> Callable[[Sequence[_T1]], Sequence[_T2]]:
-    """Create function that maps a function over each element in a
-    [collections.abc.Sequence][].
+    """Create function that maps [collections.abc.Sequence][] to
+    [collections.abc.Sequence][] values.
 
     Args:
         f: Function to apply to each element.
 
     Returns:
-        A function that takes a [collections.abc.Sequence][] and returns
-            a new [collections.abc.Sequence][] with the function applied
-            to each element.
+        Maps [collections.abc.Sequence][] values to new
+            [collections.abc.Sequence][] values according to the given function.
 
     Example:
         >>> from trcks.fp.monads import sequence as s
@@ -100,17 +99,16 @@ def map_(f: Callable[[_T1], _T2]) -> Callable[[Sequence[_T1]], Sequence[_T2]]:
 def map_to_sequence(
     f: Callable[[_T1], Sequence[_T2]],
 ) -> Callable[[Sequence[_T1]], Sequence[_T2]]:
-    """Create function that maps a function returning a [collections.abc.Sequence][]
-    over each element and flattens the result.
+    """Create function that maps [collections.abc.Sequence][] to
+    flattened [collections.abc.Sequence][] values.
 
     Args:
         f: Function to apply to each element that returns a
             [collections.abc.Sequence][].
 
     Returns:
-        A function that takes a [collections.abc.Sequence][] and returns
-            a new flattened [collections.abc.Sequence][] with the function
-            applied to each element.
+        Maps [collections.abc.Sequence][] values to flattened
+            [collections.abc.Sequence][] values according to the given function.
 
     Example:
         >>> from trcks.fp.monads import sequence as s
@@ -128,16 +126,15 @@ def map_to_sequence(
 def tap(
     f: Callable[[_T1], object],
 ) -> Callable[[Sequence[_T1]], Sequence[_T1]]:
-    """Create function that applies a side effect to each element in a
-    [collections.abc.Sequence][].
+    """Create function that applies a side effect to
+    [collections.abc.Sequence][] values.
 
     Args:
         f: Side effect to apply to each element.
 
     Returns:
-        A function that takes a [collections.abc.Sequence][] and returns
-            the same [collections.abc.Sequence][] with the side effect
-            applied to each element.
+        Applies the given side effect to each element and
+            returns the original [collections.abc.Sequence][].
 
     Example:
         >>> from trcks.fp.monads import sequence as s
@@ -158,17 +155,17 @@ def tap(
 def tap_to_sequence(
     f: Callable[[_T1], Sequence[object]],
 ) -> Callable[[Sequence[_T1]], Sequence[_T1]]:
-    """Create function that applies a side effect returning a
-    [collections.abc.Sequence][] to each element in a [collections.abc.Sequence][].
+    """Create function that applies a side effect with return type
+    [collections.abc.Sequence][] to [collections.abc.Sequence][] values.
 
     Args:
         f: Side effect to apply to each element that returns a
             [collections.abc.Sequence][].
 
     Returns:
-        A function that takes a [collections.abc.Sequence][] and returns
-            the original [collections.abc.Sequence][] with the side effect
-            applied to each element.
+        Applies the given side effect to each element.
+            Returns each element as many times as the side effect
+            returns elements.
 
     Example:
         >>> from trcks.fp.monads import sequence as s
