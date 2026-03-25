@@ -104,15 +104,14 @@ def construct_from_awaitable(awtbl: Awaitable[_T]) -> AwaitableSequence[_T]:
 
     Example:
         >>> import asyncio
-        >>> from collections.abc import Sequence
+        >>> from collections.abc import Awaitable, Sequence
         >>> from trcks import AwaitableSequence
+        >>> from trcks.fp.monads import awaitable as a
         >>> from trcks.fp.monads import awaitable_sequence as as_
-        >>> awtbl: AwaitableSequence[int] = as_.construct(7)
-        >>> a_seq: AwaitableSequence[Sequence[int]] = (
-        ...     as_.construct_from_awaitable(awtbl)
-        ... )
+        >>> awtbl: Awaitable[int] = a.construct(7)
+        >>> a_seq: AwaitableSequence[int] = as_.construct_from_awaitable(awtbl)
         >>> asyncio.run(as_.to_coroutine_sequence(a_seq))
-        [[7]]
+        [7]
     """
     return a.map_(s.construct)(awtbl)
 
@@ -142,18 +141,19 @@ def construct_from_sequence(seq: Sequence[_T]) -> AwaitableSequence[_T]:
 def map_(
     f: Callable[[_T1], _T2],
 ) -> Callable[[AwaitableSequence[_T1]], AwaitableSequence[_T2]]:
-    """Map a synchronous function over each element of a [trcks.AwaitableSequence][].
+    """Create function that maps [trcks.AwaitableSequence][]s to
+    [trcks.AwaitableSequence][]s of the same length.
 
     Args:
         f: Function to apply to each element.
 
     Returns:
-        Function that takes a [trcks.AwaitableSequence][] and yields a
-        [trcks.AwaitableSequence][] with `f` applied element-wise.
+        Maps [trcks.AwaitableSequence][]s to [trcks.AwaitableSequence][]s
+            of the same length according to the given function.
 
     Example:
         >>> import asyncio
-    >>> from collections.abc import Sequence
+        >>> from collections.abc import Sequence
         >>> from trcks.fp.composition import pipe
         >>> from trcks.fp.monads import awaitable_sequence as as_
         >>> async def main() -> Sequence[int]:
@@ -220,17 +220,17 @@ def map_to_awaitable_sequence(
 
     Example:
         >>> import asyncio
-    >>> from collections.abc import Sequence
+        >>> from collections.abc import Sequence
         >>> from trcks.fp.composition import pipe
         >>> from trcks.fp.monads import awaitable_sequence as as_
-        >>> async def dup(x: int) -> list[int]:
+        >>> async def duplicate(x: int) -> list[int]:
         ...     await asyncio.sleep(0.001)
         ...     return [x, x]
         >>> async def main() -> Sequence[int]:
         ...     return await pipe(
         ...         (
         ...             as_.construct_from_sequence([1, 2]),
-        ...             as_.map_to_awaitable_sequence(dup),
+        ...             as_.map_to_awaitable_sequence(duplicate),
         ...         )
         ...     )
         >>> asyncio.run(main())
@@ -297,9 +297,10 @@ def tap(
         ...             as_.tap(lambda x: print(f"seen {x}")),
         ...         )
         ...     )
-        >>> asyncio.run(main())
+        >>> seq = asyncio.run(main())
         seen 1
         seen 2
+        >>> seq
         [1, 2]
     """
     return a.map_(s.tap(f))
@@ -332,9 +333,10 @@ def tap_to_awaitable(
         ...             as_.tap_to_awaitable(log_async),
         ...         )
         ...     )
-        >>> asyncio.run(main())
+        >>> seq = asyncio.run(main())
         logged 1
         logged 2
+        >>> seq
         [1, 2]
     """
 
@@ -435,8 +437,10 @@ async def to_coroutine_sequence(a_seq: AwaitableSequence[_T]) -> Sequence[_T]:
 
     Example:
         >>> import asyncio
+        >>> from trcks import AwaitableSequence
         >>> from trcks.fp.monads import awaitable_sequence as as_
-        >>> coro = as_.to_coroutine_sequence(as_.construct_from_sequence((3, 4)))
+        >>> a_seq: AwaitableSequence[int] = as_.construct_from_sequence((3, 4))
+        >>> coro = as_.to_coroutine_sequence(a_seq)
         >>> asyncio.run(coro)
         (3, 4)
     """
