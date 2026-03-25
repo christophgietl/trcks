@@ -73,13 +73,13 @@ _T2 = TypeVar("_T2")
 
 
 def construct(value: _T) -> AwaitableSequence[_T]:
-    """Create a [trcks.AwaitableSequence][] object from a single value.
+    """Create a [trcks.AwaitableSequence][] from a value.
 
     Args:
-        value: A single value.
+        value: The value to create the [trcks.AwaitableSequence][] from.
 
     Returns:
-        A [trcks.AwaitableSequence][] instance containing the single value.
+        The [trcks.AwaitableSequence][] created from the value.
 
     Example:
         >>> import asyncio
@@ -93,14 +93,13 @@ def construct(value: _T) -> AwaitableSequence[_T]:
 
 
 def construct_from_awaitable(awtbl: Awaitable[_T]) -> AwaitableSequence[_T]:
-    """Create a [trcks.AwaitableSequence][] object from an awaitable value.
+    """Create a [trcks.AwaitableSequence][] from an awaitable value.
 
     Args:
-        awtbl: Awaitable value to be wrapped in a [trcks.AwaitableSequence][].
+        awtbl: The awaitable value to create the [trcks.AwaitableSequence][] from.
 
     Returns:
-        A [trcks.AwaitableSequence][] instance containing
-        the value of the given awaitable.
+        The [trcks.AwaitableSequence][] created from the awaitable value.
 
     Example:
         >>> import asyncio
@@ -117,13 +116,14 @@ def construct_from_awaitable(awtbl: Awaitable[_T]) -> AwaitableSequence[_T]:
 
 
 def construct_from_sequence(seq: Sequence[_T]) -> AwaitableSequence[_T]:
-    """Create a [trcks.AwaitableSequence][] object from a sequence.
+    """Create a [trcks.AwaitableSequence][] from a [collections.abc.Sequence][].
 
     Args:
-        seq: Sequence to be wrapped in a [trcks.AwaitableSequence][].
+        seq: The [collections.abc.Sequence][] to create
+            the [trcks.AwaitableSequence][] from.
 
     Returns:
-        A [trcks.AwaitableSequence][] instance containing the given sequence.
+        The [trcks.AwaitableSequence][] created from the sequence.
 
     Example:
         >>> import asyncio
@@ -141,16 +141,19 @@ def construct_from_sequence(seq: Sequence[_T]) -> AwaitableSequence[_T]:
 def map_(
     f: Callable[[_T1], _T2],
 ) -> Callable[[AwaitableSequence[_T1]], AwaitableSequence[_T2]]:
-    """Turn synchronous function into function mapping
-    [trcks.AwaitableSequence][]s to [trcks.AwaitableSequence][]s
+    """Turn synchronous function into a function
+    expecting and returning [trcks.AwaitableSequence][]s
     of the same length.
 
     Args:
-        f: Synchronous function to apply to each element.
+        f:
+            The synchronous function to be transformed into
+            a function expecting and returning
+            [trcks.AwaitableSequence][]s of the same length.
 
     Returns:
-        The given synchronous function transformed into a function
-            mapping [trcks.AwaitableSequence][]s to
+        The given function transformed into
+            a function expecting and returning
             [trcks.AwaitableSequence][]s of the same length.
 
     Example:
@@ -174,16 +177,20 @@ def map_(
 def map_to_awaitable(
     f: Callable[[_T1], Awaitable[_T2]],
 ) -> Callable[[AwaitableSequence[_T1]], AwaitableSequence[_T2]]:
-    """Turn [collections.abc.Awaitable][]-returning function into function
-    mapping [trcks.AwaitableSequence][]s to [trcks.AwaitableSequence][]s.
+    """Turn [collections.abc.Awaitable][]-returning function into a function
+    expecting and returning [trcks.AwaitableSequence][]s
+    of the same length.
 
     Args:
-        f: Asynchronous function to apply to each element.
+        f:
+            The [collections.abc.Awaitable][]-returning function to be transformed
+            into a function expecting and returning
+            [trcks.AwaitableSequence][]s of the same length.
 
     Returns:
-        The given [collections.abc.Awaitable][]-returning function transformed
-            into a function mapping [trcks.AwaitableSequence][]s to
-            [trcks.AwaitableSequence][]s.
+        The given function transformed into
+            a function expecting and returning
+            [trcks.AwaitableSequence][]s of the same length.
 
     Example:
         >>> import asyncio
@@ -209,17 +216,19 @@ def map_to_awaitable(
 def map_to_awaitable_sequence(
     f: Callable[[_T1], AwaitableSequence[_T2]],
 ) -> Callable[[AwaitableSequence[_T1]], AwaitableSequence[_T2]]:
-    """Turn [trcks.AwaitableSequence][]-returning function into function
-    mapping [trcks.AwaitableSequence][]s to [trcks.AwaitableSequence][]s
+    """Turn [trcks.AwaitableSequence][]-returning function into a function
+    expecting and returning [trcks.AwaitableSequence][]s
     of varying length.
 
     Args:
-        f: Asynchronous function returning a [trcks.AwaitableSequence][] for
-            each element.
+        f:
+            The [trcks.AwaitableSequence][]-returning function to be transformed
+            into a function expecting and returning
+            [trcks.AwaitableSequence][]s of varying length.
 
     Returns:
-        The given [trcks.AwaitableSequence][]-returning function transformed
-            into a function mapping [trcks.AwaitableSequence][]s to
+        The given function transformed into
+            a function expecting and returning
             [trcks.AwaitableSequence][]s of varying length.
 
     Example:
@@ -250,17 +259,19 @@ def map_to_awaitable_sequence(
 def map_to_sequence(
     f: Callable[[_T1], Sequence[_T2]],
 ) -> Callable[[AwaitableSequence[_T1]], AwaitableSequence[_T2]]:
-    """Turn [collections.abc.Sequence][]-returning function into function
-    mapping [trcks.AwaitableSequence][]s to [trcks.AwaitableSequence][]s
+    """Turn [collections.abc.Sequence][]-returning function into a function
+    expecting and returning [trcks.AwaitableSequence][]s
     of varying length.
 
     Args:
-        f: Synchronous function returning a [collections.abc.Sequence][]
-            for each element.
+        f:
+            The [collections.abc.Sequence][]-returning function to be transformed
+            into a function expecting and returning
+            [trcks.AwaitableSequence][]s of varying length.
 
     Returns:
-        The given [collections.abc.Sequence][]-returning function transformed
-            into a function mapping [trcks.AwaitableSequence][]s to
+        The given function transformed into
+            a function expecting and returning
             [trcks.AwaitableSequence][]s of varying length.
 
     Example:
@@ -284,16 +295,20 @@ def map_to_sequence(
 def tap(
     f: Callable[[_T1], object],
 ) -> Callable[[AwaitableSequence[_T1]], AwaitableSequence[_T1]]:
-    """Turn synchronous function into function applying a side effect
-    to each element of a [trcks.AwaitableSequence][].
+    """Turn synchronous function into a function
+    expecting a [trcks.AwaitableSequence][] and
+    returning the same [trcks.AwaitableSequence][].
 
     Args:
-        f: Synchronous side-effect function to apply to each element.
+        f:
+            The synchronous function to be transformed into a function
+            expecting a [trcks.AwaitableSequence][] and
+            returning the same [trcks.AwaitableSequence][].
 
     Returns:
-        The given synchronous function transformed into a function
-            applying a side effect to each element of a
-            [trcks.AwaitableSequence][].
+        The given function transformed into a function
+            expecting a [trcks.AwaitableSequence][] and
+            returning the same [trcks.AwaitableSequence][].
 
     Example:
         >>> import asyncio
@@ -319,17 +334,20 @@ def tap(
 def tap_to_awaitable(
     f: Callable[[_T1], Awaitable[object]],
 ) -> Callable[[AwaitableSequence[_T1]], AwaitableSequence[_T1]]:
-    """Turn [collections.abc.Awaitable][]-returning function into function
-    applying an asynchronous side effect to each element of a
-    [trcks.AwaitableSequence][].
+    """Turn [collections.abc.Awaitable][]-returning function into a function
+    expecting a [trcks.AwaitableSequence][] and
+    returning the same [trcks.AwaitableSequence][].
 
     Args:
-        f: Asynchronous side-effect function to apply to each element.
+        f:
+            The [collections.abc.Awaitable][]-returning function to be transformed
+            into a function expecting a [trcks.AwaitableSequence][] and
+            returning the same [trcks.AwaitableSequence][].
 
     Returns:
-        The given [collections.abc.Awaitable][]-returning function transformed
-            into a function applying an asynchronous side effect to each
-            element of a [trcks.AwaitableSequence][].
+        The given function transformed into a function
+            expecting a [trcks.AwaitableSequence][] and
+            returning the same [trcks.AwaitableSequence][].
 
     Example:
         >>> import asyncio
@@ -363,18 +381,20 @@ def tap_to_awaitable(
 def tap_to_awaitable_sequence(
     f: Callable[[_T1], AwaitableSequence[object]],
 ) -> Callable[[AwaitableSequence[_T1]], AwaitableSequence[_T1]]:
-    """Turn [trcks.AwaitableSequence][]-returning function into function
-    applying an asynchronous side effect to each element of a
-    [trcks.AwaitableSequence][].
+    """Turn [trcks.AwaitableSequence][]-returning function into a function
+    expecting a [trcks.AwaitableSequence][] and
+    returning the same [trcks.AwaitableSequence][].
 
     Args:
-        f: Asynchronous side-effect producing a [trcks.AwaitableSequence][]
-            for each element.
+        f:
+            The [trcks.AwaitableSequence][]-returning function to be transformed
+            into a function expecting a [trcks.AwaitableSequence][] and
+            returning the same [trcks.AwaitableSequence][].
 
     Returns:
-        The given [trcks.AwaitableSequence][]-returning function transformed
-            into a function applying an asynchronous side effect to each
-            element of a [trcks.AwaitableSequence][].
+        The given function transformed into a function
+            expecting a [trcks.AwaitableSequence][] and
+            returning the same [trcks.AwaitableSequence][].
 
     Example:
         >>> import asyncio
@@ -405,17 +425,20 @@ def tap_to_awaitable_sequence(
 def tap_to_sequence(
     f: Callable[[_T1], Sequence[object]],
 ) -> Callable[[AwaitableSequence[_T1]], AwaitableSequence[_T1]]:
-    """Turn [collections.abc.Sequence][]-returning function into function
-    applying a side effect to each element of a [trcks.AwaitableSequence][].
+    """Turn [collections.abc.Sequence][]-returning function into a function
+    expecting a [trcks.AwaitableSequence][] and
+    returning the same [trcks.AwaitableSequence][].
 
     Args:
-        f: Synchronous side-effect producing a [collections.abc.Sequence][]
-            for each element.
+        f:
+            The [collections.abc.Sequence][]-returning function to be transformed
+            into a function expecting a [trcks.AwaitableSequence][] and
+            returning the same [trcks.AwaitableSequence][].
 
     Returns:
-        The given [collections.abc.Sequence][]-returning function transformed
-            into a function applying a side effect to each element of a
-            [trcks.AwaitableSequence][].
+        The given function transformed into a function
+            expecting a [trcks.AwaitableSequence][] and
+            returning the same [trcks.AwaitableSequence][].
 
     Example:
         >>> import asyncio
@@ -436,15 +459,22 @@ def tap_to_sequence(
 
 
 async def to_coroutine_sequence(a_seq: AwaitableSequence[_T]) -> Sequence[_T]:
-    """Turn a [trcks.AwaitableSequence][] into a coroutine.
+    """Turn a [trcks.AwaitableSequence][] into a [collections.abc.Coroutine][].
 
-    Useful for functions expecting a coroutine (e.g., [asyncio.run][]).
+    This is useful for functions that expect a coroutine (e.g. [asyncio.run][]).
 
     Args:
-        a_seq: The [trcks.AwaitableSequence][] to be transformed.
+        a_seq: The [trcks.AwaitableSequence][] to be transformed
+            into a [collections.abc.Coroutine][].
 
     Returns:
-        The given [trcks.AwaitableSequence][] transformed into a coroutine.
+        The given [trcks.AwaitableSequence][] transformed
+            into a [collections.abc.Coroutine][].
+
+    Note:
+        The type [trcks.AwaitableSequence][] is
+        an alias of [collections.abc.Awaitable][] over
+        [collections.abc.Sequence][] values.
 
     Example:
         >>> import asyncio
