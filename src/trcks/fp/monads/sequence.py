@@ -86,11 +86,17 @@ def map_(f: Callable[[_T1], _T2]) -> Callable[[Sequence[_T1]], Sequence[_T2]]:
             of the same length according to the given function.
 
     Example:
+        >>> from collections.abc import Callable, Sequence
         >>> from trcks.fp.monads import sequence as s
-        >>> double = s.map_(lambda x: x * 2)
-        >>> double([1, 2, 3])
+        >>> def double_integer(x: int) -> int:
+        ...     return x * 2
+        ...
+        >>> double_integer_sequence: Callable[
+        ...     [Sequence[int]], Sequence[int]
+        ... ] = s.map_(double_integer)
+        >>> double_integer_sequence([1, 2, 3])
         [2, 4, 6]
-        >>> double((1, 2, 3))
+        >>> double_integer_sequence((1, 2, 3))
         [2, 4, 6]
     """
     return map_to_sequence(compose2((f, construct)))
@@ -111,9 +117,15 @@ def map_to_sequence(
             of varying length according to the given function.
 
     Example:
+        >>> from collections.abc import Callable, Sequence
         >>> from trcks.fp.monads import sequence as s
-        >>> duplicate = s.map_to_sequence(lambda x: [x, x])
-        >>> duplicate([1, 2, 3])
+        >>> def duplicate_integer(x: int) -> list[int]:
+        ...     return [x, x]
+        ...
+        >>> duplicate_integer_sequence: Callable[
+        ...     [Sequence[int]], Sequence[int]
+        ... ] = s.map_to_sequence(duplicate_integer)
+        >>> duplicate_integer_sequence([1, 2, 3])
         [1, 1, 2, 2, 3, 3]
     """
 
@@ -138,11 +150,12 @@ def tap(
             [collections.abc.Sequence][].
 
     Example:
+        >>> from collections.abc import Callable, Sequence
         >>> from trcks.fp.monads import sequence as s
         >>> def log(x: int) -> None:
         ...     print(f"Received: {x}")
         ...
-        >>> log_and_pass = s.tap(log)
+        >>> log_and_pass: Callable[[Sequence[int]], Sequence[int]] = s.tap(log)
         >>> result = log_and_pass([1, 2, 3])
         Received: 1
         Received: 2
@@ -170,12 +183,15 @@ def tap_to_sequence(
             many times as the side effect returns elements.
 
     Example:
+        >>> from collections.abc import Callable, Sequence
         >>> from trcks.fp.monads import sequence as s
         >>> def write_to_disk(x: int) -> list[str]:
         ...     print(f"Wrote {x} to disk.")
         ...     return [str(x), str(x)]
         ...
-        >>> write_and_pass = s.tap_to_sequence(write_to_disk)
+        >>> write_and_pass: Callable[
+        ...     [Sequence[int]], Sequence[int]
+        ... ] = s.tap_to_sequence(write_to_disk)
         >>> result = write_and_pass([1, 2, 3])
         Wrote 1 to disk.
         Wrote 2 to disk.
