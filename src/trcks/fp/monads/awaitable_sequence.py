@@ -440,8 +440,7 @@ async def to_coroutine_sequence(a_seq: AwaitableSequence[_T]) -> Sequence[_T]:
         >>> from trcks import AwaitableSequence
         >>> from trcks.fp.monads import awaitable_sequence as as_
         >>> a_seq: AwaitableSequence[int] = as_.construct_from_sequence((3, 4))
-        >>> coro = as_.to_coroutine_sequence(a_seq)
-        >>> asyncio.run(coro)
+        >>> asyncio.run(as_.to_coroutine_sequence(a_seq))
         (3, 4)
     """
     return await a_seq
