@@ -141,15 +141,17 @@ def construct_from_sequence(seq: Sequence[_T]) -> AwaitableSequence[_T]:
 def map_(
     f: Callable[[_T1], _T2],
 ) -> Callable[[AwaitableSequence[_T1]], AwaitableSequence[_T2]]:
-    """Create function that maps [trcks.AwaitableSequence][]s to
-    [trcks.AwaitableSequence][]s of the same length.
+    """Turn synchronous function into function mapping
+    [trcks.AwaitableSequence][]s to [trcks.AwaitableSequence][]s
+    of the same length.
 
     Args:
-        f: Function to apply to each element.
+        f: Synchronous function to apply to each element.
 
     Returns:
-        Maps [trcks.AwaitableSequence][]s to [trcks.AwaitableSequence][]s
-            of the same length according to the given function.
+        The given synchronous function transformed into a function
+            mapping [trcks.AwaitableSequence][]s to
+            [trcks.AwaitableSequence][]s of the same length.
 
     Example:
         >>> import asyncio
@@ -172,17 +174,16 @@ def map_(
 def map_to_awaitable(
     f: Callable[[_T1], Awaitable[_T2]],
 ) -> Callable[[AwaitableSequence[_T1]], AwaitableSequence[_T2]]:
-    """Map an awaitable-returning function over a [trcks.AwaitableSequence][].
-
-    Each element is transformed by the asynchronous function and the results
-    are collected into a sequence.
+    """Turn [collections.abc.Awaitable][]-returning function into function
+    mapping [trcks.AwaitableSequence][]s to [trcks.AwaitableSequence][]s.
 
     Args:
         f: Asynchronous function to apply to each element.
 
     Returns:
-        Function that takes a [trcks.AwaitableSequence][] and returns a
-        [trcks.AwaitableSequence][] of the transformed values.
+        The given [collections.abc.Awaitable][]-returning function transformed
+            into a function mapping [trcks.AwaitableSequence][]s to
+            [trcks.AwaitableSequence][]s.
 
     Example:
         >>> import asyncio
@@ -208,15 +209,18 @@ def map_to_awaitable(
 def map_to_awaitable_sequence(
     f: Callable[[_T1], AwaitableSequence[_T2]],
 ) -> Callable[[AwaitableSequence[_T1]], AwaitableSequence[_T2]]:
-    """Map a [trcks.AwaitableSequence][]-returning function and flatten results.
+    """Turn [trcks.AwaitableSequence][]-returning function into function
+    mapping [trcks.AwaitableSequence][]s to [trcks.AwaitableSequence][]s
+    of varying length.
 
     Args:
         f: Asynchronous function returning a [trcks.AwaitableSequence][] for
             each element.
 
     Returns:
-        Function that takes a [trcks.AwaitableSequence][], applies `f` to each
-        element, awaits and flattens the resulting sequences.
+        The given [trcks.AwaitableSequence][]-returning function transformed
+            into a function mapping [trcks.AwaitableSequence][]s to
+            [trcks.AwaitableSequence][]s of varying length.
 
     Example:
         >>> import asyncio
@@ -246,14 +250,18 @@ def map_to_awaitable_sequence(
 def map_to_sequence(
     f: Callable[[_T1], Sequence[_T2]],
 ) -> Callable[[AwaitableSequence[_T1]], AwaitableSequence[_T2]]:
-    """Map a sequence-returning function over a [trcks.AwaitableSequence][].
+    """Turn [collections.abc.Sequence][]-returning function into function
+    mapping [trcks.AwaitableSequence][]s to [trcks.AwaitableSequence][]s
+    of varying length.
 
     Args:
-        f: Function returning a sequence for each element.
+        f: Synchronous function returning a [collections.abc.Sequence][]
+            for each element.
 
     Returns:
-        Function that takes a [trcks.AwaitableSequence][], applies `f` to each
-        element, and returns a [trcks.AwaitableSequence][] of flattened values.
+        The given [collections.abc.Sequence][]-returning function transformed
+            into a function mapping [trcks.AwaitableSequence][]s to
+            [trcks.AwaitableSequence][]s of varying length.
 
     Example:
         >>> import asyncio
@@ -276,14 +284,16 @@ def map_to_sequence(
 def tap(
     f: Callable[[_T1], object],
 ) -> Callable[[AwaitableSequence[_T1]], AwaitableSequence[_T1]]:
-    """Apply a side effect to each element of a [trcks.AwaitableSequence][].
+    """Turn synchronous function into function applying a side effect
+    to each element of a [trcks.AwaitableSequence][].
 
     Args:
-        f: Side-effect function to apply to each element.
+        f: Synchronous side-effect function to apply to each element.
 
     Returns:
-        Function that takes a [trcks.AwaitableSequence][], applies the side
-        effect, and returns the original elements.
+        The given synchronous function transformed into a function
+            applying a side effect to each element of a
+            [trcks.AwaitableSequence][].
 
     Example:
         >>> import asyncio
@@ -309,14 +319,17 @@ def tap(
 def tap_to_awaitable(
     f: Callable[[_T1], Awaitable[object]],
 ) -> Callable[[AwaitableSequence[_T1]], AwaitableSequence[_T1]]:
-    """Apply an awaitable side effect to each element of a [trcks.AwaitableSequence][].
+    """Turn [collections.abc.Awaitable][]-returning function into function
+    applying an asynchronous side effect to each element of a
+    [trcks.AwaitableSequence][].
 
     Args:
-        f: Asynchronous side-effect function.
+        f: Asynchronous side-effect function to apply to each element.
 
     Returns:
-        Function that takes a [trcks.AwaitableSequence][], applies the side
-        effect, and returns the original elements.
+        The given [collections.abc.Awaitable][]-returning function transformed
+            into a function applying an asynchronous side effect to each
+            element of a [trcks.AwaitableSequence][].
 
     Example:
         >>> import asyncio
@@ -350,18 +363,18 @@ def tap_to_awaitable(
 def tap_to_awaitable_sequence(
     f: Callable[[_T1], AwaitableSequence[object]],
 ) -> Callable[[AwaitableSequence[_T1]], AwaitableSequence[_T1]]:
-    """Apply a [trcks.AwaitableSequence][]-returning side effect to each element.
-
-    The number of side-effect outputs determines how many times each original
-    element is repeated in the resulting sequence.
+    """Turn [trcks.AwaitableSequence][]-returning function into function
+    applying an asynchronous side effect to each element of a
+    [trcks.AwaitableSequence][].
 
     Args:
-        f: Asynchronous side-effect producing a sequence for each element.
+        f: Asynchronous side-effect producing a [trcks.AwaitableSequence][]
+            for each element.
 
     Returns:
-        Function that takes a [trcks.AwaitableSequence][], applies the side
-        effect, and returns a sequence of the original elements, replicated
-        accordingly.
+        The given [trcks.AwaitableSequence][]-returning function transformed
+            into a function applying an asynchronous side effect to each
+            element of a [trcks.AwaitableSequence][].
 
     Example:
         >>> import asyncio
@@ -392,19 +405,17 @@ def tap_to_awaitable_sequence(
 def tap_to_sequence(
     f: Callable[[_T1], Sequence[object]],
 ) -> Callable[[AwaitableSequence[_T1]], AwaitableSequence[_T1]]:
-    """Apply a sequence-returning side effect to each element of a
-    [trcks.AwaitableSequence][].
-
-    The number of side-effect outputs determines how many times each original
-    element is repeated in the resulting sequence.
+    """Turn [collections.abc.Sequence][]-returning function into function
+    applying a side effect to each element of a [trcks.AwaitableSequence][].
 
     Args:
-        f: Side-effect producing a sequence for each element.
+        f: Synchronous side-effect producing a [collections.abc.Sequence][]
+            for each element.
 
     Returns:
-        Function that takes a [trcks.AwaitableSequence][], applies the side
-        effect, and returns a sequence of the original elements, replicated
-        accordingly.
+        The given [collections.abc.Sequence][]-returning function transformed
+            into a function applying a side effect to each element of a
+            [trcks.AwaitableSequence][].
 
     Example:
         >>> import asyncio
