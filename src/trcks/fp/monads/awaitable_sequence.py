@@ -13,12 +13,15 @@ Example:
     >>> def double(x: int) -> int:
     ...     return x * 2
     ...
+    >>> def print_integer(x: int) -> None:
+    ...     print(f"Processed: {x}")
+    ...
     >>> async def main() -> Sequence[int]:
     ...     return await pipe(
     ...         (
     ...             as_.construct_from_sequence((4, 2, 0)),
     ...             as_.map_(double),
-    ...             as_.tap(lambda x: print(f"Processed: {x}")),
+    ...             as_.tap(print_integer),
     ...         )
     ...     )
     ...
@@ -130,8 +133,7 @@ def construct_from_sequence(seq: Sequence[_T]) -> AwaitableSequence[_T]:
         >>> from collections.abc import Sequence
         >>> from trcks import AwaitableSequence
         >>> from trcks.fp.monads import awaitable_sequence as as_
-        >>> seq: Sequence[int] = [1, 2]
-        >>> a_seq: AwaitableSequence[int] = as_.construct_from_sequence(seq)
+        >>> a_seq: AwaitableSequence[int] = as_.construct_from_sequence([1, 2])
         >>> asyncio.run(as_.to_coroutine_sequence(a_seq))
         [1, 2]
     """
@@ -315,11 +317,14 @@ def tap(
         >>> from collections.abc import Sequence
         >>> from trcks.fp.composition import pipe
         >>> from trcks.fp.monads import awaitable_sequence as as_
+        >>> def log_sync(x: int) -> None:
+        ...     print(f"seen {x}")
+        ...
         >>> async def main() -> Sequence[int]:
         ...     return await pipe(
         ...         (
         ...             as_.construct_from_sequence([1, 2]),
-        ...             as_.tap(lambda x: print(f"seen {x}")),
+        ...             as_.tap(log_sync),
         ...         )
         ...     )
         >>> seq = asyncio.run(main())
@@ -459,17 +464,17 @@ def tap_to_sequence(
 
 
 async def to_coroutine_sequence(a_seq: AwaitableSequence[_T]) -> Sequence[_T]:
-    """Turn a [trcks.AwaitableSequence][] into a [collections.abc.Coroutine][].
+    """Turn a [trcks.AwaitableSequence][] into a coroutine.
 
     This is useful for functions that expect a coroutine (e.g. [asyncio.run][]).
 
     Args:
         a_seq: The [trcks.AwaitableSequence][] to be transformed
-            into a [collections.abc.Coroutine][].
+            into a coroutine.
 
     Returns:
         The given [trcks.AwaitableSequence][] transformed
-            into a [collections.abc.Coroutine][].
+            into a coroutine.
 
     Note:
         The type [trcks.AwaitableSequence][] is
@@ -480,8 +485,8 @@ async def to_coroutine_sequence(a_seq: AwaitableSequence[_T]) -> Sequence[_T]:
         >>> import asyncio
         >>> from trcks import AwaitableSequence
         >>> from trcks.fp.monads import awaitable_sequence as as_
-        >>> a_seq: AwaitableSequence[int] = as_.construct_from_sequence((3, 4))
+        >>> a_seq: AwaitableSequence[int] = as_.construct_from_sequence([3, 4])
         >>> asyncio.run(as_.to_coroutine_sequence(a_seq))
-        (3, 4)
+        [3, 4]
     """
     return await a_seq
