@@ -14,7 +14,7 @@ Example:
     ...     return x * 2
     ...
     >>> def print_integer(x: int) -> None:
-    ...     print(f"Processed: {x}")
+    ...     print(f"Integer: {x}")
     ...
     >>> async def main() -> Sequence[int]:
     ...     return await pipe(
@@ -26,9 +26,9 @@ Example:
     ...     )
     ...
     >>> result = asyncio.run(main())
-    Processed: 8
-    Processed: 4
-    Processed: 0
+    Integer: 8
+    Integer: 4
+    Integer: 0
     >>> result
     [8, 4, 0]
 
@@ -317,19 +317,19 @@ def tap(
         >>> from collections.abc import Sequence
         >>> from trcks.fp.composition import pipe
         >>> from trcks.fp.monads import awaitable_sequence as as_
-        >>> def log_sync(x: int) -> None:
-        ...     print(f"seen {x}")
+        >>> def print_integer(x: int) -> None:
+        ...     print(f"Integer: {x}")
         ...
         >>> async def main() -> Sequence[int]:
         ...     return await pipe(
         ...         (
         ...             as_.construct_from_sequence([1, 2]),
-        ...             as_.tap(log_sync),
+        ...             as_.tap(print_integer),
         ...         )
         ...     )
         >>> seq = asyncio.run(main())
-        seen 1
-        seen 2
+        Integer: 1
+        Integer: 2
         >>> seq
         [1, 2]
     """
@@ -359,19 +359,19 @@ def tap_to_awaitable(
         >>> from collections.abc import Sequence
         >>> from trcks.fp.composition import pipe
         >>> from trcks.fp.monads import awaitable_sequence as as_
-        >>> async def log_async(x: int) -> None:
+        >>> async def print_integer(x: int) -> None:
         ...     await asyncio.sleep(0.001)
-        ...     print(f"logged {x}")
+        ...     print(f"Integer: {x}")
         >>> async def main() -> Sequence[int]:
         ...     return await pipe(
         ...         (
         ...             as_.construct_from_sequence([1, 2]),
-        ...             as_.tap_to_awaitable(log_async),
+        ...             as_.tap_to_awaitable(print_integer),
         ...         )
         ...     )
         >>> seq = asyncio.run(main())
-        logged 1
-        logged 2
+        Integer: 1
+        Integer: 2
         >>> seq
         [1, 2]
     """
