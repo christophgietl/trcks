@@ -8,6 +8,10 @@ updates:
       interval: daily
   - package-ecosystem: pre-commit
     directory: /
+    groups:
+      pre-commit:
+        patterns:
+          - "*"
     schedule:
       interval: daily
   - package-ecosystem: uv
