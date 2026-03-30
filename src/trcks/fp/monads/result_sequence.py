@@ -1,21 +1,37 @@
 """Monadic functions for [trcks.ResultSequence][].
 
 Provides utilities for functional composition of
-[trcks.ResultSequence][] values.
+functions returning [trcks.ResultSequence][] values.
 
 Example:
     Map and tap each element inside a success sequence:
 
-    >>> from trcks.fp.composition import pipe
+    >>> from trcks import ResultSequence, SuccessSequence
+    >>> from trcks.fp.composition import Pipeline4, pipe
     >>> from trcks.fp.monads import result as r
     >>> from trcks.fp.monads import result_sequence as rs
-    >>> p = (
+    >>> def double(x: int) -> int:
+    ...     return x * 2
+    ...
+    >>> def print_processed(x: int) -> None:
+    ...     print(f"Processed: {x}")
+    ...
+    >>> def expand(x: int) -> list[int]:
+    ...     return [x, -x]
+    ...
+    >>> pipeline: Pipeline4[
+    ...     SuccessSequence[int],
+    ...     ResultSequence[int, int],
+    ...     ResultSequence[int, int],
+    ...     ResultSequence[int, int],
+    ...     ResultSequence[int, int],
+    ... ] = (
     ...     rs.construct_successes_from_sequence([1, 2, 3]),
-    ...     rs.map_successes(lambda x: x * 2),
-    ...     rs.tap_successes(lambda x: print(f"Processed: {x}")),
-    ...     rs.map_successes_to_sequence(lambda x: [x, -x]),
+    ...     rs.map_successes(double),
+    ...     rs.tap_successes(print_processed),
+    ...     rs.map_successes_to_sequence(expand),
     ... )
-    >>> pipe(p)
+    >>> pipe(pipeline)
     Processed: 2
     Processed: 4
     Processed: 6
@@ -54,6 +70,10 @@ def construct_failure(value: _F) -> Failure[_F]:
 
     Returns:
         [trcks.Failure][] object containing the given value.
+
+    Note:
+        This function is an alias for
+        [trcks.fp.monads.result.construct_failure][].
 
     Example:
         >>> from trcks.fp.monads import result_sequence as rs
