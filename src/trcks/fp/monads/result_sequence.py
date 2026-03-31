@@ -467,8 +467,8 @@ def tap_failure_to_result(
 def tap_failure_to_result_sequence(
     f: Callable[[_F1], ResultSequence[object, _S2]],
 ) -> Callable[[ResultSequence[_F1, _S1]], Result[_F1, Sequence[_S1] | Sequence[_S2]]]:
-    """Create function that applies a side effect with return type [trcks.ResultSequence][]
-    to [trcks.Failure][] values.
+    """Create function that applies a side effect with return type
+    [trcks.ResultSequence][] to [trcks.Failure][] values.
 
     [trcks.SuccessSequence][] values are passed on without side effects.
 
@@ -545,8 +545,9 @@ def tap_successes(
 
     Returns:
         Passes on [trcks.Failure][] values without side effects.
-            Applies the given side effect to each element of the [trcks.SuccessSequence][]
-            and returns the original [trcks.SuccessSequence][].
+            Applies the given side effect to each element of the
+            [trcks.SuccessSequence][] and returns the original
+            [trcks.SuccessSequence][].
     """
     return r.map_success(s.tap(f))
 
@@ -564,7 +565,8 @@ def tap_successes_to_result(
 
     Returns:
         Passes on [trcks.Failure][] values without side effects.
-            Applies the given side effect to each element of the [trcks.SuccessSequence][].
+            Applies the given side effect to each element of the
+            [trcks.SuccessSequence][].
             If the given side effect returns a [trcks.Failure][],
             *this* [trcks.Failure][] is returned.
             If the given side effect returns a [trcks.Success][],
@@ -591,8 +593,8 @@ def tap_successes_to_result(
 def tap_successes_to_result_sequence(
     f: Callable[[_S1], ResultSequence[_F2, object]],
 ) -> Callable[[ResultSequence[_F1, _S1]], ResultSequence[_F1 | _F2, _S1]]:
-    """Create function that applies a side effect with return type [trcks.ResultSequence][]
-    to each element of a [trcks.SuccessSequence][].
+    """Create function that applies a side effect with return type
+    [trcks.ResultSequence][] to each element of a [trcks.SuccessSequence][].
 
     [trcks.Failure][] values are passed on without side effects.
 
@@ -601,7 +603,8 @@ def tap_successes_to_result_sequence(
 
     Returns:
         Passes on [trcks.Failure][] values without side effects.
-            Applies the given side effect to each element of the [trcks.SuccessSequence][].
+            Applies the given side effect to each element of the
+            [trcks.SuccessSequence][].
             If the given side effect returns a [trcks.Failure][],
             *this* [trcks.Failure][] is returned.
             If the given side effect returns a [trcks.SuccessSequence][],
@@ -645,7 +648,8 @@ def tap_successes_to_sequence(
 
     Returns:
         Passes on [trcks.Failure][] values without side effects.
-            Applies the given side effect to each element of the [trcks.SuccessSequence][]
+            Applies the given side effect to each element of the
+            [trcks.SuccessSequence][]
             and repeats each original element once per element in the sequence
             returned by the side effect.
 
