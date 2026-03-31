@@ -6,7 +6,6 @@ functions returning [trcks.ResultSequence][] values.
 Example:
     Map and tap each element inside a success sequence:
 
-    >>> from trcks import ResultSequence
     >>> from trcks.fp.composition import pipe
     >>> from trcks.fp.monads import result_sequence as rs
     >>> def double(x: int) -> int:
