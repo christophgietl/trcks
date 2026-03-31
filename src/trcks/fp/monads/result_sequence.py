@@ -12,13 +12,13 @@ Example:
     >>> def double(x: int) -> int:
     ...     return x * 2
     ...
-    >>> def log(x: int) -> None:
-    ...     print(f"Received: {x}")
-    ...
     >>> def duplicate(x: int) -> list[int]:
     ...     return [x, -x]
     ...
-    >>> pipe(
+    >>> def log(x: int) -> None:
+    ...     print(f"Received: {x}")
+    ...
+    >>> result_sequence: ResultSequence[str, int] = pipe(
     ...     (
     ...         rs.construct_successes_from_sequence([1, 2, 3]),
     ...         rs.map_successes(double),
@@ -29,6 +29,7 @@ Example:
     Received: 2
     Received: 4
     Received: 6
+    >>> result_sequence
     ('success', [2, -2, 4, -4, 6, -6])
 """
 
@@ -134,16 +135,17 @@ def construct_successes_from_sequence(seq: Sequence[_S]) -> SuccessSequence[_S]:
 def map_failure(
     f: Callable[[_F1], _F2],
 ) -> Callable[[ResultSequence[_F1, _S1]], ResultSequence[_F2, _S1]]:
-    """Map [trcks.Failure][] values in a [trcks.ResultSequence][].
+    """Create function that maps [trcks.Failure][] values to [trcks.Failure][] values.
 
     [trcks.SuccessSequence][] values are left unchanged.
 
     Args:
-        f: Function to apply to the failure value.
+        f: Function to apply to the [trcks.Failure][] values.
 
     Returns:
-        Function that transforms failures and
-        passes through [trcks.SuccessSequence][] values.
+        Maps [trcks.Failure][] values to new [trcks.Failure][] values
+            according to the given function and
+            leaves [trcks.SuccessSequence][] values unchanged.
 
     Example:
         >>> from trcks.fp.monads import result_sequence as rs
@@ -159,17 +161,18 @@ def map_failure(
 def map_failure_to_result(
     f: Callable[[_F1], Result[_F2, _S2]],
 ) -> Callable[[ResultSequence[_F1, _S1]], Result[_F2, Sequence[_S1] | Sequence[_S2]]]:
-    """Map [trcks.Failure][] values in a [trcks.ResultSequence][]
-    to [trcks.Result][] values.
+    """Create function that maps [trcks.Failure][] values
+    to [trcks.Failure][] and [trcks.Success][] values.
 
     [trcks.SuccessSequence][] values are left unchanged.
 
     Args:
-        f: Function to transform the failure into a new [trcks.Result][].
+        f: Function to apply to the [trcks.Failure][] values.
 
     Returns:
-        Function that maps failures to new [trcks.Result][] values
-            and leaves [trcks.SuccessSequence][] values unchanged.
+        Maps [trcks.Failure][] values to new [trcks.Failure][] and [trcks.Success][]
+            values according to the given function and
+            leaves [trcks.SuccessSequence][] values unchanged.
 
     Example:
         >>> from trcks.fp.monads import result_sequence as rs
@@ -187,16 +190,18 @@ def map_failure_to_result(
 def map_failure_to_result_sequence(
     f: Callable[[_F1], ResultSequence[_F2, _S2]],
 ) -> Callable[[ResultSequence[_F1, _S1]], Result[_F2, Sequence[_S1] | Sequence[_S2]]]:
-    """Map [trcks.Failure][] values in a [trcks.ResultSequence][] to new values.
+    """Create function that maps [trcks.Failure][] values
+    to new [trcks.ResultSequence][] values.
 
     [trcks.SuccessSequence][] values are left unchanged.
 
     Args:
-        f: Function to transform the failure into a new [trcks.ResultSequence][].
+        f: Function to apply to the [trcks.Failure][] values.
 
     Returns:
-        Function that maps failures to new [trcks.ResultSequence][] values
-            and leaves [trcks.SuccessSequence][] values unchanged.
+        Maps [trcks.Failure][] values to new [trcks.ResultSequence][] values
+            according to the given function and
+            leaves [trcks.SuccessSequence][] values unchanged.
 
     Example:
         >>> from trcks.fp.monads import result_sequence as rs
@@ -214,16 +219,18 @@ def map_failure_to_result_sequence(
 def map_failure_to_sequence(
     f: Callable[[_F1], Sequence[_S2]],
 ) -> Callable[[ResultSequence[_F1, _S1]], SuccessSequence[_S1] | SuccessSequence[_S2]]:
-    """Map [trcks.Failure][] values in a [trcks.ResultSequence][] to sequences.
+    """Create function that maps [trcks.Failure][] values
+    to [collections.abc.Sequence][]s.
 
     [trcks.SuccessSequence][] values are left unchanged.
 
     Args:
-        f: Function to transform the failure into a sequence.
+        f: Function to apply to the [trcks.Failure][] values.
 
     Returns:
-        Function that maps failures to sequences wrapped in a [trcks.Success][]
-            and leaves [trcks.SuccessSequence][] values unchanged.
+        Maps [trcks.Failure][] values to [collections.abc.Sequence][]s wrapped
+            in a [trcks.Success][] according to the given function and
+            leaves [trcks.SuccessSequence][] values unchanged.
 
     Example:
         >>> from trcks.fp.monads import result_sequence as rs
@@ -253,16 +260,18 @@ def map_failure_to_sequence(
 def map_successes(
     f: Callable[[_S1], _S2],
 ) -> Callable[[ResultSequence[_F1, _S1]], ResultSequence[_F1, _S2]]:
-    """Map a synchronous function over each element in a [trcks.ResultSequence][].
+    """Create function that maps each element of a [trcks.SuccessSequence][]
+    to a new element.
 
     [trcks.Failure][] values are left unchanged.
 
     Args:
-        f: Function to apply to each success element.
+        f: Function to apply to each element of the [trcks.SuccessSequence][].
 
     Returns:
-        Function that transforms [trcks.SuccessSequence][] values
-            element-wise.
+        Leaves [trcks.Failure][] values unchanged and
+            maps each element of a [trcks.SuccessSequence][] to a new element
+            according to the given function.
 
     Example:
         >>> from trcks.fp.monads import result_sequence as rs
@@ -278,16 +287,19 @@ def map_successes(
 def map_successes_to_result(
     f: Callable[[_S1], Result[_F2, _S2]],
 ) -> Callable[[ResultSequence[_F1, _S1]], ResultSequence[_F1 | _F2, _S2]]:
-    """Map a result-returning function over each element in a [trcks.ResultSequence][].
+    """Create function that maps each element of a [trcks.SuccessSequence][]
+    to [trcks.Failure][] and [trcks.Success][] values.
 
     [trcks.Failure][] values are left unchanged.
 
     Args:
-        f: Function returning a [trcks.Result][] for each success element.
+        f: Function to apply to each element of the [trcks.SuccessSequence][].
 
     Returns:
-        Function that maps over [trcks.SuccessSequence][] values and
-            returns the first [trcks.Failure][] encountered, if any.
+        Leaves [trcks.Failure][] values unchanged and
+            maps each element of a [trcks.SuccessSequence][] to
+            [trcks.Failure][] and [trcks.Success][] values according to the given
+            function, returning the first [trcks.Failure][] encountered, if any.
 
     Example:
         >>> from trcks.fp.monads import result_sequence as rs
@@ -307,16 +319,19 @@ def map_successes_to_result(
 def map_successes_to_result_sequence(
     f: Callable[[_S1], ResultSequence[_F2, _S2]],
 ) -> Callable[[ResultSequence[_F1, _S1]], ResultSequence[_F1 | _F2, _S2]]:
-    """Map a sequence-returning result function over a [trcks.ResultSequence][].
+    """Create function that maps each element of a [trcks.SuccessSequence][]
+    to new [trcks.ResultSequence][] values.
 
     [trcks.Failure][] values are left unchanged.
 
     Args:
-        f: Function returning a [trcks.ResultSequence][] for each success element.
+        f: Function to apply to each element of the [trcks.SuccessSequence][].
 
     Returns:
-        Function that flat-maps [trcks.SuccessSequence][] values and
-            short-circuits on the first [trcks.Failure][] returned by `f`.
+        Leaves [trcks.Failure][] values unchanged and
+            maps each element of a [trcks.SuccessSequence][] to new
+            [trcks.ResultSequence][] values according to the given function,
+            short-circuiting on the first [trcks.Failure][] returned by `f`.
 
     Example:
         >>> from trcks.fp.monads import result_sequence as rs
@@ -359,15 +374,18 @@ def map_successes_to_result_sequence(
 def map_successes_to_sequence(
     f: Callable[[_S1], Sequence[_S2]],
 ) -> Callable[[ResultSequence[_F1, _S1]], ResultSequence[_F1, _S2]]:
-    """Map a sequence-returning function over elements in a [trcks.ResultSequence][].
+    """Create function that maps each element of a [trcks.SuccessSequence][]
+    to a [collections.abc.Sequence][].
 
     [trcks.Failure][] values are left unchanged.
 
     Args:
-        f: Function returning a sequence for each success element.
+        f: Function to apply to each element of the [trcks.SuccessSequence][].
 
     Returns:
-        Function that flat-maps over [trcks.SuccessSequence][] values.
+        Leaves [trcks.Failure][] values unchanged and
+            flat-maps each element of a [trcks.SuccessSequence][] to a
+            [collections.abc.Sequence][] according to the given function.
 
     Example:
         >>> from trcks.fp.monads import result_sequence as rs
@@ -381,17 +399,17 @@ def map_successes_to_sequence(
 def tap_failure(
     f: Callable[[_F1], object],
 ) -> Callable[[ResultSequence[_F1, _S1]], ResultSequence[_F1, _S1]]:
-    """Apply a synchronous side effect to [trcks.Failure][] values
-    in a [trcks.ResultSequence][].
+    """Create function that applies a side effect to [trcks.Failure][] values.
 
     [trcks.SuccessSequence][] values are passed on without side effects.
 
     Args:
-        f: Side-effect function to apply to the failure value.
+        f: Side effect to apply to the [trcks.Failure][] value.
 
     Returns:
-        Function that applies the side effect to failures and passes through
-            [trcks.SuccessSequence][] values unchanged.
+        Applies the given side effect to [trcks.Failure][] values and
+            returns the original [trcks.Failure][] value.
+            Passes on [trcks.SuccessSequence][] values without side effects.
 
     Example:
         >>> from trcks.fp.monads import result_sequence as rs
@@ -408,21 +426,21 @@ def tap_failure(
 def tap_failure_to_result(
     f: Callable[[_F1], Result[object, _S2]],
 ) -> Callable[[ResultSequence[_F1, _S1]], Result[_F1, Sequence[_S1] | Sequence[_S2]]]:
-    """Apply a side effect with return type [trcks.Result][]
-    to [trcks.Failure][] values in a [trcks.ResultSequence][].
+    """Create function that applies a side effect with return type [trcks.Result][]
+    to [trcks.Failure][] values.
 
     [trcks.SuccessSequence][] values are passed on without side effects.
 
     Args:
-        f: Side-effect function returning a [trcks.Result][].
+        f: Side effect to apply to the [trcks.Failure][] value.
 
     Returns:
-        Function that applies the side effect to failures.
+        Applies the given side effect to [trcks.Failure][] values.
             If the given side effect returns a [trcks.Failure][],
             *the original* [trcks.Failure][] is returned.
             If the given side effect returns a [trcks.Success][],
             *this* [trcks.Success][] is returned (wrapped as a sequence).
-            [trcks.SuccessSequence][] values are passed through unchanged.
+            Passes on [trcks.SuccessSequence][] values without side effects.
 
     Example:
         >>> from trcks import Result
@@ -450,21 +468,21 @@ def tap_failure_to_result(
 def tap_failure_to_result_sequence(
     f: Callable[[_F1], ResultSequence[object, _S2]],
 ) -> Callable[[ResultSequence[_F1, _S1]], Result[_F1, Sequence[_S1] | Sequence[_S2]]]:
-    """Apply a side effect with return type [trcks.ResultSequence][]
-    to [trcks.Failure][] values in a [trcks.ResultSequence][].
+    """Create function that applies a side effect with return type [trcks.ResultSequence][]
+    to [trcks.Failure][] values.
 
     [trcks.SuccessSequence][] values are passed on without side effects.
 
     Args:
-        f: Side-effect function returning a [trcks.ResultSequence][].
+        f: Side effect to apply to the [trcks.Failure][] value.
 
     Returns:
-        Function that applies the side effect to failures.
+        Applies the given side effect to [trcks.Failure][] values.
             If the given side effect returns a [trcks.Failure][],
             *the original* [trcks.Failure][] is returned.
             If the given side effect returns a [trcks.Success][],
             *this* [trcks.Success][] is returned.
-            [trcks.SuccessSequence][] values are passed through unchanged.
+            Passes on [trcks.SuccessSequence][] values without side effects.
 
     Example:
         >>> from trcks.fp.monads import result_sequence as rs
@@ -482,22 +500,19 @@ def tap_failure_to_result_sequence(
 def tap_failure_to_sequence(
     f: Callable[[_F1], Sequence[object]],
 ) -> Callable[[ResultSequence[_F1, _S1]], SuccessSequence[_F1] | SuccessSequence[_S1]]:
-    """Apply a sequence-returning side effect to [trcks.Failure][] values
-    in a [trcks.ResultSequence][].
-
-    The number of side-effect outputs determines how many times the original
-    failure value is repeated. The failure is converted to a [trcks.SuccessSequence][].
+    """Create function that applies a sequence-returning side effect
+    to [trcks.Failure][] values.
 
     [trcks.SuccessSequence][] values are passed on without side effects.
 
     Args:
-        f: Side-effect function returning a sequence.
+        f: Side effect to apply to the [trcks.Failure][] value.
 
     Returns:
-        Function that applies the side effect to failures and converts them
+        Applies the given side effect to [trcks.Failure][] values and converts them
             to [trcks.SuccessSequence][] values containing the original failure
             repeated once per element in the sequence returned by the side effect.
-            [trcks.SuccessSequence][] values are passed through unchanged.
+            Passes on [trcks.SuccessSequence][] values without side effects.
 
     Example:
         >>> from trcks.fp.monads import result_sequence as rs
@@ -521,16 +536,18 @@ def tap_failure_to_sequence(
 def tap_successes(
     f: Callable[[_S1], object],
 ) -> Callable[[ResultSequence[_F1, _S1]], ResultSequence[_F1, _S1]]:
-    """Apply a synchronous side effect to each element in a [trcks.ResultSequence][].
+    """Create function that applies a side effect to each element
+    of a [trcks.SuccessSequence][].
 
     [trcks.Failure][] values are passed on without side effects.
 
     Args:
-        f: Side-effect function to apply to each success element.
+        f: Side effect to apply to each element of the [trcks.SuccessSequence][].
 
     Returns:
-        Function that applies the side effect and returns the original
-            [trcks.ResultSequence][] value.
+        Passes on [trcks.Failure][] values without side effects.
+            Applies the given side effect to each element of the [trcks.SuccessSequence][]
+            and returns the original [trcks.SuccessSequence][].
     """
     return r.map_success(s.tap(f))
 
@@ -538,16 +555,17 @@ def tap_successes(
 def tap_successes_to_result(
     f: Callable[[_S1], Result[_F2, object]],
 ) -> Callable[[ResultSequence[_F1, _S1]], ResultSequence[_F1 | _F2, _S1]]:
-    """Apply a side effect with return type [trcks.Result][]
-    to each element in a [trcks.ResultSequence][].
+    """Create function that applies a side effect with return type [trcks.Result][]
+    to each element of a [trcks.SuccessSequence][].
 
     [trcks.Failure][] values are passed on without side effects.
 
     Args:
-        f: Side-effect function returning a [trcks.Result][].
+        f: Side effect to apply to each element of the [trcks.SuccessSequence][].
 
     Returns:
-        Function that applies the side effect to each success element.
+        Passes on [trcks.Failure][] values without side effects.
+            Applies the given side effect to each element of the [trcks.SuccessSequence][].
             If the given side effect returns a [trcks.Failure][],
             *this* [trcks.Failure][] is returned.
             If the given side effect returns a [trcks.Success][],
@@ -574,16 +592,17 @@ def tap_successes_to_result(
 def tap_successes_to_result_sequence(
     f: Callable[[_S1], ResultSequence[_F2, object]],
 ) -> Callable[[ResultSequence[_F1, _S1]], ResultSequence[_F1 | _F2, _S1]]:
-    """Apply a side effect with return type [trcks.ResultSequence][]
-    to each element in a [trcks.ResultSequence][].
+    """Create function that applies a side effect with return type [trcks.ResultSequence][]
+    to each element of a [trcks.SuccessSequence][].
 
     [trcks.Failure][] values are passed on without side effects.
 
     Args:
-        f: Side-effect function returning a [trcks.ResultSequence][].
+        f: Side effect to apply to each element of the [trcks.SuccessSequence][].
 
     Returns:
-        Function that applies the side effect to each success element.
+        Passes on [trcks.Failure][] values without side effects.
+            Applies the given side effect to each element of the [trcks.SuccessSequence][].
             If the given side effect returns a [trcks.Failure][],
             *this* [trcks.Failure][] is returned.
             If the given side effect returns a [trcks.SuccessSequence][],
@@ -617,13 +636,19 @@ def tap_successes_to_result_sequence(
 def tap_successes_to_sequence(
     f: Callable[[_S1], Sequence[object]],
 ) -> Callable[[ResultSequence[_F1, _S1]], ResultSequence[_F1, _S1]]:
-    """Apply a sequence-returning side effect to each element
-    in a [trcks.ResultSequence][].
-
-    The number of side-effect outputs determines how many times each original
-    element is repeated in the resulting [trcks.ResultSequence][].
+    """Create function that applies a sequence-returning side effect
+    to each element of a [trcks.SuccessSequence][].
 
     [trcks.Failure][] values are passed on without side effects.
+
+    Args:
+        f: Side effect to apply to each element of the [trcks.SuccessSequence][].
+
+    Returns:
+        Passes on [trcks.Failure][] values without side effects.
+            Applies the given side effect to each element of the [trcks.SuccessSequence][]
+            and repeats each original element once per element in the sequence
+            returned by the side effect.
 
     Example:
         >>> from trcks.fp.monads import result_sequence as rs
