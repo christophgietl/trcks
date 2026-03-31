@@ -6,32 +6,26 @@ functions returning [trcks.ResultSequence][] values.
 Example:
     Map and tap each element inside a success sequence:
 
-    >>> from trcks import ResultSequence, SuccessSequence
-    >>> from trcks.fp.composition import Pipeline4, pipe
-    >>> from trcks.fp.monads import result as r
+    >>> from trcks import ResultSequence
+    >>> from trcks.fp.composition import pipe
     >>> from trcks.fp.monads import result_sequence as rs
     >>> def double(x: int) -> int:
     ...     return x * 2
     ...
-    >>> def print_processed(x: int) -> None:
+    >>> def log(x: int) -> None:
     ...     print(f"Processed: {x}")
     ...
-    >>> def expand(x: int) -> list[int]:
+    >>> def duplicate(x: int) -> list[int]:
     ...     return [x, -x]
     ...
-    >>> pipeline: Pipeline4[
-    ...     SuccessSequence[int],
-    ...     ResultSequence[int, int],
-    ...     ResultSequence[int, int],
-    ...     ResultSequence[int, int],
-    ...     ResultSequence[int, int],
-    ... ] = (
-    ...     rs.construct_successes_from_sequence([1, 2, 3]),
-    ...     rs.map_successes(double),
-    ...     rs.tap_successes(print_processed),
-    ...     rs.map_successes_to_sequence(expand),
+    >>> pipe(
+    ...     (
+    ...         rs.construct_successes_from_sequence([1, 2, 3]),
+    ...         rs.map_successes(double),
+    ...         rs.tap_successes(log),
+    ...         rs.map_successes_to_sequence(duplicate),
+    ...     )
     ... )
-    >>> pipe(pipeline)
     Processed: 2
     Processed: 4
     Processed: 6
@@ -94,11 +88,10 @@ def construct_from_result(rslt: Result[_F, _S]) -> ResultSequence[_F, _S]:
             wrapped in a sequence.
 
     Example:
-        >>> from trcks.fp.monads import result as r
         >>> from trcks.fp.monads import result_sequence as rs
-        >>> rs.construct_from_result(r.construct_success(7))
+        >>> rs.construct_from_result(("success", 7))
         ('success', [7])
-        >>> rs.construct_from_result(r.construct_failure("oops"))
+        >>> rs.construct_from_result(("failure", "oops"))
         ('failure', 'oops')
     """
     return r.map_success(s.construct)(rslt)
