@@ -13,7 +13,7 @@ Example:
     ...     return x * 2
     ...
     >>> def log(x: int) -> None:
-    ...     print(f"Processed: {x}")
+    ...     print(f"Received: {x}")
     ...
     >>> def duplicate(x: int) -> list[int]:
     ...     return [x, -x]
@@ -26,9 +26,9 @@ Example:
     ...         rs.map_successes_to_sequence(duplicate),
     ...     )
     ... )
-    Processed: 2
-    Processed: 4
-    Processed: 6
+    Received: 2
+    Received: 4
+    Received: 6
     ('success', [2, -2, 4, -4, 6, -6])
 """
 
