@@ -12,7 +12,7 @@ Example:
     ...     return x * 2
     ...
     >>> def log(x: int) -> None:
-    ...     print(f"Received value: {x}")
+    ...     print(f"Received: {x}")
     ...
     >>> result = pipe(
     ...     (
@@ -21,9 +21,9 @@ Example:
     ...         s.tap(log),
     ...     )
     ... )
-    Received value: 2
-    Received value: 4
-    Received value: 6
+    Received: 2
+    Received: 4
+    Received: 6
     >>> result
     [2, 4, 6]
 
