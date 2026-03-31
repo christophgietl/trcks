@@ -11,11 +11,14 @@ Example:
     >>> def double(x: int) -> int:
     ...     return x * 2
     ...
+    >>> def log(x: int) -> None:
+    ...     print(f"Received value: {x}")
+    ...
     >>> result = pipe(
     ...     (
     ...         [1, 2, 3],
     ...         s.map_(double),
-    ...         s.tap(lambda x: print(f"Received value: {x}")),
+    ...         s.tap(log),
     ...     )
     ... )
     Received value: 2
