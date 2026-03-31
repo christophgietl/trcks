@@ -18,7 +18,7 @@ Example:
     >>> def log(x: int) -> None:
     ...     print(f"Received: {x}")
     ...
-    >>> result_sequence: ResultSequence[str, int] = pipe(
+    >>> result_sequence = pipe(
     ...     (
     ...         rs.construct_successes_from_sequence([1, 2, 3]),
     ...         rs.map_successes(double),
@@ -331,7 +331,7 @@ def map_successes_to_result_sequence(
         Leaves [trcks.Failure][] values unchanged and
             maps each element of a [trcks.SuccessSequence][] to new
             [trcks.ResultSequence][] values according to the given function,
-            short-circuiting on the first [trcks.Failure][] returned by `f`.
+            returning the first [trcks.Failure][] returned by `f`, if any.
 
     Example:
         >>> from trcks.fp.monads import result_sequence as rs
