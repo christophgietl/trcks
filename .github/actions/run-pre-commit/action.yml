@@ -14,5 +14,7 @@ runs:
         path: ~/.cache/pre-commit
     - run: uv sync --all-extras --locked
       shell: bash
+    - run: uv run --no-sync pre-commit install-hooks
+      shell: bash
     - run: uv run --no-sync pre-commit run --all-files --show-diff-on-failure
       shell: bash
