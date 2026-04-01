@@ -4,9 +4,13 @@ on:
   # Automatically trigger the workflow on modification for testing purposes:
   pull_request:
     paths:
+      - .github/actions/set-up-pre-commit/action.yml
+      - .github/actions/set-up-uv/action.yml
       - .github/workflows/copilot-setup-steps.yml
   push:
     paths:
+      - .github/actions/set-up-pre-commit/action.yml
+      - .github/actions/set-up-uv/action.yml
       - .github/workflows/copilot-setup-steps.yml
   workflow_dispatch:
 
