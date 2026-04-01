@@ -8,13 +8,8 @@ inputs:
 runs:
   using: composite
   steps:
-    - uses: actions/cache@v5
+    - uses: ./.github/actions/set-up-pre-commit
       with:
-        key: pre-commit--${{ hashFiles('.pre-commit-config.yaml') }}-${{ inputs.cache-key-suffix }}
-        path: ~/.cache/pre-commit
-    - run: uv sync --all-extras --locked
-      shell: bash
-    - run: uv run --no-sync pre-commit install-hooks
-      shell: bash
+        cache-key-suffix: ${{ inputs.cache-key-suffix }}
     - run: uv run --no-sync pre-commit run --all-files --show-diff-on-failure
       shell: bash
