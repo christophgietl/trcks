@@ -29,4 +29,4 @@ jobs:
       - uses: ./.github/actions/set-up-pre-commit
         with:
           cache-key-suffix: copilot-setup-steps
-          install-hooks: true
+          install-git-hooks: true
