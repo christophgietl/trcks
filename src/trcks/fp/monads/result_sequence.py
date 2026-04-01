@@ -148,7 +148,10 @@ def map_failure(
 
     Example:
         >>> from trcks.fp.monads import result_sequence as rs
-        >>> add_prefix = rs.map_failure(lambda e: f"err: {e}")
+        >>> def add_err_prefix(e: str) -> str:
+        ...     return f"err: {e}"
+        ...
+        >>> add_prefix = rs.map_failure(add_err_prefix)
         >>> add_prefix(("failure", "not found"))
         ('failure', 'err: not found')
         >>> add_prefix(("success", [1, 2]))
@@ -174,10 +177,14 @@ def map_failure_to_result(
             leaves [trcks.SuccessSequence][] values unchanged.
 
     Example:
+        >>> from trcks import Result
         >>> from trcks.fp.monads import result_sequence as rs
-        >>> recover = rs.map_failure_to_result(
-        ...     lambda e: ("success", 0) if e == "not found" else ("failure", e)
-        ... )
+        >>> def recover_or_fail(e: str) -> Result[str, int]:
+        ...     if e == "not found":
+        ...         return ("success", 0)
+        ...     return ("failure", e)
+        ...
+        >>> recover = rs.map_failure_to_result(recover_or_fail)
         >>> recover(("failure", "not found"))
         ('success', [0])
         >>> recover(("success", [1, 2]))
@@ -203,10 +210,14 @@ def map_failure_to_result_sequence(
             leaves [trcks.SuccessSequence][] values unchanged.
 
     Example:
+        >>> from trcks import ResultSequence
         >>> from trcks.fp.monads import result_sequence as rs
-        >>> recover = rs.map_failure_to_result_sequence(
-        ...     lambda e: ("success", [0]) if e == "not found" else ("failure", e)
-        ... )
+        >>> def recover_or_fail(e: str) -> ResultSequence[str, int]:
+        ...     if e == "not found":
+        ...         return ("success", [0])
+        ...     return ("failure", e)
+        ...
+        >>> recover = rs.map_failure_to_result_sequence(recover_or_fail)
         >>> recover(("failure", "not found"))
         ('success', [0])
         >>> recover(("success", [1, 2]))
@@ -233,9 +244,12 @@ def map_failure_to_sequence(
 
     Example:
         >>> from trcks.fp.monads import result_sequence as rs
-        >>> recover = rs.map_failure_to_sequence(
-        ...     lambda e: [0] if e == "not found" else []
-        ... )
+        >>> def recover_or_empty(e: str) -> list[int]:
+        ...     if e == "not found":
+        ...         return [0]
+        ...     return []
+        ...
+        >>> recover = rs.map_failure_to_sequence(recover_or_empty)
         >>> recover(("failure", "not found"))
         ('success', [0])
         >>> recover(("success", [1, 2]))
@@ -274,10 +288,13 @@ def map_successes(
 
     Example:
         >>> from trcks.fp.monads import result_sequence as rs
-        >>> double = rs.map_successes(lambda x: x * 2)
-        >>> double(("success", [1, 2, 3]))
+        >>> def double(x: int) -> int:
+        ...     return x * 2
+        ...
+        >>> double_all = rs.map_successes(double)
+        >>> double_all(("success", [1, 2, 3]))
         ('success', [2, 4, 6])
-        >>> double(("failure", "not found"))
+        >>> double_all(("failure", "not found"))
         ('failure', 'not found')
     """
     return r.map_success(s.map_(f))
@@ -301,10 +318,14 @@ def map_successes_to_result(
             function, returning the first [trcks.Failure][] encountered, if any.
 
     Example:
+        >>> from trcks import Result
         >>> from trcks.fp.monads import result_sequence as rs
-        >>> check = rs.map_successes_to_result(
-        ...     lambda x: ("success", x * 2) if x > 0 else ("failure", "bad")
-        ... )
+        >>> def double_if_positive(x: int) -> Result[str, int]:
+        ...     if x > 0:
+        ...         return ("success", x * 2)
+        ...     return ("failure", "bad")
+        ...
+        >>> check = rs.map_successes_to_result(double_if_positive)
         >>> check(("success", [1, 2]))
         ('success', [2, 4])
         >>> check(("success", [1, -1, 2]))
@@ -333,10 +354,14 @@ def map_successes_to_result_sequence(
             returning the first [trcks.Failure][] returned by `f`, if any.
 
     Example:
+        >>> from trcks import ResultSequence
         >>> from trcks.fp.monads import result_sequence as rs
-        >>> expand = rs.map_successes_to_result_sequence(
-        ...     lambda x: ("success", [x, -x]) if x > 0 else ("failure", "bad")
-        ... )
+        >>> def expand_if_positive(x: int) -> ResultSequence[str, int]:
+        ...     if x > 0:
+        ...         return ("success", [x, -x])
+        ...     return ("failure", "bad")
+        ...
+        >>> expand = rs.map_successes_to_result_sequence(expand_if_positive)
         >>> expand(("success", [1, 2]))
         ('success', [1, -1, 2, -2])
         >>> expand(("success", [1, -1, 2]))
@@ -388,7 +413,10 @@ def map_successes_to_sequence(
 
     Example:
         >>> from trcks.fp.monads import result_sequence as rs
-        >>> flat = rs.map_successes_to_sequence(lambda x: [x, -x])
+        >>> def duplicate(x: int) -> list[int]:
+        ...     return [x, -x]
+        ...
+        >>> flat = rs.map_successes_to_sequence(duplicate)
         >>> flat(("success", [1, 2]))
         ('success', [1, -1, 2, -2])
     """
@@ -412,7 +440,10 @@ def tap_failure(
 
     Example:
         >>> from trcks.fp.monads import result_sequence as rs
-        >>> log_err = rs.tap_failure(lambda e: print(f"Error: {e}"))
+        >>> def print_error(e: str) -> None:
+        ...     print(f"Error: {e}")
+        ...
+        >>> log_err = rs.tap_failure(print_error)
         >>> log_err(("failure", "oops"))
         Error: oops
         ('failure', 'oops')
@@ -484,10 +515,14 @@ def tap_failure_to_result_sequence(
             Passes on [trcks.SuccessSequence][] values without side effects.
 
     Example:
+        >>> from trcks import ResultSequence
         >>> from trcks.fp.monads import result_sequence as rs
-        >>> attempt_recover = rs.tap_failure_to_result_sequence(
-        ...     lambda e: ("success", [99]) if e == "retry" else ("failure", None)
-        ... )
+        >>> def recover_if_retryable(e: str) -> ResultSequence[None, int]:
+        ...     if e == "retry":
+        ...         return ("success", [99])
+        ...     return ("failure", None)
+        ...
+        >>> attempt_recover = rs.tap_failure_to_result_sequence(recover_if_retryable)
         >>> attempt_recover(("failure", "retry"))
         ('success', [99])
         >>> attempt_recover(("failure", "fatal"))
@@ -515,9 +550,10 @@ def tap_failure_to_sequence(
 
     Example:
         >>> from trcks.fp.monads import result_sequence as rs
-        >>> log_err = rs.tap_failure_to_sequence(
-        ...     lambda e: [print(f"Error logged: {e}"), print(f"Alert sent: {e}")]
-        ... )
+        >>> def log_and_alert(e: str) -> list[None]:
+        ...     return [print(f"Error logged: {e}"), print(f"Alert sent: {e}")]
+        ...
+        >>> log_err = rs.tap_failure_to_sequence(log_and_alert)
         >>> log_err(("failure", "critical"))
         Error logged: critical
         Alert sent: critical
@@ -573,10 +609,14 @@ def tap_successes_to_result(
             *the original* [trcks.SuccessSequence][] element is returned.
 
     Example:
+        >>> from trcks import Result
         >>> from trcks.fp.monads import result_sequence as rs
-        >>> audit = rs.tap_successes_to_result(
-        ...     lambda x: ("success", None) if x > 0 else ("failure", "bad")
-        ... )
+        >>> def validate_positive(x: int) -> Result[str, None]:
+        ...     if x > 0:
+        ...         return ("success", None)
+        ...     return ("failure", "bad")
+        ...
+        >>> audit = rs.tap_successes_to_result(validate_positive)
         >>> audit(("success", [1, 2]))
         ('success', [1, 2])
         >>> audit(("success", [1, -1, 2]))
@@ -612,10 +652,14 @@ def tap_successes_to_result_sequence(
             per element in the side effect output.
 
     Example:
+        >>> from trcks import ResultSequence
         >>> from trcks.fp.monads import result_sequence as rs
-        >>> audit = rs.tap_successes_to_result_sequence(
-        ...     lambda x: ("success", [None, None]) if x > 0 else ("failure", "bad")
-        ... )
+        >>> def validate_positive_twice(x: int) -> ResultSequence[str, None]:
+        ...     if x > 0:
+        ...         return ("success", [None, None])
+        ...     return ("failure", "bad")
+        ...
+        >>> audit = rs.tap_successes_to_result_sequence(validate_positive_twice)
         >>> audit(("success", [7]))
         ('success', [7, 7])
         >>> audit(("success", [1, -1]))
@@ -655,9 +699,10 @@ def tap_successes_to_sequence(
 
     Example:
         >>> from trcks.fp.monads import result_sequence as rs
-        >>> log_mult = rs.tap_successes_to_sequence(
-        ...     lambda x: [print(f"v={x}"), print(f"v={x}")]
-        ... )
+        >>> def print_twice(x: int) -> list[None]:
+        ...     return [print(f"v={x}"), print(f"v={x}")]
+        ...
+        >>> log_mult = rs.tap_successes_to_sequence(print_twice)
         >>> log_mult(("success", [7]))
         v=7
         v=7
