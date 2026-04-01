@@ -5,9 +5,9 @@ inputs:
     default: ""
     description: Key suffix for the pre-commit cache. Useful for differentiating runs.
     required: true
-  install-hooks:
+  install-git-hooks:
     default: "false"
-    description: whether to install the pre-commit hooks
+    description: whether to install the git hooks for pre-commit
     required: true
 runs:
   using: composite
@@ -16,8 +16,8 @@ runs:
       with:
         key: pre-commit--${{ hashFiles('.pre-commit-config.yaml') }}-${{ inputs.cache-key-suffix }}
         path: ~/.cache/pre-commit
-    - run: uv run --no-sync pre-commit install-hooks # installs the hook environments
+    - run: uv run --no-sync pre-commit install-hooks # sets up the pre-commit environments
       shell: bash
-    - if: fromJSON(inputs.install-hooks)
-      run: uv run --no-sync pre-commit install # installs the hooks
+    - if: fromJSON(inputs.install-git-hooks)
+      run: uv run --no-sync pre-commit install # sets up the git hooks for pre-commit
       shell: bash
