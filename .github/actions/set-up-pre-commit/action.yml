@@ -1,0 +1,18 @@
+name: Set up pre-commit
+description: Set up dependencies, cache, and hooks for pre-commit
+inputs:
+  cache-key-suffix:
+    default: ""
+    description: Key suffix for the pre-commit cache. Useful for differentiating runs.
+    required: true
+runs:
+  using: composite
+  steps:
+    - uses: actions/cache@v5
+      with:
+        key: pre-commit--${{ hashFiles('.pre-commit-config.yaml') }}-${{ inputs.cache-key-suffix }}
+        path: ~/.cache/pre-commit
+    - run: uv sync --all-extras --locked
+      shell: bash
+    - run: uv run --no-sync pre-commit install-hooks
+      shell: bash
