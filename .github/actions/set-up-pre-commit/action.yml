@@ -5,6 +5,10 @@ inputs:
     default: ""
     description: Key suffix for the pre-commit cache. Useful for differentiating runs.
     required: true
+  install-hooks:
+    default: "false"
+    description: whether to install the pre-commit hooks
+    required: true
 runs:
   using: composite
   steps:
@@ -14,5 +18,8 @@ runs:
         path: ~/.cache/pre-commit
     - run: uv sync --all-extras --locked
       shell: bash
-    - run: uv run --no-sync pre-commit install-hooks
+    - run: uv run --no-sync pre-commit install-hooks # installs the hook environments
+      shell: bash
+    - if: fromJSON(inputs.install-hooks)
+      run: uv run --no-sync pre-commit install # installs the hooks
       shell: bash
