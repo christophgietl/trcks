@@ -1,2 +1,6 @@
 [general]
 ignore=body-is-missing
+regex-style-search=True
+
+[ignore-body-lines]
+regex=^(Agent-Logs-Url|Co-authored-by):
