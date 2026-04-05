@@ -265,14 +265,14 @@ def map_failure_to_sequence(
         ...         return [0]
         ...     return []
         ...
-        >>> recover_from_not_found: Callable[
+        >>> recover: Callable[
         ...     [ResultSequence[str, int]], SuccessSequence[int]
         ... ] = rs.map_failure_to_sequence(_recover_from_not_found)
-        >>> recover_from_not_found(("failure", "not found"))
+        >>> recover(("failure", "not found"))
         ('success', [0])
-        >>> recover_from_not_found(("failure", "not authorized"))
+        >>> recover(("failure", "not authorized"))
         ('success', [])
-        >>> recover_from_not_found(("success", [1, 2]))
+        >>> recover(("success", [1, 2]))
         ('success', [1, 2])
     """
 
