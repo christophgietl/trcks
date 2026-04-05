@@ -147,11 +147,15 @@ def map_failure(
             leaves [trcks.SuccessSequence][] values unchanged.
 
     Example:
+        >>> from collections.abc import Callable
+        >>> from trcks import ResultSequence
         >>> from trcks.fp.monads import result_sequence as rs
         >>> def _add_prefix(e: str) -> str:
         ...     return f"err: {e}"
         ...
-        >>> add_prefix = rs.map_failure(_add_prefix)
+        >>> add_prefix: Callable[
+        ...     [ResultSequence[str, int]], ResultSequence[str, int]
+        ... ] = rs.map_failure(_add_prefix)
         >>> add_prefix(("failure", "not found"))
         ('failure', 'err: not found')
         >>> add_prefix(("success", [1, 2]))
@@ -177,17 +181,20 @@ def map_failure_to_result(
             leaves [trcks.SuccessSequence][] values unchanged.
 
     Example:
-        >>> from trcks import Result
+        >>> from collections.abc import Callable, Sequence
+        >>> from trcks import Result, ResultSequence
         >>> from trcks.fp.monads import result_sequence as rs
         >>> def _recover_or_fail(e: str) -> Result[str, int]:
         ...     if e == "not found":
         ...         return ("success", 0)
         ...     return ("failure", e)
         ...
-        >>> recover = rs.map_failure_to_result(_recover_or_fail)
-        >>> recover(("failure", "not found"))
+        >>> recover_or_fail: Callable[
+        ...     [ResultSequence[str, int]], Result[str, Sequence[int]]
+        ... ] = rs.map_failure_to_result(_recover_or_fail)
+        >>> recover_or_fail(("failure", "not found"))
         ('success', [0])
-        >>> recover(("success", [1, 2]))
+        >>> recover_or_fail(("success", [1, 2]))
         ('success', [1, 2])
     """
     return map_failure_to_result_sequence(compose2((f, construct_from_result)))
@@ -210,17 +217,20 @@ def map_failure_to_result_sequence(
             leaves [trcks.SuccessSequence][] values unchanged.
 
     Example:
-        >>> from trcks import ResultSequence
+        >>> from collections.abc import Callable, Sequence
+        >>> from trcks import Result, ResultSequence
         >>> from trcks.fp.monads import result_sequence as rs
         >>> def _recover_or_fail(e: str) -> ResultSequence[str, int]:
         ...     if e == "not found":
         ...         return ("success", [0])
         ...     return ("failure", e)
         ...
-        >>> recover = rs.map_failure_to_result_sequence(_recover_or_fail)
-        >>> recover(("failure", "not found"))
+        >>> recover_or_fail: Callable[
+        ...     [ResultSequence[str, int]], Result[str, Sequence[int]]
+        ... ] = rs.map_failure_to_result_sequence(_recover_or_fail)
+        >>> recover_or_fail(("failure", "not found"))
         ('success', [0])
-        >>> recover(("success", [1, 2]))
+        >>> recover_or_fail(("success", [1, 2]))
         ('success', [1, 2])
     """
     return r.map_failure_to_result(f)
@@ -243,16 +253,20 @@ def map_failure_to_sequence(
             leaves [trcks.SuccessSequence][] values unchanged.
 
     Example:
+        >>> from collections.abc import Callable
+        >>> from trcks import ResultSequence, SuccessSequence
         >>> from trcks.fp.monads import result_sequence as rs
         >>> def _recover_or_empty(e: str) -> list[int]:
         ...     if e == "not found":
         ...         return [0]
         ...     return []
         ...
-        >>> recover = rs.map_failure_to_sequence(_recover_or_empty)
-        >>> recover(("failure", "not found"))
+        >>> recover_or_empty: Callable[
+        ...     [ResultSequence[str, int]], SuccessSequence[int]
+        ... ] = rs.map_failure_to_sequence(_recover_or_empty)
+        >>> recover_or_empty(("failure", "not found"))
         ('success', [0])
-        >>> recover(("success", [1, 2]))
+        >>> recover_or_empty(("success", [1, 2]))
         ('success', [1, 2])
     """
 
@@ -287,14 +301,18 @@ def map_successes(
             according to the given function.
 
     Example:
+        >>> from collections.abc import Callable
+        >>> from trcks import ResultSequence
         >>> from trcks.fp.monads import result_sequence as rs
         >>> def _double(x: int) -> int:
         ...     return x * 2
         ...
-        >>> double_all = rs.map_successes(_double)
-        >>> double_all(("success", [1, 2, 3]))
+        >>> double: Callable[
+        ...     [ResultSequence[str, int]], ResultSequence[str, int]
+        ... ] = rs.map_successes(_double)
+        >>> double(("success", [1, 2, 3]))
         ('success', [2, 4, 6])
-        >>> double_all(("failure", "not found"))
+        >>> double(("failure", "not found"))
         ('failure', 'not found')
     """
     return r.map_success(s.map_(f))
@@ -318,19 +336,22 @@ def map_successes_to_result(
             function, returning the first [trcks.Failure][] encountered, if any.
 
     Example:
-        >>> from trcks import Result
+        >>> from collections.abc import Callable
+        >>> from trcks import Result, ResultSequence
         >>> from trcks.fp.monads import result_sequence as rs
         >>> def _double_if_positive(x: int) -> Result[str, int]:
         ...     if x > 0:
         ...         return ("success", x * 2)
         ...     return ("failure", "bad")
         ...
-        >>> check = rs.map_successes_to_result(_double_if_positive)
-        >>> check(("success", [1, 2]))
+        >>> double_if_positive: Callable[
+        ...     [ResultSequence[str, int]], ResultSequence[str, int]
+        ... ] = rs.map_successes_to_result(_double_if_positive)
+        >>> double_if_positive(("success", [1, 2]))
         ('success', [2, 4])
-        >>> check(("success", [1, -1, 2]))
+        >>> double_if_positive(("success", [1, -1, 2]))
         ('failure', 'bad')
-        >>> check(("failure", "oops"))
+        >>> double_if_positive(("failure", "oops"))
         ('failure', 'oops')
     """
     return map_successes_to_result_sequence(compose2((f, construct_from_result)))
@@ -354,6 +375,7 @@ def map_successes_to_result_sequence(
             returning the first [trcks.Failure][] returned by `f`, if any.
 
     Example:
+        >>> from collections.abc import Callable
         >>> from trcks import ResultSequence
         >>> from trcks.fp.monads import result_sequence as rs
         >>> def _expand_if_positive(x: int) -> ResultSequence[str, int]:
@@ -361,12 +383,14 @@ def map_successes_to_result_sequence(
         ...         return ("success", [x, -x])
         ...     return ("failure", "bad")
         ...
-        >>> expand = rs.map_successes_to_result_sequence(_expand_if_positive)
-        >>> expand(("success", [1, 2]))
+        >>> expand_if_positive: Callable[
+        ...     [ResultSequence[str, int]], ResultSequence[str, int]
+        ... ] = rs.map_successes_to_result_sequence(_expand_if_positive)
+        >>> expand_if_positive(("success", [1, 2]))
         ('success', [1, -1, 2, -2])
-        >>> expand(("success", [1, -1, 2]))
+        >>> expand_if_positive(("success", [1, -1, 2]))
         ('failure', 'bad')
-        >>> expand(("failure", "oops"))
+        >>> expand_if_positive(("failure", "oops"))
         ('failure', 'oops')
     """
 
@@ -412,12 +436,16 @@ def map_successes_to_sequence(
             [collections.abc.Sequence][] according to the given function.
 
     Example:
+        >>> from collections.abc import Callable
+        >>> from trcks import ResultSequence
         >>> from trcks.fp.monads import result_sequence as rs
         >>> def _duplicate(x: int) -> list[int]:
         ...     return [x, -x]
         ...
-        >>> flat = rs.map_successes_to_sequence(_duplicate)
-        >>> flat(("success", [1, 2]))
+        >>> duplicate: Callable[
+        ...     [ResultSequence[str, int]], ResultSequence[str, int]
+        ... ] = rs.map_successes_to_sequence(_duplicate)
+        >>> duplicate(("success", [1, 2]))
         ('success', [1, -1, 2, -2])
     """
     return r.map_success(s.map_to_sequence(f))
@@ -439,15 +467,19 @@ def tap_failure(
             Passes on [trcks.SuccessSequence][] values without side effects.
 
     Example:
+        >>> from collections.abc import Callable
+        >>> from trcks import ResultSequence
         >>> from trcks.fp.monads import result_sequence as rs
         >>> def _print_error(e: str) -> None:
         ...     print(f"Error: {e}")
         ...
-        >>> log_err = rs.tap_failure(_print_error)
-        >>> log_err(("failure", "oops"))
+        >>> print_error: Callable[
+        ...     [ResultSequence[str, int]], ResultSequence[str, int]
+        ... ] = rs.tap_failure(_print_error)
+        >>> print_error(("failure", "oops"))
         Error: oops
         ('failure', 'oops')
-        >>> log_err(("success", [1]))
+        >>> print_error(("success", [1]))
         ('success', [1])
     """
     return r.tap_failure(f)
@@ -473,20 +505,23 @@ def tap_failure_to_result(
             Passes on [trcks.SuccessSequence][] values without side effects.
 
     Example:
-        >>> from trcks import Result
+        >>> from collections.abc import Callable, Sequence
+        >>> from trcks import Result, ResultSequence
         >>> from trcks.fp.monads import result_sequence as rs
         >>> def _retry_lookup(e: str) -> Result[None, int]:
         ...     if e == "not found":
         ...         print("Retrying...")
         ...         return ("success", 42)
         ...     return ("failure", None)
-        >>> recover = rs.tap_failure_to_result(_retry_lookup)
-        >>> recover(("failure", "not found"))
+        >>> retry_lookup: Callable[
+        ...     [ResultSequence[str, int]], Result[str, Sequence[int]]
+        ... ] = rs.tap_failure_to_result(_retry_lookup)
+        >>> retry_lookup(("failure", "not found"))
         Retrying...
         ('success', [42])
-        >>> recover(("failure", "fatal"))
+        >>> retry_lookup(("failure", "fatal"))
         ('failure', 'fatal')
-        >>> recover(("success", [1, 2]))
+        >>> retry_lookup(("success", [1, 2]))
         ('success', [1, 2])
     """
     composed_f: Callable[[_F1], ResultSequence[object, _S2]] = compose2(
@@ -515,17 +550,20 @@ def tap_failure_to_result_sequence(
             Passes on [trcks.SuccessSequence][] values without side effects.
 
     Example:
-        >>> from trcks import ResultSequence
+        >>> from collections.abc import Callable, Sequence
+        >>> from trcks import Result, ResultSequence
         >>> from trcks.fp.monads import result_sequence as rs
         >>> def _recover_if_retryable(e: str) -> ResultSequence[None, int]:
         ...     if e == "retry":
         ...         return ("success", [99])
         ...     return ("failure", None)
         ...
-        >>> attempt_recover = rs.tap_failure_to_result_sequence(_recover_if_retryable)
-        >>> attempt_recover(("failure", "retry"))
+        >>> recover_if_retryable: Callable[
+        ...     [ResultSequence[str, int]], Result[str, Sequence[int]]
+        ... ] = rs.tap_failure_to_result_sequence(_recover_if_retryable)
+        >>> recover_if_retryable(("failure", "retry"))
         ('success', [99])
-        >>> attempt_recover(("failure", "fatal"))
+        >>> recover_if_retryable(("failure", "fatal"))
         ('failure', 'fatal')
     """
     return r.tap_failure_to_result(f)
@@ -549,16 +587,21 @@ def tap_failure_to_sequence(
             Passes on [trcks.SuccessSequence][] values without side effects.
 
     Example:
+        >>> from collections.abc import Callable
+        >>> from trcks import ResultSequence, SuccessSequence
         >>> from trcks.fp.monads import result_sequence as rs
         >>> def _log_and_alert(e: str) -> list[None]:
         ...     return [print(f"Error logged: {e}"), print(f"Alert sent: {e}")]
         ...
-        >>> log_err = rs.tap_failure_to_sequence(_log_and_alert)
-        >>> log_err(("failure", "critical"))
+        >>> log_and_alert: Callable[
+        ...     [ResultSequence[str, int]],
+        ...     SuccessSequence[str] | SuccessSequence[int],
+        ... ] = rs.tap_failure_to_sequence(_log_and_alert)
+        >>> log_and_alert(("failure", "critical"))
         Error logged: critical
         Alert sent: critical
         ('success', ['critical', 'critical'])
-        >>> log_err(("success", [1, 2]))
+        >>> log_and_alert(("success", [1, 2]))
         ('success', [1, 2])
     """
 
@@ -609,19 +652,22 @@ def tap_successes_to_result(
             *the original* [trcks.SuccessSequence][] element is returned.
 
     Example:
-        >>> from trcks import Result
+        >>> from collections.abc import Callable
+        >>> from trcks import Result, ResultSequence
         >>> from trcks.fp.monads import result_sequence as rs
         >>> def _validate_positive(x: int) -> Result[str, None]:
         ...     if x > 0:
         ...         return ("success", None)
         ...     return ("failure", "bad")
         ...
-        >>> audit = rs.tap_successes_to_result(_validate_positive)
-        >>> audit(("success", [1, 2]))
+        >>> validate_positive: Callable[
+        ...     [ResultSequence[str, int]], ResultSequence[str, int]
+        ... ] = rs.tap_successes_to_result(_validate_positive)
+        >>> validate_positive(("success", [1, 2]))
         ('success', [1, 2])
-        >>> audit(("success", [1, -1, 2]))
+        >>> validate_positive(("success", [1, -1, 2]))
         ('failure', 'bad')
-        >>> audit(("failure", "oops"))
+        >>> validate_positive(("failure", "oops"))
         ('failure', 'oops')
     """
     composed_f: Callable[[_S1], ResultSequence[_F2, object]] = compose2(
@@ -652,6 +698,7 @@ def tap_successes_to_result_sequence(
             per element in the side effect output.
 
     Example:
+        >>> from collections.abc import Callable
         >>> from trcks import ResultSequence
         >>> from trcks.fp.monads import result_sequence as rs
         >>> def _validate_positive_twice(x: int) -> ResultSequence[str, None]:
@@ -659,10 +706,12 @@ def tap_successes_to_result_sequence(
         ...         return ("success", [None, None])
         ...     return ("failure", "bad")
         ...
-        >>> audit = rs.tap_successes_to_result_sequence(_validate_positive_twice)
-        >>> audit(("success", [7]))
+        >>> validate_positive_twice: Callable[
+        ...     [ResultSequence[str, int]], ResultSequence[str, int]
+        ... ] = rs.tap_successes_to_result_sequence(_validate_positive_twice)
+        >>> validate_positive_twice(("success", [7]))
         ('success', [7, 7])
-        >>> audit(("success", [1, -1]))
+        >>> validate_positive_twice(("success", [1, -1]))
         ('failure', 'bad')
     """
 
@@ -698,12 +747,16 @@ def tap_successes_to_sequence(
             returned by the side effect.
 
     Example:
+        >>> from collections.abc import Callable
+        >>> from trcks import ResultSequence
         >>> from trcks.fp.monads import result_sequence as rs
         >>> def _print_twice(x: int) -> list[None]:
         ...     return [print(f"v={x}"), print(f"v={x}")]
         ...
-        >>> log_mult = rs.tap_successes_to_sequence(_print_twice)
-        >>> log_mult(("success", [7]))
+        >>> print_twice: Callable[
+        ...     [ResultSequence[str, int]], ResultSequence[str, int]
+        ... ] = rs.tap_successes_to_sequence(_print_twice)
+        >>> print_twice(("success", [7]))
         v=7
         v=7
         ('success', [7, 7])
