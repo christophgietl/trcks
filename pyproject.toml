@@ -120,9 +120,13 @@ containers = [
 ]
 exhaustive = true
 layers = [
+    "awaitable_result_sequence",
     "awaitable_result",
+    "awaitable_sequence",
+    "result_sequence",
     "awaitable",
     "result",
+    "sequence",
     "identity",
 ]
 
@@ -158,6 +162,9 @@ warn_unreachable = true
 
 [tool.pdm.version]
 source = "scm"
+
+[tool.pymarkdown.plugins.md013]
+headings = false
 
 [tool.pyright]
 deprecateTypingAliases = true

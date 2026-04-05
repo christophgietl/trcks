@@ -5,7 +5,7 @@ for railway-oriented programming.
 Single-track and double-track code are both discussed.
 So are synchronous and asynchronous code.
 
-## Synchronous single-track code with [trcks.oop.Wrapper][]
+## Synchronous single-track code for a single value with [trcks.oop.Wrapper][]
 
 The generic class [trcks.oop.Wrapper][][T] allows us to chain functions:
 
@@ -73,7 +73,7 @@ This method allows executing side effects while preserving the original value:
     >>> output
     'Length: 13'
 
-## Synchronous double-track code with [trcks.Result][] and [trcks.oop.ResultWrapper][]
+## Synchronous double-track code for a single value with [trcks.Result][] and [trcks.oop.ResultWrapper][]
 
 Whenever we encounter something exceptional in conventional Python programming
 (e.g. something not working as expected or some edge case in our business logic),
@@ -253,7 +253,7 @@ If the side effect returns a [trcks.Success][], the original success value is pr
     >>> id_jane
     ('failure', 'User does not exist')
 
-## Asynchronous single-track code with [collections.abc.Awaitable][] and [trcks.oop.AwaitableWrapper][]
+## Asynchronous single-track code for a single value with [collections.abc.Awaitable][] and [trcks.oop.AwaitableWrapper][]
 
 While the class [trcks.oop.Wrapper][] and its method `map` allow
 the chaining of synchronous functions,
@@ -389,7 +389,7 @@ allows us to execute asynchronous side effects.
     >>> return_value
     'Length: 13'
 
-## Asynchronous double-track code with [trcks.AwaitableResult][] and [trcks.oop.AwaitableResultWrapper][]
+## Asynchronous double-track code for a single value with [trcks.AwaitableResult][] and [trcks.oop.AwaitableResultWrapper][]
 
 Whenever we define a function using the `async def ... -> Result[F, S]` syntax,
 we actually get a function with
@@ -556,6 +556,570 @@ the original success value is preserved:
     ...
     >>> result = asyncio.run(read_and_persist("input.txt"))
     LOG: Read 'Hello, world!' from disk.
+    LOG: Persisting 'Hello, world!'.
+    >>> result
+    ('failure', 'Out of disk space')
+
+## Synchronous single-track code for a sequence with [collections.abc.Sequence][] and [trcks.oop.SequenceWrapper][]
+
+While the class [trcks.oop.Wrapper][] wraps and operates on a single value,
+the class [trcks.oop.SequenceWrapper][] wraps a [collections.abc.Sequence][]
+and applies operations to each element individually.
+This is useful when we need to process multiple values
+through the same chain of transformations:
+
+???+ example
+
+    >>> from trcks.oop import SequenceWrapper
+    >>>
+    >>> def normalize_email(email: str) -> str:
+    ...     return email.strip().lower()
+    ...
+    >>> def to_domain(email: str) -> str:
+    ...     return email.split("@")[1]
+    ...
+    >>> emails = ["  Erika@Domain.ORG ", "JOHN@Provider.COM  "]
+    >>> (
+    ...     SequenceWrapper
+    ...     .construct_from_sequence(emails)
+    ...     .map(normalize_email)
+    ...     .map(to_domain)
+    ...     .core
+    ... )
+    ['domain.org', 'provider.com']
+
+To understand what is going on here,
+let us have a look at the individual steps of the chain:
+
+???+ example
+
+    >>> from collections.abc import Sequence
+    >>> # 1. Wrap the input sequence:
+    >>> wrapped: SequenceWrapper[str] = SequenceWrapper.construct_from_sequence(
+    ...     ["  Erika@Domain.ORG ", "JOHN@Provider.COM  "]
+    ... )
+    >>> wrapped
+    SequenceWrapper(core=['  Erika@Domain.ORG ', 'JOHN@Provider.COM  '])
+    >>> # 2. Apply normalize_email to each element:
+    >>> mapped: SequenceWrapper[str] = wrapped.map(normalize_email)
+    >>> mapped
+    SequenceWrapper(core=['erika@domain.org', 'john@provider.com'])
+    >>> # 3. Apply to_domain to each element:
+    >>> mapped_again: SequenceWrapper[str] = mapped.map(to_domain)
+    >>> mapped_again
+    SequenceWrapper(core=['domain.org', 'provider.com'])
+    >>> # 4. Unwrap the output sequence:
+    >>> unwrapped: Sequence[str] = mapped_again.core
+    >>> unwrapped
+    ['domain.org', 'provider.com']
+
+???+ note
+    [trcks.oop.SequenceWrapper.construct][] wraps a single value
+    in a one-element sequence:
+    `SequenceWrapper.construct(42)` produces `SequenceWrapper(core=[42])`.
+
+    The method [trcks.oop.SequenceWrapper.map_to_sequence][]
+    applies a function that returns a [collections.abc.Sequence][]
+    to each element and flattens the results (like a "flat map"):
+
+        >>> SequenceWrapper.construct_from_sequence(
+        ...     ["ab", "cd"]
+        ... ).map_to_sequence(list).core
+        ['a', 'b', 'c', 'd']
+
+The `tap` method allows executing side effects for each element
+while preserving the original sequence:
+
+???+ example
+
+    >>> sequence_wrapper = (
+    ...     SequenceWrapper
+    ...     .construct_from_sequence(emails)
+    ...     .map(normalize_email)
+    ...     .tap(lambda e: print(f"LOG: Processing '{e}'."))
+    ...     .map(to_domain)
+    ... )
+    LOG: Processing 'erika@domain.org'.
+    LOG: Processing 'john@provider.com'.
+    >>> sequence_wrapper.core
+    ['domain.org', 'provider.com']
+
+## Synchronous double-track code for a sequence with [trcks.ResultSequence][] and [trcks.oop.ResultSequenceWrapper][]
+
+When applying a failable function to each element in a sequence,
+we need the [trcks.oop.ResultSequenceWrapper][] class.
+The success track methods are named `map_successes` and `tap_successes` (plural)
+because they operate on each element in the [trcks.SuccessSequence][] individually.
+Processing short-circuits on the first [trcks.Failure][].
+
+???+ example
+
+    >>> from typing import Literal
+    >>> from trcks import Result, ResultSequence
+    >>> from trcks.oop import SequenceWrapper
+    >>>
+    >>> UserDoesNotExist = Literal["User does not exist"]
+    >>> UserDoesNotHaveASubscription = Literal["User does not have a subscription"]
+    >>> FailureDescription = UserDoesNotExist | UserDoesNotHaveASubscription
+    >>>
+    >>> def get_user_id(user_email: str) -> Result[UserDoesNotExist, int]:
+    ...     if user_email == "erika.mustermann@domain.org":
+    ...         return "success", 1
+    ...     if user_email == "john_doe@provider.com":
+    ...         return "success", 2
+    ...     return "failure", "User does not exist"
+    ...
+    >>> def get_subscription_id(
+    ...     user_id: int
+    ... ) -> Result[UserDoesNotHaveASubscription, int]:
+    ...     if user_id == 1:
+    ...         return "success", 42
+    ...     return "failure", "User does not have a subscription"
+    ...
+    >>> def get_subscription_fee(subscription_id: int) -> float:
+    ...     return subscription_id * 0.1
+    ...
+    >>> def get_subscription_fees_by_email(
+    ...     user_emails: list[str],
+    ... ) -> ResultSequence[FailureDescription, float]:
+    ...     return (
+    ...         SequenceWrapper
+    ...         .construct_from_sequence(user_emails)
+    ...         .map_to_result(get_user_id)
+    ...         .map_successes_to_result(get_subscription_id)
+    ...         .map_successes(get_subscription_fee)
+    ...         .core
+    ...     )
+    ...
+    >>> get_subscription_fees_by_email(["erika.mustermann@domain.org"])
+    ('success', [4.2])
+    >>> get_subscription_fees_by_email(
+    ...     ["erika.mustermann@domain.org", "john_doe@provider.com"]
+    ... )
+    ('failure', 'User does not have a subscription')
+    >>> get_subscription_fees_by_email(["jane_doe@provider.com"])
+    ('failure', 'User does not exist')
+
+To understand what is going on here,
+let us have a look at the individual steps of the chain:
+
+???+ example
+
+    >>> from trcks.oop import ResultSequenceWrapper
+    >>>
+    >>> # 1. Wrap the input sequence:
+    >>> wrapped: SequenceWrapper[str] = SequenceWrapper.construct_from_sequence(
+    ...     ["erika.mustermann@domain.org"]
+    ... )
+    >>> wrapped
+    SequenceWrapper(core=['erika.mustermann@domain.org'])
+    >>> # 2. Apply the Result function get_user_id to each element:
+    >>> mapped_once: ResultSequenceWrapper[
+    ...     UserDoesNotExist, int
+    ... ] = wrapped.map_to_result(get_user_id)
+    >>> mapped_once
+    ResultSequenceWrapper(core=('success', [1]))
+    >>> # 3. Apply the Result function get_subscription_id to each element:
+    >>> mapped_twice: ResultSequenceWrapper[
+    ...     FailureDescription, int
+    ... ] = mapped_once.map_successes_to_result(get_subscription_id)
+    >>> mapped_twice
+    ResultSequenceWrapper(core=('success', [42]))
+    >>> # 4. Apply get_subscription_fee to each element:
+    >>> mapped_thrice: ResultSequenceWrapper[
+    ...     FailureDescription, float
+    ... ] = mapped_twice.map_successes(get_subscription_fee)
+    >>> mapped_thrice
+    ResultSequenceWrapper(core=('success', [4.2]))
+    >>> # 5. Unwrap the output result sequence:
+    >>> unwrapped: ResultSequence[FailureDescription, float] = mapped_thrice.core
+    >>> unwrapped
+    ('success', [4.2])
+
+???+ note
+    The method [trcks.oop.SequenceWrapper.map_to_result][]
+    returns a [trcks.oop.ResultSequenceWrapper][] object.
+    The corresponding class [trcks.oop.ResultSequenceWrapper][]
+    has a `map_failure*` and a `map_successes*` method
+    for each `map*` method of the class [trcks.oop.SequenceWrapper][].
+    Note the plural `map_successes` (instead of `map_success`)
+    since the method operates on each element in the sequence.
+
+The `tap_successes` and `tap_failure` methods allow us to execute side effects
+in the success case (for each element) or in the failure case, respectively:
+
+???+ example
+
+    >>> def get_subscription_fees_by_email(
+    ...     user_emails: list[str],
+    ... ) -> ResultSequence[FailureDescription, float]:
+    ...     return (
+    ...         SequenceWrapper
+    ...         .construct_from_sequence(user_emails)
+    ...         .map_to_result(get_user_id)
+    ...         .tap_successes(lambda n: print(f"LOG: User ID: {n}."))
+    ...         .map_successes_to_result(get_subscription_id)
+    ...         .map_successes(get_subscription_fee)
+    ...         .tap_successes(lambda x: print(f"LOG: Subscription fee: {x}."))
+    ...         .tap_failure(lambda fd: print(f"LOG: Failure: {fd}."))
+    ...         .core
+    ...     )
+    ...
+    >>> fees_erika = get_subscription_fees_by_email(
+    ...     ["erika.mustermann@domain.org"]
+    ... )
+    LOG: User ID: 1.
+    LOG: Subscription fee: 4.2.
+    >>> fees_erika
+    ('success', [4.2])
+    >>> fees_john = get_subscription_fees_by_email(
+    ...     ["john_doe@provider.com"]
+    ... )
+    LOG: User ID: 2.
+    LOG: Failure: User does not have a subscription.
+    >>> fees_john
+    ('failure', 'User does not have a subscription')
+    >>> fees_jane = get_subscription_fees_by_email(
+    ...     ["jane_doe@provider.com"]
+    ... )
+    LOG: Failure: User does not exist.
+    >>> fees_jane
+    ('failure', 'User does not exist')
+
+Sometimes, side effects themselves can fail and
+need to return a [trcks.Result][] type.
+The `tap_successes_to_result` method allows us to execute such side effects
+for each element in the success case.
+If the side effect returns a [trcks.Failure][] for any element,
+that failure is propagated.
+If the side effect returns a [trcks.Success][] for all elements,
+the original success values are preserved.
+
+???+ example
+
+    >>> OutOfDiskSpace = Literal["Out of disk space"]
+    >>> def write_to_disk(n: int) -> Result[OutOfDiskSpace, None]:
+    ...     if n > 1:
+    ...         return "failure", "Out of disk space"
+    ...     return "success", print(f"LOG: Wrote {n} to disk.")
+    ...
+    >>> def get_and_persist_user_ids(
+    ...     user_emails: list[str],
+    ... ) -> ResultSequence[UserDoesNotExist | OutOfDiskSpace, int]:
+    ...     return (
+    ...         SequenceWrapper
+    ...         .construct_from_sequence(user_emails)
+    ...         .map_to_result(get_user_id)
+    ...         .tap_successes_to_result(write_to_disk)
+    ...         .core
+    ...     )
+    ...
+    >>> ids_erika = get_and_persist_user_ids(["erika.mustermann@domain.org"])
+    LOG: Wrote 1 to disk.
+    >>> ids_erika
+    ('success', [1])
+    >>> ids_john = get_and_persist_user_ids(["john_doe@provider.com"])
+    >>> ids_john
+    ('failure', 'Out of disk space')
+    >>> ids_jane = get_and_persist_user_ids(["jane_doe@provider.com"])
+    >>> ids_jane
+    ('failure', 'User does not exist')
+
+## Asynchronous single-track code for a sequence with [trcks.AwaitableSequence][] and [trcks.oop.AwaitableSequenceWrapper][]
+
+While the class [trcks.oop.SequenceWrapper][] and its method `map`
+allow the chaining of synchronous functions for each element,
+they cannot chain asynchronous functions.
+The method [trcks.oop.SequenceWrapper.map_to_awaitable][]
+and the class [trcks.oop.AwaitableSequenceWrapper][]
+allow us to combine [collections.abc.Awaitable][]-returning functions
+with other [collections.abc.Awaitable][]-returning functions or
+with "regular" functions,
+applied to each element in the sequence:
+
+???+ example
+
+    >>> import asyncio
+    >>> from collections.abc import Sequence
+    >>>
+    >>> async def read_from_disk(path: str) -> str:
+    ...     await asyncio.sleep(0.001)
+    ...     contents = {"a.txt": "Hello", "b.txt": "World"}
+    ...     return contents[path]
+    ...
+    >>> def transform(s: str) -> str:
+    ...     return f"Length: {len(s)}"
+    ...
+    >>> async def read_and_transform(
+    ...     input_paths: list[str],
+    ... ) -> Sequence[str]:
+    ...     return await (
+    ...         SequenceWrapper
+    ...         .construct_from_sequence(input_paths)
+    ...         .map_to_awaitable(read_from_disk)
+    ...         .map(transform)
+    ...         .core
+    ...     )
+    ...
+    >>> asyncio.run(read_and_transform(["a.txt", "b.txt"]))
+    ['Length: 5', 'Length: 5']
+
+To understand what is going on here,
+let us have a look at the individual steps of the chain:
+
+???+ example
+
+    >>> from trcks.oop import AwaitableSequenceWrapper
+    >>> # 1. Wrap the input sequence:
+    >>> wrapped: SequenceWrapper[str] = SequenceWrapper.construct_from_sequence(
+    ...     ["a.txt", "b.txt"]
+    ... )
+    >>> wrapped
+    SequenceWrapper(core=['a.txt', 'b.txt'])
+    >>> # 2. Apply the Awaitable function read_from_disk to each element:
+    >>> mapped_once: AwaitableSequenceWrapper[str] = wrapped.map_to_awaitable(
+    ...     read_from_disk
+    ... )
+    >>> mapped_once
+    AwaitableSequenceWrapper(core=<coroutine object ...>)
+    >>> # 3. Apply the function transform to each element:
+    >>> mapped_twice: AwaitableSequenceWrapper[str] = mapped_once.map(transform)
+    >>> mapped_twice
+    AwaitableSequenceWrapper(core=<coroutine object ...>)
+    >>> # 4. Unwrap and run the output coroutine:
+    >>> asyncio.run(mapped_twice.core_as_coroutine)
+    ['Length: 5', 'Length: 5']
+
+???+ note
+    The property `core` of the class [trcks.oop.AwaitableSequenceWrapper][]
+    has type [trcks.AwaitableSequence][].
+    Since [asyncio.run][] expects a [collections.abc.Coroutine][] object,
+    we need to use the property `core_as_coroutine` instead.
+
+The method [trcks.oop.AwaitableSequenceWrapper.tap][]
+allows us to execute synchronous side effects for each element.
+Similarly, the method [trcks.oop.AwaitableSequenceWrapper.tap_to_awaitable][]
+allows us to execute asynchronous side effects for each element.
+
+???+ example
+    >>> async def read_from_disk(path: str) -> str:
+    ...     await asyncio.sleep(0.001)
+    ...     contents = {"a.txt": "Hello", "b.txt": "World"}
+    ...     return contents[path]
+    ...
+    >>> async def read_and_transform(
+    ...     input_paths: list[str],
+    ... ) -> Sequence[str]:
+    ...     return await (
+    ...         SequenceWrapper
+    ...         .construct_from_sequence(input_paths)
+    ...         .map_to_awaitable(read_from_disk)
+    ...         .tap(lambda s: print(f"Read '{s}' from disk."))
+    ...         .map(transform)
+    ...         .tap(lambda s: print(f"Transformed to '{s}'."))
+    ...         .core
+    ...     )
+    ...
+    >>> result = asyncio.run(read_and_transform(["a.txt", "b.txt"]))
+    Read 'Hello' from disk.
+    Read 'World' from disk.
+    Transformed to 'Length: 5'.
+    Transformed to 'Length: 5'.
+    >>> result
+    ['Length: 5', 'Length: 5']
+
+## Asynchronous double-track code for a sequence with [trcks.AwaitableResultSequence][] and [trcks.oop.AwaitableResultSequenceWrapper][]
+
+Whenever we define a function using
+the `async def ... -> Result[F, S]` syntax
+and want to apply it to each element in a sequence,
+we need the [trcks.oop.AwaitableResultSequenceWrapper][] class.
+The package [trcks][] provides the type alias
+[trcks.AwaitableResultSequence][][F, S]
+for `Awaitable[ResultSequence[F, S]]`.
+The success track methods are named `map_successes` and `tap_successes` (plural)
+because they operate on each element individually.
+Processing short-circuits on the first [trcks.Failure][].
+
+???+ example
+
+    >>> from trcks import AwaitableResultSequence
+    >>>
+    >>> ReadErrorLiteral = Literal["read error"]
+    >>> WriteErrorLiteral = Literal["write error"]
+    >>> async def read_from_disk(path: str) -> Result[ReadErrorLiteral, str]:
+    ...     if path != "a.txt" and path != "b.txt":
+    ...         return "failure", "read error"
+    ...     await asyncio.sleep(0.001)
+    ...     contents = {"a.txt": "Hello", "b.txt": "World"}
+    ...     return "success", contents[path]
+    ...
+    >>> def transform(s: str) -> str:
+    ...     return f"Length: {len(s)}"
+    ...
+    >>> async def write_to_disk(
+    ...     s: str, path: str
+    ... ) -> Result[WriteErrorLiteral, None]:
+    ...     if path != "output.txt":
+    ...         return "failure", "write error"
+    ...     await asyncio.sleep(0.001)
+    ...     print(f"Wrote '{s}' to file {path}.")
+    ...     return "success", None
+    ...
+    >>> async def read_and_transform_and_write(
+    ...     input_paths: list[str], output_path: str
+    ... ) -> ResultSequence[ReadErrorLiteral | WriteErrorLiteral, str]:
+    ...     return await (
+    ...         SequenceWrapper
+    ...         .construct_from_sequence(input_paths)
+    ...         .map_to_awaitable_result(read_from_disk)
+    ...         .map_successes(transform)
+    ...         .tap_successes_to_awaitable_result(
+    ...             lambda s: write_to_disk(s, output_path)
+    ...         )
+    ...         .core
+    ...     )
+    ...
+    >>> asyncio.run(
+    ...     read_and_transform_and_write(["a.txt", "b.txt"], "output.txt")
+    ... )
+    Wrote 'Length: 5' to file output.txt.
+    Wrote 'Length: 5' to file output.txt.
+    ('success', ['Length: 5', 'Length: 5'])
+
+To understand what is going on here,
+let us have a look at the individual steps of the chain:
+
+???+ example
+
+    >>> from trcks.oop import AwaitableResultSequenceWrapper
+    >>> # 1. Wrap the input sequence:
+    >>> wrapped: SequenceWrapper[str] = SequenceWrapper.construct_from_sequence(
+    ...     ["a.txt", "b.txt"]
+    ... )
+    >>> wrapped
+    SequenceWrapper(core=['a.txt', 'b.txt'])
+    >>> # 2. Apply the AwaitableResult function read_from_disk to each element:
+    >>> mapped_once: AwaitableResultSequenceWrapper[
+    ...     ReadErrorLiteral, str
+    ... ] = wrapped.map_to_awaitable_result(read_from_disk)
+    >>> mapped_once
+    AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+    >>> # 3. Apply the function transform to each element in the success case:
+    >>> mapped_twice: AwaitableResultSequenceWrapper[
+    ...     ReadErrorLiteral, str
+    ... ] = mapped_once.map_successes(transform)
+    >>> mapped_twice
+    AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+    >>> # 4. Apply the failable async side effect write_to_disk to each element:
+    >>> mapped_thrice: AwaitableResultSequenceWrapper[
+    ...     ReadErrorLiteral | WriteErrorLiteral, str
+    ... ] = mapped_twice.tap_successes_to_awaitable_result(
+    ...     lambda s: write_to_disk(s, "output.txt")
+    ... )
+    >>> mapped_thrice
+    AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+    >>> # 5. Unwrap and run the output coroutine:
+    >>> asyncio.run(mapped_thrice.core_as_coroutine)
+    Wrote 'Length: 5' to file output.txt.
+    Wrote 'Length: 5' to file output.txt.
+    ('success', ['Length: 5', 'Length: 5'])
+
+The methods [trcks.oop.AwaitableResultSequenceWrapper.tap_failure][] and
+[trcks.oop.AwaitableResultSequenceWrapper.tap_successes][]
+allow us to execute synchronous side effects
+in the failure case or in the success case (for each element), respectively:
+
+???+ example
+
+    >>> async def read_from_disk(path: str) -> Result[ReadErrorLiteral, str]:
+    ...     if path != "a.txt" and path != "b.txt":
+    ...         return "failure", "read error"
+    ...     await asyncio.sleep(0.001)
+    ...     contents = {"a.txt": "Hello", "b.txt": "World"}
+    ...     return "success", contents[path]
+    ...
+    >>> async def write_to_disk(
+    ...     s: str, path: str
+    ... ) -> Result[WriteErrorLiteral, None]:
+    ...     if path != "output.txt":
+    ...         return "failure", "write error"
+    ...     await asyncio.sleep(0.001)
+    ...     return "success", None
+    ...
+    >>> async def read_and_transform_and_write(
+    ...     input_paths: list[str], output_path: str
+    ... ) -> ResultSequence[ReadErrorLiteral | WriteErrorLiteral, str]:
+    ...     return await (
+    ...         SequenceWrapper
+    ...         .construct_from_sequence(input_paths)
+    ...         .map_to_awaitable_result(read_from_disk)
+    ...         .tap_successes(lambda s: print(f"LOG: Read '{s}' from disk."))
+    ...         .map_successes(transform)
+    ...         .tap_successes_to_awaitable_result(
+    ...             lambda s: write_to_disk(s, output_path)
+    ...         )
+    ...         .tap_successes(lambda _: print("LOG: Successfully wrote to disk."))
+    ...         .tap_failure(lambda err: print(f"LOG: Failed with error: {err}"))
+    ...         .core
+    ...     )
+    ...
+    >>> result_1 = asyncio.run(
+    ...     read_and_transform_and_write(["a.txt", "b.txt"], "output.txt")
+    ... )
+    LOG: Read 'Hello' from disk.
+    LOG: Read 'World' from disk.
+    LOG: Successfully wrote to disk.
+    LOG: Successfully wrote to disk.
+    >>> result_1
+    ('success', ['Length: 5', 'Length: 5'])
+    >>> result_2 = asyncio.run(
+    ...     read_and_transform_and_write(["missing.txt"], "output.txt")
+    ... )
+    LOG: Failed with error: read error
+    >>> result_2
+    ('failure', 'read error')
+
+Sometimes, side effects themselves can fail and
+need to return an [trcks.AwaitableResult][] type.
+The method
+[trcks.oop.AwaitableResultSequenceWrapper.tap_successes_to_awaitable_result][]
+allows us to execute such asynchronous side effects
+for each element in the success case.
+If the side effect returns a [trcks.Failure][] for any element,
+that failure is propagated.
+If the side effect returns a [trcks.Success][] for all elements,
+the original success values are preserved:
+
+???+ example
+
+    >>> async def write_to_disk(s: str) -> Result[OutOfDiskSpace, None]:
+    ...     await asyncio.sleep(0.001)
+    ...     if len(s) > 10:
+    ...         return "failure", "Out of disk space"
+    ...     return "success", None
+    ...
+    >>> async def read_from_disk(path: str) -> Result[ReadErrorLiteral, str]:
+    ...     if path != "a.txt" and path != "b.txt":
+    ...         return "failure", "read error"
+    ...     await asyncio.sleep(0.001)
+    ...     contents = {"a.txt": "Hi", "b.txt": "Hello, world!"}
+    ...     return "success", contents[path]
+    ...
+    >>> async def read_and_persist(
+    ...     input_paths: list[str],
+    ... ) -> ResultSequence[ReadErrorLiteral | OutOfDiskSpace, str]:
+    ...     return await (
+    ...         SequenceWrapper
+    ...         .construct_from_sequence(input_paths)
+    ...         .map_to_awaitable_result(read_from_disk)
+    ...         .tap_successes(lambda s: print(f"LOG: Persisting '{s}'."))
+    ...         .tap_successes_to_awaitable_result(write_to_disk)
+    ...         .core
+    ...     )
+    ...
+    >>> result = asyncio.run(read_and_persist(["a.txt", "b.txt"]))
+    LOG: Persisting 'Hi'.
     LOG: Persisting 'Hello, world!'.
     >>> result
     ('failure', 'Out of disk space')
