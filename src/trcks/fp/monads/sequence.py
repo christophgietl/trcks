@@ -192,8 +192,8 @@ def tap_to_sequence(
     Example:
         >>> from collections.abc import Callable, Sequence
         >>> from trcks.fp.monads import sequence as s
-        >>> def assign_to_groups(n: int) -> list[int]:
-        ...     return list(range(1, n + 1))
+        >>> def assign_to_groups(n: int) -> range:
+        ...     return range(1, n + 1)
         ...
         >>> assign_and_pass: Callable[
         ...     [Sequence[int]], Sequence[int]
