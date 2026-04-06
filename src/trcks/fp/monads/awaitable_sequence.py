@@ -414,18 +414,19 @@ def tap_to_awaitable_sequence(
         >>> from collections.abc import Sequence
         >>> from trcks.fp.composition import pipe
         >>> from trcks.fp.monads import awaitable_sequence as as_
-        >>> async def slowly_echo_twice(n: int) -> list[str]:
+        >>> async def slowly_get_divisors(n: int) -> list[int]:
         ...     await asyncio.sleep(0.001)
-        ...     return [str(n), str(n)]
+        ...     candidates = range(1, n + 1)
+        ...     return [c for c in candidates if n % c == 0]
         >>> async def main() -> Sequence[int]:
         ...     return await pipe(
         ...         (
-        ...             as_.construct_from_sequence([1, 2]),
-        ...             as_.tap_to_awaitable_sequence(slowly_echo_twice),
+        ...             as_.construct_from_sequence([1, 2, 3, 4]),
+        ...             as_.tap_to_awaitable_sequence(slowly_get_divisors),
         ...         )
         ...     )
         >>> asyncio.run(main())
-        [1, 1, 2, 2]
+        [1, 2, 2, 3, 3, 4, 4, 4]
     """
 
     async def bypassed_f(t1: _T1) -> Sequence[_T1]:
@@ -458,17 +459,18 @@ def tap_to_sequence(
         >>> from collections.abc import Sequence
         >>> from trcks.fp.composition import pipe
         >>> from trcks.fp.monads import awaitable_sequence as as_
-        >>> def duplicate_integer(n: int) -> list[int]:
-        ...     return [n, n]
+        >>> def get_divisors(n: int) -> list[int]:
+        ...     candidates = range(1, n + 1)
+        ...     return [c for c in candidates if n % c == 0]
         >>> async def main() -> Sequence[int]:
         ...     return await pipe(
         ...         (
-        ...             as_.construct_from_sequence([1, 2]),
-        ...             as_.tap_to_sequence(duplicate_integer),
+        ...             as_.construct_from_sequence([1, 2, 3, 4]),
+        ...             as_.tap_to_sequence(get_divisors),
         ...         )
         ...     )
         >>> asyncio.run(main())
-        [1, 1, 2, 2]
+        [1, 2, 2, 3, 3, 4, 4, 4]
     """
     return a.map_(s.tap_to_sequence(f))
 
