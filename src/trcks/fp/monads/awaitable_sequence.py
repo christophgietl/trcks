@@ -158,6 +158,10 @@ def map_(
             a function expecting and returning
             [trcks.AwaitableSequence][]s of the same length.
 
+    Note:
+        The underscore in the function name helps to avoid collisions
+        with the built-in function [map][].
+
     Example:
         >>> import asyncio
         >>> from collections.abc import Sequence
