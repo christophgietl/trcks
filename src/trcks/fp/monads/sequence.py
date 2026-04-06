@@ -8,11 +8,11 @@ Example:
 
     >>> from trcks.fp.composition import pipe
     >>> from trcks.fp.monads import sequence as s
-    >>> def double(x: int) -> int:
-    ...     return x * 2
+    >>> def double(n: int) -> int:
+    ...     return n * 2
     ...
-    >>> def log(x: int) -> None:
-    ...     print(f"Received: {x}")
+    >>> def log(n: int) -> None:
+    ...     print(f"Received: {n}")
     ...
     >>> result = pipe(
     ...     (
@@ -29,8 +29,8 @@ Example:
 
     Map each element to a sequence and flatten the result:
 
-    >>> def duplicate(x: int) -> list[int]:
-    ...     return [x, x]
+    >>> def duplicate(n: int) -> list[int]:
+    ...     return [n, n]
     ...
     >>> result = pipe(
     ...     (
@@ -95,8 +95,8 @@ def map_(f: Callable[[_T1], _T2]) -> Callable[[Sequence[_T1]], Sequence[_T2]]:
     Example:
         >>> from collections.abc import Callable, Sequence
         >>> from trcks.fp.monads import sequence as s
-        >>> def double_integer(x: int) -> int:
-        ...     return x * 2
+        >>> def double_integer(n: int) -> int:
+        ...     return n * 2
         ...
         >>> double_integers: Callable[
         ...     [Sequence[int]], Sequence[int]
@@ -126,8 +126,8 @@ def map_to_sequence(
     Example:
         >>> from collections.abc import Callable, Sequence
         >>> from trcks.fp.monads import sequence as s
-        >>> def duplicate_integer(x: int) -> list[int]:
-        ...     return [x, x]
+        >>> def duplicate_integer(n: int) -> list[int]:
+        ...     return [n, n]
         ...
         >>> duplicate_integers: Callable[
         ...     [Sequence[int]], Sequence[int]
@@ -159,8 +159,8 @@ def tap(
     Example:
         >>> from collections.abc import Callable, Sequence
         >>> from trcks.fp.monads import sequence as s
-        >>> def log(x: int) -> None:
-        ...     print(f"Received: {x}")
+        >>> def log(n: int) -> None:
+        ...     print(f"Received: {n}")
         ...
         >>> log_and_pass: Callable[[Sequence[int]], Sequence[int]] = s.tap(log)
         >>> result = log_and_pass([1, 2, 3])
@@ -192,21 +192,15 @@ def tap_to_sequence(
     Example:
         >>> from collections.abc import Callable, Sequence
         >>> from trcks.fp.monads import sequence as s
-        >>> def record_in_two_systems(x: int) -> list[str]:
-        ...     print(f"Recording {x} in local log.")
-        ...     print(f"Recording {x} in remote log.")
-        ...     return ["local", "remote"]
+        >>> def assign_to_groups(n: int) -> list[int]:
+        ...     return list(range(1, n + 1))
         ...
-        >>> record_and_pass: Callable[
+        >>> assign_and_pass: Callable[
         ...     [Sequence[int]], Sequence[int]
-        ... ] = s.tap_to_sequence(record_in_two_systems)
-        >>> result = record_and_pass([1, 2])
-        Recording 1 in local log.
-        Recording 1 in remote log.
-        Recording 2 in local log.
-        Recording 2 in remote log.
+        ... ] = s.tap_to_sequence(assign_to_groups)
+        >>> result = assign_and_pass([2, 3])
         >>> result
-        [1, 1, 2, 2]
+        [2, 2, 3, 3, 3]
     """
 
     def bypassed_f(t1: _T1) -> Sequence[_T1]:
