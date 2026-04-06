@@ -88,18 +88,22 @@ def map_(f: Callable[[_T1], _T2]) -> Callable[[Sequence[_T1]], Sequence[_T2]]:
         Maps [collections.abc.Sequence][]s to [collections.abc.Sequence][]s
             of the same length according to the given function.
 
+    Note:
+        The underscore in the function name helps to avoid collisions
+        with the built-in function [map][].
+
     Example:
         >>> from collections.abc import Callable, Sequence
         >>> from trcks.fp.monads import sequence as s
         >>> def double_integer(x: int) -> int:
         ...     return x * 2
         ...
-        >>> double_integer_sequence: Callable[
+        >>> double_integers: Callable[
         ...     [Sequence[int]], Sequence[int]
         ... ] = s.map_(double_integer)
-        >>> double_integer_sequence([1, 2, 3])
+        >>> double_integers([1, 2, 3])
         [2, 4, 6]
-        >>> double_integer_sequence((1, 2, 3))
+        >>> double_integers((1, 2, 3))
         [2, 4, 6]
     """
     return map_to_sequence(compose2((f, construct)))
@@ -125,10 +129,10 @@ def map_to_sequence(
         >>> def duplicate_integer(x: int) -> list[int]:
         ...     return [x, x]
         ...
-        >>> duplicate_integer_sequence: Callable[
+        >>> duplicate_integers: Callable[
         ...     [Sequence[int]], Sequence[int]
         ... ] = s.map_to_sequence(duplicate_integer)
-        >>> duplicate_integer_sequence([1, 2, 3])
+        >>> duplicate_integers([1, 2, 3])
         [1, 1, 2, 2, 3, 3]
     """
 
@@ -188,19 +192,21 @@ def tap_to_sequence(
     Example:
         >>> from collections.abc import Callable, Sequence
         >>> from trcks.fp.monads import sequence as s
-        >>> def write_to_disk(x: int) -> list[str]:
-        ...     print(f"Wrote {x} to disk.")
-        ...     return [str(x), str(x)]
+        >>> def record_in_two_systems(x: int) -> list[str]:
+        ...     print(f"Recording {x} in local log.")
+        ...     print(f"Recording {x} in remote log.")
+        ...     return ["local", "remote"]
         ...
-        >>> write_and_pass: Callable[
+        >>> record_and_pass: Callable[
         ...     [Sequence[int]], Sequence[int]
-        ... ] = s.tap_to_sequence(write_to_disk)
-        >>> result = write_and_pass([1, 2, 3])
-        Wrote 1 to disk.
-        Wrote 2 to disk.
-        Wrote 3 to disk.
+        ... ] = s.tap_to_sequence(record_in_two_systems)
+        >>> result = record_and_pass([1, 2])
+        Recording 1 in local log.
+        Recording 1 in remote log.
+        Recording 2 in local log.
+        Recording 2 in remote log.
         >>> result
-        [1, 1, 2, 2, 3, 3]
+        [1, 1, 2, 2]
     """
 
     def bypassed_f(t1: _T1) -> Sequence[_T1]:
