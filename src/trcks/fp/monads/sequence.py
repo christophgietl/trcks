@@ -195,12 +195,13 @@ def tap_to_sequence(
         >>> from collections.abc import Callable, Sequence
         >>> from trcks.fp.monads import sequence as s
         >>> def get_divisors(n: int) -> list[int]:
-        ...     return [d for d in range(1, n + 1) if n % d == 0]
+        ...     candidates = range(1, n + 1)
+        ...     return [c for c in candidates if n % c == 0]
         ...
-        >>> repeat_integer_according_to_number_of_divisors: Callable[
+        >>> repeat_integers_according_to_number_of_divisors: Callable[
         ...     [Sequence[int]], Sequence[int]
         ... ] = s.tap_to_sequence(get_divisors)
-        >>> result = repeat_integer_according_to_number_of_divisors([1, 2, 3, 4])
+        >>> result = repeat_integers_according_to_number_of_divisors([1, 2, 3, 4])
         >>> result
         [1, 2, 2, 3, 3, 4, 4, 4]
     """
