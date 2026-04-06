@@ -13,22 +13,22 @@ Example:
     >>> def double_integer(n: int) -> int:
     ...     return n * 2
     ...
-    >>> def print_integer(n: int) -> None:
-    ...     print(f"Integer: {n}")
+    >>> def log_integer(n: int) -> None:
+    ...     print(f"Received: {n}")
     ...
     >>> async def main() -> Sequence[int]:
     ...     return await pipe(
     ...         (
     ...             as_.construct_from_sequence([4, 2, 0]),
     ...             as_.map_(double_integer),
-    ...             as_.tap(print_integer),
+    ...             as_.tap(log_integer),
     ...         )
     ...     )
     ...
     >>> sequence = asyncio.run(main())
-    Integer: 8
-    Integer: 4
-    Integer: 0
+    Received: 8
+    Received: 4
+    Received: 0
     >>> sequence
     [8, 4, 0]
 
@@ -321,19 +321,19 @@ def tap(
         >>> from collections.abc import Sequence
         >>> from trcks.fp.composition import pipe
         >>> from trcks.fp.monads import awaitable_sequence as as_
-        >>> def print_integer(n: int) -> None:
-        ...     print(f"Integer: {n}")
+        >>> def log_integer(n: int) -> None:
+        ...     print(f"Received: {n}")
         ...
         >>> async def main() -> Sequence[int]:
         ...     return await pipe(
         ...         (
         ...             as_.construct_from_sequence([1, 2]),
-        ...             as_.tap(print_integer),
+        ...             as_.tap(log_integer),
         ...         )
         ...     )
         >>> seq = asyncio.run(main())
-        Integer: 1
-        Integer: 2
+        Received: 1
+        Received: 2
         >>> seq
         [1, 2]
     """
@@ -363,19 +363,19 @@ def tap_to_awaitable(
         >>> from collections.abc import Sequence
         >>> from trcks.fp.composition import pipe
         >>> from trcks.fp.monads import awaitable_sequence as as_
-        >>> async def print_integer(n: int) -> None:
+        >>> async def log_integer(n: int) -> None:
         ...     await asyncio.sleep(0.001)
-        ...     print(f"Integer: {n}")
+        ...     print(f"Received: {n}")
         >>> async def main() -> Sequence[int]:
         ...     return await pipe(
         ...         (
         ...             as_.construct_from_sequence([1, 2]),
-        ...             as_.tap_to_awaitable(print_integer),
+        ...             as_.tap_to_awaitable(log_integer),
         ...         )
         ...     )
         >>> seq = asyncio.run(main())
-        Integer: 1
-        Integer: 2
+        Received: 1
+        Received: 2
         >>> seq
         [1, 2]
     """
