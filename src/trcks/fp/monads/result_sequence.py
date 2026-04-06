@@ -8,21 +8,21 @@ Example:
 
     >>> from trcks.fp.composition import pipe
     >>> from trcks.fp.monads import result_sequence as rs
-    >>> def double(n: int) -> int:
+    >>> def double_integer(n: int) -> int:
     ...     return n * 2
     ...
-    >>> def duplicate(n: int) -> list[int]:
+    >>> def duplicate_integer(n: int) -> list[int]:
     ...     return [n, -n]
     ...
-    >>> def log(n: int) -> None:
+    >>> def log_integer(n: int) -> None:
     ...     print(f"Received: {n}")
     ...
     >>> result_sequence = pipe(
     ...     (
     ...         rs.construct_successes_from_sequence([1, 2, 3]),
-    ...         rs.map_successes(double),
-    ...         rs.tap_successes(log),
-    ...         rs.map_successes_to_sequence(duplicate),
+    ...         rs.map_successes(double_integer),
+    ...         rs.tap_successes(log_integer),
+    ...         rs.map_successes_to_sequence(duplicate_integer),
     ...     )
     ... )
     Received: 2
@@ -310,15 +310,15 @@ def map_successes(
         >>> from collections.abc import Callable
         >>> from trcks import ResultSequence
         >>> from trcks.fp.monads import result_sequence as rs
-        >>> def _double(n: int) -> int:
+        >>> def _double_integer(n: int) -> int:
         ...     return n * 2
         ...
-        >>> double: Callable[
+        >>> double_integer: Callable[
         ...     [ResultSequence[str, int]], ResultSequence[str, int]
-        ... ] = rs.map_successes(_double)
-        >>> double(("success", [1, 2, 3]))
+        ... ] = rs.map_successes(_double_integer)
+        >>> double_integer(("success", [1, 2, 3]))
         ('success', [2, 4, 6])
-        >>> double(("failure", "not found"))
+        >>> double_integer(("failure", "not found"))
         ('failure', 'not found')
     """
     return r.map_success(s.map_(f))
@@ -445,15 +445,15 @@ def map_successes_to_sequence(
         >>> from collections.abc import Callable
         >>> from trcks import ResultSequence
         >>> from trcks.fp.monads import result_sequence as rs
-        >>> def _duplicate(n: int) -> list[int]:
+        >>> def _duplicate_integer(n: int) -> list[int]:
         ...     return [n, -n]
         ...
-        >>> duplicate: Callable[
+        >>> duplicate_integer: Callable[
         ...     [ResultSequence[str, int]], ResultSequence[str, int]
-        ... ] = rs.map_successes_to_sequence(_duplicate)
-        >>> duplicate(("success", [1, 2]))
+        ... ] = rs.map_successes_to_sequence(_duplicate_integer)
+        >>> duplicate_integer(("success", [1, 2]))
         ('success', [1, -1, 2, -2])
-        >>> duplicate(("failure", "not found"))
+        >>> duplicate_integer(("failure", "not found"))
         ('failure', 'not found')
     """
     return r.map_success(s.map_to_sequence(f))
