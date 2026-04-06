@@ -313,12 +313,12 @@ def map_successes(
         >>> def _double_integer(n: int) -> int:
         ...     return n * 2
         ...
-        >>> double_integer: Callable[
+        >>> double_integers: Callable[
         ...     [ResultSequence[str, int]], ResultSequence[str, int]
         ... ] = rs.map_successes(_double_integer)
-        >>> double_integer(("success", [1, 2, 3]))
+        >>> double_integers(("success", [1, 2, 3]))
         ('success', [2, 4, 6])
-        >>> double_integer(("failure", "not found"))
+        >>> double_integers(("failure", "not found"))
         ('failure', 'not found')
     """
     return r.map_success(s.map_(f))
@@ -448,12 +448,12 @@ def map_successes_to_sequence(
         >>> def _duplicate_integer(n: int) -> list[int]:
         ...     return [n, -n]
         ...
-        >>> duplicate_integer: Callable[
+        >>> duplicate_integers: Callable[
         ...     [ResultSequence[str, int]], ResultSequence[str, int]
         ... ] = rs.map_successes_to_sequence(_duplicate_integer)
-        >>> duplicate_integer(("success", [1, 2]))
+        >>> duplicate_integers(("success", [1, 2]))
         ('success', [1, -1, 2, -2])
-        >>> duplicate_integer(("failure", "not found"))
+        >>> duplicate_integers(("failure", "not found"))
         ('failure', 'not found')
     """
     return r.map_success(s.map_to_sequence(f))
