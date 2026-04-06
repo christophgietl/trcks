@@ -8,17 +8,17 @@ Example:
 
     >>> from trcks.fp.composition import pipe
     >>> from trcks.fp.monads import sequence as s
-    >>> def double(n: int) -> int:
+    >>> def double_integer(n: int) -> int:
     ...     return n * 2
     ...
-    >>> def log(n: int) -> None:
+    >>> def log_integer(n: int) -> None:
     ...     print(f"Received: {n}")
     ...
     >>> result = pipe(
     ...     (
     ...         [1, 2, 3],
-    ...         s.map_(double),
-    ...         s.tap(log),
+    ...         s.map_(double_integer),
+    ...         s.tap(log_integer),
     ...     )
     ... )
     Received: 2
@@ -29,13 +29,13 @@ Example:
 
     Map each element to a sequence and flatten the result:
 
-    >>> def duplicate(n: int) -> list[int]:
+    >>> def duplicate_integer(n: int) -> list[int]:
     ...     return [n, n]
     ...
     >>> result = pipe(
     ...     (
     ...         [1, 2, 3],
-    ...         s.map_to_sequence(duplicate),
+    ...         s.map_to_sequence(duplicate_integer),
     ...     )
     ... )
     >>> result
@@ -159,11 +159,13 @@ def tap(
     Example:
         >>> from collections.abc import Callable, Sequence
         >>> from trcks.fp.monads import sequence as s
-        >>> def log(n: int) -> None:
+        >>> def log_integer(n: int) -> None:
         ...     print(f"Received: {n}")
         ...
-        >>> log_and_pass: Callable[[Sequence[int]], Sequence[int]] = s.tap(log)
-        >>> result = log_and_pass([1, 2, 3])
+        >>> log_and_pass_integers: Callable[
+        ...     [Sequence[int]], Sequence[int]
+        ... ] = s.tap(log_integer)
+        >>> result = log_and_pass_integers([1, 2, 3])
         Received: 1
         Received: 2
         Received: 3
@@ -195,12 +197,12 @@ def tap_to_sequence(
         >>> def get_divisors(n: int) -> list[int]:
         ...     return [d for d in range(1, n + 1) if n % d == 0]
         ...
-        >>> get_and_pass: Callable[
+        >>> repeat_integer_according_to_number_of_divisors: Callable[
         ...     [Sequence[int]], Sequence[int]
         ... ] = s.tap_to_sequence(get_divisors)
-        >>> result = get_and_pass([2, 4])
+        >>> result = repeat_integer_according_to_number_of_divisors([1, 2, 3, 4])
         >>> result
-        [2, 2, 4, 4, 4]
+        [1, 2, 2, 3, 3, 4, 4, 4]
     """
 
     def bypassed_f(t1: _T1) -> Sequence[_T1]:
