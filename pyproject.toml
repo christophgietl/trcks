@@ -162,6 +162,10 @@ source = "scm"
 [tool.pymarkdown]
 extensions.front-matter.enabled = true
 extensions.markdown-tables.enabled = true
+# Recommended settings for Python-Markdown
+# (cf. https://pymarkdown.readthedocs.io/en/latest/advanced_plugins/#python-markdown):
+plugins.list-anchored-indent.enabled = true
+plugins.ul-indent.enabled = false
 
 [tool.pyright]
 deprecateTypingAliases = true
