@@ -10,6 +10,7 @@ The function [trcks.fp.composition.pipe][] allows us to chain functions:
 
 ???+ example
 
+    ```pycon
     >>> from trcks.fp.composition import pipe
     >>>
     >>> def to_length_string(s: str) -> str:
@@ -18,11 +19,14 @@ The function [trcks.fp.composition.pipe][] allows us to chain functions:
     >>> to_length_string("Hello, world!")
     'Length: 13'
 
+    ```
+
 To understand what is going on here,
 let us have a look at the individual steps of the chain:
 
 ???+ example
 
+    ```pycon
     >>> pipe(("Hello, world!",))
     'Hello, world!'
     >>> pipe(("Hello, world!", len))
@@ -30,9 +34,12 @@ let us have a look at the individual steps of the chain:
     >>> pipe(("Hello, world!", len, lambda n: f"Length: {n}"))
     'Length: 13'
 
+    ```
+
 ???+ note
     The function [trcks.fp.composition.pipe][] expects a [trcks.fp.composition.Pipeline][],
-    i.e. a tuple consisting of a start value followed by up to seven compatible functions.
+    i.e. a tuple consisting of a start value followed by up to seven
+    compatible functions.
 
 Side effects like logging or writing to a file tend to
 "consume" their input and return [None][] instead.
@@ -42,6 +49,7 @@ that behaves like the original function but returns the input value.
 
 ???+ example
 
+    ```pycon
     >>> from trcks.fp.monads import identity as i
     >>>
     >>> def to_length_string(s: str) -> str:
@@ -61,6 +69,8 @@ that behaves like the original function but returns the input value.
     >>> output
     'Length: 13'
 
+    ```
+
 ## Synchronous double-track code with [trcks.fp.composition][] and [trcks.fp.monads.result][]
 
 If one of the functions in a [trcks.fp.composition.Pipeline][]
@@ -75,6 +85,7 @@ into functions with input type `trcks.Result[F, S]`.
 
 ???+ example
 
+    ```pycon
     >>> from typing import Literal
     >>> from trcks import Result
     >>> from trcks.fp.monads import result as r
@@ -126,11 +137,14 @@ into functions with input type `trcks.Result[F, S]`.
     >>> get_subscription_fee_by_email("jane_doe@provider.com")
     ('failure', 'User does not exist')
 
+    ```
+
 To understand what is going on here,
 let us have a look at the individual steps of the chain:
 
 ???+ example
 
+    ```pycon
     >>> from trcks.fp.composition import (
     ...     Pipeline0, Pipeline1, Pipeline2, Pipeline3, pipe
     ... )
@@ -170,6 +184,8 @@ let us have a look at the individual steps of the chain:
     >>> pipe(p3)
     ('success', 4.2)
 
+    ```
+
 While [trcks.fp.monads.result.map_failure][] and [trcks.fp.monads.result.map_success][]
 allow us to apply functions in the failure case or in the success case, respectively,
 the higher-order functions [trcks.fp.monads.result.tap_failure][] and [trcks.fp.monads.result.tap_success][]
@@ -177,6 +193,7 @@ allow us to execute side effects in the failure case or in the success case, res
 
 ???+ example
 
+    ```pycon
     >>> from trcks.fp.composition import Pipeline6
     >>>
     >>> def get_subscription_fee_by_email(
@@ -218,6 +235,8 @@ allow us to execute side effects in the failure case or in the success case, res
     >>> fee_jane
     ('failure', 'User does not exist')
 
+    ```
+
 Sometimes, side effects themselves can fail and
 need to return a [trcks.Result][] value.
 The higher-order function [trcks.fp.monads.result.tap_success_to_result][]
@@ -227,6 +246,7 @@ If the side effect returns a [trcks.Success][], the original success value is pr
 
 ???+ example
 
+    ```pycon
     >>> OutOfDiskSpace = Literal["Out of disk space"]
     >>>
     >>> def write_to_disk(n: int) -> Result[OutOfDiskSpace, None]:
@@ -261,6 +281,8 @@ If the side effect returns a [trcks.Success][], the original success value is pr
     >>> id_jane
     ('failure', 'User does not exist')
 
+    ```
+
 ## Asynchronous single-track code with [trcks.fp.composition][] and [trcks.fp.monads.awaitable][]
 
 If one of the functions in a [trcks.fp.composition.Pipeline][] returns
@@ -276,6 +298,7 @@ into functions with input type `collections.abc.Awaitable[T]`.
 
 ???+ example
 
+    ```pycon
     >>> import asyncio
     >>> from collections.abc import Awaitable
     >>> from trcks.fp.monads import awaitable as a
@@ -310,11 +333,14 @@ into functions with input type `collections.abc.Awaitable[T]`.
     Read 'Hello, world!' from file input.txt.
     Wrote 'Length: 13' to file output.txt.
 
+    ```
+
 To understand what is going on here,
 let us have a look at the individual steps of the chain:
 
 ???+ example
 
+    ```pycon
     >>> p1: Pipeline1[str, Awaitable[str]] = (
     ...     "input.txt",
     ...     read_from_disk,
@@ -342,6 +368,8 @@ let us have a look at the individual steps of the chain:
     Read 'Hello, world!' from file input.txt.
     Wrote 'Length: 13' to file output.txt.
 
+    ```
+
 ???+ note
     The values `pipe(p1)`, `pipe(p2)` and `pipe(p3)` are all of the type [collections.abc.Awaitable][].
     Since [asyncio.run][] expects the input type [collections.abc.Coroutine][],
@@ -355,6 +383,7 @@ allows us to execute asynchronous side effects.
 
 ???+ example
 
+    ```pycon
     >>> async def read_from_disk(path: str) -> str:
     ...     await asyncio.sleep(0.001)
     ...     return "Hello, world!"
@@ -387,6 +416,8 @@ allows us to execute asynchronous side effects.
     Wrote 'Length: 13' to disk.
     'Length: 13'
 
+    ```
+
 ## Asynchronous double-track code with [trcks.fp.composition][] and [trcks.fp.monads.awaitable_result][]
 
 If one of the functions in a [trcks.fp.composition.Pipeline][] returns
@@ -403,6 +434,7 @@ into functions with input type `trcks.AwaitableResult[F, S]`.
 
 ???+ example
 
+    ```pycon
     >>> from trcks.fp.monads import awaitable_result as ar
     >>>
     >>> ReadErrorLiteral = Literal["read error"]
@@ -419,7 +451,9 @@ into functions with input type `trcks.AwaitableResult[F, S]`.
     >>> def transform(s: str) -> str:
     ...     return f"Length: {len(s)}"
     ...
-    >>> async def write_to_disk(s: str, path: str) -> Result[WriteErrorLiteral, None]:
+    >>> async def write_to_disk(
+    ...     s: str, path: str
+    ... ) -> Result[WriteErrorLiteral, None]:
     ...     if path != "output.txt":
     ...         return "failure", "write error"
     ...     await asyncio.sleep(0.001)
@@ -447,11 +481,14 @@ into functions with input type `trcks.AwaitableResult[F, S]`.
     Wrote 'Length: 13' to file output.txt.
     ('success', None)
 
+    ```
+
 To understand what is going on here,
 let us have a look at the individual steps of the chain:
 
 ???+ example
 
+    ```pycon
     >>> from trcks import AwaitableResult, Result
     >>>
     >>> p1: Pipeline1[str, AwaitableResult[ReadErrorLiteral, str]] = (
@@ -491,6 +528,8 @@ let us have a look at the individual steps of the chain:
     Wrote 'Length: 13' to file output.txt.
     ('success', None)
 
+    ```
+
 ???+ note
     The values `pipe(p1)`, `pipe(p2)` and `pipe(p3)` all are
     of type [trcks.AwaitableResult][].
@@ -505,13 +544,16 @@ in the failure case or in the success case, respectively:
 
 ???+ example
 
+    ```pycon
     >>> async def read_from_disk(path: str) -> Result[ReadErrorLiteral, str]:
     ...     if path != "input.txt":
     ...         return "failure", "read error"
     ...     await asyncio.sleep(0.001)
     ...     return "success", "Hello, world!"
     ...
-    >>> async def write_to_disk(s: str, path: str) -> Result[WriteErrorLiteral, None]:
+    >>> async def write_to_disk(
+    ...     s: str, path: str
+    ... ) -> Result[WriteErrorLiteral, None]:
     ...     if path != "output.txt":
     ...         return "failure", "write error"
     ...     await asyncio.sleep(0.001)
@@ -550,6 +592,8 @@ in the failure case or in the success case, respectively:
     >>> result_2
     ('failure', 'read error')
 
+    ```
+
 Sometimes, side effects themselves can fail and
 need to return an [trcks.AwaitableResult][] type.
 The higher-order function [trcks.fp.monads.awaitable_result.tap_success_to_awaitable_result][]
@@ -560,6 +604,7 @@ the original success value is preserved:
 
 ???+ example
 
+    ```pycon
     >>> async def write_to_disk(s: str) -> Result[OutOfDiskSpace, None]:
     ...     await asyncio.sleep(0.001)
     ...     if len(s) > 10:
@@ -586,3 +631,5 @@ the original success value is preserved:
     LOG: Persisting 'Hello, world!'.
     >>> result
     ('failure', 'Out of disk space')
+
+    ```

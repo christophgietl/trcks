@@ -11,7 +11,7 @@ Moreover, it can lead to repetitive code patterns:
 
 ???+ example
 
-    ``` pycon hl_lines="28-39"
+    ```pycon hl_lines="28-39"
     >>> from typing import Literal
     >>> from trcks import Result
     >>>
@@ -72,6 +72,7 @@ using method chaining:
 
 ???+ example
 
+    ```pycon
     >>> from trcks.oop import Wrapper
     >>>
     >>> def get_subscription_fee_by_email(
@@ -92,6 +93,8 @@ using method chaining:
     >>> get_subscription_fee_by_email("jane_doe@provider.com")
     ('failure', 'User does not exist')
 
+    ```
+
 ## How does the package [trcks.fp][] help with function combination?
 
 The package [trcks.fp][] supports combining functions in a functional style
@@ -99,6 +102,7 @@ using function composition:
 
 ???+ example
 
+    ```pycon
     >>> from trcks.fp.composition import Pipeline3, pipe
     >>> from trcks.fp.monads import result as r
     >>>
@@ -127,3 +131,5 @@ using function composition:
     ('failure', 'User does not have a subscription')
     >>> get_subscription_fee_by_email("jane_doe@provider.com")
     ('failure', 'User does not exist')
+
+    ```

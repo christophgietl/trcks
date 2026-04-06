@@ -18,6 +18,7 @@ in the following example.
 
 ???+ example
 
+    ```pycon
     >>> from typing import Literal
     >>> from trcks import Result
     >>> from trcks.oop import Wrapper
@@ -61,13 +62,15 @@ in the following example.
     >>> get_subscription_fee_by_email("jane_doe@provider.com")
     ('failure', 'User does not exist')
 
+    ```
+
 ???+ note
 
     1. The generic type `trcks.Result` allows domain errors to become
        part of a function's return type (subject to static type checking).
-    2. The class `trcks.oop.Wrapper` provides a convenient way to chain
-       `trcks.Result`-returning functions and "regular" functions
-       (in a type-safe way).
+    2. <!-- rumdl-disable-line MD032 --> The class `trcks.oop.Wrapper` provides
+       a convenient way to chain `trcks.Result`-returning functions and
+       "regular" functions (in a type-safe way).
 
 ### Functional style
 
@@ -77,6 +80,7 @@ in the following example.
 
 ???+ example
 
+    ```pycon
     >>> from typing import Literal
     >>> from trcks import Result
     >>> from trcks.fp.composition import Pipeline3, pipe
@@ -129,12 +133,14 @@ in the following example.
     >>> get_subscription_fee_by_email("jane_doe@provider.com")
     ('failure', 'User does not exist')
 
+    ```
+
 ???+ note
 
     1. The generic type `trcks.Result` allows domain errors to become
        part of a function's return type (subject to static type checking).
-    2. The modules `trcks.fp.composition` and `trcks.fp.monads.result`
-       provide a convenient way to chain
+    2. <!-- rumdl-disable-line MD032 --> The modules `trcks.fp.composition` and
+       `trcks.fp.monads.result` provide a convenient way to chain
        `trcks.Result`-returning functions and "regular" functions
        (in a type-safe way).
 

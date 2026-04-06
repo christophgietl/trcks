@@ -6,6 +6,7 @@ Usually, the second element is a string, an exception or an enum value:
 
 ???+ example
 
+    ```pycon
     >>> import enum
     >>> from typing import Literal
     >>> from trcks import Failure
@@ -25,12 +26,15 @@ Usually, the second element is a string, an exception or an enum value:
     ...
     >>> enum_failure: Failure[ErrorEnum] = ("failure", ErrorEnum.USER_DOES_NOT_EXIST)
 
+    ```
+
 The generic type [trcks.Success][][S] describes all [tuple][]s of length 2
 with the string "success" as the first element and a second element of type S.
 Here, S can be any type.
 
 ???+ example
 
+    ```pycon
     >>> from decimal import Decimal
     >>> from pathlib import Path
     >>> from trcks import Success
@@ -41,12 +45,15 @@ Here, S can be any type.
     >>> path_success: Success[Path] = ("success", Path("/tmp/my-file.txt"))
     >>> str_success: Success[str] = ("success", "foo")
 
+    ```
+
 The generic type [trcks.Result][][F, S] is
 the union of [trcks.Failure][][F] and [trcks.Success][][S].
 It is primarily used as a return type for functions:
 
 ???+ example
 
+    ```pycon
     >>> from typing import Literal
     >>> from trcks import Result
     >>>
@@ -63,3 +70,5 @@ It is primarily used as a return type for functions:
     ('success', 42)
     >>> get_subscription_id(user_id=2)
     ('failure', 'User does not have a subscription')
+
+    ```
