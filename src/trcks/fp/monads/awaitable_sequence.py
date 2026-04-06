@@ -38,7 +38,7 @@ Example:
     >>> from collections.abc import Sequence
     >>> from trcks.fp.composition import pipe
     >>> from trcks.fp.monads import awaitable_sequence as as_
-    >>> async def duplicate_integer(n: int) -> list[int]:
+    >>> async def slowly_duplicate_integer(n: int) -> list[int]:
     ...     await asyncio.sleep(0.001)
     ...     return [n, n]
     ...
@@ -46,7 +46,7 @@ Example:
     ...     return await pipe(
     ...         (
     ...             as_.construct_from_sequence([1, 2, 3]),
-    ...             as_.map_to_awaitable_sequence(duplicate_integer),
+    ...             as_.map_to_awaitable_sequence(slowly_duplicate_integer),
     ...         )
     ...     )
     ...
@@ -203,14 +203,14 @@ def map_to_awaitable(
         >>> from collections.abc import Sequence
         >>> from trcks.fp.composition import pipe
         >>> from trcks.fp.monads import awaitable_sequence as as_
-        >>> async def add_one(n: int) -> int:
+        >>> async def slowly_add_one(n: int) -> int:
         ...     await asyncio.sleep(0.001)
         ...     return n + 1
         >>> async def main() -> Sequence[int]:
         ...     return await pipe(
         ...         (
         ...             as_.construct_from_sequence([1, 2]),
-        ...             as_.map_to_awaitable(add_one),
+        ...             as_.map_to_awaitable(slowly_add_one),
         ...         )
         ...     )
         >>> asyncio.run(main())
@@ -242,14 +242,14 @@ def map_to_awaitable_sequence(
         >>> from collections.abc import Sequence
         >>> from trcks.fp.composition import pipe
         >>> from trcks.fp.monads import awaitable_sequence as as_
-        >>> async def duplicate_integer(n: int) -> list[int]:
+        >>> async def slowly_duplicate_integer(n: int) -> list[int]:
         ...     await asyncio.sleep(0.001)
         ...     return [n, n]
         >>> async def main() -> Sequence[int]:
         ...     return await pipe(
         ...         (
         ...             as_.construct_from_sequence([1, 2]),
-        ...             as_.map_to_awaitable_sequence(duplicate_integer),
+        ...             as_.map_to_awaitable_sequence(slowly_duplicate_integer),
         ...         )
         ...     )
         >>> asyncio.run(main())
@@ -363,14 +363,14 @@ def tap_to_awaitable(
         >>> from collections.abc import Sequence
         >>> from trcks.fp.composition import pipe
         >>> from trcks.fp.monads import awaitable_sequence as as_
-        >>> async def log_integer(n: int) -> None:
+        >>> async def slowly_log_integer(n: int) -> None:
         ...     await asyncio.sleep(0.001)
         ...     print(f"Received: {n}")
         >>> async def main() -> Sequence[int]:
         ...     return await pipe(
         ...         (
         ...             as_.construct_from_sequence([1, 2]),
-        ...             as_.tap_to_awaitable(log_integer),
+        ...             as_.tap_to_awaitable(slowly_log_integer),
         ...         )
         ...     )
         >>> seq = asyncio.run(main())
@@ -410,14 +410,14 @@ def tap_to_awaitable_sequence(
         >>> from collections.abc import Sequence
         >>> from trcks.fp.composition import pipe
         >>> from trcks.fp.monads import awaitable_sequence as as_
-        >>> async def echo_twice(n: int) -> list[str]:
+        >>> async def slowly_echo_twice(n: int) -> list[str]:
         ...     await asyncio.sleep(0.001)
         ...     return [str(n), str(n)]
         >>> async def main() -> Sequence[int]:
         ...     return await pipe(
         ...         (
         ...             as_.construct_from_sequence([1, 2]),
-        ...             as_.tap_to_awaitable_sequence(echo_twice),
+        ...             as_.tap_to_awaitable_sequence(slowly_echo_twice),
         ...         )
         ...     )
         >>> asyncio.run(main())
