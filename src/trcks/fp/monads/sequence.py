@@ -192,15 +192,15 @@ def tap_to_sequence(
     Example:
         >>> from collections.abc import Callable, Sequence
         >>> from trcks.fp.monads import sequence as s
-        >>> def assign_to_groups(n: int) -> range:
-        ...     return range(1, n + 1)
+        >>> def get_divisors(n: int) -> list[int]:
+        ...     return [d for d in range(1, n + 1) if n % d == 0]
         ...
-        >>> assign_and_pass: Callable[
+        >>> get_and_pass: Callable[
         ...     [Sequence[int]], Sequence[int]
-        ... ] = s.tap_to_sequence(assign_to_groups)
-        >>> result = assign_and_pass([2, 3])
+        ... ] = s.tap_to_sequence(get_divisors)
+        >>> result = get_and_pass([2, 4])
         >>> result
-        [2, 2, 3, 3, 3]
+        [2, 2, 4, 4, 4]
     """
 
     def bypassed_f(t1: _T1) -> Sequence[_T1]:
