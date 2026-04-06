@@ -21,17 +21,6 @@ repos:
     rev: 2ccb47ff45ad361a21071a7eedda4c37e6ae8c5a  # frozen: v2.4.2
     hooks:
       - id: codespell
-  - repo: https://github.com/jackdewinter/pymarkdown
-    rev: c5755e272a13da06be38d74052658af46c1ee447  # frozen: v0.9.35
-    hooks:
-      - id: pymarkdown
-        args:
-          - fix
-        name: pymarkdown fix
-      - id: pymarkdown
-        args:
-          - scan
-        name: pymarkdown scan
   - repo: https://github.com/jorisroovers/gitlint
     rev: acc9d9de6369b76d22cb4167029d2035e8730b98  # frozen: v0.19.1
     hooks:
@@ -67,3 +56,8 @@ repos:
     rev: 914e7df21a07ef503a81201c76d2b11c789d3fca  # frozen: v1.7.12
     hooks:
       - id: actionlint
+  - repo: https://github.com/rvben/rumdl-pre-commit
+    rev: 916d85f452acfb1f57123538315a130f34fb5a21  # frozen: v0.1.67
+    hooks:
+      - id: rumdl
+      - id: rumdl-fmt

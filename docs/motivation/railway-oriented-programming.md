@@ -14,6 +14,7 @@ to check whether functions fit together:
 
 ???+ example
 
+    ```pycon
     >>> def get_user_id(user_email: str) -> int:
     ...     if user_email == "erika.mustermann@domain.org":
     ...         return 1
@@ -35,19 +36,26 @@ to check whether functions fit together:
     >>> get_subscription_fee_by_email("erika.mustermann@domain.org")
     4.2
 
-Unfortunately, conventional return type annotations do not always tell the full story:
+    ```
+
+Unfortunately, conventional return type annotations do not always tell
+the full story:
 
 ???+ example
 
+    ```pycon
     >>> get_subscription_id(user_id=2)
     Traceback (most recent call last):
         ...
     Exception: User does not have a subscription
 
+    ```
+
 We can document domain exceptions in the docstring of the function:
 
 ???+ example
 
+    ```pycon
     >>> def get_subscription_id(user_id: int) -> int:
     ...     """Look up the subscription ID for a user.
     ...
@@ -58,6 +66,8 @@ We can document domain exceptions in the docstring of the function:
     ...         return 42
     ...     raise Exception("User does not have a subscription")
     ...
+
+    ```
 
 While this helps humans (and maybe LLMs),
 static type checkers usually ignore docstrings.
@@ -73,6 +83,7 @@ we return a result type:
 
 ???+ example
 
+    ```pycon
     >>> from typing import Literal
     >>> from trcks import Result
     >>>
@@ -89,6 +100,8 @@ we return a result type:
     ('success', 42)
     >>> get_subscription_id(user_id=2)
     ('failure', 'User does not have a subscription')
+
+    ```
 
 This return type
 

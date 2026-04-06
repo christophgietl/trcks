@@ -34,8 +34,9 @@ the [returns.result.Result][] container (and multiple other containers)
 for synchronous code and
 the [returns.future.Future][] and the [returns.future.FutureResult][] container
 for asynchronous code.
-Whereas the [returns.result.Result][] container is pretty similar to [trcks.Result][],
-the [returns.future.Future][] container and the [returns.future.FutureResult][] container
+Whereas the [returns.result.Result][] container is pretty similar to
+[trcks.Result][], the [returns.future.Future][] container and the
+[returns.future.FutureResult][] container
 deviate from [collections.abc.Awaitable][] and [trcks.AwaitableResult][].
 Other major differences are:
 

@@ -30,7 +30,9 @@ This makes expected failures explicit and type-checkable rather than using excep
 
 **Dual API design**: The library intentionally provides two equivalent ways
 to work with railway-oriented programming:
-- OOP style for developers comfortable with method chaining (similar to pandas, requests)
+
+- OOP style for developers comfortable with method chaining
+  (similar to pandas, requests)
 - FP style for developers preferring function composition (similar to toolz, returns)
 
 **Wrapper pattern**:
@@ -87,18 +89,21 @@ from trcks.fp.monads import result as r, awaitable as a, awaitable_result as ar
 ```
 
 **Module responsibilities**:
-- `src/trcks/__init__.py`: Core types (`Result`, `Success`, `Failure`) and type aliases
+
+- `src/trcks/__init__.py`: Core types (`Result`, `Success`,
+  `Failure`) and type aliases
 - `src/trcks/_typing.py`: Python version compatibility shims for typing features
 - `src/trcks/oop.py`:
-    All wrapper classes with extensive method chaining API (2600+ lines)
+  All wrapper classes with extensive method chaining API (2600+ lines)
 - `src/trcks/fp/composition.py`:
-    Pipeline types (`Pipeline1` through `Pipeline8`) and composition functions
+  Pipeline types (`Pipeline1` through `Pipeline8`) and composition functions
 - `src/trcks/fp/monads/result.py`:
-    Functional operations on `Result` types (`map_success`, `map_failure`, etc.)
+  Functional operations on `Result` types (`map_success`, `map_failure`, etc.)
 - `src/trcks/fp/monads/awaitable.py`: Operations on `Awaitable` types
 - `src/trcks/fp/monads/awaitable_result.py`: Operations on `AwaitableResult` types
 
 **Import conventions**:
+
 - Never import `*` - all imports are explicit
 - Type imports typically use `TypeAlias` annotations
 - Monad modules conventionally aliased as single letters in FP style
@@ -112,8 +117,8 @@ from trcks.fp.monads import result as r, awaitable as a, awaitable_result as ar
 - **Build backend**: `pdm-backend` with SCM versioning from Git tags
 - **Dev dependencies**: All in `[dependency-groups.dev]` in `pyproject.toml`
 - **Import linter**: `import-linter` is used to enforce
-    import rules within and between Python packages.
-    Its contracts are configured in `pyproject.toml`.
+  import rules within and between Python packages.
+  Its contracts are configured in `pyproject.toml`.
 
 ### Key commands
 
@@ -145,7 +150,7 @@ uv run lint-imports
 - **Doctest**: Enabled for `.md` files (`--doctest-glob='*.md'`)
 - **Async**: Auto mode with function-scoped event loops
 - **Test data**: Extensive use of `Final` tuples for test cases
-    (see `_FLOATS`, `_OBJECTS`, `_RESULTS` in `test_oop.py`)
+  (see `_FLOATS`, `_OBJECTS`, `_RESULTS` in `test_oop.py`)
 
 ## Code quality standards
 
@@ -207,6 +212,7 @@ async def test_async_wrapper():
 
 ### Integration points
 
-- Cross-references to functional programming libraries (returns, expression) in docs
+- Cross-references to functional programming libraries
+  (returns, expression) in docs
 - Designed for interoperability with standard Python async patterns
 - Compatible with static type checkers (mypy, pyright)

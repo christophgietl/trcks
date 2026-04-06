@@ -11,6 +11,7 @@ The generic class [trcks.oop.Wrapper][][T] allows us to chain functions:
 
 ???+ example
 
+    ```pycon
     >>> from trcks.oop import Wrapper
     >>>
     >>> def to_length_string(s: str) -> str:
@@ -19,11 +20,14 @@ The generic class [trcks.oop.Wrapper][][T] allows us to chain functions:
     >>> to_length_string("Hello, world!")
     'Length: 13'
 
+    ```
+
 To understand what is going on here,
 let us have a look at the individual steps of the chain:
 
 ???+ example
 
+    ```pycon
     >>> # 1. Wrap the input string:
     >>> wrapped: Wrapper[str] = Wrapper(core="Hello, world!")
     >>> wrapped
@@ -41,6 +45,8 @@ let us have a look at the individual steps of the chain:
     >>> unwrapped
     'Length: 13'
 
+    ```
+
 ???+ note
     Instead of the default constructor `trcks.oop.Wrapper(core="Hello, world!")`,
     we can also use the static method `trcks.oop.Wrapper.construct("Hello, world!")`.
@@ -57,6 +63,7 @@ This method allows executing side effects while preserving the original value:
 
 ???+ example
 
+    ```pycon
     >>> def to_length_string(s: str) -> str:
     ...     return (
     ...         Wrapper(core=s)
@@ -72,6 +79,8 @@ This method allows executing side effects while preserving the original value:
     LOG: Returning 'Length: 13'.
     >>> output
     'Length: 13'
+
+    ```
 
 ## Synchronous double-track code with [trcks.Result][] and [trcks.oop.ResultWrapper][]
 
@@ -99,6 +108,7 @@ the implementation of the parallel code tracks.
 
 ???+ example
 
+    ```pycon
     >>> from typing import Literal
     >>> from trcks import Result
     >>> from trcks.oop import Wrapper
@@ -142,11 +152,14 @@ the implementation of the parallel code tracks.
     >>> get_subscription_fee_by_email("jane_doe@provider.com")
     ('failure', 'User does not exist')
 
+    ```
+
 To understand what is going on here,
 let us have a look at the individual steps of the chain:
 
 ???+ example
 
+    ```pycon
     >>> from trcks.oop import ResultWrapper
     >>>
     >>> # 1. Wrap the input string:
@@ -176,6 +189,8 @@ let us have a look at the individual steps of the chain:
     >>> unwrapped
     ('success', 4.2)
 
+    ```
+
 ???+ note
     The method [trcks.oop.Wrapper.map_to_result][] returns
     a [trcks.oop.ResultWrapper][] object.
@@ -188,6 +203,7 @@ in the success case or in the failure case, respectively:
 
 ???+ example
 
+    ```pycon
     >>> def get_subscription_fee_by_email(
     ...     user_email: str
     ... ) -> Result[FailureDescription, float]:
@@ -217,6 +233,8 @@ in the success case or in the failure case, respectively:
     >>> fee_jane
     ('failure', 'User does not exist')
 
+    ```
+
 Sometimes, side effects themselves can fail and
 need to return a [trcks.Result][] type.
 The `tap_success_to_result` method allows us to execute such side effects
@@ -226,6 +244,7 @@ If the side effect returns a [trcks.Success][], the original success value is pr
 
 ???+ example
 
+    ```pycon
     >>> OutOfDiskSpace = Literal["Out of disk space"]
     >>> def write_to_disk(n: int) -> Result[OutOfDiskSpace, None]:
     ...     if n > 1:
@@ -253,6 +272,8 @@ If the side effect returns a [trcks.Success][], the original success value is pr
     >>> id_jane
     ('failure', 'User does not exist')
 
+    ```
+
 ## Asynchronous single-track code with [collections.abc.Awaitable][] and [trcks.oop.AwaitableWrapper][]
 
 While the class [trcks.oop.Wrapper][] and its method `map` allow
@@ -262,6 +283,8 @@ To understand why,
 we first need to understand the return type of asynchronous functions:
 
 ???+ example
+
+    ```pycon
     >>> import asyncio
     >>> from collections.abc import Awaitable, Coroutine
     >>> async def read_from_disk(path: str) -> str:
@@ -286,6 +309,8 @@ we first need to understand the return type of asynchronous functions:
     >>> issubclass(Coroutine, Awaitable)
     True
 
+    ```
+
 So, whenever we define a function using the `async def ... -> T` syntax,
 we actually get a function with the return type [collections.abc.Awaitable][][T].
 The method [trcks.oop.Wrapper.map_to_awaitable][] and the class [trcks.oop.AwaitableWrapper][]
@@ -295,6 +320,7 @@ with "regular" functions:
 
 ???+ example
 
+    ```pycon
     >>> def transform(s: str) -> str:
     ...     return f"Length: {len(s)}"
     ...
@@ -317,11 +343,14 @@ with "regular" functions:
     Read 'Hello, world!' from file input.txt.
     Wrote 'Length: 13' to file output.txt.
 
+    ```
+
 To understand what is going on here,
 let us have a look at the individual steps of the chain:
 
 ???+ example
 
+    ```pycon
     >>> from typing import Any
     >>> from trcks.oop import AwaitableWrapper
     >>> # 1. Wrap the input string:
@@ -351,6 +380,8 @@ let us have a look at the individual steps of the chain:
     Read 'Hello, world!' from file input.txt.
     Wrote 'Length: 13' to file output.txt.
 
+    ```
+
 ???+ note
     The property `core` of the class [trcks.oop.AwaitableWrapper][]
     has type [collections.abc.Awaitable][].
@@ -363,6 +394,8 @@ Similarly, the method [trcks.oop.AwaitableWrapper.tap_to_awaitable][]
 allows us to execute asynchronous side effects.
 
 ???+ example
+
+    ```pycon
     >>> async def read_from_disk(path: str) -> str:
     ...     await asyncio.sleep(0.001)
     ...     return "Hello, world!"
@@ -389,6 +422,8 @@ allows us to execute asynchronous side effects.
     >>> return_value
     'Length: 13'
 
+    ```
+
 ## Asynchronous double-track code with [trcks.AwaitableResult][] and [trcks.oop.AwaitableResultWrapper][]
 
 Whenever we define a function using the `async def ... -> Result[F, S]` syntax,
@@ -404,6 +439,7 @@ with "regular" functions:
 
 ???+ example
 
+    ```pycon
     >>> ReadErrorLiteral = Literal["read error"]
     >>> WriteErrorLiteral = Literal["write error"]
     >>> async def read_from_disk(path: str) -> Result[ReadErrorLiteral, str]:
@@ -417,7 +453,9 @@ with "regular" functions:
     >>> def transform(s: str) -> str:
     ...     return f"Length: {len(s)}"
     ...
-    >>> async def write_to_disk(s: str, path: str) -> Result[WriteErrorLiteral, None]:
+    >>> async def write_to_disk(
+    ...     s: str, path: str
+    ... ) -> Result[WriteErrorLiteral, None]:
     ...     if path != "output.txt":
     ...         return "failure", "write error"
     ...     await asyncio.sleep(0.001)
@@ -441,11 +479,14 @@ with "regular" functions:
     Wrote 'Length: 13' to file output.txt.
     ('success', None)
 
+    ```
+
 To understand what is going on here,
 let us have a look at the individual steps of the chain:
 
 ???+ example
 
+    ```pycon
     >>> from trcks.oop import AwaitableResultWrapper
     >>> # 1. Wrap the input string:
     >>> wrapped: Wrapper[str] = Wrapper(core="input.txt")
@@ -483,6 +524,8 @@ let us have a look at the individual steps of the chain:
     Wrote 'Length: 13' to file output.txt.
     ('success', None)
 
+    ```
+
 The methods [trcks.oop.AwaitableResultWrapper.tap_failure][] and
 [trcks.oop.AwaitableResultWrapper.tap_success][]
 allow us to execute synchronous side effects
@@ -490,13 +533,16 @@ in the failure case or in the success case, respectively:
 
 ???+ example
 
+    ```pycon
     >>> async def read_from_disk(path: str) -> Result[ReadErrorLiteral, str]:
     ...     if path != "input.txt":
     ...         return "failure", "read error"
     ...     await asyncio.sleep(0.001)
     ...     return "success", "Hello, world!"
     ...
-    >>> async def write_to_disk(s: str, path: str) -> Result[WriteErrorLiteral, None]:
+    >>> async def write_to_disk(
+    ...     s: str, path: str
+    ... ) -> Result[WriteErrorLiteral, None]:
     ...     if path != "output.txt":
     ...         return "failure", "write error"
     ...     await asyncio.sleep(0.001)
@@ -526,6 +572,8 @@ in the failure case or in the success case, respectively:
     >>> result_2
     ('failure', 'read error')
 
+    ```
+
 Sometimes, side effects themselves can fail and
 need to return an [trcks.AwaitableResult][] type.
 The method [trcks.oop.AwaitableResultWrapper.tap_success_to_awaitable_result][]
@@ -536,6 +584,7 @@ the original success value is preserved:
 
 ???+ example
 
+    ```pycon
     >>> async def write_to_disk(s: str) -> Result[OutOfDiskSpace, None]:
     ...     await asyncio.sleep(0.001)
     ...     if len(s) > 10:
@@ -559,3 +608,5 @@ the original success value is preserved:
     LOG: Persisting 'Hello, world!'.
     >>> result
     ('failure', 'Out of disk space')
+
+    ```
