@@ -10,7 +10,7 @@ Example:
     >>> from collections.abc import Sequence
     >>> from trcks.fp.composition import pipe
     >>> from trcks.fp.monads import awaitable_sequence as as_
-    >>> def double(n: int) -> int:
+    >>> def double_integer(n: int) -> int:
     ...     return n * 2
     ...
     >>> def print_integer(n: int) -> None:
@@ -20,16 +20,16 @@ Example:
     ...     return await pipe(
     ...         (
     ...             as_.construct_from_sequence([4, 2, 0]),
-    ...             as_.map_(double),
+    ...             as_.map_(double_integer),
     ...             as_.tap(print_integer),
     ...         )
     ...     )
     ...
-    >>> result = asyncio.run(main())
+    >>> sequence = asyncio.run(main())
     Integer: 8
     Integer: 4
     Integer: 0
-    >>> result
+    >>> sequence
     [8, 4, 0]
 
     Map each element to an awaitable sequence and flatten the result:
@@ -38,7 +38,7 @@ Example:
     >>> from collections.abc import Sequence
     >>> from trcks.fp.composition import pipe
     >>> from trcks.fp.monads import awaitable_sequence as as_
-    >>> async def duplicate(n: int) -> list[int]:
+    >>> async def duplicate_integer(n: int) -> list[int]:
     ...     await asyncio.sleep(0.001)
     ...     return [n, n]
     ...
@@ -46,7 +46,7 @@ Example:
     ...     return await pipe(
     ...         (
     ...             as_.construct_from_sequence([1, 2, 3]),
-    ...             as_.map_to_awaitable_sequence(duplicate),
+    ...             as_.map_to_awaitable_sequence(duplicate_integer),
     ...         )
     ...     )
     ...
@@ -242,14 +242,14 @@ def map_to_awaitable_sequence(
         >>> from collections.abc import Sequence
         >>> from trcks.fp.composition import pipe
         >>> from trcks.fp.monads import awaitable_sequence as as_
-        >>> async def duplicate(n: int) -> list[int]:
+        >>> async def duplicate_integer(n: int) -> list[int]:
         ...     await asyncio.sleep(0.001)
         ...     return [n, n]
         >>> async def main() -> Sequence[int]:
         ...     return await pipe(
         ...         (
         ...             as_.construct_from_sequence([1, 2]),
-        ...             as_.map_to_awaitable_sequence(duplicate),
+        ...             as_.map_to_awaitable_sequence(duplicate_integer),
         ...         )
         ...     )
         >>> asyncio.run(main())
