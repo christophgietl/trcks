@@ -14,7 +14,7 @@ Example:
     >>> def log_integer(n: int) -> None:
     ...     print(f"Received: {n}")
     ...
-    >>> result = pipe(
+    >>> sequence = pipe(
     ...     (
     ...         [1, 2, 3],
     ...         s.map_(double_integer),
@@ -24,7 +24,7 @@ Example:
     Received: 2
     Received: 4
     Received: 6
-    >>> result
+    >>> sequence
     [2, 4, 6]
 
     Map each element to a sequence and flatten the result:
@@ -32,13 +32,13 @@ Example:
     >>> def duplicate_integer(n: int) -> list[int]:
     ...     return [n, n]
     ...
-    >>> result = pipe(
+    >>> sequence = pipe(
     ...     (
     ...         [1, 2, 3],
     ...         s.map_to_sequence(duplicate_integer),
     ...     )
     ... )
-    >>> result
+    >>> sequence
     [1, 1, 2, 2, 3, 3]
 """
 
@@ -165,11 +165,11 @@ def tap(
         >>> log_and_pass_integers: Callable[
         ...     [Sequence[int]], Sequence[int]
         ... ] = s.tap(log_integer)
-        >>> result = log_and_pass_integers([1, 2, 3])
+        >>> sequence = log_and_pass_integers([1, 2, 3])
         Received: 1
         Received: 2
         Received: 3
-        >>> result
+        >>> sequence
         [1, 2, 3]
     """
     return map_(i.tap(f))
@@ -201,8 +201,7 @@ def tap_to_sequence(
         >>> repeat_integers_according_to_number_of_divisors: Callable[
         ...     [Sequence[int]], Sequence[int]
         ... ] = s.tap_to_sequence(get_divisors)
-        >>> result = repeat_integers_according_to_number_of_divisors([1, 2, 3, 4])
-        >>> result
+        >>> repeat_integers_according_to_number_of_divisors([1, 2, 3, 4])
         [1, 2, 2, 3, 3, 4, 4, 4]
     """
 
