@@ -287,13 +287,13 @@ def map_to_sequence(
         >>> from collections.abc import Sequence
         >>> from trcks.fp.composition import pipe
         >>> from trcks.fp.monads import awaitable_sequence as as_
-        >>> def list_with_negative(n: int) -> list[int]:
+        >>> def add_negative(n: int) -> list[int]:
         ...     return [n, -n]
         >>> async def main() -> Sequence[int]:
         ...     return await pipe(
         ...         (
         ...             as_.construct_from_sequence([1, 2]),
-        ...             as_.map_to_sequence(list_with_negative),
+        ...             as_.map_to_sequence(add_negative),
         ...         )
         ...     )
         >>> asyncio.run(main())
@@ -458,8 +458,8 @@ def tap_to_sequence(
         >>> from collections.abc import Sequence
         >>> from trcks.fp.composition import pipe
         >>> from trcks.fp.monads import awaitable_sequence as as_
-        >>> def duplicate_integer(n: int) -> tuple[int, int]:
-        ...     return (n, n)
+        >>> def duplicate_integer(n: int) -> list[int]:
+        ...     return [n, n]
         >>> async def main() -> Sequence[int]:
         ...     return await pipe(
         ...         (
