@@ -159,6 +159,10 @@ warn_unreachable = true
 [tool.pdm.version]
 source = "scm"
 
+[tool.pymarkdown]
+extensions.front-matter.enabled = true
+extensions.markdown-tables.enabled = true
+
 [tool.pyright]
 deprecateTypingAliases = true
 enableTypeIgnoreComments = false
