@@ -150,8 +150,8 @@ def map_failure(
         >>> from collections.abc import Callable
         >>> from trcks import ResultSequence
         >>> from trcks.fp.monads import result_sequence as rs
-        >>> def _add_prefix(e: str) -> str:
-        ...     return f"err: {e}"
+        >>> def _add_prefix(description: str) -> str:
+        ...     return f"err: {description}"
         ...
         >>> add_prefix: Callable[
         ...     [ResultSequence[str, int]], ResultSequence[str, int]
@@ -478,16 +478,16 @@ def tap_failure(
         >>> from collections.abc import Callable
         >>> from trcks import ResultSequence
         >>> from trcks.fp.monads import result_sequence as rs
-        >>> def _print_error(e: str) -> None:
-        ...     print(f"Error: {e}")
+        >>> def _log_error(description: str) -> None:
+        ...     print(f"Error: {description}")
         ...
-        >>> print_error: Callable[
+        >>> log_error: Callable[
         ...     [ResultSequence[str, int]], ResultSequence[str, int]
-        ... ] = rs.tap_failure(_print_error)
-        >>> print_error(("failure", "oops"))
+        ... ] = rs.tap_failure(_log_error)
+        >>> log_error(("failure", "oops"))
         Error: oops
         ('failure', 'oops')
-        >>> print_error(("success", [1]))
+        >>> log_error(("success", [1]))
         ('success', [1])
     """
     return r.tap_failure(f)
@@ -516,20 +516,18 @@ def tap_failure_to_result(
         >>> from collections.abc import Callable, Sequence
         >>> from trcks import Result, ResultSequence
         >>> from trcks.fp.monads import result_sequence as rs
-        >>> def _retry_lookup(e: str) -> Result[None, int]:
-        ...     if e == "not found":
-        ...         print("Retrying...")
+        >>> def _recover_from_not_found(description: str) -> Result[None, int]:
+        ...     if description == "not found":
         ...         return ("success", 42)
         ...     return ("failure", None)
-        >>> retry_lookup: Callable[
+        >>> recover_from_not_found: Callable[
         ...     [ResultSequence[str, int]], Result[str, Sequence[int]]
-        ... ] = rs.tap_failure_to_result(_retry_lookup)
-        >>> retry_lookup(("failure", "not found"))
-        Retrying...
+        ... ] = rs.tap_failure_to_result(_recover_from_not_found)
+        >>> recover_from_not_found(("failure", "not found"))
         ('success', [42])
-        >>> retry_lookup(("failure", "fatal"))
+        >>> recover_from_not_found(("failure", "fatal"))
         ('failure', 'fatal')
-        >>> retry_lookup(("success", [1, 2]))
+        >>> recover_from_not_found(("success", [1, 2]))
         ('success', [1, 2])
     """
     composed_f: Callable[[_F1], ResultSequence[object, _S2]] = compose2(
@@ -561,18 +559,19 @@ def tap_failure_to_result_sequence(
         >>> from collections.abc import Callable, Sequence
         >>> from trcks import Result, ResultSequence
         >>> from trcks.fp.monads import result_sequence as rs
-        >>> def _recover_if_retryable(e: str) -> ResultSequence[None, int]:
-        ...     if e == "retry":
-        ...         return ("success", [99])
+        >>> def _recover_from_not_found(description: str) -> ResultSequence[None, int]:
+        ...     if description == "not found":
+        ...         return ("success", [42])
         ...     return ("failure", None)
-        ...
-        >>> recover_if_retryable: Callable[
+        >>> recover_from_not_found: Callable[
         ...     [ResultSequence[str, int]], Result[str, Sequence[int]]
-        ... ] = rs.tap_failure_to_result_sequence(_recover_if_retryable)
-        >>> recover_if_retryable(("failure", "retry"))
-        ('success', [99])
-        >>> recover_if_retryable(("failure", "fatal"))
+        ... ] = rs.tap_failure_to_result_sequence(_recover_from_not_found)
+        >>> recover_from_not_found(("failure", "not found"))
+        ('success', [42])
+        >>> recover_from_not_found(("failure", "fatal"))
         ('failure', 'fatal')
+        >>> recover_from_not_found(("success", [1, 2]))
+        ('success', [1, 2])
     """
     return r.tap_failure_to_result(f)
 
@@ -598,8 +597,11 @@ def tap_failure_to_sequence(
         >>> from collections.abc import Callable
         >>> from trcks import ResultSequence, SuccessSequence
         >>> from trcks.fp.monads import result_sequence as rs
-        >>> def _log_and_alert(e: str) -> list[None]:
-        ...     return [print(f"Error logged: {e}"), print(f"Alert sent: {e}")]
+        >>> def _log_and_alert(description: str) -> list[None]:
+        ...     return [
+        ...         print(f"Error logged: {description}"),
+        ...         print(f"Alert sent: {description}"),
+        ...     ]
         ...
         >>> log_and_alert: Callable[
         ...     [ResultSequence[str, int]],
