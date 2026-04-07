@@ -10,7 +10,7 @@ inputs:
 runs:
   using: composite
   steps:
-    - uses: astral-sh/setup-uv@v7
+    - uses: astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78  # v7.6.0
       with:
         enable-cache: ${{ fromJSON(inputs.install-and-cache-dependencies) }}
         python-version: ${{ inputs.python-version }}
