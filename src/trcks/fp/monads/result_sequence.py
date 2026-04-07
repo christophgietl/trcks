@@ -12,7 +12,7 @@ Example:
     ...     return n * 2
     ...
     >>> def duplicate_integer(n: int) -> list[int]:
-    ...     return [n, -n]
+    ...     return [n, n]
     ...
     >>> def log_integer(n: int) -> None:
     ...     print(f"Received: {n}")
@@ -29,7 +29,7 @@ Example:
     Received: 4
     Received: 6
     >>> result_sequence
-    ('success', [2, -2, 4, -4, 6, -6])
+    ('success', [2, 2, 4, 4, 6, 6])
 """
 
 from __future__ import annotations
@@ -181,8 +181,8 @@ def map_failure_to_result(
             leaves [trcks.SuccessSequence][] values unchanged.
 
     Example:
-        >>> from collections.abc import Callable, Sequence
-        >>> from trcks import Result, ResultSequence
+        >>> from collections.abc import Callable
+        >>> from trcks import ResultSequence
         >>> from trcks.fp.monads import result_sequence as rs
         >>> def _recover_from_not_found(description: str) -> Result[str, int]:
         ...     if description == "not found":
@@ -190,7 +190,7 @@ def map_failure_to_result(
         ...     return ("failure", description)
         ...
         >>> recover_from_not_found: Callable[
-        ...     [ResultSequence[str, int]], Result[str, Sequence[int]]
+        ...     [ResultSequence[str, int]], ResultSequence[str, int]
         ... ] = rs.map_failure_to_result(_recover_from_not_found)
         >>> recover_from_not_found(("failure", "not found"))
         ('success', [0])
@@ -219,8 +219,8 @@ def map_failure_to_result_sequence(
             leaves [trcks.SuccessSequence][] values unchanged.
 
     Example:
-        >>> from collections.abc import Callable, Sequence
-        >>> from trcks import Result, ResultSequence
+        >>> from collections.abc import Callable
+        >>> from trcks import ResultSequence
         >>> from trcks.fp.monads import result_sequence as rs
         >>> def _recover_from_not_found(description: str) -> ResultSequence[str, int]:
         ...     if description == "not found":
@@ -228,7 +228,7 @@ def map_failure_to_result_sequence(
         ...     return ("failure", description)
         ...
         >>> recover_from_not_found: Callable[
-        ...     [ResultSequence[str, int]], Result[str, Sequence[int]]
+        ...     [ResultSequence[str, int]], ResultSequence[str, int]
         ... ] = rs.map_failure_to_result_sequence(_recover_from_not_found)
         >>> recover_from_not_found(("failure", "not found"))
         ('success', [0])
@@ -260,14 +260,14 @@ def map_failure_to_sequence(
         >>> from collections.abc import Callable
         >>> from trcks import ResultSequence, SuccessSequence
         >>> from trcks.fp.monads import result_sequence as rs
-        >>> def _recover_from_not_found(description: str) -> list[int]:
+        >>> def _recover(description: str) -> list[int]:
         ...     if description == "not found":
         ...         return [0]
         ...     return []
         ...
         >>> recover: Callable[
         ...     [ResultSequence[str, int]], SuccessSequence[int]
-        ... ] = rs.map_failure_to_sequence(_recover_from_not_found)
+        ... ] = rs.map_failure_to_sequence(_recover)
         >>> recover(("failure", "not found"))
         ('success', [0])
         >>> recover(("failure", "not authorized"))
@@ -348,7 +348,7 @@ def map_successes_to_result(
         >>> def _double_if_positive(n: int) -> Result[str, int]:
         ...     if n > 0:
         ...         return ("success", n * 2)
-        ...     return ("failure", "bad")
+        ...     return ("failure", "not positive")
         ...
         >>> double_if_positive: Callable[
         ...     [ResultSequence[str, int]], ResultSequence[str, int]
@@ -356,7 +356,7 @@ def map_successes_to_result(
         >>> double_if_positive(("success", [1, 2]))
         ('success', [2, 4])
         >>> double_if_positive(("success", [1, -1, 2]))
-        ('failure', 'bad')
+        ('failure', 'not positive')
         >>> double_if_positive(("failure", "oops"))
         ('failure', 'oops')
     """
@@ -384,19 +384,19 @@ def map_successes_to_result_sequence(
         >>> from collections.abc import Callable
         >>> from trcks import ResultSequence
         >>> from trcks.fp.monads import result_sequence as rs
-        >>> def _expand_if_positive(n: int) -> ResultSequence[str, int]:
+        >>> def _duplicate_if_positive(n: int) -> ResultSequence[str, int]:
         ...     if n > 0:
-        ...         return ("success", [n, -n])
-        ...     return ("failure", "bad")
+        ...         return ("success", [n, n])
+        ...     return ("failure", "not positive")
         ...
-        >>> expand_if_positive: Callable[
+        >>> duplicate_if_positive: Callable[
         ...     [ResultSequence[str, int]], ResultSequence[str, int]
-        ... ] = rs.map_successes_to_result_sequence(_expand_if_positive)
-        >>> expand_if_positive(("success", [1, 2]))
-        ('success', [1, -1, 2, -2])
-        >>> expand_if_positive(("success", [1, -1, 2]))
-        ('failure', 'bad')
-        >>> expand_if_positive(("failure", "oops"))
+        ... ] = rs.map_successes_to_result_sequence(_duplicate_if_positive)
+        >>> duplicate_if_positive(("success", [1, 2]))
+        ('success', [1, 1, 2, 2])
+        >>> duplicate_if_positive(("success", [1, -1, 2]))
+        ('failure', 'not positive')
+        >>> duplicate_if_positive(("failure", "oops"))
         ('failure', 'oops')
     """
 
@@ -446,13 +446,13 @@ def map_successes_to_sequence(
         >>> from trcks import ResultSequence
         >>> from trcks.fp.monads import result_sequence as rs
         >>> def _duplicate_integer(n: int) -> list[int]:
-        ...     return [n, -n]
+        ...     return [n, n]
         ...
         >>> duplicate_integers: Callable[
         ...     [ResultSequence[str, int]], ResultSequence[str, int]
         ... ] = rs.map_successes_to_sequence(_duplicate_integer)
         >>> duplicate_integers(("success", [1, 2]))
-        ('success', [1, -1, 2, -2])
+        ('success', [1, 1, 2, 2])
         >>> duplicate_integers(("failure", "not found"))
         ('failure', 'not found')
     """
