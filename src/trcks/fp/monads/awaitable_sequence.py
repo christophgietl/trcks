@@ -106,7 +106,7 @@ def construct_from_awaitable(awtbl: Awaitable[_T]) -> AwaitableSequence[_T]:
 
     Example:
         >>> import asyncio
-        >>> from collections.abc import Awaitable, Sequence
+        >>> from collections.abc import Awaitable
         >>> from trcks import AwaitableSequence
         >>> from trcks.fp.monads import awaitable as a
         >>> from trcks.fp.monads import awaitable_sequence as as_
@@ -119,10 +119,10 @@ def construct_from_awaitable(awtbl: Awaitable[_T]) -> AwaitableSequence[_T]:
 
 
 def construct_from_sequence(seq: Sequence[_T]) -> AwaitableSequence[_T]:
-    """Create a [trcks.AwaitableSequence][] from a [collections.abc.Sequence][].
+    """Create a [trcks.AwaitableSequence][] from a sequence.
 
     Args:
-        seq: The [collections.abc.Sequence][] to create
+        seq: The sequence to create
             the [trcks.AwaitableSequence][] from.
 
     Returns:
@@ -130,7 +130,6 @@ def construct_from_sequence(seq: Sequence[_T]) -> AwaitableSequence[_T]:
 
     Example:
         >>> import asyncio
-        >>> from collections.abc import Sequence
         >>> from trcks import AwaitableSequence
         >>> from trcks.fp.monads import awaitable_sequence as as_
         >>> a_seq: AwaitableSequence[int] = as_.construct_from_sequence([1, 2])
@@ -267,13 +266,13 @@ def map_to_awaitable_sequence(
 def map_to_sequence(
     f: Callable[[_T1], Sequence[_T2]],
 ) -> Callable[[AwaitableSequence[_T1]], AwaitableSequence[_T2]]:
-    """Turn [collections.abc.Sequence][]-returning function into a function
+    """Turn sequence-returning function into a function
     expecting and returning [trcks.AwaitableSequence][]s
     of varying length.
 
     Args:
         f:
-            The [collections.abc.Sequence][]-returning function to be transformed
+            The sequence-returning function to be transformed
             into a function expecting and returning
             [trcks.AwaitableSequence][]s of varying length.
 
@@ -439,13 +438,13 @@ def tap_to_awaitable_sequence(
 def tap_to_sequence(
     f: Callable[[_T1], Sequence[object]],
 ) -> Callable[[AwaitableSequence[_T1]], AwaitableSequence[_T1]]:
-    """Turn [collections.abc.Sequence][]-returning function into a function
+    """Turn sequence-returning function into a function
     expecting a [trcks.AwaitableSequence][] and
     returning the same [trcks.AwaitableSequence][].
 
     Args:
         f:
-            The [collections.abc.Sequence][]-returning function to be transformed
+            The sequence-returning function to be transformed
             into a function expecting a [trcks.AwaitableSequence][] and
             returning the same [trcks.AwaitableSequence][].
 
