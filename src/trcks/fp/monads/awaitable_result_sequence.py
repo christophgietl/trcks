@@ -10,23 +10,32 @@ Example:
     >>> from trcks import Result
     >>> from trcks.fp.composition import pipe
     >>> from trcks.fp.monads import awaitable_result_sequence as ars
-    >>> async def read_from_disk() -> Result[str, int]:
+    >>> async def slowly_read_from_disk() -> Result[str, int]:
     ...     await asyncio.sleep(0.001)
     ...     return "success", 3
+    ...
+    >>> def double_integer(x: int) -> int:
+    ...     return x * 2
+    ...
+    >>> def log_integer(x: int) -> None:
+    ...     print(f"Received: {x}")
+    ...
+    >>> def duplicate_integer(x: int) -> list[int]:
+    ...     return [x, x]
     ...
     >>> async def main() -> Result[str, list[int]]:
     ...     return await pipe(
     ...         (
-    ...             ars.construct_from_awaitable_result(read_from_disk()),
-    ...             ars.map_successes(lambda x: x * 2),
-    ...             ars.tap_successes(lambda x: print(f"Processed: {x}")),
-    ...             ars.map_successes_to_sequence(lambda x: [x, -x]),
+    ...             ars.construct_from_awaitable_result(slowly_read_from_disk()),
+    ...             ars.map_successes(double_integer),
+    ...             ars.tap_successes(log_integer),
+    ...             ars.map_successes_to_sequence(duplicate_integer),
     ...         )
     ...     )
     ...
     >>> asyncio.run(main())
-    Processed: 6
-    ('success', [6, -6])
+    Received: 6
+    ('success', [6, 6])
 """
 
 from __future__ import annotations
@@ -75,10 +84,10 @@ def construct_failure(value: _F) -> AwaitableFailure[_F]:
         >>> import asyncio
         >>> from collections.abc import Awaitable
         >>> from trcks.fp.monads import awaitable_result_sequence as ars
-        >>> a_rs = ars.construct_failure("not found")
-        >>> isinstance(a_rs, Awaitable)
+        >>> a_r_seq = ars.construct_failure("not found")
+        >>> isinstance(a_r_seq, Awaitable)
         True
-        >>> asyncio.run(ars.to_coroutine_result_sequence(a_rs))
+        >>> asyncio.run(ars.to_coroutine_result_sequence(a_r_seq))
         ('failure', 'not found')
     """
     return a.construct(rs.construct_failure(value))
@@ -100,12 +109,12 @@ def construct_failure_from_awaitable(awtbl: Awaitable[_F]) -> AwaitableFailure[_
         >>> import asyncio
         >>> from collections.abc import Awaitable
         >>> from trcks.fp.monads import awaitable_result_sequence as ars
-        >>> async def get_error() -> str:
+        >>> async def slowly_get_error() -> str:
         ...     await asyncio.sleep(0.001)
         ...     return "not found"
         ...
-        >>> a_rs = ars.construct_failure_from_awaitable(get_error())
-        >>> asyncio.run(ars.to_coroutine_result_sequence(a_rs))
+        >>> a_r_seq = ars.construct_failure_from_awaitable(slowly_get_error())
+        >>> asyncio.run(ars.to_coroutine_result_sequence(a_r_seq))
         ('failure', 'not found')
     """
     return a.map_(rs.construct_failure)(awtbl)
@@ -132,11 +141,13 @@ def construct_from_awaitable_result(
         >>> from collections.abc import Awaitable
         >>> from trcks.fp.monads import awaitable_result as ar
         >>> from trcks.fp.monads import awaitable_result_sequence as ars
-        >>> a_rs = ars.construct_from_awaitable_result(ar.construct_success(7))
-        >>> asyncio.run(ars.to_coroutine_result_sequence(a_rs))
+        >>> a_r_seq = ars.construct_from_awaitable_result(ar.construct_success(7))
+        >>> asyncio.run(ars.to_coroutine_result_sequence(a_r_seq))
         ('success', [7])
-        >>> a_rs_2 = ars.construct_from_awaitable_result(ar.construct_failure("oops"))
-        >>> asyncio.run(ars.to_coroutine_result_sequence(a_rs_2))
+        >>> a_r_seq_2 = ars.construct_from_awaitable_result(
+        ...     ar.construct_failure("oops")
+        ... )
+        >>> asyncio.run(ars.to_coroutine_result_sequence(a_r_seq_2))
         ('failure', 'oops')
     """
     return a.map_(rs.construct_from_result)(a_rslt)
@@ -160,10 +171,10 @@ def construct_from_result_sequence(
         >>> import asyncio
         >>> from collections.abc import Awaitable
         >>> from trcks.fp.monads import awaitable_result_sequence as ars
-        >>> a_rs = ars.construct_from_result_sequence(("success", [1, 2]))
-        >>> isinstance(a_rs, Awaitable)
+        >>> a_r_seq = ars.construct_from_result_sequence(("success", [1, 2]))
+        >>> isinstance(a_r_seq, Awaitable)
         True
-        >>> asyncio.run(ars.to_coroutine_result_sequence(a_rs))
+        >>> asyncio.run(ars.to_coroutine_result_sequence(a_r_seq))
         ('success', [1, 2])
     """
     return a.construct(rslt_seq)
@@ -182,8 +193,8 @@ def construct_successes(value: _S) -> AwaitableSuccessSequence[_S]:
     Example:
         >>> import asyncio
         >>> from trcks.fp.monads import awaitable_result_sequence as ars
-        >>> a_rs = ars.construct_successes(42)
-        >>> asyncio.run(ars.to_coroutine_result_sequence(a_rs))
+        >>> a_r_seq = ars.construct_successes(42)
+        >>> asyncio.run(ars.to_coroutine_result_sequence(a_r_seq))
         ('success', [42])
     """
     return a.construct(rs.construct_successes(value))
@@ -208,12 +219,12 @@ def construct_successes_from_awaitable(
     Example:
         >>> import asyncio
         >>> from trcks.fp.monads import awaitable_result_sequence as ars
-        >>> async def read_value() -> int:
+        >>> async def slowly_read_value() -> int:
         ...     await asyncio.sleep(0.001)
         ...     return 7
         ...
-        >>> a_rs = ars.construct_successes_from_awaitable(read_value())
-        >>> asyncio.run(ars.to_coroutine_result_sequence(a_rs))
+        >>> a_r_seq = ars.construct_successes_from_awaitable(slowly_read_value())
+        >>> asyncio.run(ars.to_coroutine_result_sequence(a_r_seq))
         ('success', [7])
     """
     return a.map_(rs.construct_successes)(awtbl)
@@ -234,8 +245,8 @@ def construct_successes_from_sequence(
     Example:
         >>> import asyncio
         >>> from trcks.fp.monads import awaitable_result_sequence as ars
-        >>> a_rs = ars.construct_successes_from_sequence([1, 2])
-        >>> asyncio.run(ars.to_coroutine_result_sequence(a_rs))
+        >>> a_r_seq = ars.construct_successes_from_sequence([1, 2])
+        >>> asyncio.run(ars.to_coroutine_result_sequence(a_r_seq))
         ('success', [1, 2])
     """
     return a.construct(rs.construct_successes_from_sequence(seq))
@@ -261,16 +272,19 @@ def map_failure(
         >>> import asyncio
         >>> from trcks import AwaitableResultSequence
         >>> from trcks.fp.monads import awaitable_result_sequence as ars
-        >>> add_prefix = ars.map_failure(lambda e: f"err: {e}")
-        >>> a_rs_1: AwaitableResultSequence[str, int] = add_prefix(
+        >>> def _add_prefix(description: str) -> str:
+        ...     return f"err: {description}"
+        ...
+        >>> add_prefix = ars.map_failure(_add_prefix)
+        >>> a_r_seq_1: AwaitableResultSequence[str, int] = add_prefix(
         ...     ars.construct_failure("not found")
         ... )
-        >>> asyncio.run(ars.to_coroutine_result_sequence(a_rs_1))
+        >>> asyncio.run(ars.to_coroutine_result_sequence(a_r_seq_1))
         ('failure', 'err: not found')
-        >>> a_rs_2: AwaitableResultSequence[str, int] = add_prefix(
+        >>> a_r_seq_2: AwaitableResultSequence[str, int] = add_prefix(
         ...     ars.construct_successes_from_sequence([1, 2])
         ... )
-        >>> asyncio.run(ars.to_coroutine_result_sequence(a_rs_2))
+        >>> asyncio.run(ars.to_coroutine_result_sequence(a_r_seq_2))
         ('success', [1, 2])
     """
     return a.map_(rs.map_failure(f))
@@ -301,15 +315,15 @@ def map_failure_to_awaitable(
         ...     return f"err: {s}"
         ...
         >>> add_prefix = ars.map_failure_to_awaitable(slowly_add_prefix)
-        >>> a_rs_1: AwaitableResultSequence[str, int] = add_prefix(
+        >>> a_r_seq_1: AwaitableResultSequence[str, int] = add_prefix(
         ...     ars.construct_failure("not found")
         ... )
-        >>> asyncio.run(ars.to_coroutine_result_sequence(a_rs_1))
+        >>> asyncio.run(ars.to_coroutine_result_sequence(a_r_seq_1))
         ('failure', 'err: not found')
-        >>> a_rs_2: AwaitableResultSequence[str, int] = add_prefix(
+        >>> a_r_seq_2: AwaitableResultSequence[str, int] = add_prefix(
         ...     ars.construct_successes_from_sequence([1, 2])
         ... )
-        >>> asyncio.run(ars.to_coroutine_result_sequence(a_rs_2))
+        >>> asyncio.run(ars.to_coroutine_result_sequence(a_r_seq_2))
         ('success', [1, 2])
     """
     return map_failure_to_awaitable_result_sequence(
@@ -400,9 +414,12 @@ def map_failure_to_result(
     Example:
         >>> import asyncio
         >>> from trcks.fp.monads import awaitable_result_sequence as ars
-        >>> recover = ars.map_failure_to_result(
-        ...     lambda e: ("success", 0) if e == "not found" else ("failure", e)
-        ... )
+        >>> def _recover_from_not_found(description: str) -> Result[str, int]:
+        ...     if description == "not found":
+        ...         return ("success", 0)
+        ...     return ("failure", description)
+        ...
+        >>> recover = ars.map_failure_to_result(_recover_from_not_found)
         >>> asyncio.run(ars.to_coroutine_result_sequence(
         ...     recover(ars.construct_failure("not found"))
         ... ))
@@ -439,9 +456,12 @@ def map_failure_to_result_sequence(
     Example:
         >>> import asyncio
         >>> from trcks.fp.monads import awaitable_result_sequence as ars
-        >>> recover = ars.map_failure_to_result_sequence(
-        ...     lambda e: ("success", [0]) if e == "not found" else ("failure", e)
-        ... )
+        >>> def _recover_from_not_found(description: str) -> ResultSequence[str, int]:
+        ...     if description == "not found":
+        ...         return ("success", [0])
+        ...     return ("failure", description)
+        ...
+        >>> recover = ars.map_failure_to_result_sequence(_recover_from_not_found)
         >>> asyncio.run(ars.to_coroutine_result_sequence(
         ...     recover(ars.construct_failure("not found"))
         ... ))
@@ -475,9 +495,12 @@ def map_failure_to_sequence(
     Example:
         >>> import asyncio
         >>> from trcks.fp.monads import awaitable_result_sequence as ars
-        >>> recover = ars.map_failure_to_sequence(
-        ...     lambda e: [0] if e == "not found" else []
-        ... )
+        >>> def _recover(description: str) -> list[int]:
+        ...     if description == "not found":
+        ...         return [0]
+        ...     return []
+        ...
+        >>> recover = ars.map_failure_to_sequence(_recover)
         >>> asyncio.run(recover(ars.construct_failure("not found")))
         ('success', [0])
         >>> asyncio.run(recover(ars.construct_successes_from_sequence([1, 2])))
@@ -505,16 +528,19 @@ def map_successes(
         >>> import asyncio
         >>> from trcks import AwaitableResultSequence
         >>> from trcks.fp.monads import awaitable_result_sequence as ars
-        >>> double = ars.map_successes(lambda x: x * 2)
-        >>> a_rs: AwaitableResultSequence[str, int] = double(
+        >>> def _double_integer(n: int) -> int:
+        ...     return n * 2
+        ...
+        >>> double_integers = ars.map_successes(_double_integer)
+        >>> a_r_seq: AwaitableResultSequence[str, int] = double_integers(
         ...     ars.construct_successes_from_sequence([1, 2, 3])
         ... )
-        >>> asyncio.run(ars.to_coroutine_result_sequence(a_rs))
+        >>> asyncio.run(ars.to_coroutine_result_sequence(a_r_seq))
         ('success', [2, 4, 6])
-        >>> a_rs_2: AwaitableResultSequence[str, int] = double(
+        >>> a_r_seq_2: AwaitableResultSequence[str, int] = double_integers(
         ...     ars.construct_failure("not found")
         ... )
-        >>> asyncio.run(ars.to_coroutine_result_sequence(a_rs_2))
+        >>> asyncio.run(ars.to_coroutine_result_sequence(a_r_seq_2))
         ('failure', 'not found')
     """
     return a.map_(rs.map_successes(f))
@@ -538,11 +564,11 @@ def map_successes_to_awaitable(
     Example:
         >>> import asyncio
         >>> from trcks.fp.monads import awaitable_result_sequence as ars
-        >>> async def double_slowly(x: int) -> int:
+        >>> async def slowly_double_integer(x: int) -> int:
         ...     await asyncio.sleep(0.001)
         ...     return x * 2
         ...
-        >>> double = ars.map_successes_to_awaitable(double_slowly)
+        >>> double = ars.map_successes_to_awaitable(slowly_double_integer)
         >>> asyncio.run(ars.to_coroutine_result_sequence(
         ...     double(ars.construct_successes_from_sequence([1, 2, 3]))
         ... ))
@@ -581,11 +607,11 @@ def map_successes_to_awaitable_result(
         >>> import asyncio
         >>> from trcks import Result
         >>> from trcks.fp.monads import awaitable_result_sequence as ars
-        >>> async def check(x: int) -> Result[str, int]:
+        >>> async def slowly_check(x: int) -> Result[str, int]:
         ...     await asyncio.sleep(0.001)
         ...     return ("success", x * 2) if x > 0 else ("failure", "bad")
         ...
-        >>> mapped = ars.map_successes_to_awaitable_result(check)
+        >>> mapped = ars.map_successes_to_awaitable_result(slowly_check)
         >>> asyncio.run(ars.to_coroutine_result_sequence(
         ...     mapped(ars.construct_successes_from_sequence([1, 2]))
         ... ))
@@ -627,17 +653,17 @@ def map_successes_to_awaitable_result_sequence(
     Example:
         >>> import asyncio
         >>> from trcks.fp.monads import awaitable_result_sequence as ars
-        >>> async def expand(x: int) -> tuple[str, list[int]]:
+        >>> async def slowly_expand(x: int) -> tuple[str, list[int]]:
         ...     await asyncio.sleep(0.001)
         ...     if x > 0:
-        ...         return "success", [x, -x]
+        ...         return "success", [x, x]
         ...     return "failure", "bad"
         ...
-        >>> flat_mapped = ars.map_successes_to_awaitable_result_sequence(expand)
+        >>> flat_mapped = ars.map_successes_to_awaitable_result_sequence(slowly_expand)
         >>> asyncio.run(ars.to_coroutine_result_sequence(
         ...     flat_mapped(ars.construct_successes_from_sequence([1, 2]))
         ... ))
-        ('success', [1, -1, 2, -2])
+        ('success', [1, 1, 2, 2])
         >>> asyncio.run(ars.to_coroutine_result_sequence(
         ...     flat_mapped(ars.construct_successes_from_sequence([1, -1, 2]))
         ... ))
@@ -695,9 +721,12 @@ def map_successes_to_result(
     Example:
         >>> import asyncio
         >>> from trcks.fp.monads import awaitable_result_sequence as ars
-        >>> check = ars.map_successes_to_result(
-        ...     lambda x: ("success", x * 2) if x > 0 else ("failure", "bad")
-        ... )
+        >>> def _double_if_positive(n: int) -> Result[str, int]:
+        ...     if n > 0:
+        ...         return ("success", n * 2)
+        ...     return ("failure", "bad")
+        ...
+        >>> check = ars.map_successes_to_result(_double_if_positive)
         >>> asyncio.run(ars.to_coroutine_result_sequence(
         ...     check(ars.construct_successes_from_sequence([1, 2]))
         ... ))
@@ -737,13 +766,16 @@ def map_successes_to_result_sequence(
     Example:
         >>> import asyncio
         >>> from trcks.fp.monads import awaitable_result_sequence as ars
-        >>> expand = ars.map_successes_to_result_sequence(
-        ...     lambda x: ("success", [x, -x]) if x > 0 else ("failure", "bad")
-        ... )
+        >>> def _duplicate_if_positive(n: int) -> ResultSequence[str, int]:
+        ...     if n > 0:
+        ...         return ("success", [n, n])
+        ...     return ("failure", "bad")
+        ...
+        >>> expand = ars.map_successes_to_result_sequence(_duplicate_if_positive)
         >>> asyncio.run(ars.to_coroutine_result_sequence(
         ...     expand(ars.construct_successes_from_sequence([1, 2]))
         ... ))
-        ('success', [1, -1, 2, -2])
+        ('success', [1, 1, 2, 2])
         >>> asyncio.run(ars.to_coroutine_result_sequence(
         ...     expand(ars.construct_failure("oops"))
         ... ))
@@ -769,11 +801,14 @@ def map_successes_to_sequence(
     Example:
         >>> import asyncio
         >>> from trcks.fp.monads import awaitable_result_sequence as ars
-        >>> flat = ars.map_successes_to_sequence(lambda x: [x, -x])
+        >>> def _duplicate_integer(n: int) -> list[int]:
+        ...     return [n, n]
+        ...
+        >>> flat = ars.map_successes_to_sequence(_duplicate_integer)
         >>> asyncio.run(ars.to_coroutine_result_sequence(
         ...     flat(ars.construct_successes_from_sequence([1, 2]))
         ... ))
-        ('success', [1, -1, 2, -2])
+        ('success', [1, 1, 2, 2])
     """
     return a.map_(rs.map_successes_to_sequence(f))
 
@@ -796,7 +831,10 @@ def tap_failure(
     Example:
         >>> import asyncio
         >>> from trcks.fp.monads import awaitable_result_sequence as ars
-        >>> log_err = ars.tap_failure(lambda e: print(f"Error: {e}"))
+        >>> def _log_error(description: str) -> None:
+        ...     print(f"Error: {description}")
+        ...
+        >>> log_err = ars.tap_failure(_log_error)
         >>> asyncio.run(ars.to_coroutine_result_sequence(
         ...     log_err(ars.construct_failure("oops"))
         ... ))
@@ -828,11 +866,11 @@ def tap_failure_to_awaitable(
     Example:
         >>> import asyncio
         >>> from trcks.fp.monads import awaitable_result_sequence as ars
-        >>> async def log_error(e: str) -> None:
+        >>> async def slowly_log_error(e: str) -> None:
         ...     await asyncio.sleep(0.001)
         ...     print(f"Error: {e}")
         ...
-        >>> log_err = ars.tap_failure_to_awaitable(log_error)
+        >>> log_err = ars.tap_failure_to_awaitable(slowly_log_error)
         >>> asyncio.run(ars.to_coroutine_result_sequence(
         ...     log_err(ars.construct_failure("oops"))
         ... ))
@@ -877,11 +915,11 @@ def tap_failure_to_awaitable_result(
         >>> import asyncio
         >>> from trcks import Result
         >>> from trcks.fp.monads import awaitable_result_sequence as ars
-        >>> async def retry(e: str) -> Result[str, int]:
+        >>> async def slowly_retry(e: str) -> Result[str, int]:
         ...     await asyncio.sleep(0.001)
         ...     return ("success", 0) if e == "not found" else ("failure", e)
         ...
-        >>> recover = ars.tap_failure_to_awaitable_result(retry)
+        >>> recover = ars.tap_failure_to_awaitable_result(slowly_retry)
         >>> asyncio.run(ars.to_coroutine_result_sequence(
         ...     recover(ars.construct_failure("not found"))
         ... ))
@@ -930,11 +968,11 @@ def tap_failure_to_awaitable_result_sequence(
     Example:
         >>> import asyncio
         >>> from trcks.fp.monads import awaitable_result_sequence as ars
-        >>> async def retry(e: str) -> tuple[str, list[int]]:
+        >>> async def slowly_retry(e: str) -> tuple[str, list[int]]:
         ...     await asyncio.sleep(0.001)
         ...     return ("success", [0]) if e == "not found" else ("failure", e)
         ...
-        >>> recover = ars.tap_failure_to_awaitable_result_sequence(retry)
+        >>> recover = ars.tap_failure_to_awaitable_result_sequence(slowly_retry)
         >>> asyncio.run(ars.to_coroutine_result_sequence(
         ...     recover(ars.construct_failure("not found"))
         ... ))
@@ -983,9 +1021,12 @@ def tap_failure_to_result(
     Example:
         >>> import asyncio
         >>> from trcks.fp.monads import awaitable_result_sequence as ars
-        >>> recover = ars.tap_failure_to_result(
-        ...     lambda e: ("success", 0) if e == "not found" else ("failure", e)
-        ... )
+        >>> def _recover_from_not_found(description: str) -> Result[None, int]:
+        ...     if description == "not found":
+        ...         return ("success", 0)
+        ...     return ("failure", None)
+        ...
+        >>> recover = ars.tap_failure_to_result(_recover_from_not_found)
         >>> asyncio.run(ars.to_coroutine_result_sequence(
         ...     recover(ars.construct_failure("not found"))
         ... ))
@@ -1023,9 +1064,12 @@ def tap_failure_to_result_sequence(
     Example:
         >>> import asyncio
         >>> from trcks.fp.monads import awaitable_result_sequence as ars
-        >>> recover = ars.tap_failure_to_result_sequence(
-        ...     lambda e: ("success", [0]) if e == "not found" else ("failure", e)
-        ... )
+        >>> def _recover_from_not_found(description: str) -> ResultSequence[None, int]:
+        ...     if description == "not found":
+        ...         return ("success", [0])
+        ...     return ("failure", None)
+        ...
+        >>> recover = ars.tap_failure_to_result_sequence(_recover_from_not_found)
         >>> asyncio.run(ars.to_coroutine_result_sequence(
         ...     recover(ars.construct_failure("not found"))
         ... ))
@@ -1066,9 +1110,13 @@ def tap_failure_to_sequence(
     Example:
         >>> import asyncio
         >>> from trcks.fp.monads import awaitable_result_sequence as ars
-        >>> log_err = ars.tap_failure_to_sequence(
-        ...     lambda e: [print(f"Error: {e}"), print(f"Logged: {e}")]
-        ... )
+        >>> def _log_and_alert(description: str) -> list[None]:
+        ...     return [
+        ...         print(f"Error: {description}"),
+        ...         print(f"Logged: {description}"),
+        ...     ]
+        ...
+        >>> log_err = ars.tap_failure_to_sequence(_log_and_alert)
         >>> asyncio.run(log_err(ars.construct_failure("critical")))
         Error: critical
         Logged: critical
@@ -1115,11 +1163,11 @@ def tap_successes_to_awaitable(
     Example:
         >>> import asyncio
         >>> from trcks.fp.monads import awaitable_result_sequence as ars
-        >>> async def log_value(x: int) -> None:
+        >>> async def slowly_log_value(x: int) -> None:
         ...     await asyncio.sleep(0.001)
         ...     print(f"Value: {x}")
         ...
-        >>> log_vals = ars.tap_successes_to_awaitable(log_value)
+        >>> log_vals = ars.tap_successes_to_awaitable(slowly_log_value)
         >>> asyncio.run(ars.to_coroutine_result_sequence(
         ...     log_vals(ars.construct_successes_from_sequence([1, 2]))
         ... ))
@@ -1160,11 +1208,11 @@ def tap_successes_to_awaitable_result(
         >>> import asyncio
         >>> from trcks import Result
         >>> from trcks.fp.monads import awaitable_result_sequence as ars
-        >>> async def audit(x: int) -> Result[str, None]:
+        >>> async def slowly_audit(x: int) -> Result[str, None]:
         ...     await asyncio.sleep(0.001)
         ...     return ("success", None) if x > 0 else ("failure", "bad")
         ...
-        >>> audited = ars.tap_successes_to_awaitable_result(audit)
+        >>> audited = ars.tap_successes_to_awaitable_result(slowly_audit)
         >>> asyncio.run(ars.to_coroutine_result_sequence(
         ...     audited(ars.construct_successes_from_sequence([1, 2]))
         ... ))
@@ -1205,13 +1253,13 @@ def tap_successes_to_awaitable_result_sequence(
     Example:
         >>> import asyncio
         >>> from trcks.fp.monads import awaitable_result_sequence as ars
-        >>> async def audit(x: int) -> tuple[str, list[None]]:
+        >>> async def slowly_audit(x: int) -> tuple[str, list[None]]:
         ...     await asyncio.sleep(0.001)
         ...     if x > 0:
         ...         return ("success", [None, None])
         ...     return ("failure", "bad")
         ...
-        >>> audited = ars.tap_successes_to_awaitable_result_sequence(audit)
+        >>> audited = ars.tap_successes_to_awaitable_result_sequence(slowly_audit)
         >>> asyncio.run(ars.to_coroutine_result_sequence(
         ...     audited(ars.construct_successes_from_sequence([7]))
         ... ))
@@ -1259,9 +1307,12 @@ def tap_successes_to_result(
     Example:
         >>> import asyncio
         >>> from trcks.fp.monads import awaitable_result_sequence as ars
-        >>> audit = ars.tap_successes_to_result(
-        ...     lambda x: ("success", None) if x > 0 else ("failure", "bad")
-        ... )
+        >>> def _validate_positive(n: int) -> Result[str, None]:
+        ...     if n > 0:
+        ...         return ("success", None)
+        ...     return ("failure", "bad")
+        ...
+        >>> audit = ars.tap_successes_to_result(_validate_positive)
         >>> asyncio.run(ars.to_coroutine_result_sequence(
         ...     audit(ars.construct_successes_from_sequence([1, 2]))
         ... ))
@@ -1299,9 +1350,12 @@ def tap_successes_to_result_sequence(
     Example:
         >>> import asyncio
         >>> from trcks.fp.monads import awaitable_result_sequence as ars
-        >>> audit = ars.tap_successes_to_result_sequence(
-        ...     lambda x: ("success", [None, None]) if x > 0 else ("failure", "bad")
-        ... )
+        >>> def _validate_positive_twice(n: int) -> ResultSequence[str, None]:
+        ...     if n > 0:
+        ...         return ("success", [None, None])
+        ...     return ("failure", "bad")
+        ...
+        >>> audit = ars.tap_successes_to_result_sequence(_validate_positive_twice)
         >>> asyncio.run(ars.to_coroutine_result_sequence(
         ...     audit(ars.construct_successes_from_sequence([7]))
         ... ))
@@ -1337,28 +1391,29 @@ def tap_successes_to_sequence(
     Example:
         >>> import asyncio
         >>> from trcks.fp.monads import awaitable_result_sequence as ars
-        >>> log_mult = ars.tap_successes_to_sequence(
-        ...     lambda x: [print(f"v={x}"), print(f"v={x}")]
-        ... )
+        >>> def _log_twice(n: int) -> list[None]:
+        ...     return [print(f"Received: {n}"), print(f"Received: {n}")]
+        ...
+        >>> log_mult = ars.tap_successes_to_sequence(_log_twice)
         >>> asyncio.run(ars.to_coroutine_result_sequence(
         ...     log_mult(ars.construct_successes_from_sequence([7]))
         ... ))
-        v=7
-        v=7
+        Received: 7
+        Received: 7
         ('success', [7, 7])
     """
     return a.map_(rs.tap_successes_to_sequence(f))
 
 
 async def to_coroutine_result_sequence(
-    a_rs: AwaitableResultSequence[_F, _S],
+    a_r_seq: AwaitableResultSequence[_F, _S],
 ) -> ResultSequence[_F, _S]:
     """Turn a [trcks.AwaitableResultSequence][] into a [collections.abc.Coroutine][].
 
     This is useful for functions that expect a coroutine (e.g. [asyncio.run][]).
 
     Args:
-        a_rs: The [trcks.AwaitableResultSequence][] to be transformed
+        a_r_seq: The [trcks.AwaitableResultSequence][] to be transformed
             into a [collections.abc.Coroutine][].
 
     Returns:
@@ -1380,4 +1435,4 @@ async def to_coroutine_result_sequence(
         >>> asyncio.run(coro)
         ('success', [1, 2])
     """
-    return await a_rs
+    return await a_r_seq
