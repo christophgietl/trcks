@@ -637,6 +637,23 @@ def tap_successes(
             Applies the given side effect to each element of the
             [trcks.SuccessSequence][] and returns the original
             [trcks.SuccessSequence][].
+
+    Example:
+        >>> from collections.abc import Callable
+        >>> from trcks import ResultSequence
+        >>> from trcks.fp.monads import result_sequence as rs
+        >>> def _log_integer(n: int) -> None:
+        ...     print(f"Received: {n}")
+        ...
+        >>> log_integers: Callable[
+        ...     [ResultSequence[str, int]], ResultSequence[str, int]
+        ... ] = rs.tap_successes(_log_integer)
+        >>> log_integers(("success", [1, 2]))
+        Received: 1
+        Received: 2
+        ('success', [1, 2])
+        >>> log_integers(("failure", "oops"))
+        ('failure', 'oops')
     """
     return r.map_success(s.tap(f))
 
@@ -668,7 +685,7 @@ def tap_successes_to_result(
         >>> def _validate_positive(n: int) -> Result[str, None]:
         ...     if n > 0:
         ...         return ("success", None)
-        ...     return ("failure", "bad")
+        ...     return ("failure", "not positive")
         ...
         >>> validate_positive: Callable[
         ...     [ResultSequence[str, int]], ResultSequence[str, int]
@@ -676,7 +693,7 @@ def tap_successes_to_result(
         >>> validate_positive(("success", [1, 2]))
         ('success', [1, 2])
         >>> validate_positive(("success", [1, -1, 2]))
-        ('failure', 'bad')
+        ('failure', 'not positive')
         >>> validate_positive(("failure", "oops"))
         ('failure', 'oops')
     """
@@ -714,7 +731,7 @@ def tap_successes_to_result_sequence(
         >>> def _validate_positive_twice(n: int) -> ResultSequence[str, None]:
         ...     if n > 0:
         ...         return ("success", [None, None])
-        ...     return ("failure", "bad")
+        ...     return ("failure", "not positive")
         ...
         >>> validate_positive_twice: Callable[
         ...     [ResultSequence[str, int]], ResultSequence[str, int]
@@ -722,7 +739,7 @@ def tap_successes_to_result_sequence(
         >>> validate_positive_twice(("success", [7]))
         ('success', [7, 7])
         >>> validate_positive_twice(("success", [1, -1]))
-        ('failure', 'bad')
+        ('failure', 'not positive')
     """
 
     def tapped_f(s1: _S1) -> ResultSequence[_F2, _S1]:
@@ -760,15 +777,15 @@ def tap_successes_to_sequence(
         >>> from collections.abc import Callable
         >>> from trcks import ResultSequence
         >>> from trcks.fp.monads import result_sequence as rs
-        >>> def _print_twice(n: int) -> list[None]:
-        ...     return [print(f"v={n}"), print(f"v={n}")]
+        >>> def _log_twice(n: int) -> list[None]:
+        ...     return [print(f"Received: {n}"), print(f"Received: {n}")]
         ...
-        >>> print_twice: Callable[
+        >>> log_twice: Callable[
         ...     [ResultSequence[str, int]], ResultSequence[str, int]
-        ... ] = rs.tap_successes_to_sequence(_print_twice)
-        >>> print_twice(("success", [7]))
-        v=7
-        v=7
+        ... ] = rs.tap_successes_to_sequence(_log_twice)
+        >>> log_twice(("success", [7]))
+        Received: 7
+        Received: 7
         ('success', [7, 7])
     """
     return r.map_success(s.tap_to_sequence(f))
