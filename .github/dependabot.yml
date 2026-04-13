@@ -4,6 +4,10 @@ updates:
     directories:
       - /
       - /.github/actions/*/
+    groups:
+      github-actions:
+        patterns:
+          - "*"
     schedule:
       interval: daily
   - package-ecosystem: pre-commit
