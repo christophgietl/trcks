@@ -108,12 +108,10 @@ def construct_failure_from_awaitable(awtbl: Awaitable[_F]) -> AwaitableFailure[_
     Example:
         >>> import asyncio
         >>> from collections.abc import Awaitable
+        >>> from trcks.fp.monads import awaitable as a
         >>> from trcks.fp.monads import awaitable_result_sequence as ars
-        >>> async def slowly_get_error() -> str:
-        ...     await asyncio.sleep(0.001)
-        ...     return "not found"
-        ...
-        >>> a_r_seq = ars.construct_failure_from_awaitable(slowly_get_error())
+        >>> awtbl = a.construct("not found")
+        >>> a_r_seq = ars.construct_failure_from_awaitable(awtbl)
         >>> asyncio.run(ars.to_coroutine_result_sequence(a_r_seq))
         ('failure', 'not found')
     """
@@ -141,8 +139,8 @@ def construct_from_awaitable_result(
         >>> from collections.abc import Awaitable
         >>> from trcks.fp.monads import awaitable_result as ar
         >>> from trcks.fp.monads import awaitable_result_sequence as ars
-        >>> a_r_seq = ars.construct_from_awaitable_result(ar.construct_success(7))
-        >>> asyncio.run(ars.to_coroutine_result_sequence(a_r_seq))
+        >>> a_r_seq_1 = ars.construct_from_awaitable_result(ar.construct_success(7))
+        >>> asyncio.run(ars.to_coroutine_result_sequence(a_r_seq_1))
         ('success', [7])
         >>> a_r_seq_2 = ars.construct_from_awaitable_result(
         ...     ar.construct_failure("oops")
@@ -153,14 +151,40 @@ def construct_from_awaitable_result(
     return a.map_(rs.construct_from_result)(a_rslt)
 
 
+def construct_from_result(rslt: Result[_F, _S]) -> AwaitableResultSequence[_F, _S]:
+    """Create a [trcks.AwaitableResultSequence][] object from a [trcks.Result][].
+
+    The success payload is wrapped in a single-element sequence.
+
+    Args:
+        rslt: [trcks.Result][] object to be converted.
+
+    Returns:
+        A new [trcks.AwaitableResultSequence][] instance where
+            the success payload is wrapped in a single-element sequence,
+            or the original failure is preserved.
+
+    Example:
+        >>> import asyncio
+        >>> from trcks.fp.monads import awaitable_result_sequence as ars
+        >>> a_r_seq_1 = ars.construct_from_result(("success", 7))
+        >>> asyncio.run(ars.to_coroutine_result_sequence(a_r_seq_1))
+        ('success', [7])
+        >>> a_r_seq_2 = ars.construct_from_result(("failure", "oops"))
+        >>> asyncio.run(ars.to_coroutine_result_sequence(a_r_seq_2))
+        ('failure', 'oops')
+    """
+    return a.construct(rs.construct_from_result(rslt))
+
+
 def construct_from_result_sequence(
-    rslt_seq: ResultSequence[_F, _S],
+    r_seq: ResultSequence[_F, _S],
 ) -> AwaitableResultSequence[_F, _S]:
     """Create a [trcks.AwaitableResultSequence][] object
     from a [trcks.ResultSequence][] object.
 
     Args:
-        rslt_seq: [trcks.ResultSequence][] object to be wrapped
+        r_seq: [trcks.ResultSequence][] object to be wrapped
             in an [trcks.AwaitableResultSequence][] object.
 
     Returns:
@@ -177,7 +201,7 @@ def construct_from_result_sequence(
         >>> asyncio.run(ars.to_coroutine_result_sequence(a_r_seq))
         ('success', [1, 2])
     """
-    return a.construct(rslt_seq)
+    return a.construct(r_seq)
 
 
 def construct_successes(value: _S) -> AwaitableSuccessSequence[_S]:
@@ -218,12 +242,10 @@ def construct_successes_from_awaitable(
 
     Example:
         >>> import asyncio
+        >>> from trcks.fp.monads import awaitable as a
         >>> from trcks.fp.monads import awaitable_result_sequence as ars
-        >>> async def slowly_read_value() -> int:
-        ...     await asyncio.sleep(0.001)
-        ...     return 7
-        ...
-        >>> a_r_seq = ars.construct_successes_from_awaitable(slowly_read_value())
+        >>> awtbl = a.construct(7)
+        >>> a_r_seq = ars.construct_successes_from_awaitable(awtbl)
         >>> asyncio.run(ars.to_coroutine_result_sequence(a_r_seq))
         ('success', [7])
     """

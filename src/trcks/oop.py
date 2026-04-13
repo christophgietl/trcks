@@ -337,6 +337,46 @@ class AwaitableResultSequenceWrapper(
         )
 
     @staticmethod
+    def construct_from_result(
+        rslt: Result[_F_default, _S_default],
+    ) -> AwaitableResultSequenceWrapper[_F_default, _S_default]:
+        """Construct and wrap an [trcks.AwaitableResultSequence][] from a
+        [trcks.Result][].
+
+        The success payload is wrapped in a single-element sequence.
+
+        Args:
+            rslt: The [trcks.Result][] object to be converted.
+
+        Returns:
+            A new [trcks.oop.AwaitableResultSequenceWrapper][] instance where
+                the success payload is wrapped in a single-element sequence,
+                or the original failure is preserved.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks.oop import AwaitableResultSequenceWrapper
+            >>> wrapper_1 = (
+            ...     AwaitableResultSequenceWrapper
+            ...     .construct_from_result(("success", 7))
+            ... )
+            >>> wrapper_1
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(wrapper_1.core_as_coroutine)
+            ('success', [7])
+            >>>
+            >>> wrapper_2 = (
+            ...     AwaitableResultSequenceWrapper
+            ...     .construct_from_result(("failure", "oops"))
+            ... )
+            >>> wrapper_2
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(wrapper_2.core_as_coroutine)
+            ('failure', 'oops')
+        """
+        return AwaitableResultSequenceWrapper(ars.construct_from_result(rslt))
+
+    @staticmethod
     def construct_from_result_sequence(
         rslt_seq: ResultSequence[_F_default, _S_default],
     ) -> AwaitableResultSequenceWrapper[_F_default, _S_default]:
