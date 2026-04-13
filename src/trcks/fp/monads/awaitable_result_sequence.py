@@ -139,12 +139,12 @@ def construct_from_awaitable_result(
         >>> from collections.abc import Awaitable
         >>> from trcks.fp.monads import awaitable_result as ar
         >>> from trcks.fp.monads import awaitable_result_sequence as ars
-        >>> a_r_seq_1 = ars.construct_from_awaitable_result(ar.construct_success(7))
+        >>> a_rslt_1 = ar.construct_success(7)
+        >>> a_r_seq_1 = ars.construct_from_awaitable_result(a_rslt_1)
         >>> asyncio.run(ars.to_coroutine_result_sequence(a_r_seq_1))
         ('success', [7])
-        >>> a_r_seq_2 = ars.construct_from_awaitable_result(
-        ...     ar.construct_failure("oops")
-        ... )
+        >>> a_rslt_2 = ar.construct_failure("oops")
+        >>> a_r_seq_2 = ars.construct_from_awaitable_result(a_rslt_2)
         >>> asyncio.run(ars.to_coroutine_result_sequence(a_r_seq_2))
         ('failure', 'oops')
     """
