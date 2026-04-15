@@ -7,7 +7,7 @@ dev = [
     "import-linter==2.11",
     "markdown-pycon==1.0.1",
     "mkdocs-material==9.7.6",
-    "mkdocstrings[python]==1.0.3",
+    "mkdocstrings[python]==1.0.4",
     "mypy", # Check project.optional-dependencies for lower bound.
     "pre-commit==4.5.1",
     "pyright[nodejs]", # Check project.optional-dependencies for lower bound.
