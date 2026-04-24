@@ -12,8 +12,10 @@ inputs:
 runs:
   using: composite
   steps:
-    - run: uv sync --all-extras${{ fromJSON(inputs.locked) && ' --locked' || '' }} --resolution=${{ inputs.resolution-strategy }}
+    - run: uv sync --all-extras${{ fromJSON(inputs.locked) && ' --locked' || '' }} --resolution=${INPUTS_RESOLUTION_STRATEGY}
       shell: bash
+      env:
+        INPUTS_RESOLUTION_STRATEGY: ${{ inputs.resolution-strategy }}
     - env:
         PYTHONIOENCODING: utf-8 # avoids UnicodeEncodeError in Windows (see https://github.com/Textualize/rich/issues/2411)
       run: uv run --no-sync lint-imports
