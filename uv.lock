@@ -6,6 +6,10 @@ resolution-markers = [
     "python_full_version < '3.14'",
 ]
 
+[options]
+exclude-newer = "2026-04-17T18:09:42.12273Z"
+exclude-newer-span = "P7D"
+
 [[package]]
 name = "babel"
 version = "2.18.0"
