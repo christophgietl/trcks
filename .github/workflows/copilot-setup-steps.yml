@@ -4,13 +4,9 @@ on:
   # Automatically trigger the workflow on modification for testing purposes:
   pull_request:
     paths:
-      - .github/actions/set-up-pre-commit/action.yml
-      - .github/actions/set-up-uv/action.yml
       - .github/workflows/copilot-setup-steps.yml
   push:
     paths:
-      - .github/actions/set-up-pre-commit/action.yml
-      - .github/actions/set-up-uv/action.yml
       - .github/workflows/copilot-setup-steps.yml
   workflow_dispatch:
 
@@ -24,10 +20,10 @@ jobs:
         with:
           fetch-depth: 0  # needed by build-backend to derive package version from Git tags
           persist-credentials: false
-      - uses: ./.github/actions/set-up-uv
+      - uses: christophgietl/uv-actions/set-up-uv@f025ee6ab6bc5d0cdf1390f59ca7506564598141 # 2026.4.25
         with:
           install-and-cache-dependencies: true
-      - uses: ./.github/actions/set-up-pre-commit
+      - uses: christophgietl/uv-actions/set-up-pre-commit@f025ee6ab6bc5d0cdf1390f59ca7506564598141 # 2026.4.25
         with:
           cache-key-suffix: copilot-setup-steps
           install-git-hooks: true
