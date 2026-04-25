@@ -1,19 +1,53 @@
 name: Set up uv
-description: Install uv and Python and, if desired, dependencies
+description: Install uv and Python and, if desired, dependencies and pre-commit environments
 inputs:
+  cache-key-suffix:
+    description: key suffix for the pre-commit cache
   install-and-cache-dependencies:
     default: "false"
     description: whether to install the dependencies specified in pyproject.toml
     required: true
+  install-git-hooks:
+    default: "false"
+    description: whether to install git hooks for pre-commit (requires setup-pre-commit to be true)
   python-version:
     description: Python version to be installed
+  setup-pre-commit:
+    default: "false"
+    description: whether to set up pre-commit environments (requires install-and-cache-dependencies to be true and cache-key-suffix to be set)
 runs:
   using: composite
   steps:
+    - if: fromJSON(inputs.setup-pre-commit) && !fromJSON(inputs.install-and-cache-dependencies)
+      run: |
+        echo "::error::setup-pre-commit requires install-and-cache-dependencies to be true"
+        exit 1
+      shell: bash
+    - if: fromJSON(inputs.setup-pre-commit) && inputs.cache-key-suffix == ''
+      run: |
+        echo "::error::setup-pre-commit requires cache-key-suffix to be set"
+        exit 1
+      shell: bash
+    - if: fromJSON(inputs.install-git-hooks) && !fromJSON(inputs.setup-pre-commit)
+      run: |
+        echo "::error::install-git-hooks requires setup-pre-commit to be true"
+        exit 1
+      shell: bash
     - uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b  # v8.1.0
       with:
         enable-cache: ${{ fromJSON(inputs.install-and-cache-dependencies) }}
         python-version: ${{ inputs.python-version }}
     - if: fromJSON(inputs.install-and-cache-dependencies)
       run: uv sync --all-extras --locked
+      shell: bash
+    - if: fromJSON(inputs.setup-pre-commit)
+      uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae  # v5.0.5
+      with:
+        key: pre-commit--${{ hashFiles('.pre-commit-config.yaml') }}-${{ inputs.cache-key-suffix }}
+        path: ~/.cache/pre-commit
+    - if: fromJSON(inputs.setup-pre-commit)
+      run: uv run --no-sync pre-commit install-hooks
+      shell: bash
+    - if: fromJSON(inputs.install-git-hooks)
+      run: uv run --no-sync pre-commit install
       shell: bash
