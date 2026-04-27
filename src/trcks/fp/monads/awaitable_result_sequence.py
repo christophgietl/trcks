@@ -563,13 +563,13 @@ def map_successes(
         >>> def _double_integer(n: int) -> int:
         ...     return n * 2
         ...
-        >>> double_integer = ars.map_successes(_double_integer)
-        >>> a_r_seq_1 = double_integer(
+        >>> double_integers = ars.map_successes(_double_integer)
+        >>> a_r_seq_1 = double_integers(
         ...     ars.construct_successes_from_sequence([1, 2, 3])
         ... )
         >>> asyncio.run(ars.to_coroutine_result_sequence(a_r_seq_1))
         ('success', [2, 4, 6])
-        >>> a_r_seq_2 = double_integer(ars.construct_failure("not found"))
+        >>> a_r_seq_2 = double_integers(ars.construct_failure("not found"))
         >>> asyncio.run(ars.to_coroutine_result_sequence(a_r_seq_2))
         ('failure', 'not found')
     """
@@ -598,15 +598,15 @@ def map_successes_to_awaitable(
         ...     await asyncio.sleep(0.001)
         ...     return x * 2
         ...
-        >>> slowly_double_integer = ars.map_successes_to_awaitable(
+        >>> slowly_double_integers = ars.map_successes_to_awaitable(
         ...     _slowly_double_integer
         ... )
         >>> asyncio.run(ars.to_coroutine_result_sequence(
-        ...     slowly_double_integer(ars.construct_successes_from_sequence([1, 2, 3]))
+        ...     slowly_double_integers(ars.construct_successes_from_sequence([1, 2, 3]))
         ... ))
         ('success', [2, 4, 6])
         >>> asyncio.run(ars.to_coroutine_result_sequence(
-        ...     slowly_double_integer(ars.construct_failure("not found"))
+        ...     slowly_double_integers(ars.construct_failure("not found"))
         ... ))
         ('failure', 'not found')
     """
@@ -641,7 +641,9 @@ def map_successes_to_awaitable_result(
         >>> from trcks.fp.monads import awaitable_result_sequence as ars
         >>> async def _slowly_check(x: int) -> Result[str, int]:
         ...     await asyncio.sleep(0.001)
-        ...     return ("success", x * 2) if x > 0 else ("failure", "bad")
+        ...     if x > 0:
+        ...         return ("success", x * 2)
+        ...     return ("failure", "bad")
         ...
         >>> slowly_check = ars.map_successes_to_awaitable_result(_slowly_check)
         >>> asyncio.run(ars.to_coroutine_result_sequence(
@@ -684,8 +686,9 @@ def map_successes_to_awaitable_result_sequence(
 
     Example:
         >>> import asyncio
+        >>> from trcks import ResultSequence
         >>> from trcks.fp.monads import awaitable_result_sequence as ars
-        >>> async def _slowly_expand(x: int) -> tuple[str, list[int]]:
+        >>> async def _slowly_expand(x: int) -> ResultSequence[str, int]:
         ...     await asyncio.sleep(0.001)
         ...     if x > 0:
         ...         return "success", [x, x]
@@ -840,9 +843,9 @@ def map_successes_to_sequence(
         >>> def _duplicate_integer(n: int) -> list[int]:
         ...     return [n, n]
         ...
-        >>> duplicate_integer = ars.map_successes_to_sequence(_duplicate_integer)
+        >>> duplicate_integers = ars.map_successes_to_sequence(_duplicate_integer)
         >>> asyncio.run(ars.to_coroutine_result_sequence(
-        ...     duplicate_integer(ars.construct_successes_from_sequence([1, 2]))
+        ...     duplicate_integers(ars.construct_successes_from_sequence([1, 2]))
         ... ))
         ('success', [1, 1, 2, 2])
     """
@@ -953,7 +956,9 @@ def tap_failure_to_awaitable_result(
         >>> from trcks.fp.monads import awaitable_result_sequence as ars
         >>> async def _slowly_retry(e: str) -> Result[str, int]:
         ...     await asyncio.sleep(0.001)
-        ...     return ("success", 0) if e == "not found" else ("failure", e)
+        ...     if e == "not found":
+        ...         return ("success", 0)
+        ...     return ("failure", e)
         ...
         >>> slowly_retry = ars.tap_failure_to_awaitable_result(_slowly_retry)
         >>> asyncio.run(ars.to_coroutine_result_sequence(
@@ -1003,10 +1008,13 @@ def tap_failure_to_awaitable_result_sequence(
 
     Example:
         >>> import asyncio
+        >>> from trcks import ResultSequence
         >>> from trcks.fp.monads import awaitable_result_sequence as ars
-        >>> async def _slowly_retry(e: str) -> tuple[str, list[int]]:
+        >>> async def _slowly_retry(e: str) -> ResultSequence[str, int]:
         ...     await asyncio.sleep(0.001)
-        ...     return ("success", [0]) if e == "not found" else ("failure", e)
+        ...     if e == "not found":
+        ...         return ("success", [0])
+        ...     return ("failure", e)
         ...
         >>> slowly_retry = ars.tap_failure_to_awaitable_result_sequence(_slowly_retry)
         >>> asyncio.run(ars.to_coroutine_result_sequence(
@@ -1205,9 +1213,9 @@ def tap_successes_to_awaitable(
         ...     await asyncio.sleep(0.001)
         ...     print(f"Value: {x}")
         ...
-        >>> slowly_log_value = ars.tap_successes_to_awaitable(_slowly_log_value)
+        >>> slowly_log_values = ars.tap_successes_to_awaitable(_slowly_log_value)
         >>> asyncio.run(ars.to_coroutine_result_sequence(
-        ...     slowly_log_value(ars.construct_successes_from_sequence([1, 2]))
+        ...     slowly_log_values(ars.construct_successes_from_sequence([1, 2]))
         ... ))
         Value: 1
         Value: 2
@@ -1248,7 +1256,9 @@ def tap_successes_to_awaitable_result(
         >>> from trcks.fp.monads import awaitable_result_sequence as ars
         >>> async def _slowly_audit(x: int) -> Result[str, None]:
         ...     await asyncio.sleep(0.001)
-        ...     return ("success", None) if x > 0 else ("failure", "bad")
+        ...     if x > 0:
+        ...         return ("success", None)
+        ...     return ("failure", "bad")
         ...
         >>> slowly_audit = ars.tap_successes_to_awaitable_result(_slowly_audit)
         >>> asyncio.run(ars.to_coroutine_result_sequence(
@@ -1290,8 +1300,9 @@ def tap_successes_to_awaitable_result_sequence(
 
     Example:
         >>> import asyncio
+        >>> from trcks import ResultSequence
         >>> from trcks.fp.monads import awaitable_result_sequence as ars
-        >>> async def _slowly_audit(x: int) -> tuple[str, list[None]]:
+        >>> async def _slowly_audit(x: int) -> ResultSequence[str, None]:
         ...     await asyncio.sleep(0.001)
         ...     if x > 0:
         ...         return ("success", [None, None])
