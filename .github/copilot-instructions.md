@@ -140,7 +140,7 @@ uv run mypy
 uv run pyright
 
 # Enforce import rules
-uv run lint-imports
+uv run import-linter lint
 ```
 
 ### Testing conventions

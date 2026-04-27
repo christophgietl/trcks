@@ -19,7 +19,7 @@ runs:
       shell: bash
     - env:
         PYTHONIOENCODING: utf-8 # avoids UnicodeEncodeError in Windows (see https://github.com/Textualize/rich/issues/2411)
-      run: uv run --no-sync lint-imports
+      run: uv run --no-sync import-linter lint
       shell: bash
     - run: uv run --no-sync mypy
       shell: bash
