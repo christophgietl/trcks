@@ -80,6 +80,10 @@ def construct_failure(value: _F) -> AwaitableFailure[_F]:
     Returns:
         A new [trcks.AwaitableFailure][] instance containing the given value.
 
+    Note:
+        This function is equivalent to
+            [trcks.fp.monads.awaitable_result.construct_failure][].
+
     Example:
         >>> import asyncio
         >>> from collections.abc import Awaitable
@@ -292,20 +296,15 @@ def map_failure(
 
     Example:
         >>> import asyncio
-        >>> from trcks import AwaitableResultSequence
         >>> from trcks.fp.monads import awaitable_result_sequence as ars
         >>> def _add_prefix(description: str) -> str:
         ...     return f"err: {description}"
         ...
         >>> add_prefix = ars.map_failure(_add_prefix)
-        >>> a_r_seq_1: AwaitableResultSequence[str, int] = add_prefix(
-        ...     ars.construct_failure("not found")
-        ... )
+        >>> a_r_seq_1 = add_prefix(ars.construct_failure("not found"))
         >>> asyncio.run(ars.to_coroutine_result_sequence(a_r_seq_1))
         ('failure', 'err: not found')
-        >>> a_r_seq_2: AwaitableResultSequence[str, int] = add_prefix(
-        ...     ars.construct_successes_from_sequence([1, 2])
-        ... )
+        >>> a_r_seq_2 = add_prefix(ars.construct_successes_from_sequence([1, 2]))
         >>> asyncio.run(ars.to_coroutine_result_sequence(a_r_seq_2))
         ('success', [1, 2])
     """
@@ -330,19 +329,16 @@ def map_failure_to_awaitable(
 
     Example:
         >>> import asyncio
-        >>> from trcks import AwaitableResultSequence
         >>> from trcks.fp.monads import awaitable_result_sequence as ars
-        >>> async def slowly_add_prefix(s: str) -> str:
+        >>> async def _slowly_add_prefix(s: str) -> str:
         ...     await asyncio.sleep(0.001)
         ...     return f"err: {s}"
         ...
-        >>> add_prefix = ars.map_failure_to_awaitable(slowly_add_prefix)
-        >>> a_r_seq_1: AwaitableResultSequence[str, int] = add_prefix(
-        ...     ars.construct_failure("not found")
-        ... )
+        >>> slowly_add_prefix = ars.map_failure_to_awaitable(_slowly_add_prefix)
+        >>> a_r_seq_1 = slowly_add_prefix(ars.construct_failure("not found"))
         >>> asyncio.run(ars.to_coroutine_result_sequence(a_r_seq_1))
         ('failure', 'err: not found')
-        >>> a_r_seq_2: AwaitableResultSequence[str, int] = add_prefix(
+        >>> a_r_seq_2 = slowly_add_prefix(
         ...     ars.construct_successes_from_sequence([1, 2])
         ... )
         >>> asyncio.run(ars.to_coroutine_result_sequence(a_r_seq_2))
@@ -376,24 +372,27 @@ def map_failure_to_awaitable_result_sequence(
 
     Example:
         >>> import asyncio
+        >>> from trcks import ResultSequence
         >>> from trcks.fp.monads import awaitable_result_sequence as ars
-        >>> async def _slowly_recover(e: str) -> tuple[str, list[int]]:
+        >>> async def _slowly_recover(e: str) -> ResultSequence[str, int]:
         ...     await asyncio.sleep(0.001)
         ...     if e == "not found":
         ...         return "success", [0]
         ...     return "failure", e
         ...
-        >>> recover = ars.map_failure_to_awaitable_result_sequence(_slowly_recover)
+        >>> slowly_recover = ars.map_failure_to_awaitable_result_sequence(
+        ...     _slowly_recover
+        ... )
         >>> asyncio.run(ars.to_coroutine_result_sequence(
-        ...     recover(ars.construct_failure("not found"))
+        ...     slowly_recover(ars.construct_failure("not found"))
         ... ))
         ('success', [0])
         >>> asyncio.run(ars.to_coroutine_result_sequence(
-        ...     recover(ars.construct_failure("fatal"))
+        ...     slowly_recover(ars.construct_failure("fatal"))
         ... ))
         ('failure', 'fatal')
         >>> asyncio.run(ars.to_coroutine_result_sequence(
-        ...     recover(ars.construct_successes_from_sequence([1, 2]))
+        ...     slowly_recover(ars.construct_successes_from_sequence([1, 2]))
         ... ))
         ('success', [1, 2])
     """
@@ -548,20 +547,17 @@ def map_successes(
 
     Example:
         >>> import asyncio
-        >>> from trcks import AwaitableResultSequence
         >>> from trcks.fp.monads import awaitable_result_sequence as ars
         >>> def _double_integer(n: int) -> int:
         ...     return n * 2
         ...
         >>> double_integers = ars.map_successes(_double_integer)
-        >>> a_r_seq: AwaitableResultSequence[str, int] = double_integers(
+        >>> a_r_seq = double_integers(
         ...     ars.construct_successes_from_sequence([1, 2, 3])
         ... )
         >>> asyncio.run(ars.to_coroutine_result_sequence(a_r_seq))
         ('success', [2, 4, 6])
-        >>> a_r_seq_2: AwaitableResultSequence[str, int] = double_integers(
-        ...     ars.construct_failure("not found")
-        ... )
+        >>> a_r_seq_2 = double_integers(ars.construct_failure("not found"))
         >>> asyncio.run(ars.to_coroutine_result_sequence(a_r_seq_2))
         ('failure', 'not found')
     """
