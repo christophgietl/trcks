@@ -440,13 +440,17 @@ def map_failure_to_result(
         ...         return ("success", 0)
         ...     return ("failure", description)
         ...
-        >>> recover = ars.map_failure_to_result(_recover_from_not_found)
+        >>> recover_from_not_found = ars.map_failure_to_result(_recover_from_not_found)
         >>> asyncio.run(ars.to_coroutine_result_sequence(
-        ...     recover(ars.construct_failure("not found"))
+        ...     recover_from_not_found(ars.construct_failure("not found"))
         ... ))
         ('success', [0])
         >>> asyncio.run(ars.to_coroutine_result_sequence(
-        ...     recover(ars.construct_successes_from_sequence([1, 2]))
+        ...     recover_from_not_found(ars.construct_failure("fatal"))
+        ... ))
+        ('failure', 'fatal')
+        >>> asyncio.run(ars.to_coroutine_result_sequence(
+        ...     recover_from_not_found(ars.construct_successes_from_sequence([1, 2]))
         ... ))
         ('success', [1, 2])
     """
@@ -552,10 +556,10 @@ def map_successes(
         ...     return n * 2
         ...
         >>> double_integers = ars.map_successes(_double_integer)
-        >>> a_r_seq = double_integers(
+        >>> a_r_seq_1 = double_integers(
         ...     ars.construct_successes_from_sequence([1, 2, 3])
         ... )
-        >>> asyncio.run(ars.to_coroutine_result_sequence(a_r_seq))
+        >>> asyncio.run(ars.to_coroutine_result_sequence(a_r_seq_1))
         ('success', [2, 4, 6])
         >>> a_r_seq_2 = double_integers(ars.construct_failure("not found"))
         >>> asyncio.run(ars.to_coroutine_result_sequence(a_r_seq_2))
