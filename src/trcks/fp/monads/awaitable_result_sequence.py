@@ -33,9 +33,9 @@ Example:
     ...         )
     ...     )
     ...
-    >>> result = asyncio.run(main())
+    >>> result_sequence = asyncio.run(main())
     Received: 6
-    >>> result
+    >>> result_sequence
     ('success', [6, 6])
 """
 
@@ -897,11 +897,11 @@ def tap_failure(
         ...     print(f"Failure: {description}")
         ...
         >>> log_failure = ars.tap_failure(_log_failure)
-        >>> result = asyncio.run(ars.to_coroutine_result_sequence(
+        >>> result_sequence = asyncio.run(ars.to_coroutine_result_sequence(
         ...     log_failure(ars.construct_failure("oops"))
         ... ))
         Failure: oops
-        >>> result
+        >>> result_sequence
         ('failure', 'oops')
         >>> asyncio.run(ars.to_coroutine_result_sequence(
         ...     log_failure(ars.construct_successes_from_sequence([1]))
@@ -934,11 +934,11 @@ def tap_failure_to_awaitable(
         ...     print(f"Failure: {e}")
         ...
         >>> slowly_log_failure = ars.tap_failure_to_awaitable(_slowly_log_failure)
-        >>> result = asyncio.run(ars.to_coroutine_result_sequence(
+        >>> result_sequence = asyncio.run(ars.to_coroutine_result_sequence(
         ...     slowly_log_failure(ars.construct_failure("oops"))
         ... ))
         Failure: oops
-        >>> result
+        >>> result_sequence
         ('failure', 'oops')
         >>> asyncio.run(ars.to_coroutine_result_sequence(
         ...     slowly_log_failure(ars.construct_successes_from_sequence([1]))
@@ -1198,10 +1198,12 @@ def tap_failure_to_sequence(
         ...     ]
         ...
         >>> log_and_alert = ars.tap_failure_to_sequence(_log_and_alert)
-        >>> result = asyncio.run(log_and_alert(ars.construct_failure("critical")))
+        >>> result_sequence = asyncio.run(
+        ...     log_and_alert(ars.construct_failure("critical"))
+        ... )
         Failure: critical
         Logged: critical
-        >>> result
+        >>> result_sequence
         ('success', ['critical', 'critical'])
         >>> asyncio.run(log_and_alert(ars.construct_successes_from_sequence([1])))
         ('success', [1])
@@ -1250,12 +1252,12 @@ def tap_successes_to_awaitable(
         ...     print(f"Value: {x}")
         ...
         >>> slowly_log_values = ars.tap_successes_to_awaitable(_slowly_log_value)
-        >>> result = asyncio.run(ars.to_coroutine_result_sequence(
+        >>> result_sequence = asyncio.run(ars.to_coroutine_result_sequence(
         ...     slowly_log_values(ars.construct_successes_from_sequence([1, 2]))
         ... ))
         Value: 1
         Value: 2
-        >>> result
+        >>> result_sequence
         ('success', [1, 2])
     """
 
@@ -1483,12 +1485,12 @@ def tap_successes_to_sequence(
         ...     return [print(f"Received: {n}"), print(f"Received: {n}")]
         ...
         >>> log_twice = ars.tap_successes_to_sequence(_log_twice)
-        >>> result = asyncio.run(ars.to_coroutine_result_sequence(
+        >>> result_sequence = asyncio.run(ars.to_coroutine_result_sequence(
         ...     log_twice(ars.construct_successes_from_sequence([7]))
         ... ))
         Received: 7
         Received: 7
-        >>> result
+        >>> result_sequence
         ('success', [7, 7])
     """
     return a.map_(rs.tap_successes_to_sequence(f))
