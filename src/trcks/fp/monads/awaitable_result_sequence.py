@@ -641,9 +641,9 @@ def map_successes_to_awaitable_result(
         >>> from trcks.fp.monads import awaitable_result_sequence as ars
         >>> async def _slowly_check(x: int) -> Result[str, int]:
         ...     await asyncio.sleep(0.001)
-        ...     if x > 0:
-        ...         return ("success", x * 2)
-        ...     return ("failure", "bad")
+        ...     if x <= 0:
+        ...         return ("failure", "bad")
+        ...     return ("success", x * 2)
         ...
         >>> slowly_check = ars.map_successes_to_awaitable_result(_slowly_check)
         >>> asyncio.run(ars.to_coroutine_result_sequence(
@@ -690,9 +690,9 @@ def map_successes_to_awaitable_result_sequence(
         >>> from trcks.fp.monads import awaitable_result_sequence as ars
         >>> async def _slowly_expand(x: int) -> ResultSequence[str, int]:
         ...     await asyncio.sleep(0.001)
-        ...     if x > 0:
-        ...         return "success", [x, x]
-        ...     return "failure", "bad"
+        ...     if x <= 0:
+        ...         return "failure", "bad"
+        ...     return "success", [x, x]
         ...
         >>> slowly_expand = ars.map_successes_to_awaitable_result_sequence(
         ...     _slowly_expand
@@ -759,9 +759,9 @@ def map_successes_to_result(
         >>> import asyncio
         >>> from trcks.fp.monads import awaitable_result_sequence as ars
         >>> def _double_if_positive(n: int) -> Result[str, int]:
-        ...     if n > 0:
-        ...         return ("success", n * 2)
-        ...     return ("failure", "bad")
+        ...     if n <= 0:
+        ...         return ("failure", "bad")
+        ...     return ("success", n * 2)
         ...
         >>> double_if_positive = ars.map_successes_to_result(_double_if_positive)
         >>> asyncio.run(ars.to_coroutine_result_sequence(
@@ -804,9 +804,9 @@ def map_successes_to_result_sequence(
         >>> import asyncio
         >>> from trcks.fp.monads import awaitable_result_sequence as ars
         >>> def _duplicate_if_positive(n: int) -> ResultSequence[str, int]:
-        ...     if n > 0:
-        ...         return ("success", [n, n])
-        ...     return ("failure", "bad")
+        ...     if n <= 0:
+        ...         return ("failure", "bad")
+        ...     return ("success", [n, n])
         ...
         >>> duplicate_if_positive = ars.map_successes_to_result_sequence(
         ...     _duplicate_if_positive
@@ -1256,9 +1256,9 @@ def tap_successes_to_awaitable_result(
         >>> from trcks.fp.monads import awaitable_result_sequence as ars
         >>> async def _slowly_audit(x: int) -> Result[str, None]:
         ...     await asyncio.sleep(0.001)
-        ...     if x > 0:
-        ...         return ("success", None)
-        ...     return ("failure", "bad")
+        ...     if x <= 0:
+        ...         return ("failure", "bad")
+        ...     return ("success", None)
         ...
         >>> slowly_audit = ars.tap_successes_to_awaitable_result(_slowly_audit)
         >>> asyncio.run(ars.to_coroutine_result_sequence(
@@ -1304,9 +1304,9 @@ def tap_successes_to_awaitable_result_sequence(
         >>> from trcks.fp.monads import awaitable_result_sequence as ars
         >>> async def _slowly_audit(x: int) -> ResultSequence[str, None]:
         ...     await asyncio.sleep(0.001)
-        ...     if x > 0:
-        ...         return ("success", [None, None])
-        ...     return ("failure", "bad")
+        ...     if x <= 0:
+        ...         return ("failure", "bad")
+        ...     return ("success", [None, None])
         ...
         >>> slowly_audit = ars.tap_successes_to_awaitable_result_sequence(_slowly_audit)
         >>> asyncio.run(ars.to_coroutine_result_sequence(
@@ -1357,9 +1357,9 @@ def tap_successes_to_result(
         >>> import asyncio
         >>> from trcks.fp.monads import awaitable_result_sequence as ars
         >>> def _validate_positive(n: int) -> Result[str, None]:
-        ...     if n > 0:
-        ...         return ("success", None)
-        ...     return ("failure", "bad")
+        ...     if n <= 0:
+        ...         return ("failure", "bad")
+        ...     return ("success", None)
         ...
         >>> validate_positive = ars.tap_successes_to_result(_validate_positive)
         >>> asyncio.run(ars.to_coroutine_result_sequence(
@@ -1400,9 +1400,9 @@ def tap_successes_to_result_sequence(
         >>> import asyncio
         >>> from trcks.fp.monads import awaitable_result_sequence as ars
         >>> def _validate_positive_twice(n: int) -> ResultSequence[str, None]:
-        ...     if n > 0:
-        ...         return ("success", [None, None])
-        ...     return ("failure", "bad")
+        ...     if n <= 0:
+        ...         return ("failure", "bad")
+        ...     return ("success", [None, None])
         ...
         >>> validate_positive_twice = ars.tap_successes_to_result_sequence(
         ...     _validate_positive_twice
