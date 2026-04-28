@@ -639,23 +639,29 @@ def map_successes_to_awaitable_result(
         >>> import asyncio
         >>> from trcks import Result
         >>> from trcks.fp.monads import awaitable_result_sequence as ars
-        >>> async def _slowly_check(x: int) -> Result[str, int]:
+        >>> async def _slowly_double_integer_if_positive(x: int) -> Result[str, int]:
         ...     await asyncio.sleep(0.001)
         ...     if x <= 0:
         ...         return ("failure", "bad")
         ...     return ("success", x * 2)
         ...
-        >>> slowly_check = ars.map_successes_to_awaitable_result(_slowly_check)
+        >>> slowly_double_integers_if_positive = ars.map_successes_to_awaitable_result(
+        ...     _slowly_double_integer_if_positive
+        ... )
         >>> asyncio.run(ars.to_coroutine_result_sequence(
-        ...     slowly_check(ars.construct_successes_from_sequence([1, 2]))
+        ...     slowly_double_integers_if_positive(
+        ...         ars.construct_successes_from_sequence([1, 2])
+        ...     )
         ... ))
         ('success', [2, 4])
         >>> asyncio.run(ars.to_coroutine_result_sequence(
-        ...     slowly_check(ars.construct_successes_from_sequence([1, -1, 2]))
+        ...     slowly_double_integers_if_positive(
+        ...         ars.construct_successes_from_sequence([1, -1, 2])
+        ...     )
         ... ))
         ('failure', 'bad')
         >>> asyncio.run(ars.to_coroutine_result_sequence(
-        ...     slowly_check(ars.construct_failure("oops"))
+        ...     slowly_double_integers_if_positive(ars.construct_failure("oops"))
         ... ))
         ('failure', 'oops')
     """
@@ -688,25 +694,33 @@ def map_successes_to_awaitable_result_sequence(
         >>> import asyncio
         >>> from trcks import ResultSequence
         >>> from trcks.fp.monads import awaitable_result_sequence as ars
-        >>> async def _slowly_expand(x: int) -> ResultSequence[str, int]:
+        >>> async def _slowly_duplicate_integer_if_positive(
+        ...     x: int,
+        ... ) -> ResultSequence[str, int]:
         ...     await asyncio.sleep(0.001)
         ...     if x <= 0:
         ...         return "failure", "bad"
         ...     return "success", [x, x]
         ...
-        >>> slowly_expand = ars.map_successes_to_awaitable_result_sequence(
-        ...     _slowly_expand
+        >>> slowly_duplicate_integers_if_positive = (
+        ...     ars.map_successes_to_awaitable_result_sequence(
+        ...         _slowly_duplicate_integer_if_positive
+        ...     )
         ... )
         >>> asyncio.run(ars.to_coroutine_result_sequence(
-        ...     slowly_expand(ars.construct_successes_from_sequence([1, 2]))
+        ...     slowly_duplicate_integers_if_positive(
+        ...         ars.construct_successes_from_sequence([1, 2])
+        ...     )
         ... ))
         ('success', [1, 1, 2, 2])
         >>> asyncio.run(ars.to_coroutine_result_sequence(
-        ...     slowly_expand(ars.construct_successes_from_sequence([1, -1, 2]))
+        ...     slowly_duplicate_integers_if_positive(
+        ...         ars.construct_successes_from_sequence([1, -1, 2])
+        ...     )
         ... ))
         ('failure', 'bad')
         >>> asyncio.run(ars.to_coroutine_result_sequence(
-        ...     slowly_expand(ars.construct_failure("oops"))
+        ...     slowly_duplicate_integers_if_positive(ars.construct_failure("oops"))
         ... ))
         ('failure', 'oops')
     """
@@ -758,22 +772,28 @@ def map_successes_to_result(
     Example:
         >>> import asyncio
         >>> from trcks.fp.monads import awaitable_result_sequence as ars
-        >>> def _double_if_positive(n: int) -> Result[str, int]:
+        >>> def _double_integer_if_positive(n: int) -> Result[str, int]:
         ...     if n <= 0:
         ...         return ("failure", "bad")
         ...     return ("success", n * 2)
         ...
-        >>> double_if_positive = ars.map_successes_to_result(_double_if_positive)
+        >>> double_integers_if_positive = ars.map_successes_to_result(
+        ...     _double_integer_if_positive
+        ... )
         >>> asyncio.run(ars.to_coroutine_result_sequence(
-        ...     double_if_positive(ars.construct_successes_from_sequence([1, 2]))
+        ...     double_integers_if_positive(
+        ...         ars.construct_successes_from_sequence([1, 2])
+        ...     )
         ... ))
         ('success', [2, 4])
         >>> asyncio.run(ars.to_coroutine_result_sequence(
-        ...     double_if_positive(ars.construct_successes_from_sequence([1, -1, 2]))
+        ...     double_integers_if_positive(
+        ...         ars.construct_successes_from_sequence([1, -1, 2])
+        ...     )
         ... ))
         ('failure', 'bad')
         >>> asyncio.run(ars.to_coroutine_result_sequence(
-        ...     double_if_positive(ars.construct_failure("oops"))
+        ...     double_integers_if_positive(ars.construct_failure("oops"))
         ... ))
         ('failure', 'oops')
     """
@@ -803,20 +823,22 @@ def map_successes_to_result_sequence(
     Example:
         >>> import asyncio
         >>> from trcks.fp.monads import awaitable_result_sequence as ars
-        >>> def _duplicate_if_positive(n: int) -> ResultSequence[str, int]:
+        >>> def _duplicate_integer_if_positive(n: int) -> ResultSequence[str, int]:
         ...     if n <= 0:
         ...         return ("failure", "bad")
         ...     return ("success", [n, n])
         ...
-        >>> duplicate_if_positive = ars.map_successes_to_result_sequence(
-        ...     _duplicate_if_positive
+        >>> duplicate_integers_if_positive = ars.map_successes_to_result_sequence(
+        ...     _duplicate_integer_if_positive
         ... )
         >>> asyncio.run(ars.to_coroutine_result_sequence(
-        ...     duplicate_if_positive(ars.construct_successes_from_sequence([1, 2]))
+        ...     duplicate_integers_if_positive(
+        ...         ars.construct_successes_from_sequence([1, 2])
+        ...     )
         ... ))
         ('success', [1, 1, 2, 2])
         >>> asyncio.run(ars.to_coroutine_result_sequence(
-        ...     duplicate_if_positive(ars.construct_failure("oops"))
+        ...     duplicate_integers_if_positive(ars.construct_failure("oops"))
         ... ))
         ('failure', 'oops')
     """
