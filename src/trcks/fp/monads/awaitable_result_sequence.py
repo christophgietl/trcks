@@ -892,17 +892,17 @@ def tap_failure(
     Example:
         >>> import asyncio
         >>> from trcks.fp.monads import awaitable_result_sequence as ars
-        >>> def _log_error(description: str) -> None:
-        ...     print(f"Error: {description}")
+        >>> def _log_failure(description: str) -> None:
+        ...     print(f"Failure: {description}")
         ...
-        >>> log_error = ars.tap_failure(_log_error)
+        >>> log_failure = ars.tap_failure(_log_failure)
         >>> asyncio.run(ars.to_coroutine_result_sequence(
-        ...     log_error(ars.construct_failure("oops"))
+        ...     log_failure(ars.construct_failure("oops"))
         ... ))
-        Error: oops
+        Failure: oops
         ('failure', 'oops')
         >>> asyncio.run(ars.to_coroutine_result_sequence(
-        ...     log_error(ars.construct_successes_from_sequence([1]))
+        ...     log_failure(ars.construct_successes_from_sequence([1]))
         ... ))
         ('success', [1])
     """
@@ -927,18 +927,18 @@ def tap_failure_to_awaitable(
     Example:
         >>> import asyncio
         >>> from trcks.fp.monads import awaitable_result_sequence as ars
-        >>> async def _slowly_log_error(e: str) -> None:
+        >>> async def _slowly_log_failure(e: str) -> None:
         ...     await asyncio.sleep(0.001)
-        ...     print(f"Error: {e}")
+        ...     print(f"Failure: {e}")
         ...
-        >>> slowly_log_error = ars.tap_failure_to_awaitable(_slowly_log_error)
+        >>> slowly_log_failure = ars.tap_failure_to_awaitable(_slowly_log_failure)
         >>> asyncio.run(ars.to_coroutine_result_sequence(
-        ...     slowly_log_error(ars.construct_failure("oops"))
+        ...     slowly_log_failure(ars.construct_failure("oops"))
         ... ))
-        Error: oops
+        Failure: oops
         ('failure', 'oops')
         >>> asyncio.run(ars.to_coroutine_result_sequence(
-        ...     slowly_log_error(ars.construct_successes_from_sequence([1]))
+        ...     slowly_log_failure(ars.construct_successes_from_sequence([1]))
         ... ))
         ('success', [1])
     """
@@ -1180,13 +1180,13 @@ def tap_failure_to_sequence(
         >>> from trcks.fp.monads import awaitable_result_sequence as ars
         >>> def _log_and_alert(description: str) -> list[None]:
         ...     return [
-        ...         print(f"Error: {description}"),
+        ...         print(f"Failure: {description}"),
         ...         print(f"Logged: {description}"),
         ...     ]
         ...
         >>> log_and_alert = ars.tap_failure_to_sequence(_log_and_alert)
         >>> asyncio.run(log_and_alert(ars.construct_failure("critical")))
-        Error: critical
+        Failure: critical
         Logged: critical
         ('success', ['critical', 'critical'])
         >>> asyncio.run(log_and_alert(ars.construct_successes_from_sequence([1])))
