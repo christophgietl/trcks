@@ -897,15 +897,16 @@ def tap_failure(
         ...     print(f"Failure: {description}")
         ...
         >>> log_failure = ars.tap_failure(_log_failure)
-        >>> result_sequence = asyncio.run(ars.to_coroutine_result_sequence(
+        >>> result_sequence_1 = asyncio.run(ars.to_coroutine_result_sequence(
         ...     log_failure(ars.construct_failure("oops"))
         ... ))
         Failure: oops
-        >>> result_sequence
+        >>> result_sequence_1
         ('failure', 'oops')
-        >>> asyncio.run(ars.to_coroutine_result_sequence(
+        >>> result_sequence_2 = asyncio.run(ars.to_coroutine_result_sequence(
         ...     log_failure(ars.construct_successes_from_sequence([1]))
         ... ))
+        >>> result_sequence_2
         ('success', [1])
     """
     return a.map_(rs.tap_failure(f))
@@ -934,15 +935,16 @@ def tap_failure_to_awaitable(
         ...     print(f"Failure: {e}")
         ...
         >>> slowly_log_failure = ars.tap_failure_to_awaitable(_slowly_log_failure)
-        >>> result_sequence = asyncio.run(ars.to_coroutine_result_sequence(
+        >>> result_sequence_1 = asyncio.run(ars.to_coroutine_result_sequence(
         ...     slowly_log_failure(ars.construct_failure("oops"))
         ... ))
         Failure: oops
-        >>> result_sequence
+        >>> result_sequence_1
         ('failure', 'oops')
-        >>> asyncio.run(ars.to_coroutine_result_sequence(
+        >>> result_sequence_2 = asyncio.run(ars.to_coroutine_result_sequence(
         ...     slowly_log_failure(ars.construct_successes_from_sequence([1]))
         ... ))
+        >>> result_sequence_2
         ('success', [1])
     """
 
@@ -1198,14 +1200,17 @@ def tap_failure_to_sequence(
         ...     ]
         ...
         >>> log_and_alert = ars.tap_failure_to_sequence(_log_and_alert)
-        >>> result_sequence = asyncio.run(
+        >>> result_sequence_1 = asyncio.run(
         ...     log_and_alert(ars.construct_failure("critical"))
         ... )
         Failure: critical
         Logged: critical
-        >>> result_sequence
+        >>> result_sequence_1
         ('success', ['critical', 'critical'])
-        >>> asyncio.run(log_and_alert(ars.construct_successes_from_sequence([1])))
+        >>> result_sequence_2 = asyncio.run(
+        ...     log_and_alert(ars.construct_successes_from_sequence([1]))
+        ... )
+        >>> result_sequence_2
         ('success', [1])
     """
     return a.map_(rs.tap_failure_to_sequence(f))
@@ -1225,6 +1230,26 @@ def tap_successes(
     Returns:
         Applies the given side effect and returns the original
             [trcks.AwaitableResultSequence][] value.
+
+    Example:
+        >>> import asyncio
+        >>> from trcks.fp.monads import awaitable_result_sequence as ars
+        >>> def _log_value(x: int) -> None:
+        ...     print(f"Value: {x}")
+        ...
+        >>> log_values = ars.tap_successes(_log_value)
+        >>> result_sequence_1 = asyncio.run(ars.to_coroutine_result_sequence(
+        ...     log_values(ars.construct_successes_from_sequence([1, 2]))
+        ... ))
+        Value: 1
+        Value: 2
+        >>> result_sequence_1
+        ('success', [1, 2])
+        >>> result_sequence_2 = asyncio.run(ars.to_coroutine_result_sequence(
+        ...     log_values(ars.construct_failure("oops"))
+        ... ))
+        >>> result_sequence_2
+        ('failure', 'oops')
     """
     return a.map_(rs.tap_successes(f))
 
@@ -1252,13 +1277,18 @@ def tap_successes_to_awaitable(
         ...     print(f"Value: {x}")
         ...
         >>> slowly_log_values = ars.tap_successes_to_awaitable(_slowly_log_value)
-        >>> result_sequence = asyncio.run(ars.to_coroutine_result_sequence(
+        >>> result_sequence_1 = asyncio.run(ars.to_coroutine_result_sequence(
         ...     slowly_log_values(ars.construct_successes_from_sequence([1, 2]))
         ... ))
         Value: 1
         Value: 2
-        >>> result_sequence
+        >>> result_sequence_1
         ('success', [1, 2])
+        >>> result_sequence_2 = asyncio.run(ars.to_coroutine_result_sequence(
+        ...     slowly_log_values(ars.construct_failure("oops"))
+        ... ))
+        >>> result_sequence_2
+        ('failure', 'oops')
     """
 
     async def bypassed_f(value: _S1) -> _S1:
@@ -1293,21 +1323,27 @@ def tap_successes_to_awaitable_result(
         >>> import asyncio
         >>> from trcks import Result
         >>> from trcks.fp.monads import awaitable_result_sequence as ars
-        >>> async def _slowly_audit(x: int) -> Result[str, None]:
+        >>> async def _validate_positive(x: int) -> Result[str, None]:
         ...     await asyncio.sleep(0.001)
         ...     if x <= 0:
         ...         return ("failure", "bad")
         ...     return ("success", None)
         ...
-        >>> slowly_audit = ars.tap_successes_to_awaitable_result(_slowly_audit)
+        >>> validate_positive = ars.tap_successes_to_awaitable_result(
+        ...     _validate_positive
+        ... )
         >>> asyncio.run(ars.to_coroutine_result_sequence(
-        ...     slowly_audit(ars.construct_successes_from_sequence([1, 2]))
+        ...     validate_positive(ars.construct_successes_from_sequence([1, 2]))
         ... ))
         ('success', [1, 2])
         >>> asyncio.run(ars.to_coroutine_result_sequence(
-        ...     slowly_audit(ars.construct_successes_from_sequence([1, -1]))
+        ...     validate_positive(ars.construct_successes_from_sequence([1, -1]))
         ... ))
         ('failure', 'bad')
+        >>> asyncio.run(ars.to_coroutine_result_sequence(
+        ...     validate_positive(ars.construct_failure("oops"))
+        ... ))
+        ('failure', 'oops')
     """
     return tap_successes_to_awaitable_result_sequence(
         compose2((f, construct_from_awaitable_result))
@@ -1341,21 +1377,27 @@ def tap_successes_to_awaitable_result_sequence(
         >>> import asyncio
         >>> from trcks import ResultSequence
         >>> from trcks.fp.monads import awaitable_result_sequence as ars
-        >>> async def _slowly_audit(x: int) -> ResultSequence[str, None]:
+        >>> async def _validate_positive(x: int) -> ResultSequence[str, None]:
         ...     await asyncio.sleep(0.001)
         ...     if x <= 0:
         ...         return ("failure", "bad")
         ...     return ("success", [None, None])
         ...
-        >>> slowly_audit = ars.tap_successes_to_awaitable_result_sequence(_slowly_audit)
+        >>> validate_positive = ars.tap_successes_to_awaitable_result_sequence(
+        ...     _validate_positive
+        ... )
         >>> asyncio.run(ars.to_coroutine_result_sequence(
-        ...     slowly_audit(ars.construct_successes_from_sequence([7]))
+        ...     validate_positive(ars.construct_successes_from_sequence([7]))
         ... ))
         ('success', [7, 7])
         >>> asyncio.run(ars.to_coroutine_result_sequence(
-        ...     slowly_audit(ars.construct_successes_from_sequence([1, -1]))
+        ...     validate_positive(ars.construct_successes_from_sequence([1, -1]))
         ... ))
         ('failure', 'bad')
+        >>> asyncio.run(ars.to_coroutine_result_sequence(
+        ...     validate_positive(ars.construct_failure("oops"))
+        ... ))
+        ('failure', 'oops')
     """
 
     async def tapped_f(s1: _S1) -> ResultSequence[_F2, _S1]:
@@ -1409,6 +1451,10 @@ def tap_successes_to_result(
         ...     validate_positive(ars.construct_successes_from_sequence([1, -1]))
         ... ))
         ('failure', 'bad')
+        >>> asyncio.run(ars.to_coroutine_result_sequence(
+        ...     validate_positive(ars.construct_failure("oops"))
+        ... ))
+        ('failure', 'oops')
     """
     return a.map_(rs.tap_successes_to_result(f))
 
@@ -1454,6 +1500,10 @@ def tap_successes_to_result_sequence(
         ...     validate_positive_twice(ars.construct_successes_from_sequence([1, -1]))
         ... ))
         ('failure', 'bad')
+        >>> asyncio.run(ars.to_coroutine_result_sequence(
+        ...     validate_positive_twice(ars.construct_failure("oops"))
+        ... ))
+        ('failure', 'oops')
     """
     return a.map_(rs.tap_successes_to_result_sequence(f))
 
