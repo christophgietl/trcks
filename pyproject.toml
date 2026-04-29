@@ -9,7 +9,7 @@ dev = [
     "mkdocs-material==9.7.6",
     "mkdocstrings[python]==1.0.4",
     "mypy", # Check project.optional-dependencies for lower bound.
-    "pre-commit==4.5.1",
+    "pre-commit==4.6.0",
     "pyright[nodejs]", # Check project.optional-dependencies for lower bound.
     "pytest==9.0.3",
     "pytest-asyncio==1.3.0",
