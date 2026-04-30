@@ -4,8 +4,12 @@ This module provides wrapper classes for processing values of the following type
 in a method-chaining style:
 
 - [collections.abc.Awaitable][]
+- [collections.abc.Sequence][]
 - [trcks.AwaitableResult][]
+- [trcks.AwaitableResultSequence][]
+- [trcks.AwaitableSequence][]
 - [trcks.Result][]
+- [trcks.ResultSequence][]
 
 Example:
     This example uses the classes [trcks.oop.Wrapper][] and [trcks.oop.ResultWrapper][]
@@ -72,15 +76,25 @@ See:
 
 from __future__ import annotations
 
-from collections.abc import Awaitable, Callable
+from collections.abc import Awaitable, Callable, Sequence
 from typing import Generic, Literal
 
-from trcks import AwaitableResult, Result
+from trcks import (
+    AwaitableResult,
+    AwaitableResultSequence,
+    AwaitableSequence,
+    Result,
+    ResultSequence,
+)
 from trcks._typing import Never, TypeVar, override
 from trcks.fp.monads import awaitable as a
 from trcks.fp.monads import awaitable_result as ar
+from trcks.fp.monads import awaitable_result_sequence as ars
+from trcks.fp.monads import awaitable_sequence as as_
 from trcks.fp.monads import identity as i
 from trcks.fp.monads import result as r
+from trcks.fp.monads import result_sequence as rs
+from trcks.fp.monads import sequence as s
 
 __docformat__ = "google"
 
@@ -146,7 +160,1693 @@ class _AwaitableWrapper(_Wrapper[Awaitable[_T_co]]):
         return await self.core
 
 
-class AwaitableResultWrapper(_AwaitableWrapper[Result[_F_default_co, _S_default_co]]):
+class _AwaitableResultWrapper(_AwaitableWrapper[Result[_F_default_co, _S_default_co]]):
+    """Base class for all awaitable result wrappers in the [trcks.oop][] module."""
+
+    @property
+    async def track(self) -> Literal["failure", "success"]:
+        """First element of the awaited [trcks.Result][] object.
+
+        Returns:
+            The literal string `"failure"` or `"success"`.
+        """
+        return (await self.core)[0]
+
+    @property
+    async def value(self) -> _F_default_co | _S_default_co:
+        """Second element of the awaited [trcks.Result][] object.
+
+        Returns:
+            The failure or success value.
+        """
+        return (await self.core)[1]
+
+
+class _ResultWrapper(_Wrapper[Result[_F_default_co, _S_default_co]]):
+    """Base class for all result wrappers in the [trcks.oop][] module."""
+
+    @property
+    def track(self) -> Literal["failure", "success"]:
+        """First element of the wrapped [trcks.Result][] object.
+
+        Returns:
+            The literal string `"failure"` or `"success"`.
+        """
+        return self.core[0]
+
+    @property
+    def value(self) -> _F_default_co | _S_default_co:
+        """Second element of the wrapped [trcks.Result][] object.
+
+        Returns:
+            The failure or success value.
+        """
+        return self.core[1]
+
+
+class AwaitableResultSequenceWrapper(
+    _AwaitableResultWrapper[_F_default_co, Sequence[_S_default_co]]
+):
+    """Type-safe and immutable wrapper for [trcks.AwaitableResultSequence][] objects.
+
+    The wrapped object can be accessed
+    via the attribute `trcks.oop.AwaitableResultSequenceWrapper.core`.
+    The `trcks.oop.AwaitableResultSequenceWrapper.map*` methods allow method chaining.
+    The `trcks.oop.AwaitableResultSequenceWrapper.tap*` methods allow for side effects
+    without changing the wrapped [trcks.ResultSequence][].
+
+    Example:
+        >>> import asyncio
+        >>> from trcks import Result
+        >>> from trcks.oop import AwaitableResultSequenceWrapper
+        >>> async def read_from_disk() -> Result[str, int]:
+        ...     await asyncio.sleep(0.001)
+        ...     return "success", 3
+        ...
+        >>> async def main() -> Result[str, list[int]]:
+        ...     return await (
+        ...         AwaitableResultSequenceWrapper
+        ...         .construct_from_awaitable_result(read_from_disk())
+        ...         .map_successes(lambda x: x * 2)
+        ...         .tap_successes(lambda x: print(f"Processed: {x}"))
+        ...         .map_successes_to_sequence(lambda x: [x, -x])
+        ...         .core_as_coroutine
+        ...     )
+        ...
+        >>> asyncio.run(main())
+        Processed: 6
+        ('success', [6, -6])
+    """
+
+    @staticmethod
+    def construct_failure(value: _F) -> AwaitableResultSequenceWrapper[_F, Never]:
+        """Construct and wrap an awaitable [trcks.Failure][] object from a value.
+
+        Args:
+            value: The value to be wrapped.
+
+        Returns:
+            A new [trcks.oop.AwaitableResultSequenceWrapper][] instance with
+                the wrapped [trcks.AwaitableResultSequence][] object.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks.oop import AwaitableResultSequenceWrapper
+            >>> wrapper = AwaitableResultSequenceWrapper.construct_failure("not found")
+            >>> wrapper
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(wrapper.core_as_coroutine)
+            ('failure', 'not found')
+        """
+        return AwaitableResultSequenceWrapper(ars.construct_failure(value))
+
+    @staticmethod
+    def construct_failure_from_awaitable(
+        awtbl: Awaitable[_F],
+    ) -> AwaitableResultSequenceWrapper[_F, Never]:
+        """Construct and wrap an awaitable [trcks.Failure][] from an awaitable value.
+
+        Args:
+            awtbl: The awaitable value to be wrapped.
+
+        Returns:
+            A new [trcks.oop.AwaitableResultSequenceWrapper][] instance with
+                the wrapped [trcks.AwaitableResultSequence][] object.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks.oop import AwaitableResultSequenceWrapper
+            >>> async def get_error() -> str:
+            ...     await asyncio.sleep(0.001)
+            ...     return "not found"
+            ...
+            >>> wrapper = (
+            ...     AwaitableResultSequenceWrapper
+            ...     .construct_failure_from_awaitable(get_error())
+            ... )
+            >>> wrapper
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(wrapper.core_as_coroutine)
+            ('failure', 'not found')
+        """
+        return AwaitableResultSequenceWrapper(
+            ars.construct_failure_from_awaitable(awtbl)
+        )
+
+    @staticmethod
+    def construct_from_awaitable_result(
+        a_rslt: AwaitableResult[_F, _S],
+    ) -> AwaitableResultSequenceWrapper[_F, _S]:
+        """Construct and wrap an [trcks.AwaitableResultSequence][] from an
+        [trcks.AwaitableResult][].
+
+        The success payload is wrapped in a single-element sequence.
+
+        Args:
+            a_rslt: The [trcks.AwaitableResult][] object to be converted.
+
+        Returns:
+            A new [trcks.oop.AwaitableResultSequenceWrapper][] instance where
+                the success payload is wrapped in a single-element sequence,
+                or the original failure is preserved.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks.fp.monads import awaitable_result as ar
+            >>> from trcks.oop import AwaitableResultSequenceWrapper
+            >>> wrapper_1 = (
+            ...     AwaitableResultSequenceWrapper
+            ...     .construct_from_awaitable_result(ar.construct_success(7))
+            ... )
+            >>> wrapper_1
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(wrapper_1.core_as_coroutine)
+            ('success', [7])
+            >>>
+            >>> wrapper_2 = (
+            ...     AwaitableResultSequenceWrapper
+            ...     .construct_from_awaitable_result(ar.construct_failure("oops"))
+            ... )
+            >>> wrapper_2
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(wrapper_2.core_as_coroutine)
+            ('failure', 'oops')
+        """
+        return AwaitableResultSequenceWrapper(
+            ars.construct_from_awaitable_result(a_rslt)
+        )
+
+    @staticmethod
+    def construct_from_result(
+        rslt: Result[_F_default, _S_default],
+    ) -> AwaitableResultSequenceWrapper[_F_default, _S_default]:
+        """Construct and wrap an [trcks.AwaitableResultSequence][] from a
+        [trcks.Result][].
+
+        The success payload is wrapped in a single-element sequence.
+
+        Args:
+            rslt: The [trcks.Result][] object to be converted.
+
+        Returns:
+            A new [trcks.oop.AwaitableResultSequenceWrapper][] instance where
+                the success payload is wrapped in a single-element sequence,
+                or the original failure is preserved.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks.oop import AwaitableResultSequenceWrapper
+            >>> wrapper_1 = (
+            ...     AwaitableResultSequenceWrapper
+            ...     .construct_from_result(("success", 7))
+            ... )
+            >>> wrapper_1
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(wrapper_1.core_as_coroutine)
+            ('success', [7])
+            >>>
+            >>> wrapper_2 = (
+            ...     AwaitableResultSequenceWrapper
+            ...     .construct_from_result(("failure", "oops"))
+            ... )
+            >>> wrapper_2
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(wrapper_2.core_as_coroutine)
+            ('failure', 'oops')
+        """
+        return AwaitableResultSequenceWrapper(ars.construct_from_result(rslt))
+
+    @staticmethod
+    def construct_from_result_sequence(
+        rslt_seq: ResultSequence[_F_default, _S_default],
+    ) -> AwaitableResultSequenceWrapper[_F_default, _S_default]:
+        """Wrap a [trcks.ResultSequence][] object.
+
+        Args:
+            rslt_seq: The [trcks.ResultSequence][] object to be wrapped.
+
+        Returns:
+            A new [trcks.oop.AwaitableResultSequenceWrapper][] instance with
+                the wrapped [trcks.AwaitableResultSequence][] object.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks.oop import AwaitableResultSequenceWrapper
+            >>> wrapper = (
+            ...     AwaitableResultSequenceWrapper
+            ...     .construct_from_result_sequence(("success", [1, 2]))
+            ... )
+            >>> wrapper
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(wrapper.core_as_coroutine)
+            ('success', [1, 2])
+        """
+        return AwaitableResultSequenceWrapper(
+            ars.construct_from_result_sequence(rslt_seq)
+        )
+
+    @staticmethod
+    def construct_successes(value: _S) -> AwaitableResultSequenceWrapper[Never, _S]:
+        """Construct and wrap an awaitable [trcks.SuccessSequence][] from a value.
+
+        Args:
+            value: The value to be wrapped in a single-element sequence.
+
+        Returns:
+            A new [trcks.oop.AwaitableResultSequenceWrapper][] instance with
+                the wrapped [trcks.AwaitableResultSequence][] object.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks.oop import AwaitableResultSequenceWrapper
+            >>> wrapper = AwaitableResultSequenceWrapper.construct_successes(42)
+            >>> wrapper
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(wrapper.core_as_coroutine)
+            ('success', [42])
+        """
+        return AwaitableResultSequenceWrapper(ars.construct_successes(value))
+
+    @staticmethod
+    def construct_successes_from_awaitable(
+        awtbl: Awaitable[_S],
+    ) -> AwaitableResultSequenceWrapper[Never, _S]:
+        """Construct and wrap an awaitable [trcks.SuccessSequence][] from an
+        awaitable value.
+
+        Args:
+            awtbl: The awaitable value to be wrapped in a single-element sequence.
+
+        Returns:
+            A new [trcks.oop.AwaitableResultSequenceWrapper][] instance with
+                the wrapped [trcks.AwaitableResultSequence][] object.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks.oop import AwaitableResultSequenceWrapper
+            >>> async def read_value() -> int:
+            ...     await asyncio.sleep(0.001)
+            ...     return 7
+            ...
+            >>> wrapper = (
+            ...     AwaitableResultSequenceWrapper
+            ...     .construct_successes_from_awaitable(read_value())
+            ... )
+            >>> wrapper
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(wrapper.core_as_coroutine)
+            ('success', [7])
+        """
+        return AwaitableResultSequenceWrapper(
+            ars.construct_successes_from_awaitable(awtbl)
+        )
+
+    @staticmethod
+    def construct_successes_from_sequence(
+        seq: Sequence[_S],
+    ) -> AwaitableResultSequenceWrapper[Never, _S]:
+        """Construct and wrap an awaitable [trcks.SuccessSequence][] from a sequence.
+
+        Args:
+            seq: The sequence to be wrapped.
+
+        Returns:
+            A new [trcks.oop.AwaitableResultSequenceWrapper][] instance with
+                the wrapped [trcks.AwaitableResultSequence][] object.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks.oop import AwaitableResultSequenceWrapper
+            >>> wrapper = (
+            ...     AwaitableResultSequenceWrapper
+            ...     .construct_successes_from_sequence([1, 2])
+            ... )
+            >>> wrapper
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(wrapper.core_as_coroutine)
+            ('success', [1, 2])
+        """
+        return AwaitableResultSequenceWrapper(
+            ars.construct_successes_from_sequence(seq)
+        )
+
+    def map_failure(
+        self, f: Callable[[_F_default_co], _F]
+    ) -> AwaitableResultSequenceWrapper[_F, _S_default_co]:
+        """Apply a synchronous function to the wrapped [trcks.Failure][] object.
+
+        Wrapped [trcks.SuccessSequence][] objects are passed on unchanged.
+
+        Args:
+            f: The synchronous function to be applied.
+
+        Returns:
+            A new [trcks.oop.AwaitableResultSequenceWrapper][] instance with
+
+                - the result of the function application if
+                    the original [trcks.AwaitableResultSequence][] is a failure, or
+                - the original [trcks.AwaitableResultSequence][] if it is a success.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks.oop import AwaitableResultSequenceWrapper
+            >>> wrapper_1 = (
+            ...     AwaitableResultSequenceWrapper
+            ...     .construct_failure("not found")
+            ...     .map_failure(lambda e: f"err: {e}")
+            ... )
+            >>> wrapper_1
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(wrapper_1.core_as_coroutine)
+            ('failure', 'err: not found')
+            >>>
+            >>> wrapper_2 = (
+            ...     AwaitableResultSequenceWrapper
+            ...     .construct_successes_from_sequence([1, 2])
+            ...     .map_failure(lambda e: f"err: {e}")
+            ... )
+            >>> wrapper_2
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(wrapper_2.core_as_coroutine)
+            ('success', [1, 2])
+        """
+        return AwaitableResultSequenceWrapper(ars.map_failure(f)(self.core))
+
+    def map_failure_to_awaitable(
+        self, f: Callable[[_F_default_co], Awaitable[_F]]
+    ) -> AwaitableResultSequenceWrapper[_F, _S_default_co]:
+        """Apply an asynchronous function to the wrapped [trcks.Failure][] object.
+
+        Wrapped [trcks.SuccessSequence][] objects are passed on unchanged.
+
+        Args:
+            f: The asynchronous function to be applied.
+
+        Returns:
+            A new [trcks.oop.AwaitableResultSequenceWrapper][] instance with
+
+                - the result of the function application if
+                    the original [trcks.AwaitableResultSequence][] is a failure, or
+                - the original [trcks.AwaitableResultSequence][] if it is a success.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks.oop import AwaitableResultSequenceWrapper
+            >>> async def slowly_add_prefix(s: str) -> str:
+            ...     await asyncio.sleep(0.001)
+            ...     return f"err: {s}"
+            ...
+            >>> wrapper_1 = (
+            ...     AwaitableResultSequenceWrapper
+            ...     .construct_failure("not found")
+            ...     .map_failure_to_awaitable(slowly_add_prefix)
+            ... )
+            >>> wrapper_1
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(wrapper_1.core_as_coroutine)
+            ('failure', 'err: not found')
+            >>>
+            >>> wrapper_2 = (
+            ...     AwaitableResultSequenceWrapper
+            ...     .construct_successes_from_sequence([1, 2])
+            ...     .map_failure_to_awaitable(slowly_add_prefix)
+            ... )
+            >>> wrapper_2
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(wrapper_2.core_as_coroutine)
+            ('success', [1, 2])
+        """
+        return AwaitableResultSequenceWrapper(
+            ars.map_failure_to_awaitable(f)(self.core)
+        )
+
+    def map_failure_to_awaitable_result_sequence(
+        self, f: Callable[[_F_default_co], AwaitableResultSequence[_F, _S]]
+    ) -> AwaitableResultSequenceWrapper[_F, _S_default_co | _S]:
+        """Apply an asynchronous function with return type
+        [trcks.AwaitableResultSequence][] to the wrapped [trcks.Failure][] object.
+
+        Wrapped [trcks.SuccessSequence][] objects are passed on unchanged.
+
+        Args:
+            f: The asynchronous function to be applied.
+
+        Returns:
+            A new [trcks.oop.AwaitableResultSequenceWrapper][] instance with
+
+                - the result of the function application if
+                    the original [trcks.AwaitableResultSequence][] is a failure, or
+                - the original [trcks.AwaitableResultSequence][] if it is a success.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks.oop import AwaitableResultSequenceWrapper
+            >>> async def slowly_recover(e: str) -> tuple[str, list[int]]:
+            ...     await asyncio.sleep(0.001)
+            ...     if e == "not found":
+            ...         return "success", [0]
+            ...     return "failure", e
+            ...
+            >>> wrapper_1 = (
+            ...     AwaitableResultSequenceWrapper
+            ...     .construct_failure("not found")
+            ...     .map_failure_to_awaitable_result_sequence(slowly_recover)
+            ... )
+            >>> wrapper_1
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(wrapper_1.core_as_coroutine)
+            ('success', [0])
+            >>>
+            >>> wrapper_2 = (
+            ...     AwaitableResultSequenceWrapper
+            ...     .construct_failure("fatal")
+            ...     .map_failure_to_awaitable_result_sequence(slowly_recover)
+            ... )
+            >>> wrapper_2
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(wrapper_2.core_as_coroutine)
+            ('failure', 'fatal')
+            >>>
+            >>> wrapper_3 = (
+            ...     AwaitableResultSequenceWrapper
+            ...     .construct_successes_from_sequence([1, 2])
+            ...     .map_failure_to_awaitable_result_sequence(slowly_recover)
+            ... )
+            >>> wrapper_3
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(wrapper_3.core_as_coroutine)
+            ('success', [1, 2])
+        """
+        return AwaitableResultSequenceWrapper(
+            ars.map_failure_to_awaitable_result_sequence(f)(self.core)
+        )
+
+    def map_failure_to_result(
+        self, f: Callable[[_F_default_co], Result[_F, _S]]
+    ) -> AwaitableResultSequenceWrapper[_F, _S_default_co | _S]:
+        """Apply a synchronous function with return type [trcks.Result][]
+        to the wrapped [trcks.Failure][] object.
+
+        Wrapped [trcks.SuccessSequence][] objects are passed on unchanged.
+
+        Args:
+            f: The synchronous function to be applied.
+
+        Returns:
+            A new [trcks.oop.AwaitableResultSequenceWrapper][] instance with
+
+                - the result of the function application if
+                    the original [trcks.AwaitableResultSequence][] is a failure, or
+                - the original [trcks.AwaitableResultSequence][] if it is a success.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks import Result
+            >>> from trcks.oop import AwaitableResultSequenceWrapper
+            >>> def recover(e: str) -> Result[str, int]:
+            ...     if e == "not found":
+            ...         return "success", 0
+            ...     return "failure", e
+            ...
+            >>> wrapper_1 = (
+            ...     AwaitableResultSequenceWrapper
+            ...     .construct_failure("not found")
+            ...     .map_failure_to_result(recover)
+            ... )
+            >>> wrapper_1
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(wrapper_1.core_as_coroutine)
+            ('success', [0])
+            >>>
+            >>> wrapper_2 = (
+            ...     AwaitableResultSequenceWrapper
+            ...     .construct_successes_from_sequence([1, 2])
+            ...     .map_failure_to_result(recover)
+            ... )
+            >>> wrapper_2
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(wrapper_2.core_as_coroutine)
+            ('success', [1, 2])
+        """
+        return AwaitableResultSequenceWrapper(ars.map_failure_to_result(f)(self.core))
+
+    def map_failure_to_result_sequence(
+        self, f: Callable[[_F_default_co], ResultSequence[_F, _S]]
+    ) -> AwaitableResultSequenceWrapper[_F, _S_default_co | _S]:
+        """Apply a synchronous function with return type [trcks.ResultSequence][]
+        to the wrapped [trcks.Failure][] object.
+
+        Wrapped [trcks.SuccessSequence][] objects are passed on unchanged.
+
+        Args:
+            f: The synchronous function to be applied.
+
+        Returns:
+            A new [trcks.oop.AwaitableResultSequenceWrapper][] instance with
+
+                - the result of the function application if
+                    the original [trcks.AwaitableResultSequence][] is a failure, or
+                - the original [trcks.AwaitableResultSequence][] if it is a success.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks import ResultSequence
+            >>> from trcks.oop import AwaitableResultSequenceWrapper
+            >>> def recover(e: str) -> ResultSequence[str, int]:
+            ...     if e == "not found":
+            ...         return "success", [0]
+            ...     return "failure", e
+            ...
+            >>> wrapper_1 = (
+            ...     AwaitableResultSequenceWrapper
+            ...     .construct_failure("not found")
+            ...     .map_failure_to_result_sequence(recover)
+            ... )
+            >>> wrapper_1
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(wrapper_1.core_as_coroutine)
+            ('success', [0])
+            >>>
+            >>> wrapper_2 = (
+            ...     AwaitableResultSequenceWrapper
+            ...     .construct_successes_from_sequence([1, 2])
+            ...     .map_failure_to_result_sequence(recover)
+            ... )
+            >>> wrapper_2
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(wrapper_2.core_as_coroutine)
+            ('success', [1, 2])
+        """
+        return AwaitableResultSequenceWrapper(
+            ars.map_failure_to_result_sequence(f)(self.core)
+        )
+
+    def map_failure_to_sequence(
+        self, f: Callable[[_F_default_co], Sequence[_S]]
+    ) -> AwaitableResultSequenceWrapper[Never, _S_default_co | _S]:
+        """Apply a synchronous function returning a sequence
+        to the wrapped [trcks.Failure][] object.
+
+        Wrapped [trcks.SuccessSequence][] objects are passed on unchanged.
+
+        Args:
+            f: The synchronous function returning a sequence to be applied.
+
+        Returns:
+            A new [trcks.oop.AwaitableResultSequenceWrapper][] instance with
+
+                - an [trcks.AwaitableSuccessSequence][] containing the result of
+                    the function application if
+                    the original [trcks.AwaitableResultSequence][] is a failure, or
+                - the original [trcks.AwaitableResultSequence][] if it is a success.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks.oop import AwaitableResultSequenceWrapper
+            >>> def recover(e: str) -> list[int]:
+            ...     if e == "not found":
+            ...         return [0]
+            ...     return []
+            ...
+            >>> wrapper_1 = (
+            ...     AwaitableResultSequenceWrapper
+            ...     .construct_failure("not found")
+            ...     .map_failure_to_sequence(recover)
+            ... )
+            >>> wrapper_1
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(wrapper_1.core_as_coroutine)
+            ('success', [0])
+            >>>
+            >>> wrapper_2 = (
+            ...     AwaitableResultSequenceWrapper
+            ...     .construct_successes_from_sequence([1, 2])
+            ...     .map_failure_to_sequence(recover)
+            ... )
+            >>> wrapper_2
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(wrapper_2.core_as_coroutine)
+            ('success', [1, 2])
+        """
+        mapped_f: Callable[
+            [AwaitableResultSequence[_F_default_co, _S_default_co]],
+            AwaitableResultSequence[Never, _S_default_co | _S],
+        ] = ars.map_failure_to_sequence(f)
+        return AwaitableResultSequenceWrapper(mapped_f(self.core))
+
+    def map_successes(
+        self, f: Callable[[_S_default_co], _S]
+    ) -> AwaitableResultSequenceWrapper[_F_default_co, _S]:
+        """Apply a synchronous function to each element in the wrapped
+        [trcks.AwaitableSuccessSequence][].
+
+        Wrapped [trcks.Failure][] objects are passed on unchanged.
+
+        Args:
+            f: The synchronous function to be applied to each success element.
+
+        Returns:
+            A new [trcks.oop.AwaitableResultSequenceWrapper][] instance with
+
+                - the original [trcks.AwaitableResultSequence][] if it is a failure,
+                    or
+                - an [trcks.AwaitableSuccessSequence][] with transformed elements if
+                    the original [trcks.AwaitableResultSequence][] is a success.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks.oop import AwaitableResultSequenceWrapper
+            >>> wrapper_1 = (
+            ...     AwaitableResultSequenceWrapper
+            ...     .construct_failure("not found")
+            ...     .map_successes(lambda x: x * 2)
+            ... )
+            >>> wrapper_1
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(wrapper_1.core_as_coroutine)
+            ('failure', 'not found')
+            >>>
+            >>> wrapper_2 = (
+            ...     AwaitableResultSequenceWrapper
+            ...     .construct_successes_from_sequence([1, 2, 3])
+            ...     .map_successes(lambda x: x * 2)
+            ... )
+            >>> wrapper_2
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(wrapper_2.core_as_coroutine)
+            ('success', [2, 4, 6])
+        """
+        return AwaitableResultSequenceWrapper(ars.map_successes(f)(self.core))
+
+    def map_successes_to_awaitable(
+        self, f: Callable[[_S_default_co], Awaitable[_S]]
+    ) -> AwaitableResultSequenceWrapper[_F_default_co, _S]:
+        """Apply an asynchronous function to each element in the wrapped
+        [trcks.AwaitableSuccessSequence][].
+
+        Wrapped [trcks.Failure][] objects are passed on unchanged.
+
+        Args:
+            f: The asynchronous function to be applied to each success element.
+
+        Returns:
+            A new [trcks.oop.AwaitableResultSequenceWrapper][] instance with
+
+                - the original [trcks.AwaitableResultSequence][] if it is a failure,
+                    or
+                - an [trcks.AwaitableSuccessSequence][] with transformed elements if
+                    the original [trcks.AwaitableResultSequence][] is a success.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks.oop import AwaitableResultSequenceWrapper
+            >>> async def double_slowly(x: int) -> int:
+            ...     await asyncio.sleep(0.001)
+            ...     return x * 2
+            ...
+            >>> wrapper_1 = (
+            ...     AwaitableResultSequenceWrapper
+            ...     .construct_failure("not found")
+            ...     .map_successes_to_awaitable(double_slowly)
+            ... )
+            >>> wrapper_1
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(wrapper_1.core_as_coroutine)
+            ('failure', 'not found')
+            >>>
+            >>> wrapper_2 = (
+            ...     AwaitableResultSequenceWrapper
+            ...     .construct_successes_from_sequence([1, 2, 3])
+            ...     .map_successes_to_awaitable(double_slowly)
+            ... )
+            >>> wrapper_2
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(wrapper_2.core_as_coroutine)
+            ('success', [2, 4, 6])
+        """
+        return AwaitableResultSequenceWrapper(
+            ars.map_successes_to_awaitable(f)(self.core)
+        )
+
+    def map_successes_to_awaitable_result(
+        self, f: Callable[[_S_default_co], AwaitableResult[_F, _S]]
+    ) -> AwaitableResultSequenceWrapper[_F_default_co | _F, _S]:
+        """Apply an asynchronous function with return type [trcks.AwaitableResult][]
+        to each element in the wrapped [trcks.AwaitableSuccessSequence][].
+
+        Wrapped [trcks.Failure][] objects are passed on unchanged.
+        Short-circuits on the first failure returned by the function.
+
+        Args:
+            f: The asynchronous function to be applied to each success element.
+
+        Returns:
+            A new [trcks.oop.AwaitableResultSequenceWrapper][] instance with
+
+                - the original [trcks.AwaitableResultSequence][] if it is a failure,
+                - the first [trcks.Failure][] returned by the function, or
+                - an [trcks.AwaitableSuccessSequence][] with all transformed
+                    elements if the function returns success for all elements.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks import Result
+            >>> from trcks.oop import AwaitableResultSequenceWrapper
+            >>> async def check(x: int) -> Result[str, int]:
+            ...     await asyncio.sleep(0.001)
+            ...     return ("success", x * 2) if x > 0 else ("failure", "bad")
+            ...
+            >>> wrapper_1 = (
+            ...     AwaitableResultSequenceWrapper
+            ...     .construct_successes_from_sequence([1, 2])
+            ...     .map_successes_to_awaitable_result(check)
+            ... )
+            >>> wrapper_1
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(wrapper_1.core_as_coroutine)
+            ('success', [2, 4])
+            >>>
+            >>> wrapper_2 = (
+            ...     AwaitableResultSequenceWrapper
+            ...     .construct_successes_from_sequence([1, -1, 2])
+            ...     .map_successes_to_awaitable_result(check)
+            ... )
+            >>> wrapper_2
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(wrapper_2.core_as_coroutine)
+            ('failure', 'bad')
+        """
+        return AwaitableResultSequenceWrapper(
+            ars.map_successes_to_awaitable_result(f)(self.core)
+        )
+
+    def map_successes_to_awaitable_result_sequence(
+        self, f: Callable[[_S_default_co], AwaitableResultSequence[_F, _S]]
+    ) -> AwaitableResultSequenceWrapper[_F_default_co | _F, _S]:
+        """Apply an asynchronous function with return type
+        [trcks.AwaitableResultSequence][] to each element in the wrapped
+        [trcks.AwaitableSuccessSequence][] and flatten.
+
+        Wrapped [trcks.Failure][] objects are passed on unchanged.
+        Short-circuits on the first failure returned by the function.
+
+        Args:
+            f: The asynchronous function to be applied to each success element.
+
+        Returns:
+            A new [trcks.oop.AwaitableResultSequenceWrapper][] instance with
+
+                - the original [trcks.AwaitableResultSequence][] if it is a failure,
+                - the first [trcks.Failure][] returned by the function, or
+                - a flattened [trcks.AwaitableSuccessSequence][] if the function
+                    returns success for all elements.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks.oop import AwaitableResultSequenceWrapper
+            >>> async def expand(x: int) -> tuple[str, list[int]]:
+            ...     await asyncio.sleep(0.001)
+            ...     if x > 0:
+            ...         return "success", [x, -x]
+            ...     return "failure", "bad"
+            ...
+            >>> wrapper_1 = (
+            ...     AwaitableResultSequenceWrapper
+            ...     .construct_successes_from_sequence([1, 2])
+            ...     .map_successes_to_awaitable_result_sequence(expand)
+            ... )
+            >>> wrapper_1
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(wrapper_1.core_as_coroutine)
+            ('success', [1, -1, 2, -2])
+            >>>
+            >>> wrapper_2 = (
+            ...     AwaitableResultSequenceWrapper
+            ...     .construct_successes_from_sequence([1, -1, 2])
+            ...     .map_successes_to_awaitable_result_sequence(expand)
+            ... )
+            >>> wrapper_2
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(wrapper_2.core_as_coroutine)
+            ('failure', 'bad')
+        """
+        return AwaitableResultSequenceWrapper(
+            ars.map_successes_to_awaitable_result_sequence(f)(self.core)
+        )
+
+    def map_successes_to_result(
+        self, f: Callable[[_S_default_co], Result[_F, _S]]
+    ) -> AwaitableResultSequenceWrapper[_F_default_co | _F, _S]:
+        """Apply a synchronous function with return type [trcks.Result][]
+        to each element in the wrapped [trcks.AwaitableSuccessSequence][].
+
+        Wrapped [trcks.Failure][] objects are passed on unchanged.
+        Short-circuits on the first failure returned by the function.
+
+        Args:
+            f: The synchronous function to be applied to each success element.
+
+        Returns:
+            A new [trcks.oop.AwaitableResultSequenceWrapper][] instance with
+
+                - the original [trcks.AwaitableResultSequence][] if it is a failure,
+                - the first [trcks.Failure][] returned by the function, or
+                - an [trcks.AwaitableSuccessSequence][] with all transformed
+                    elements if the function returns success for all elements.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks import Result
+            >>> from trcks.oop import AwaitableResultSequenceWrapper
+            >>> def check(x: int) -> Result[str, int]:
+            ...     if x > 0:
+            ...         return "success", x * 2
+            ...     return "failure", "bad"
+            ...
+            >>> wrapper_1 = (
+            ...     AwaitableResultSequenceWrapper
+            ...     .construct_successes_from_sequence([1, 2])
+            ...     .map_successes_to_result(check)
+            ... )
+            >>> wrapper_1
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(wrapper_1.core_as_coroutine)
+            ('success', [2, 4])
+            >>>
+            >>> wrapper_2 = (
+            ...     AwaitableResultSequenceWrapper
+            ...     .construct_successes_from_sequence([1, -1, 2])
+            ...     .map_successes_to_result(check)
+            ... )
+            >>> wrapper_2
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(wrapper_2.core_as_coroutine)
+            ('failure', 'bad')
+        """
+        return AwaitableResultSequenceWrapper(ars.map_successes_to_result(f)(self.core))
+
+    def map_successes_to_result_sequence(
+        self, f: Callable[[_S_default_co], ResultSequence[_F, _S]]
+    ) -> AwaitableResultSequenceWrapper[_F_default_co | _F, _S]:
+        """Apply a synchronous function with return type [trcks.ResultSequence][]
+        to each element in the wrapped [trcks.AwaitableSuccessSequence][] and flatten.
+
+        Wrapped [trcks.Failure][] objects are passed on unchanged.
+        Short-circuits on the first failure returned by the function.
+
+        Args:
+            f: The synchronous function to be applied to each success element.
+
+        Returns:
+            A new [trcks.oop.AwaitableResultSequenceWrapper][] instance with
+
+                - the original [trcks.AwaitableResultSequence][] if it is a failure,
+                - the first [trcks.Failure][] returned by the function, or
+                - a flattened [trcks.AwaitableSuccessSequence][] if the function
+                    returns success for all elements.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks import ResultSequence
+            >>> from trcks.oop import AwaitableResultSequenceWrapper
+            >>> def expand(x: int) -> ResultSequence[str, int]:
+            ...     if x > 0:
+            ...         return "success", [x, -x]
+            ...     return "failure", "bad"
+            ...
+            >>> wrapper_1 = (
+            ...     AwaitableResultSequenceWrapper
+            ...     .construct_successes_from_sequence([1, 2])
+            ...     .map_successes_to_result_sequence(expand)
+            ... )
+            >>> wrapper_1
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(wrapper_1.core_as_coroutine)
+            ('success', [1, -1, 2, -2])
+            >>>
+            >>> wrapper_2 = (
+            ...     AwaitableResultSequenceWrapper
+            ...     .construct_successes_from_sequence([1, -1, 2])
+            ...     .map_successes_to_result_sequence(expand)
+            ... )
+            >>> wrapper_2
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(wrapper_2.core_as_coroutine)
+            ('failure', 'bad')
+        """
+        return AwaitableResultSequenceWrapper(
+            ars.map_successes_to_result_sequence(f)(self.core)
+        )
+
+    def map_successes_to_sequence(
+        self, f: Callable[[_S_default_co], Sequence[_S]]
+    ) -> AwaitableResultSequenceWrapper[_F_default_co, _S]:
+        """Apply a synchronous function returning a sequence to each element in
+        the wrapped [trcks.AwaitableSuccessSequence][] and flatten.
+
+        Wrapped [trcks.Failure][] objects are passed on unchanged.
+
+        Args:
+            f: The synchronous function to be applied to each success element.
+
+        Returns:
+            A new [trcks.oop.AwaitableResultSequenceWrapper][] instance with
+
+                - the original [trcks.AwaitableResultSequence][] if it is a failure,
+                    or
+                - a flattened [trcks.AwaitableSuccessSequence][] if
+                    the original [trcks.AwaitableResultSequence][] is a success.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks.oop import AwaitableResultSequenceWrapper
+            >>> wrapper_1 = (
+            ...     AwaitableResultSequenceWrapper
+            ...     .construct_failure("not found")
+            ...     .map_successes_to_sequence(lambda x: [x, -x])
+            ... )
+            >>> wrapper_1
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(wrapper_1.core_as_coroutine)
+            ('failure', 'not found')
+            >>>
+            >>> wrapper_2 = (
+            ...     AwaitableResultSequenceWrapper
+            ...     .construct_successes_from_sequence([1, 2])
+            ...     .map_successes_to_sequence(lambda x: [x, -x])
+            ... )
+            >>> wrapper_2
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(wrapper_2.core_as_coroutine)
+            ('success', [1, -1, 2, -2])
+        """
+        return AwaitableResultSequenceWrapper(
+            ars.map_successes_to_sequence(f)(self.core)
+        )
+
+    def tap_failure(
+        self, f: Callable[[_F_default_co], object]
+    ) -> AwaitableResultSequenceWrapper[_F_default_co, _S_default_co]:
+        """Apply a synchronous side effect to the wrapped [trcks.Failure][] object.
+
+        Wrapped [trcks.SuccessSequence][] objects are passed on without side effects.
+
+        Args:
+            f: The synchronous side effect to be applied.
+
+        Returns:
+            A new [trcks.oop.AwaitableResultSequenceWrapper][] instance
+                with the original [trcks.AwaitableResultSequence][] object,
+                allowing for further method chaining.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks.oop import AwaitableResultSequenceWrapper
+            >>> wrapper_1 = AwaitableResultSequenceWrapper.construct_failure(
+            ...     "oops"
+            ... ).tap_failure(lambda e: print(f"Error: {e}"))
+            >>> wrapper_1
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> result_1 = asyncio.run(wrapper_1.core_as_coroutine)
+            Error: oops
+            >>> result_1
+            ('failure', 'oops')
+            >>> wrapper_2 = AwaitableResultSequenceWrapper.construct_successes(
+            ...     1
+            ... ).tap_failure(lambda e: print(f"Error: {e}"))
+            >>> wrapper_2
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> result_2 = asyncio.run(wrapper_2.core_as_coroutine)
+            >>> result_2
+            ('success', [1])
+        """
+        return AwaitableResultSequenceWrapper(ars.tap_failure(f)(self.core))
+
+    def tap_failure_to_awaitable(
+        self, f: Callable[[_F_default_co], Awaitable[object]]
+    ) -> AwaitableResultSequenceWrapper[_F_default_co, _S_default_co]:
+        """Apply an asynchronous side effect to the wrapped [trcks.Failure][] object.
+
+        Wrapped [trcks.SuccessSequence][] objects are passed on without side effects.
+
+        Args:
+            f: The asynchronous side effect to be applied.
+
+        Returns:
+            A new [trcks.oop.AwaitableResultSequenceWrapper][] instance
+                with the original [trcks.AwaitableResultSequence][] object,
+                allowing for further method chaining.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks.oop import AwaitableResultSequenceWrapper
+            >>> async def log_error(e: str) -> None:
+            ...     await asyncio.sleep(0.001)
+            ...     print(f"Error: {e}")
+            ...
+            >>> wrapper_1 = AwaitableResultSequenceWrapper.construct_failure(
+            ...     "oops"
+            ... ).tap_failure_to_awaitable(log_error)
+            >>> wrapper_1
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> result_1 = asyncio.run(wrapper_1.core_as_coroutine)
+            Error: oops
+            >>> result_1
+            ('failure', 'oops')
+            >>> wrapper_2 = AwaitableResultSequenceWrapper.construct_successes(
+            ...     1
+            ... ).tap_failure_to_awaitable(log_error)
+            >>> wrapper_2
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> result_2 = asyncio.run(wrapper_2.core_as_coroutine)
+            >>> result_2
+            ('success', [1])
+        """
+        return AwaitableResultSequenceWrapper(
+            ars.tap_failure_to_awaitable(f)(self.core)
+        )
+
+    def tap_failure_to_awaitable_result(
+        self, f: Callable[[_F_default_co], AwaitableResult[object, _S]]
+    ) -> AwaitableResultSequenceWrapper[_F_default_co, _S_default_co | _S]:
+        """Apply an asynchronous side effect with return type [trcks.AwaitableResult][]
+        to the wrapped [trcks.Failure][] object.
+
+        Wrapped [trcks.SuccessSequence][] objects are passed on without side effects.
+
+        Args:
+            f: The asynchronous side effect to be applied.
+
+        Returns:
+            A new [trcks.oop.AwaitableResultSequenceWrapper][] instance with
+
+                - *the original* [trcks.Failure][]
+                    if the applied side effect returns a [trcks.Failure][],
+                - *the returned* [trcks.Success][] (wrapped as a sequence)
+                    if the applied side effect returns a [trcks.Success][] and
+                - *the original* [trcks.SuccessSequence][]
+                    if no side effect was applied.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks import Result
+            >>> from trcks.oop import AwaitableResultSequenceWrapper
+            >>> async def retry(e: str) -> Result[str, int]:
+            ...     await asyncio.sleep(0.001)
+            ...     return ("success", 0) if e == "not found" else ("failure", e)
+            ...
+            >>> wrapper_1 = (
+            ...     AwaitableResultSequenceWrapper
+            ...     .construct_failure("not found")
+            ...     .tap_failure_to_awaitable_result(retry)
+            ... )
+            >>> wrapper_1
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(wrapper_1.core_as_coroutine)
+            ('success', [0])
+            >>>
+            >>> wrapper_2 = (
+            ...     AwaitableResultSequenceWrapper
+            ...     .construct_failure("fatal")
+            ...     .tap_failure_to_awaitable_result(retry)
+            ... )
+            >>> wrapper_2
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(wrapper_2.core_as_coroutine)
+            ('failure', 'fatal')
+        """
+        return AwaitableResultSequenceWrapper(
+            ars.tap_failure_to_awaitable_result(f)(self.core)
+        )
+
+    def tap_failure_to_awaitable_result_sequence(
+        self, f: Callable[[_F_default_co], AwaitableResultSequence[object, _S]]
+    ) -> AwaitableResultSequenceWrapper[_F_default_co, _S_default_co | _S]:
+        """Apply an asynchronous side effect with return type
+        [trcks.AwaitableResultSequence][] to the wrapped [trcks.Failure][] object.
+
+        Wrapped [trcks.SuccessSequence][] objects are passed on without side effects.
+
+        Args:
+            f: The asynchronous side effect to be applied.
+
+        Returns:
+            A new [trcks.oop.AwaitableResultSequenceWrapper][] instance with
+
+                - *the original* [trcks.Failure][]
+                    if the applied side effect returns a [trcks.Failure][],
+                - *the returned* [trcks.SuccessSequence][]
+                    if the applied side effect returns a [trcks.SuccessSequence][] and
+                - *the original* [trcks.SuccessSequence][]
+                    if no side effect was applied.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks.oop import AwaitableResultSequenceWrapper
+            >>> async def retry(e: str) -> tuple[str, list[int]]:
+            ...     await asyncio.sleep(0.001)
+            ...     return ("success", [0]) if e == "not found" else ("failure", e)
+            ...
+            >>> wrapper_1 = (
+            ...     AwaitableResultSequenceWrapper
+            ...     .construct_failure("not found")
+            ...     .tap_failure_to_awaitable_result_sequence(retry)
+            ... )
+            >>> wrapper_1
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(wrapper_1.core_as_coroutine)
+            ('success', [0])
+            >>>
+            >>> wrapper_2 = (
+            ...     AwaitableResultSequenceWrapper
+            ...     .construct_failure("fatal")
+            ...     .tap_failure_to_awaitable_result_sequence(retry)
+            ... )
+            >>> wrapper_2
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(wrapper_2.core_as_coroutine)
+            ('failure', 'fatal')
+        """
+        return AwaitableResultSequenceWrapper(
+            ars.tap_failure_to_awaitable_result_sequence(f)(self.core)
+        )
+
+    def tap_failure_to_result(
+        self, f: Callable[[_F_default_co], Result[object, _S]]
+    ) -> AwaitableResultSequenceWrapper[_F_default_co, _S_default_co | _S]:
+        """Apply a synchronous side effect with return type [trcks.Result][]
+        to the wrapped [trcks.Failure][] object.
+
+        Wrapped [trcks.SuccessSequence][] objects are passed on without side effects.
+
+        Args:
+            f: The synchronous side effect to be applied.
+
+        Returns:
+            A new [trcks.oop.AwaitableResultSequenceWrapper][] instance with
+
+                - *the original* [trcks.Failure][]
+                    if the applied side effect returns a [trcks.Failure][],
+                - *the returned* [trcks.Success][] (wrapped as a sequence)
+                    if the applied side effect returns a [trcks.Success][] and
+                - *the original* [trcks.SuccessSequence][]
+                    if no side effect was applied.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks import Result
+            >>> from trcks.oop import AwaitableResultSequenceWrapper
+            >>> def recover(e: str) -> Result[str, int]:
+            ...     return ("success", 0) if e == "not found" else ("failure", e)
+            ...
+            >>> wrapper_1 = (
+            ...     AwaitableResultSequenceWrapper
+            ...     .construct_failure("not found")
+            ...     .tap_failure_to_result(recover)
+            ... )
+            >>> wrapper_1
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(wrapper_1.core_as_coroutine)
+            ('success', [0])
+            >>>
+            >>> wrapper_2 = (
+            ...     AwaitableResultSequenceWrapper
+            ...     .construct_failure("fatal")
+            ...     .tap_failure_to_result(recover)
+            ... )
+            >>> wrapper_2
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(wrapper_2.core_as_coroutine)
+            ('failure', 'fatal')
+        """
+        return AwaitableResultSequenceWrapper(ars.tap_failure_to_result(f)(self.core))
+
+    def tap_failure_to_result_sequence(
+        self, f: Callable[[_F_default_co], ResultSequence[object, _S]]
+    ) -> AwaitableResultSequenceWrapper[_F_default_co, _S_default_co | _S]:
+        """Apply a synchronous side effect with return type [trcks.ResultSequence][]
+        to the wrapped [trcks.Failure][] object.
+
+        Wrapped [trcks.SuccessSequence][] objects are passed on without side effects.
+
+        Args:
+            f: The synchronous side effect to be applied.
+
+        Returns:
+            A new [trcks.oop.AwaitableResultSequenceWrapper][] instance with
+
+                - *the original* [trcks.Failure][]
+                    if the applied side effect returns a [trcks.Failure][],
+                - *the returned* [trcks.SuccessSequence][]
+                    if the applied side effect returns a [trcks.SuccessSequence][] and
+                - *the original* [trcks.SuccessSequence][]
+                    if no side effect was applied.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks import ResultSequence
+            >>> from trcks.oop import AwaitableResultSequenceWrapper
+            >>> def recover(e: str) -> ResultSequence[str, int]:
+            ...     return ("success", [0]) if e == "not found" else ("failure", e)
+            ...
+            >>> wrapper_1 = (
+            ...     AwaitableResultSequenceWrapper
+            ...     .construct_failure("not found")
+            ...     .tap_failure_to_result_sequence(recover)
+            ... )
+            >>> wrapper_1
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(wrapper_1.core_as_coroutine)
+            ('success', [0])
+            >>>
+            >>> wrapper_2 = (
+            ...     AwaitableResultSequenceWrapper
+            ...     .construct_failure("fatal")
+            ...     .tap_failure_to_result_sequence(recover)
+            ... )
+            >>> wrapper_2
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(wrapper_2.core_as_coroutine)
+            ('failure', 'fatal')
+        """
+        return AwaitableResultSequenceWrapper(
+            ars.tap_failure_to_result_sequence(f)(self.core)
+        )
+
+    def tap_failure_to_sequence(
+        self, f: Callable[[_F_default_co], Sequence[object]]
+    ) -> AwaitableResultSequenceWrapper[Never, _F_default_co | _S_default_co]:
+        """Apply a synchronous side effect returning a sequence
+        to the wrapped [trcks.Failure][] object.
+
+        The failure is converted to an [trcks.AwaitableSuccessSequence][] where
+        the original failure value is repeated once per element in
+        the sequence returned by the side effect.
+
+        Wrapped [trcks.SuccessSequence][] objects are passed on without side effects.
+
+        Args:
+            f: The synchronous side effect returning a sequence to be applied.
+
+        Returns:
+            A new [trcks.oop.AwaitableResultSequenceWrapper][] instance with
+
+                - an [trcks.AwaitableSuccessSequence][] containing the original
+                    failure repeated once per element in the sequence returned by
+                    the side effect if the original
+                    [trcks.AwaitableResultSequence][] is a failure, or
+                - the original [trcks.AwaitableSuccessSequence][]
+                    if no side effect was applied.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks.oop import AwaitableResultSequenceWrapper
+            >>> def log_err(e: str) -> list[None]:
+            ...     print(f"Error logged: {e}")
+            ...     print(f"Alert sent: {e}")
+            ...     return [None, None]
+            ...
+            >>> wrapper_1 = (
+            ...     AwaitableResultSequenceWrapper
+            ...     .construct_failure("critical")
+            ...     .tap_failure_to_sequence(log_err)
+            ... )
+            >>> wrapper_1
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> result_1 = asyncio.run(wrapper_1.core_as_coroutine)
+            Error logged: critical
+            Alert sent: critical
+            >>> result_1
+            ('success', ['critical', 'critical'])
+            >>>
+            >>> wrapper_2 = (
+            ...     AwaitableResultSequenceWrapper
+            ...     .construct_successes_from_sequence([1, 2])
+            ...     .tap_failure_to_sequence(log_err)
+            ... )
+            >>> wrapper_2
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(wrapper_2.core_as_coroutine)
+            ('success', [1, 2])
+        """
+        tapped_f: Callable[
+            [AwaitableResultSequence[_F_default_co, _S_default_co]],
+            AwaitableResultSequence[Never, _F_default_co | _S_default_co],
+        ] = ars.tap_failure_to_sequence(f)
+        return AwaitableResultSequenceWrapper(tapped_f(self.core))
+
+    def tap_successes(
+        self, f: Callable[[_S_default_co], object]
+    ) -> AwaitableResultSequenceWrapper[_F_default_co, _S_default_co]:
+        """Apply a synchronous side effect to each element in the wrapped
+        [trcks.AwaitableSuccessSequence][].
+
+        Wrapped [trcks.Failure][] objects are passed on without side effects.
+
+        Args:
+            f: The synchronous side effect to be applied to each success element.
+
+        Returns:
+            A new [trcks.oop.AwaitableResultSequenceWrapper][] instance
+                with the original [trcks.AwaitableResultSequence][] object,
+                allowing for further method chaining.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks.oop import AwaitableResultSequenceWrapper
+            >>> wrapper_1 = AwaitableResultSequenceWrapper.construct_failure(
+            ...     "oops"
+            ... ).tap_successes(lambda x: print(f"Value: {x}"))
+            >>> wrapper_1
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> result_1 = asyncio.run(wrapper_1.core_as_coroutine)
+            >>> result_1
+            ('failure', 'oops')
+            >>> wrapper_2 = (
+            ...     AwaitableResultSequenceWrapper
+            ...     .construct_successes_from_sequence([1, 2])
+            ...     .tap_successes(lambda x: print(f"Value: {x}"))
+            ... )
+            >>> wrapper_2
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> result_2 = asyncio.run(wrapper_2.core_as_coroutine)
+            Value: 1
+            Value: 2
+            >>> result_2
+            ('success', [1, 2])
+        """
+        return AwaitableResultSequenceWrapper(ars.tap_successes(f)(self.core))
+
+    def tap_successes_to_awaitable(
+        self, f: Callable[[_S_default_co], Awaitable[object]]
+    ) -> AwaitableResultSequenceWrapper[_F_default_co, _S_default_co]:
+        """Apply an asynchronous side effect to each element in the wrapped
+        [trcks.AwaitableSuccessSequence][].
+
+        Wrapped [trcks.Failure][] objects are passed on without side effects.
+
+        Args:
+            f: The asynchronous side effect to be applied to each success element.
+
+        Returns:
+            A new [trcks.oop.AwaitableResultSequenceWrapper][] instance
+                with the original [trcks.AwaitableResultSequence][] object,
+                allowing for further method chaining.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks.oop import AwaitableResultSequenceWrapper
+            >>> async def log_value(x: int) -> None:
+            ...     await asyncio.sleep(0.001)
+            ...     print(f"Value: {x}")
+            ...
+            >>> wrapper_1 = AwaitableResultSequenceWrapper.construct_failure(
+            ...     "oops"
+            ... ).tap_successes_to_awaitable(log_value)
+            >>> wrapper_1
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> result_1 = asyncio.run(wrapper_1.core_as_coroutine)
+            >>> result_1
+            ('failure', 'oops')
+            >>> wrapper_2 = (
+            ...     AwaitableResultSequenceWrapper
+            ...     .construct_successes_from_sequence([1, 2])
+            ...     .tap_successes_to_awaitable(log_value)
+            ... )
+            >>> wrapper_2
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> result_2 = asyncio.run(wrapper_2.core_as_coroutine)
+            Value: 1
+            Value: 2
+            >>> result_2
+            ('success', [1, 2])
+        """
+        return AwaitableResultSequenceWrapper(
+            ars.tap_successes_to_awaitable(f)(self.core)
+        )
+
+    def tap_successes_to_awaitable_result(
+        self, f: Callable[[_S_default_co], AwaitableResult[_F, object]]
+    ) -> AwaitableResultSequenceWrapper[_F_default_co | _F, _S_default_co]:
+        """Apply an asynchronous side effect with return type [trcks.AwaitableResult][]
+        to each element in the wrapped [trcks.AwaitableSuccessSequence][].
+
+        Wrapped [trcks.Failure][] objects are passed on without side effects.
+
+        Args:
+            f: The asynchronous side effect to be applied to each success element.
+
+        Returns:
+            A new [trcks.oop.AwaitableResultSequenceWrapper][] instance with
+
+                - *the original* [trcks.Failure][] if no side effect was applied,
+                - *the returned* [trcks.Failure][]
+                    if the applied side effect returns a [trcks.Failure][] and
+                - *the original* [trcks.AwaitableSuccessSequence][]
+                    if the applied side effect returns success for all elements.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks import Result
+            >>> from trcks.oop import AwaitableResultSequenceWrapper
+            >>> async def audit(x: int) -> Result[str, None]:
+            ...     await asyncio.sleep(0.001)
+            ...     return ("success", None) if x > 0 else ("failure", "bad")
+            ...
+            >>> wrapper_1 = (
+            ...     AwaitableResultSequenceWrapper
+            ...     .construct_successes_from_sequence([1, 2])
+            ...     .tap_successes_to_awaitable_result(audit)
+            ... )
+            >>> wrapper_1
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(wrapper_1.core_as_coroutine)
+            ('success', [1, 2])
+            >>>
+            >>> wrapper_2 = (
+            ...     AwaitableResultSequenceWrapper
+            ...     .construct_successes_from_sequence([1, -1])
+            ...     .tap_successes_to_awaitable_result(audit)
+            ... )
+            >>> wrapper_2
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(wrapper_2.core_as_coroutine)
+            ('failure', 'bad')
+        """
+        return AwaitableResultSequenceWrapper(
+            ars.tap_successes_to_awaitable_result(f)(self.core)
+        )
+
+    def tap_successes_to_awaitable_result_sequence(
+        self, f: Callable[[_S_default_co], AwaitableResultSequence[_F, object]]
+    ) -> AwaitableResultSequenceWrapper[_F_default_co | _F, _S_default_co]:
+        """Apply an asynchronous side effect with return type
+        [trcks.AwaitableResultSequence][] to each element in the wrapped
+        [trcks.AwaitableSuccessSequence][].
+
+        Wrapped [trcks.Failure][] objects are passed on without side effects.
+
+        Args:
+            f: The asynchronous side effect to be applied to each success element.
+
+        Returns:
+            A new [trcks.oop.AwaitableResultSequenceWrapper][] instance with
+
+                - *the original* [trcks.Failure][] if no side effect was applied,
+                - *the returned* [trcks.Failure][]
+                    if the applied side effect returns a [trcks.Failure][] and
+                - *the original* success element repeated once per element
+                    in the side effect output if the applied side effect returns
+                    success for all elements.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks.oop import AwaitableResultSequenceWrapper
+            >>> async def audit(x: int) -> tuple[str, list[None]]:
+            ...     await asyncio.sleep(0.001)
+            ...     if x > 0:
+            ...         return ("success", [None, None])
+            ...     return ("failure", "bad")
+            ...
+            >>> wrapper_1 = (
+            ...     AwaitableResultSequenceWrapper
+            ...     .construct_successes(7)
+            ...     .tap_successes_to_awaitable_result_sequence(audit)
+            ... )
+            >>> wrapper_1
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(wrapper_1.core_as_coroutine)
+            ('success', [7, 7])
+            >>>
+            >>> wrapper_2 = (
+            ...     AwaitableResultSequenceWrapper
+            ...     .construct_successes_from_sequence([1, -1])
+            ...     .tap_successes_to_awaitable_result_sequence(audit)
+            ... )
+            >>> wrapper_2
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(wrapper_2.core_as_coroutine)
+            ('failure', 'bad')
+        """
+        return AwaitableResultSequenceWrapper(
+            ars.tap_successes_to_awaitable_result_sequence(f)(self.core)
+        )
+
+    def tap_successes_to_result(
+        self, f: Callable[[_S_default_co], Result[_F, object]]
+    ) -> AwaitableResultSequenceWrapper[_F_default_co | _F, _S_default_co]:
+        """Apply a synchronous side effect with return type [trcks.Result][]
+        to each element in the wrapped [trcks.AwaitableSuccessSequence][].
+
+        Wrapped [trcks.Failure][] objects are passed on without side effects.
+
+        Args:
+            f: The synchronous side effect to be applied to each success element.
+
+        Returns:
+            A new [trcks.oop.AwaitableResultSequenceWrapper][] instance with
+
+                - *the original* [trcks.Failure][] if no side effect was applied,
+                - *the returned* [trcks.Failure][]
+                    if the applied side effect returns a [trcks.Failure][] and
+                - *the original* [trcks.AwaitableSuccessSequence][]
+                    if the applied side effect returns success for all elements.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks import Result
+            >>> from trcks.oop import AwaitableResultSequenceWrapper
+            >>> def audit(x: int) -> Result[str, None]:
+            ...     if x > 0:
+            ...         return "success", None
+            ...     return "failure", "bad"
+            ...
+            >>> wrapper_1 = (
+            ...     AwaitableResultSequenceWrapper
+            ...     .construct_successes_from_sequence([1, 2])
+            ...     .tap_successes_to_result(audit)
+            ... )
+            >>> wrapper_1
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(wrapper_1.core_as_coroutine)
+            ('success', [1, 2])
+            >>>
+            >>> wrapper_2 = (
+            ...     AwaitableResultSequenceWrapper
+            ...     .construct_successes_from_sequence([1, -1])
+            ...     .tap_successes_to_result(audit)
+            ... )
+            >>> wrapper_2
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(wrapper_2.core_as_coroutine)
+            ('failure', 'bad')
+        """
+        return AwaitableResultSequenceWrapper(ars.tap_successes_to_result(f)(self.core))
+
+    def tap_successes_to_result_sequence(
+        self, f: Callable[[_S_default_co], ResultSequence[_F, object]]
+    ) -> AwaitableResultSequenceWrapper[_F_default_co | _F, _S_default_co]:
+        """Apply a synchronous side effect with return type [trcks.ResultSequence][]
+        to each element in the wrapped [trcks.AwaitableSuccessSequence][].
+
+        Wrapped [trcks.Failure][] objects are passed on without side effects.
+
+        Args:
+            f: The synchronous side effect to be applied to each success element.
+
+        Returns:
+            A new [trcks.oop.AwaitableResultSequenceWrapper][] instance with
+
+                - *the original* [trcks.Failure][] if no side effect was applied,
+                - *the returned* [trcks.Failure][]
+                    if the applied side effect returns a [trcks.Failure][] and
+                - *the original* success element repeated once per element
+                    in the side effect output if the applied side effect returns
+                    success for all elements.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks import ResultSequence
+            >>> from trcks.oop import AwaitableResultSequenceWrapper
+            >>> def audit(x: int) -> ResultSequence[str, None]:
+            ...     if x > 0:
+            ...         return "success", [None, None]
+            ...     return "failure", "bad"
+            ...
+            >>> wrapper_1 = (
+            ...     AwaitableResultSequenceWrapper
+            ...     .construct_successes(7)
+            ...     .tap_successes_to_result_sequence(audit)
+            ... )
+            >>> wrapper_1
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(wrapper_1.core_as_coroutine)
+            ('success', [7, 7])
+            >>>
+            >>> wrapper_2 = (
+            ...     AwaitableResultSequenceWrapper
+            ...     .construct_successes_from_sequence([1, -1])
+            ...     .tap_successes_to_result_sequence(audit)
+            ... )
+            >>> wrapper_2
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(wrapper_2.core_as_coroutine)
+            ('failure', 'bad')
+        """
+        return AwaitableResultSequenceWrapper(
+            ars.tap_successes_to_result_sequence(f)(self.core)
+        )
+
+    def tap_successes_to_sequence(
+        self, f: Callable[[_S_default_co], Sequence[object]]
+    ) -> AwaitableResultSequenceWrapper[_F_default_co, _S_default_co]:
+        """Apply a synchronous side effect returning a sequence to each element in
+        the wrapped [trcks.AwaitableSuccessSequence][].
+
+        The original success elements are repeated once per element in the sequence
+        returned by the side effect.
+
+        Wrapped [trcks.Failure][] objects are passed on without side effects.
+
+        Args:
+            f: The synchronous side effect returning a sequence to be applied
+                to each success element.
+
+        Returns:
+            A new [trcks.oop.AwaitableResultSequenceWrapper][] instance with
+
+                - the original [trcks.Failure][] if no side effect was applied, or
+                - an [trcks.AwaitableSuccessSequence][] where each original element
+                    is repeated once per element in the sequence returned by the
+                    side effect.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks.oop import AwaitableResultSequenceWrapper
+            >>> def log_mult(x: int) -> list[None]:
+            ...     print(f"v={x}")
+            ...     print(f"v={x}")
+            ...     return [None, None]
+            ...
+            >>> wrapper_1 = (
+            ...     AwaitableResultSequenceWrapper
+            ...     .construct_successes(7)
+            ...     .tap_successes_to_sequence(log_mult)
+            ... )
+            >>> wrapper_1
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> result_1 = asyncio.run(wrapper_1.core_as_coroutine)
+            v=7
+            v=7
+            >>> result_1
+            ('success', [7, 7])
+        """
+        return AwaitableResultSequenceWrapper(
+            ars.tap_successes_to_sequence(f)(self.core)
+        )
+
+
+class AwaitableResultWrapper(_AwaitableResultWrapper[_F_default_co, _S_default_co]):
     """Type-safe and immutable wrapper for [trcks.AwaitableResult][] objects.
 
     The wrapped object can be accessed
@@ -505,6 +2205,60 @@ class AwaitableResultWrapper(_AwaitableWrapper[Result[_F_default_co, _S_default_
         """
         return AwaitableResultWrapper(ar.map_failure_to_awaitable_result(f)(self.core))
 
+    def map_failure_to_awaitable_result_sequence(
+        self, f: Callable[[_F_default_co], AwaitableResultSequence[_F, _S]]
+    ) -> AwaitableResultSequenceWrapper[_F, _S_default_co | _S]:
+        """Apply an asynchronous function with return type
+        [trcks.ResultSequence][] to the wrapped [trcks.Failure][] object.
+
+        Wrapped [trcks.Success][] objects are passed on unchanged.
+
+        Args:
+            f: The asynchronous function to be applied.
+
+        Returns:
+            A new [trcks.oop.AwaitableResultSequenceWrapper][] instance with
+
+                - the result of the function application if
+                    the original [trcks.AwaitableResult][] is a failure, or
+                - the original [trcks.AwaitableResult][] if it is a success.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks import AwaitableResultSequence
+            >>> from trcks.oop import AwaitableResultWrapper
+            >>> async def recover(
+            ...     e: str,
+            ... ) -> AwaitableResultSequence[str, float]:
+            ...     await asyncio.sleep(0.001)
+            ...     if e == "not found":
+            ...         return "success", [0.0, 1.0]
+            ...     return "failure", e
+            ...
+            >>> wrapper_1 = (
+            ...     AwaitableResultWrapper
+            ...     .construct_failure("not found")
+            ...     .map_failure_to_awaitable_result_sequence(recover)
+            ... )
+            >>> wrapper_1
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(wrapper_1.core_as_coroutine)
+            ('success', [0.0, 1.0])
+            >>>
+            >>> wrapper_2 = (
+            ...     AwaitableResultWrapper
+            ...     .construct_success(25.0)
+            ...     .map_failure_to_awaitable_result_sequence(recover)
+            ... )
+            >>> wrapper_2
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(wrapper_2.core_as_coroutine)
+            ('success', [25.0])
+        """
+        return AwaitableResultSequenceWrapper.construct_from_awaitable_result(
+            self.core
+        ).map_failure_to_awaitable_result_sequence(f)
+
     def map_failure_to_result(
         self, f: Callable[[_F_default_co], Result[_F, _S]]
     ) -> AwaitableResultWrapper[_F, _S_default_co | _S]:
@@ -563,6 +2317,110 @@ class AwaitableResultWrapper(_AwaitableWrapper[Result[_F_default_co, _S_default_
             ('success', 25.0)
         """
         return AwaitableResultWrapper(ar.map_failure_to_result(f)(self.core))
+
+    def map_failure_to_result_sequence(
+        self, f: Callable[[_F_default_co], ResultSequence[_F, _S]]
+    ) -> AwaitableResultSequenceWrapper[_F, _S_default_co | _S]:
+        """Apply a synchronous function with return type [trcks.ResultSequence][]
+        to the wrapped [trcks.Failure][] object.
+
+        Wrapped [trcks.Success][] objects are passed on unchanged.
+
+        Args:
+            f: The synchronous function to be applied.
+
+        Returns:
+            A new [trcks.oop.AwaitableResultSequenceWrapper][] instance with
+
+                - the result of the function application if
+                    the original [trcks.AwaitableResult][] is a failure, or
+                - the original [trcks.AwaitableResult][] if it is a success.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks import ResultSequence
+            >>> from trcks.oop import AwaitableResultWrapper
+            >>> def recover(e: str) -> ResultSequence[str, float]:
+            ...     if e == "not found":
+            ...         return "success", [0.0, 1.0]
+            ...     return "failure", e
+            ...
+            >>> wrapper_1 = (
+            ...     AwaitableResultWrapper
+            ...     .construct_failure("not found")
+            ...     .map_failure_to_result_sequence(recover)
+            ... )
+            >>> wrapper_1
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(wrapper_1.core_as_coroutine)
+            ('success', [0.0, 1.0])
+            >>>
+            >>> wrapper_2 = (
+            ...     AwaitableResultWrapper
+            ...     .construct_success(25.0)
+            ...     .map_failure_to_result_sequence(recover)
+            ... )
+            >>> wrapper_2
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(wrapper_2.core_as_coroutine)
+            ('success', [25.0])
+        """
+        return AwaitableResultSequenceWrapper.construct_from_awaitable_result(
+            self.core
+        ).map_failure_to_result_sequence(f)
+
+    def map_failure_to_sequence(
+        self, f: Callable[[_F_default_co], Sequence[_S]]
+    ) -> AwaitableResultSequenceWrapper[Never, _S_default_co | _S]:
+        """Apply a synchronous function returning a [collections.abc.Sequence][]
+        to the wrapped [trcks.Failure][] object.
+
+        The failure is converted to a [trcks.SuccessSequence][].
+        Wrapped [trcks.Success][] objects are passed on unchanged.
+
+        Args:
+            f: The synchronous function to be applied,
+                returning a [collections.abc.Sequence][].
+
+        Returns:
+            A [trcks.oop.AwaitableResultSequenceWrapper][] instance with
+
+                - a [trcks.SuccessSequence][] containing the result of the
+                    function application if
+                    the original [trcks.AwaitableResult][] is a failure, or
+                - the original [trcks.AwaitableResult][] if it is a success.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks.oop import AwaitableResultWrapper
+            >>> def recover(e: str) -> list[float]:
+            ...     if e == "not found":
+            ...         return [0.0, 1.0]
+            ...     return []
+            ...
+            >>> wrapper_1 = (
+            ...     AwaitableResultWrapper
+            ...     .construct_failure("not found")
+            ...     .map_failure_to_sequence(recover)
+            ... )
+            >>> wrapper_1
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(wrapper_1.core_as_coroutine)
+            ('success', [0.0, 1.0])
+            >>>
+            >>> wrapper_2 = (
+            ...     AwaitableResultWrapper
+            ...     .construct_success(25.0)
+            ...     .map_failure_to_sequence(recover)
+            ... )
+            >>> wrapper_2
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(wrapper_2.core_as_coroutine)
+            ('success', [25.0])
+        """
+        return AwaitableResultSequenceWrapper.construct_from_awaitable_result(
+            self.core
+        ).map_failure_to_sequence(f)
 
     def map_success(
         self, f: Callable[[_S_default_co], _S]
@@ -714,6 +2572,60 @@ class AwaitableResultWrapper(_AwaitableWrapper[Result[_F_default_co, _S_default_
         """
         return AwaitableResultWrapper(ar.map_success_to_awaitable_result(f)(self.core))
 
+    def map_success_to_awaitable_result_sequence(
+        self, f: Callable[[_S_default_co], AwaitableResultSequence[_F, _S]]
+    ) -> AwaitableResultSequenceWrapper[_F_default_co | _F, _S]:
+        """Apply an asynchronous function with return type
+        [trcks.ResultSequence][] to the wrapped [trcks.Success][] object.
+
+        Wrapped [trcks.Failure][] objects are passed on unchanged.
+
+        Args:
+            f: The asynchronous function to be applied.
+
+        Returns:
+            A new [trcks.oop.AwaitableResultSequenceWrapper][] instance with
+
+                - the original [trcks.AwaitableResult][] if it is a failure, or
+                - the result of the function application if
+                    the original [trcks.AwaitableResult][] is a success.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks import AwaitableResultSequence
+            >>> from trcks.oop import AwaitableResultWrapper
+            >>> async def expand(
+            ...     x: float,
+            ... ) -> AwaitableResultSequence[str, float]:
+            ...     await asyncio.sleep(0.001)
+            ...     if x < 0:
+            ...         return "failure", "negative"
+            ...     return "success", [x, x * 2]
+            ...
+            >>> wrapper_1 = (
+            ...     AwaitableResultWrapper
+            ...     .construct_failure("not found")
+            ...     .map_success_to_awaitable_result_sequence(expand)
+            ... )
+            >>> wrapper_1
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(wrapper_1.core_as_coroutine)
+            ('failure', 'not found')
+            >>>
+            >>> wrapper_2 = (
+            ...     AwaitableResultWrapper
+            ...     .construct_success(5.0)
+            ...     .map_success_to_awaitable_result_sequence(expand)
+            ... )
+            >>> wrapper_2
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(wrapper_2.core_as_coroutine)
+            ('success', [5.0, 10.0])
+        """
+        return AwaitableResultSequenceWrapper.construct_from_awaitable_result(
+            self.core
+        ).map_successes_to_awaitable_result_sequence(f)
+
     def map_success_to_result(
         self, f: Callable[[_S_default_co], Result[_F, _S]]
     ) -> AwaitableResultWrapper[_F_default_co | _F, _S]:
@@ -773,6 +2685,107 @@ class AwaitableResultWrapper(_AwaitableWrapper[Result[_F_default_co, _S_default_
             ('success', 5.0)
         """
         return AwaitableResultWrapper(ar.map_success_to_result(f)(self.core))
+
+    def map_success_to_result_sequence(
+        self, f: Callable[[_S_default_co], ResultSequence[_F, _S]]
+    ) -> AwaitableResultSequenceWrapper[_F_default_co | _F, _S]:
+        """Apply a synchronous function with return type [trcks.ResultSequence][]
+        to the wrapped [trcks.Success][] object.
+
+        Wrapped [trcks.Failure][] objects are passed on unchanged.
+
+        Args:
+            f: The synchronous function to be applied.
+
+        Returns:
+            A new [trcks.oop.AwaitableResultSequenceWrapper][] instance with
+
+                - the original [trcks.AwaitableResult][] if it is a failure, or
+                - the result of the function application if
+                    the original [trcks.AwaitableResult][] is a success.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks import ResultSequence
+            >>> from trcks.oop import AwaitableResultWrapper
+            >>> def expand(x: float) -> ResultSequence[str, float]:
+            ...     if x < 0:
+            ...         return "failure", "negative"
+            ...     return "success", [x, x * 2]
+            ...
+            >>> wrapper_1 = (
+            ...     AwaitableResultWrapper
+            ...     .construct_failure("not found")
+            ...     .map_success_to_result_sequence(expand)
+            ... )
+            >>> wrapper_1
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(wrapper_1.core_as_coroutine)
+            ('failure', 'not found')
+            >>>
+            >>> wrapper_2 = (
+            ...     AwaitableResultWrapper
+            ...     .construct_success(5.0)
+            ...     .map_success_to_result_sequence(expand)
+            ... )
+            >>> wrapper_2
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(wrapper_2.core_as_coroutine)
+            ('success', [5.0, 10.0])
+        """
+        return AwaitableResultSequenceWrapper.construct_from_awaitable_result(
+            self.core
+        ).map_successes_to_result_sequence(f)
+
+    def map_success_to_sequence(
+        self, f: Callable[[_S_default_co], Sequence[_S]]
+    ) -> AwaitableResultSequenceWrapper[_F_default_co, _S]:
+        """Apply a synchronous function returning a [collections.abc.Sequence][]
+        to the wrapped [trcks.Success][] object.
+
+        Wrapped [trcks.Failure][] objects are passed on unchanged.
+
+        Args:
+            f: The synchronous function to be applied,
+                returning a [collections.abc.Sequence][].
+
+        Returns:
+            A [trcks.oop.AwaitableResultSequenceWrapper][] instance with
+
+                - the original [trcks.AwaitableResult][] if it is a failure, or
+                - an awaitable [trcks.SuccessSequence][] containing the result
+                    of the function application if
+                    the original [trcks.AwaitableResult][] is a success.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks.oop import AwaitableResultWrapper
+            >>> def duplicate(x: float) -> list[float]:
+            ...     return [x, x]
+            ...
+            >>> wrapper_1 = (
+            ...     AwaitableResultWrapper
+            ...     .construct_failure("not found")
+            ...     .map_success_to_sequence(duplicate)
+            ... )
+            >>> wrapper_1
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(wrapper_1.core_as_coroutine)
+            ('failure', 'not found')
+            >>>
+            >>> wrapper_2 = (
+            ...     AwaitableResultWrapper
+            ...     .construct_success(5.0)
+            ...     .map_success_to_sequence(duplicate)
+            ... )
+            >>> wrapper_2
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(wrapper_2.core_as_coroutine)
+            ('success', [5.0, 5.0])
+        """
+        return AwaitableResultSequenceWrapper.construct_from_awaitable_result(
+            self.core
+        ).map_successes_to_sequence(f)
 
     def tap_failure(
         self, f: Callable[[_F_default_co], object]
@@ -876,6 +2889,63 @@ class AwaitableResultWrapper(_AwaitableWrapper[Result[_F_default_co, _S_default_
         """
         return AwaitableResultWrapper(ar.tap_failure_to_awaitable_result(f)(self.core))
 
+    def tap_failure_to_awaitable_result_sequence(
+        self, f: Callable[[_F_default_co], AwaitableResultSequence[object, _S]]
+    ) -> AwaitableResultSequenceWrapper[_F_default_co, _S_default_co | _S]:
+        """Apply an asynchronous side effect with return type
+        [trcks.ResultSequence][] to the wrapped [trcks.Failure][] object.
+
+        Wrapped [trcks.Success][] objects are passed on without side effects.
+
+        Args:
+            f: The asynchronous side effect to be applied.
+
+        Returns:
+            A new [trcks.oop.AwaitableResultSequenceWrapper][] instance with
+
+                - *the original* [trcks.Failure][]
+                    if the applied side effect returns a [trcks.Failure][],
+                - *the returned* [trcks.SuccessSequence][]
+                    if the applied side effect returns a [trcks.SuccessSequence][]
+                    and
+                - *the original* [trcks.Success][] if no side effect was applied.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks import AwaitableResultSequence
+            >>> from trcks.oop import AwaitableResultWrapper
+            >>> async def recover(
+            ...     e: str,
+            ... ) -> AwaitableResultSequence[object, float]:
+            ...     await asyncio.sleep(0.001)
+            ...     if e == "not found":
+            ...         return "success", [0.0, 1.0]
+            ...     return "failure", e
+            ...
+            >>> wrapper_1 = (
+            ...     AwaitableResultWrapper
+            ...     .construct_failure("not found")
+            ...     .tap_failure_to_awaitable_result_sequence(recover)
+            ... )
+            >>> wrapper_1
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(wrapper_1.core_as_coroutine)
+            ('success', [0.0, 1.0])
+            >>>
+            >>> wrapper_2 = (
+            ...     AwaitableResultWrapper
+            ...     .construct_success(42)
+            ...     .tap_failure_to_awaitable_result_sequence(recover)
+            ... )
+            >>> wrapper_2
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(wrapper_2.core_as_coroutine)
+            ('success', [42])
+        """
+        return AwaitableResultSequenceWrapper.construct_from_awaitable_result(
+            self.core
+        ).tap_failure_to_awaitable_result_sequence(f)
+
     def tap_failure_to_result(
         self, f: Callable[[_F_default_co], Result[object, _S]]
     ) -> AwaitableResultWrapper[_F_default_co, _S_default_co | _S]:
@@ -936,6 +3006,118 @@ class AwaitableResultWrapper(_AwaitableWrapper[Result[_F_default_co, _S_default_
             ('success', 42)
         """
         return AwaitableResultWrapper(ar.tap_failure_to_result(f)(self.core))
+
+    def tap_failure_to_result_sequence(
+        self, f: Callable[[_F_default_co], ResultSequence[object, _S]]
+    ) -> AwaitableResultSequenceWrapper[_F_default_co, _S_default_co | _S]:
+        """Apply a synchronous side effect with return type [trcks.ResultSequence][]
+        to the wrapped [trcks.Failure][] object.
+
+        Wrapped [trcks.Success][] objects are passed on without side effects.
+
+        Args:
+            f: The synchronous side effect to be applied.
+
+        Returns:
+            A new [trcks.oop.AwaitableResultSequenceWrapper][] instance with
+
+                - *the original* [trcks.Failure][]
+                    if the applied side effect returns a [trcks.Failure][],
+                - *the returned* [trcks.SuccessSequence][]
+                    if the applied side effect returns a [trcks.SuccessSequence][]
+                    and
+                - *the original* [trcks.Success][] if no side effect was applied.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks import ResultSequence
+            >>> from trcks.oop import AwaitableResultWrapper
+            >>> def recover(e: str) -> ResultSequence[object, float]:
+            ...     if e == "not found":
+            ...         return "success", [0.0, 1.0]
+            ...     return "failure", e
+            ...
+            >>> wrapper_1 = (
+            ...     AwaitableResultWrapper
+            ...     .construct_failure("not found")
+            ...     .tap_failure_to_result_sequence(recover)
+            ... )
+            >>> wrapper_1
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(wrapper_1.core_as_coroutine)
+            ('success', [0.0, 1.0])
+            >>>
+            >>> wrapper_2 = (
+            ...     AwaitableResultWrapper
+            ...     .construct_success(42)
+            ...     .tap_failure_to_result_sequence(recover)
+            ... )
+            >>> wrapper_2
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(wrapper_2.core_as_coroutine)
+            ('success', [42])
+        """
+        return AwaitableResultSequenceWrapper.construct_from_awaitable_result(
+            self.core
+        ).tap_failure_to_result_sequence(f)
+
+    def tap_failure_to_sequence(
+        self, f: Callable[[_F_default_co], Sequence[object]]
+    ) -> AwaitableResultSequenceWrapper[Never, _F_default_co | _S_default_co]:
+        """Apply a synchronous side effect returning a [collections.abc.Sequence][]
+        to the wrapped [trcks.Failure][] object.
+
+        The failure is converted to a [trcks.SuccessSequence][] where
+        the original failure value is repeated once per element in
+        the sequence returned by the side effect.
+
+        Wrapped [trcks.Success][] objects are passed on without side effects.
+
+        Args:
+            f: The synchronous side effect to be applied.
+
+        Returns:
+            A new [trcks.oop.AwaitableResultSequenceWrapper][] instance with
+
+                - a [trcks.SuccessSequence][] containing the original failure
+                    repeated once per element returned by the side effect
+                    if the original [trcks.AwaitableResult][] is a failure, or
+                - the original [trcks.AwaitableResult][] if it is a success.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks.oop import AwaitableResultWrapper
+            >>> def log_err(e: str) -> list[None]:
+            ...     print(f"Error logged: {e}")
+            ...     print(f"Alert sent: {e}")
+            ...     return [None, None]
+            ...
+            >>> wrapper_1 = (
+            ...     AwaitableResultWrapper
+            ...     .construct_failure("critical")
+            ...     .tap_failure_to_sequence(log_err)
+            ... )
+            >>> wrapper_1
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> result_1 = asyncio.run(wrapper_1.core_as_coroutine)
+            Error logged: critical
+            Alert sent: critical
+            >>> result_1
+            ('success', ['critical', 'critical'])
+            >>>
+            >>> wrapper_2 = (
+            ...     AwaitableResultWrapper
+            ...     .construct_success(42)
+            ...     .tap_failure_to_sequence(log_err)
+            ... )
+            >>> wrapper_2
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(wrapper_2.core_as_coroutine)
+            ('success', [42])
+        """
+        return AwaitableResultSequenceWrapper.construct_from_awaitable_result(
+            self.core
+        ).tap_failure_to_sequence(f)
 
     def tap_success(
         self, f: Callable[[_S_default_co], object]
@@ -1092,6 +3274,64 @@ class AwaitableResultWrapper(_AwaitableWrapper[Result[_F_default_co, _S_default_
         """
         return AwaitableResultWrapper(ar.tap_success_to_awaitable_result(f)(self.core))
 
+    def tap_success_to_awaitable_result_sequence(
+        self, f: Callable[[_S_default_co], AwaitableResultSequence[_F, object]]
+    ) -> AwaitableResultSequenceWrapper[_F_default_co | _F, _S_default_co]:
+        """Apply an asynchronous side effect with return type
+        [trcks.ResultSequence][] to the wrapped [trcks.Success][] object.
+
+        Wrapped [trcks.Failure][] objects are passed on without side effects.
+
+        Args:
+            f: The asynchronous side effect to be applied.
+
+        Returns:
+            A new [trcks.oop.AwaitableResultSequenceWrapper][] instance with
+
+                - *the original* [trcks.Failure][] if no side effect was applied,
+                - *the returned* [trcks.Failure][]
+                    if the applied side effect returns a [trcks.Failure][] and
+                - *the original* [trcks.Success][] repeated once per element
+                    in the returned [trcks.SuccessSequence][]
+                    if the applied side effect returns a [trcks.SuccessSequence][].
+
+        Example:
+            >>> import asyncio
+            >>> from trcks import AwaitableResultSequence
+            >>> from trcks.oop import AwaitableResultWrapper
+            >>> async def write_twice(
+            ...     s: str,
+            ... ) -> AwaitableResultSequence[str, None]:
+            ...     await asyncio.sleep(0.001)
+            ...     print(f"Wrote '{s}' twice.")
+            ...     return "success", [None, None]
+            ...
+            >>> wrapper_1 = (
+            ...     AwaitableResultWrapper
+            ...     .construct_failure("missing text")
+            ...     .tap_success_to_awaitable_result_sequence(write_twice)
+            ... )
+            >>> wrapper_1
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(wrapper_1.core_as_coroutine)
+            ('failure', 'missing text')
+            >>>
+            >>> wrapper_2 = (
+            ...     AwaitableResultWrapper
+            ...     .construct_success("Hello, world!")
+            ...     .tap_success_to_awaitable_result_sequence(write_twice)
+            ... )
+            >>> wrapper_2
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> result_2 = asyncio.run(wrapper_2.core_as_coroutine)
+            Wrote 'Hello, world!' twice.
+            >>> result_2
+            ('success', ['Hello, world!', 'Hello, world!'])
+        """
+        return AwaitableResultSequenceWrapper.construct_from_awaitable_result(
+            self.core
+        ).tap_successes_to_awaitable_result_sequence(f)
+
     def tap_success_to_result(
         self, f: Callable[[_S_default_co], Result[_F, object]]
     ) -> AwaitableResultWrapper[_F_default_co | _F, _S_default_co]:
@@ -1114,37 +3354,490 @@ class AwaitableResultWrapper(_AwaitableWrapper[Result[_F_default_co, _S_default_
         """
         return AwaitableResultWrapper(ar.tap_success_to_result(f)(self.core))
 
-    @property
-    async def track(self) -> Literal["failure", "success"]:
-        """First element of the awaited attribute
-        `trcks.oop.AwaitableResultWrapper.core`.
+    def tap_success_to_result_sequence(
+        self, f: Callable[[_S_default_co], ResultSequence[_F, object]]
+    ) -> AwaitableResultSequenceWrapper[_F_default_co | _F, _S_default_co]:
+        """Apply a synchronous side effect with return type [trcks.ResultSequence][]
+        to the wrapped [trcks.Success][] object.
+
+        Wrapped [trcks.Failure][] objects are passed on without side effects.
+
+        Args:
+            f: The synchronous side effect to be applied.
+
+        Returns:
+            A new [trcks.oop.AwaitableResultSequenceWrapper][] instance with
+
+                - *the original* [trcks.Failure][] if no side effect was applied,
+                - *the returned* [trcks.Failure][]
+                    if the applied side effect returns a [trcks.Failure][] and
+                - *the original* [trcks.Success][] repeated once per element
+                    in the returned [trcks.SuccessSequence][]
+                    if the applied side effect returns a [trcks.SuccessSequence][].
+
+        Example:
+            >>> import asyncio
+            >>> from trcks import ResultSequence
+            >>> from trcks.oop import AwaitableResultWrapper
+            >>> def audit(s: str) -> ResultSequence[str, None]:
+            ...     if s:
+            ...         return "success", [None, None]
+            ...     return "failure", "empty"
+            ...
+            >>> wrapper_1 = (
+            ...     AwaitableResultWrapper
+            ...     .construct_failure("missing")
+            ...     .tap_success_to_result_sequence(audit)
+            ... )
+            >>> wrapper_1
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(wrapper_1.core_as_coroutine)
+            ('failure', 'missing')
+            >>>
+            >>> wrapper_2 = (
+            ...     AwaitableResultWrapper
+            ...     .construct_success("Hello, world!")
+            ...     .tap_success_to_result_sequence(audit)
+            ... )
+            >>> wrapper_2
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(wrapper_2.core_as_coroutine)
+            ('success', ['Hello, world!', 'Hello, world!'])
+        """
+        return AwaitableResultSequenceWrapper.construct_from_awaitable_result(
+            self.core
+        ).tap_successes_to_result_sequence(f)
+
+    def tap_success_to_sequence(
+        self, f: Callable[[_S_default_co], Sequence[object]]
+    ) -> AwaitableResultSequenceWrapper[_F_default_co, _S_default_co]:
+        """Apply a synchronous side effect returning a [collections.abc.Sequence][]
+        to the wrapped [trcks.Success][] object.
+
+        The original success value is repeated once per element
+        in the sequence returned by the side effect.
+
+        Wrapped [trcks.Failure][] objects are passed on without side effects.
+
+        Args:
+            f: The synchronous side effect to be applied,
+                returning a [collections.abc.Sequence][].
+
+        Returns:
+            A [trcks.oop.AwaitableResultSequenceWrapper][] instance with
+
+                - *the original* [trcks.Failure][] if no side effect was applied, or
+                - an awaitable [trcks.SuccessSequence][] where the original element
+                    is repeated once per element in the sequence returned by the
+                    side effect.
 
         Example:
             >>> import asyncio
             >>> from trcks.oop import AwaitableResultWrapper
-            >>> track_coroutine = AwaitableResultWrapper.construct_failure(42).track
-            >>> track_coroutine
-            <coroutine object ...>
-            >>> asyncio.run(track_coroutine)
-            'failure'
+            >>> def log_mult(x: int) -> list[None]:
+            ...     print(f"v={x}")
+            ...     print(f"v={x}")
+            ...     return [None, None]
+            ...
+            >>> wrapper_1 = (
+            ...     AwaitableResultWrapper
+            ...     .construct_failure("error")
+            ...     .tap_success_to_sequence(log_mult)
+            ... )
+            >>> wrapper_1
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(wrapper_1.core_as_coroutine)
+            ('failure', 'error')
+            >>>
+            >>> wrapper_2 = (
+            ...     AwaitableResultWrapper
+            ...     .construct_success(7)
+            ...     .tap_success_to_sequence(log_mult)
+            ... )
+            >>> wrapper_2
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> result_2 = asyncio.run(wrapper_2.core_as_coroutine)
+            v=7
+            v=7
+            >>> result_2
+            ('success', [7, 7])
         """
-        return (await self.core)[0]
+        return AwaitableResultSequenceWrapper.construct_from_awaitable_result(
+            self.core
+        ).tap_successes_to_sequence(f)
 
-    @property
-    async def value(self) -> _F_default_co | _S_default_co:
-        """Second element of the awaited attribute
-        `trcks.oop.AwaitableResultWrapper.core`.
+
+class AwaitableSequenceWrapper(_AwaitableWrapper[Sequence[_T_co]]):
+    """Type-safe and immutable wrapper for [trcks.AwaitableSequence][] objects.
+
+    The wrapped object can be accessed
+    via the attribute `trcks.oop.AwaitableSequenceWrapper.core`.
+    The `trcks.oop.AwaitableSequenceWrapper.map*` methods allow method chaining.
+    The `trcks.oop.AwaitableSequenceWrapper.tap*` methods allow for side effects
+    without changing the wrapped sequence.
+
+    Example:
+        >>> import asyncio
+        >>> from collections.abc import Sequence
+        >>> from trcks.oop import AwaitableSequenceWrapper
+        >>> async def double(x: int) -> int:
+        ...     await asyncio.sleep(0.001)
+        ...     return x * 2
+        ...
+        >>> async def main() -> Sequence[int]:
+        ...     awaitable_sequence_wrapper = (
+        ...         AwaitableSequenceWrapper
+        ...         .construct_from_sequence((1, 2, 3))
+        ...         .map_to_awaitable(double)
+        ...     )
+        ...     return await awaitable_sequence_wrapper.core_as_coroutine
+        ...
+        >>> asyncio.run(main())
+        [2, 4, 6]
+    """
+
+    @staticmethod
+    def construct(value: _T) -> AwaitableSequenceWrapper[_T]:
+        """Construct and wrap a [trcks.AwaitableSequence][] object from a value.
+
+        Args:
+            value: The value to be wrapped.
+
+        Returns:
+            A new [trcks.oop.AwaitableSequenceWrapper][] instance with
+                the wrapped [trcks.AwaitableSequence][] object.
 
         Example:
             >>> import asyncio
-            >>> from trcks.oop import AwaitableResultWrapper
-            >>> value_coroutine = AwaitableResultWrapper.construct_failure(42).value
-            >>> value_coroutine
-            <coroutine object ...>
-            >>> asyncio.run(value_coroutine)
-            42
+            >>> from trcks.oop import AwaitableSequenceWrapper
+            >>> awaitable_sequence_wrapper = AwaitableSequenceWrapper.construct(42)
+            >>> awaitable_sequence_wrapper
+            AwaitableSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(awaitable_sequence_wrapper.core_as_coroutine)
+            [42]
         """
-        return (await self.core)[1]
+        return AwaitableSequenceWrapper(as_.construct(value))
+
+    @staticmethod
+    def construct_from_awaitable(
+        awtbl: Awaitable[_T],
+    ) -> AwaitableSequenceWrapper[_T]:
+        """Construct and wrap a [trcks.AwaitableSequence][] from an awaitable value.
+
+        Args:
+            awtbl: The awaitable value to be wrapped.
+
+        Returns:
+            A new [trcks.oop.AwaitableSequenceWrapper][] instance with
+                the wrapped [trcks.AwaitableSequence][] object.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks.oop import AwaitableSequenceWrapper
+            >>> async def get_value() -> int:
+            ...     await asyncio.sleep(0.001)
+            ...     return 7
+            ...
+            >>> awaitable_sequence_wrapper = (
+            ...     AwaitableSequenceWrapper
+            ...     .construct_from_awaitable(get_value())
+            ... )
+            >>> awaitable_sequence_wrapper
+            AwaitableSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(awaitable_sequence_wrapper.core_as_coroutine)
+            [7]
+        """
+        return AwaitableSequenceWrapper(as_.construct_from_awaitable(awtbl))
+
+    @staticmethod
+    def construct_from_sequence(
+        seq: Sequence[_T],
+    ) -> AwaitableSequenceWrapper[_T]:
+        """Construct and wrap a [trcks.AwaitableSequence][] from a sequence.
+
+        Args:
+            seq: The sequence to be wrapped.
+
+        Returns:
+            A new [trcks.oop.AwaitableSequenceWrapper][] instance with
+                the wrapped [trcks.AwaitableSequence][] object.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks.oop import AwaitableSequenceWrapper
+            >>> awaitable_sequence_wrapper = (
+            ...     AwaitableSequenceWrapper
+            ...     .construct_from_sequence((1, 2, 3))
+            ... )
+            >>> awaitable_sequence_wrapper
+            AwaitableSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(awaitable_sequence_wrapper.core_as_coroutine)
+            (1, 2, 3)
+        """
+        return AwaitableSequenceWrapper(as_.construct_from_sequence(seq))
+
+    def map(self, f: Callable[[_T_co], _T]) -> AwaitableSequenceWrapper[_T]:
+        """Apply a synchronous function to each element in the wrapped
+        [trcks.AwaitableSequence][] object.
+
+        Args:
+            f: The synchronous function to be applied to each element.
+
+        Returns:
+            A new [trcks.oop.AwaitableSequenceWrapper][] instance with
+                the wrapped [trcks.AwaitableSequence][] object containing
+                the results of applying the function to each element.
+
+        Example:
+            >>> import asyncio
+            >>> from collections.abc import Sequence
+            >>> from trcks.oop import AwaitableSequenceWrapper
+            >>> async def main() -> Sequence[int]:
+            ...     return await (
+            ...         AwaitableSequenceWrapper
+            ...         .construct_from_sequence((1, 2, 3))
+            ...         .map(lambda x: x * 2)
+            ...         .core_as_coroutine
+            ...     )
+            ...
+            >>> asyncio.run(main())
+            [2, 4, 6]
+        """
+        return AwaitableSequenceWrapper(as_.map_(f)(self.core))
+
+    def map_to_awaitable(
+        self, f: Callable[[_T_co], Awaitable[_T]]
+    ) -> AwaitableSequenceWrapper[_T]:
+        """Apply an asynchronous function to each element in the wrapped
+        [trcks.AwaitableSequence][] object.
+
+        Args:
+            f: The asynchronous function to be applied to each element.
+
+        Returns:
+            A new [trcks.oop.AwaitableSequenceWrapper][] instance with
+                the wrapped [trcks.AwaitableSequence][] object containing
+                the results of applying the function to each element.
+
+        Example:
+            >>> import asyncio
+            >>> from collections.abc import Sequence
+            >>> from trcks.oop import AwaitableSequenceWrapper
+            >>> async def add_one(x: int) -> int:
+            ...     await asyncio.sleep(0.001)
+            ...     return x + 1
+            ...
+            >>> async def main() -> Sequence[int]:
+            ...     return await (
+            ...         AwaitableSequenceWrapper
+            ...         .construct_from_sequence((1, 2, 3))
+            ...         .map_to_awaitable(add_one)
+            ...         .core_as_coroutine
+            ...     )
+            ...
+            >>> asyncio.run(main())
+            [2, 3, 4]
+        """
+        return AwaitableSequenceWrapper(as_.map_to_awaitable(f)(self.core))
+
+    def map_to_awaitable_sequence(
+        self, f: Callable[[_T_co], AwaitableSequence[_T]]
+    ) -> AwaitableSequenceWrapper[_T]:
+        """Apply an asynchronous function returning a [collections.abc.Sequence][]
+        to each element in the wrapped [trcks.AwaitableSequence][] and flatten.
+
+        Args:
+            f: The asynchronous function to be applied to each element,
+                returning a [trcks.AwaitableSequence][].
+
+        Returns:
+            A new [trcks.oop.AwaitableSequenceWrapper][] instance with
+                the flattened [trcks.AwaitableSequence][] object.
+
+        Example:
+            >>> import asyncio
+            >>> from collections.abc import Sequence
+            >>> from trcks.oop import AwaitableSequenceWrapper
+            >>> async def duplicate(x: int) -> list[int]:
+            ...     await asyncio.sleep(0.001)
+            ...     return [x, x]
+            ...
+            >>> async def main() -> Sequence[int]:
+            ...     return await (
+            ...         AwaitableSequenceWrapper
+            ...         .construct_from_sequence((1, 2))
+            ...         .map_to_awaitable_sequence(duplicate)
+            ...         .core_as_coroutine
+            ...     )
+            ...
+            >>> asyncio.run(main())
+            [1, 1, 2, 2]
+        """
+        return AwaitableSequenceWrapper(as_.map_to_awaitable_sequence(f)(self.core))
+
+    def map_to_sequence(
+        self, f: Callable[[_T_co], Sequence[_T]]
+    ) -> AwaitableSequenceWrapper[_T]:
+        """Apply a synchronous function returning a sequence to each element in
+        the wrapped [trcks.AwaitableSequence][] object and flatten.
+
+        Args:
+            f: The synchronous function to be applied to each element,
+                returning a sequence.
+
+        Returns:
+            A new [trcks.oop.AwaitableSequenceWrapper][] instance with
+                the flattened [trcks.AwaitableSequence][] object.
+
+        Example:
+            >>> import asyncio
+            >>> from collections.abc import Sequence
+            >>> from trcks.oop import AwaitableSequenceWrapper
+            >>> async def main() -> Sequence[int]:
+            ...     return await (
+            ...         AwaitableSequenceWrapper
+            ...         .construct_from_sequence((1, 2, 3))
+            ...         .map_to_sequence(lambda x: (x, -x))
+            ...         .core_as_coroutine
+            ...     )
+            ...
+            >>> asyncio.run(main())
+            [1, -1, 2, -2, 3, -3]
+        """
+        return AwaitableSequenceWrapper(as_.map_to_sequence(f)(self.core))
+
+    def tap(self, f: Callable[[_T_co], object]) -> AwaitableSequenceWrapper[_T_co]:
+        """Apply a synchronous side effect to each element in the wrapped
+        [trcks.AwaitableSequence][] object.
+
+        Args:
+            f: The synchronous side effect to be applied to each element.
+
+        Returns:
+            A new [trcks.oop.AwaitableSequenceWrapper][] instance with
+                the original [trcks.AwaitableSequence][] object.
+
+        Example:
+            >>> import asyncio
+            >>> from collections.abc import Sequence
+            >>> from trcks.oop import AwaitableSequenceWrapper
+            >>> async def main() -> Sequence[int]:
+            ...     return await (
+            ...         AwaitableSequenceWrapper
+            ...         .construct_from_sequence((1, 2, 3))
+            ...         .tap(lambda x: print(f"Processing: {x}"))
+            ...         .core_as_coroutine
+            ...     )
+            ...
+            >>> asyncio.run(main())
+            Processing: 1
+            Processing: 2
+            Processing: 3
+            [1, 2, 3]
+        """
+        return AwaitableSequenceWrapper(as_.tap(f)(self.core))
+
+    def tap_to_awaitable(
+        self, f: Callable[[_T_co], Awaitable[object]]
+    ) -> AwaitableSequenceWrapper[_T_co]:
+        """Apply an asynchronous side effect to each element in the wrapped
+        [trcks.AwaitableSequence][] object.
+
+        Args:
+            f: The asynchronous side effect to be applied to each element.
+
+        Returns:
+            A new [trcks.oop.AwaitableSequenceWrapper][] instance with
+                the original [trcks.AwaitableSequence][] object.
+
+        Example:
+            >>> import asyncio
+            >>> from collections.abc import Sequence
+            >>> from trcks.oop import AwaitableSequenceWrapper
+            >>> async def log_async(x: int) -> None:
+            ...     await asyncio.sleep(0.001)
+            ...     print(f"Logged: {x}")
+            ...
+            >>> async def main() -> Sequence[int]:
+            ...     return await (
+            ...         AwaitableSequenceWrapper
+            ...         .construct_from_sequence((1, 2))
+            ...         .tap_to_awaitable(log_async)
+            ...         .core_as_coroutine
+            ...     )
+            ...
+            >>> asyncio.run(main())
+            Logged: 1
+            Logged: 2
+            [1, 2]
+        """
+        return AwaitableSequenceWrapper(as_.tap_to_awaitable(f)(self.core))
+
+    def tap_to_awaitable_sequence(
+        self, f: Callable[[_T_co], AwaitableSequence[object]]
+    ) -> AwaitableSequenceWrapper[_T_co]:
+        """Apply an asynchronous side effect returning a [trcks.AwaitableSequence][]
+        to each element in the wrapped [trcks.AwaitableSequence][] object.
+
+        Args:
+            f: The asynchronous side effect to be applied to each element,
+                returning a [trcks.AwaitableSequence][].
+
+        Returns:
+            A new [trcks.oop.AwaitableSequenceWrapper][] instance with
+                the original [trcks.AwaitableSequence][] object.
+
+        Example:
+            >>> import asyncio
+            >>> from collections.abc import Sequence
+            >>> from trcks.oop import AwaitableSequenceWrapper
+            >>> async def echo_twice(x: int) -> list[str]:
+            ...     await asyncio.sleep(0.001)
+            ...     return [str(x), str(x)]
+            ...
+            >>> async def main() -> Sequence[int]:
+            ...     return await (
+            ...         AwaitableSequenceWrapper
+            ...         .construct_from_sequence((1, 2))
+            ...         .tap_to_awaitable_sequence(echo_twice)
+            ...         .core_as_coroutine
+            ...     )
+            ...
+            >>> asyncio.run(main())
+            [1, 1, 2, 2]
+        """
+        return AwaitableSequenceWrapper(as_.tap_to_awaitable_sequence(f)(self.core))
+
+    def tap_to_sequence(
+        self, f: Callable[[_T_co], Sequence[object]]
+    ) -> AwaitableSequenceWrapper[_T_co]:
+        """Apply a synchronous side effect returning a sequence to each element in
+        the wrapped [trcks.AwaitableSequence][] object.
+
+        Args:
+            f: The synchronous side effect to be applied to each element,
+                returning a sequence.
+
+        Returns:
+            A new [trcks.oop.AwaitableSequenceWrapper][] instance with
+                the original [trcks.AwaitableSequence][] object.
+
+        Example:
+            >>> import asyncio
+            >>> from collections.abc import Sequence
+            >>> from trcks.oop import AwaitableSequenceWrapper
+            >>> async def main() -> Sequence[int]:
+            ...     return await (
+            ...         AwaitableSequenceWrapper
+            ...         .construct_from_sequence((1, 2))
+            ...         .tap_to_sequence(lambda x: (x, x))
+            ...         .core_as_coroutine
+            ...     )
+            ...
+            >>> asyncio.run(main())
+            [1, 1, 2, 2]
+        """
+        return AwaitableSequenceWrapper(as_.tap_to_sequence(f)(self.core))
 
 
 class AwaitableWrapper(_AwaitableWrapper[_T_co]):
@@ -1339,6 +4032,80 @@ class AwaitableWrapper(_AwaitableWrapper[_T_co]):
             self.core
         ).map_success_to_awaitable_result(f)
 
+    def map_to_awaitable_result_sequence(
+        self, f: Callable[[_T_co], AwaitableResultSequence[_F, _S]]
+    ) -> AwaitableResultSequenceWrapper[_F, _S]:
+        """Apply an asynchronous function with return type
+        [trcks.ResultSequence][] to the wrapped
+        [collections.abc.Awaitable][] object.
+
+        Args:
+            f: The asynchronous function to be applied.
+
+        Returns:
+            A [trcks.oop.AwaitableResultSequenceWrapper][] instance with
+                the result of the function application.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks import AwaitableResultSequence
+            >>> from trcks.oop import AwaitableWrapper
+            >>> async def validate(
+            ...     x: float,
+            ... ) -> AwaitableResultSequence[str, float]:
+            ...     await asyncio.sleep(0.001)
+            ...     if x < 0:
+            ...         return "failure", "negative value"
+            ...     return "success", [x, x * 2]
+            ...
+            >>> wrapper = (
+            ...     AwaitableWrapper
+            ...     .construct(5.0)
+            ...     .map_to_awaitable_result_sequence(validate)
+            ... )
+            >>> wrapper
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(wrapper.core_as_coroutine)
+            ('success', [5.0, 10.0])
+        """
+        return AwaitableResultSequenceWrapper.construct_successes_from_awaitable(
+            self.core
+        ).map_successes_to_awaitable_result_sequence(f)
+
+    def map_to_awaitable_sequence(
+        self, f: Callable[[_T_co], AwaitableSequence[_T]]
+    ) -> AwaitableSequenceWrapper[_T]:
+        """Apply an asynchronous function returning a [collections.abc.Sequence][]
+        to the wrapped [collections.abc.Awaitable][] object.
+
+        Args:
+            f: The asynchronous function to be applied, returning an awaitable
+                [collections.abc.Sequence][].
+
+        Returns:
+            A new [trcks.oop.AwaitableSequenceWrapper][] instance with
+                the result of the function application.
+
+        Example:
+            >>> import asyncio
+            >>> from collections.abc import Sequence
+            >>> from trcks.oop import AwaitableWrapper
+            >>> async def duplicate_async(x: int) -> Sequence[int]:
+            ...     await asyncio.sleep(0.001)
+            ...     return [x, x]
+            ...
+            >>> awaitable_sequence_wrapper = (
+            ...     AwaitableWrapper
+            ...     .construct(21)
+            ...     .map_to_awaitable_sequence(duplicate_async)
+            ... )
+            >>> awaitable_sequence_wrapper
+            AwaitableSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(awaitable_sequence_wrapper.core_as_coroutine)
+            [21, 21]
+        """
+        return AwaitableSequenceWrapper(a.map_to_awaitable(f)(self.core))
+
     def map_to_result(
         self, f: Callable[[_T_co], Result[_F, _S]]
     ) -> AwaitableResultWrapper[_F, _S]:
@@ -1372,6 +4139,69 @@ class AwaitableWrapper(_AwaitableWrapper[_T_co]):
         return AwaitableResultWrapper.construct_success_from_awaitable(
             self.core
         ).map_success_to_result(f)
+
+    def map_to_result_sequence(
+        self, f: Callable[[_T_co], ResultSequence[_F, _S]]
+    ) -> AwaitableResultSequenceWrapper[_F, _S]:
+        """Apply a synchronous function with return type [trcks.ResultSequence][]
+        to the wrapped [collections.abc.Awaitable][] object.
+
+        Args:
+            f: The synchronous function to be applied.
+
+        Returns:
+            A [trcks.oop.AwaitableResultSequenceWrapper][] instance with
+                the result of the function application.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks import ResultSequence
+            >>> from trcks.oop import AwaitableWrapper
+            >>> def validate(x: float) -> ResultSequence[str, float]:
+            ...     if x < 0:
+            ...         return "failure", "negative value"
+            ...     return "success", [x, x * 2]
+            ...
+            >>> wrapper = AwaitableWrapper.construct(5.0).map_to_result_sequence(
+            ...     validate
+            ... )
+            >>> wrapper
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(wrapper.core_as_coroutine)
+            ('success', [5.0, 10.0])
+        """
+        return AwaitableResultSequenceWrapper.construct_successes_from_awaitable(
+            self.core
+        ).map_successes_to_result_sequence(f)
+
+    def map_to_sequence(
+        self, f: Callable[[_T_co], Sequence[_T]]
+    ) -> AwaitableSequenceWrapper[_T]:
+        """Apply a synchronous function returning a [collections.abc.Sequence][]
+        to the wrapped [collections.abc.Awaitable][] object.
+
+        Args:
+            f: The synchronous function to be applied.
+
+        Returns:
+            A new [trcks.oop.AwaitableSequenceWrapper][] instance with
+                the result of the function application.
+
+        Example:
+            >>> import asyncio
+            >>> from collections.abc import Sequence
+            >>> from trcks.oop import AwaitableWrapper
+            >>> awaitable_sequence_wrapper = (
+            ...     AwaitableWrapper
+            ...     .construct(3)
+            ...     .map_to_sequence(lambda x: [x, -x])
+            ... )
+            >>> awaitable_sequence_wrapper
+            AwaitableSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(awaitable_sequence_wrapper.core_as_coroutine)
+            [3, -3]
+        """
+        return AwaitableSequenceWrapper(a.map_(f)(self.core))
 
     def tap(self, f: Callable[[_T_co], object]) -> AwaitableWrapper[_T_co]:
         """Apply a synchronous side effect
@@ -1476,6 +4306,90 @@ class AwaitableWrapper(_AwaitableWrapper[_T_co]):
             self.core
         ).tap_success_to_awaitable_result(f)
 
+    def tap_to_awaitable_result_sequence(
+        self, f: Callable[[_T_co], AwaitableResultSequence[_F, object]]
+    ) -> AwaitableResultSequenceWrapper[_F, _T_co]:
+        """Apply an asynchronous side effect with return type
+        [trcks.ResultSequence][] to the wrapped
+        [collections.abc.Awaitable][] object.
+
+        Args:
+            f: The asynchronous side effect to be applied.
+
+        Returns:
+            A [trcks.oop.AwaitableResultSequenceWrapper][] instance with
+
+                - *the returned* [trcks.Failure][]
+                    if the given side effect returns a [trcks.Failure][] or
+                - *the original* wrapped object repeated once per element
+                    in the side effect output if the given side effect
+                    returns [trcks.SuccessSequence][].
+
+        Example:
+            >>> import asyncio
+            >>> from trcks import AwaitableResultSequence
+            >>> from trcks.oop import AwaitableWrapper
+            >>> async def write_twice(
+            ...     s: str,
+            ... ) -> AwaitableResultSequence[str, None]:
+            ...     await asyncio.sleep(0.001)
+            ...     print(f"Wrote '{s}' twice.")
+            ...     return "success", [None, None]
+            ...
+            >>> wrapper = AwaitableWrapper.construct(
+            ...     "Hello, world!"
+            ... ).tap_to_awaitable_result_sequence(write_twice)
+            >>> wrapper
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> result = asyncio.run(wrapper.core_as_coroutine)
+            Wrote 'Hello, world!' twice.
+            >>> result
+            ('success', ['Hello, world!', 'Hello, world!'])
+        """
+        return AwaitableResultSequenceWrapper.construct_successes_from_awaitable(
+            self.core
+        ).tap_successes_to_awaitable_result_sequence(f)
+
+    def tap_to_awaitable_sequence(
+        self, f: Callable[[_T_co], AwaitableSequence[object]]
+    ) -> AwaitableSequenceWrapper[_T_co]:
+        """Apply an asynchronous side effect returning a [collections.abc.Sequence][]
+        to the wrapped [collections.abc.Awaitable][] object.
+
+        Args:
+            f: The asynchronous side effect to be applied,
+                returning an awaitable [collections.abc.Sequence][].
+
+        Returns:
+            A new [trcks.oop.AwaitableSequenceWrapper][] instance with
+                the original awaitable wrapped object repeated
+                according to the number of items returned by the side effect.
+
+        Example:
+            >>> import asyncio
+            >>> from collections.abc import Sequence
+            >>> from trcks.oop import AwaitableWrapper
+            >>> async def duplicate_with_log_async(x: int) -> Sequence[int]:
+            ...     await asyncio.sleep(0.001)
+            ...     print(f"Processing: {x}")
+            ...     return [x, x]
+            ...
+            >>> async def main() -> Sequence[int]:
+            ...     return await (
+            ...         AwaitableWrapper
+            ...         .construct(21)
+            ...         .tap_to_awaitable_sequence(duplicate_with_log_async)
+            ...         .core_as_coroutine
+            ...     )
+            ...
+            >>> asyncio.run(main())
+            Processing: 21
+            [21, 21]
+        """
+        return AwaitableSequenceWrapper.construct_from_awaitable(
+            self.core
+        ).tap_to_awaitable_sequence(f)
+
     def tap_to_result(
         self, f: Callable[[_T_co], Result[_F, object]]
     ) -> AwaitableResultWrapper[_F, _T_co]:
@@ -1521,8 +4435,87 @@ class AwaitableWrapper(_AwaitableWrapper[_T_co]):
             self.core
         ).tap_success_to_result(f)
 
+    def tap_to_result_sequence(
+        self, f: Callable[[_T_co], ResultSequence[_F, object]]
+    ) -> AwaitableResultSequenceWrapper[_F, _T_co]:
+        """Apply a synchronous side effect with return type [trcks.ResultSequence][]
+        to the wrapped [collections.abc.Awaitable][] object.
 
-class ResultWrapper(_Wrapper[Result[_F_default_co, _S_default_co]]):
+        Args:
+            f: The synchronous side effect to be applied.
+
+        Returns:
+            A [trcks.oop.AwaitableResultSequenceWrapper][] instance with
+
+                - *the returned* [trcks.Failure][]
+                    if the given side effect returns a [trcks.Failure][] or
+                - *the original* wrapped object repeated once per element
+                    in the side effect output if the given side effect
+                    returns [trcks.SuccessSequence][].
+
+        Example:
+            >>> import asyncio
+            >>> from trcks import ResultSequence
+            >>> from trcks.oop import AwaitableWrapper
+            >>> def write_twice(s: str) -> ResultSequence[str, None]:
+            ...     print(f"Wrote '{s}' twice.")
+            ...     return "success", [None, None]
+            ...
+            >>> wrapper = AwaitableWrapper.construct(
+            ...     "Hello, world!"
+            ... ).tap_to_result_sequence(write_twice)
+            >>> wrapper
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> result = asyncio.run(wrapper.core_as_coroutine)
+            Wrote 'Hello, world!' twice.
+            >>> result
+            ('success', ['Hello, world!', 'Hello, world!'])
+        """
+        return AwaitableResultSequenceWrapper.construct_successes_from_awaitable(
+            self.core
+        ).tap_successes_to_result_sequence(f)
+
+    def tap_to_sequence(
+        self, f: Callable[[_T_co], Sequence[object]]
+    ) -> AwaitableSequenceWrapper[_T_co]:
+        """Apply a synchronous side effect returning a [collections.abc.Sequence][]
+        to the wrapped [collections.abc.Awaitable][] object.
+
+        Args:
+            f: The synchronous side effect to be applied,
+                returning a [collections.abc.Sequence][].
+
+        Returns:
+            A new [trcks.oop.AwaitableSequenceWrapper][] instance with
+                the original awaitable wrapped object repeated
+                according to the number of items returned by the side effect.
+
+        Example:
+            >>> import asyncio
+            >>> from collections.abc import Sequence
+            >>> from trcks.oop import AwaitableWrapper
+            >>> def duplicate_with_log(x: int) -> Sequence[object]:
+            ...     print(f"Processing: {x}")
+            ...     return [x, x]
+            ...
+            >>> async def main() -> Sequence[int]:
+            ...     return await (
+            ...         AwaitableWrapper
+            ...         .construct(42)
+            ...         .tap_to_sequence(duplicate_with_log)
+            ...         .core_as_coroutine
+            ...     )
+            ...
+            >>> asyncio.run(main())
+            Processing: 42
+            [42, 42]
+        """
+        return AwaitableSequenceWrapper.construct_from_awaitable(
+            self.core
+        ).tap_to_sequence(f)
+
+
+class ResultWrapper(_ResultWrapper[_F_default_co, _S_default_co]):
     """Type-safe and immutable wrapper for [trcks.Result][] objects.
 
     The wrapped object can be accessed via the attribute `trcks.oop.ResultWrapper.core`.
@@ -1743,6 +4736,60 @@ class ResultWrapper(_Wrapper[Result[_F_default_co, _S_default_co]]):
             self.core
         ).map_failure_to_awaitable_result(f)
 
+    def map_failure_to_awaitable_result_sequence(
+        self, f: Callable[[_F_default_co], AwaitableResultSequence[_F, _S]]
+    ) -> AwaitableResultSequenceWrapper[_F, _S_default_co | _S]:
+        """Apply an asynchronous function with return type
+        [trcks.ResultSequence][] to the wrapped [trcks.Failure][] object.
+
+        Wrapped [trcks.Success][] objects are passed on unchanged.
+
+        Args:
+            f: The asynchronous function to be applied.
+
+        Returns:
+            A [trcks.oop.AwaitableResultSequenceWrapper][] instance with
+
+                - the result of the function application if
+                    the original [trcks.Result][] is a failure, or
+                - the original [trcks.Result][] object if it is a success.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks import AwaitableResultSequence
+            >>> from trcks.oop import ResultWrapper
+            >>> async def recover(
+            ...     e: str,
+            ... ) -> AwaitableResultSequence[str, float]:
+            ...     await asyncio.sleep(0.001)
+            ...     if e == "not found":
+            ...         return "success", [0.0, 1.0]
+            ...     return "failure", e
+            ...
+            >>> wrapper_1 = (
+            ...     ResultWrapper
+            ...     .construct_failure("not found")
+            ...     .map_failure_to_awaitable_result_sequence(recover)
+            ... )
+            >>> wrapper_1
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(wrapper_1.core_as_coroutine)
+            ('success', [0.0, 1.0])
+            >>>
+            >>> wrapper_2 = (
+            ...     ResultWrapper
+            ...     .construct_success(25.0)
+            ...     .map_failure_to_awaitable_result_sequence(recover)
+            ... )
+            >>> wrapper_2
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(wrapper_2.core_as_coroutine)
+            ('success', [25.0])
+        """
+        return AwaitableResultSequenceWrapper.construct_from_result_sequence(
+            rs.construct_from_result(self.core)
+        ).map_failure_to_awaitable_result_sequence(f)
+
     def map_failure_to_result(
         self, f: Callable[[_F_default_co], Result[_F, _S]]
     ) -> ResultWrapper[_F, _S_default_co | _S]:
@@ -1791,6 +4838,100 @@ class ResultWrapper(_Wrapper[Result[_F_default_co, _S_default_co]]):
             ResultWrapper(core=('success', 25.0))
         """
         return ResultWrapper(r.map_failure_to_result(f)(self.core))
+
+    def map_failure_to_result_sequence(
+        self, f: Callable[[_F_default_co], ResultSequence[_F, _S]]
+    ) -> ResultSequenceWrapper[_F, _S_default_co | _S]:
+        """Apply a synchronous function with return type [trcks.ResultSequence][]
+        to the wrapped [trcks.Failure][] object.
+
+        Wrapped [trcks.Success][] objects are passed on unchanged.
+
+        Args:
+            f: The synchronous function to be applied.
+
+        Returns:
+            A [trcks.oop.ResultSequenceWrapper][] instance with
+
+                - the result of the function application if
+                    the original [trcks.Result][] is a failure, or
+                - the original [trcks.Result][] object (wrapped as a sequence)
+                    if it is a success.
+
+        Example:
+            >>> from trcks import ResultSequence
+            >>> from trcks.oop import ResultWrapper
+            >>> def expand_error(s: str) -> ResultSequence[str, float]:
+            ...     if s == "not found":
+            ...         return "success", [0.0, 1.0]
+            ...     return "failure", s
+            ...
+            >>> ResultWrapper.construct_failure(
+            ...     "not found"
+            ... ).map_failure_to_result_sequence(expand_error)
+            ResultSequenceWrapper(core=('success', [0.0, 1.0]))
+            >>>
+            >>> ResultWrapper.construct_failure(
+            ...     "other error"
+            ... ).map_failure_to_result_sequence(expand_error)
+            ResultSequenceWrapper(core=('failure', 'other error'))
+            >>>
+            >>> ResultWrapper.construct_success(
+            ...     42
+            ... ).map_failure_to_result_sequence(expand_error)
+            ResultSequenceWrapper(core=('success', [42]))
+        """
+        return ResultSequenceWrapper.construct_from_result(
+            self.core
+        ).map_failure_to_result_sequence(f)
+
+    def map_failure_to_sequence(
+        self, f: Callable[[_F_default_co], Sequence[_S]]
+    ) -> ResultSequenceWrapper[Never, _S_default_co | _S]:
+        """Apply a synchronous function returning a [collections.abc.Sequence][]
+        to the wrapped [trcks.Failure][] object.
+
+        The failure is converted to a [trcks.SuccessSequence][].
+        Wrapped [trcks.Success][] objects are passed on unchanged.
+
+        Args:
+            f: The synchronous function to be applied,
+                returning a [collections.abc.Sequence][].
+
+        Returns:
+            A [trcks.oop.ResultSequenceWrapper][] instance with
+
+                - a [trcks.SuccessSequence][] containing the result
+                    of the function application if
+                    the original [trcks.Result][] is a failure, or
+                - the original [trcks.Result][] object (wrapped as a sequence)
+                    if it is a success.
+
+        Example:
+            >>> from trcks.oop import ResultWrapper
+            >>> def recover(s: str) -> list[float]:
+            ...     if s == "not found":
+            ...         return [0.0, 1.0]
+            ...     return []
+            ...
+            >>> ResultWrapper.construct_failure(
+            ...     "not found"
+            ... ).map_failure_to_sequence(recover)
+            ResultSequenceWrapper(core=('success', [0.0, 1.0]))
+            >>>
+            >>> ResultWrapper.construct_failure(
+            ...     "other error"
+            ... ).map_failure_to_sequence(recover)
+            ResultSequenceWrapper(core=('success', []))
+            >>>
+            >>> ResultWrapper.construct_success(
+            ...     42
+            ... ).map_failure_to_sequence(recover)
+            ResultSequenceWrapper(core=('success', [42]))
+        """
+        return ResultSequenceWrapper.construct_from_result(
+            self.core
+        ).map_failure_to_sequence(f)
 
     def map_success(
         self, f: Callable[[_S_default_co], _S]
@@ -1929,6 +5070,60 @@ class ResultWrapper(_Wrapper[Result[_F_default_co, _S_default_co]]):
             self.core
         ).map_success_to_awaitable_result(f)
 
+    def map_success_to_awaitable_result_sequence(
+        self, f: Callable[[_S_default_co], AwaitableResultSequence[_F, _S]]
+    ) -> AwaitableResultSequenceWrapper[_F_default_co | _F, _S]:
+        """Apply an asynchronous function with return type
+        [trcks.ResultSequence][] to the wrapped [trcks.Success][] object.
+
+        Wrapped [trcks.Failure][] objects are passed on unchanged.
+
+        Args:
+            f: The asynchronous function to be applied.
+
+        Returns:
+            A [trcks.oop.AwaitableResultSequenceWrapper][] instance with
+
+                - the original [trcks.Result][] object if it is a failure, or
+                - the result of the function application if
+                    the original [trcks.Result][] is a success.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks import AwaitableResultSequence
+            >>> from trcks.oop import ResultWrapper
+            >>> async def expand(
+            ...     x: float,
+            ... ) -> AwaitableResultSequence[str, float]:
+            ...     await asyncio.sleep(0.001)
+            ...     if x < 0:
+            ...         return "failure", "negative"
+            ...     return "success", [x, x * 2]
+            ...
+            >>> wrapper_1 = (
+            ...     ResultWrapper
+            ...     .construct_failure("not found")
+            ...     .map_success_to_awaitable_result_sequence(expand)
+            ... )
+            >>> wrapper_1
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(wrapper_1.core_as_coroutine)
+            ('failure', 'not found')
+            >>>
+            >>> wrapper_2 = (
+            ...     ResultWrapper
+            ...     .construct_success(5.0)
+            ...     .map_success_to_awaitable_result_sequence(expand)
+            ... )
+            >>> wrapper_2
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(wrapper_2.core_as_coroutine)
+            ('success', [5.0, 10.0])
+        """
+        return AwaitableResultSequenceWrapper.construct_from_result_sequence(
+            rs.construct_from_result(self.core)
+        ).map_successes_to_awaitable_result_sequence(f)
+
     def map_success_to_result(
         self, f: Callable[[_S_default_co], Result[_F, _S]]
     ) -> ResultWrapper[_F_default_co | _F, _S]:
@@ -1972,6 +5167,90 @@ class ResultWrapper(_Wrapper[Result[_F_default_co, _S_default_co]]):
             ResultWrapper(core=('success', 5.0))
         """
         return ResultWrapper(r.map_success_to_result(f)(self.core))
+
+    def map_success_to_result_sequence(
+        self, f: Callable[[_S_default_co], ResultSequence[_F, _S]]
+    ) -> ResultSequenceWrapper[_F_default_co | _F, _S]:
+        """Apply a synchronous function with return type [trcks.ResultSequence][]
+        to the wrapped [trcks.Success][] object.
+
+        Wrapped [trcks.Failure][] objects are passed on unchanged.
+
+        Args:
+            f: The synchronous function to be applied.
+
+        Returns:
+            A [trcks.oop.ResultSequenceWrapper][] instance with
+
+                - the original [trcks.Result][] object if it is a failure, or
+                - the result of the function application if
+                    the original [trcks.Result][] is a success.
+
+        Example:
+            >>> from trcks import ResultSequence
+            >>> from trcks.oop import ResultWrapper
+            >>> def expand(x: float) -> ResultSequence[str, float]:
+            ...     if x < 0:
+            ...         return "failure", "negative"
+            ...     return "success", [x, x * 2]
+            ...
+            >>> ResultWrapper.construct_failure(
+            ...     "not found"
+            ... ).map_success_to_result_sequence(expand)
+            ResultSequenceWrapper(core=('failure', 'not found'))
+            >>>
+            >>> ResultWrapper.construct_success(
+            ...     5.0
+            ... ).map_success_to_result_sequence(expand)
+            ResultSequenceWrapper(core=('success', [5.0, 10.0]))
+            >>>
+            >>> ResultWrapper.construct_success(
+            ...     -5.0
+            ... ).map_success_to_result_sequence(expand)
+            ResultSequenceWrapper(core=('failure', 'negative'))
+        """
+        return ResultSequenceWrapper.construct_from_result(
+            self.core
+        ).map_successes_to_result_sequence(f)
+
+    def map_success_to_sequence(
+        self, f: Callable[[_S_default_co], Sequence[_S]]
+    ) -> ResultSequenceWrapper[_F_default_co, _S]:
+        """Apply a synchronous function returning a [collections.abc.Sequence][]
+        to the wrapped [trcks.Success][] object.
+
+        Wrapped [trcks.Failure][] objects are passed on unchanged.
+
+        Args:
+            f: The synchronous function to be applied,
+                returning a [collections.abc.Sequence][].
+
+        Returns:
+            A [trcks.oop.ResultSequenceWrapper][] instance with
+
+                - the original [trcks.Result][] object if it is a failure, or
+                - a [trcks.SuccessSequence][] containing the result
+                    of the function application if
+                    the original [trcks.Result][] is a success.
+
+        Example:
+            >>> from trcks.oop import ResultWrapper
+            >>> def duplicate(x: float) -> list[float]:
+            ...     return [x, x]
+            ...
+            >>> ResultWrapper.construct_failure(
+            ...     "not found"
+            ... ).map_success_to_sequence(duplicate)
+            ResultSequenceWrapper(core=('failure', 'not found'))
+            >>>
+            >>> ResultWrapper.construct_success(
+            ...     5.0
+            ... ).map_success_to_sequence(duplicate)
+            ResultSequenceWrapper(core=('success', [5.0, 5.0]))
+        """
+        return ResultSequenceWrapper.construct_from_result(
+            self.core
+        ).map_successes_to_sequence(f)
 
     def tap_failure(
         self, f: Callable[[_F_default_co], object]
@@ -2108,6 +5387,63 @@ class ResultWrapper(_Wrapper[Result[_F_default_co, _S_default_co]]):
             self.core
         ).tap_failure_to_awaitable_result(f)
 
+    def tap_failure_to_awaitable_result_sequence(
+        self, f: Callable[[_F_default_co], AwaitableResultSequence[object, _S]]
+    ) -> AwaitableResultSequenceWrapper[_F_default_co, _S_default_co | _S]:
+        """Apply an asynchronous side effect with return type
+        [trcks.ResultSequence][] to the wrapped [trcks.Failure][] object.
+
+        Wrapped [trcks.Success][] objects are passed on without side effects.
+
+        Args:
+            f: The asynchronous side effect to be applied.
+
+        Returns:
+            A [trcks.oop.AwaitableResultSequenceWrapper][] instance with
+
+                - *the original* [trcks.Failure][]
+                    if the applied side effect returns a [trcks.Failure][],
+                - *the returned* [trcks.SuccessSequence][]
+                    if the applied side effect returns a [trcks.SuccessSequence][]
+                    and
+                - *the original* [trcks.Success][] if no side effect was applied.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks import AwaitableResultSequence
+            >>> from trcks.oop import ResultWrapper
+            >>> async def recover(
+            ...     e: str,
+            ... ) -> AwaitableResultSequence[object, float]:
+            ...     await asyncio.sleep(0.001)
+            ...     if e == "not found":
+            ...         return "success", [0.0, 1.0]
+            ...     return "failure", e
+            ...
+            >>> wrapper_1 = (
+            ...     ResultWrapper
+            ...     .construct_failure("not found")
+            ...     .tap_failure_to_awaitable_result_sequence(recover)
+            ... )
+            >>> wrapper_1
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(wrapper_1.core_as_coroutine)
+            ('success', [0.0, 1.0])
+            >>>
+            >>> wrapper_2 = (
+            ...     ResultWrapper
+            ...     .construct_success(42)
+            ...     .tap_failure_to_awaitable_result_sequence(recover)
+            ... )
+            >>> wrapper_2
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(wrapper_2.core_as_coroutine)
+            ('success', [42])
+        """
+        return AwaitableResultSequenceWrapper.construct_from_result_sequence(
+            rs.construct_from_result(self.core)
+        ).tap_failure_to_awaitable_result_sequence(f)
+
     def tap_failure_to_result(
         self, f: Callable[[_F_default_co], Result[object, _S]]
     ) -> ResultWrapper[_F_default_co, _S_default_co | _S]:
@@ -2153,6 +5489,103 @@ class ResultWrapper(_Wrapper[Result[_F_default_co, _S_default_co]]):
             ResultWrapper(core=('success', 42))
         """
         return ResultWrapper(r.tap_failure_to_result(f)(self.core))
+
+    def tap_failure_to_result_sequence(
+        self, f: Callable[[_F_default_co], ResultSequence[object, _S]]
+    ) -> ResultSequenceWrapper[_F_default_co, _S_default_co | _S]:
+        """Apply a synchronous side effect with return type [trcks.ResultSequence][]
+        to the wrapped [trcks.Failure][] object.
+
+        Wrapped [trcks.Success][] objects are passed on without side effects.
+
+        Args:
+            f: The synchronous side effect to be applied.
+
+        Returns:
+            A [trcks.oop.ResultSequenceWrapper][] instance with
+
+                - *the original* [trcks.Failure][]
+                    if the applied side effect returns a [trcks.Failure][],
+                - *the returned* [trcks.SuccessSequence][]
+                    if the applied side effect returns a [trcks.SuccessSequence][] and
+                - *the original* [trcks.Success][] (wrapped as a sequence)
+                    if no side effect was applied.
+
+        Example:
+            >>> from trcks import ResultSequence
+            >>> from trcks.oop import ResultWrapper
+            >>> def attempt_recover(s: str) -> ResultSequence[None, int]:
+            ...     if s == "retry":
+            ...         return "success", [99]
+            ...     return "failure", None
+            ...
+            >>> ResultWrapper.construct_failure(
+            ...     "retry"
+            ... ).tap_failure_to_result_sequence(attempt_recover)
+            ResultSequenceWrapper(core=('success', [99]))
+            >>>
+            >>> ResultWrapper.construct_failure(
+            ...     "fatal"
+            ... ).tap_failure_to_result_sequence(attempt_recover)
+            ResultSequenceWrapper(core=('failure', 'fatal'))
+            >>>
+            >>> ResultWrapper.construct_success(
+            ...     42
+            ... ).tap_failure_to_result_sequence(attempt_recover)
+            ResultSequenceWrapper(core=('success', [42]))
+        """
+        return ResultSequenceWrapper.construct_from_result(
+            self.core
+        ).tap_failure_to_result_sequence(f)
+
+    def tap_failure_to_sequence(
+        self, f: Callable[[_F_default_co], Sequence[object]]
+    ) -> ResultSequenceWrapper[Never, _F_default_co | _S_default_co]:
+        """Apply a synchronous side effect returning a [collections.abc.Sequence][]
+        to the wrapped [trcks.Failure][] object.
+
+        The failure is converted to a [trcks.SuccessSequence][] where
+        the original failure value is repeated once per element in
+        the sequence returned by the side effect.
+
+        Wrapped [trcks.Success][] objects are passed on without side effects.
+
+        Args:
+            f: The synchronous side effect to be applied,
+                returning a [collections.abc.Sequence][].
+
+        Returns:
+            A [trcks.oop.ResultSequenceWrapper][] instance with
+
+                - a [trcks.SuccessSequence][] containing the original failure
+                    repeated once per element
+                    in the sequence returned by the side effect
+                    if the original [trcks.Result][] is a failure, or
+                - *the original* [trcks.Success][] (wrapped as a sequence)
+                    if no side effect was applied.
+
+        Example:
+            >>> from trcks.oop import ResultWrapper
+            >>> def log_err(e: str) -> list[None]:
+            ...     print(f"Error logged: {e}")
+            ...     print(f"Alert sent: {e}")
+            ...     return [None, None]
+            ...
+            >>> ResultWrapper.construct_failure(
+            ...     "critical"
+            ... ).tap_failure_to_sequence(log_err)
+            Error logged: critical
+            Alert sent: critical
+            ResultSequenceWrapper(core=('success', ['critical', 'critical']))
+            >>>
+            >>> ResultWrapper.construct_success(
+            ...     42
+            ... ).tap_failure_to_sequence(log_err)
+            ResultSequenceWrapper(core=('success', [42]))
+        """
+        return ResultSequenceWrapper.construct_from_result(
+            self.core
+        ).tap_failure_to_sequence(f)
 
     def tap_success(
         self, f: Callable[[_S_default_co], object]
@@ -2305,6 +5738,64 @@ class ResultWrapper(_Wrapper[Result[_F_default_co, _S_default_co]]):
             self.core
         ).tap_success_to_awaitable_result(f)
 
+    def tap_success_to_awaitable_result_sequence(
+        self, f: Callable[[_S_default_co], AwaitableResultSequence[_F, object]]
+    ) -> AwaitableResultSequenceWrapper[_F_default_co | _F, _S_default_co]:
+        """Apply an asynchronous side effect with return type
+        [trcks.ResultSequence][] to the wrapped [trcks.Success][] object.
+
+        Wrapped [trcks.Failure][] objects are passed on without side effects.
+
+        Args:
+            f: The asynchronous side effect to be applied.
+
+        Returns:
+            A [trcks.oop.AwaitableResultSequenceWrapper][] instance with
+
+                - *the original* [trcks.Failure][] if no side effect was applied,
+                - *the returned* [trcks.Failure][]
+                    if the applied side effect returns a [trcks.Failure][] and
+                - *the original* [trcks.Success][] repeated once per element
+                    in the returned [trcks.SuccessSequence][]
+                    if the applied side effect returns a [trcks.SuccessSequence][].
+
+        Example:
+            >>> import asyncio
+            >>> from trcks import AwaitableResultSequence
+            >>> from trcks.oop import ResultWrapper
+            >>> async def write_twice(
+            ...     s: str,
+            ... ) -> AwaitableResultSequence[str, None]:
+            ...     await asyncio.sleep(0.001)
+            ...     print(f"Wrote '{s}' twice.")
+            ...     return "success", [None, None]
+            ...
+            >>> wrapper_1 = (
+            ...     ResultWrapper
+            ...     .construct_failure("missing text")
+            ...     .tap_success_to_awaitable_result_sequence(write_twice)
+            ... )
+            >>> wrapper_1
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(wrapper_1.core_as_coroutine)
+            ('failure', 'missing text')
+            >>>
+            >>> wrapper_2 = (
+            ...     ResultWrapper
+            ...     .construct_success("Hello, world!")
+            ...     .tap_success_to_awaitable_result_sequence(write_twice)
+            ... )
+            >>> wrapper_2
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> result_2 = asyncio.run(wrapper_2.core_as_coroutine)
+            Wrote 'Hello, world!' twice.
+            >>> result_2
+            ('success', ['Hello, world!', 'Hello, world!'])
+        """
+        return AwaitableResultSequenceWrapper.construct_from_result_sequence(
+            rs.construct_from_result(self.core)
+        ).tap_successes_to_awaitable_result_sequence(f)
+
     def tap_success_to_result(
         self, f: Callable[[_S_default_co], Result[_F, object]]
     ) -> ResultWrapper[_F_default_co | _F, _S_default_co]:
@@ -2327,25 +5818,2079 @@ class ResultWrapper(_Wrapper[Result[_F_default_co, _S_default_co]]):
         """
         return ResultWrapper(r.tap_success_to_result(f)(self.core))
 
-    @property
-    def track(self) -> Literal["failure", "success"]:
-        """First element of the attribute `trcks.oop.ResultWrapper.core`.
+    def tap_success_to_result_sequence(
+        self, f: Callable[[_S_default_co], ResultSequence[_F, object]]
+    ) -> ResultSequenceWrapper[_F_default_co | _F, _S_default_co]:
+        """Apply a synchronous side effect with return type [trcks.ResultSequence][]
+        to the wrapped [trcks.Success][] object.
+
+        Wrapped [trcks.Failure][] objects are passed on without side effects.
+
+        Args:
+            f: The synchronous side effect to be applied.
+
+        Returns:
+            A [trcks.oop.ResultSequenceWrapper][] instance with
+
+                - *the original* [trcks.Failure][] if no side effect was applied,
+                - *the returned* [trcks.Failure][]
+                    if the applied side effect returns a [trcks.Failure][] and
+                - *the original* [trcks.Success][] (wrapped and repeated once
+                    per element in the side effect output) if the applied side effect
+                    returns [trcks.SuccessSequence][].
 
         Example:
-            >>> ResultWrapper(core=('failure', 42)).track
-            'failure'
+            >>> from trcks import ResultSequence
+            >>> from trcks.oop import ResultWrapper
+            >>> def audit(x: int) -> ResultSequence[str, None]:
+            ...     if x > 0:
+            ...         return "success", [None, None]
+            ...     return "failure", "bad"
+            ...
+            >>> ResultWrapper.construct_failure(
+            ...     "oops"
+            ... ).tap_success_to_result_sequence(audit)
+            ResultSequenceWrapper(core=('failure', 'oops'))
+            >>>
+            >>> ResultWrapper.construct_success(
+            ...     7
+            ... ).tap_success_to_result_sequence(audit)
+            ResultSequenceWrapper(core=('success', [7, 7]))
+            >>>
+            >>> ResultWrapper.construct_success(
+            ...     -1
+            ... ).tap_success_to_result_sequence(audit)
+            ResultSequenceWrapper(core=('failure', 'bad'))
         """
-        return self.core[0]
+        return ResultSequenceWrapper.construct_from_result(
+            self.core
+        ).tap_successes_to_result_sequence(f)
 
-    @property
-    def value(self) -> _F_default_co | _S_default_co:
-        """Second element of the attribute `trcks.oop.ResultWrapper.core`.
+    def tap_success_to_sequence(
+        self, f: Callable[[_S_default_co], Sequence[object]]
+    ) -> ResultSequenceWrapper[_F_default_co, _S_default_co]:
+        """Apply a synchronous side effect returning a [collections.abc.Sequence][]
+        to the wrapped [trcks.Success][] object.
+
+        The original success value is repeated once per element
+        in the sequence returned by the side effect.
+
+        Wrapped [trcks.Failure][] objects are passed on without side effects.
+
+        Args:
+            f: The synchronous side effect to be applied,
+                returning a [collections.abc.Sequence][].
+
+        Returns:
+            A [trcks.oop.ResultSequenceWrapper][] instance with
+
+                - *the original* [trcks.Failure][] if no side effect was applied, or
+                - a [trcks.SuccessSequence][] where the original element is repeated
+                    once per element in the sequence returned by the side effect.
 
         Example:
-            >>> ResultWrapper(core=('failure', 42)).value
-            42
+            >>> from trcks.oop import ResultWrapper
+            >>> def log_mult(x: int) -> list[None]:
+            ...     print(f"v={x}")
+            ...     print(f"v={x}")
+            ...     return [None, None]
+            ...
+            >>> ResultWrapper.construct_failure(
+            ...     "error"
+            ... ).tap_success_to_sequence(log_mult)
+            ResultSequenceWrapper(core=('failure', 'error'))
+            >>>
+            >>> ResultWrapper.construct_success(
+            ...     7
+            ... ).tap_success_to_sequence(log_mult)
+            v=7
+            v=7
+            ResultSequenceWrapper(core=('success', [7, 7]))
         """
-        return self.core[1]
+        return ResultSequenceWrapper.construct_from_result(
+            self.core
+        ).tap_successes_to_sequence(f)
+
+
+class ResultSequenceWrapper(_ResultWrapper[_F_default_co, Sequence[_S_default_co]]):
+    """Type-safe and immutable wrapper for [trcks.ResultSequence][] objects.
+
+    The wrapped object can be accessed via the attribute
+    `trcks.oop.ResultSequenceWrapper.core`.
+    The `trcks.oop.ResultSequenceWrapper.map*` methods allow method chaining.
+    The `trcks.oop.ResultSequenceWrapper.tap*` methods allow for side effects.
+
+    Example:
+        >>> from trcks.oop import ResultSequenceWrapper
+        >>> result_sequence_wrapper = (
+        ...     ResultSequenceWrapper
+        ...     .construct_successes_from_sequence([1, 2, 3])
+        ...     .map_successes(lambda x: x * 2)
+        ...     .tap_successes(lambda x: print(f"Processed: {x}"))
+        ... )
+        Processed: 2
+        Processed: 4
+        Processed: 6
+        >>> result_sequence_wrapper
+        ResultSequenceWrapper(core=('success', [2, 4, 6]))
+        >>> result_sequence_wrapper.core
+        ('success', [2, 4, 6])
+    """
+
+    @staticmethod
+    def construct_failure(value: _F) -> ResultSequenceWrapper[_F, Never]:
+        """Construct and wrap a [trcks.Failure][] object from a value.
+
+        Args:
+            value: The value to be wrapped.
+
+        Returns:
+            A new [trcks.oop.ResultSequenceWrapper][] instance with
+                the wrapped [trcks.Failure][] object.
+
+        Example:
+            >>> ResultSequenceWrapper.construct_failure("not found")
+            ResultSequenceWrapper(core=('failure', 'not found'))
+        """
+        return ResultSequenceWrapper(rs.construct_failure(value))
+
+    @staticmethod
+    def construct_from_result(
+        rslt: Result[_F_default, _S_default],
+    ) -> ResultSequenceWrapper[_F_default, _S_default]:
+        """Construct and wrap a [trcks.ResultSequence][] object from a
+        [trcks.Result][] object.
+
+        Args:
+            rslt: The [trcks.Result][] object to be wrapped.
+
+        Returns:
+            A new [trcks.oop.ResultSequenceWrapper][] instance with
+                the wrapped [trcks.ResultSequence][] object.
+
+        Example:
+            >>> from trcks.oop import ResultSequenceWrapper
+            >>> ResultSequenceWrapper.construct_from_result(("success", 7))
+            ResultSequenceWrapper(core=('success', [7]))
+            >>> ResultSequenceWrapper.construct_from_result(("failure", "oops"))
+            ResultSequenceWrapper(core=('failure', 'oops'))
+        """
+        return ResultSequenceWrapper(rs.construct_from_result(rslt))
+
+    @staticmethod
+    def construct_successes(value: _S) -> ResultSequenceWrapper[Never, _S]:
+        """Construct and wrap a [trcks.SuccessSequence][] object from a value.
+
+        Args:
+            value: The value to be wrapped.
+
+        Returns:
+            A new [trcks.oop.ResultSequenceWrapper][] instance with
+                the wrapped [trcks.SuccessSequence][] object.
+
+        Example:
+            >>> ResultSequenceWrapper.construct_successes(42)
+            ResultSequenceWrapper(core=('success', [42]))
+        """
+        return ResultSequenceWrapper(rs.construct_successes(value))
+
+    @staticmethod
+    def construct_successes_from_sequence(
+        seq: Sequence[_S],
+    ) -> ResultSequenceWrapper[Never, _S]:
+        """Construct and wrap a [trcks.SuccessSequence][] object from a sequence.
+
+        Args:
+            seq: The sequence to be wrapped.
+
+        Returns:
+            A new [trcks.oop.ResultSequenceWrapper][] instance with
+                the wrapped [trcks.SuccessSequence][] object.
+
+        Example:
+            >>> ResultSequenceWrapper.construct_successes_from_sequence([1, 2, 3])
+            ResultSequenceWrapper(core=('success', [1, 2, 3]))
+        """
+        return ResultSequenceWrapper(rs.construct_successes_from_sequence(seq))
+
+    def map_failure(
+        self, f: Callable[[_F_default_co], _F]
+    ) -> ResultSequenceWrapper[_F, _S_default_co]:
+        """Apply a synchronous function to the wrapped [trcks.Failure][] object.
+
+        Wrapped [trcks.SuccessSequence][] objects are passed on unchanged.
+
+        Args:
+            f: The synchronous function to be applied.
+
+        Returns:
+            A new [trcks.oop.ResultSequenceWrapper][] instance with
+
+                - the result of the function application if
+                    the original [trcks.ResultSequence][] is a failure, or
+                - the original [trcks.ResultSequence][] object if it is a success.
+
+        Example:
+            >>> ResultSequenceWrapper.construct_failure("not found").map_failure(
+            ...     lambda e: f"err: {e}"
+            ... )
+            ResultSequenceWrapper(core=('failure', 'err: not found'))
+            >>>
+            >>> ResultSequenceWrapper.construct_successes_from_sequence(
+            ...     [1, 2]
+            ... ).map_failure(lambda e: f"err: {e}")
+            ResultSequenceWrapper(core=('success', [1, 2]))
+        """
+        return ResultSequenceWrapper(rs.map_failure(f)(self.core))
+
+    def map_failure_to_awaitable(
+        self, f: Callable[[_F_default_co], Awaitable[_F]]
+    ) -> AwaitableResultSequenceWrapper[_F, _S_default_co]:
+        """Apply an asynchronous function to the wrapped [trcks.Failure][] object.
+
+        Wrapped [trcks.SuccessSequence][] objects are passed on unchanged.
+
+        Args:
+            f: The asynchronous function to be applied.
+
+        Returns:
+            A new [trcks.oop.AwaitableResultSequenceWrapper][] instance with
+
+                - the result of the function application if
+                    the original [trcks.ResultSequence][] is a failure, or
+                - the original [trcks.ResultSequence][] if it is a success.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks.oop import ResultSequenceWrapper
+            >>> async def prefix_slowly(e: str) -> str:
+            ...     await asyncio.sleep(0.001)
+            ...     return f"err: {e}"
+            ...
+            >>> wrapper_1 = ResultSequenceWrapper.construct_failure(
+            ...     "not found"
+            ... ).map_failure_to_awaitable(prefix_slowly)
+            >>> wrapper_1
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(wrapper_1.core_as_coroutine)
+            ('failure', 'err: not found')
+            >>>
+            >>> wrapper_2 = ResultSequenceWrapper.construct_successes_from_sequence(
+            ...     [1, 2]
+            ... ).map_failure_to_awaitable(prefix_slowly)
+            >>> wrapper_2
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(wrapper_2.core_as_coroutine)
+            ('success', [1, 2])
+        """
+        return AwaitableResultSequenceWrapper.construct_from_result_sequence(
+            self.core
+        ).map_failure_to_awaitable(f)
+
+    def map_failure_to_awaitable_result_sequence(
+        self, f: Callable[[_F_default_co], AwaitableResultSequence[_F, _S]]
+    ) -> AwaitableResultSequenceWrapper[_F, _S_default_co | _S]:
+        """Apply an asynchronous function with return type
+        [trcks.ResultSequence][] to the wrapped [trcks.Failure][] object.
+
+        Wrapped [trcks.SuccessSequence][] objects are passed on unchanged.
+
+        Args:
+            f: The asynchronous function to be applied.
+
+        Returns:
+            A new [trcks.oop.AwaitableResultSequenceWrapper][] instance with
+
+                - the result of the function application if
+                    the original [trcks.ResultSequence][] is a failure, or
+                - the original [trcks.ResultSequence][] if it is a success.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks import AwaitableResultSequence
+            >>> from trcks.oop import ResultSequenceWrapper
+            >>> async def recover(
+            ...     e: str,
+            ... ) -> AwaitableResultSequence[str, int]:
+            ...     await asyncio.sleep(0.001)
+            ...     if e == "not found":
+            ...         return "success", [0, 1]
+            ...     return "failure", e
+            ...
+            >>> wrapper_1 = ResultSequenceWrapper.construct_failure(
+            ...     "not found"
+            ... ).map_failure_to_awaitable_result_sequence(recover)
+            >>> wrapper_1
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(wrapper_1.core_as_coroutine)
+            ('success', [0, 1])
+            >>>
+            >>> wrapper_2 = ResultSequenceWrapper.construct_successes_from_sequence(
+            ...     [1, 2]
+            ... ).map_failure_to_awaitable_result_sequence(recover)
+            >>> wrapper_2
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(wrapper_2.core_as_coroutine)
+            ('success', [1, 2])
+        """
+        return AwaitableResultSequenceWrapper.construct_from_result_sequence(
+            self.core
+        ).map_failure_to_awaitable_result_sequence(f)
+
+    def map_failure_to_result(
+        self, f: Callable[[_F_default_co], Result[_F, _S]]
+    ) -> ResultSequenceWrapper[_F, _S_default_co | _S]:
+        """Apply a synchronous function with return type [trcks.Result][]
+        to the wrapped [trcks.Failure][] object.
+
+        Wrapped [trcks.SuccessSequence][] objects are passed on unchanged.
+
+        Args:
+            f: The synchronous function to be applied.
+
+        Returns:
+            A new [trcks.oop.ResultSequenceWrapper][] instance with
+
+                - the result of the function application if
+                    the original [trcks.ResultSequence][] is a failure, or
+                - the original [trcks.ResultSequence][] object if it is a success.
+
+        Example:
+            >>> from trcks import Result
+            >>> from trcks.oop import ResultSequenceWrapper
+            >>> def recover(e: str) -> Result[str, int]:
+            ...     if e == "not found":
+            ...         return "success", 0
+            ...     return "failure", e
+            ...
+            >>> ResultSequenceWrapper.construct_failure(
+            ...     "not found"
+            ... ).map_failure_to_result(recover)
+            ResultSequenceWrapper(core=('success', [0]))
+            >>>
+            >>> ResultSequenceWrapper.construct_successes_from_sequence(
+            ...     [1, 2]
+            ... ).map_failure_to_result(recover)
+            ResultSequenceWrapper(core=('success', [1, 2]))
+        """
+        mapped_f: Callable[
+            [ResultSequence[_F_default_co, _S_default_co]],
+            ResultSequence[_F, _S_default_co | _S],
+        ] = rs.map_failure_to_result(f)
+        return ResultSequenceWrapper(mapped_f(self.core))
+
+    def map_failure_to_result_sequence(
+        self, f: Callable[[_F_default_co], ResultSequence[_F, _S]]
+    ) -> ResultSequenceWrapper[_F, _S_default_co | _S]:
+        """Apply a synchronous function with return type [trcks.ResultSequence][]
+        to the wrapped [trcks.Failure][] object.
+
+        Wrapped [trcks.SuccessSequence][] objects are passed on unchanged.
+
+        Args:
+            f: The synchronous function to be applied.
+
+        Returns:
+            A new [trcks.oop.ResultSequenceWrapper][] instance with
+
+                - the result of the function application if
+                    the original [trcks.ResultSequence][] is a failure, or
+                - the original [trcks.ResultSequence][] object if it is a success.
+
+        Example:
+            >>> from trcks import ResultSequence
+            >>> from trcks.oop import ResultSequenceWrapper
+            >>> def recover(e: str) -> ResultSequence[str, int]:
+            ...     if e == "not found":
+            ...         return "success", [0]
+            ...     return "failure", e
+            ...
+            >>> ResultSequenceWrapper.construct_failure(
+            ...     "not found"
+            ... ).map_failure_to_result_sequence(recover)
+            ResultSequenceWrapper(core=('success', [0]))
+            >>>
+            >>> ResultSequenceWrapper.construct_successes_from_sequence(
+            ...     [1, 2]
+            ... ).map_failure_to_result_sequence(recover)
+            ResultSequenceWrapper(core=('success', [1, 2]))
+        """
+        mapped_f: Callable[
+            [ResultSequence[_F_default_co, _S_default_co]],
+            ResultSequence[_F, _S_default_co | _S],
+        ] = rs.map_failure_to_result_sequence(f)
+        return ResultSequenceWrapper(mapped_f(self.core))
+
+    def map_failure_to_sequence(
+        self, f: Callable[[_F_default_co], Sequence[_S]]
+    ) -> ResultSequenceWrapper[Never, _S_default_co | _S]:
+        """Apply a synchronous function returning a sequence
+        to the wrapped [trcks.Failure][] object.
+
+        Wrapped [trcks.SuccessSequence][] objects are passed on unchanged.
+
+        Args:
+            f: The synchronous function to be applied.
+
+        Returns:
+            A new [trcks.oop.ResultSequenceWrapper][] instance with
+
+                - a [trcks.SuccessSequence][] containing the result of
+                    the function application if
+                    the original [trcks.ResultSequence][] is a failure, or
+                - the original [trcks.ResultSequence][] object if it is a success.
+
+        Example:
+            >>> from trcks.oop import ResultSequenceWrapper
+            >>> def recover(e: str) -> list[int]:
+            ...     if e == "not found":
+            ...         return [0]
+            ...     return []
+            ...
+            >>> ResultSequenceWrapper.construct_failure(
+            ...     "not found"
+            ... ).map_failure_to_sequence(recover)
+            ResultSequenceWrapper(core=('success', [0]))
+            >>>
+            >>> ResultSequenceWrapper.construct_successes_from_sequence(
+            ...     [1, 2]
+            ... ).map_failure_to_sequence(recover)
+            ResultSequenceWrapper(core=('success', [1, 2]))
+        """
+        mapped_f: Callable[
+            [ResultSequence[_F_default_co, _S_default_co]],
+            ResultSequence[Never, _S_default_co | _S],
+        ] = rs.map_failure_to_sequence(f)
+        return ResultSequenceWrapper(mapped_f(self.core))
+
+    def map_successes(
+        self, f: Callable[[_S_default_co], _S]
+    ) -> ResultSequenceWrapper[_F_default_co, _S]:
+        """Apply a synchronous function to each element in the wrapped
+        [trcks.SuccessSequence][].
+
+        Wrapped [trcks.Failure][] objects are passed on unchanged.
+
+        Args:
+            f: The synchronous function to be applied to each success element.
+
+        Returns:
+            A new [trcks.oop.ResultSequenceWrapper][] instance with
+
+                - the original [trcks.ResultSequence][] object if it is a failure, or
+                - a [trcks.SuccessSequence][] with transformed elements if
+                    the original [trcks.ResultSequence][] is a success.
+
+        Example:
+            >>> ResultSequenceWrapper.construct_failure("not found").map_successes(
+            ...     lambda x: x * 2
+            ... )
+            ResultSequenceWrapper(core=('failure', 'not found'))
+            >>>
+            >>> ResultSequenceWrapper.construct_successes_from_sequence(
+            ...     [1, 2, 3]
+            ... ).map_successes(lambda x: x * 2)
+            ResultSequenceWrapper(core=('success', [2, 4, 6]))
+        """
+        return ResultSequenceWrapper(rs.map_successes(f)(self.core))
+
+    def map_successes_to_awaitable(
+        self, f: Callable[[_S_default_co], Awaitable[_S]]
+    ) -> AwaitableResultSequenceWrapper[_F_default_co, _S]:
+        """Apply an asynchronous function to each element in the wrapped
+        [trcks.SuccessSequence][].
+
+        Wrapped [trcks.Failure][] objects are passed on unchanged.
+
+        Args:
+            f: The asynchronous function to be applied to each success element.
+
+        Returns:
+            A new [trcks.oop.AwaitableResultSequenceWrapper][] instance with
+
+                - the original [trcks.ResultSequence][] if it is a failure, or
+                - an awaitable [trcks.SuccessSequence][] with all transformed
+                    elements.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks.oop import ResultSequenceWrapper
+            >>> async def double_slowly(x: int) -> int:
+            ...     await asyncio.sleep(0.001)
+            ...     return x * 2
+            ...
+            >>> wrapper_1 = ResultSequenceWrapper.construct_failure(
+            ...     "not found"
+            ... ).map_successes_to_awaitable(double_slowly)
+            >>> wrapper_1
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(wrapper_1.core_as_coroutine)
+            ('failure', 'not found')
+            >>>
+            >>> wrapper_2 = ResultSequenceWrapper.construct_successes_from_sequence(
+            ...     [1, 2]
+            ... ).map_successes_to_awaitable(double_slowly)
+            >>> wrapper_2
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(wrapper_2.core_as_coroutine)
+            ('success', [2, 4])
+        """
+        return AwaitableResultSequenceWrapper.construct_from_result_sequence(
+            self.core
+        ).map_successes_to_awaitable(f)
+
+    def map_successes_to_awaitable_result(
+        self, f: Callable[[_S_default_co], AwaitableResult[_F, _S]]
+    ) -> AwaitableResultSequenceWrapper[_F_default_co | _F, _S]:
+        """Apply an asynchronous function with return type [trcks.Result][]
+        to each element in the wrapped [trcks.SuccessSequence][].
+
+        Wrapped [trcks.Failure][] objects are passed on unchanged.
+
+        Args:
+            f: The asynchronous function to be applied to each success element.
+
+        Returns:
+            A new [trcks.oop.AwaitableResultSequenceWrapper][] instance with
+
+                - the original [trcks.ResultSequence][] if it is a failure, or
+                - the first [trcks.Failure][] returned by the function, or
+                - an awaitable [trcks.SuccessSequence][] with all transformed
+                    elements if the function returns [trcks.Success][] for all.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks import Result
+            >>> from trcks.oop import ResultSequenceWrapper
+            >>> async def check(x: int) -> Result[str, int]:
+            ...     await asyncio.sleep(0.001)
+            ...     if x > 0:
+            ...         return "success", x * 2
+            ...     return "failure", "bad"
+            ...
+            >>> wrapper_1 = ResultSequenceWrapper.construct_failure(
+            ...     "not found"
+            ... ).map_successes_to_awaitable_result(check)
+            >>> wrapper_1
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(wrapper_1.core_as_coroutine)
+            ('failure', 'not found')
+            >>>
+            >>> wrapper_2 = ResultSequenceWrapper.construct_successes_from_sequence(
+            ...     [1, 2]
+            ... ).map_successes_to_awaitable_result(check)
+            >>> wrapper_2
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(wrapper_2.core_as_coroutine)
+            ('success', [2, 4])
+        """
+        return AwaitableResultSequenceWrapper.construct_from_result_sequence(
+            self.core
+        ).map_successes_to_awaitable_result(f)
+
+    def map_successes_to_awaitable_result_sequence(
+        self, f: Callable[[_S_default_co], AwaitableResultSequence[_F, _S]]
+    ) -> AwaitableResultSequenceWrapper[_F_default_co | _F, _S]:
+        """Apply an asynchronous function with return type
+        [trcks.ResultSequence][] to each element in the wrapped
+        [trcks.SuccessSequence][] and flatten.
+
+        Wrapped [trcks.Failure][] objects are passed on unchanged.
+
+        Args:
+            f: The asynchronous function to be applied to each success element.
+
+        Returns:
+            A new [trcks.oop.AwaitableResultSequenceWrapper][] instance with
+
+                - the original [trcks.ResultSequence][] if it is a failure, or
+                - the first [trcks.Failure][] returned by the function, or
+                - a flattened awaitable [trcks.SuccessSequence][] if the function
+                    returns [trcks.SuccessSequence][] for all elements.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks import AwaitableResultSequence
+            >>> from trcks.oop import ResultSequenceWrapper
+            >>> async def expand(
+            ...     x: int,
+            ... ) -> AwaitableResultSequence[str, int]:
+            ...     await asyncio.sleep(0.001)
+            ...     if x > 0:
+            ...         return "success", [x, -x]
+            ...     return "failure", "bad"
+            ...
+            >>> wrapper_1 = ResultSequenceWrapper.construct_failure(
+            ...     "not found"
+            ... ).map_successes_to_awaitable_result_sequence(expand)
+            >>> wrapper_1
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(wrapper_1.core_as_coroutine)
+            ('failure', 'not found')
+            >>>
+            >>> wrapper_2 = ResultSequenceWrapper.construct_successes_from_sequence(
+            ...     [1, 2]
+            ... ).map_successes_to_awaitable_result_sequence(expand)
+            >>> wrapper_2
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(wrapper_2.core_as_coroutine)
+            ('success', [1, -1, 2, -2])
+        """
+        return AwaitableResultSequenceWrapper.construct_from_result_sequence(
+            self.core
+        ).map_successes_to_awaitable_result_sequence(f)
+
+    def map_successes_to_result(
+        self, f: Callable[[_S_default_co], Result[_F, _S]]
+    ) -> ResultSequenceWrapper[_F_default_co | _F, _S]:
+        """Apply a synchronous function with return type [trcks.Result][]
+        to each element in the wrapped [trcks.SuccessSequence][].
+
+        Wrapped [trcks.Failure][] objects are passed on unchanged.
+
+        Args:
+            f: The synchronous function to be applied to each success element.
+
+        Returns:
+            A new [trcks.oop.ResultSequenceWrapper][] instance with
+
+                - the original [trcks.ResultSequence][] object if it is a failure, or
+                - the first [trcks.Failure][] returned by the function, or
+                - a [trcks.SuccessSequence][] with all transformed elements if
+                    the function returns [trcks.Success][] for all elements.
+
+        Example:
+            >>> from trcks import Result
+            >>> from trcks.oop import ResultSequenceWrapper
+            >>> def check(x: int) -> Result[str, int]:
+            ...     if x > 0:
+            ...         return "success", x * 2
+            ...     return "failure", "bad"
+            ...
+            >>> ResultSequenceWrapper.construct_successes_from_sequence(
+            ...     [1, 2]
+            ... ).map_successes_to_result(check)
+            ResultSequenceWrapper(core=('success', [2, 4]))
+            >>>
+            >>> ResultSequenceWrapper.construct_successes_from_sequence(
+            ...     [1, -1, 2]
+            ... ).map_successes_to_result(check)
+            ResultSequenceWrapper(core=('failure', 'bad'))
+        """
+        mapped_f: Callable[
+            [ResultSequence[_F_default_co, _S_default_co]],
+            ResultSequence[_F_default_co | _F, _S],
+        ] = rs.map_successes_to_result(f)
+        return ResultSequenceWrapper(mapped_f(self.core))
+
+    def map_successes_to_result_sequence(
+        self, f: Callable[[_S_default_co], ResultSequence[_F, _S]]
+    ) -> ResultSequenceWrapper[_F_default_co | _F, _S]:
+        """Apply a synchronous function with return type [trcks.ResultSequence][]
+        to each element in the wrapped [trcks.SuccessSequence][] and flatten.
+
+        Wrapped [trcks.Failure][] objects are passed on unchanged.
+
+        Args:
+            f: The synchronous function to be applied to each success element.
+
+        Returns:
+            A new [trcks.oop.ResultSequenceWrapper][] instance with
+
+                - the original [trcks.ResultSequence][] object if it is a failure, or
+                - the first [trcks.Failure][] returned by the function, or
+                - a flattened [trcks.SuccessSequence][] if the function returns
+                    [trcks.SuccessSequence][] for all elements.
+
+        Example:
+            >>> from trcks import ResultSequence
+            >>> from trcks.oop import ResultSequenceWrapper
+            >>> def expand(x: int) -> ResultSequence[str, int]:
+            ...     if x > 0:
+            ...         return "success", [x, -x]
+            ...     return "failure", "bad"
+            ...
+            >>> ResultSequenceWrapper.construct_successes_from_sequence(
+            ...     [1, 2]
+            ... ).map_successes_to_result_sequence(expand)
+            ResultSequenceWrapper(core=('success', [1, -1, 2, -2]))
+            >>>
+            >>> ResultSequenceWrapper.construct_successes_from_sequence(
+            ...     [1, -1, 2]
+            ... ).map_successes_to_result_sequence(expand)
+            ResultSequenceWrapper(core=('failure', 'bad'))
+        """
+        mapped_f: Callable[
+            [ResultSequence[_F_default_co, _S_default_co]],
+            ResultSequence[_F_default_co | _F, _S],
+        ] = rs.map_successes_to_result_sequence(f)
+        return ResultSequenceWrapper(mapped_f(self.core))
+
+    def map_successes_to_sequence(
+        self, f: Callable[[_S_default_co], Sequence[_S]]
+    ) -> ResultSequenceWrapper[_F_default_co, _S]:
+        """Apply a synchronous function returning a sequence
+        to each element in the wrapped [trcks.SuccessSequence][] and flatten.
+
+        Wrapped [trcks.Failure][] objects are passed on unchanged.
+
+        Args:
+            f: The synchronous function to be applied to each success element.
+
+        Returns:
+            A new [trcks.oop.ResultSequenceWrapper][] instance with
+
+                - the original [trcks.ResultSequence][] object if it is a failure, or
+                - a flattened [trcks.SuccessSequence][] if
+                    the original [trcks.ResultSequence][] is a success.
+
+        Example:
+            >>> from trcks.oop import ResultSequenceWrapper
+            >>> ResultSequenceWrapper.construct_successes_from_sequence(
+            ...     [1, 2]
+            ... ).map_successes_to_sequence(lambda x: [x, -x])
+            ResultSequenceWrapper(core=('success', [1, -1, 2, -2]))
+        """
+        return ResultSequenceWrapper(rs.map_successes_to_sequence(f)(self.core))
+
+    def tap_failure(
+        self, f: Callable[[_F_default_co], object]
+    ) -> ResultSequenceWrapper[_F_default_co, _S_default_co]:
+        """Apply a synchronous side effect to the wrapped [trcks.Failure][] object.
+
+        Wrapped [trcks.SuccessSequence][] objects are passed on without side effects.
+
+        Args:
+            f: The synchronous side effect to be applied.
+
+        Returns:
+            A new [trcks.oop.ResultSequenceWrapper][] instance
+                with the original [trcks.ResultSequence][] object,
+                allowing for further method chaining.
+
+        Example:
+            >>> result_sequence_wrapper_1 = ResultSequenceWrapper.construct_failure(
+            ...     "oops"
+            ... ).tap_failure(lambda e: print(f"Error: {e}"))
+            Error: oops
+            >>> result_sequence_wrapper_1
+            ResultSequenceWrapper(core=('failure', 'oops'))
+            >>> result_sequence_wrapper_2 = (
+            ...     ResultSequenceWrapper.construct_successes(1).tap_failure(
+            ...         lambda e: print(f"Error: {e}")
+            ...     )
+            ... )
+            >>> result_sequence_wrapper_2
+            ResultSequenceWrapper(core=('success', [1]))
+        """
+        return ResultSequenceWrapper(rs.tap_failure(f)(self.core))
+
+    def tap_failure_to_awaitable(
+        self, f: Callable[[_F_default_co], Awaitable[object]]
+    ) -> AwaitableResultSequenceWrapper[_F_default_co, _S_default_co]:
+        """Apply an asynchronous side effect to the wrapped
+        [trcks.Failure][] object.
+
+        Wrapped [trcks.SuccessSequence][] objects are passed on without side
+        effects.
+
+        Args:
+            f: The asynchronous side effect to be applied.
+
+        Returns:
+            A new [trcks.oop.AwaitableResultSequenceWrapper][] instance with
+                the original [trcks.ResultSequence][] object.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks.oop import ResultSequenceWrapper
+            >>> async def log_slowly(e: str) -> None:
+            ...     await asyncio.sleep(0.001)
+            ...     print(f"Error: {e}")
+            ...
+            >>> wrapper_1 = ResultSequenceWrapper.construct_failure(
+            ...     "oops"
+            ... ).tap_failure_to_awaitable(log_slowly)
+            >>> wrapper_1
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> result_1 = asyncio.run(wrapper_1.core_as_coroutine)
+            Error: oops
+            >>> result_1
+            ('failure', 'oops')
+            >>>
+            >>> wrapper_2 = ResultSequenceWrapper.construct_successes(
+            ...     1
+            ... ).tap_failure_to_awaitable(log_slowly)
+            >>> wrapper_2
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(wrapper_2.core_as_coroutine)
+            ('success', [1])
+        """
+        return AwaitableResultSequenceWrapper.construct_from_result_sequence(
+            self.core
+        ).tap_failure_to_awaitable(f)
+
+    def tap_failure_to_awaitable_result(
+        self, f: Callable[[_F_default_co], AwaitableResult[object, _S]]
+    ) -> AwaitableResultSequenceWrapper[_F_default_co, _S_default_co | _S]:
+        """Apply an asynchronous side effect with return type [trcks.Result][]
+        to the wrapped [trcks.Failure][] object.
+
+        Wrapped [trcks.SuccessSequence][] objects are passed on without side
+        effects.
+
+        Args:
+            f: The asynchronous side effect to be applied.
+
+        Returns:
+            A new [trcks.oop.AwaitableResultSequenceWrapper][] instance with
+
+                - *the original* [trcks.Failure][]
+                    if the applied side effect returns a [trcks.Failure][],
+                - *the returned* [trcks.Success][] (wrapped as a sequence)
+                    if the applied side effect returns a [trcks.Success][] and
+                - *the original* [trcks.SuccessSequence][]
+                    if no side effect was applied.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks import Result
+            >>> from trcks.oop import ResultSequenceWrapper
+            >>> async def recover(e: str) -> Result[object, int]:
+            ...     await asyncio.sleep(0.001)
+            ...     if e == "not found":
+            ...         return "success", 0
+            ...     return "failure", e
+            ...
+            >>> wrapper_1 = ResultSequenceWrapper.construct_failure(
+            ...     "not found"
+            ... ).tap_failure_to_awaitable_result(recover)
+            >>> wrapper_1
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(wrapper_1.core_as_coroutine)
+            ('success', [0])
+            >>>
+            >>> wrapper_2 = ResultSequenceWrapper.construct_successes(
+            ...     1
+            ... ).tap_failure_to_awaitable_result(recover)
+            >>> wrapper_2
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(wrapper_2.core_as_coroutine)
+            ('success', [1])
+        """
+        return AwaitableResultSequenceWrapper.construct_from_result_sequence(
+            self.core
+        ).tap_failure_to_awaitable_result(f)
+
+    def tap_failure_to_awaitable_result_sequence(
+        self, f: Callable[[_F_default_co], AwaitableResultSequence[object, _S]]
+    ) -> AwaitableResultSequenceWrapper[_F_default_co, _S_default_co | _S]:
+        """Apply an asynchronous side effect with return type
+        [trcks.ResultSequence][] to the wrapped [trcks.Failure][] object.
+
+        Wrapped [trcks.SuccessSequence][] objects are passed on without side
+        effects.
+
+        Args:
+            f: The asynchronous side effect to be applied.
+
+        Returns:
+            A new [trcks.oop.AwaitableResultSequenceWrapper][] instance with
+
+                - *the original* [trcks.Failure][]
+                    if the applied side effect returns a [trcks.Failure][],
+                - *the returned* [trcks.SuccessSequence][]
+                    if the applied side effect returns a [trcks.SuccessSequence][]
+                    and
+                - *the original* [trcks.SuccessSequence][]
+                    if no side effect was applied.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks import AwaitableResultSequence
+            >>> from trcks.oop import ResultSequenceWrapper
+            >>> async def recover(
+            ...     e: str,
+            ... ) -> AwaitableResultSequence[object, int]:
+            ...     await asyncio.sleep(0.001)
+            ...     if e == "not found":
+            ...         return "success", [0, 1]
+            ...     return "failure", e
+            ...
+            >>> wrapper_1 = ResultSequenceWrapper.construct_failure(
+            ...     "not found"
+            ... ).tap_failure_to_awaitable_result_sequence(recover)
+            >>> wrapper_1
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(wrapper_1.core_as_coroutine)
+            ('success', [0, 1])
+            >>>
+            >>> wrapper_2 = ResultSequenceWrapper.construct_successes(
+            ...     1
+            ... ).tap_failure_to_awaitable_result_sequence(recover)
+            >>> wrapper_2
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(wrapper_2.core_as_coroutine)
+            ('success', [1])
+        """
+        return AwaitableResultSequenceWrapper.construct_from_result_sequence(
+            self.core
+        ).tap_failure_to_awaitable_result_sequence(f)
+
+    def tap_failure_to_result(
+        self, f: Callable[[_F_default_co], Result[object, _S]]
+    ) -> ResultSequenceWrapper[_F_default_co, _S_default_co | _S]:
+        """Apply a synchronous side effect with return type [trcks.Result][]
+        to the wrapped [trcks.Failure][] object.
+
+        Wrapped [trcks.SuccessSequence][] objects are passed on without side effects.
+
+        Args:
+            f: The synchronous side effect to be applied.
+
+        Returns:
+            A new [trcks.oop.ResultSequenceWrapper][] instance with
+
+                - *the original* [trcks.Failure][]
+                    if the applied side effect returns a [trcks.Failure][],
+                - *the returned* [trcks.Success][] (wrapped as a sequence)
+                    if the applied side effect returns a [trcks.Success][] and
+                - *the original* [trcks.SuccessSequence][]
+                    if no side effect was applied.
+
+        Example:
+            >>> from trcks import Result
+            >>> from trcks.oop import ResultSequenceWrapper
+            >>> def retry_lookup(e: str) -> Result[None, int]:
+            ...     if e == "not found":
+            ...         print("Retrying...")
+            ...         return "success", 42
+            ...     return "failure", None
+            ...
+            >>> ResultSequenceWrapper.construct_failure(
+            ...     "not found"
+            ... ).tap_failure_to_result(retry_lookup)
+            Retrying...
+            ResultSequenceWrapper(core=('success', [42]))
+            >>>
+            >>> ResultSequenceWrapper.construct_failure(
+            ...     "fatal"
+            ... ).tap_failure_to_result(retry_lookup)
+            ResultSequenceWrapper(core=('failure', 'fatal'))
+        """
+        tapped_f: Callable[
+            [ResultSequence[_F_default_co, _S_default_co]],
+            ResultSequence[_F_default_co, _S_default_co | _S],
+        ] = rs.tap_failure_to_result(f)
+        return ResultSequenceWrapper(tapped_f(self.core))
+
+    def tap_failure_to_result_sequence(
+        self, f: Callable[[_F_default_co], ResultSequence[object, _S]]
+    ) -> ResultSequenceWrapper[_F_default_co, _S_default_co | _S]:
+        """Apply a synchronous side effect with return type [trcks.ResultSequence][]
+        to the wrapped [trcks.Failure][] object.
+
+        Wrapped [trcks.SuccessSequence][] objects are passed on without side effects.
+
+        Args:
+            f: The synchronous side effect to be applied.
+
+        Returns:
+            A new [trcks.oop.ResultSequenceWrapper][] instance with
+
+                - *the original* [trcks.Failure][]
+                    if the applied side effect returns a [trcks.Failure][],
+                - *the returned* [trcks.SuccessSequence][]
+                    if the applied side effect returns a [trcks.SuccessSequence][] and
+                - *the original* [trcks.SuccessSequence][]
+                    if no side effect was applied.
+
+        Example:
+            >>> from trcks import ResultSequence
+            >>> from trcks.oop import ResultSequenceWrapper
+            >>> def attempt_recover(e: str) -> ResultSequence[None, int]:
+            ...     if e == "retry":
+            ...         return "success", [99]
+            ...     return "failure", None
+            ...
+            >>> ResultSequenceWrapper.construct_failure(
+            ...     "retry"
+            ... ).tap_failure_to_result_sequence(attempt_recover)
+            ResultSequenceWrapper(core=('success', [99]))
+            >>>
+            >>> ResultSequenceWrapper.construct_failure(
+            ...     "fatal"
+            ... ).tap_failure_to_result_sequence(attempt_recover)
+            ResultSequenceWrapper(core=('failure', 'fatal'))
+        """
+        tapped_f: Callable[
+            [ResultSequence[_F_default_co, _S_default_co]],
+            ResultSequence[_F_default_co, _S_default_co | _S],
+        ] = rs.tap_failure_to_result_sequence(f)
+        return ResultSequenceWrapper(tapped_f(self.core))
+
+    def tap_failure_to_sequence(
+        self, f: Callable[[_F_default_co], Sequence[object]]
+    ) -> ResultSequenceWrapper[Never, _F_default_co | _S_default_co]:
+        """Apply a synchronous side effect returning a sequence
+        to the wrapped [trcks.Failure][] object.
+
+        The failure is converted to a [trcks.SuccessSequence][] where
+        the original failure value is repeated once per element in
+        the sequence returned by the side effect.
+
+        Wrapped [trcks.SuccessSequence][] objects are passed on without side effects.
+
+        Args:
+            f: The synchronous side effect to be applied.
+
+        Returns:
+            A new [trcks.oop.ResultSequenceWrapper][] instance with
+
+                - a [trcks.SuccessSequence][] containing the original failure
+                    repeated once per element
+                    in the sequence returned by the side effect
+                    if the original [trcks.ResultSequence][] is a failure, or
+                - the original [trcks.SuccessSequence][] if no side effect was applied.
+
+        Example:
+            >>> from trcks.oop import ResultSequenceWrapper
+            >>> def log_err(e: str) -> list[None]:
+            ...     print(f"Error logged: {e}")
+            ...     print(f"Alert sent: {e}")
+            ...     return [None, None]
+            ...
+            >>> ResultSequenceWrapper.construct_failure(
+            ...     "critical"
+            ... ).tap_failure_to_sequence(log_err)
+            Error logged: critical
+            Alert sent: critical
+            ResultSequenceWrapper(core=('success', ['critical', 'critical']))
+            >>>
+            >>> ResultSequenceWrapper.construct_successes_from_sequence(
+            ...     [1, 2]
+            ... ).tap_failure_to_sequence(log_err)
+            ResultSequenceWrapper(core=('success', [1, 2]))
+        """
+        tapped_f: Callable[
+            [ResultSequence[_F_default_co, _S_default_co]],
+            ResultSequence[Never, _F_default_co | _S_default_co],
+        ] = rs.tap_failure_to_sequence(f)
+        return ResultSequenceWrapper(tapped_f(self.core))
+
+    def tap_successes(
+        self, f: Callable[[_S_default_co], object]
+    ) -> ResultSequenceWrapper[_F_default_co, _S_default_co]:
+        """Apply a synchronous side effect to each element in the wrapped
+        [trcks.SuccessSequence][].
+
+        Wrapped [trcks.Failure][] objects are passed on without side effects.
+
+        Args:
+            f: The synchronous side effect to be applied to each success element.
+
+        Returns:
+            A new [trcks.oop.ResultSequenceWrapper][] instance
+                with the original [trcks.ResultSequence][] object,
+                allowing for further method chaining.
+
+        Example:
+            >>> result_sequence_wrapper_1 = ResultSequenceWrapper.construct_failure(
+            ...     "oops"
+            ... ).tap_successes(lambda x: print(f"Value: {x}"))
+            >>> result_sequence_wrapper_1
+            ResultSequenceWrapper(core=('failure', 'oops'))
+            >>> result_sequence_wrapper_2 = (
+            ...     ResultSequenceWrapper.construct_successes_from_sequence([1, 2])
+            ...     .tap_successes(lambda x: print(f"Value: {x}"))
+            ... )
+            Value: 1
+            Value: 2
+            >>> result_sequence_wrapper_2
+            ResultSequenceWrapper(core=('success', [1, 2]))
+        """
+        return ResultSequenceWrapper(rs.tap_successes(f)(self.core))
+
+    def tap_successes_to_awaitable(
+        self, f: Callable[[_S_default_co], Awaitable[object]]
+    ) -> AwaitableResultSequenceWrapper[_F_default_co, _S_default_co]:
+        """Apply an asynchronous side effect to each element in the wrapped
+        [trcks.SuccessSequence][].
+
+        Wrapped [trcks.Failure][] objects are passed on without side effects.
+
+        Args:
+            f: The asynchronous side effect to be applied to each success element.
+
+        Returns:
+            A new [trcks.oop.AwaitableResultSequenceWrapper][] instance with
+                the original [trcks.ResultSequence][] object.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks.oop import ResultSequenceWrapper
+            >>> async def print_slowly(x: int) -> None:
+            ...     await asyncio.sleep(0.001)
+            ...     print(f"Value: {x}")
+            ...
+            >>> wrapper_1 = ResultSequenceWrapper.construct_failure(
+            ...     "oops"
+            ... ).tap_successes_to_awaitable(print_slowly)
+            >>> wrapper_1
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(wrapper_1.core_as_coroutine)
+            ('failure', 'oops')
+            >>>
+            >>> wrapper_2 = ResultSequenceWrapper.construct_successes_from_sequence(
+            ...     [1, 2]
+            ... ).tap_successes_to_awaitable(print_slowly)
+            >>> wrapper_2
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> result_2 = asyncio.run(wrapper_2.core_as_coroutine)
+            Value: 1
+            Value: 2
+            >>> result_2
+            ('success', [1, 2])
+        """
+        return AwaitableResultSequenceWrapper.construct_from_result_sequence(
+            self.core
+        ).tap_successes_to_awaitable(f)
+
+    def tap_successes_to_awaitable_result(
+        self, f: Callable[[_S_default_co], AwaitableResult[_F, object]]
+    ) -> AwaitableResultSequenceWrapper[_F_default_co | _F, _S_default_co]:
+        """Apply an asynchronous side effect with return type [trcks.Result][]
+        to each element in the wrapped [trcks.SuccessSequence][].
+
+        Wrapped [trcks.Failure][] objects are passed on without side effects.
+
+        Args:
+            f: The asynchronous side effect to be applied to each success element.
+
+        Returns:
+            A new [trcks.oop.AwaitableResultSequenceWrapper][] instance with
+
+                - *the original* [trcks.Failure][] if no side effect was applied,
+                - *the returned* [trcks.Failure][]
+                    if the applied side effect returns a [trcks.Failure][] and
+                - *the original* [trcks.SuccessSequence][]
+                    if the applied side effect returns [trcks.Success][] for all.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks import Result
+            >>> from trcks.oop import ResultSequenceWrapper
+            >>> async def check(x: int) -> Result[str, None]:
+            ...     await asyncio.sleep(0.001)
+            ...     if x > 0:
+            ...         return "success", None
+            ...     return "failure", "bad"
+            ...
+            >>> wrapper_1 = ResultSequenceWrapper.construct_failure(
+            ...     "oops"
+            ... ).tap_successes_to_awaitable_result(check)
+            >>> wrapper_1
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(wrapper_1.core_as_coroutine)
+            ('failure', 'oops')
+            >>>
+            >>> wrapper_2 = ResultSequenceWrapper.construct_successes_from_sequence(
+            ...     [1, 2]
+            ... ).tap_successes_to_awaitable_result(check)
+            >>> wrapper_2
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(wrapper_2.core_as_coroutine)
+            ('success', [1, 2])
+        """
+        return AwaitableResultSequenceWrapper.construct_from_result_sequence(
+            self.core
+        ).tap_successes_to_awaitable_result(f)
+
+    def tap_successes_to_awaitable_result_sequence(
+        self, f: Callable[[_S_default_co], AwaitableResultSequence[_F, object]]
+    ) -> AwaitableResultSequenceWrapper[_F_default_co | _F, _S_default_co]:
+        """Apply an asynchronous side effect with return type
+        [trcks.ResultSequence][] to each element in the wrapped
+        [trcks.SuccessSequence][].
+
+        Wrapped [trcks.Failure][] objects are passed on without side effects.
+
+        Args:
+            f: The asynchronous side effect to be applied to each success element.
+
+        Returns:
+            A new [trcks.oop.AwaitableResultSequenceWrapper][] instance with
+
+                - *the original* [trcks.Failure][] if no side effect was applied,
+                - *the returned* [trcks.Failure][]
+                    if the applied side effect returns a [trcks.Failure][] and
+                - *the original* [trcks.SuccessSequence][] (with each element
+                    repeated per element in the side effect output)
+                    if the applied side effect returns [trcks.SuccessSequence][]
+                    for all elements.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks import AwaitableResultSequence
+            >>> from trcks.oop import ResultSequenceWrapper
+            >>> async def audit(
+            ...     x: int,
+            ... ) -> AwaitableResultSequence[str, None]:
+            ...     await asyncio.sleep(0.001)
+            ...     if x > 0:
+            ...         return "success", [None, None]
+            ...     return "failure", "bad"
+            ...
+            >>> wrapper_1 = ResultSequenceWrapper.construct_failure(
+            ...     "oops"
+            ... ).tap_successes_to_awaitable_result_sequence(audit)
+            >>> wrapper_1
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(wrapper_1.core_as_coroutine)
+            ('failure', 'oops')
+            >>>
+            >>> wrapper_2 = ResultSequenceWrapper.construct_successes_from_sequence(
+            ...     [1, 2]
+            ... ).tap_successes_to_awaitable_result_sequence(audit)
+            >>> wrapper_2
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(wrapper_2.core_as_coroutine)
+            ('success', [1, 1, 2, 2])
+        """
+        return AwaitableResultSequenceWrapper.construct_from_result_sequence(
+            self.core
+        ).tap_successes_to_awaitable_result_sequence(f)
+
+    def tap_successes_to_result(
+        self, f: Callable[[_S_default_co], Result[_F, object]]
+    ) -> ResultSequenceWrapper[_F_default_co | _F, _S_default_co]:
+        """Apply a synchronous side effect with return type [trcks.Result][]
+        to each element in the wrapped [trcks.SuccessSequence][].
+
+        Wrapped [trcks.Failure][] objects are passed on without side effects.
+
+        Args:
+            f: The synchronous side effect to be applied to each success element.
+
+        Returns:
+            A new [trcks.oop.ResultSequenceWrapper][] instance with
+
+                - *the original* [trcks.Failure][] if no side effect was applied,
+                - *the returned* [trcks.Failure][]
+                    if the applied side effect returns a [trcks.Failure][] and
+                - *the original* [trcks.SuccessSequence][]
+                    if the applied side effect returns [trcks.Success][]
+                    for all elements.
+
+        Example:
+            >>> from trcks import Result
+            >>> from trcks.oop import ResultSequenceWrapper
+            >>> def audit(x: int) -> Result[str, None]:
+            ...     if x > 0:
+            ...         return "success", None
+            ...     return "failure", "bad"
+            ...
+            >>> ResultSequenceWrapper.construct_successes_from_sequence(
+            ...     [1, 2]
+            ... ).tap_successes_to_result(audit)
+            ResultSequenceWrapper(core=('success', [1, 2]))
+            >>>
+            >>> ResultSequenceWrapper.construct_successes_from_sequence(
+            ...     [1, -1, 2]
+            ... ).tap_successes_to_result(audit)
+            ResultSequenceWrapper(core=('failure', 'bad'))
+        """
+        return ResultSequenceWrapper(rs.tap_successes_to_result(f)(self.core))
+
+    def tap_successes_to_result_sequence(
+        self, f: Callable[[_S_default_co], ResultSequence[_F, object]]
+    ) -> ResultSequenceWrapper[_F_default_co | _F, _S_default_co]:
+        """Apply a synchronous side effect with return type [trcks.ResultSequence][]
+        to each element in the wrapped [trcks.SuccessSequence][].
+
+        Wrapped [trcks.Failure][] objects are passed on without side effects.
+
+        Args:
+            f: The synchronous side effect to be applied to each success element.
+
+        Returns:
+            A new [trcks.oop.ResultSequenceWrapper][] instance with
+
+                - *the original* [trcks.Failure][] if no side effect was applied,
+                - *the returned* [trcks.Failure][]
+                    if the applied side effect returns a [trcks.Failure][] and
+                - *the original* [trcks.SuccessSequence][] element repeated once
+                    per element in the side effect output if the applied side effect
+                    returns [trcks.SuccessSequence][] for all elements.
+
+        Example:
+            >>> from trcks import ResultSequence
+            >>> from trcks.oop import ResultSequenceWrapper
+            >>> def audit(x: int) -> ResultSequence[str, None]:
+            ...     if x > 0:
+            ...         return "success", [None, None]
+            ...     return "failure", "bad"
+            ...
+            >>> ResultSequenceWrapper.construct_successes(
+            ...     7
+            ... ).tap_successes_to_result_sequence(audit)
+            ResultSequenceWrapper(core=('success', [7, 7]))
+            >>>
+            >>> ResultSequenceWrapper.construct_successes_from_sequence(
+            ...     [1, -1]
+            ... ).tap_successes_to_result_sequence(audit)
+            ResultSequenceWrapper(core=('failure', 'bad'))
+        """
+        return ResultSequenceWrapper(rs.tap_successes_to_result_sequence(f)(self.core))
+
+    def tap_successes_to_sequence(
+        self, f: Callable[[_S_default_co], Sequence[object]]
+    ) -> ResultSequenceWrapper[_F_default_co, _S_default_co]:
+        """Apply a synchronous side effect returning a sequence
+        to each element in the wrapped [trcks.SuccessSequence][].
+
+        The original success elements are repeated once per element
+        in the sequence returned by the side effect.
+
+        Wrapped [trcks.Failure][] objects are passed on without side effects.
+
+        Args:
+            f: The synchronous side effect to be applied to each success element.
+
+        Returns:
+            A new [trcks.oop.ResultSequenceWrapper][] instance with
+
+                - the original [trcks.Failure][] if no side effect was applied, or
+                - a [trcks.SuccessSequence][] where each original element is repeated
+                    once per element in the sequence returned by the side effect.
+
+        Example:
+            >>> from trcks.oop import ResultSequenceWrapper
+            >>> def log_mult(x: int) -> list[None]:
+            ...     print(f"v={x}")
+            ...     print(f"v={x}")
+            ...     return [None, None]
+            ...
+            >>> ResultSequenceWrapper.construct_successes(7).tap_successes_to_sequence(
+            ...     log_mult
+            ... )
+            v=7
+            v=7
+            ResultSequenceWrapper(core=('success', [7, 7]))
+        """
+        return ResultSequenceWrapper(rs.tap_successes_to_sequence(f)(self.core))
+
+
+class SequenceWrapper(_Wrapper[Sequence[_T_co]]):
+    """Type-safe and immutable wrapper for [collections.abc.Sequence][] objects.
+
+    The wrapped [collections.abc.Sequence][] can be accessed
+    via the attribute `trcks.oop.SequenceWrapper.core`.
+    The `trcks.oop.SequenceWrapper.map*` methods allow method chaining.
+    The `trcks.oop.SequenceWrapper.tap*` methods allow for side effects
+    without changing the wrapped sequence.
+
+    Example:
+        >>> from trcks.oop import SequenceWrapper
+        >>> def double(x: int) -> int:
+        ...     return x * 2
+        ...
+        >>> sequence_wrapper = (
+        ...     SequenceWrapper
+        ...     .construct_from_sequence((1, 2, 3))
+        ...     .map(double)
+        ...     .tap(lambda x: print(f"Processing: {x}"))
+        ... )
+        Processing: 2
+        Processing: 4
+        Processing: 6
+        >>> sequence_wrapper
+        SequenceWrapper(core=[2, 4, 6])
+    """
+
+    @staticmethod
+    def construct(value: _T) -> SequenceWrapper[_T]:
+        """Construct and wrap a [collections.abc.Sequence][] from a single value.
+
+        Args:
+            value: The value to be wrapped in a [collections.abc.Sequence][].
+
+        Returns:
+            A new [trcks.oop.SequenceWrapper][] instance with
+                a [collections.abc.Sequence][] containing the single value.
+
+        Example:
+            >>> from trcks.oop import SequenceWrapper
+            >>> sequence_wrapper = SequenceWrapper.construct(42)
+            >>> sequence_wrapper
+            SequenceWrapper(core=[42])
+        """
+        return SequenceWrapper(s.construct(value))
+
+    @staticmethod
+    def construct_from_sequence(seq: Sequence[_T]) -> SequenceWrapper[_T]:
+        """Wrap a [collections.abc.Sequence][] object.
+
+        Args:
+            seq: The [collections.abc.Sequence][] to be wrapped.
+
+        Returns:
+            A new [trcks.oop.SequenceWrapper][] instance with
+                the wrapped [collections.abc.Sequence][].
+
+        Example:
+            >>> from trcks.oop import SequenceWrapper
+            >>> sequence_wrapper = SequenceWrapper.construct_from_sequence([1, 2, 3])
+            >>> sequence_wrapper
+            SequenceWrapper(core=[1, 2, 3])
+        """
+        return SequenceWrapper(seq)
+
+    def map(self, f: Callable[[_T_co], _T]) -> SequenceWrapper[_T]:
+        """Apply a synchronous function to each element in the wrapped
+        [collections.abc.Sequence][].
+
+        Args:
+            f: The synchronous function to be applied to each element.
+
+        Returns:
+            A new [trcks.oop.SequenceWrapper][] instance with
+                a [collections.abc.Sequence][] containing
+                the results of applying the function to each element.
+
+        Example:
+            >>> from trcks.oop import SequenceWrapper
+            >>> def triple(x: int) -> int:
+            ...     return x * 3
+            ...
+            >>> sequence_wrapper = (
+            ...     SequenceWrapper
+            ...     .construct_from_sequence((1, 2, 3))
+            ...     .map(triple)
+            ... )
+            >>> sequence_wrapper
+            SequenceWrapper(core=[3, 6, 9])
+        """
+        return SequenceWrapper(s.map_(f)(self.core))
+
+    def map_to_awaitable(
+        self, f: Callable[[_T_co], Awaitable[_T]]
+    ) -> AwaitableSequenceWrapper[_T]:
+        """Apply an asynchronous function to each element in the wrapped
+        [collections.abc.Sequence][].
+
+        Args:
+            f: The asynchronous function to be applied to each element.
+
+        Returns:
+            An [trcks.oop.AwaitableSequenceWrapper][] instance with
+                an awaitable [collections.abc.Sequence][] containing
+                the results of applying the function to each element.
+
+        Example:
+            >>> import asyncio
+            >>> from collections.abc import Sequence
+            >>> from trcks.oop import SequenceWrapper
+            >>> async def add_one(x: int) -> int:
+            ...     await asyncio.sleep(0.001)
+            ...     return x + 1
+            ...
+            >>> async def main() -> Sequence[int]:
+            ...     return await (
+            ...         SequenceWrapper
+            ...         .construct_from_sequence((1, 2, 3))
+            ...         .map_to_awaitable(add_one)
+            ...         .core_as_coroutine
+            ...     )
+            ...
+            >>> asyncio.run(main())
+            [2, 3, 4]
+        """
+        return AwaitableSequenceWrapper.construct_from_sequence(
+            self.core
+        ).map_to_awaitable(f)
+
+    def map_to_awaitable_result(
+        self, f: Callable[[_T_co], AwaitableResult[_F, _S]]
+    ) -> AwaitableResultSequenceWrapper[_F, _S]:
+        """Apply an asynchronous function with return type [trcks.Result][]
+        to each element in the wrapped [collections.abc.Sequence][].
+
+        Wrapped objects short-circuit on the first [trcks.Failure][].
+
+        Args:
+            f: The asynchronous function to be applied to each element.
+
+        Returns:
+            An [trcks.oop.AwaitableResultSequenceWrapper][] instance with
+
+                - the first [trcks.Failure][] returned by the function, or
+                - an awaitable [trcks.SuccessSequence][] if the function
+                    returns [trcks.Success][] for all elements.
+
+        Example:
+            >>> import asyncio
+            >>> from collections.abc import Sequence
+            >>> from trcks import Result
+            >>> from trcks.oop import SequenceWrapper
+            >>> async def check(x: int) -> Result[str, int]:
+            ...     await asyncio.sleep(0.001)
+            ...     if x > 0:
+            ...         return "success", x * 2
+            ...     return "failure", "bad"
+            ...
+            >>> async def main_1() -> Sequence[int]:
+            ...     return await (
+            ...         SequenceWrapper
+            ...         .construct_from_sequence([1, 2])
+            ...         .map_to_awaitable_result(check)
+            ...         .core_as_coroutine
+            ...     )
+            ...
+            >>> asyncio.run(main_1())
+            ('success', [2, 4])
+            >>> async def main_2() -> object:
+            ...     return await (
+            ...         SequenceWrapper
+            ...         .construct_from_sequence([1, -1, 2])
+            ...         .map_to_awaitable_result(check)
+            ...         .core_as_coroutine
+            ...     )
+            ...
+            >>> asyncio.run(main_2())
+            ('failure', 'bad')
+        """
+        return AwaitableResultSequenceWrapper.construct_successes_from_sequence(
+            self.core
+        ).map_successes_to_awaitable_result(f)
+
+    def map_to_awaitable_result_sequence(
+        self, f: Callable[[_T_co], AwaitableResultSequence[_F, _S]]
+    ) -> AwaitableResultSequenceWrapper[_F, _S]:
+        """Apply an asynchronous function with return type
+        [trcks.ResultSequence][] to each element in the wrapped
+        [collections.abc.Sequence][] and flatten.
+
+        Wrapped objects short-circuit on the first [trcks.Failure][].
+
+        Args:
+            f: The asynchronous function to be applied to each element.
+
+        Returns:
+            An [trcks.oop.AwaitableResultSequenceWrapper][] instance with
+
+                - the first [trcks.Failure][] returned by the function, or
+                - a flattened awaitable [trcks.SuccessSequence][] if the
+                    function returns [trcks.SuccessSequence][] for all elements.
+
+        Example:
+            >>> import asyncio
+            >>> from collections.abc import Sequence
+            >>> from trcks import AwaitableResultSequence
+            >>> from trcks.oop import SequenceWrapper
+            >>> async def expand(
+            ...     x: int,
+            ... ) -> AwaitableResultSequence[str, int]:
+            ...     await asyncio.sleep(0.001)
+            ...     if x > 0:
+            ...         return "success", [x, -x]
+            ...     return "failure", "bad"
+            ...
+            >>> async def main_1() -> object:
+            ...     return await (
+            ...         SequenceWrapper
+            ...         .construct_from_sequence([1, 2])
+            ...         .map_to_awaitable_result_sequence(expand)
+            ...         .core_as_coroutine
+            ...     )
+            ...
+            >>> asyncio.run(main_1())
+            ('success', [1, -1, 2, -2])
+            >>> async def main_2() -> object:
+            ...     return await (
+            ...         SequenceWrapper
+            ...         .construct_from_sequence([1, -1, 2])
+            ...         .map_to_awaitable_result_sequence(expand)
+            ...         .core_as_coroutine
+            ...     )
+            ...
+            >>> asyncio.run(main_2())
+            ('failure', 'bad')
+        """
+        return AwaitableResultSequenceWrapper.construct_successes_from_sequence(
+            self.core
+        ).map_successes_to_awaitable_result_sequence(f)
+
+    def map_to_awaitable_sequence(
+        self, f: Callable[[_T_co], AwaitableSequence[_T]]
+    ) -> AwaitableSequenceWrapper[_T]:
+        """Apply an asynchronous function returning a [collections.abc.Sequence][]
+        to each element in the wrapped [collections.abc.Sequence][] and flatten.
+
+        Args:
+            f: The asynchronous function to be applied to each element,
+                returning an awaitable [collections.abc.Sequence][].
+
+        Returns:
+            An [trcks.oop.AwaitableSequenceWrapper][] instance with
+                the flattened awaitable [collections.abc.Sequence][].
+
+        Example:
+            >>> import asyncio
+            >>> from collections.abc import Sequence
+            >>> from trcks.oop import SequenceWrapper
+            >>> async def duplicate(x: int) -> list[int]:
+            ...     await asyncio.sleep(0.001)
+            ...     return [x, x]
+            ...
+            >>> async def main() -> Sequence[int]:
+            ...     return await (
+            ...         SequenceWrapper
+            ...         .construct_from_sequence((1, 2))
+            ...         .map_to_awaitable_sequence(duplicate)
+            ...         .core_as_coroutine
+            ...     )
+            ...
+            >>> asyncio.run(main())
+            [1, 1, 2, 2]
+        """
+        return AwaitableSequenceWrapper.construct_from_sequence(
+            self.core
+        ).map_to_awaitable_sequence(f)
+
+    def map_to_result(
+        self, f: Callable[[_T_co], Result[_F, _S]]
+    ) -> ResultSequenceWrapper[_F, _S]:
+        """Apply a synchronous function with return type [trcks.Result][]
+        to each element in the wrapped [collections.abc.Sequence][].
+
+        Args:
+            f: The synchronous function to be applied to each element.
+
+        Returns:
+            A [trcks.oop.ResultSequenceWrapper][] instance with
+
+                - the first [trcks.Failure][] returned by the function, or
+                - a [trcks.SuccessSequence][] with all transformed elements if
+                    the function returns [trcks.Success][] for all elements.
+
+        Example:
+            >>> from trcks import Result
+            >>> from trcks.oop import SequenceWrapper
+            >>> def check(x: int) -> Result[str, int]:
+            ...     if x > 0:
+            ...         return "success", x * 2
+            ...     return "failure", "bad"
+            ...
+            >>> SequenceWrapper.construct_from_sequence(
+            ...     [1, 2, 3]
+            ... ).map_to_result(check)
+            ResultSequenceWrapper(core=('success', [2, 4, 6]))
+            >>>
+            >>> SequenceWrapper.construct_from_sequence(
+            ...     [1, -1, 2]
+            ... ).map_to_result(check)
+            ResultSequenceWrapper(core=('failure', 'bad'))
+        """
+        return ResultSequenceWrapper.construct_successes_from_sequence(
+            self.core
+        ).map_successes_to_result(f)
+
+    def map_to_result_sequence(
+        self, f: Callable[[_T_co], ResultSequence[_F, _S]]
+    ) -> ResultSequenceWrapper[_F, _S]:
+        """Apply a synchronous function with return type [trcks.ResultSequence][]
+        to each element in the wrapped [collections.abc.Sequence][] and flatten.
+
+        Args:
+            f: The synchronous function to be applied to each element,
+                returning a [trcks.ResultSequence][].
+
+        Returns:
+            A [trcks.oop.ResultSequenceWrapper][] instance with
+
+                - the first [trcks.Failure][] returned by the function, or
+                - a flattened [trcks.SuccessSequence][] if
+                    the function returns [trcks.SuccessSequence][] for all elements.
+
+        Example:
+            >>> from trcks import ResultSequence
+            >>> from trcks.oop import SequenceWrapper
+            >>> def expand(x: int) -> ResultSequence[str, int]:
+            ...     if x > 0:
+            ...         return "success", [x, -x]
+            ...     return "failure", "bad"
+            ...
+            >>> SequenceWrapper.construct_from_sequence(
+            ...     [1, 2]
+            ... ).map_to_result_sequence(expand)
+            ResultSequenceWrapper(core=('success', [1, -1, 2, -2]))
+            >>>
+            >>> SequenceWrapper.construct_from_sequence(
+            ...     [1, -1, 2]
+            ... ).map_to_result_sequence(expand)
+            ResultSequenceWrapper(core=('failure', 'bad'))
+        """
+        return ResultSequenceWrapper.construct_successes_from_sequence(
+            self.core
+        ).map_successes_to_result_sequence(f)
+
+    def map_to_sequence(
+        self, f: Callable[[_T_co], Sequence[_T]]
+    ) -> SequenceWrapper[_T]:
+        """Apply a function returning a [collections.abc.Sequence][] to each element
+        in the wrapped [collections.abc.Sequence][] and flatten the result.
+
+        Args:
+            f: The function to be applied to each element,
+                returning a [collections.abc.Sequence][].
+
+        Returns:
+            A new [trcks.oop.SequenceWrapper][] instance with
+                the flattened [collections.abc.Sequence][].
+
+        Example:
+            >>> from trcks.oop import SequenceWrapper
+            >>> def duplicate(x: int) -> list[int]:
+            ...     return [x, x]
+            ...
+            >>> sequence_wrapper = (
+            ...     SequenceWrapper
+            ...     .construct_from_sequence((1, 2, 3))
+            ...     .map_to_sequence(duplicate)
+            ... )
+            >>> sequence_wrapper
+            SequenceWrapper(core=[1, 1, 2, 2, 3, 3])
+        """
+        return SequenceWrapper(s.map_to_sequence(f)(self.core))
+
+    def tap(self, f: Callable[[_T_co], object]) -> SequenceWrapper[_T_co]:
+        """Apply a synchronous side effect to each element in the wrapped
+        [collections.abc.Sequence][].
+
+        Args:
+            f: The synchronous side effect to be applied to each element.
+
+        Returns:
+            A new [trcks.oop.SequenceWrapper][] instance with
+                the original [collections.abc.Sequence][].
+
+        Example:
+            >>> from trcks.oop import SequenceWrapper
+            >>> sequence_wrapper = (
+            ...     SequenceWrapper
+            ...     .construct_from_sequence((1, 2, 3))
+            ...     .tap(lambda x: print(f"Value: {x}"))
+            ... )
+            Value: 1
+            Value: 2
+            Value: 3
+            >>> sequence_wrapper
+            SequenceWrapper(core=[1, 2, 3])
+        """
+        return SequenceWrapper(s.tap(f)(self.core))
+
+    def tap_to_awaitable(
+        self, f: Callable[[_T_co], Awaitable[object]]
+    ) -> AwaitableSequenceWrapper[_T_co]:
+        """Apply an asynchronous side effect to each element in the wrapped
+        [collections.abc.Sequence][].
+
+        Args:
+            f: The asynchronous side effect to be applied to each element.
+
+        Returns:
+            An [trcks.oop.AwaitableSequenceWrapper][] instance with
+                the original awaitable [collections.abc.Sequence][].
+
+        Example:
+            >>> import asyncio
+            >>> from collections.abc import Sequence
+            >>> from trcks.oop import SequenceWrapper
+            >>> async def print_value(x: int) -> None:
+            ...     await asyncio.sleep(0.001)
+            ...     print(f"Value: {x}")
+            ...
+            >>> async def main() -> Sequence[int]:
+            ...     return await (
+            ...         SequenceWrapper
+            ...         .construct_from_sequence((1, 2, 3))
+            ...         .tap_to_awaitable(print_value)
+            ...         .core_as_coroutine
+            ...     )
+            ...
+            >>> asyncio.run(main())
+            Value: 1
+            Value: 2
+            Value: 3
+            [1, 2, 3]
+        """
+        return AwaitableSequenceWrapper.construct_from_sequence(
+            self.core
+        ).tap_to_awaitable(f)
+
+    def tap_to_awaitable_result(
+        self, f: Callable[[_T_co], AwaitableResult[_F, object]]
+    ) -> AwaitableResultSequenceWrapper[_F, _T_co]:
+        """Apply an asynchronous side effect with return type [trcks.Result][]
+        to each element in the wrapped [collections.abc.Sequence][].
+
+        Args:
+            f: The asynchronous side effect to be applied to each element.
+
+        Returns:
+            An [trcks.oop.AwaitableResultSequenceWrapper][] instance with
+
+                - *the returned* [trcks.Failure][]
+                    if the applied side effect returns a [trcks.Failure][] or
+                - *the original* [collections.abc.Sequence][] with each element
+                    repeated for the first [trcks.Success][] if all succeed.
+
+        Example:
+            >>> import asyncio
+            >>> from collections.abc import Sequence
+            >>> from trcks import Result
+            >>> from trcks.oop import SequenceWrapper
+            >>> async def check(x: int) -> Result[str, None]:
+            ...     await asyncio.sleep(0.001)
+            ...     if x > 0:
+            ...         return "success", None
+            ...     return "failure", "bad"
+            ...
+            >>> async def main_1() -> object:
+            ...     return await (
+            ...         SequenceWrapper
+            ...         .construct_from_sequence([1, 2])
+            ...         .tap_to_awaitable_result(check)
+            ...         .core_as_coroutine
+            ...     )
+            ...
+            >>> asyncio.run(main_1())
+            ('success', [1, 2])
+            >>> async def main_2() -> object:
+            ...     return await (
+            ...         SequenceWrapper
+            ...         .construct_from_sequence([1, -1, 2])
+            ...         .tap_to_awaitable_result(check)
+            ...         .core_as_coroutine
+            ...     )
+            ...
+            >>> asyncio.run(main_2())
+            ('failure', 'bad')
+        """
+        return AwaitableResultSequenceWrapper.construct_successes_from_sequence(
+            self.core
+        ).tap_successes_to_awaitable_result(f)
+
+    def tap_to_awaitable_result_sequence(
+        self, f: Callable[[_T_co], AwaitableResultSequence[_F, object]]
+    ) -> AwaitableResultSequenceWrapper[_F, _T_co]:
+        """Apply an asynchronous side effect with return type
+        [trcks.ResultSequence][] to each element in the wrapped
+        [collections.abc.Sequence][].
+
+        Args:
+            f: The asynchronous side effect to be applied to each element.
+
+        Returns:
+            An [trcks.oop.AwaitableResultSequenceWrapper][] instance with
+
+                - *the returned* [trcks.Failure][]
+                    if the applied side effect returns a [trcks.Failure][] or
+                - *the original* element repeated once per element in the side
+                    effect output for each element if all succeed.
+
+        Example:
+            >>> import asyncio
+            >>> from collections.abc import Sequence
+            >>> from trcks import AwaitableResultSequence
+            >>> from trcks.oop import SequenceWrapper
+            >>> async def audit(
+            ...     x: int,
+            ... ) -> AwaitableResultSequence[str, None]:
+            ...     await asyncio.sleep(0.001)
+            ...     if x > 0:
+            ...         return "success", [None, None]
+            ...     return "failure", "bad"
+            ...
+            >>> async def main_1() -> object:
+            ...     return await (
+            ...         SequenceWrapper
+            ...         .construct_from_sequence([1, 2])
+            ...         .tap_to_awaitable_result_sequence(audit)
+            ...         .core_as_coroutine
+            ...     )
+            ...
+            >>> asyncio.run(main_1())
+            ('success', [1, 1, 2, 2])
+            >>> async def main_2() -> object:
+            ...     return await (
+            ...         SequenceWrapper
+            ...         .construct_from_sequence([1, -1, 2])
+            ...         .tap_to_awaitable_result_sequence(audit)
+            ...         .core_as_coroutine
+            ...     )
+            ...
+            >>> asyncio.run(main_2())
+            ('failure', 'bad')
+        """
+        return AwaitableResultSequenceWrapper.construct_successes_from_sequence(
+            self.core
+        ).tap_successes_to_awaitable_result_sequence(f)
+
+    def tap_to_awaitable_sequence(
+        self, f: Callable[[_T_co], AwaitableSequence[object]]
+    ) -> AwaitableSequenceWrapper[_T_co]:
+        """Apply an asynchronous side effect returning a [collections.abc.Sequence][]
+        to each element in the wrapped [collections.abc.Sequence][].
+
+        Args:
+            f: The asynchronous side effect to be applied to each element,
+                returning an awaitable [collections.abc.Sequence][].
+
+        Returns:
+            An [trcks.oop.AwaitableSequenceWrapper][] instance with
+                the original awaitable [collections.abc.Sequence][].
+
+        Example:
+            >>> import asyncio
+            >>> from collections.abc import Sequence
+            >>> from trcks.oop import SequenceWrapper
+            >>> async def write_to_disk(x: int) -> list[str]:
+            ...     await asyncio.sleep(0.001)
+            ...     print(f"Wrote {x} to disk.")
+            ...     return [str(x), str(x)]
+            ...
+            >>> async def main() -> Sequence[int]:
+            ...     return await (
+            ...         SequenceWrapper
+            ...         .construct_from_sequence((1, 2, 3))
+            ...         .tap_to_awaitable_sequence(write_to_disk)
+            ...         .core_as_coroutine
+            ...     )
+            ...
+            >>> asyncio.run(main())
+            Wrote 1 to disk.
+            Wrote 2 to disk.
+            Wrote 3 to disk.
+            [1, 1, 2, 2, 3, 3]
+        """
+        return AwaitableSequenceWrapper.construct_from_sequence(
+            self.core
+        ).tap_to_awaitable_sequence(f)
+
+    def tap_to_result(
+        self, f: Callable[[_T_co], Result[_F, object]]
+    ) -> ResultSequenceWrapper[_F, _T_co]:
+        """Apply a synchronous side effect with return type [trcks.Result][]
+        to each element in the wrapped [collections.abc.Sequence][].
+
+        Args:
+            f: The synchronous side effect to be applied to each element.
+
+        Returns:
+            A [trcks.oop.ResultSequenceWrapper][] instance with
+
+                - *the returned* [trcks.Failure][]
+                    if the applied side effect returns a [trcks.Failure][] or
+                - *the original* [trcks.SuccessSequence][]
+                    if the applied side effect returns [trcks.Success][]
+                    for all elements.
+
+        Example:
+            >>> from trcks import Result
+            >>> from trcks.oop import SequenceWrapper
+            >>> def audit(x: int) -> Result[str, None]:
+            ...     if x > 0:
+            ...         return "success", None
+            ...     return "failure", "bad"
+            ...
+            >>> SequenceWrapper.construct_from_sequence(
+            ...     [1, 2]
+            ... ).tap_to_result(audit)
+            ResultSequenceWrapper(core=('success', [1, 2]))
+            >>>
+            >>> SequenceWrapper.construct_from_sequence(
+            ...     [1, -1, 2]
+            ... ).tap_to_result(audit)
+            ResultSequenceWrapper(core=('failure', 'bad'))
+        """
+        return ResultSequenceWrapper.construct_successes_from_sequence(
+            self.core
+        ).tap_successes_to_result(f)
+
+    def tap_to_result_sequence(
+        self, f: Callable[[_T_co], ResultSequence[_F, object]]
+    ) -> ResultSequenceWrapper[_F, _T_co]:
+        """Apply a synchronous side effect with return type [trcks.ResultSequence][]
+        to each element in the wrapped [collections.abc.Sequence][].
+
+        Args:
+            f: The synchronous side effect to be applied to each element.
+
+        Returns:
+            A [trcks.oop.ResultSequenceWrapper][] instance with
+
+                - *the returned* [trcks.Failure][]
+                    if the applied side effect returns a [trcks.Failure][] or
+                - *the original* [trcks.SuccessSequence][] element repeated once
+                    per element in the side effect output if the applied side effect
+                    returns [trcks.SuccessSequence][] for all elements.
+
+        Example:
+            >>> from trcks import ResultSequence
+            >>> from trcks.oop import SequenceWrapper
+            >>> def audit(x: int) -> ResultSequence[str, None]:
+            ...     if x > 0:
+            ...         return "success", [None, None]
+            ...     return "failure", "bad"
+            ...
+            >>> SequenceWrapper.construct_from_sequence(
+            ...     [7]
+            ... ).tap_to_result_sequence(audit)
+            ResultSequenceWrapper(core=('success', [7, 7]))
+            >>>
+            >>> SequenceWrapper.construct_from_sequence(
+            ...     [1, -1]
+            ... ).tap_to_result_sequence(audit)
+            ResultSequenceWrapper(core=('failure', 'bad'))
+        """
+        return ResultSequenceWrapper.construct_successes_from_sequence(
+            self.core
+        ).tap_successes_to_result_sequence(f)
+
+    def tap_to_sequence(
+        self, f: Callable[[_T_co], Sequence[object]]
+    ) -> SequenceWrapper[_T_co]:
+        """Apply a side effect returning a [collections.abc.Sequence][] to each element
+        in the wrapped [collections.abc.Sequence][].
+
+        Args:
+            f: The side effect to be applied to each element,
+                returning a [collections.abc.Sequence][].
+
+        Returns:
+            A new [trcks.oop.SequenceWrapper][] instance with
+                the original [collections.abc.Sequence][].
+
+        Example:
+            >>> from trcks.oop import SequenceWrapper
+            >>> def write_to_disk(x: int) -> list[str]:
+            ...     print(f"Wrote {x} to disk.")
+            ...     return [str(x), str(x)]
+            ...
+            >>> sequence_wrapper = (
+            ...     SequenceWrapper
+            ...     .construct_from_sequence((1, 2, 3))
+            ...     .tap_to_sequence(write_to_disk)
+            ... )
+            Wrote 1 to disk.
+            Wrote 2 to disk.
+            Wrote 3 to disk.
+            >>> sequence_wrapper
+            SequenceWrapper(core=[1, 1, 2, 2, 3, 3])
+        """
+        return SequenceWrapper(s.tap_to_sequence(f)(self.core))
 
 
 class Wrapper(_Wrapper[_T_co]):
@@ -2471,6 +8016,76 @@ class Wrapper(_Wrapper[_T_co]):
         """
         return AwaitableResultWrapper(f(self.core))
 
+    def map_to_awaitable_result_sequence(
+        self, f: Callable[[_T_co], AwaitableResultSequence[_F, _S]]
+    ) -> AwaitableResultSequenceWrapper[_F, _S]:
+        """Apply an asynchronous function with return type
+        [trcks.ResultSequence][] to the wrapped object.
+
+        Args:
+            f: The asynchronous function to be applied.
+
+        Returns:
+            A [trcks.oop.AwaitableResultSequenceWrapper][] instance with
+                the result of the function application.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks import AwaitableResultSequence
+            >>> from trcks.oop import Wrapper
+            >>> async def validate(x: float) -> AwaitableResultSequence[str, float]:
+            ...     await asyncio.sleep(0.001)
+            ...     if x < 0:
+            ...         return "failure", "negative value"
+            ...     return "success", [x, x * 2]
+            ...
+            >>> wrapper = (
+            ...     Wrapper
+            ...     .construct(5.0)
+            ...     .map_to_awaitable_result_sequence(validate)
+            ... )
+            >>> wrapper
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(wrapper.core_as_coroutine)
+            ('success', [5.0, 10.0])
+        """
+        return AwaitableResultSequenceWrapper(f(self.core))
+
+    def map_to_awaitable_sequence(
+        self, f: Callable[[_T_co], AwaitableSequence[_T]]
+    ) -> AwaitableSequenceWrapper[_T]:
+        """Apply an asynchronous function returning a [collections.abc.Sequence][]
+        to the wrapped object.
+
+        Args:
+            f: The asynchronous function to be applied, returning a
+                [collections.abc.Sequence][].
+
+        Returns:
+            A [trcks.oop.AwaitableSequenceWrapper][] instance with
+                the result of the function application.
+
+        Example:
+            >>> import asyncio
+            >>> from collections.abc import Sequence
+            >>> from trcks.oop import Wrapper
+            >>> async def duplicate(x: int) -> list[int]:
+            ...     await asyncio.sleep(0.001)
+            ...     return [x, x]
+            ...
+            >>> async def main() -> Sequence[int]:
+            ...     awaitable_sequence_wrapper = (
+            ...         Wrapper.construct(7).map_to_awaitable_sequence(duplicate)
+            ...     )
+            ...     sequence = await awaitable_sequence_wrapper.core_as_coroutine
+            ...     assert len(sequence) == 2
+            ...     return sequence
+            ...
+            >>> asyncio.run(main())
+            [7, 7]
+        """
+        return AwaitableSequenceWrapper(f(self.core))
+
     def map_to_result(
         self, f: Callable[[_T_co], Result[_F, _S]]
     ) -> ResultWrapper[_F, _S]:
@@ -2493,6 +8108,53 @@ class Wrapper(_Wrapper[_T_co]):
             ResultWrapper(core=('failure', 'negative value'))
         """
         return ResultWrapper(f(self.core))
+
+    def map_to_result_sequence(
+        self, f: Callable[[_T_co], ResultSequence[_F, _S]]
+    ) -> ResultSequenceWrapper[_F, _S]:
+        """Apply a synchronous function with return type [trcks.ResultSequence][]
+        to the wrapped object.
+
+        Args:
+            f: The synchronous function to be applied.
+
+        Returns:
+            A [trcks.oop.ResultSequenceWrapper][] instance with
+                the result of the function application.
+
+        Example:
+            >>> from trcks import ResultSequence
+            >>> Wrapper.construct(-1).map_to_result_sequence(
+            ...     lambda x: ("success", [x, x])
+            ...     if x >= 0
+            ...     else ("failure", "negative value")
+            ... )
+            ResultSequenceWrapper(core=('failure', 'negative value'))
+        """
+        return ResultSequenceWrapper(f(self.core))
+
+    def map_to_sequence(
+        self, f: Callable[[_T_co], Sequence[_T]]
+    ) -> SequenceWrapper[_T]:
+        """Apply a function returning a [collections.abc.Sequence][]
+        to the wrapped object.
+
+        Args:
+            f: The function to be applied, returning a [collections.abc.Sequence][].
+
+        Returns:
+            A [trcks.oop.SequenceWrapper][] instance with
+                the result of the function application.
+
+        Example:
+            >>> from trcks.oop import Wrapper
+            >>> def duplicate(x: int) -> list[int]:
+            ...     return [x, x]
+            ...
+            >>> Wrapper.construct(3).map_to_sequence(duplicate)
+            SequenceWrapper(core=[3, 3])
+        """
+        return SequenceWrapper(f(self.core))
 
     def tap(self, f: Callable[[_T_co], object]) -> Wrapper[_T_co]:
         """Apply a synchronous side effect to the wrapped object.
@@ -2596,6 +8258,83 @@ class Wrapper(_Wrapper[_T_co]):
             self.core
         ).tap_success_to_awaitable_result(f)
 
+    def tap_to_awaitable_result_sequence(
+        self, f: Callable[[_T_co], AwaitableResultSequence[_F, object]]
+    ) -> AwaitableResultSequenceWrapper[_F, _T_co]:
+        """Apply an asynchronous side effect with return type
+        [trcks.ResultSequence][] to the wrapped object.
+
+        Args:
+            f: The asynchronous side effect to be applied.
+
+        Returns:
+            A [trcks.oop.AwaitableResultSequenceWrapper][] instance with
+
+                - *the returned* [trcks.Failure][]
+                    if the given side effect returns a [trcks.Failure][] or
+                - *the original* wrapped object repeated once per element
+                    in the side effect output if the given side effect
+                    returns [trcks.SuccessSequence][].
+
+        Example:
+            >>> import asyncio
+            >>> from trcks import AwaitableResultSequence
+            >>> from trcks.oop import Wrapper
+            >>> async def write_twice(
+            ...     s: str,
+            ... ) -> AwaitableResultSequence[str, None]:
+            ...     await asyncio.sleep(0.001)
+            ...     print(f"Wrote '{s}' twice.")
+            ...     return "success", [None, None]
+            ...
+            >>> wrapper = Wrapper.construct(
+            ...     "Hello, world!"
+            ... ).tap_to_awaitable_result_sequence(write_twice)
+            >>> wrapper
+            AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+            >>> result = asyncio.run(wrapper.core_as_coroutine)
+            Wrote 'Hello, world!' twice.
+            >>> result
+            ('success', ['Hello, world!', 'Hello, world!'])
+        """
+        return AwaitableResultSequenceWrapper.construct_successes(
+            self.core
+        ).tap_successes_to_awaitable_result_sequence(f)
+
+    def tap_to_awaitable_sequence(
+        self, f: Callable[[_T_co], AwaitableSequence[object]]
+    ) -> AwaitableSequenceWrapper[_T_co]:
+        """Apply an asynchronous side effect returning a [collections.abc.Sequence][]
+        to the wrapped object.
+
+        Args:
+            f: The asynchronous side effect to be applied,
+                returning a [collections.abc.Sequence][].
+
+        Returns:
+            A [trcks.oop.AwaitableSequenceWrapper][] instance with
+                the original wrapped object repeated once per item returned by the
+                side effect.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks.oop import Wrapper
+            >>> async def write_to_disk(x: int) -> list[str]:
+            ...     await asyncio.sleep(0.001)
+            ...     print(f"Wrote {x} to disk.")
+            ...     return ["left", "right"]
+            ...
+            >>> awaitable_sequence_wrapper = Wrapper.construct(
+            ...     3
+            ... ).tap_to_awaitable_sequence(write_to_disk)
+            >>> asyncio.run(awaitable_sequence_wrapper.core_as_coroutine)
+            Wrote 3 to disk.
+            [3, 3]
+        """
+        return AwaitableSequenceWrapper.construct(self.core).tap_to_awaitable_sequence(
+            f
+        )
+
     def tap_to_result(
         self, f: Callable[[_T_co], Result[_F, object]]
     ) -> ResultWrapper[_F, _T_co]:
@@ -2634,3 +8373,74 @@ class Wrapper(_Wrapper[_T_co]):
             ResultWrapper(core=('success', 3.5))
         """
         return ResultWrapper.construct_success(self.core).tap_success_to_result(f)
+
+    def tap_to_result_sequence(
+        self, f: Callable[[_T_co], ResultSequence[_F, object]]
+    ) -> ResultSequenceWrapper[_F, _T_co]:
+        """Apply a synchronous side effect with return type [trcks.ResultSequence][]
+        to the wrapped object.
+
+        Args:
+            f: The synchronous side effect to be applied.
+
+        Returns:
+            A [trcks.oop.ResultSequenceWrapper][] instance with
+
+                - *the returned* [trcks.Failure][]
+                    if the given side effect returns a [trcks.Failure][] or
+                - *the original* [trcks.SuccessSequence][] element repeated once
+                    per element in the side effect output if the given side effect
+                    returns [trcks.SuccessSequence][].
+
+        Example:
+            >>> from trcks import ResultSequence
+            >>> from trcks.oop import Wrapper
+            >>> def print_positive_float(x: float) -> ResultSequence[str, None]:
+            ...     if x <= 0:
+            ...         return "failure", "not positive"
+            ...     return (
+            ...         "success",
+            ...         [print(f"Positive float: {x}"), print(f"Positive float: {x}")]
+            ...     )
+            >>> result_sequence_wrapper_1 = Wrapper.construct(
+            ...     -2.3
+            ... ).tap_to_result_sequence(print_positive_float)
+            >>> result_sequence_wrapper_1
+            ResultSequenceWrapper(core=('failure', 'not positive'))
+            >>> result_sequence_wrapper_2 = Wrapper.construct(
+            ...     3.5
+            ... ).tap_to_result_sequence(print_positive_float)
+            Positive float: 3.5
+            Positive float: 3.5
+            >>> result_sequence_wrapper_2
+            ResultSequenceWrapper(core=('success', [3.5, 3.5]))
+        """
+        return ResultSequenceWrapper.construct_successes(
+            self.core
+        ).tap_successes_to_result_sequence(f)
+
+    def tap_to_sequence(
+        self, f: Callable[[_T_co], Sequence[object]]
+    ) -> SequenceWrapper[_T_co]:
+        """Apply a side effect returning a [collections.abc.Sequence][] to the
+        wrapped object.
+
+        Args:
+            f: The side effect to be applied, returning a
+                [collections.abc.Sequence][].
+
+        Returns:
+            A [trcks.oop.SequenceWrapper][] instance with the original wrapped
+                object repeated once per item returned by the side effect.
+
+        Example:
+            >>> from trcks.oop import Wrapper
+            >>> def write_to_disk(x: int) -> list[str]:
+            ...     print(f"Wrote {x} to disk.")
+            ...     return ["left", "right"]
+            ...
+            >>> Wrapper.construct(3).tap_to_sequence(write_to_disk)
+            Wrote 3 to disk.
+            SequenceWrapper(core=[3, 3])
+        """
+        return SequenceWrapper.construct(self.core).tap_to_sequence(f)

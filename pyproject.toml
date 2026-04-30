@@ -120,9 +120,13 @@ containers = [
 ]
 exhaustive = true
 layers = [
+    "awaitable_result_sequence",
     "awaitable_result",
+    "awaitable_sequence",
+    "result_sequence",
     "awaitable",
     "result",
+    "sequence",
     "identity",
 ]
 
@@ -196,6 +200,9 @@ convention = "google"
 
 [tool.rumdl]
 flavor = "gfm"
+
+[tool.rumdl.MD013]
+headings = false
 
 [tool.rumdl.MD052]
 ignore = ["None", "trcks", "tuple"]
