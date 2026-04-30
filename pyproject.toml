@@ -71,7 +71,7 @@ mypy = [
 pyright = [
     # pyright versions older than 1.1.391 seem to have issues
     # with reachability analysis in match statements:
-    "pyright>=1.1.391",
+    "pyright>=1.1.407",
     # pyright 1.1.406 and older report false positives for Python 3.14
     # (cf. https://github.com/microsoft/pyright/issues/11003):
     "pyright>=1.1.407; python_full_version>='3.14'",
