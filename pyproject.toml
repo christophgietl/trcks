@@ -152,7 +152,6 @@ disallow_redefinition = true
 disallow_untyped_globals = true
 files = "."
 strict = true
-strict_bytes = true  # will become the default in mypy 2.0
 warn_incomplete_stub = true
 warn_unreachable = true
 
