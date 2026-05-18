@@ -184,10 +184,10 @@ def map_failure_to_result(
     """
 
     def mapped_f(rslt: Result[_F1, _S1]) -> Result[_F2, _S1 | _S2]:
-        match rslt[0]:
-            case "failure":
-                return f(rslt[1])
-            case "success":
+        match rslt:
+            case ("failure", value):
+                return f(value)
+            case ("success", _):
                 return rslt
             case _:  # pragma: no cover
                 return assert_never(rslt)  # type: ignore [unreachable]  # pyright: ignore [reportUnreachable]
@@ -259,11 +259,11 @@ def map_success_to_result(
     """
 
     def mapped_f(rslt: Result[_F1, _S1]) -> Result[_F1 | _F2, _S2]:
-        match rslt[0]:
-            case "failure":
+        match rslt:
+            case ("failure", _):
                 return rslt
-            case "success":
-                return f(rslt[1])
+            case ("success", value):
+                return f(value)
             case _:  # pragma: no cover
                 return assert_never(rslt)  # type: ignore [unreachable]  # pyright: ignore [reportUnreachable]
 
@@ -310,10 +310,10 @@ def tap_failure_to_result(
 
     def bypassed_f(value: _F1) -> Result[_F1, _S2]:
         rslt: Result[object, _S2] = f(value)
-        match rslt[0]:
-            case "failure":
+        match rslt:
+            case ("failure", _):
                 return construct_failure(value)
-            case "success":
+            case ("success", _):
                 return rslt
             case _:  # pragma: no cover
                 return assert_never(rslt)  # type: ignore [unreachable]  # pyright: ignore [reportUnreachable]
@@ -361,10 +361,10 @@ def tap_success_to_result(
 
     def bypassed_f(value: _S1) -> Result[_F2, _S1]:
         rslt: Result[_F2, object] = f(value)
-        match rslt[0]:
-            case "failure":
+        match rslt:
+            case ("failure", _):
                 return rslt
-            case "success":
+            case ("success", _):
                 return construct_success(value)
             case _:  # pragma: no cover
                 return assert_never(rslt)  # type: ignore [unreachable]  # pyright: ignore [reportUnreachable]
