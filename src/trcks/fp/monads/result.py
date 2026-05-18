@@ -309,13 +309,12 @@ def tap_failure_to_result(
     """
 
     def bypassed_f(value: _F1) -> Result[_F1, _S2]:
-        rslt: Result[object, _S2] = f(value)
-        match rslt:
+        match f(value):
             case ("failure", _):
                 return construct_failure(value)
-            case ("success", _):
+            case ("success", _) as rslt:
                 return rslt
-            case _:  # pragma: no cover
+            case _ as rslt:  # pragma: no cover
                 return assert_never(rslt)  # type: ignore [unreachable]  # pyright: ignore [reportUnreachable]
 
     return map_failure_to_result(bypassed_f)
@@ -360,13 +359,12 @@ def tap_success_to_result(
     """
 
     def bypassed_f(value: _S1) -> Result[_F2, _S1]:
-        rslt: Result[_F2, object] = f(value)
-        match rslt:
-            case ("failure", _):
+        match f(value):
+            case ("failure", _) as rslt:
                 return rslt
             case ("success", _):
                 return construct_success(value)
-            case _:  # pragma: no cover
+            case _ as rslt:  # pragma: no cover
                 return assert_never(rslt)  # type: ignore [unreachable]  # pyright: ignore [reportUnreachable]
 
     return map_success_to_result(bypassed_f)

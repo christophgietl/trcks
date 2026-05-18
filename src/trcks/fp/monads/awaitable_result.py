@@ -611,13 +611,12 @@ def tap_failure_to_awaitable_result(
     """
 
     async def bypassed_f(value: _F1) -> Result[_F1, _S2]:
-        rslt: Result[object, _S2] = await f(value)
-        match rslt:
+        match await f(value):
             case ("failure", _):
                 return r.construct_failure(value)
-            case ("success", _):
+            case ("success", _) as rslt:
                 return rslt
-            case _:  # pragma: no cover
+            case _ as rslt:  # pragma: no cover
                 return assert_never(rslt)  # type: ignore [unreachable]  # pyright: ignore [reportUnreachable]
 
     return map_failure_to_awaitable_result(bypassed_f)
@@ -709,13 +708,12 @@ def tap_success_to_awaitable_result(
     """
 
     async def bypassed_f(value: _S1) -> Result[_F2, _S1]:
-        rslt: Result[_F2, object] = await f(value)
-        match rslt:
-            case ("failure", _):
+        match await f(value):
+            case ("failure", _) as rslt:
                 return rslt
             case ("success", _):
                 return r.construct_success(value)
-            case _:  # pragma: no cover
+            case _ as rslt:  # pragma: no cover
                 return assert_never(rslt)  # type: ignore [unreachable]  # pyright: ignore [reportUnreachable]
 
     return map_success_to_awaitable_result(bypassed_f)
