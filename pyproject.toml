@@ -64,9 +64,9 @@ requires-python = ">=3.10"
 
 [project.optional-dependencies]
 mypy = [
-    # mypy versions older than 1.16 seem to have issues
+    # mypy versions older than 1.20 seem to have issues
     # with type narrowing in match statements:
-    "mypy>=1.16",
+    "mypy>=1.20",
 ]
 pyright = [
     # pyright versions older than 1.1.391 seem to have issues
