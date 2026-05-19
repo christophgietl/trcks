@@ -96,7 +96,7 @@ from trcks.fp.monads import result as r, awaitable as a, awaitable_result as ar
 - `src/trcks/oop.py`:
   All wrapper classes with extensive method chaining API (2600+ lines)
 - `src/trcks/fp/composition.py`:
-  Pipeline types (`Pipeline1` through `Pipeline8`) and composition functions
+  Pipeline types (`Pipeline0` through `Pipeline7`) and composition functions
 - `src/trcks/fp/monads/result.py`:
   Functional operations on `Result` types (`map_success`, `map_failure`, etc.)
 - `src/trcks/fp/monads/awaitable.py`: Operations on `Awaitable` types
