@@ -92,7 +92,7 @@ uv build
 
 - The documentation website is built with Material for MkDocs,
   configured in `mkdocs.yml` and written in `docs/**/*.md`.
-- Update `mkdocs.yml` and `docs/**/*.md` whenever features, architecture or UI changes.
+- Update `mkdocs.yml` and `docs/**/*.md` whenever features, architecture or UI change.
 - API docs in `docs/reference/trcks.*.md` must mirror
   the module and class structure of `trcks`
   (e.g. `trcks.fp.monads.result` → `docs/reference/trcks.fp.monads.result.md`).
