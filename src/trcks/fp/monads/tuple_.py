@@ -1,10 +1,10 @@
-"""Monadic functions for [tuple][].
+"""Monadic functions for homogeneous [tuple][].
 
 Provides utilities for functional composition of
-functions returning [tuple][] values.
+functions returning homogeneous [tuple][] values.
 
 Example:
-    Create and process a [tuple][]:
+    Create and process a homogeneous [tuple][]:
 
     >>> from trcks.fp.composition import pipe
     >>> from trcks.fp.monads import tuple_ as s
@@ -61,13 +61,13 @@ _T2 = TypeVar("_T2")
 
 
 def construct(value: _T) -> tuple[_T, ...]:
-    """Create a [tuple][] from a single value.
+    """Create a homogeneous [tuple][] from a single value.
 
     Args:
         value: A single value.
 
     Returns:
-        A [tuple][] containing the single value.
+        A homogeneous [tuple][] containing the single value.
 
     Example:
         >>> from trcks.fp.monads import tuple_ as s
@@ -78,14 +78,14 @@ def construct(value: _T) -> tuple[_T, ...]:
 
 
 def map_(f: Callable[[_T1], _T2]) -> Callable[[tuple[_T1, ...]], tuple[_T2, ...]]:
-    """Create function that maps [tuple][]s to
-    [tuple][]s of the same length.
+    """Create function that maps homogeneous [tuple][]s to
+    homogeneous [tuple][]s of the same length.
 
     Args:
         f: Function to apply to each element.
 
     Returns:
-        Maps [tuple][]s to [tuple][]s
+        Maps homogeneous [tuple][]s to homogeneous [tuple][]s
             of the same length according to the given function.
 
     Note:
@@ -110,15 +110,15 @@ def map_(f: Callable[[_T1], _T2]) -> Callable[[tuple[_T1, ...]], tuple[_T2, ...]
 def map_to_tuple(
     f: Callable[[_T1], tuple[_T2, ...]],
 ) -> Callable[[tuple[_T1, ...]], tuple[_T2, ...]]:
-    """Create function that maps [tuple][]s to
-    [tuple][]s of varying length.
+    """Create function that maps homogeneous [tuple][]s to
+    homogeneous [tuple][]s of varying length.
 
     Args:
         f: Function to apply to each element that returns a
-            [tuple][].
+            homogeneous [tuple][].
 
     Returns:
-        Maps [tuple][]s to [tuple][]s
+        Maps homogeneous [tuple][]s to homogeneous [tuple][]s
             of varying length according to the given function.
 
     Example:
@@ -144,15 +144,15 @@ def tap(
     f: Callable[[_T1], object],
 ) -> Callable[[tuple[_T1, ...]], tuple[_T1, ...]]:
     """Create function that applies a side effect to each element
-    of a [tuple][].
+    of a homogeneous [tuple][].
 
     Args:
         f: Side effect to apply to each element.
 
     Returns:
         Applies the given side effect to each element of a
-            [tuple][] and returns the original
-            [tuple][].
+            homogeneous [tuple][] and returns the original
+            homogeneous [tuple][].
 
     Example:
         >>> from collections.abc import Callable, Sequence
@@ -177,16 +177,16 @@ def tap_to_tuple(
     f: Callable[[_T1], tuple[object, ...]],
 ) -> Callable[[tuple[_T1, ...]], tuple[_T1, ...]]:
     """Create function that applies a side effect with return type
-    [tuple][] to each element of a
-    [tuple][].
+    homogeneous [tuple][] to each element of a
+    homogeneous [tuple][].
 
     Args:
         f: Side effect to apply to each element that returns a
-            [tuple][].
+            homogeneous [tuple][].
 
     Returns:
         Applies the given side effect to each element of a
-            [tuple][]. Returns each element as
+            homogeneous [tuple][]. Returns each element as
             many times as the side effect returns elements.
 
     Example:

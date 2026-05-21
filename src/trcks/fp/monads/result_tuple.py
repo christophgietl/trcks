@@ -244,7 +244,7 @@ def map_failure_to_tuple(
     f: Callable[[_F1], tuple[_S2, ...]],
 ) -> Callable[[ResultTuple[_F1, _S1]], SuccessTuple[_S1] | SuccessTuple[_S2]]:
     """Create function that maps [trcks.Failure][] values
-    to [tuple][]s.
+    to homogeneous [tuple][]s.
 
     [trcks.SuccessTuple][] values are left unchanged.
 
@@ -252,7 +252,7 @@ def map_failure_to_tuple(
         f: Function to apply to the [trcks.Failure][] values.
 
     Returns:
-        Maps [trcks.Failure][] values to [tuple][]s wrapped
+        Maps [trcks.Failure][] values to homogeneous [tuple][]s wrapped
             in a [trcks.Success][] according to the given function and
             leaves [trcks.SuccessTuple][] values unchanged.
 
@@ -429,7 +429,7 @@ def map_successes_to_tuple(
     f: Callable[[_S1], tuple[_S2, ...]],
 ) -> Callable[[ResultTuple[_F1, _S1]], ResultTuple[_F1, _S2]]:
     """Create function that maps each element of a [trcks.SuccessTuple][]
-    to a [tuple][].
+    to a homogeneous [tuple][].
 
     [trcks.Failure][] values are left unchanged.
 
@@ -439,7 +439,7 @@ def map_successes_to_tuple(
     Returns:
         Leaves [trcks.Failure][] values unchanged and
             flat-maps each element of a [trcks.SuccessTuple][] to a
-            [tuple][] according to the given function.
+            homogeneous [tuple][] according to the given function.
 
     Example:
         >>> from collections.abc import Callable
