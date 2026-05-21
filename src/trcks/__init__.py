@@ -24,8 +24,7 @@ _T_co = TypeVar("_T_co", covariant=True)
 
 
 Failure: TypeAlias = tuple[Literal["failure"], _F_co]
-"""[tuple][] of length 2 containing ``"failure"`` followed by
-a value of type `_F_co`.
+"""[tuple][] of length 2 containing ``"failure"`` followed by a value of type `_F_co`.
 
 Example:
     >>> failure: Failure[str] = ("failure", "File does not exist")
@@ -36,8 +35,7 @@ Note:
 """
 
 Success: TypeAlias = tuple[Literal["success"], _S_co]
-"""[tuple][] of length 2 containing ``"success"`` followed by
-a value of type `_S_co`.
+"""[tuple][] of length 2 containing ``"success"`` followed by a value of type `_S_co`.
 
 Example:
     >>> success: Success[int] = ("success", 42)

@@ -654,19 +654,19 @@ operating on entire tuples.
     >>> def to_domain(email: str) -> str:
     ...     return email.split("@")[1]
     ...
-    >>> def get_domains(emails: list[str]) -> tuple[str, ...]:
+    >>> def get_domains(emails: tuple[str, ...]) -> tuple[str, ...]:
     ...     pipeline: Pipeline2[
     ...         tuple[str, ...],
     ...         tuple[str, ...],
     ...         tuple[str, ...],
     ...     ] = (
-    ...         tuple(emails),
+    ...         emails,
     ...         s.map_(normalize_email),
     ...         s.map_(to_domain),
     ...     )
     ...     return pipe(pipeline)
     ...
-    >>> get_domains(["  Erika@Domain.ORG ", "JOHN@Provider.COM  "])
+    >>> get_domains(("  Erika@Domain.ORG ", "JOHN@Provider.COM  "))
     ('domain.org', 'provider.com')
 
     ```
@@ -708,7 +708,7 @@ let us have a look at the individual steps of the chain:
     ```pycon
     >>> pipe(
     ...     (
-    ...         ["ab", "cd"],
+    ...         ("ab", "cd"),
     ...         s.map_to_tuple(list),
     ...     )
     ... )
