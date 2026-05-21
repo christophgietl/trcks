@@ -760,7 +760,7 @@ Processing short-circuits on the first [trcks.Failure][].
 
     ```pycon
     >>> from trcks import ResultTuple, SuccessTuple
-    >>> from trcks.fp.monads import result_tuple as rs_
+    >>> from trcks.fp.monads import result_tuple as rt
     >>>
     >>> UserDoesNotExist = Literal["User does not exist"]
     >>> UserDoesNotHaveASubscription = Literal["User does not have a subscription"]
@@ -784,7 +784,7 @@ Processing short-circuits on the first [trcks.Failure][].
     ...     return subscription_id * 0.1
     ...
     >>> def get_subscription_fees_by_email(
-    ...     user_emails: list[str],
+    ...     user_emails: tuple[str, ...],
     ... ) -> ResultTuple[FailureDescription, float]:
     ...     pipeline: Pipeline4[
     ...         tuple[str, ...],
@@ -793,21 +793,21 @@ Processing short-circuits on the first [trcks.Failure][].
     ...         ResultTuple[FailureDescription, int],
     ...         ResultTuple[FailureDescription, float],
     ...     ] = (
-    ...         tuple(user_emails),
-    ...         rs_.construct_successes_from_tuple,
-    ...         rs_.map_successes_to_result(get_user_id),
-    ...         rs_.map_successes_to_result(get_subscription_id),
-    ...         rs_.map_successes(get_subscription_fee),
+    ...         user_emails,
+    ...         rt.construct_successes_from_tuple,
+    ...         rt.map_successes_to_result(get_user_id),
+    ...         rt.map_successes_to_result(get_subscription_id),
+    ...         rt.map_successes(get_subscription_fee),
     ...     )
     ...     return pipe(pipeline)
     ...
-    >>> get_subscription_fees_by_email(["erika.mustermann@domain.org"])
+    >>> get_subscription_fees_by_email(("erika.mustermann@domain.org",))
     ('success', (4.2,))
     >>> get_subscription_fees_by_email(
-    ...     ["erika.mustermann@domain.org", "john_doe@provider.com"]
+    ...     ("erika.mustermann@domain.org", "john_doe@provider.com")
     ... )
     ('failure', 'User does not have a subscription')
-    >>> get_subscription_fees_by_email(["jane_doe@provider.com"])
+    >>> get_subscription_fees_by_email(("jane_doe@provider.com",))
     ('failure', 'User does not exist')
 
     ```
@@ -829,7 +829,7 @@ let us have a look at the individual steps of the chain:
     ...     SuccessTuple[str],
     ... ] = (
     ...     ("erika.mustermann@domain.org",),
-    ...     rs_.construct_successes_from_tuple,
+    ...     rt.construct_successes_from_tuple,
     ... )
     >>> pipe(p1)
     ('success', ('erika.mustermann@domain.org',))
@@ -840,8 +840,8 @@ let us have a look at the individual steps of the chain:
     ...     ResultTuple[UserDoesNotExist, int],
     ... ] = (
     ...     ("erika.mustermann@domain.org",),
-    ...     rs_.construct_successes_from_tuple,
-    ...     rs_.map_successes_to_result(get_user_id),
+    ...     rt.construct_successes_from_tuple,
+    ...     rt.map_successes_to_result(get_user_id),
     ... )
     >>> pipe(p2)
     ('success', (1,))
@@ -853,9 +853,9 @@ let us have a look at the individual steps of the chain:
     ...     ResultTuple[FailureDescription, int],
     ... ] = (
     ...     ("erika.mustermann@domain.org",),
-    ...     rs_.construct_successes_from_tuple,
-    ...     rs_.map_successes_to_result(get_user_id),
-    ...     rs_.map_successes_to_result(get_subscription_id),
+    ...     rt.construct_successes_from_tuple,
+    ...     rt.map_successes_to_result(get_user_id),
+    ...     rt.map_successes_to_result(get_subscription_id),
     ... )
     >>> pipe(p3)
     ('success', (42,))
@@ -868,10 +868,10 @@ let us have a look at the individual steps of the chain:
     ...     ResultTuple[FailureDescription, float],
     ... ] = (
     ...     ("erika.mustermann@domain.org",),
-    ...     rs_.construct_successes_from_tuple,
-    ...     rs_.map_successes_to_result(get_user_id),
-    ...     rs_.map_successes_to_result(get_subscription_id),
-    ...     rs_.map_successes(get_subscription_fee),
+    ...     rt.construct_successes_from_tuple,
+    ...     rt.map_successes_to_result(get_user_id),
+    ...     rt.map_successes_to_result(get_subscription_id),
+    ...     rt.map_successes(get_subscription_fee),
     ... )
     >>> pipe(p4)
     ('success', (4.2,))
@@ -899,10 +899,10 @@ in the success case (for each element) or in the failure case, respectively.
 
     ```pycon
     >>> def get_subscription_fees_by_email(
-    ...     user_emails: list[str],
+    ...     user_emails: tuple[str, ...],
     ... ) -> ResultTuple[FailureDescription, float]:
     ...     pipeline: Pipeline7[
-    ...         list[str],
+    ...         tuple[str, ...],
     ...         SuccessTuple[str],
     ...         ResultTuple[UserDoesNotExist, int],
     ...         ResultTuple[UserDoesNotExist, int],
@@ -912,18 +912,18 @@ in the success case (for each element) or in the failure case, respectively.
     ...         ResultTuple[FailureDescription, float],
     ...     ] = (
     ...         user_emails,
-    ...         rs_.construct_successes_from_tuple,
-    ...         rs_.map_successes_to_result(get_user_id),
-    ...         rs_.tap_successes(lambda n: print(f"LOG: User ID: {n}.")),
-    ...         rs_.map_successes_to_result(get_subscription_id),
-    ...         rs_.map_successes(get_subscription_fee),
-    ...         rs_.tap_successes(lambda x: print(f"LOG: Subscription fee: {x}.")),
-    ...         rs_.tap_failure(lambda fd: print(f"LOG: Failure: {fd}.")),
+    ...         rt.construct_successes_from_tuple,
+    ...         rt.map_successes_to_result(get_user_id),
+    ...         rt.tap_successes(lambda n: print(f"LOG: User ID: {n}.")),
+    ...         rt.map_successes_to_result(get_subscription_id),
+    ...         rt.map_successes(get_subscription_fee),
+    ...         rt.tap_successes(lambda x: print(f"LOG: Subscription fee: {x}.")),
+    ...         rt.tap_failure(lambda fd: print(f"LOG: Failure: {fd}.")),
     ...     )
     ...     return pipe(pipeline)
     ...
     >>> fees_erika = get_subscription_fees_by_email(
-    ...     ["erika.mustermann@domain.org"]
+    ...     ("erika.mustermann@domain.org",)
     ... )
     LOG: User ID: 1.
     LOG: Subscription fee: 4.2.
@@ -931,7 +931,7 @@ in the success case (for each element) or in the failure case, respectively.
     ('success', (4.2,))
     >>>
     >>> fees_john = get_subscription_fees_by_email(
-    ...     ["john_doe@provider.com"]
+    ...     ("john_doe@provider.com",)
     ... )
     LOG: User ID: 2.
     LOG: Failure: User does not have a subscription.
@@ -939,7 +939,7 @@ in the success case (for each element) or in the failure case, respectively.
     ('failure', 'User does not have a subscription')
     >>>
     >>> fees_jane = get_subscription_fees_by_email(
-    ...     ["jane_doe@provider.com"]
+    ...     ("jane_doe@provider.com",)
     ... )
     LOG: Failure: User does not exist.
     >>> fees_jane
@@ -967,31 +967,31 @@ the original success values are preserved.
     ...     return "success", print(f"LOG: Wrote {n} to disk.")
     ...
     >>> def get_and_persist_user_ids(
-    ...     user_emails: list[str],
+    ...     user_emails: tuple[str, ...],
     ... ) -> ResultTuple[UserDoesNotExist | OutOfDiskSpace, int]:
     ...     pipeline: Pipeline3[
-    ...         list[str],
+    ...         tuple[str, ...],
     ...         SuccessTuple[str],
     ...         ResultTuple[UserDoesNotExist, int],
     ...         ResultTuple[UserDoesNotExist | OutOfDiskSpace, int],
     ...     ] = (
     ...         user_emails,
-    ...         rs_.construct_successes_from_tuple,
-    ...         rs_.map_successes_to_result(get_user_id),
-    ...         rs_.tap_successes_to_result(write_to_disk),
+    ...         rt.construct_successes_from_tuple,
+    ...         rt.map_successes_to_result(get_user_id),
+    ...         rt.tap_successes_to_result(write_to_disk),
     ...     )
     ...     return pipe(pipeline)
     ...
-    >>> ids_erika = get_and_persist_user_ids(["erika.mustermann@domain.org"])
+    >>> ids_erika = get_and_persist_user_ids(("erika.mustermann@domain.org",))
     LOG: Wrote 1 to disk.
     >>> ids_erika
     ('success', (1,))
     >>>
-    >>> ids_john = get_and_persist_user_ids(["john_doe@provider.com"])
+    >>> ids_john = get_and_persist_user_ids(("john_doe@provider.com",))
     >>> ids_john
     ('failure', 'Out of disk space')
     >>>
-    >>> ids_jane = get_and_persist_user_ids(["jane_doe@provider.com"])
+    >>> ids_jane = get_and_persist_user_ids(("jane_doe@provider.com",))
     >>> ids_jane
     ('failure', 'User does not exist')
 
@@ -1011,7 +1011,7 @@ into functions operating on [trcks.AwaitableTuple][] values.
 ???+ example
 
     ```pycon
-    >>> from trcks.fp.monads import awaitable_tuple as as_
+    >>> from trcks.fp.monads import awaitable_tuple as at
     >>>
     >>> async def read_from_disk(path: str) -> str:
     ...     await asyncio.sleep(0.001)
@@ -1022,7 +1022,7 @@ into functions operating on [trcks.AwaitableTuple][] values.
     ...     return f"Length: {len(s)}"
     ...
     >>> async def read_and_transform(
-    ...     input_paths: list[str],
+    ...     input_paths: tuple[str, ...],
     ... ) -> tuple[str, ...]:
     ...     p: Pipeline3[
     ...         tuple[str, ...],
@@ -1030,14 +1030,14 @@ into functions operating on [trcks.AwaitableTuple][] values.
     ...         AwaitableTuple[str],
     ...         AwaitableTuple[str],
     ...     ] = (
-    ...         tuple(input_paths),
-    ...         as_.construct_from_tuple,
-    ...         as_.map_to_awaitable(read_from_disk),
-    ...         as_.map_(transform),
+    ...         input_paths,
+    ...         at.construct_from_tuple,
+    ...         at.map_to_awaitable(read_from_disk),
+    ...         at.map_(transform),
     ...     )
     ...     return await pipe(p)
     ...
-    >>> asyncio.run(read_and_transform(["a.txt", "b.txt"]))
+    >>> asyncio.run(read_and_transform(("a.txt", "b.txt")))
     ('Length: 5', 'Length: 5')
 
     ```
@@ -1052,9 +1052,9 @@ let us have a look at the individual steps of the chain:
     >>>
     >>> p1: Pipeline1[tuple[str, ...], AwaitableTuple[str]] = (
     ...     ("a.txt", "b.txt"),
-    ...     as_.construct_from_tuple,
+    ...     at.construct_from_tuple,
     ... )
-    >>> asyncio.run(as_.to_coroutine_tuple(pipe(p1)))
+    >>> asyncio.run(at.to_coroutine_tuple(pipe(p1)))
     ('a.txt', 'b.txt')
     >>>
     >>> p2: Pipeline2[
@@ -1063,10 +1063,10 @@ let us have a look at the individual steps of the chain:
     ...     AwaitableTuple[str],
     ... ] = (
     ...     ("a.txt", "b.txt"),
-    ...     as_.construct_from_tuple,
-    ...     as_.map_to_awaitable(read_from_disk),
+    ...     at.construct_from_tuple,
+    ...     at.map_to_awaitable(read_from_disk),
     ... )
-    >>> asyncio.run(as_.to_coroutine_tuple(pipe(p2)))
+    >>> asyncio.run(at.to_coroutine_tuple(pipe(p2)))
     ('Hello', 'World')
     >>>
     >>> p3: Pipeline3[
@@ -1076,11 +1076,11 @@ let us have a look at the individual steps of the chain:
     ...     AwaitableTuple[str],
     ... ] = (
     ...     ("a.txt", "b.txt"),
-    ...     as_.construct_from_tuple,
-    ...     as_.map_to_awaitable(read_from_disk),
-    ...     as_.map_(transform),
+    ...     at.construct_from_tuple,
+    ...     at.map_to_awaitable(read_from_disk),
+    ...     at.map_(transform),
     ... )
-    >>> asyncio.run(as_.to_coroutine_tuple(pipe(p3)))
+    >>> asyncio.run(at.to_coroutine_tuple(pipe(p3)))
     ('Length: 5', 'Length: 5')
 
     ```
@@ -1115,7 +1115,7 @@ allows us to execute asynchronous side effects for each element.
     ...     return contents[path]
     ...
     >>> async def read_and_transform(
-    ...     input_paths: list[str],
+    ...     input_paths: tuple[str, ...],
     ... ) -> tuple[str, ...]:
     ...     p: Pipeline5[
     ...         tuple[str, ...],
@@ -1125,16 +1125,16 @@ allows us to execute asynchronous side effects for each element.
     ...         AwaitableTuple[str],
     ...         AwaitableTuple[str],
     ...     ] = (
-    ...         tuple(input_paths),
-    ...         as_.construct_from_tuple,
-    ...         as_.map_to_awaitable(read_from_disk),
-    ...         as_.tap(lambda s: print(f"Read '{s}' from disk.")),
-    ...         as_.map_(transform),
-    ...         as_.tap(lambda s: print(f"Transformed to '{s}'.")),
+    ...         input_paths,
+    ...         at.construct_from_tuple,
+    ...         at.map_to_awaitable(read_from_disk),
+    ...         at.tap(lambda s: print(f"Read '{s}' from disk.")),
+    ...         at.map_(transform),
+    ...         at.tap(lambda s: print(f"Transformed to '{s}'.")),
     ...     )
     ...     return await pipe(p)
     ...
-    >>> asyncio.run(read_and_transform(["a.txt", "b.txt"]))
+    >>> asyncio.run(read_and_transform(("a.txt", "b.txt")))
     Read 'Hello' from disk.
     Read 'World' from disk.
     Transformed to 'Length: 5'.
@@ -1183,10 +1183,10 @@ Processing short-circuits on the first [trcks.Failure][].
     ...     return "success", None
     ...
     >>> async def read_and_transform_and_write(
-    ...     input_paths: list[str], output_path: str
+    ...     input_paths: tuple[str, ...], output_path: str
     ... ) -> ResultTuple[ReadErrorLiteral | WriteErrorLiteral, str]:
     ...     p: Pipeline4[
-    ...         list[str],
+    ...         tuple[str, ...],
     ...         AwaitableSuccessTuple[str],
     ...         AwaitableResultTuple[ReadErrorLiteral, str],
     ...         AwaitableResultTuple[ReadErrorLiteral, str],
@@ -1203,7 +1203,7 @@ Processing short-circuits on the first [trcks.Failure][].
     ...     return await pipe(p)
     ...
     >>> asyncio.run(
-    ...     read_and_transform_and_write(["a.txt", "b.txt"], "output.txt")
+    ...     read_and_transform_and_write(("a.txt", "b.txt"), "output.txt")
     ... )
     Wrote 'Length: 5' to file output.txt.
     Wrote 'Length: 5' to file output.txt.
@@ -1218,21 +1218,21 @@ let us have a look at the individual steps of the chain:
 
     ```pycon
     >>> p1: Pipeline1[
-    ...     list[str],
+    ...     tuple[str, ...],
     ...     AwaitableSuccessTuple[str],
     ... ] = (
-    ...     ["a.txt", "b.txt"],
+    ...     ("a.txt", "b.txt"),
     ...     ars.construct_successes_from_tuple,
     ... )
     >>> asyncio.run(ars.to_coroutine_result_tuple(pipe(p1)))
-    ('success', ['a.txt', 'b.txt'])
+    ('success', ('a.txt', 'b.txt'))
     >>>
     >>> p2: Pipeline2[
-    ...     list[str],
+    ...     tuple[str, ...],
     ...     AwaitableSuccessTuple[str],
     ...     AwaitableResultTuple[ReadErrorLiteral, str],
     ... ] = (
-    ...     ["a.txt", "b.txt"],
+    ...     ("a.txt", "b.txt"),
     ...     ars.construct_successes_from_tuple,
     ...     ars.map_successes_to_awaitable_result(read_from_disk),
     ... )
@@ -1240,12 +1240,12 @@ let us have a look at the individual steps of the chain:
     ('success', ('Hello', 'World'))
     >>>
     >>> p3: Pipeline3[
-    ...     list[str],
+    ...     tuple[str, ...],
     ...     AwaitableSuccessTuple[str],
     ...     AwaitableResultTuple[ReadErrorLiteral, str],
     ...     AwaitableResultTuple[ReadErrorLiteral, str],
     ... ] = (
-    ...     ["a.txt", "b.txt"],
+    ...     ("a.txt", "b.txt"),
     ...     ars.construct_successes_from_tuple,
     ...     ars.map_successes_to_awaitable_result(read_from_disk),
     ...     ars.map_successes(transform),
@@ -1254,13 +1254,13 @@ let us have a look at the individual steps of the chain:
     ('success', ('Length: 5', 'Length: 5'))
     >>>
     >>> p4: Pipeline4[
-    ...     list[str],
+    ...     tuple[str, ...],
     ...     AwaitableSuccessTuple[str],
     ...     AwaitableResultTuple[ReadErrorLiteral, str],
     ...     AwaitableResultTuple[ReadErrorLiteral, str],
     ...     AwaitableResultTuple[ReadErrorLiteral | WriteErrorLiteral, str],
     ... ] = (
-    ...     ["a.txt", "b.txt"],
+    ...     ("a.txt", "b.txt"),
     ...     ars.construct_successes_from_tuple,
     ...     ars.map_successes_to_awaitable_result(read_from_disk),
     ...     ars.map_successes(transform),
@@ -1316,10 +1316,10 @@ in the failure case or in the success case (for each element), respectively:
     ...     return "success", None
     ...
     >>> async def read_and_transform_and_write(
-    ...     input_paths: list[str], output_path: str
+    ...     input_paths: tuple[str, ...], output_path: str
     ... ) -> ResultTuple[ReadErrorLiteral | WriteErrorLiteral, str]:
     ...     pipeline: Pipeline7[
-    ...         list[str],
+    ...         tuple[str, ...],
     ...         AwaitableSuccessTuple[str],
     ...         AwaitableResultTuple[ReadErrorLiteral, str],
     ...         AwaitableResultTuple[ReadErrorLiteral, str],
@@ -1342,7 +1342,7 @@ in the failure case or in the success case (for each element), respectively:
     ...     return await pipe(pipeline)
     ...
     >>> result_1 = asyncio.run(
-    ...     read_and_transform_and_write(["a.txt", "b.txt"], "output.txt")
+    ...     read_and_transform_and_write(("a.txt", "b.txt"), "output.txt")
     ... )
     LOG: Read 'Hello' from disk.
     LOG: Read 'World' from disk.
@@ -1352,7 +1352,7 @@ in the failure case or in the success case (for each element), respectively:
     ('success', ('Length: 5', 'Length: 5'))
     >>>
     >>> result_2 = asyncio.run(
-    ...     read_and_transform_and_write(["missing.txt"], "output.txt")
+    ...     read_and_transform_and_write(("missing.txt",), "output.txt")
     ... )
     LOG: Failed with error: read error
     >>> result_2
@@ -1388,10 +1388,10 @@ the original success values are preserved:
     ...     return "success", contents[path]
     ...
     >>> async def read_and_persist(
-    ...     input_paths: list[str],
+    ...     input_paths: tuple[str, ...],
     ... ) -> ResultTuple[ReadErrorLiteral | OutOfDiskSpace, str]:
     ...     pipeline: Pipeline4[
-    ...         list[str],
+    ...         tuple[str, ...],
     ...         AwaitableSuccessTuple[str],
     ...         AwaitableResultTuple[ReadErrorLiteral, str],
     ...         AwaitableResultTuple[ReadErrorLiteral, str],
@@ -1405,7 +1405,7 @@ the original success values are preserved:
     ...     )
     ...     return await pipe(pipeline)
     ...
-    >>> result = asyncio.run(read_and_persist(["a.txt", "b.txt"]))
+    >>> result = asyncio.run(read_and_persist(("a.txt", "b.txt")))
     LOG: Persisting 'Hi'.
     LOG: Persisting 'Hello, world!'.
     >>> result
