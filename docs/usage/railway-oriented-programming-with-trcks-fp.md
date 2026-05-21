@@ -634,14 +634,14 @@ the original success value is preserved:
 
     ```
 
-## Synchronous single-track code for a sequence with [trcks.fp.composition][] and [trcks.fp.monads.tuple_][]
+## Synchronous single-track code for a tuple with [trcks.fp.composition][] and [trcks.fp.monads.tuple_][]
 
 If we want to apply a pipeline of functions to each element
 in a [collections.abc.Sequence][],
 the module [trcks.fp.monads.tuple_][] provides
 some higher-order functions named `map_*` and `tap`
 that turn element-wise functions into functions
-operating on entire sequences.
+operating on entire tuples.
 
 ???+ example
 
@@ -747,7 +747,7 @@ allows us to execute side effects for each element:
 
     ```
 
-## Synchronous double-track code for a sequence with [trcks.fp.composition][] and [trcks.fp.monads.result_tuple][]
+## Synchronous double-track code for a tuple with [trcks.fp.composition][] and [trcks.fp.monads.result_tuple][]
 
 If one of the functions in a [trcks.fp.composition.Pipeline][]
 returns a [trcks.ResultTuple][][F, S] type,
@@ -891,7 +891,7 @@ let us have a look at the individual steps of the chain:
     and [trcks.fp.monads.result.map_success][]
     operate on single-value [trcks.Result][] types,
     [trcks.fp.monads.result_tuple.map_successes][] (plural)
-    operates on each element in the sequence.
+    operates on each element in the tuple.
 
 The higher-order functions [trcks.fp.monads.result_tuple.tap_successes][]
 and [trcks.fp.monads.result_tuple.tap_failure][]
@@ -1000,7 +1000,7 @@ the original success values are preserved.
 
     ```
 
-## Asynchronous single-track code for a sequence with [trcks.fp.composition][] and [trcks.fp.monads.awaitable_tuple][]
+## Asynchronous single-track code for a tuple with [trcks.fp.composition][] and [trcks.fp.monads.awaitable_tuple][]
 
 If one of the functions in a [trcks.fp.composition.Pipeline][] returns
 a [trcks.AwaitableTuple][][T] type,
@@ -1146,7 +1146,7 @@ allows us to execute asynchronous side effects for each element.
 
     ```
 
-## Asynchronous double-track code for a sequence with [trcks.fp.composition][] and [trcks.fp.monads.awaitable_result_tuple][]
+## Asynchronous double-track code for a tuple with [trcks.fp.composition][] and [trcks.fp.monads.awaitable_result_tuple][]
 
 If one of the functions in a [trcks.fp.composition.Pipeline][] returns
 a [trcks.AwaitableResultTuple][][F, S] type,

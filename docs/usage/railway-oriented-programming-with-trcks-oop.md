@@ -611,7 +611,7 @@ the original success value is preserved:
 
     ```
 
-## Synchronous single-track code for a sequence with [collections.abc.Sequence][] and [trcks.oop.TupleWrapper][]
+## Synchronous single-track code for a tuple with [collections.abc.Sequence][] and [trcks.oop.TupleWrapper][]
 
 While the class [trcks.oop.Wrapper][] wraps and operates on a single value,
 the class [trcks.oop.TupleWrapper][] wraps a [collections.abc.Sequence][]
@@ -649,7 +649,7 @@ let us have a look at the individual steps of the chain:
 
     ```pycon
     >>> from collections.abc import Sequence
-    >>> # 1. Wrap the input sequence:
+    >>> # 1. Wrap the input tuple:
     >>> wrapped: TupleWrapper[str] = TupleWrapper.construct_from_tuple(
     ...     ["  Erika@Domain.ORG ", "JOHN@Provider.COM  "]
     ... )
@@ -663,7 +663,7 @@ let us have a look at the individual steps of the chain:
     >>> mapped_again: TupleWrapper[str] = mapped.map(to_domain)
     >>> mapped_again
     TupleWrapper(core=('domain.org', 'provider.com'))
-    >>> # 4. Unwrap the output sequence:
+    >>> # 4. Unwrap the output tuple:
     >>> unwrapped: Sequence[str] = mapped_again.core
     >>> unwrapped
     ('domain.org', 'provider.com')
@@ -672,7 +672,7 @@ let us have a look at the individual steps of the chain:
 
 ???+ note
     [trcks.oop.TupleWrapper.construct][] wraps a single value
-    in a one-element sequence:
+    in a one-element tuple:
     `TupleWrapper.construct(42)` produces `TupleWrapper(core=[42])`.
 
     The method [trcks.oop.TupleWrapper.map_to_tuple][]
@@ -688,12 +688,12 @@ let us have a look at the individual steps of the chain:
     ```
 
 The `tap` method allows executing side effects for each element
-while preserving the original sequence:
+while preserving the original tuple:
 
 ???+ example
 
     ```pycon
-    >>> sequence_wrapper = (
+    >>> tuple_wrapper = (
     ...     TupleWrapper
     ...     .construct_from_tuple(emails)
     ...     .map(normalize_email)
@@ -702,14 +702,14 @@ while preserving the original sequence:
     ... )
     LOG: Processing 'erika@domain.org'.
     LOG: Processing 'john@provider.com'.
-    >>> sequence_wrapper.core
+    >>> tuple_wrapper.core
     ('domain.org', 'provider.com')
 
     ```
 
-## Synchronous double-track code for a sequence with [trcks.ResultTuple][] and [trcks.oop.ResultTupleWrapper][]
+## Synchronous double-track code for a tuple with [trcks.ResultTuple][] and [trcks.oop.ResultTupleWrapper][]
 
-When applying a failable function to each element in a sequence,
+When applying a failable function to each element in a tuple,
 we need the [trcks.oop.ResultTupleWrapper][] class.
 The success track methods are named `map_successes` and `tap_successes` (plural)
 because they operate on each element in the [trcks.SuccessTuple][] individually.
@@ -774,7 +774,7 @@ let us have a look at the individual steps of the chain:
     ```pycon
     >>> from trcks.oop import ResultTupleWrapper
     >>>
-    >>> # 1. Wrap the input sequence:
+    >>> # 1. Wrap the input tuple:
     >>> wrapped: TupleWrapper[str] = TupleWrapper.construct_from_tuple(
     ...     ["erika.mustermann@domain.org"]
     ... )
@@ -798,7 +798,7 @@ let us have a look at the individual steps of the chain:
     ... ] = mapped_twice.map_successes(get_subscription_fee)
     >>> mapped_thrice
     ResultTupleWrapper(core=('success', (4.2,)))
-    >>> # 5. Unwrap the output result sequence:
+    >>> # 5. Unwrap the output result tuple:
     >>> unwrapped: ResultTuple[FailureDescription, float] = mapped_thrice.core
     >>> unwrapped
     ('success', (4.2,))
@@ -812,7 +812,7 @@ let us have a look at the individual steps of the chain:
     has a `map_failure*` and a `map_successes*` method
     for each `map*` method of the class [trcks.oop.TupleWrapper][].
     Note the plural `map_successes` (instead of `map_success`)
-    since the method operates on each element in the sequence.
+    since the method operates on each element in the tuple.
 
 The `tap_successes` and `tap_failure` methods allow us to execute side effects
 in the success case (for each element) or in the failure case, respectively:
@@ -900,7 +900,7 @@ the original success values are preserved.
 
     ```
 
-## Asynchronous single-track code for a sequence with [trcks.AwaitableTuple][] and [trcks.oop.AwaitableTupleWrapper][]
+## Asynchronous single-track code for a tuple with [trcks.AwaitableTuple][] and [trcks.oop.AwaitableTupleWrapper][]
 
 While the class [trcks.oop.TupleWrapper][] and its method `map`
 allow the chaining of synchronous functions for each element,
@@ -910,7 +910,7 @@ and the class [trcks.oop.AwaitableTupleWrapper][]
 allow us to combine [collections.abc.Awaitable][]-returning functions
 with other [collections.abc.Awaitable][]-returning functions or
 with "regular" functions,
-applied to each element in the sequence:
+applied to each element in the tuple:
 
 ???+ example
 
@@ -949,7 +949,7 @@ let us have a look at the individual steps of the chain:
 
     ```pycon
     >>> from trcks.oop import AwaitableTupleWrapper
-    >>> # 1. Wrap the input sequence:
+    >>> # 1. Wrap the input tuple:
     >>> wrapped: TupleWrapper[str] = TupleWrapper.construct_from_tuple(
     ...     ["a.txt", "b.txt"]
     ... )
@@ -1013,11 +1013,11 @@ allows us to execute asynchronous side effects for each element.
 
     ```
 
-## Asynchronous double-track code for a sequence with [trcks.AwaitableResultTuple][] and [trcks.oop.AwaitableResultTupleWrapper][]
+## Asynchronous double-track code for a tuple with [trcks.AwaitableResultTuple][] and [trcks.oop.AwaitableResultTupleWrapper][]
 
 Whenever we define a function using
 the `async def ... -> Result[F, S]` syntax
-and want to apply it to each element in a sequence,
+and want to apply it to each element in a tuple,
 we need the [trcks.oop.AwaitableResultTupleWrapper][] class.
 The package [trcks][] provides the type alias
 [trcks.AwaitableResultTuple][][F, S]
@@ -1082,7 +1082,7 @@ let us have a look at the individual steps of the chain:
 
     ```pycon
     >>> from trcks.oop import AwaitableResultTupleWrapper
-    >>> # 1. Wrap the input sequence:
+    >>> # 1. Wrap the input tuple:
     >>> wrapped: TupleWrapper[str] = TupleWrapper.construct_from_tuple(
     ...     ["a.txt", "b.txt"]
     ... )
