@@ -398,8 +398,8 @@ def map_failure_to_awaitable_result_tuple(
         rslt_tpl: ResultTuple[_F1, _S1],
     ) -> ResultTuple[_F2, _S1 | _S2]:
         match rslt_tpl:
-            case ("failure", failure_value):
-                return await f(failure_value)
+            case ("failure", value):
+                return await f(value)
             case ("success", _):
                 return rslt_tpl
             case _:  # pragma: no cover
@@ -974,10 +974,10 @@ def tap_failure_to_awaitable_result(
 
     async def bypassed_f(value: _F1) -> ResultTuple[_F1, _S2]:
         rslt: Result[object, _S2] = await f(value)
-        match rslt[0]:
-            case "failure":
+        match rslt:
+            case ("failure", _):
                 return r.construct_failure(value)
-            case "success":
+            case ("success", _):
                 return rt.construct_from_result(rslt)
             case _:  # pragma: no cover
                 return assert_never(rslt)  # type: ignore [unreachable]  # pyright: ignore [reportUnreachable]

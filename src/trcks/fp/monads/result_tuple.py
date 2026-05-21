@@ -280,8 +280,8 @@ def map_failure_to_tuple(
         r_tpl: ResultTuple[_F1, _S1],
     ) -> SuccessTuple[_S1] | SuccessTuple[_S2]:
         match r_tpl:
-            case ("failure", f1):
-                return "success", f(f1)
+            case ("failure", value):
+                return "success", f(value)
             case ("success", _):
                 return r_tpl
             case _:  # pragma: no cover
@@ -405,18 +405,18 @@ def map_successes_to_result_tuple(
         for s1 in s1s:
             r_tpl = f(s1)
             match r_tpl:
-                case ("failure", failure_value):
-                    return "failure", failure_value
-                case ("success", next_s2s):
-                    s2s.extend(next_s2s)
+                case ("failure", value):
+                    return "failure", value
+                case ("success", s2):
+                    s2s.extend(s2)
                 case _:  # pragma: no cover
                     return assert_never(r_tpl)  # type: ignore[arg-type]  # pyright: ignore[reportArgumentType]
         return "success", tuple(s2s)
 
     def mapped_f(r_tpl: ResultTuple[_F1, _S1]) -> ResultTuple[_F1 | _F2, _S2]:
         match r_tpl:
-            case ("failure", failure_value):
-                return "failure", failure_value
+            case ("failure", value):
+                return "failure", value
             case ("success", s1s):
                 return partially_mapped_f(s1s)
             case _:  # pragma: no cover
@@ -748,8 +748,8 @@ def tap_successes_to_result_tuple(
     def tapped_f(s1: _S1) -> ResultTuple[_F2, _S1]:
         r_tpl = f(s1)
         match r_tpl:
-            case ("failure", failure_value):
-                return "failure", failure_value
+            case ("failure", value):
+                return "failure", value
             case ("success", s2s):
                 return "success", tuple(s1 for _s2 in s2s)
             case _:  # pragma: no cover
