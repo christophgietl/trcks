@@ -751,7 +751,7 @@ def tap_successes_to_result_tuple(
             case ("failure", value):
                 return "failure", value
             case ("success", s2s):
-                return "success", tuple(s1 for _s2 in s2s)
+                return "success", tuple(s1 for _ in s2s)
             case _:  # pragma: no cover
                 return assert_never(r_tpl)  # type: ignore[arg-type] # pyright: ignore[reportArgumentType]
 
