@@ -646,7 +646,7 @@ operating on entire tuples.
 ???+ example
 
     ```pycon
-    >>> from trcks.fp.monads import tuple_ as s
+    >>> from trcks.fp.monads import tuple_ as t
     >>>
     >>> def normalize_email(email: str) -> str:
     ...     return email.strip().lower()
@@ -661,8 +661,8 @@ operating on entire tuples.
     ...         tuple[str, ...],
     ...     ] = (
     ...         emails,
-    ...         s.map_(normalize_email),
-    ...         s.map_(to_domain),
+    ...         t.map_(normalize_email),
+    ...         t.map_(to_domain),
     ...     )
     ...     return pipe(pipeline)
     ...
@@ -685,15 +685,15 @@ let us have a look at the individual steps of the chain:
     >>>
     >>> p1: Pipeline1[tuple[str, ...], tuple[str, ...]] = (
     ...     emails,
-    ...     s.map_(normalize_email),
+    ...     t.map_(normalize_email),
     ... )
     >>> pipe(p1)
     ('erika@domain.org', 'john@provider.com')
     >>>
     >>> p2: Pipeline2[tuple[str, ...], tuple[str, ...], tuple[str, ...]] = (
     ...     emails,
-    ...     s.map_(normalize_email),
-    ...     s.map_(to_domain),
+    ...     t.map_(normalize_email),
+    ...     t.map_(to_domain),
     ... )
     >>> pipe(p2)
     ('domain.org', 'provider.com')
@@ -709,7 +709,7 @@ let us have a look at the individual steps of the chain:
     >>> pipe(
     ...     (
     ...         ("ab", "cd"),
-    ...         s.map_to_tuple(list),
+    ...         t.map_to_tuple(list),
     ...     )
     ... )
     ('a', 'b', 'c', 'd')
@@ -730,9 +730,9 @@ allows us to execute side effects for each element:
     ...         tuple[str, ...],
     ...     ] = (
     ...         emails,
-    ...         s.map_(normalize_email),
-    ...         s.tap(lambda e: print(f"LOG: Processing '{e}'.")),
-    ...         s.map_(to_domain),
+    ...         t.map_(normalize_email),
+    ...         t.tap(lambda e: print(f"LOG: Processing '{e}'.")),
+    ...         t.map_(to_domain),
     ...     )
     ...     return pipe(pipeline)
     ...
