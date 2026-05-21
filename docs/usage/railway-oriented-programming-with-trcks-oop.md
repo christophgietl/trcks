@@ -611,10 +611,10 @@ the original success value is preserved:
 
     ```
 
-## Synchronous single-track code for a sequence with [collections.abc.Sequence][] and [trcks.oop.SequenceWrapper][]
+## Synchronous single-track code for a tuple with [collections.abc.Sequence][] and [trcks.oop.TupleWrapper][]
 
 While the class [trcks.oop.Wrapper][] wraps and operates on a single value,
-the class [trcks.oop.SequenceWrapper][] wraps a [collections.abc.Sequence][]
+the class [trcks.oop.TupleWrapper][] wraps a [collections.abc.Sequence][]
 and applies operations to each element individually.
 This is useful when we need to process multiple values
 through the same chain of transformations:
@@ -622,7 +622,7 @@ through the same chain of transformations:
 ???+ example
 
     ```pycon
-    >>> from trcks.oop import SequenceWrapper
+    >>> from trcks.oop import TupleWrapper
     >>>
     >>> def normalize_email(email: str) -> str:
     ...     return email.strip().lower()
@@ -632,8 +632,8 @@ through the same chain of transformations:
     ...
     >>> emails = ["  Erika@Domain.ORG ", "JOHN@Provider.COM  "]
     >>> (
-    ...     SequenceWrapper
-    ...     .construct_from_sequence(emails)
+    ...     TupleWrapper
+    ...     .construct_from_tuple(emails)
     ...     .map(normalize_email)
     ...     .map(to_domain)
     ...     .core
@@ -649,21 +649,21 @@ let us have a look at the individual steps of the chain:
 
     ```pycon
     >>> from collections.abc import Sequence
-    >>> # 1. Wrap the input sequence:
-    >>> wrapped: SequenceWrapper[str] = SequenceWrapper.construct_from_sequence(
+    >>> # 1. Wrap the input tuple:
+    >>> wrapped: TupleWrapper[str] = TupleWrapper.construct_from_tuple(
     ...     ["  Erika@Domain.ORG ", "JOHN@Provider.COM  "]
     ... )
     >>> wrapped
-    SequenceWrapper(core=['  Erika@Domain.ORG ', 'JOHN@Provider.COM  '])
+    TupleWrapper(core=['  Erika@Domain.ORG ', 'JOHN@Provider.COM  '])
     >>> # 2. Apply normalize_email to each element:
-    >>> mapped: SequenceWrapper[str] = wrapped.map(normalize_email)
+    >>> mapped: TupleWrapper[str] = wrapped.map(normalize_email)
     >>> mapped
-    SequenceWrapper(core=('erika@domain.org', 'john@provider.com'))
+    TupleWrapper(core=('erika@domain.org', 'john@provider.com'))
     >>> # 3. Apply to_domain to each element:
-    >>> mapped_again: SequenceWrapper[str] = mapped.map(to_domain)
+    >>> mapped_again: TupleWrapper[str] = mapped.map(to_domain)
     >>> mapped_again
-    SequenceWrapper(core=('domain.org', 'provider.com'))
-    >>> # 4. Unwrap the output sequence:
+    TupleWrapper(core=('domain.org', 'provider.com'))
+    >>> # 4. Unwrap the output tuple:
     >>> unwrapped: Sequence[str] = mapped_again.core
     >>> unwrapped
     ('domain.org', 'provider.com')
@@ -671,56 +671,56 @@ let us have a look at the individual steps of the chain:
     ```
 
 ???+ note
-    [trcks.oop.SequenceWrapper.construct][] wraps a single value
-    in a one-element sequence:
-    `SequenceWrapper.construct(42)` produces `SequenceWrapper(core=[42])`.
+    [trcks.oop.TupleWrapper.construct][] wraps a single value
+    in a one-element tuple:
+    `TupleWrapper.construct(42)` produces `TupleWrapper(core=[42])`.
 
-    The method [trcks.oop.SequenceWrapper.map_to_sequence][]
+    The method [trcks.oop.TupleWrapper.map_to_tuple][]
     applies a function that returns a [collections.abc.Sequence][]
     to each element and flattens the results (like a "flat map"):
 
     ```pycon
-    >>> SequenceWrapper.construct_from_sequence(
+    >>> TupleWrapper.construct_from_tuple(
     ...     ["ab", "cd"]
-    ... ).map_to_sequence(list).core
+    ... ).map_to_tuple(list).core
     ('a', 'b', 'c', 'd')
 
     ```
 
 The `tap` method allows executing side effects for each element
-while preserving the original sequence:
+while preserving the original tuple:
 
 ???+ example
 
     ```pycon
-    >>> sequence_wrapper = (
-    ...     SequenceWrapper
-    ...     .construct_from_sequence(emails)
+    >>> tuple_wrapper = (
+    ...     TupleWrapper
+    ...     .construct_from_tuple(emails)
     ...     .map(normalize_email)
     ...     .tap(lambda e: print(f"LOG: Processing '{e}'."))
     ...     .map(to_domain)
     ... )
     LOG: Processing 'erika@domain.org'.
     LOG: Processing 'john@provider.com'.
-    >>> sequence_wrapper.core
+    >>> tuple_wrapper.core
     ('domain.org', 'provider.com')
 
     ```
 
-## Synchronous double-track code for a sequence with [trcks.ResultSequence][] and [trcks.oop.ResultSequenceWrapper][]
+## Synchronous double-track code for a tuple with [trcks.ResultTuple][] and [trcks.oop.ResultTupleWrapper][]
 
-When applying a failable function to each element in a sequence,
-we need the [trcks.oop.ResultSequenceWrapper][] class.
+When applying a failable function to each element in a tuple,
+we need the [trcks.oop.ResultTupleWrapper][] class.
 The success track methods are named `map_successes` and `tap_successes` (plural)
-because they operate on each element in the [trcks.SuccessSequence][] individually.
+because they operate on each element in the [trcks.SuccessTuple][] individually.
 Processing short-circuits on the first [trcks.Failure][].
 
 ???+ example
 
     ```pycon
     >>> from typing import Literal
-    >>> from trcks import Result, ResultSequence
-    >>> from trcks.oop import SequenceWrapper
+    >>> from trcks import Result, ResultTuple
+    >>> from trcks.oop import TupleWrapper
     >>>
     >>> UserDoesNotExist = Literal["User does not exist"]
     >>> UserDoesNotHaveASubscription = Literal["User does not have a subscription"]
@@ -745,10 +745,10 @@ Processing short-circuits on the first [trcks.Failure][].
     ...
     >>> def get_subscription_fees_by_email(
     ...     user_emails: list[str],
-    ... ) -> ResultSequence[FailureDescription, float]:
+    ... ) -> ResultTuple[FailureDescription, float]:
     ...     return (
-    ...         SequenceWrapper
-    ...         .construct_from_sequence(user_emails)
+    ...         TupleWrapper
+    ...         .construct_from_tuple(user_emails)
     ...         .map_to_result(get_user_id)
     ...         .map_successes_to_result(get_subscription_id)
     ...         .map_successes(get_subscription_fee)
@@ -772,47 +772,47 @@ let us have a look at the individual steps of the chain:
 ???+ example
 
     ```pycon
-    >>> from trcks.oop import ResultSequenceWrapper
+    >>> from trcks.oop import ResultTupleWrapper
     >>>
-    >>> # 1. Wrap the input sequence:
-    >>> wrapped: SequenceWrapper[str] = SequenceWrapper.construct_from_sequence(
+    >>> # 1. Wrap the input tuple:
+    >>> wrapped: TupleWrapper[str] = TupleWrapper.construct_from_tuple(
     ...     ["erika.mustermann@domain.org"]
     ... )
     >>> wrapped
-    SequenceWrapper(core=['erika.mustermann@domain.org'])
+    TupleWrapper(core=['erika.mustermann@domain.org'])
     >>> # 2. Apply the Result function get_user_id to each element:
-    >>> mapped_once: ResultSequenceWrapper[
+    >>> mapped_once: ResultTupleWrapper[
     ...     UserDoesNotExist, int
     ... ] = wrapped.map_to_result(get_user_id)
     >>> mapped_once
-    ResultSequenceWrapper(core=('success', (1,)))
+    ResultTupleWrapper(core=('success', (1,)))
     >>> # 3. Apply the Result function get_subscription_id to each element:
-    >>> mapped_twice: ResultSequenceWrapper[
+    >>> mapped_twice: ResultTupleWrapper[
     ...     FailureDescription, int
     ... ] = mapped_once.map_successes_to_result(get_subscription_id)
     >>> mapped_twice
-    ResultSequenceWrapper(core=('success', (42,)))
+    ResultTupleWrapper(core=('success', (42,)))
     >>> # 4. Apply get_subscription_fee to each element:
-    >>> mapped_thrice: ResultSequenceWrapper[
+    >>> mapped_thrice: ResultTupleWrapper[
     ...     FailureDescription, float
     ... ] = mapped_twice.map_successes(get_subscription_fee)
     >>> mapped_thrice
-    ResultSequenceWrapper(core=('success', (4.2,)))
-    >>> # 5. Unwrap the output result sequence:
-    >>> unwrapped: ResultSequence[FailureDescription, float] = mapped_thrice.core
+    ResultTupleWrapper(core=('success', (4.2,)))
+    >>> # 5. Unwrap the output result tuple:
+    >>> unwrapped: ResultTuple[FailureDescription, float] = mapped_thrice.core
     >>> unwrapped
     ('success', (4.2,))
 
     ```
 
 ???+ note
-    The method [trcks.oop.SequenceWrapper.map_to_result][]
-    returns a [trcks.oop.ResultSequenceWrapper][] object.
-    The corresponding class [trcks.oop.ResultSequenceWrapper][]
+    The method [trcks.oop.TupleWrapper.map_to_result][]
+    returns a [trcks.oop.ResultTupleWrapper][] object.
+    The corresponding class [trcks.oop.ResultTupleWrapper][]
     has a `map_failure*` and a `map_successes*` method
-    for each `map*` method of the class [trcks.oop.SequenceWrapper][].
+    for each `map*` method of the class [trcks.oop.TupleWrapper][].
     Note the plural `map_successes` (instead of `map_success`)
-    since the method operates on each element in the sequence.
+    since the method operates on each element in the tuple.
 
 The `tap_successes` and `tap_failure` methods allow us to execute side effects
 in the success case (for each element) or in the failure case, respectively:
@@ -822,10 +822,10 @@ in the success case (for each element) or in the failure case, respectively:
     ```pycon
     >>> def get_subscription_fees_by_email(
     ...     user_emails: list[str],
-    ... ) -> ResultSequence[FailureDescription, float]:
+    ... ) -> ResultTuple[FailureDescription, float]:
     ...     return (
-    ...         SequenceWrapper
-    ...         .construct_from_sequence(user_emails)
+    ...         TupleWrapper
+    ...         .construct_from_tuple(user_emails)
     ...         .map_to_result(get_user_id)
     ...         .tap_successes(lambda n: print(f"LOG: User ID: {n}."))
     ...         .map_successes_to_result(get_subscription_id)
@@ -878,10 +878,10 @@ the original success values are preserved.
     ...
     >>> def get_and_persist_user_ids(
     ...     user_emails: list[str],
-    ... ) -> ResultSequence[UserDoesNotExist | OutOfDiskSpace, int]:
+    ... ) -> ResultTuple[UserDoesNotExist | OutOfDiskSpace, int]:
     ...     return (
-    ...         SequenceWrapper
-    ...         .construct_from_sequence(user_emails)
+    ...         TupleWrapper
+    ...         .construct_from_tuple(user_emails)
     ...         .map_to_result(get_user_id)
     ...         .tap_successes_to_result(write_to_disk)
     ...         .core
@@ -900,17 +900,17 @@ the original success values are preserved.
 
     ```
 
-## Asynchronous single-track code for a sequence with [trcks.AwaitableSequence][] and [trcks.oop.AwaitableSequenceWrapper][]
+## Asynchronous single-track code for a tuple with [trcks.AwaitableTuple][] and [trcks.oop.AwaitableTupleWrapper][]
 
-While the class [trcks.oop.SequenceWrapper][] and its method `map`
+While the class [trcks.oop.TupleWrapper][] and its method `map`
 allow the chaining of synchronous functions for each element,
 they cannot chain asynchronous functions.
-The method [trcks.oop.SequenceWrapper.map_to_awaitable][]
-and the class [trcks.oop.AwaitableSequenceWrapper][]
+The method [trcks.oop.TupleWrapper.map_to_awaitable][]
+and the class [trcks.oop.AwaitableTupleWrapper][]
 allow us to combine [collections.abc.Awaitable][]-returning functions
 with other [collections.abc.Awaitable][]-returning functions or
 with "regular" functions,
-applied to each element in the sequence:
+applied to each element in the tuple:
 
 ???+ example
 
@@ -930,8 +930,8 @@ applied to each element in the sequence:
     ...     input_paths: list[str],
     ... ) -> Sequence[str]:
     ...     return await (
-    ...         SequenceWrapper
-    ...         .construct_from_sequence(input_paths)
+    ...         TupleWrapper
+    ...         .construct_from_tuple(input_paths)
     ...         .map_to_awaitable(read_from_disk)
     ...         .map(transform)
     ...         .core
@@ -948,23 +948,23 @@ let us have a look at the individual steps of the chain:
 ???+ example
 
     ```pycon
-    >>> from trcks.oop import AwaitableSequenceWrapper
-    >>> # 1. Wrap the input sequence:
-    >>> wrapped: SequenceWrapper[str] = SequenceWrapper.construct_from_sequence(
+    >>> from trcks.oop import AwaitableTupleWrapper
+    >>> # 1. Wrap the input tuple:
+    >>> wrapped: TupleWrapper[str] = TupleWrapper.construct_from_tuple(
     ...     ["a.txt", "b.txt"]
     ... )
     >>> wrapped
-    SequenceWrapper(core=['a.txt', 'b.txt'])
+    TupleWrapper(core=['a.txt', 'b.txt'])
     >>> # 2. Apply the Awaitable function read_from_disk to each element:
-    >>> mapped_once: AwaitableSequenceWrapper[str] = wrapped.map_to_awaitable(
+    >>> mapped_once: AwaitableTupleWrapper[str] = wrapped.map_to_awaitable(
     ...     read_from_disk
     ... )
     >>> mapped_once
-    AwaitableSequenceWrapper(core=<coroutine object ...>)
+    AwaitableTupleWrapper(core=<coroutine object ...>)
     >>> # 3. Apply the function transform to each element:
-    >>> mapped_twice: AwaitableSequenceWrapper[str] = mapped_once.map(transform)
+    >>> mapped_twice: AwaitableTupleWrapper[str] = mapped_once.map(transform)
     >>> mapped_twice
-    AwaitableSequenceWrapper(core=<coroutine object ...>)
+    AwaitableTupleWrapper(core=<coroutine object ...>)
     >>> # 4. Unwrap and run the output coroutine:
     >>> asyncio.run(mapped_twice.core_as_coroutine)
     ('Length: 5', 'Length: 5')
@@ -972,14 +972,14 @@ let us have a look at the individual steps of the chain:
     ```
 
 ???+ note
-    The property `core` of the class [trcks.oop.AwaitableSequenceWrapper][]
-    has type [trcks.AwaitableSequence][].
+    The property `core` of the class [trcks.oop.AwaitableTupleWrapper][]
+    has type [trcks.AwaitableTuple][].
     Since [asyncio.run][] expects a [collections.abc.Coroutine][] object,
     we need to use the property `core_as_coroutine` instead.
 
-The method [trcks.oop.AwaitableSequenceWrapper.tap][]
+The method [trcks.oop.AwaitableTupleWrapper.tap][]
 allows us to execute synchronous side effects for each element.
-Similarly, the method [trcks.oop.AwaitableSequenceWrapper.tap_to_awaitable][]
+Similarly, the method [trcks.oop.AwaitableTupleWrapper.tap_to_awaitable][]
 allows us to execute asynchronous side effects for each element.
 
 ???+ example
@@ -994,8 +994,8 @@ allows us to execute asynchronous side effects for each element.
     ...     input_paths: list[str],
     ... ) -> Sequence[str]:
     ...     return await (
-    ...         SequenceWrapper
-    ...         .construct_from_sequence(input_paths)
+    ...         TupleWrapper
+    ...         .construct_from_tuple(input_paths)
     ...         .map_to_awaitable(read_from_disk)
     ...         .tap(lambda s: print(f"Read '{s}' from disk."))
     ...         .map(transform)
@@ -1013,15 +1013,15 @@ allows us to execute asynchronous side effects for each element.
 
     ```
 
-## Asynchronous double-track code for a sequence with [trcks.AwaitableResultSequence][] and [trcks.oop.AwaitableResultSequenceWrapper][]
+## Asynchronous double-track code for a tuple with [trcks.AwaitableResultTuple][] and [trcks.oop.AwaitableResultTupleWrapper][]
 
 Whenever we define a function using
 the `async def ... -> Result[F, S]` syntax
-and want to apply it to each element in a sequence,
-we need the [trcks.oop.AwaitableResultSequenceWrapper][] class.
+and want to apply it to each element in a tuple,
+we need the [trcks.oop.AwaitableResultTupleWrapper][] class.
 The package [trcks][] provides the type alias
-[trcks.AwaitableResultSequence][][F, S]
-for `Awaitable[ResultSequence[F, S]]`.
+[trcks.AwaitableResultTuple][][F, S]
+for `Awaitable[ResultTuple[F, S]]`.
 The success track methods are named `map_successes` and `tap_successes` (plural)
 because they operate on each element individually.
 Processing short-circuits on the first [trcks.Failure][].
@@ -1029,7 +1029,7 @@ Processing short-circuits on the first [trcks.Failure][].
 ???+ example
 
     ```pycon
-    >>> from trcks import AwaitableResultSequence
+    >>> from trcks import AwaitableResultTuple
     >>>
     >>> ReadErrorLiteral = Literal["read error"]
     >>> WriteErrorLiteral = Literal["write error"]
@@ -1054,10 +1054,10 @@ Processing short-circuits on the first [trcks.Failure][].
     ...
     >>> async def read_and_transform_and_write(
     ...     input_paths: list[str], output_path: str
-    ... ) -> ResultSequence[ReadErrorLiteral | WriteErrorLiteral, str]:
+    ... ) -> ResultTuple[ReadErrorLiteral | WriteErrorLiteral, str]:
     ...     return await (
-    ...         SequenceWrapper
-    ...         .construct_from_sequence(input_paths)
+    ...         TupleWrapper
+    ...         .construct_from_tuple(input_paths)
     ...         .map_to_awaitable_result(read_from_disk)
     ...         .map_successes(transform)
     ...         .tap_successes_to_awaitable_result(
@@ -1081,33 +1081,33 @@ let us have a look at the individual steps of the chain:
 ???+ example
 
     ```pycon
-    >>> from trcks.oop import AwaitableResultSequenceWrapper
-    >>> # 1. Wrap the input sequence:
-    >>> wrapped: SequenceWrapper[str] = SequenceWrapper.construct_from_sequence(
+    >>> from trcks.oop import AwaitableResultTupleWrapper
+    >>> # 1. Wrap the input tuple:
+    >>> wrapped: TupleWrapper[str] = TupleWrapper.construct_from_tuple(
     ...     ["a.txt", "b.txt"]
     ... )
     >>> wrapped
-    SequenceWrapper(core=['a.txt', 'b.txt'])
+    TupleWrapper(core=['a.txt', 'b.txt'])
     >>> # 2. Apply the AwaitableResult function read_from_disk to each element:
-    >>> mapped_once: AwaitableResultSequenceWrapper[
+    >>> mapped_once: AwaitableResultTupleWrapper[
     ...     ReadErrorLiteral, str
     ... ] = wrapped.map_to_awaitable_result(read_from_disk)
     >>> mapped_once
-    AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+    AwaitableResultTupleWrapper(core=<coroutine object ...>)
     >>> # 3. Apply the function transform to each element in the success case:
-    >>> mapped_twice: AwaitableResultSequenceWrapper[
+    >>> mapped_twice: AwaitableResultTupleWrapper[
     ...     ReadErrorLiteral, str
     ... ] = mapped_once.map_successes(transform)
     >>> mapped_twice
-    AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+    AwaitableResultTupleWrapper(core=<coroutine object ...>)
     >>> # 4. Apply the failable async side effect write_to_disk to each element:
-    >>> mapped_thrice: AwaitableResultSequenceWrapper[
+    >>> mapped_thrice: AwaitableResultTupleWrapper[
     ...     ReadErrorLiteral | WriteErrorLiteral, str
     ... ] = mapped_twice.tap_successes_to_awaitable_result(
     ...     lambda s: write_to_disk(s, "output.txt")
     ... )
     >>> mapped_thrice
-    AwaitableResultSequenceWrapper(core=<coroutine object ...>)
+    AwaitableResultTupleWrapper(core=<coroutine object ...>)
     >>> # 5. Unwrap and run the output coroutine:
     >>> asyncio.run(mapped_thrice.core_as_coroutine)
     Wrote 'Length: 5' to file output.txt.
@@ -1116,8 +1116,8 @@ let us have a look at the individual steps of the chain:
 
     ```
 
-The methods [trcks.oop.AwaitableResultSequenceWrapper.tap_failure][] and
-[trcks.oop.AwaitableResultSequenceWrapper.tap_successes][]
+The methods [trcks.oop.AwaitableResultTupleWrapper.tap_failure][] and
+[trcks.oop.AwaitableResultTupleWrapper.tap_successes][]
 allow us to execute synchronous side effects
 in the failure case or in the success case (for each element), respectively:
 
@@ -1141,10 +1141,10 @@ in the failure case or in the success case (for each element), respectively:
     ...
     >>> async def read_and_transform_and_write(
     ...     input_paths: list[str], output_path: str
-    ... ) -> ResultSequence[ReadErrorLiteral | WriteErrorLiteral, str]:
+    ... ) -> ResultTuple[ReadErrorLiteral | WriteErrorLiteral, str]:
     ...     return await (
-    ...         SequenceWrapper
-    ...         .construct_from_sequence(input_paths)
+    ...         TupleWrapper
+    ...         .construct_from_tuple(input_paths)
     ...         .map_to_awaitable_result(read_from_disk)
     ...         .tap_successes(lambda s: print(f"LOG: Read '{s}' from disk."))
     ...         .map_successes(transform)
@@ -1177,7 +1177,7 @@ in the failure case or in the success case (for each element), respectively:
 Sometimes, side effects themselves can fail and
 need to return an [trcks.AwaitableResult][] type.
 The method
-[trcks.oop.AwaitableResultSequenceWrapper.tap_successes_to_awaitable_result][]
+[trcks.oop.AwaitableResultTupleWrapper.tap_successes_to_awaitable_result][]
 allows us to execute such asynchronous side effects
 for each element in the success case.
 If the side effect returns a [trcks.Failure][] for any element,
@@ -1203,10 +1203,10 @@ the original success values are preserved:
     ...
     >>> async def read_and_persist(
     ...     input_paths: list[str],
-    ... ) -> ResultSequence[ReadErrorLiteral | OutOfDiskSpace, str]:
+    ... ) -> ResultTuple[ReadErrorLiteral | OutOfDiskSpace, str]:
     ...     return await (
-    ...         SequenceWrapper
-    ...         .construct_from_sequence(input_paths)
+    ...         TupleWrapper
+    ...         .construct_from_tuple(input_paths)
     ...         .map_to_awaitable_result(read_from_disk)
     ...         .tap_successes(lambda s: print(f"LOG: Persisting '{s}'."))
     ...         .tap_successes_to_awaitable_result(write_to_disk)

@@ -10,7 +10,7 @@ See:
     [Railway oriented programming | F# for fun and profit](https://fsharpforfunandprofit.com/posts/recipe-part2/)
 """
 
-from collections.abc import Awaitable, Sequence
+from collections.abc import Awaitable
 from typing import Literal, TypeAlias
 
 from trcks._typing import TypeVar
@@ -73,8 +73,8 @@ AwaitableFailure: TypeAlias = Awaitable[Failure[_F_co]]
 when used in an `await` expression.
 """
 
-AwaitableSequence: TypeAlias = Awaitable[Sequence[_T_co]]
-"""[collections.abc.Awaitable][] that returns a [collections.abc.Sequence][]
+AwaitableTuple: TypeAlias = Awaitable[tuple[_T_co, ...]]
+"""[collections.abc.Awaitable][] that returns a [tuple][]
 when used in an `await` expression.
 """
 
@@ -129,18 +129,18 @@ Example:
     ... ] = divide_slowly
 """
 
-ResultSequence: TypeAlias = Result[_F_co, Sequence[_S_co]]
-"""[trcks.Result][] where the success value is a [collections.abc.Sequence][]."""
+ResultTuple: TypeAlias = Result[_F_co, tuple[_S_co, ...]]
+"""[trcks.Result][] where the success value is a [tuple][]."""
 
-SuccessSequence: TypeAlias = Success[Sequence[_S_co]]
-"""[trcks.Success][] that contains a [collections.abc.Sequence][]."""
+SuccessTuple: TypeAlias = Success[tuple[_S_co, ...]]
+"""[trcks.Success][] that contains a [tuple][]."""
 
-AwaitableResultSequence: TypeAlias = Awaitable[ResultSequence[_F_co, _S_co]]
-"""[collections.abc.Awaitable][] that returns a [trcks.ResultSequence][]
+AwaitableResultTuple: TypeAlias = Awaitable[ResultTuple[_F_co, _S_co]]
+"""[collections.abc.Awaitable][] that returns a [trcks.ResultTuple][]
 when used in an `await` expression.
 """
 
-AwaitableSuccessSequence: TypeAlias = Awaitable[SuccessSequence[_S_co]]
-"""[collections.abc.Awaitable][] that returns a [trcks.SuccessSequence][]
+AwaitableSuccessTuple: TypeAlias = Awaitable[SuccessTuple[_S_co]]
+"""[collections.abc.Awaitable][] that returns a [trcks.SuccessTuple][]
 when used in an `await` expression.
 """

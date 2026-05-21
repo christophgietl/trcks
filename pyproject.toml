@@ -120,13 +120,13 @@ containers = [
 ]
 exhaustive = true
 layers = [
-    "awaitable_result_sequence",
+    "awaitable_result_tuple",
     "awaitable_result",
-    "awaitable_sequence",
-    "result_sequence",
+    "awaitable_tuple",
+    "result_tuple",
     "awaitable",
     "result",
-    "sequence",
+    "tuple_",
     "identity",
 ]
 
