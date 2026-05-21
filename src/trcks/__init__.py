@@ -24,7 +24,7 @@ _T_co = TypeVar("_T_co", covariant=True)
 
 
 Failure: TypeAlias = tuple[Literal["failure"], _F_co]
-"""homogeneous [tuple][] of length 2 containing ``"failure"`` followed by
+"""[tuple][] of length 2 containing ``"failure"`` followed by
 a value of type `_F_co`.
 
 Example:
@@ -36,7 +36,7 @@ Note:
 """
 
 Success: TypeAlias = tuple[Literal["success"], _S_co]
-"""homogeneous [tuple][] of length 2 containing ``"success"`` followed by
+"""[tuple][] of length 2 containing ``"success"`` followed by
 a value of type `_S_co`.
 
 Example:
