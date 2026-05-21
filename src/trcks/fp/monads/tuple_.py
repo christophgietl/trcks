@@ -101,8 +101,6 @@ def map_(f: Callable[[_T1], _T2]) -> Callable[[tuple[_T1, ...]], tuple[_T2, ...]
         >>> double_integers: Callable[
         ...     [tuple[int, ...]], tuple[int, ...]
         ... ] = s.map_(double_integer)
-        >>> double_integers([1, 2, 3])
-        (2, 4, 6)
         >>> double_integers((1, 2, 3))
         (2, 4, 6)
     """
@@ -132,7 +130,7 @@ def map_to_tuple(
         >>> duplicate_integers: Callable[
         ...     [tuple[int, ...]], tuple[int, ...]
         ... ] = s.map_to_tuple(duplicate_integer)
-        >>> duplicate_integers([1, 2, 3])
+        >>> duplicate_integers((1, 2, 3))
         (1, 1, 2, 2, 3, 3)
     """
 
@@ -165,7 +163,7 @@ def tap(
         >>> log_and_pass_integers: Callable[
         ...     [tuple[int, ...]], tuple[int, ...]
         ... ] = s.tap(log_integer)
-        >>> sequence = log_and_pass_integers([1, 2, 3])
+        >>> sequence = log_and_pass_integers((1, 2, 3))
         Received: 1
         Received: 2
         Received: 3
@@ -201,7 +199,7 @@ def tap_to_tuple(
         >>> repeat_integers_according_to_number_of_divisors: Callable[
         ...     [tuple[int, ...]], tuple[int, ...]
         ... ] = s.tap_to_tuple(get_divisors)
-        >>> repeat_integers_according_to_number_of_divisors([1, 2, 3, 4])
+        >>> repeat_integers_according_to_number_of_divisors((1, 2, 3, 4))
         (1, 2, 2, 3, 3, 4, 4, 4)
     """
 
