@@ -4,12 +4,12 @@ This module provides wrapper classes for processing values of the following type
 in a method-chaining style:
 
 - [collections.abc.Awaitable][]
-- [tuple][]
 - [trcks.AwaitableResult][]
 - [trcks.AwaitableResultTuple][]
 - [trcks.AwaitableTuple][]
 - [trcks.Result][]
 - [trcks.ResultTuple][]
+- [tuple][]
 
 Example:
     This example uses the classes [trcks.oop.Wrapper][] and [trcks.oop.ResultWrapper][]
