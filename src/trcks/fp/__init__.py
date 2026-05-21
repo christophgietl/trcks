@@ -4,12 +4,12 @@ This package provides functions for processing values of the following generic t
 in a functional style:
 
 - [collections.abc.Awaitable][]
-- [collections.abc.Sequence][]
 - [trcks.AwaitableResult][]
-- [trcks.AwaitableResultSequence][]
-- [trcks.AwaitableSequence][]
+- [trcks.AwaitableResultTuple][]
+- [trcks.AwaitableTuple][]
 - [trcks.Result][]
-- [trcks.ResultSequence][]
+- [trcks.ResultTuple][]
+- [tuple][]
 
 Example:
     This example uses the modules
