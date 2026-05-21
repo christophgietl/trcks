@@ -171,7 +171,7 @@ def map_(
         >>> async def main() -> tuple[int, ...]:
         ...     return await pipe(
         ...         (
-        ...             as_.construct_from_tuple([1, 2, 3]),
+        ...             as_.construct_from_tuple((1, 2, 3)),
         ...             as_.map_(double_integer),
         ...         )
         ...     )
@@ -210,7 +210,7 @@ def map_to_awaitable(
         >>> async def main() -> tuple[int, ...]:
         ...     return await pipe(
         ...         (
-        ...             as_.construct_from_tuple([1, 2]),
+        ...             as_.construct_from_tuple((1, 2)),
         ...             as_.map_to_awaitable(slowly_add_one),
         ...         )
         ...     )
@@ -330,7 +330,7 @@ def tap(
         >>> async def main() -> tuple[int, ...]:
         ...     return await pipe(
         ...         (
-        ...             as_.construct_from_tuple([1, 2]),
+        ...             as_.construct_from_tuple((1, 2)),
         ...             as_.tap(log_integer),
         ...         )
         ...     )
@@ -372,7 +372,7 @@ def tap_to_awaitable(
         >>> async def main() -> tuple[int, ...]:
         ...     return await pipe(
         ...         (
-        ...             as_.construct_from_tuple([1, 2]),
+        ...             as_.construct_from_tuple((1, 2)),
         ...             as_.tap_to_awaitable(slowly_log_integer),
         ...         )
         ...     )
@@ -458,13 +458,13 @@ def tap_to_tuple(
         >>> from collections.abc import Sequence
         >>> from trcks.fp.composition import pipe
         >>> from trcks.fp.monads import awaitable_tuple as as_
-        >>> def get_divisors(n: int) -> list[int]:
+        >>> def get_divisors(n: int) -> tuple[int, ...]:
         ...     candidates = range(1, n + 1)
-        ...     return [c for c in candidates if n % c == 0]
+        ...     return tuple(c for c in candidates if n % c == 0)
         >>> async def main() -> tuple[int, ...]:
         ...     return await pipe(
         ...         (
-        ...             as_.construct_from_tuple([1, 2, 3, 4]),
+        ...             as_.construct_from_tuple((1, 2, 3, 4)),
         ...             as_.tap_to_tuple(get_divisors),
         ...         )
         ...     )
