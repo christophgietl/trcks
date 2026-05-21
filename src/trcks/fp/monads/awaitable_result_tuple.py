@@ -721,17 +721,17 @@ def map_successes_to_awaitable_result_sequence(
             case "failure":
                 return rslt_seq
             case "success":
-                s2s: tuple[_S2, ...] = ()
+                s2s: list[_S2] = []
                 for s1 in rslt_seq[1]:
                     inner = await f(s1)
                     match inner[0]:
                         case "failure":
                             return inner
                         case "success":
-                            s2s = (*s2s, *inner[1])
+                            s2s.extend(inner[1])
                         case _:  # pragma: no cover
                             return assert_never(inner)  # type: ignore [unreachable]  # pyright: ignore [reportUnreachable]
-                return "success", s2s
+                return "success", tuple(s2s)
             case _:  # pragma: no cover
                 return assert_never(rslt_seq)  # type: ignore [unreachable]  # pyright: ignore [reportUnreachable]
 
