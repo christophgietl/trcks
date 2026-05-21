@@ -1,7 +1,7 @@
 """Monadic functions for [trcks.AwaitableTuple][].
 
 Provides utilities for functional composition of
-asynchronous [tuple][]-returning functions.
+asynchronous homogeneous [tuple][]-returning functions.
 
 Example:
     Map and tap over an awaitable sequence:
@@ -490,7 +490,7 @@ async def to_coroutine_tuple(a_seq: AwaitableTuple[_T]) -> tuple[_T, ...]:
     Note:
         The type [trcks.AwaitableTuple][] is
         an alias of [collections.abc.Awaitable][] over
-        [tuple][] values.
+        homogeneous [tuple][] values.
 
     Example:
         >>> import asyncio

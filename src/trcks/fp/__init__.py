@@ -9,7 +9,7 @@ in a functional style:
 - [trcks.AwaitableTuple][]
 - [trcks.Result][]
 - [trcks.ResultTuple][]
-- [tuple][]
+- homogeneous [tuple][]
 
 Example:
     This example uses the modules
