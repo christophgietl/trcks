@@ -648,7 +648,6 @@ let us have a look at the individual steps of the chain:
 ???+ example
 
     ```pycon
-    >>> from collections.abc import Sequence
     >>> # 1. Wrap the input tuple:
     >>> wrapped: TupleWrapper[str] = TupleWrapper.construct_from_tuple(
     ...     ("  Erika@Domain.ORG ", "JOHN@Provider.COM  ")
@@ -916,7 +915,6 @@ applied to each element in the tuple:
 
     ```pycon
     >>> import asyncio
-    >>> from collections.abc import Sequence
     >>>
     >>> async def read_from_disk(path: str) -> str:
     ...     await asyncio.sleep(0.001)

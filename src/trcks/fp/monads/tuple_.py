@@ -1,4 +1,4 @@
-"""Monadic functions for homogeneous [tuple][].
+"""Monadic functions for homogeneous [tuple][]s.
 
 Provides utilities for functional composition of
 functions returning homogeneous [tuple][] values.
@@ -7,7 +7,7 @@ Example:
     Create and process a homogeneous [tuple][]:
 
     >>> from trcks.fp.composition import pipe
-    >>> from trcks.fp.monads import tuple_ as s
+    >>> from trcks.fp.monads import tuple_ as t
     >>> def double_integer(n: int) -> int:
     ...     return n * 2
     ...
@@ -17,8 +17,8 @@ Example:
     >>> sequence = pipe(
     ...     (
     ...         (1, 2, 3),
-    ...         s.map_(double_integer),
-    ...         s.tap(log_integer),
+    ...         t.map_(double_integer),
+    ...         t.tap(log_integer),
     ...     )
     ... )
     Received: 2
@@ -35,7 +35,7 @@ Example:
     >>> sequence = pipe(
     ...     (
     ...         (1, 2, 3),
-    ...         s.map_to_tuple(duplicate_integer),
+    ...         t.map_to_tuple(duplicate_integer),
     ...     )
     ... )
     >>> sequence

@@ -677,21 +677,21 @@ let us have a look at the individual steps of the chain:
 ???+ example
 
     ```pycon
-    >>> emails: list[str] = ["  Erika@Domain.ORG ", "JOHN@Provider.COM  "]
+    >>> emails: tuple[str, ...] = ("  Erika@Domain.ORG ", "JOHN@Provider.COM  ")
     >>>
-    >>> p0: Pipeline0[tuple[str, ...]] = (tuple(emails),)
+    >>> p0: Pipeline0[tuple[str, ...]] = (emails,)
     >>> pipe(p0)
     ('  Erika@Domain.ORG ', 'JOHN@Provider.COM  ')
     >>>
     >>> p1: Pipeline1[tuple[str, ...], tuple[str, ...]] = (
-    ...     tuple(emails),
+    ...     emails,
     ...     s.map_(normalize_email),
     ... )
     >>> pipe(p1)
     ('erika@domain.org', 'john@provider.com')
     >>>
     >>> p2: Pipeline2[tuple[str, ...], tuple[str, ...], tuple[str, ...]] = (
-    ...     tuple(emails),
+    ...     emails,
     ...     s.map_(normalize_email),
     ...     s.map_(to_domain),
     ... )
@@ -722,21 +722,21 @@ allows us to execute side effects for each element:
 ???+ example
 
     ```pycon
-    >>> def get_domains(emails: list[str]) -> tuple[str, ...]:
+    >>> def get_domains(emails: tuple[str, ...]) -> tuple[str, ...]:
     ...     pipeline: Pipeline3[
     ...         tuple[str, ...],
     ...         tuple[str, ...],
     ...         tuple[str, ...],
     ...         tuple[str, ...],
     ...     ] = (
-    ...         tuple(emails),
+    ...         emails,
     ...         s.map_(normalize_email),
     ...         s.tap(lambda e: print(f"LOG: Processing '{e}'.")),
     ...         s.map_(to_domain),
     ...     )
     ...     return pipe(pipeline)
     ...
-    >>> result = get_domains(["  Erika@Domain.ORG ", "JOHN@Provider.COM  "])
+    >>> result = get_domains(("  Erika@Domain.ORG ", "JOHN@Provider.COM  "))
     LOG: Processing 'erika@domain.org'.
     LOG: Processing 'john@provider.com'.
     >>> result
