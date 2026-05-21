@@ -611,10 +611,10 @@ the original success value is preserved:
 
     ```
 
-## Synchronous single-track code for a tuple with [collections.abc.Sequence][] and [trcks.oop.TupleWrapper][]
+## Synchronous single-track code for a homogeneous tuple with [trcks.oop.TupleWrapper][]
 
 While the class [trcks.oop.Wrapper][] wraps and operates on a single value,
-the class [trcks.oop.TupleWrapper][] wraps a [collections.abc.Sequence][]
+the class [trcks.oop.TupleWrapper][] wraps a [tuple][]
 and applies operations to each element individually.
 This is useful when we need to process multiple values
 through the same chain of transformations:
@@ -664,7 +664,7 @@ let us have a look at the individual steps of the chain:
     >>> mapped_again
     TupleWrapper(core=('domain.org', 'provider.com'))
     >>> # 4. Unwrap the output tuple:
-    >>> unwrapped: Sequence[str] = mapped_again.core
+    >>> unwrapped: tuple[str, ...] = mapped_again.core
     >>> unwrapped
     ('domain.org', 'provider.com')
 
@@ -676,7 +676,7 @@ let us have a look at the individual steps of the chain:
     `TupleWrapper.construct(42)` produces `TupleWrapper(core=(42,))`.
 
     The method [trcks.oop.TupleWrapper.map_to_tuple][]
-    applies a function that returns a [collections.abc.Sequence][]
+    applies a function that returns a [tuple][]
     to each element and flattens the results (like a "flat map"):
 
     ```pycon
@@ -928,10 +928,10 @@ applied to each element in the tuple:
     ...
     >>> async def read_and_transform(
     ...     input_paths: list[str],
-    ... ) -> Sequence[str]:
+    ... ) -> tuple[str, ...]:
     ...     return await (
     ...         TupleWrapper
-    ...         .construct_from_tuple(input_paths)
+    ...         .construct_from_tuple(tuple(input_paths))
     ...         .map_to_awaitable(read_from_disk)
     ...         .map(transform)
     ...         .core
@@ -992,10 +992,10 @@ allows us to execute asynchronous side effects for each element.
     ...
     >>> async def read_and_transform(
     ...     input_paths: list[str],
-    ... ) -> Sequence[str]:
+    ... ) -> tuple[str, ...]:
     ...     return await (
     ...         TupleWrapper
-    ...         .construct_from_tuple(input_paths)
+    ...         .construct_from_tuple(tuple(input_paths))
     ...         .map_to_awaitable(read_from_disk)
     ...         .tap(lambda s: print(f"Read '{s}' from disk."))
     ...         .map(transform)

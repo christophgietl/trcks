@@ -634,10 +634,10 @@ the original success value is preserved:
 
     ```
 
-## Synchronous single-track code for a tuple with [trcks.fp.composition][] and [trcks.fp.monads.tuple_][]
+## Synchronous single-track code for a homogeneous tuple with [trcks.fp.composition][] and [trcks.fp.monads.tuple_][]
 
 If we want to apply a pipeline of functions to each element
-in a [collections.abc.Sequence][],
+in a [tuple][],
 the module [trcks.fp.monads.tuple_][] provides
 some higher-order functions named `map_*` and `tap`
 that turn element-wise functions into functions
@@ -646,7 +646,6 @@ operating on entire tuples.
 ???+ example
 
     ```pycon
-    >>> from collections.abc import Sequence
     >>> from trcks.fp.monads import tuple_ as s
     >>>
     >>> def normalize_email(email: str) -> str:
@@ -655,13 +654,13 @@ operating on entire tuples.
     >>> def to_domain(email: str) -> str:
     ...     return email.split("@")[1]
     ...
-    >>> def get_domains(emails: list[str]) -> Sequence[str]:
+    >>> def get_domains(emails: list[str]) -> tuple[str, ...]:
     ...     pipeline: Pipeline2[
-    ...         Sequence[str],
-    ...         Sequence[str],
-    ...         Sequence[str],
+    ...         tuple[str, ...],
+    ...         tuple[str, ...],
+    ...         tuple[str, ...],
     ...     ] = (
-    ...         emails,
+    ...         tuple(emails),
     ...         s.map_(normalize_email),
     ...         s.map_(to_domain),
     ...     )
@@ -678,23 +677,21 @@ let us have a look at the individual steps of the chain:
 ???+ example
 
     ```pycon
-    >>> from collections.abc import Sequence
-    >>>
     >>> emails: list[str] = ["  Erika@Domain.ORG ", "JOHN@Provider.COM  "]
     >>>
-    >>> p0: Pipeline0[list[str]] = (emails,)
+    >>> p0: Pipeline0[tuple[str, ...]] = (tuple(emails),)
     >>> pipe(p0)
-    ['  Erika@Domain.ORG ', 'JOHN@Provider.COM  ']
+    ('  Erika@Domain.ORG ', 'JOHN@Provider.COM  ')
     >>>
-    >>> p1: Pipeline1[list[str], Sequence[str]] = (
-    ...     emails,
+    >>> p1: Pipeline1[tuple[str, ...], tuple[str, ...]] = (
+    ...     tuple(emails),
     ...     s.map_(normalize_email),
     ... )
     >>> pipe(p1)
     ('erika@domain.org', 'john@provider.com')
     >>>
-    >>> p2: Pipeline2[list[str], Sequence[str], Sequence[str]] = (
-    ...     emails,
+    >>> p2: Pipeline2[tuple[str, ...], tuple[str, ...], tuple[str, ...]] = (
+    ...     tuple(emails),
     ...     s.map_(normalize_email),
     ...     s.map_(to_domain),
     ... )
@@ -705,7 +702,7 @@ let us have a look at the individual steps of the chain:
 
 ???+ note
     The higher-order function [trcks.fp.monads.tuple_.map_to_tuple][]
-    applies a function that returns a [collections.abc.Sequence][]
+    applies a function that returns a [tuple][]
     to each element and flattens the results (like a "flat map"):
 
     ```pycon
@@ -725,14 +722,14 @@ allows us to execute side effects for each element:
 ???+ example
 
     ```pycon
-    >>> def get_domains(emails: list[str]) -> Sequence[str]:
+    >>> def get_domains(emails: list[str]) -> tuple[str, ...]:
     ...     pipeline: Pipeline3[
-    ...         list[str],
-    ...         Sequence[str],
-    ...         Sequence[str],
-    ...         Sequence[str],
+    ...         tuple[str, ...],
+    ...         tuple[str, ...],
+    ...         tuple[str, ...],
+    ...         tuple[str, ...],
     ...     ] = (
-    ...         emails,
+    ...         tuple(emails),
     ...         s.map_(normalize_email),
     ...         s.tap(lambda e: print(f"LOG: Processing '{e}'.")),
     ...         s.map_(to_domain),
@@ -747,7 +744,7 @@ allows us to execute side effects for each element:
 
     ```
 
-## Synchronous double-track code for a tuple with [trcks.fp.composition][] and [trcks.fp.monads.result_tuple][]
+## Synchronous double-track code for a homogeneous tuple with [trcks.fp.composition][] and [trcks.fp.monads.result_tuple][]
 
 If one of the functions in a [trcks.fp.composition.Pipeline][]
 returns a [trcks.ResultTuple][][F, S] type,
@@ -790,13 +787,13 @@ Processing short-circuits on the first [trcks.Failure][].
     ...     user_emails: list[str],
     ... ) -> ResultTuple[FailureDescription, float]:
     ...     pipeline: Pipeline4[
-    ...         list[str],
+    ...         tuple[str, ...],
     ...         SuccessTuple[str],
     ...         ResultTuple[UserDoesNotExist, int],
     ...         ResultTuple[FailureDescription, int],
     ...         ResultTuple[FailureDescription, float],
     ...     ] = (
-    ...         user_emails,
+    ...         tuple(user_emails),
     ...         rs_.construct_successes_from_tuple,
     ...         rs_.map_successes_to_result(get_user_id),
     ...         rs_.map_successes_to_result(get_subscription_id),
@@ -823,26 +820,26 @@ let us have a look at the individual steps of the chain:
     ```pycon
     >>> from trcks.fp.composition import Pipeline4
     >>>
-    >>> p0: Pipeline0[list[str]] = (["erika.mustermann@domain.org"],)
+    >>> p0: Pipeline0[tuple[str, ...]] = (("erika.mustermann@domain.org",),)
     >>> pipe(p0)
-    ['erika.mustermann@domain.org']
+    ('erika.mustermann@domain.org',)
     >>>
     >>> p1: Pipeline1[
-    ...     list[str],
+    ...     tuple[str, ...],
     ...     SuccessTuple[str],
     ... ] = (
-    ...     ["erika.mustermann@domain.org"],
+    ...     ("erika.mustermann@domain.org",),
     ...     rs_.construct_successes_from_tuple,
     ... )
     >>> pipe(p1)
-    ('success', ['erika.mustermann@domain.org'])
+    ('success', ('erika.mustermann@domain.org',))
     >>>
     >>> p2: Pipeline2[
-    ...     list[str],
+    ...     tuple[str, ...],
     ...     SuccessTuple[str],
     ...     ResultTuple[UserDoesNotExist, int],
     ... ] = (
-    ...     ["erika.mustermann@domain.org"],
+    ...     ("erika.mustermann@domain.org",),
     ...     rs_.construct_successes_from_tuple,
     ...     rs_.map_successes_to_result(get_user_id),
     ... )
@@ -850,12 +847,12 @@ let us have a look at the individual steps of the chain:
     ('success', (1,))
     >>>
     >>> p3: Pipeline3[
-    ...     list[str],
+    ...     tuple[str, ...],
     ...     SuccessTuple[str],
     ...     ResultTuple[UserDoesNotExist, int],
     ...     ResultTuple[FailureDescription, int],
     ... ] = (
-    ...     ["erika.mustermann@domain.org"],
+    ...     ("erika.mustermann@domain.org",),
     ...     rs_.construct_successes_from_tuple,
     ...     rs_.map_successes_to_result(get_user_id),
     ...     rs_.map_successes_to_result(get_subscription_id),
@@ -864,13 +861,13 @@ let us have a look at the individual steps of the chain:
     ('success', (42,))
     >>>
     >>> p4: Pipeline4[
-    ...     list[str],
+    ...     tuple[str, ...],
     ...     SuccessTuple[str],
     ...     ResultTuple[UserDoesNotExist, int],
     ...     ResultTuple[FailureDescription, int],
     ...     ResultTuple[FailureDescription, float],
     ... ] = (
-    ...     ["erika.mustermann@domain.org"],
+    ...     ("erika.mustermann@domain.org",),
     ...     rs_.construct_successes_from_tuple,
     ...     rs_.map_successes_to_result(get_user_id),
     ...     rs_.map_successes_to_result(get_subscription_id),
@@ -883,7 +880,7 @@ let us have a look at the individual steps of the chain:
 
 ???+ note
     The function [trcks.fp.monads.result_tuple.construct_successes_from_tuple][]
-    wraps a [collections.abc.Sequence][] into a [trcks.SuccessTuple][],
+    wraps a [tuple][] into a [trcks.SuccessTuple][],
     which can then be used with the higher-order functions
     from [trcks.fp.monads.result_tuple][].
 
@@ -1000,7 +997,7 @@ the original success values are preserved.
 
     ```
 
-## Asynchronous single-track code for a tuple with [trcks.fp.composition][] and [trcks.fp.monads.awaitable_tuple][]
+## Asynchronous single-track code for a homogeneous tuple with [trcks.fp.composition][] and [trcks.fp.monads.awaitable_tuple][]
 
 If one of the functions in a [trcks.fp.composition.Pipeline][] returns
 a [trcks.AwaitableTuple][][T] type,
@@ -1026,14 +1023,14 @@ into functions operating on [trcks.AwaitableTuple][] values.
     ...
     >>> async def read_and_transform(
     ...     input_paths: list[str],
-    ... ) -> Sequence[str]:
+    ... ) -> tuple[str, ...]:
     ...     p: Pipeline3[
-    ...         list[str],
+    ...         tuple[str, ...],
     ...         AwaitableTuple[str],
     ...         AwaitableTuple[str],
     ...         AwaitableTuple[str],
     ...     ] = (
-    ...         input_paths,
+    ...         tuple(input_paths),
     ...         as_.construct_from_tuple,
     ...         as_.map_to_awaitable(read_from_disk),
     ...         as_.map_(transform),
@@ -1053,19 +1050,19 @@ let us have a look at the individual steps of the chain:
     ```pycon
     >>> from trcks import AwaitableTuple
     >>>
-    >>> p1: Pipeline1[list[str], AwaitableTuple[str]] = (
-    ...     ["a.txt", "b.txt"],
+    >>> p1: Pipeline1[tuple[str, ...], AwaitableTuple[str]] = (
+    ...     ("a.txt", "b.txt"),
     ...     as_.construct_from_tuple,
     ... )
     >>> asyncio.run(as_.to_coroutine_tuple(pipe(p1)))
-    ['a.txt', 'b.txt']
+    ('a.txt', 'b.txt')
     >>>
     >>> p2: Pipeline2[
-    ...     list[str],
+    ...     tuple[str, ...],
     ...     AwaitableTuple[str],
     ...     AwaitableTuple[str],
     ... ] = (
-    ...     ["a.txt", "b.txt"],
+    ...     ("a.txt", "b.txt"),
     ...     as_.construct_from_tuple,
     ...     as_.map_to_awaitable(read_from_disk),
     ... )
@@ -1073,12 +1070,12 @@ let us have a look at the individual steps of the chain:
     ('Hello', 'World')
     >>>
     >>> p3: Pipeline3[
-    ...     list[str],
+    ...     tuple[str, ...],
     ...     AwaitableTuple[str],
     ...     AwaitableTuple[str],
     ...     AwaitableTuple[str],
     ... ] = (
-    ...     ["a.txt", "b.txt"],
+    ...     ("a.txt", "b.txt"),
     ...     as_.construct_from_tuple,
     ...     as_.map_to_awaitable(read_from_disk),
     ...     as_.map_(transform),
@@ -1090,7 +1087,7 @@ let us have a look at the individual steps of the chain:
 
 ???+ note
     The function [trcks.fp.monads.awaitable_tuple.construct_from_tuple][]
-    wraps a [collections.abc.Sequence][] into
+    wraps a [tuple][] into
     an [trcks.AwaitableTuple][],
     which can then be used with the higher-order functions
     from [trcks.fp.monads.awaitable_tuple][].
@@ -1119,16 +1116,16 @@ allows us to execute asynchronous side effects for each element.
     ...
     >>> async def read_and_transform(
     ...     input_paths: list[str],
-    ... ) -> Sequence[str]:
+    ... ) -> tuple[str, ...]:
     ...     p: Pipeline5[
-    ...         list[str],
+    ...         tuple[str, ...],
     ...         AwaitableTuple[str],
     ...         AwaitableTuple[str],
     ...         AwaitableTuple[str],
     ...         AwaitableTuple[str],
     ...         AwaitableTuple[str],
     ...     ] = (
-    ...         input_paths,
+    ...         tuple(input_paths),
     ...         as_.construct_from_tuple,
     ...         as_.map_to_awaitable(read_from_disk),
     ...         as_.tap(lambda s: print(f"Read '{s}' from disk.")),
@@ -1146,7 +1143,7 @@ allows us to execute asynchronous side effects for each element.
 
     ```
 
-## Asynchronous double-track code for a tuple with [trcks.fp.composition][] and [trcks.fp.monads.awaitable_result_tuple][]
+## Asynchronous double-track code for a homogeneous tuple with [trcks.fp.composition][] and [trcks.fp.monads.awaitable_result_tuple][]
 
 If one of the functions in a [trcks.fp.composition.Pipeline][] returns
 a [trcks.AwaitableResultTuple][][F, S] type,
@@ -1281,7 +1278,7 @@ let us have a look at the individual steps of the chain:
 ???+ note
     The function
     [trcks.fp.monads.awaitable_result_tuple.construct_successes_from_tuple][]
-    wraps a [collections.abc.Sequence][]
+    wraps a [tuple][]
     into an [trcks.AwaitableSuccessTuple][],
     which can then be used with the higher-order functions
     from [trcks.fp.monads.awaitable_result_tuple][].
