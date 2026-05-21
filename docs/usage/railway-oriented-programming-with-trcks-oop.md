@@ -681,7 +681,7 @@ let us have a look at the individual steps of the chain:
     ```pycon
     >>> TupleWrapper.construct_from_tuple(
     ...     ("ab", "cd")
-    ... ).map_to_tuple(list).core
+    ... ).map_to_tuple(tuple).core
     ('a', 'b', 'c', 'd')
 
     ```
