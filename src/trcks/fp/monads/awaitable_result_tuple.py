@@ -258,16 +258,16 @@ def construct_successes_from_awaitable(
 
 
 def construct_successes_from_tuple(
-    seq: tuple[_S, ...],
+    tpl: tuple[_S, ...],
 ) -> AwaitableSuccessTuple[_S]:
-    """Create a [trcks.AwaitableSuccessTuple][] object from a sequence.
+    """Create a [trcks.AwaitableSuccessTuple][] object from a homogeneous tuple.
 
     Args:
-        seq: Sequence to be wrapped in a [trcks.AwaitableSuccessTuple][].
+        tpl: Homogeneous tuple to be wrapped in a [trcks.AwaitableSuccessTuple][].
 
     Returns:
         A new [trcks.AwaitableSuccessTuple][] instance containing
-            the given sequence.
+            the given homogeneous tuple.
 
     Example:
         >>> import asyncio
@@ -276,7 +276,7 @@ def construct_successes_from_tuple(
         >>> asyncio.run(ars.to_coroutine_result_tuple(a_r_tpl))
         ('success', (1, 2))
     """
-    return a.construct(rs.construct_successes_from_tuple(seq))
+    return a.construct(rs.construct_successes_from_tuple(tpl))
 
 
 def map_failure(
