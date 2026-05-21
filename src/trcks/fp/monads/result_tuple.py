@@ -4,7 +4,7 @@ Provides utilities for functional composition of
 functions returning [trcks.ResultTuple][] values.
 
 Example:
-    Map and tap each element inside a success sequence:
+    Map and tap each element inside a success homogeneous tuple:
 
     >>> from trcks.fp.composition import pipe
     >>> from trcks.fp.monads import result_tuple as rs
@@ -17,7 +17,7 @@ Example:
     >>> def log_integer(n: int) -> None:
     ...     print(f"Received: {n}")
     ...
-    >>> result_sequence = pipe(
+    >>> result_tuple = pipe(
     ...     (
     ...         rs.construct_successes_from_tuple((1, 2, 3)),
     ...         rs.map_successes(double_integer),
@@ -28,7 +28,7 @@ Example:
     Received: 2
     Received: 4
     Received: 6
-    >>> result_sequence
+    >>> result_tuple
     ('success', (2, 2, 4, 4, 6, 6))
 """
 
@@ -39,7 +39,7 @@ from typing import TYPE_CHECKING
 from trcks._typing import TypeVar, assert_never
 from trcks.fp.composition import compose2
 from trcks.fp.monads import result as r
-from trcks.fp.monads import tuple_ as s
+from trcks.fp.monads import tuple_ as t
 
 if TYPE_CHECKING:  # pragma: no cover
     from collections.abc import Callable
@@ -85,7 +85,7 @@ def construct_from_result(rslt: Result[_F, _S]) -> ResultTuple[_F, _S]:
 
     Returns:
         A new [trcks.ResultTuple][] instance with the success payload
-            wrapped in a sequence.
+            wrapped in a homogeneous tuple.
 
     Example:
         >>> from trcks.fp.monads import result_tuple as rs
@@ -94,7 +94,7 @@ def construct_from_result(rslt: Result[_F, _S]) -> ResultTuple[_F, _S]:
         >>> rs.construct_from_result(("failure", "oops"))
         ('failure', 'oops')
     """
-    return r.map_success(s.construct)(rslt)
+    return r.map_success(t.construct)(rslt)
 
 
 def construct_successes(value: _S) -> SuccessTuple[_S]:
@@ -111,17 +111,17 @@ def construct_successes(value: _S) -> SuccessTuple[_S]:
         >>> rs.construct_successes(42)
         ('success', (42,))
     """
-    return r.construct_success(s.construct(value))
+    return r.construct_success(t.construct(value))
 
 
 def construct_successes_from_tuple(seq: tuple[_S, ...]) -> SuccessTuple[_S]:
-    """Create a [trcks.SuccessTuple][] object from a sequence.
+    """Create a [trcks.SuccessTuple][] object from a homogeneous tuple.
 
     Args:
-        seq: Sequence to be wrapped in a [trcks.SuccessTuple][].
+        seq: Homogeneous tuple to be wrapped in a [trcks.SuccessTuple][].
 
     Returns:
-        A new [trcks.SuccessTuple][] instance containing the given sequence.
+        A new [trcks.SuccessTuple][] instance containing the given homogeneous tuple.
 
     Example:
         >>> from trcks.fp.monads import result_tuple as rs
@@ -199,10 +199,10 @@ def map_failure_to_result(
         >>> recover_from_not_found(("success", (1, 2)))
         ('success', (1, 2))
     """
-    return map_failure_to_result_sequence(compose2((f, construct_from_result)))
+    return map_failure_to_result_tuple(compose2((f, construct_from_result)))
 
 
-def map_failure_to_result_sequence(
+def map_failure_to_result_tuple(
     f: Callable[[_F1], ResultTuple[_F2, _S2]],
 ) -> Callable[[ResultTuple[_F1, _S1]], Result[_F2, tuple[_S1, ...] | tuple[_S2, ...]]]:
     """Create function that maps [trcks.Failure][] values
@@ -229,7 +229,7 @@ def map_failure_to_result_sequence(
         ...
         >>> recover_from_not_found: Callable[
         ...     [ResultTuple[str, int]], ResultTuple[str, int]
-        ... ] = rs.map_failure_to_result_sequence(_recover_from_not_found)
+        ... ] = rs.map_failure_to_result_tuple(_recover_from_not_found)
         >>> recover_from_not_found(("failure", "not found"))
         ('success', (0,))
         >>> recover_from_not_found(("failure", "not authorized"))
@@ -321,7 +321,7 @@ def map_successes(
         >>> double_integers(("failure", "not found"))
         ('failure', 'not found')
     """
-    return r.map_success(s.map_(f))
+    return r.map_success(t.map_(f))
 
 
 def map_successes_to_result(
@@ -360,10 +360,10 @@ def map_successes_to_result(
         >>> double_if_positive(("failure", "oops"))
         ('failure', 'oops')
     """
-    return map_successes_to_result_sequence(compose2((f, construct_from_result)))
+    return map_successes_to_result_tuple(compose2((f, construct_from_result)))
 
 
-def map_successes_to_result_sequence(
+def map_successes_to_result_tuple(
     f: Callable[[_S1], ResultTuple[_F2, _S2]],
 ) -> Callable[[ResultTuple[_F1, _S1]], ResultTuple[_F1 | _F2, _S2]]:
     """Create function that maps each element of a [trcks.SuccessTuple][]
@@ -391,7 +391,7 @@ def map_successes_to_result_sequence(
         ...
         >>> duplicate_if_positive: Callable[
         ...     [ResultTuple[str, int]], ResultTuple[str, int]
-        ... ] = rs.map_successes_to_result_sequence(_duplicate_if_positive)
+        ... ] = rs.map_successes_to_result_tuple(_duplicate_if_positive)
         >>> duplicate_if_positive(("success", (1, 2)))
         ('success', (1, 1, 2, 2))
         >>> duplicate_if_positive(("success", (1, -1, 2)))
@@ -456,7 +456,7 @@ def map_successes_to_tuple(
         >>> duplicate_integers(("failure", "not found"))
         ('failure', 'not found')
     """
-    return r.map_success(s.map_to_tuple(f))
+    return r.map_success(t.map_to_tuple(f))
 
 
 def tap_failure(
@@ -509,11 +509,11 @@ def tap_failure_to_result(
             If the given side effect returns a [trcks.Failure][],
             *the original* [trcks.Failure][] is returned.
             If the given side effect returns a [trcks.Success][],
-            *this* [trcks.Success][] is returned (wrapped as a sequence).
+            *this* [trcks.Success][] is returned (wrapped as a homogeneous tuple).
             Passes on [trcks.SuccessTuple][] values without side effects.
 
     Example:
-        >>> from collections.abc import Callable, Sequence
+        >>> from collections.abc import Callable
         >>> from trcks import Result, ResultTuple
         >>> from trcks.fp.monads import result_tuple as rs
         >>> def _recover_from_not_found(description: str) -> Result[None, int]:
@@ -533,10 +533,10 @@ def tap_failure_to_result(
     composed_f: Callable[[_F1], ResultTuple[object, _S2]] = compose2(
         (f, construct_from_result)
     )
-    return tap_failure_to_result_sequence(composed_f)
+    return tap_failure_to_result_tuple(composed_f)
 
 
-def tap_failure_to_result_sequence(
+def tap_failure_to_result_tuple(
     f: Callable[[_F1], ResultTuple[object, _S2]],
 ) -> Callable[[ResultTuple[_F1, _S1]], Result[_F1, tuple[_S1, ...] | tuple[_S2, ...]]]:
     """Create function that applies a side effect with return type
@@ -556,7 +556,7 @@ def tap_failure_to_result_sequence(
             Passes on [trcks.SuccessTuple][] values without side effects.
 
     Example:
-        >>> from collections.abc import Callable, Sequence
+        >>> from collections.abc import Callable
         >>> from trcks import Result, ResultTuple
         >>> from trcks.fp.monads import result_tuple as rs
         >>> def _recover_from_not_found(description: str) -> ResultTuple[None, int]:
@@ -565,7 +565,7 @@ def tap_failure_to_result_sequence(
         ...     return "failure", None
         >>> recover_from_not_found: Callable[
         ...     [ResultTuple[str, int]], Result[str, tuple[int, ...]]
-        ... ] = rs.tap_failure_to_result_sequence(_recover_from_not_found)
+        ... ] = rs.tap_failure_to_result_tuple(_recover_from_not_found)
         >>> recover_from_not_found(("failure", "not found"))
         ('success', (42,))
         >>> recover_from_not_found(("failure", "fatal"))
@@ -579,7 +579,7 @@ def tap_failure_to_result_sequence(
 def tap_failure_to_tuple(
     f: Callable[[_F1], tuple[object, ...]],
 ) -> Callable[[ResultTuple[_F1, _S1]], SuccessTuple[_F1] | SuccessTuple[_S1]]:
-    """Create function that applies a sequence-returning side effect
+    """Create function that applies a homogeneous-tuple-returning side effect
     to [trcks.Failure][] values.
 
     [trcks.SuccessTuple][] values are passed on without side effects.
@@ -590,7 +590,8 @@ def tap_failure_to_tuple(
     Returns:
         Applies the given side effect to [trcks.Failure][] values and converts them
             to [trcks.SuccessTuple][] values containing the original failure
-            repeated once per element in the sequence returned by the side effect.
+            repeated once per element in the homogeneous tuple returned
+            by the side effect.
             Passes on [trcks.SuccessTuple][] values without side effects.
 
     Example:
@@ -657,7 +658,7 @@ def tap_successes(
         >>> r_tpl_2
         ('failure', 'oops')
     """
-    return r.map_success(s.tap(f))
+    return r.map_success(t.tap(f))
 
 
 def tap_successes_to_result(
@@ -702,10 +703,10 @@ def tap_successes_to_result(
     composed_f: Callable[[_S1], ResultTuple[_F2, object]] = compose2(
         (f, construct_from_result)
     )
-    return tap_successes_to_result_sequence(composed_f)
+    return tap_successes_to_result_tuple(composed_f)
 
 
-def tap_successes_to_result_sequence(
+def tap_successes_to_result_tuple(
     f: Callable[[_S1], ResultTuple[_F2, object]],
 ) -> Callable[[ResultTuple[_F1, _S1]], ResultTuple[_F1 | _F2, _S1]]:
     """Create function that applies a side effect with return type
@@ -737,7 +738,7 @@ def tap_successes_to_result_sequence(
         ...
         >>> validate_positive_twice: Callable[
         ...     [ResultTuple[str, int]], ResultTuple[str, int]
-        ... ] = rs.tap_successes_to_result_sequence(_validate_positive_twice)
+        ... ] = rs.tap_successes_to_result_tuple(_validate_positive_twice)
         >>> validate_positive_twice(("success", (7,)))
         ('success', (7, 7))
         >>> validate_positive_twice(("success", (1, -1)))
@@ -754,13 +755,13 @@ def tap_successes_to_result_sequence(
             case _:  # pragma: no cover
                 return assert_never(rs[0])  # type: ignore[unreachable] # pyright: ignore[reportUnreachable]
 
-    return map_successes_to_result_sequence(tapped_f)
+    return map_successes_to_result_tuple(tapped_f)
 
 
 def tap_successes_to_tuple(
     f: Callable[[_S1], tuple[object, ...]],
 ) -> Callable[[ResultTuple[_F1, _S1]], ResultTuple[_F1, _S1]]:
-    """Create function that applies a sequence-returning side effect
+    """Create function that applies a homogeneous-tuple-returning side effect
     to each element of a [trcks.SuccessTuple][].
 
     [trcks.Failure][] values are passed on without side effects.
@@ -772,7 +773,7 @@ def tap_successes_to_tuple(
         Passes on [trcks.Failure][] values without side effects.
             Applies the given side effect to each element of the
             [trcks.SuccessTuple][]
-            and repeats each original element once per element in the sequence
+            and repeats each original element once per element in the homogeneous tuple
             returned by the side effect.
 
     Example:
@@ -790,4 +791,4 @@ def tap_successes_to_tuple(
         Received: 7
         ('success', (7, 7))
     """
-    return r.map_success(s.tap_to_tuple(f))
+    return r.map_success(t.tap_to_tuple(f))

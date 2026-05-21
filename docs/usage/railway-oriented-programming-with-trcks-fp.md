@@ -1224,7 +1224,7 @@ let us have a look at the individual steps of the chain:
     ...     ["a.txt", "b.txt"],
     ...     ars.construct_successes_from_tuple,
     ... )
-    >>> asyncio.run(ars.to_coroutine_result_sequence(pipe(p1)))
+    >>> asyncio.run(ars.to_coroutine_result_tuple(pipe(p1)))
     ('success', ['a.txt', 'b.txt'])
     >>>
     >>> p2: Pipeline2[
@@ -1236,7 +1236,7 @@ let us have a look at the individual steps of the chain:
     ...     ars.construct_successes_from_tuple,
     ...     ars.map_successes_to_awaitable_result(read_from_disk),
     ... )
-    >>> asyncio.run(ars.to_coroutine_result_sequence(pipe(p2)))
+    >>> asyncio.run(ars.to_coroutine_result_tuple(pipe(p2)))
     ('success', ('Hello', 'World'))
     >>>
     >>> p3: Pipeline3[
@@ -1250,7 +1250,7 @@ let us have a look at the individual steps of the chain:
     ...     ars.map_successes_to_awaitable_result(read_from_disk),
     ...     ars.map_successes(transform),
     ... )
-    >>> asyncio.run(ars.to_coroutine_result_sequence(pipe(p3)))
+    >>> asyncio.run(ars.to_coroutine_result_tuple(pipe(p3)))
     ('success', ('Length: 5', 'Length: 5'))
     >>>
     >>> p4: Pipeline4[
@@ -1268,7 +1268,7 @@ let us have a look at the individual steps of the chain:
     ...         lambda s: write_to_disk(s, "output.txt")
     ...     ),
     ... )
-    >>> asyncio.run(ars.to_coroutine_result_sequence(pipe(p4)))
+    >>> asyncio.run(ars.to_coroutine_result_tuple(pipe(p4)))
     Wrote 'Length: 5' to file output.txt.
     Wrote 'Length: 5' to file output.txt.
     ('success', ('Length: 5', 'Length: 5'))
@@ -1287,7 +1287,7 @@ let us have a look at the individual steps of the chain:
     of type [trcks.AwaitableResultTuple][].
     Since [asyncio.run][] expects the input type [collections.abc.Coroutine][],
     we use the function
-    [trcks.fp.monads.awaitable_result_tuple.to_coroutine_result_sequence][]
+    [trcks.fp.monads.awaitable_result_tuple.to_coroutine_result_tuple][]
     to convert the [trcks.AwaitableResultTuple][]s
     to [collections.abc.Coroutine][]s.
 
