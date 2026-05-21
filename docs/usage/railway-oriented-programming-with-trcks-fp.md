@@ -704,7 +704,7 @@ let us have a look at the individual steps of the chain:
     ```
 
 ???+ note
-    The higher-order function [trcks.fp.monads.sequence.map_to_sequence][]
+    The higher-order function [trcks.fp.monads.sequence.map_to_tuple][]
     applies a function that returns a [collections.abc.Sequence][]
     to each element and flattens the results (like a "flat map"):
 
@@ -712,7 +712,7 @@ let us have a look at the individual steps of the chain:
     >>> pipe(
     ...     (
     ...         ["ab", "cd"],
-    ...         s.map_to_sequence(list),
+    ...         s.map_to_tuple(list),
     ...     )
     ... )
     ('a', 'b', 'c', 'd')
@@ -750,19 +750,19 @@ allows us to execute side effects for each element:
 ## Synchronous double-track code for a sequence with [trcks.fp.composition][] and [trcks.fp.monads.result_sequence][]
 
 If one of the functions in a [trcks.fp.composition.Pipeline][]
-returns a [trcks.ResultSequence][][F, S] type,
+returns a [trcks.ResultTuple][][F, S] type,
 the module [trcks.fp.monads.result_sequence][] provides
 some higher-order functions named `map_successes*` and `tap_successes*`
 that turn element-wise functions into functions
-operating on [trcks.ResultSequence][] values.
+operating on [trcks.ResultTuple][] values.
 The success track functions use the plural `map_successes` (instead of `map_success`)
-because they operate on each element in the [trcks.SuccessSequence][] individually.
+because they operate on each element in the [trcks.SuccessTuple][] individually.
 Processing short-circuits on the first [trcks.Failure][].
 
 ???+ example
 
     ```pycon
-    >>> from trcks import ResultSequence, SuccessSequence
+    >>> from trcks import ResultTuple, SuccessTuple
     >>> from trcks.fp.monads import result_sequence as rs_
     >>>
     >>> UserDoesNotExist = Literal["User does not exist"]
@@ -788,16 +788,16 @@ Processing short-circuits on the first [trcks.Failure][].
     ...
     >>> def get_subscription_fees_by_email(
     ...     user_emails: list[str],
-    ... ) -> ResultSequence[FailureDescription, float]:
+    ... ) -> ResultTuple[FailureDescription, float]:
     ...     pipeline: Pipeline4[
     ...         list[str],
-    ...         SuccessSequence[str],
-    ...         ResultSequence[UserDoesNotExist, int],
-    ...         ResultSequence[FailureDescription, int],
-    ...         ResultSequence[FailureDescription, float],
+    ...         SuccessTuple[str],
+    ...         ResultTuple[UserDoesNotExist, int],
+    ...         ResultTuple[FailureDescription, int],
+    ...         ResultTuple[FailureDescription, float],
     ...     ] = (
     ...         user_emails,
-    ...         rs_.construct_successes_from_sequence,
+    ...         rs_.construct_successes_from_tuple,
     ...         rs_.map_successes_to_result(get_user_id),
     ...         rs_.map_successes_to_result(get_subscription_id),
     ...         rs_.map_successes(get_subscription_fee),
@@ -829,21 +829,21 @@ let us have a look at the individual steps of the chain:
     >>>
     >>> p1: Pipeline1[
     ...     list[str],
-    ...     SuccessSequence[str],
+    ...     SuccessTuple[str],
     ... ] = (
     ...     ["erika.mustermann@domain.org"],
-    ...     rs_.construct_successes_from_sequence,
+    ...     rs_.construct_successes_from_tuple,
     ... )
     >>> pipe(p1)
     ('success', ['erika.mustermann@domain.org'])
     >>>
     >>> p2: Pipeline2[
     ...     list[str],
-    ...     SuccessSequence[str],
-    ...     ResultSequence[UserDoesNotExist, int],
+    ...     SuccessTuple[str],
+    ...     ResultTuple[UserDoesNotExist, int],
     ... ] = (
     ...     ["erika.mustermann@domain.org"],
-    ...     rs_.construct_successes_from_sequence,
+    ...     rs_.construct_successes_from_tuple,
     ...     rs_.map_successes_to_result(get_user_id),
     ... )
     >>> pipe(p2)
@@ -851,12 +851,12 @@ let us have a look at the individual steps of the chain:
     >>>
     >>> p3: Pipeline3[
     ...     list[str],
-    ...     SuccessSequence[str],
-    ...     ResultSequence[UserDoesNotExist, int],
-    ...     ResultSequence[FailureDescription, int],
+    ...     SuccessTuple[str],
+    ...     ResultTuple[UserDoesNotExist, int],
+    ...     ResultTuple[FailureDescription, int],
     ... ] = (
     ...     ["erika.mustermann@domain.org"],
-    ...     rs_.construct_successes_from_sequence,
+    ...     rs_.construct_successes_from_tuple,
     ...     rs_.map_successes_to_result(get_user_id),
     ...     rs_.map_successes_to_result(get_subscription_id),
     ... )
@@ -865,13 +865,13 @@ let us have a look at the individual steps of the chain:
     >>>
     >>> p4: Pipeline4[
     ...     list[str],
-    ...     SuccessSequence[str],
-    ...     ResultSequence[UserDoesNotExist, int],
-    ...     ResultSequence[FailureDescription, int],
-    ...     ResultSequence[FailureDescription, float],
+    ...     SuccessTuple[str],
+    ...     ResultTuple[UserDoesNotExist, int],
+    ...     ResultTuple[FailureDescription, int],
+    ...     ResultTuple[FailureDescription, float],
     ... ] = (
     ...     ["erika.mustermann@domain.org"],
-    ...     rs_.construct_successes_from_sequence,
+    ...     rs_.construct_successes_from_tuple,
     ...     rs_.map_successes_to_result(get_user_id),
     ...     rs_.map_successes_to_result(get_subscription_id),
     ...     rs_.map_successes(get_subscription_fee),
@@ -882,8 +882,8 @@ let us have a look at the individual steps of the chain:
     ```
 
 ???+ note
-    The function [trcks.fp.monads.result_sequence.construct_successes_from_sequence][]
-    wraps a [collections.abc.Sequence][] into a [trcks.SuccessSequence][],
+    The function [trcks.fp.monads.result_sequence.construct_successes_from_tuple][]
+    wraps a [collections.abc.Sequence][] into a [trcks.SuccessTuple][],
     which can then be used with the higher-order functions
     from [trcks.fp.monads.result_sequence][].
 
@@ -903,19 +903,19 @@ in the success case (for each element) or in the failure case, respectively.
     ```pycon
     >>> def get_subscription_fees_by_email(
     ...     user_emails: list[str],
-    ... ) -> ResultSequence[FailureDescription, float]:
+    ... ) -> ResultTuple[FailureDescription, float]:
     ...     pipeline: Pipeline7[
     ...         list[str],
-    ...         SuccessSequence[str],
-    ...         ResultSequence[UserDoesNotExist, int],
-    ...         ResultSequence[UserDoesNotExist, int],
-    ...         ResultSequence[FailureDescription, int],
-    ...         ResultSequence[FailureDescription, float],
-    ...         ResultSequence[FailureDescription, float],
-    ...         ResultSequence[FailureDescription, float],
+    ...         SuccessTuple[str],
+    ...         ResultTuple[UserDoesNotExist, int],
+    ...         ResultTuple[UserDoesNotExist, int],
+    ...         ResultTuple[FailureDescription, int],
+    ...         ResultTuple[FailureDescription, float],
+    ...         ResultTuple[FailureDescription, float],
+    ...         ResultTuple[FailureDescription, float],
     ...     ] = (
     ...         user_emails,
-    ...         rs_.construct_successes_from_sequence,
+    ...         rs_.construct_successes_from_tuple,
     ...         rs_.map_successes_to_result(get_user_id),
     ...         rs_.tap_successes(lambda n: print(f"LOG: User ID: {n}.")),
     ...         rs_.map_successes_to_result(get_subscription_id),
@@ -971,15 +971,15 @@ the original success values are preserved.
     ...
     >>> def get_and_persist_user_ids(
     ...     user_emails: list[str],
-    ... ) -> ResultSequence[UserDoesNotExist | OutOfDiskSpace, int]:
+    ... ) -> ResultTuple[UserDoesNotExist | OutOfDiskSpace, int]:
     ...     pipeline: Pipeline3[
     ...         list[str],
-    ...         SuccessSequence[str],
-    ...         ResultSequence[UserDoesNotExist, int],
-    ...         ResultSequence[UserDoesNotExist | OutOfDiskSpace, int],
+    ...         SuccessTuple[str],
+    ...         ResultTuple[UserDoesNotExist, int],
+    ...         ResultTuple[UserDoesNotExist | OutOfDiskSpace, int],
     ...     ] = (
     ...         user_emails,
-    ...         rs_.construct_successes_from_sequence,
+    ...         rs_.construct_successes_from_tuple,
     ...         rs_.map_successes_to_result(get_user_id),
     ...         rs_.tap_successes_to_result(write_to_disk),
     ...     )
@@ -1003,13 +1003,13 @@ the original success values are preserved.
 ## Asynchronous single-track code for a sequence with [trcks.fp.composition][] and [trcks.fp.monads.awaitable_sequence][]
 
 If one of the functions in a [trcks.fp.composition.Pipeline][] returns
-a [trcks.AwaitableSequence][][T] type,
-the following function must accept this [trcks.AwaitableSequence][][T] type
+a [trcks.AwaitableTuple][][T] type,
+the following function must accept this [trcks.AwaitableTuple][][T] type
 as its input.
 The module [trcks.fp.monads.awaitable_sequence][] provides
 some higher-order functions named `map_*`
 that turn element-wise functions
-into functions operating on [trcks.AwaitableSequence][] values.
+into functions operating on [trcks.AwaitableTuple][] values.
 
 ???+ example
 
@@ -1029,12 +1029,12 @@ into functions operating on [trcks.AwaitableSequence][] values.
     ... ) -> Sequence[str]:
     ...     p: Pipeline3[
     ...         list[str],
-    ...         AwaitableSequence[str],
-    ...         AwaitableSequence[str],
-    ...         AwaitableSequence[str],
+    ...         AwaitableTuple[str],
+    ...         AwaitableTuple[str],
+    ...         AwaitableTuple[str],
     ...     ] = (
     ...         input_paths,
-    ...         as_.construct_from_sequence,
+    ...         as_.construct_from_tuple,
     ...         as_.map_to_awaitable(read_from_disk),
     ...         as_.map_(transform),
     ...     )
@@ -1051,56 +1051,56 @@ let us have a look at the individual steps of the chain:
 ???+ example
 
     ```pycon
-    >>> from trcks import AwaitableSequence
+    >>> from trcks import AwaitableTuple
     >>>
-    >>> p1: Pipeline1[list[str], AwaitableSequence[str]] = (
+    >>> p1: Pipeline1[list[str], AwaitableTuple[str]] = (
     ...     ["a.txt", "b.txt"],
-    ...     as_.construct_from_sequence,
+    ...     as_.construct_from_tuple,
     ... )
-    >>> asyncio.run(as_.to_coroutine_sequence(pipe(p1)))
+    >>> asyncio.run(as_.to_coroutine_tuple(pipe(p1)))
     ['a.txt', 'b.txt']
     >>>
     >>> p2: Pipeline2[
     ...     list[str],
-    ...     AwaitableSequence[str],
-    ...     AwaitableSequence[str],
+    ...     AwaitableTuple[str],
+    ...     AwaitableTuple[str],
     ... ] = (
     ...     ["a.txt", "b.txt"],
-    ...     as_.construct_from_sequence,
+    ...     as_.construct_from_tuple,
     ...     as_.map_to_awaitable(read_from_disk),
     ... )
-    >>> asyncio.run(as_.to_coroutine_sequence(pipe(p2)))
+    >>> asyncio.run(as_.to_coroutine_tuple(pipe(p2)))
     ('Hello', 'World')
     >>>
     >>> p3: Pipeline3[
     ...     list[str],
-    ...     AwaitableSequence[str],
-    ...     AwaitableSequence[str],
-    ...     AwaitableSequence[str],
+    ...     AwaitableTuple[str],
+    ...     AwaitableTuple[str],
+    ...     AwaitableTuple[str],
     ... ] = (
     ...     ["a.txt", "b.txt"],
-    ...     as_.construct_from_sequence,
+    ...     as_.construct_from_tuple,
     ...     as_.map_to_awaitable(read_from_disk),
     ...     as_.map_(transform),
     ... )
-    >>> asyncio.run(as_.to_coroutine_sequence(pipe(p3)))
+    >>> asyncio.run(as_.to_coroutine_tuple(pipe(p3)))
     ('Length: 5', 'Length: 5')
 
     ```
 
 ???+ note
-    The function [trcks.fp.monads.awaitable_sequence.construct_from_sequence][]
+    The function [trcks.fp.monads.awaitable_sequence.construct_from_tuple][]
     wraps a [collections.abc.Sequence][] into
-    an [trcks.AwaitableSequence][],
+    an [trcks.AwaitableTuple][],
     which can then be used with the higher-order functions
     from [trcks.fp.monads.awaitable_sequence][].
 
     The values `pipe(p1)`, `pipe(p2)` and `pipe(p3)` are all
-    of type [trcks.AwaitableSequence][].
+    of type [trcks.AwaitableTuple][].
     Since [asyncio.run][] expects the input type [collections.abc.Coroutine][],
     we use the function
-    [trcks.fp.monads.awaitable_sequence.to_coroutine_sequence][]
-    to convert the [trcks.AwaitableSequence][]s
+    [trcks.fp.monads.awaitable_sequence.to_coroutine_tuple][]
+    to convert the [trcks.AwaitableTuple][]s
     to [collections.abc.Coroutine][]s.
 
 The higher-order function [trcks.fp.monads.awaitable_sequence.tap][]
@@ -1122,14 +1122,14 @@ allows us to execute asynchronous side effects for each element.
     ... ) -> Sequence[str]:
     ...     p: Pipeline5[
     ...         list[str],
-    ...         AwaitableSequence[str],
-    ...         AwaitableSequence[str],
-    ...         AwaitableSequence[str],
-    ...         AwaitableSequence[str],
-    ...         AwaitableSequence[str],
+    ...         AwaitableTuple[str],
+    ...         AwaitableTuple[str],
+    ...         AwaitableTuple[str],
+    ...         AwaitableTuple[str],
+    ...         AwaitableTuple[str],
     ...     ] = (
     ...         input_paths,
-    ...         as_.construct_from_sequence,
+    ...         as_.construct_from_tuple,
     ...         as_.map_to_awaitable(read_from_disk),
     ...         as_.tap(lambda s: print(f"Read '{s}' from disk.")),
     ...         as_.map_(transform),
@@ -1149,11 +1149,11 @@ allows us to execute asynchronous side effects for each element.
 ## Asynchronous double-track code for a sequence with [trcks.fp.composition][] and [trcks.fp.monads.awaitable_result_sequence][]
 
 If one of the functions in a [trcks.fp.composition.Pipeline][] returns
-a [trcks.AwaitableResultSequence][][F, S] type,
+a [trcks.AwaitableResultTuple][][F, S] type,
 the module [trcks.fp.monads.awaitable_result_sequence][] provides
 some higher-order functions named `map_successes*` and `tap_successes*`
 that turn element-wise functions into functions
-operating on [trcks.AwaitableResultSequence][] values.
+operating on [trcks.AwaitableResultTuple][] values.
 The success track functions use the plural `map_successes` (instead of `map_success`)
 because they operate on each element individually.
 Processing short-circuits on the first [trcks.Failure][].
@@ -1161,7 +1161,7 @@ Processing short-circuits on the first [trcks.Failure][].
 ???+ example
 
     ```pycon
-    >>> from trcks import AwaitableResultSequence, AwaitableSuccessSequence
+    >>> from trcks import AwaitableResultTuple, AwaitableSuccessTuple
     >>> from trcks.fp.monads import awaitable_result_sequence as ars
     >>>
     >>> ReadErrorLiteral = Literal["read error"]
@@ -1187,16 +1187,16 @@ Processing short-circuits on the first [trcks.Failure][].
     ...
     >>> async def read_and_transform_and_write(
     ...     input_paths: list[str], output_path: str
-    ... ) -> ResultSequence[ReadErrorLiteral | WriteErrorLiteral, str]:
+    ... ) -> ResultTuple[ReadErrorLiteral | WriteErrorLiteral, str]:
     ...     p: Pipeline4[
     ...         list[str],
-    ...         AwaitableSuccessSequence[str],
-    ...         AwaitableResultSequence[ReadErrorLiteral, str],
-    ...         AwaitableResultSequence[ReadErrorLiteral, str],
-    ...         AwaitableResultSequence[ReadErrorLiteral | WriteErrorLiteral, str],
+    ...         AwaitableSuccessTuple[str],
+    ...         AwaitableResultTuple[ReadErrorLiteral, str],
+    ...         AwaitableResultTuple[ReadErrorLiteral, str],
+    ...         AwaitableResultTuple[ReadErrorLiteral | WriteErrorLiteral, str],
     ...     ] = (
     ...         input_paths,
-    ...         ars.construct_successes_from_sequence,
+    ...         ars.construct_successes_from_tuple,
     ...         ars.map_successes_to_awaitable_result(read_from_disk),
     ...         ars.map_successes(transform),
     ...         ars.tap_successes_to_awaitable_result(
@@ -1222,21 +1222,21 @@ let us have a look at the individual steps of the chain:
     ```pycon
     >>> p1: Pipeline1[
     ...     list[str],
-    ...     AwaitableSuccessSequence[str],
+    ...     AwaitableSuccessTuple[str],
     ... ] = (
     ...     ["a.txt", "b.txt"],
-    ...     ars.construct_successes_from_sequence,
+    ...     ars.construct_successes_from_tuple,
     ... )
     >>> asyncio.run(ars.to_coroutine_result_sequence(pipe(p1)))
     ('success', ['a.txt', 'b.txt'])
     >>>
     >>> p2: Pipeline2[
     ...     list[str],
-    ...     AwaitableSuccessSequence[str],
-    ...     AwaitableResultSequence[ReadErrorLiteral, str],
+    ...     AwaitableSuccessTuple[str],
+    ...     AwaitableResultTuple[ReadErrorLiteral, str],
     ... ] = (
     ...     ["a.txt", "b.txt"],
-    ...     ars.construct_successes_from_sequence,
+    ...     ars.construct_successes_from_tuple,
     ...     ars.map_successes_to_awaitable_result(read_from_disk),
     ... )
     >>> asyncio.run(ars.to_coroutine_result_sequence(pipe(p2)))
@@ -1244,12 +1244,12 @@ let us have a look at the individual steps of the chain:
     >>>
     >>> p3: Pipeline3[
     ...     list[str],
-    ...     AwaitableSuccessSequence[str],
-    ...     AwaitableResultSequence[ReadErrorLiteral, str],
-    ...     AwaitableResultSequence[ReadErrorLiteral, str],
+    ...     AwaitableSuccessTuple[str],
+    ...     AwaitableResultTuple[ReadErrorLiteral, str],
+    ...     AwaitableResultTuple[ReadErrorLiteral, str],
     ... ] = (
     ...     ["a.txt", "b.txt"],
-    ...     ars.construct_successes_from_sequence,
+    ...     ars.construct_successes_from_tuple,
     ...     ars.map_successes_to_awaitable_result(read_from_disk),
     ...     ars.map_successes(transform),
     ... )
@@ -1258,13 +1258,13 @@ let us have a look at the individual steps of the chain:
     >>>
     >>> p4: Pipeline4[
     ...     list[str],
-    ...     AwaitableSuccessSequence[str],
-    ...     AwaitableResultSequence[ReadErrorLiteral, str],
-    ...     AwaitableResultSequence[ReadErrorLiteral, str],
-    ...     AwaitableResultSequence[ReadErrorLiteral | WriteErrorLiteral, str],
+    ...     AwaitableSuccessTuple[str],
+    ...     AwaitableResultTuple[ReadErrorLiteral, str],
+    ...     AwaitableResultTuple[ReadErrorLiteral, str],
+    ...     AwaitableResultTuple[ReadErrorLiteral | WriteErrorLiteral, str],
     ... ] = (
     ...     ["a.txt", "b.txt"],
-    ...     ars.construct_successes_from_sequence,
+    ...     ars.construct_successes_from_tuple,
     ...     ars.map_successes_to_awaitable_result(read_from_disk),
     ...     ars.map_successes(transform),
     ...     ars.tap_successes_to_awaitable_result(
@@ -1280,18 +1280,18 @@ let us have a look at the individual steps of the chain:
 
 ???+ note
     The function
-    [trcks.fp.monads.awaitable_result_sequence.construct_successes_from_sequence][]
+    [trcks.fp.monads.awaitable_result_sequence.construct_successes_from_tuple][]
     wraps a [collections.abc.Sequence][]
-    into an [trcks.AwaitableSuccessSequence][],
+    into an [trcks.AwaitableSuccessTuple][],
     which can then be used with the higher-order functions
     from [trcks.fp.monads.awaitable_result_sequence][].
 
     The values `pipe(p1)`, `pipe(p2)`, `pipe(p3)` and `pipe(p4)` are all
-    of type [trcks.AwaitableResultSequence][].
+    of type [trcks.AwaitableResultTuple][].
     Since [asyncio.run][] expects the input type [collections.abc.Coroutine][],
     we use the function
     [trcks.fp.monads.awaitable_result_sequence.to_coroutine_result_sequence][]
-    to convert the [trcks.AwaitableResultSequence][]s
+    to convert the [trcks.AwaitableResultTuple][]s
     to [collections.abc.Coroutine][]s.
 
 The higher-order functions
@@ -1320,19 +1320,19 @@ in the failure case or in the success case (for each element), respectively:
     ...
     >>> async def read_and_transform_and_write(
     ...     input_paths: list[str], output_path: str
-    ... ) -> ResultSequence[ReadErrorLiteral | WriteErrorLiteral, str]:
+    ... ) -> ResultTuple[ReadErrorLiteral | WriteErrorLiteral, str]:
     ...     pipeline: Pipeline7[
     ...         list[str],
-    ...         AwaitableSuccessSequence[str],
-    ...         AwaitableResultSequence[ReadErrorLiteral, str],
-    ...         AwaitableResultSequence[ReadErrorLiteral, str],
-    ...         AwaitableResultSequence[ReadErrorLiteral, str],
-    ...         AwaitableResultSequence[ReadErrorLiteral | WriteErrorLiteral, str],
-    ...         AwaitableResultSequence[ReadErrorLiteral | WriteErrorLiteral, str],
-    ...         AwaitableResultSequence[ReadErrorLiteral | WriteErrorLiteral, str],
+    ...         AwaitableSuccessTuple[str],
+    ...         AwaitableResultTuple[ReadErrorLiteral, str],
+    ...         AwaitableResultTuple[ReadErrorLiteral, str],
+    ...         AwaitableResultTuple[ReadErrorLiteral, str],
+    ...         AwaitableResultTuple[ReadErrorLiteral | WriteErrorLiteral, str],
+    ...         AwaitableResultTuple[ReadErrorLiteral | WriteErrorLiteral, str],
+    ...         AwaitableResultTuple[ReadErrorLiteral | WriteErrorLiteral, str],
     ...     ] = (
     ...         input_paths,
-    ...         ars.construct_successes_from_sequence,
+    ...         ars.construct_successes_from_tuple,
     ...         ars.map_successes_to_awaitable_result(read_from_disk),
     ...         ars.tap_successes(lambda s: print(f"LOG: Read '{s}' from disk.")),
     ...         ars.map_successes(transform),
@@ -1392,16 +1392,16 @@ the original success values are preserved:
     ...
     >>> async def read_and_persist(
     ...     input_paths: list[str],
-    ... ) -> ResultSequence[ReadErrorLiteral | OutOfDiskSpace, str]:
+    ... ) -> ResultTuple[ReadErrorLiteral | OutOfDiskSpace, str]:
     ...     pipeline: Pipeline4[
     ...         list[str],
-    ...         AwaitableSuccessSequence[str],
-    ...         AwaitableResultSequence[ReadErrorLiteral, str],
-    ...         AwaitableResultSequence[ReadErrorLiteral, str],
-    ...         AwaitableResultSequence[ReadErrorLiteral | OutOfDiskSpace, str],
+    ...         AwaitableSuccessTuple[str],
+    ...         AwaitableResultTuple[ReadErrorLiteral, str],
+    ...         AwaitableResultTuple[ReadErrorLiteral, str],
+    ...         AwaitableResultTuple[ReadErrorLiteral | OutOfDiskSpace, str],
     ...     ] = (
     ...         input_paths,
-    ...         ars.construct_successes_from_sequence,
+    ...         ars.construct_successes_from_tuple,
     ...         ars.map_successes_to_awaitable_result(read_from_disk),
     ...         ars.tap_successes(lambda s: print(f"LOG: Persisting '{s}'.")),
     ...         ars.tap_successes_to_awaitable_result(write_to_disk),

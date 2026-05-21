@@ -1,7 +1,7 @@
-"""Monadic functions for [trcks.AwaitableResultSequence][].
+"""Monadic functions for [trcks.AwaitableResultTuple][].
 
 Provides utilities for functional composition of
-asynchronous [trcks.ResultSequence][]-returning functions.
+asynchronous [trcks.ResultTuple][]-returning functions.
 
 Example:
     Map and tap each element inside an awaitable success sequence:
@@ -29,7 +29,7 @@ Example:
     ...             ars.construct_from_awaitable_result(slowly_read_from_disk()),
     ...             ars.map_successes(double_integer),
     ...             ars.tap_successes(log_integer),
-    ...             ars.map_successes_to_sequence(duplicate_integer),
+    ...             ars.map_successes_to_tuple(duplicate_integer),
     ...         )
     ...     )
     ...
@@ -55,11 +55,11 @@ if TYPE_CHECKING:  # pragma: no cover
     from trcks import (
         AwaitableFailure,
         AwaitableResult,
-        AwaitableResultSequence,
-        AwaitableSuccessSequence,
+        AwaitableResultTuple,
+        AwaitableSuccessTuple,
         Result,
-        ResultSequence,
-        SuccessSequence,
+        ResultTuple,
+        SuccessTuple,
     )
 
 __docformat__ = "google"
@@ -125,8 +125,8 @@ def construct_failure_from_awaitable(awtbl: Awaitable[_F]) -> AwaitableFailure[_
 
 def construct_from_awaitable_result(
     a_rslt: AwaitableResult[_F, _S],
-) -> AwaitableResultSequence[_F, _S]:
-    """Create a [trcks.AwaitableResultSequence][] object
+) -> AwaitableResultTuple[_F, _S]:
+    """Create a [trcks.AwaitableResultTuple][] object
     from a [trcks.AwaitableResult][] object.
 
     The success payload is wrapped in a single-element sequence.
@@ -135,7 +135,7 @@ def construct_from_awaitable_result(
         a_rslt: [trcks.AwaitableResult][] object to be converted.
 
     Returns:
-        A new [trcks.AwaitableResultSequence][] instance where
+        A new [trcks.AwaitableResultTuple][] instance where
             the success payload is wrapped in a single-element sequence,
             or the original failure is preserved.
 
@@ -156,8 +156,8 @@ def construct_from_awaitable_result(
     return a.map_(rs.construct_from_result)(a_rslt)
 
 
-def construct_from_result(rslt: Result[_F, _S]) -> AwaitableResultSequence[_F, _S]:
-    """Create a [trcks.AwaitableResultSequence][] object from a [trcks.Result][].
+def construct_from_result(rslt: Result[_F, _S]) -> AwaitableResultTuple[_F, _S]:
+    """Create a [trcks.AwaitableResultTuple][] object from a [trcks.Result][].
 
     The success payload is wrapped in a single-element sequence.
 
@@ -165,7 +165,7 @@ def construct_from_result(rslt: Result[_F, _S]) -> AwaitableResultSequence[_F, _
         rslt: [trcks.Result][] object to be converted.
 
     Returns:
-        A new [trcks.AwaitableResultSequence][] instance where
+        A new [trcks.AwaitableResultTuple][] instance where
             the success payload is wrapped in a single-element sequence,
             or the original failure is preserved.
 
@@ -183,18 +183,18 @@ def construct_from_result(rslt: Result[_F, _S]) -> AwaitableResultSequence[_F, _
 
 
 def construct_from_result_sequence(
-    r_seq: ResultSequence[_F, _S],
-) -> AwaitableResultSequence[_F, _S]:
-    """Create a [trcks.AwaitableResultSequence][] object
-    from a [trcks.ResultSequence][] object.
+    r_seq: ResultTuple[_F, _S],
+) -> AwaitableResultTuple[_F, _S]:
+    """Create a [trcks.AwaitableResultTuple][] object
+    from a [trcks.ResultTuple][] object.
 
     Args:
-        r_seq: [trcks.ResultSequence][] object to be wrapped
-            in a [trcks.AwaitableResultSequence][] object.
+        r_seq: [trcks.ResultTuple][] object to be wrapped
+            in a [trcks.AwaitableResultTuple][] object.
 
     Returns:
-        A new [trcks.AwaitableResultSequence][] instance containing
-            the given [trcks.ResultSequence][] object.
+        A new [trcks.AwaitableResultTuple][] instance containing
+            the given [trcks.ResultTuple][] object.
 
     Example:
         >>> import asyncio
@@ -209,14 +209,14 @@ def construct_from_result_sequence(
     return a.construct(r_seq)
 
 
-def construct_successes(value: _S) -> AwaitableSuccessSequence[_S]:
-    """Create a [trcks.AwaitableSuccessSequence][] object from a single value.
+def construct_successes(value: _S) -> AwaitableSuccessTuple[_S]:
+    """Create a [trcks.AwaitableSuccessTuple][] object from a single value.
 
     Args:
         value: A single value.
 
     Returns:
-        A new [trcks.AwaitableSuccessSequence][] instance containing
+        A new [trcks.AwaitableSuccessTuple][] instance containing
             the single value in a sequence.
 
     Example:
@@ -231,18 +231,18 @@ def construct_successes(value: _S) -> AwaitableSuccessSequence[_S]:
 
 def construct_successes_from_awaitable(
     awtbl: Awaitable[_S],
-) -> AwaitableSuccessSequence[_S]:
-    """Create a [trcks.AwaitableSuccessSequence][] object
+) -> AwaitableSuccessTuple[_S]:
+    """Create a [trcks.AwaitableSuccessTuple][] object
     from a [collections.abc.Awaitable][] object.
 
     The value of the awaitable is wrapped in a single-element success sequence.
 
     Args:
         awtbl: [collections.abc.Awaitable][] object whose resolved value
-            will be wrapped in a [trcks.AwaitableSuccessSequence][].
+            will be wrapped in a [trcks.AwaitableSuccessTuple][].
 
     Returns:
-        A new [trcks.AwaitableSuccessSequence][] instance containing
+        A new [trcks.AwaitableSuccessTuple][] instance containing
             the value of the given [collections.abc.Awaitable][] in a sequence.
 
     Example:
@@ -257,35 +257,35 @@ def construct_successes_from_awaitable(
     return a.map_(rs.construct_successes)(awtbl)
 
 
-def construct_successes_from_sequence(
+def construct_successes_from_tuple(
     seq: tuple[_S, ...],
-) -> AwaitableSuccessSequence[_S]:
-    """Create a [trcks.AwaitableSuccessSequence][] object from a sequence.
+) -> AwaitableSuccessTuple[_S]:
+    """Create a [trcks.AwaitableSuccessTuple][] object from a sequence.
 
     Args:
-        seq: Sequence to be wrapped in a [trcks.AwaitableSuccessSequence][].
+        seq: Sequence to be wrapped in a [trcks.AwaitableSuccessTuple][].
 
     Returns:
-        A new [trcks.AwaitableSuccessSequence][] instance containing
+        A new [trcks.AwaitableSuccessTuple][] instance containing
             the given sequence.
 
     Example:
         >>> import asyncio
         >>> from trcks.fp.monads import awaitable_result_sequence as ars
-        >>> a_r_seq = ars.construct_successes_from_sequence((1, 2))
+        >>> a_r_seq = ars.construct_successes_from_tuple((1, 2))
         >>> asyncio.run(ars.to_coroutine_result_sequence(a_r_seq))
         ('success', (1, 2))
     """
-    return a.construct(rs.construct_successes_from_sequence(seq))
+    return a.construct(rs.construct_successes_from_tuple(seq))
 
 
 def map_failure(
     f: Callable[[_F1], _F2],
-) -> Callable[[AwaitableResultSequence[_F1, _S1]], AwaitableResultSequence[_F2, _S1]]:
+) -> Callable[[AwaitableResultTuple[_F1, _S1]], AwaitableResultTuple[_F2, _S1]]:
     """Create function that maps [trcks.AwaitableFailure][]
     to [trcks.AwaitableFailure][] values.
 
-    [trcks.AwaitableSuccessSequence][] values are left unchanged.
+    [trcks.AwaitableSuccessTuple][] values are left unchanged.
 
     Args:
         f: Synchronous function to apply to the [trcks.AwaitableFailure][] values.
@@ -293,7 +293,7 @@ def map_failure(
     Returns:
         Maps [trcks.AwaitableFailure][] values to [trcks.AwaitableFailure][] values
             according to the given function and
-            leaves [trcks.AwaitableSuccessSequence][] values unchanged.
+            leaves [trcks.AwaitableSuccessTuple][] values unchanged.
 
     Example:
         >>> import asyncio
@@ -305,7 +305,7 @@ def map_failure(
         >>> a_r_seq_1 = add_prefix(ars.construct_failure("not found"))
         >>> asyncio.run(ars.to_coroutine_result_sequence(a_r_seq_1))
         ('failure', 'err: not found')
-        >>> a_r_seq_2 = add_prefix(ars.construct_successes_from_sequence((1, 2)))
+        >>> a_r_seq_2 = add_prefix(ars.construct_successes_from_tuple((1, 2)))
         >>> asyncio.run(ars.to_coroutine_result_sequence(a_r_seq_2))
         ('success', (1, 2))
     """
@@ -314,11 +314,11 @@ def map_failure(
 
 def map_failure_to_awaitable(
     f: Callable[[_F1], Awaitable[_F2]],
-) -> Callable[[AwaitableResultSequence[_F1, _S1]], AwaitableResultSequence[_F2, _S1]]:
+) -> Callable[[AwaitableResultTuple[_F1, _S1]], AwaitableResultTuple[_F2, _S1]]:
     """Create function that maps [trcks.AwaitableFailure][]
     to [trcks.AwaitableFailure][] values.
 
-    [trcks.AwaitableSuccessSequence][] values are left unchanged.
+    [trcks.AwaitableSuccessTuple][] values are left unchanged.
 
     Args:
         f: Asynchronous function to apply to the [trcks.AwaitableFailure][] values.
@@ -326,7 +326,7 @@ def map_failure_to_awaitable(
     Returns:
         Maps [trcks.AwaitableFailure][] values to [trcks.AwaitableFailure][] values
             according to the given asynchronous function and
-            leaves [trcks.AwaitableSuccessSequence][] values unchanged.
+            leaves [trcks.AwaitableSuccessTuple][] values unchanged.
 
     Example:
         >>> import asyncio
@@ -340,7 +340,7 @@ def map_failure_to_awaitable(
         >>> asyncio.run(ars.to_coroutine_result_sequence(a_r_seq_1))
         ('failure', 'err: not found')
         >>> a_r_seq_2 = slowly_add_prefix(
-        ...     ars.construct_successes_from_sequence((1, 2))
+        ...     ars.construct_successes_from_tuple((1, 2))
         ... )
         >>> asyncio.run(ars.to_coroutine_result_sequence(a_r_seq_2))
         ('success', (1, 2))
@@ -351,30 +351,30 @@ def map_failure_to_awaitable(
 
 
 def map_failure_to_awaitable_result_sequence(
-    f: Callable[[_F1], AwaitableResultSequence[_F2, _S2]],
+    f: Callable[[_F1], AwaitableResultTuple[_F2, _S2]],
 ) -> Callable[
-    [AwaitableResultSequence[_F1, _S1]],
-    AwaitableResultSequence[_F2, _S1 | _S2],
+    [AwaitableResultTuple[_F1, _S1]],
+    AwaitableResultTuple[_F2, _S1 | _S2],
 ]:
     """Create function that maps [trcks.AwaitableFailure][] values
-    to [trcks.AwaitableResultSequence][] values.
+    to [trcks.AwaitableResultTuple][] values.
 
-    [trcks.AwaitableSuccessSequence][] values are left unchanged.
+    [trcks.AwaitableSuccessTuple][] values are left unchanged.
 
     Args:
         f: Asynchronous function to apply to the [trcks.AwaitableFailure][] values.
 
     Returns:
         Maps [trcks.AwaitableFailure][] values to new
-            [trcks.AwaitableResultSequence][] values
+            [trcks.AwaitableResultTuple][] values
             according to the given asynchronous function and
-            leaves [trcks.AwaitableSuccessSequence][] values unchanged.
+            leaves [trcks.AwaitableSuccessTuple][] values unchanged.
 
     Example:
         >>> import asyncio
-        >>> from trcks import ResultSequence
+        >>> from trcks import ResultTuple
         >>> from trcks.fp.monads import awaitable_result_sequence as ars
-        >>> async def _slowly_recover(e: str) -> ResultSequence[str, int]:
+        >>> async def _slowly_recover(e: str) -> ResultTuple[str, int]:
         ...     await asyncio.sleep(0.001)
         ...     if e == "not found":
         ...         return "success", (0,)
@@ -389,14 +389,14 @@ def map_failure_to_awaitable_result_sequence(
         >>> a_r_seq_2 = slowly_recover(ars.construct_failure("fatal"))
         >>> asyncio.run(ars.to_coroutine_result_sequence(a_r_seq_2))
         ('failure', 'fatal')
-        >>> a_r_seq_3 = slowly_recover(ars.construct_successes_from_sequence((1, 2)))
+        >>> a_r_seq_3 = slowly_recover(ars.construct_successes_from_tuple((1, 2)))
         >>> asyncio.run(ars.to_coroutine_result_sequence(a_r_seq_3))
         ('success', (1, 2))
     """
 
     async def partially_mapped_f(
-        rslt_seq: ResultSequence[_F1, _S1],
-    ) -> ResultSequence[_F2, _S1 | _S2]:
+        rslt_seq: ResultTuple[_F1, _S1],
+    ) -> ResultTuple[_F2, _S1 | _S2]:
         match rslt_seq[0]:
             case "failure":
                 return await f(rslt_seq[1])
@@ -411,22 +411,22 @@ def map_failure_to_awaitable_result_sequence(
 def map_failure_to_result(
     f: Callable[[_F1], Result[_F2, _S2]],
 ) -> Callable[
-    [AwaitableResultSequence[_F1, _S1]],
-    AwaitableResultSequence[_F2, _S1 | _S2],
+    [AwaitableResultTuple[_F1, _S1]],
+    AwaitableResultTuple[_F2, _S1 | _S2],
 ]:
     """Create function that maps [trcks.AwaitableFailure][] values
-    to [trcks.AwaitableResultSequence][] values.
+    to [trcks.AwaitableResultTuple][] values.
 
-    [trcks.AwaitableSuccessSequence][] values are left unchanged.
+    [trcks.AwaitableSuccessTuple][] values are left unchanged.
 
     Args:
         f: Synchronous function to apply to the [trcks.AwaitableFailure][] values.
 
     Returns:
         Maps [trcks.AwaitableFailure][] values to new
-            [trcks.AwaitableResultSequence][] values
+            [trcks.AwaitableResultTuple][] values
             according to the given function and
-            leaves [trcks.AwaitableSuccessSequence][] values unchanged.
+            leaves [trcks.AwaitableSuccessTuple][] values unchanged.
 
     Example:
         >>> import asyncio
@@ -444,7 +444,7 @@ def map_failure_to_result(
         >>> asyncio.run(ars.to_coroutine_result_sequence(a_r_seq_2))
         ('failure', 'fatal')
         >>> a_r_seq_3 = recover_from_not_found(
-        ...     ars.construct_successes_from_sequence((1, 2))
+        ...     ars.construct_successes_from_tuple((1, 2))
         ... )
         >>> asyncio.run(ars.to_coroutine_result_sequence(a_r_seq_3))
         ('success', (1, 2))
@@ -453,29 +453,29 @@ def map_failure_to_result(
 
 
 def map_failure_to_result_sequence(
-    f: Callable[[_F1], ResultSequence[_F2, _S2]],
+    f: Callable[[_F1], ResultTuple[_F2, _S2]],
 ) -> Callable[
-    [AwaitableResultSequence[_F1, _S1]],
-    AwaitableResultSequence[_F2, _S1 | _S2],
+    [AwaitableResultTuple[_F1, _S1]],
+    AwaitableResultTuple[_F2, _S1 | _S2],
 ]:
     """Create function that maps [trcks.AwaitableFailure][] values
-    to [trcks.AwaitableResultSequence][] values.
+    to [trcks.AwaitableResultTuple][] values.
 
-    [trcks.AwaitableSuccessSequence][] values are left unchanged.
+    [trcks.AwaitableSuccessTuple][] values are left unchanged.
 
     Args:
         f: Synchronous function to apply to the [trcks.AwaitableFailure][] values.
 
     Returns:
         Maps [trcks.AwaitableFailure][] values to new
-            [trcks.AwaitableResultSequence][] values
+            [trcks.AwaitableResultTuple][] values
             according to the given function and
-            leaves [trcks.AwaitableSuccessSequence][] values unchanged.
+            leaves [trcks.AwaitableSuccessTuple][] values unchanged.
 
     Example:
         >>> import asyncio
         >>> from trcks.fp.monads import awaitable_result_sequence as ars
-        >>> def _recover_from_not_found(description: str) -> ResultSequence[str, int]:
+        >>> def _recover_from_not_found(description: str) -> ResultTuple[str, int]:
         ...     if description == "not found":
         ...         return "success", (0,)
         ...     return "failure", description
@@ -490,7 +490,7 @@ def map_failure_to_result_sequence(
         >>> asyncio.run(ars.to_coroutine_result_sequence(a_r_seq_2))
         ('failure', 'fatal')
         >>> a_r_seq_3 = recover_from_not_found(
-        ...     ars.construct_successes_from_sequence((1, 2))
+        ...     ars.construct_successes_from_tuple((1, 2))
         ... )
         >>> asyncio.run(ars.to_coroutine_result_sequence(a_r_seq_3))
         ('success', (1, 2))
@@ -498,23 +498,23 @@ def map_failure_to_result_sequence(
     return a.map_(rs.map_failure_to_result_sequence(f))
 
 
-def map_failure_to_sequence(
+def map_failure_to_tuple(
     f: Callable[[_F1], tuple[_S2, ...]],
 ) -> Callable[
-    [AwaitableResultSequence[_F1, _S1]],
-    Awaitable[SuccessSequence[_S1] | SuccessSequence[_S2]],
+    [AwaitableResultTuple[_F1, _S1]],
+    Awaitable[SuccessTuple[_S1] | SuccessTuple[_S2]],
 ]:
     """Create function that maps [trcks.AwaitableFailure][] values to sequences.
 
-    [trcks.AwaitableSuccessSequence][] values are left unchanged.
+    [trcks.AwaitableSuccessTuple][] values are left unchanged.
 
     Args:
         f: Synchronous function to apply to the [trcks.AwaitableFailure][] values.
 
     Returns:
         Maps [trcks.AwaitableFailure][] values to sequences wrapped in
-            [trcks.AwaitableSuccessSequence][] values and
-            leaves [trcks.AwaitableSuccessSequence][] values unchanged.
+            [trcks.AwaitableSuccessTuple][] values and
+            leaves [trcks.AwaitableSuccessTuple][] values unchanged.
 
     Example:
         >>> import asyncio
@@ -524,22 +524,22 @@ def map_failure_to_sequence(
         ...         return (0,)
         ...     return ()
         ...
-        >>> recover = ars.map_failure_to_sequence(_recover)
+        >>> recover = ars.map_failure_to_tuple(_recover)
         >>> asyncio.run(recover(ars.construct_failure("not found")))
         ('success', (0,))
         >>> asyncio.run(recover(ars.construct_failure("fatal")))
         ('success', ())
-        >>> asyncio.run(recover(ars.construct_successes_from_sequence((1, 2))))
+        >>> asyncio.run(recover(ars.construct_successes_from_tuple((1, 2))))
         ('success', (1, 2))
     """
-    return a.map_(rs.map_failure_to_sequence(f))
+    return a.map_(rs.map_failure_to_tuple(f))
 
 
 def map_successes(
     f: Callable[[_S1], _S2],
-) -> Callable[[AwaitableResultSequence[_F1, _S1]], AwaitableResultSequence[_F1, _S2]]:
+) -> Callable[[AwaitableResultTuple[_F1, _S1]], AwaitableResultTuple[_F1, _S2]]:
     """Map a synchronous function over each element
-    in a [trcks.AwaitableResultSequence][].
+    in a [trcks.AwaitableResultTuple][].
 
     [trcks.AwaitableFailure][] values are left unchanged.
 
@@ -547,7 +547,7 @@ def map_successes(
         f: Function to apply to each success element.
 
     Returns:
-        Function that transforms [trcks.AwaitableSuccessSequence][] values
+        Function that transforms [trcks.AwaitableSuccessTuple][] values
             element-wise.
 
     Example:
@@ -558,7 +558,7 @@ def map_successes(
         ...
         >>> double_integers = ars.map_successes(_double_integer)
         >>> a_r_seq_1 = double_integers(
-        ...     ars.construct_successes_from_sequence((1, 2, 3))
+        ...     ars.construct_successes_from_tuple((1, 2, 3))
         ... )
         >>> asyncio.run(ars.to_coroutine_result_sequence(a_r_seq_1))
         ('success', (2, 4, 6))
@@ -571,9 +571,9 @@ def map_successes(
 
 def map_successes_to_awaitable(
     f: Callable[[_S1], Awaitable[_S2]],
-) -> Callable[[AwaitableResultSequence[_F1, _S1]], AwaitableResultSequence[_F1, _S2]]:
+) -> Callable[[AwaitableResultTuple[_F1, _S1]], AwaitableResultTuple[_F1, _S2]]:
     """Map an awaitable-returning function over each element
-    in a [trcks.AwaitableResultSequence][].
+    in a [trcks.AwaitableResultTuple][].
 
     [trcks.AwaitableFailure][] values are left unchanged.
 
@@ -581,7 +581,7 @@ def map_successes_to_awaitable(
         f: Asynchronous function to apply to each success element.
 
     Returns:
-        Function that transforms [trcks.AwaitableSuccessSequence][] values
+        Function that transforms [trcks.AwaitableSuccessTuple][] values
             element-wise using the given asynchronous function.
 
     Example:
@@ -595,7 +595,7 @@ def map_successes_to_awaitable(
         ...     _slowly_double_integer
         ... )
         >>> a_r_seq_1 = slowly_double_integers(
-        ...     ars.construct_successes_from_sequence((1, 2, 3))
+        ...     ars.construct_successes_from_tuple((1, 2, 3))
         ... )
         >>> asyncio.run(ars.to_coroutine_result_sequence(a_r_seq_1))
         ('success', (2, 4, 6))
@@ -611,11 +611,11 @@ def map_successes_to_awaitable(
 def map_successes_to_awaitable_result(
     f: Callable[[_S1], AwaitableResult[_F2, _S2]],
 ) -> Callable[
-    [AwaitableResultSequence[_F1, _S1]],
-    AwaitableResultSequence[_F1 | _F2, _S2],
+    [AwaitableResultTuple[_F1, _S1]],
+    AwaitableResultTuple[_F1 | _F2, _S2],
 ]:
     """Map a [trcks.AwaitableResult][]-returning function over each element
-    in a [trcks.AwaitableResultSequence][].
+    in a [trcks.AwaitableResultTuple][].
 
     [trcks.AwaitableFailure][] values are left unchanged.
     Short-circuits on the first failure returned by `f`.
@@ -624,7 +624,7 @@ def map_successes_to_awaitable_result(
         f: Asynchronous function to apply to each success element.
 
     Returns:
-        Function that maps over [trcks.AwaitableSuccessSequence][] values and
+        Function that maps over [trcks.AwaitableSuccessTuple][] values and
             returns the first [trcks.AwaitableFailure][] encountered, if any.
 
     Example:
@@ -641,12 +641,12 @@ def map_successes_to_awaitable_result(
         ...     _slowly_double_integer_if_positive
         ... )
         >>> a_r_seq_1 = slowly_double_integers_if_positive(
-        ...     ars.construct_successes_from_sequence((1, 2))
+        ...     ars.construct_successes_from_tuple((1, 2))
         ... )
         >>> asyncio.run(ars.to_coroutine_result_sequence(a_r_seq_1))
         ('success', (2, 4))
         >>> a_r_seq_2 = slowly_double_integers_if_positive(
-        ...     ars.construct_successes_from_sequence((1, -1, 2))
+        ...     ars.construct_successes_from_tuple((1, -1, 2))
         ... )
         >>> asyncio.run(ars.to_coroutine_result_sequence(a_r_seq_2))
         ('failure', 'bad')
@@ -662,13 +662,13 @@ def map_successes_to_awaitable_result(
 
 
 def map_successes_to_awaitable_result_sequence(
-    f: Callable[[_S1], AwaitableResultSequence[_F2, _S2]],
+    f: Callable[[_S1], AwaitableResultTuple[_F2, _S2]],
 ) -> Callable[
-    [AwaitableResultSequence[_F1, _S1]],
-    AwaitableResultSequence[_F1 | _F2, _S2],
+    [AwaitableResultTuple[_F1, _S1]],
+    AwaitableResultTuple[_F1 | _F2, _S2],
 ]:
-    """Map a [trcks.AwaitableResultSequence][]-returning function over each element
-    in a [trcks.AwaitableResultSequence][].
+    """Map a [trcks.AwaitableResultTuple][]-returning function over each element
+    in a [trcks.AwaitableResultTuple][].
 
     [trcks.AwaitableFailure][] values are left unchanged.
     Short-circuits on the first failure returned by `f`.
@@ -677,16 +677,16 @@ def map_successes_to_awaitable_result_sequence(
         f: Asynchronous function to apply to each success element.
 
     Returns:
-        Function that flat-maps [trcks.AwaitableSuccessSequence][] values and
+        Function that flat-maps [trcks.AwaitableSuccessTuple][] values and
             short-circuits on the first [trcks.AwaitableFailure][] returned by `f`.
 
     Example:
         >>> import asyncio
-        >>> from trcks import ResultSequence
+        >>> from trcks import ResultTuple
         >>> from trcks.fp.monads import awaitable_result_sequence as ars
         >>> async def _slowly_duplicate_integer_if_positive(
         ...     x: int,
-        ... ) -> ResultSequence[str, int]:
+        ... ) -> ResultTuple[str, int]:
         ...     await asyncio.sleep(0.001)
         ...     if x <= 0:
         ...         return "failure", "bad"
@@ -698,12 +698,12 @@ def map_successes_to_awaitable_result_sequence(
         ...     )
         ... )
         >>> a_r_seq_1 = slowly_duplicate_integers_if_positive(
-        ...     ars.construct_successes_from_sequence((1, 2))
+        ...     ars.construct_successes_from_tuple((1, 2))
         ... )
         >>> asyncio.run(ars.to_coroutine_result_sequence(a_r_seq_1))
         ('success', (1, 1, 2, 2))
         >>> a_r_seq_2 = slowly_duplicate_integers_if_positive(
-        ...     ars.construct_successes_from_sequence((1, -1, 2))
+        ...     ars.construct_successes_from_tuple((1, -1, 2))
         ... )
         >>> asyncio.run(ars.to_coroutine_result_sequence(a_r_seq_2))
         ('failure', 'bad')
@@ -715,8 +715,8 @@ def map_successes_to_awaitable_result_sequence(
     """
 
     async def partially_mapped_f(
-        rslt_seq: ResultSequence[_F1, _S1],
-    ) -> ResultSequence[_F1 | _F2, _S2]:
+        rslt_seq: ResultTuple[_F1, _S1],
+    ) -> ResultTuple[_F1 | _F2, _S2]:
         match rslt_seq[0]:
             case "failure":
                 return rslt_seq
@@ -741,11 +741,11 @@ def map_successes_to_awaitable_result_sequence(
 def map_successes_to_result(
     f: Callable[[_S1], Result[_F2, _S2]],
 ) -> Callable[
-    [AwaitableResultSequence[_F1, _S1]],
-    AwaitableResultSequence[_F1 | _F2, _S2],
+    [AwaitableResultTuple[_F1, _S1]],
+    AwaitableResultTuple[_F1 | _F2, _S2],
 ]:
     """Map a result-returning function over each element
-    in a [trcks.AwaitableResultSequence][].
+    in a [trcks.AwaitableResultTuple][].
 
     [trcks.AwaitableFailure][] values are left unchanged.
     Short-circuits on the first failure returned by `f`.
@@ -754,7 +754,7 @@ def map_successes_to_result(
         f: Synchronous function to apply to each success element.
 
     Returns:
-        Function that maps over [trcks.AwaitableSuccessSequence][] values and
+        Function that maps over [trcks.AwaitableSuccessTuple][] values and
             returns the first [trcks.AwaitableFailure][] encountered, if any.
 
     Example:
@@ -769,12 +769,12 @@ def map_successes_to_result(
         ...     _double_integer_if_positive
         ... )
         >>> a_r_seq_1 = double_integers_if_positive(
-        ...     ars.construct_successes_from_sequence((1, 2))
+        ...     ars.construct_successes_from_tuple((1, 2))
         ... )
         >>> asyncio.run(ars.to_coroutine_result_sequence(a_r_seq_1))
         ('success', (2, 4))
         >>> a_r_seq_2 = double_integers_if_positive(
-        ...     ars.construct_successes_from_sequence((1, -1, 2))
+        ...     ars.construct_successes_from_tuple((1, -1, 2))
         ... )
         >>> asyncio.run(ars.to_coroutine_result_sequence(a_r_seq_2))
         ('failure', 'bad')
@@ -786,13 +786,13 @@ def map_successes_to_result(
 
 
 def map_successes_to_result_sequence(
-    f: Callable[[_S1], ResultSequence[_F2, _S2]],
+    f: Callable[[_S1], ResultTuple[_F2, _S2]],
 ) -> Callable[
-    [AwaitableResultSequence[_F1, _S1]],
-    AwaitableResultSequence[_F1 | _F2, _S2],
+    [AwaitableResultTuple[_F1, _S1]],
+    AwaitableResultTuple[_F1 | _F2, _S2],
 ]:
     """Map a sequence-returning result function over each element
-    in a [trcks.AwaitableResultSequence][].
+    in a [trcks.AwaitableResultTuple][].
 
     [trcks.AwaitableFailure][] values are left unchanged.
     Short-circuits on the first failure returned by `f`.
@@ -801,13 +801,13 @@ def map_successes_to_result_sequence(
         f: Synchronous function to apply to each success element.
 
     Returns:
-        Function that flat-maps [trcks.AwaitableSuccessSequence][] values and
+        Function that flat-maps [trcks.AwaitableSuccessTuple][] values and
             short-circuits on the first [trcks.AwaitableFailure][] returned by `f`.
 
     Example:
         >>> import asyncio
         >>> from trcks.fp.monads import awaitable_result_sequence as ars
-        >>> def _duplicate_integer_if_positive(n: int) -> ResultSequence[str, int]:
+        >>> def _duplicate_integer_if_positive(n: int) -> ResultTuple[str, int]:
         ...     if n <= 0:
         ...         return "failure", "bad"
         ...     return "success", (n, n)
@@ -816,7 +816,7 @@ def map_successes_to_result_sequence(
         ...     _duplicate_integer_if_positive
         ... )
         >>> a_r_seq_1 = duplicate_integers_if_positive(
-        ...     ars.construct_successes_from_sequence((1, 2))
+        ...     ars.construct_successes_from_tuple((1, 2))
         ... )
         >>> asyncio.run(ars.to_coroutine_result_sequence(a_r_seq_1))
         ('success', (1, 1, 2, 2))
@@ -827,11 +827,11 @@ def map_successes_to_result_sequence(
     return a.map_(rs.map_successes_to_result_sequence(f))
 
 
-def map_successes_to_sequence(
+def map_successes_to_tuple(
     f: Callable[[_S1], tuple[_S2, ...]],
-) -> Callable[[AwaitableResultSequence[_F1, _S1]], AwaitableResultSequence[_F1, _S2]]:
+) -> Callable[[AwaitableResultTuple[_F1, _S1]], AwaitableResultTuple[_F1, _S2]]:
     """Map a sequence-returning function over each element
-    in a [trcks.AwaitableResultSequence][].
+    in a [trcks.AwaitableResultTuple][].
 
     [trcks.AwaitableFailure][] values are left unchanged.
 
@@ -839,7 +839,7 @@ def map_successes_to_sequence(
         f: Synchronous function to apply to each success element.
 
     Returns:
-        Function that flat-maps over [trcks.AwaitableSuccessSequence][] values.
+        Function that flat-maps over [trcks.AwaitableSuccessTuple][] values.
 
     Example:
         >>> import asyncio
@@ -847,20 +847,20 @@ def map_successes_to_sequence(
         >>> def _duplicate_integer(n: int) -> tuple[int, int]:
         ...     return n, n
         ...
-        >>> duplicate_integers = ars.map_successes_to_sequence(_duplicate_integer)
-        >>> a_r_seq = duplicate_integers(ars.construct_successes_from_sequence((1, 2)))
+        >>> duplicate_integers = ars.map_successes_to_tuple(_duplicate_integer)
+        >>> a_r_seq = duplicate_integers(ars.construct_successes_from_tuple((1, 2)))
         >>> asyncio.run(ars.to_coroutine_result_sequence(a_r_seq))
         ('success', (1, 1, 2, 2))
     """
-    return a.map_(rs.map_successes_to_sequence(f))
+    return a.map_(rs.map_successes_to_tuple(f))
 
 
 def tap_failure(
     f: Callable[[_F1], object],
-) -> Callable[[AwaitableResultSequence[_F1, _S1]], AwaitableResultSequence[_F1, _S1]]:
+) -> Callable[[AwaitableResultTuple[_F1, _S1]], AwaitableResultTuple[_F1, _S1]]:
     """Apply a synchronous side effect to [trcks.AwaitableFailure][] values.
 
-    [trcks.AwaitableSuccessSequence][] values are passed on without side effects.
+    [trcks.AwaitableSuccessTuple][] values are passed on without side effects.
 
     Args:
         f: Synchronous side effect to apply to the [trcks.AwaitableFailure][] value.
@@ -868,7 +868,7 @@ def tap_failure(
     Returns:
         Applies the given side effect to [trcks.AwaitableFailure][] values and
             returns the original [trcks.AwaitableFailure][] value.
-            Passes on [trcks.AwaitableSuccessSequence][] values without side effects.
+            Passes on [trcks.AwaitableSuccessTuple][] values without side effects.
 
     Example:
         >>> import asyncio
@@ -882,7 +882,7 @@ def tap_failure(
         Failure: oops
         >>> r_seq_1
         ('failure', 'oops')
-        >>> a_r_seq_2 = log_failure(ars.construct_successes_from_sequence((1,)))
+        >>> a_r_seq_2 = log_failure(ars.construct_successes_from_tuple((1,)))
         >>> r_seq_2 = asyncio.run(ars.to_coroutine_result_sequence(a_r_seq_2))
         >>> r_seq_2
         ('success', (1,))
@@ -892,10 +892,10 @@ def tap_failure(
 
 def tap_failure_to_awaitable(
     f: Callable[[_F1], Awaitable[object]],
-) -> Callable[[AwaitableResultSequence[_F1, _S1]], AwaitableResultSequence[_F1, _S1]]:
+) -> Callable[[AwaitableResultTuple[_F1, _S1]], AwaitableResultTuple[_F1, _S1]]:
     """Apply an asynchronous side effect to [trcks.AwaitableFailure][] values.
 
-    [trcks.AwaitableSuccessSequence][] values are passed on without side effects.
+    [trcks.AwaitableSuccessTuple][] values are passed on without side effects.
 
     Args:
         f: Asynchronous side effect to apply to the [trcks.AwaitableFailure][] value.
@@ -903,7 +903,7 @@ def tap_failure_to_awaitable(
     Returns:
         Applies the given side effect to [trcks.AwaitableFailure][] values and
             returns the original [trcks.AwaitableFailure][] value.
-            Passes on [trcks.AwaitableSuccessSequence][] values without side effects.
+            Passes on [trcks.AwaitableSuccessTuple][] values without side effects.
 
     Example:
         >>> import asyncio
@@ -918,7 +918,7 @@ def tap_failure_to_awaitable(
         Failure: oops
         >>> r_seq_1
         ('failure', 'oops')
-        >>> a_r_seq_2 = slowly_log_failure(ars.construct_successes_from_sequence((1,)))
+        >>> a_r_seq_2 = slowly_log_failure(ars.construct_successes_from_tuple((1,)))
         >>> r_seq_2 = asyncio.run(ars.to_coroutine_result_sequence(a_r_seq_2))
         >>> r_seq_2
         ('success', (1,))
@@ -934,13 +934,13 @@ def tap_failure_to_awaitable(
 def tap_failure_to_awaitable_result(
     f: Callable[[_F1], AwaitableResult[object, _S2]],
 ) -> Callable[
-    [AwaitableResultSequence[_F1, _S1]],
-    AwaitableResultSequence[_F1, _S1 | _S2],
+    [AwaitableResultTuple[_F1, _S1]],
+    AwaitableResultTuple[_F1, _S1 | _S2],
 ]:
     """Apply an asynchronous side effect with return type [trcks.Result][]
     to [trcks.AwaitableFailure][] values.
 
-    [trcks.AwaitableSuccessSequence][] values are passed on without side effects.
+    [trcks.AwaitableSuccessTuple][] values are passed on without side effects.
 
     Args:
         f: Asynchronous side effect to apply to the [trcks.AwaitableFailure][] value.
@@ -951,7 +951,7 @@ def tap_failure_to_awaitable_result(
             *the original* [trcks.AwaitableFailure][] value is returned.
             If the given side effect returns a [trcks.AwaitableSuccess][],
             *this* [trcks.AwaitableSuccess][] is returned (wrapped as a sequence).
-            Passes on [trcks.AwaitableSuccessSequence][] values without side effects.
+            Passes on [trcks.AwaitableSuccessTuple][] values without side effects.
 
     Example:
         >>> import asyncio
@@ -972,7 +972,7 @@ def tap_failure_to_awaitable_result(
         ('failure', 'fatal')
     """
 
-    async def bypassed_f(value: _F1) -> ResultSequence[_F1, _S2]:
+    async def bypassed_f(value: _F1) -> ResultTuple[_F1, _S2]:
         rslt: Result[object, _S2] = await f(value)
         match rslt[0]:
             case "failure":
@@ -986,15 +986,15 @@ def tap_failure_to_awaitable_result(
 
 
 def tap_failure_to_awaitable_result_sequence(
-    f: Callable[[_F1], AwaitableResultSequence[object, _S2]],
+    f: Callable[[_F1], AwaitableResultTuple[object, _S2]],
 ) -> Callable[
-    [AwaitableResultSequence[_F1, _S1]],
-    AwaitableResultSequence[_F1, _S1 | _S2],
+    [AwaitableResultTuple[_F1, _S1]],
+    AwaitableResultTuple[_F1, _S1 | _S2],
 ]:
     """Apply an asynchronous side effect with return type
-    [trcks.ResultSequence][] to [trcks.AwaitableFailure][] values.
+    [trcks.ResultTuple][] to [trcks.AwaitableFailure][] values.
 
-    [trcks.AwaitableSuccessSequence][] values are passed on without side effects.
+    [trcks.AwaitableSuccessTuple][] values are passed on without side effects.
 
     Args:
         f: Asynchronous side effect to apply to the [trcks.AwaitableFailure][] value.
@@ -1003,15 +1003,15 @@ def tap_failure_to_awaitable_result_sequence(
         Applies the given side effect to [trcks.AwaitableFailure][] values.
             If the given side effect returns a [trcks.AwaitableFailure][],
             *the original* [trcks.AwaitableFailure][] value is returned.
-            If the given side effect returns a [trcks.AwaitableSuccessSequence][],
-            *this* [trcks.AwaitableSuccessSequence][] is returned.
-            Passes on [trcks.AwaitableSuccessSequence][] values without side effects.
+            If the given side effect returns a [trcks.AwaitableSuccessTuple][],
+            *this* [trcks.AwaitableSuccessTuple][] is returned.
+            Passes on [trcks.AwaitableSuccessTuple][] values without side effects.
 
     Example:
         >>> import asyncio
-        >>> from trcks import ResultSequence
+        >>> from trcks import ResultTuple
         >>> from trcks.fp.monads import awaitable_result_sequence as ars
-        >>> async def _slowly_recover(e: str) -> ResultSequence[str, int]:
+        >>> async def _slowly_recover(e: str) -> ResultTuple[str, int]:
         ...     await asyncio.sleep(0.001)
         ...     if e == "not found":
         ...         return "success", (0,)
@@ -1028,8 +1028,8 @@ def tap_failure_to_awaitable_result_sequence(
         ('failure', 'fatal')
     """
 
-    async def bypassed_f(value: _F1) -> ResultSequence[_F1, _S2]:
-        rslt_seq: ResultSequence[object, _S2] = await f(value)
+    async def bypassed_f(value: _F1) -> ResultTuple[_F1, _S2]:
+        rslt_seq: ResultTuple[object, _S2] = await f(value)
         match rslt_seq[0]:
             case "failure":
                 return r.construct_failure(value)
@@ -1044,13 +1044,13 @@ def tap_failure_to_awaitable_result_sequence(
 def tap_failure_to_result(
     f: Callable[[_F1], Result[object, _S2]],
 ) -> Callable[
-    [AwaitableResultSequence[_F1, _S1]],
-    AwaitableResultSequence[_F1, _S1 | _S2],
+    [AwaitableResultTuple[_F1, _S1]],
+    AwaitableResultTuple[_F1, _S1 | _S2],
 ]:
     """Apply a synchronous side effect with return type [trcks.Result][]
     to [trcks.AwaitableFailure][] values.
 
-    [trcks.AwaitableSuccessSequence][] values are passed on without side effects.
+    [trcks.AwaitableSuccessTuple][] values are passed on without side effects.
 
     Args:
         f: Synchronous side effect to apply to the [trcks.AwaitableFailure][] value.
@@ -1061,7 +1061,7 @@ def tap_failure_to_result(
             *the original* [trcks.AwaitableFailure][] value is returned.
             If the given side effect returns a [trcks.Success][],
             *this* [trcks.Success][] is returned (wrapped as a sequence).
-            Passes on [trcks.AwaitableSuccessSequence][] values without side effects.
+            Passes on [trcks.AwaitableSuccessTuple][] values without side effects.
 
     Example:
         >>> import asyncio
@@ -1079,7 +1079,7 @@ def tap_failure_to_result(
         >>> asyncio.run(ars.to_coroutine_result_sequence(a_r_seq_2))
         ('failure', 'fatal')
         >>> a_r_seq_3 = recover_from_not_found(
-        ...     ars.construct_successes_from_sequence((1,))
+        ...     ars.construct_successes_from_tuple((1,))
         ... )
         >>> asyncio.run(ars.to_coroutine_result_sequence(a_r_seq_3))
         ('success', (1,))
@@ -1088,15 +1088,15 @@ def tap_failure_to_result(
 
 
 def tap_failure_to_result_sequence(
-    f: Callable[[_F1], ResultSequence[object, _S2]],
+    f: Callable[[_F1], ResultTuple[object, _S2]],
 ) -> Callable[
-    [AwaitableResultSequence[_F1, _S1]],
-    AwaitableResultSequence[_F1, _S1 | _S2],
+    [AwaitableResultTuple[_F1, _S1]],
+    AwaitableResultTuple[_F1, _S1 | _S2],
 ]:
-    """Apply a synchronous side effect with return type [trcks.ResultSequence][]
+    """Apply a synchronous side effect with return type [trcks.ResultTuple][]
     to [trcks.AwaitableFailure][] values.
 
-    [trcks.AwaitableSuccessSequence][] values are passed on without side effects.
+    [trcks.AwaitableSuccessTuple][] values are passed on without side effects.
 
     Args:
         f: Synchronous side effect to apply to the [trcks.AwaitableFailure][] value.
@@ -1105,14 +1105,14 @@ def tap_failure_to_result_sequence(
         Applies the given side effect to [trcks.AwaitableFailure][] values.
             If the given side effect returns a [trcks.Failure][],
             *the original* [trcks.AwaitableFailure][] value is returned.
-            If the given side effect returns a [trcks.SuccessSequence][],
-            *this* [trcks.SuccessSequence][] is returned.
-            Passes on [trcks.AwaitableSuccessSequence][] values without side effects.
+            If the given side effect returns a [trcks.SuccessTuple][],
+            *this* [trcks.SuccessTuple][] is returned.
+            Passes on [trcks.AwaitableSuccessTuple][] values without side effects.
 
     Example:
         >>> import asyncio
         >>> from trcks.fp.monads import awaitable_result_sequence as ars
-        >>> def _recover_from_not_found(description: str) -> ResultSequence[None, int]:
+        >>> def _recover_from_not_found(description: str) -> ResultTuple[None, int]:
         ...     if description == "not found":
         ...         return "success", (0,)
         ...     return "failure", None
@@ -1127,7 +1127,7 @@ def tap_failure_to_result_sequence(
         >>> asyncio.run(ars.to_coroutine_result_sequence(a_r_seq_2))
         ('failure', 'fatal')
         >>> a_r_seq_3 = recover_from_not_found(
-        ...     ars.construct_successes_from_sequence((1,))
+        ...     ars.construct_successes_from_tuple((1,))
         ... )
         >>> asyncio.run(ars.to_coroutine_result_sequence(a_r_seq_3))
         ('success', (1,))
@@ -1135,29 +1135,29 @@ def tap_failure_to_result_sequence(
     return a.map_(rs.tap_failure_to_result_sequence(f))
 
 
-def tap_failure_to_sequence(
+def tap_failure_to_tuple(
     f: Callable[[_F1], tuple[object, ...]],
 ) -> Callable[
-    [AwaitableResultSequence[_F1, _S1]],
-    Awaitable[SuccessSequence[_F1] | SuccessSequence[_S1]],
+    [AwaitableResultTuple[_F1, _S1]],
+    Awaitable[SuccessTuple[_F1] | SuccessTuple[_S1]],
 ]:
     """Apply a sequence-returning side effect to [trcks.AwaitableFailure][] values.
 
     The number of side effect outputs determines how many times the original
     failure value is repeated. The failure is converted to a
-    [trcks.AwaitableSuccessSequence][].
+    [trcks.AwaitableSuccessTuple][].
 
-    [trcks.AwaitableSuccessSequence][] values are passed on without side effects.
+    [trcks.AwaitableSuccessTuple][] values are passed on without side effects.
 
     Args:
         f: Synchronous side effect to apply to the [trcks.AwaitableFailure][] value.
 
     Returns:
         Applies the given side effect to [trcks.AwaitableFailure][] values and
-            converts them to [trcks.AwaitableSuccessSequence][] values containing
+            converts them to [trcks.AwaitableSuccessTuple][] values containing
             the original failure repeated once per element in the sequence returned
             by the side effect.
-            Passes on [trcks.AwaitableSuccessSequence][] values without side effects.
+            Passes on [trcks.AwaitableSuccessTuple][] values without side effects.
 
     Example:
         >>> import asyncio
@@ -1168,7 +1168,7 @@ def tap_failure_to_sequence(
         ...         print(f"Logged: {description}"),
         ...     )
         ...
-        >>> log_and_alert = ars.tap_failure_to_sequence(_log_and_alert)
+        >>> log_and_alert = ars.tap_failure_to_tuple(_log_and_alert)
         >>> r_seq_1 = asyncio.run(
         ...     log_and_alert(ars.construct_failure("critical"))
         ... )
@@ -1177,19 +1177,19 @@ def tap_failure_to_sequence(
         >>> r_seq_1
         ('success', ('critical', 'critical'))
         >>> r_seq_2 = asyncio.run(
-        ...     log_and_alert(ars.construct_successes_from_sequence((1,)))
+        ...     log_and_alert(ars.construct_successes_from_tuple((1,)))
         ... )
         >>> r_seq_2
         ('success', (1,))
     """
-    return a.map_(rs.tap_failure_to_sequence(f))
+    return a.map_(rs.tap_failure_to_tuple(f))
 
 
 def tap_successes(
     f: Callable[[_S1], object],
-) -> Callable[[AwaitableResultSequence[_F1, _S1]], AwaitableResultSequence[_F1, _S1]]:
+) -> Callable[[AwaitableResultTuple[_F1, _S1]], AwaitableResultTuple[_F1, _S1]]:
     """Apply a synchronous side effect to each element
-    in a [trcks.AwaitableResultSequence][].
+    in a [trcks.AwaitableResultTuple][].
 
     [trcks.AwaitableFailure][] values are passed on without side effects.
 
@@ -1198,7 +1198,7 @@ def tap_successes(
 
     Returns:
         Applies the given side effect and returns the original
-            [trcks.AwaitableResultSequence][] value.
+            [trcks.AwaitableResultTuple][] value.
 
     Example:
         >>> import asyncio
@@ -1207,7 +1207,7 @@ def tap_successes(
         ...     print(f"Value: {x}")
         ...
         >>> log_values = ars.tap_successes(_log_value)
-        >>> a_r_seq_1 = log_values(ars.construct_successes_from_sequence((1, 2)))
+        >>> a_r_seq_1 = log_values(ars.construct_successes_from_tuple((1, 2)))
         >>> r_seq_1 = asyncio.run(ars.to_coroutine_result_sequence(a_r_seq_1))
         Value: 1
         Value: 2
@@ -1223,9 +1223,9 @@ def tap_successes(
 
 def tap_successes_to_awaitable(
     f: Callable[[_S1], Awaitable[object]],
-) -> Callable[[AwaitableResultSequence[_F1, _S1]], AwaitableResultSequence[_F1, _S1]]:
+) -> Callable[[AwaitableResultTuple[_F1, _S1]], AwaitableResultTuple[_F1, _S1]]:
     """Apply an asynchronous side effect to each element
-    in a [trcks.AwaitableResultSequence][].
+    in a [trcks.AwaitableResultTuple][].
 
     [trcks.AwaitableFailure][] values are passed on without side effects.
 
@@ -1234,7 +1234,7 @@ def tap_successes_to_awaitable(
 
     Returns:
         Applies the given side effect and returns the original
-            [trcks.AwaitableResultSequence][] value.
+            [trcks.AwaitableResultTuple][] value.
 
     Example:
         >>> import asyncio
@@ -1244,7 +1244,7 @@ def tap_successes_to_awaitable(
         ...     print(f"Value: {x}")
         ...
         >>> slowly_log_values = ars.tap_successes_to_awaitable(_slowly_log_value)
-        >>> a_r_seq_1 = slowly_log_values(ars.construct_successes_from_sequence((1, 2)))
+        >>> a_r_seq_1 = slowly_log_values(ars.construct_successes_from_tuple((1, 2)))
         >>> r_seq_1 = asyncio.run(ars.to_coroutine_result_sequence(a_r_seq_1))
         Value: 1
         Value: 2
@@ -1266,11 +1266,11 @@ def tap_successes_to_awaitable(
 def tap_successes_to_awaitable_result(
     f: Callable[[_S1], AwaitableResult[_F2, object]],
 ) -> Callable[
-    [AwaitableResultSequence[_F1, _S1]],
-    AwaitableResultSequence[_F1 | _F2, _S1],
+    [AwaitableResultTuple[_F1, _S1]],
+    AwaitableResultTuple[_F1 | _F2, _S1],
 ]:
     """Apply an asynchronous side effect with return type [trcks.Result][]
-    to each element in a [trcks.AwaitableResultSequence][].
+    to each element in a [trcks.AwaitableResultTuple][].
 
     [trcks.AwaitableFailure][] values are passed on without side effects.
 
@@ -1297,11 +1297,11 @@ def tap_successes_to_awaitable_result(
         >>> validate_positive = ars.tap_successes_to_awaitable_result(
         ...     _validate_positive
         ... )
-        >>> a_r_seq_1 = validate_positive(ars.construct_successes_from_sequence((1, 2)))
+        >>> a_r_seq_1 = validate_positive(ars.construct_successes_from_tuple((1, 2)))
         >>> asyncio.run(ars.to_coroutine_result_sequence(a_r_seq_1))
         ('success', (1, 2))
         >>> a_r_seq_2 = validate_positive(
-        ...     ars.construct_successes_from_sequence((1, -1))
+        ...     ars.construct_successes_from_tuple((1, -1))
         ... )
         >>> asyncio.run(ars.to_coroutine_result_sequence(a_r_seq_2))
         ('failure', 'bad')
@@ -1315,14 +1315,14 @@ def tap_successes_to_awaitable_result(
 
 
 def tap_successes_to_awaitable_result_sequence(
-    f: Callable[[_S1], AwaitableResultSequence[_F2, object]],
+    f: Callable[[_S1], AwaitableResultTuple[_F2, object]],
 ) -> Callable[
-    [AwaitableResultSequence[_F1, _S1]],
-    AwaitableResultSequence[_F1 | _F2, _S1],
+    [AwaitableResultTuple[_F1, _S1]],
+    AwaitableResultTuple[_F1 | _F2, _S1],
 ]:
     """Apply an asynchronous side effect with return type
-    [trcks.ResultSequence][] to each element
-    in a [trcks.AwaitableResultSequence][].
+    [trcks.ResultTuple][] to each element
+    in a [trcks.AwaitableResultTuple][].
 
     [trcks.AwaitableFailure][] values are passed on without side effects.
 
@@ -1333,15 +1333,15 @@ def tap_successes_to_awaitable_result_sequence(
         Applies the given side effect to each success element.
             If the given side effect returns a [trcks.AwaitableFailure][],
             *this* [trcks.AwaitableFailure][] is returned.
-            If the given side effect returns a [trcks.AwaitableSuccessSequence][],
+            If the given side effect returns a [trcks.AwaitableSuccessTuple][],
             *the original* success element is repeated once per element
             in the side effect output.
 
     Example:
         >>> import asyncio
-        >>> from trcks import ResultSequence
+        >>> from trcks import ResultTuple
         >>> from trcks.fp.monads import awaitable_result_sequence as ars
-        >>> async def _validate_positive(x: int) -> ResultSequence[str, None]:
+        >>> async def _validate_positive(x: int) -> ResultTuple[str, None]:
         ...     await asyncio.sleep(0.001)
         ...     if x <= 0:
         ...         return "failure", "bad"
@@ -1350,11 +1350,11 @@ def tap_successes_to_awaitable_result_sequence(
         >>> validate_positive = ars.tap_successes_to_awaitable_result_sequence(
         ...     _validate_positive
         ... )
-        >>> a_r_seq_1 = validate_positive(ars.construct_successes_from_sequence((7,)))
+        >>> a_r_seq_1 = validate_positive(ars.construct_successes_from_tuple((7,)))
         >>> asyncio.run(ars.to_coroutine_result_sequence(a_r_seq_1))
         ('success', (7, 7))
         >>> a_r_seq_2 = validate_positive(
-        ...     ars.construct_successes_from_sequence((1, -1))
+        ...     ars.construct_successes_from_tuple((1, -1))
         ... )
         >>> asyncio.run(ars.to_coroutine_result_sequence(a_r_seq_2))
         ('failure', 'bad')
@@ -1363,8 +1363,8 @@ def tap_successes_to_awaitable_result_sequence(
         ('failure', 'oops')
     """
 
-    async def tapped_f(s1: _S1) -> ResultSequence[_F2, _S1]:
-        rslt_seq: ResultSequence[_F2, object] = await f(s1)
+    async def tapped_f(s1: _S1) -> ResultTuple[_F2, _S1]:
+        rslt_seq: ResultTuple[_F2, object] = await f(s1)
         match rslt_seq[0]:
             case "failure":
                 return rslt_seq
@@ -1379,11 +1379,11 @@ def tap_successes_to_awaitable_result_sequence(
 def tap_successes_to_result(
     f: Callable[[_S1], Result[_F2, object]],
 ) -> Callable[
-    [AwaitableResultSequence[_F1, _S1]],
-    AwaitableResultSequence[_F1 | _F2, _S1],
+    [AwaitableResultTuple[_F1, _S1]],
+    AwaitableResultTuple[_F1 | _F2, _S1],
 ]:
     """Apply a synchronous side effect with return type [trcks.Result][]
-    to each element in a [trcks.AwaitableResultSequence][].
+    to each element in a [trcks.AwaitableResultTuple][].
 
     [trcks.AwaitableFailure][] values are passed on without side effects.
 
@@ -1406,11 +1406,11 @@ def tap_successes_to_result(
         ...     return "success", None
         ...
         >>> validate_positive = ars.tap_successes_to_result(_validate_positive)
-        >>> a_r_seq_1 = validate_positive(ars.construct_successes_from_sequence((1, 2)))
+        >>> a_r_seq_1 = validate_positive(ars.construct_successes_from_tuple((1, 2)))
         >>> asyncio.run(ars.to_coroutine_result_sequence(a_r_seq_1))
         ('success', (1, 2))
         >>> a_r_seq_2 = validate_positive(
-        ...     ars.construct_successes_from_sequence((1, -1))
+        ...     ars.construct_successes_from_tuple((1, -1))
         ... )
         >>> asyncio.run(ars.to_coroutine_result_sequence(a_r_seq_2))
         ('failure', 'bad')
@@ -1422,13 +1422,13 @@ def tap_successes_to_result(
 
 
 def tap_successes_to_result_sequence(
-    f: Callable[[_S1], ResultSequence[_F2, object]],
+    f: Callable[[_S1], ResultTuple[_F2, object]],
 ) -> Callable[
-    [AwaitableResultSequence[_F1, _S1]],
-    AwaitableResultSequence[_F1 | _F2, _S1],
+    [AwaitableResultTuple[_F1, _S1]],
+    AwaitableResultTuple[_F1 | _F2, _S1],
 ]:
-    """Apply a synchronous side effect with return type [trcks.ResultSequence][]
-    to each element in a [trcks.AwaitableResultSequence][].
+    """Apply a synchronous side effect with return type [trcks.ResultTuple][]
+    to each element in a [trcks.AwaitableResultTuple][].
 
     [trcks.AwaitableFailure][] values are passed on without side effects.
 
@@ -1439,14 +1439,14 @@ def tap_successes_to_result_sequence(
         Applies the given side effect to each success element.
             If the given side effect returns a [trcks.Failure][],
             *this* [trcks.Failure][] is returned.
-            If the given side effect returns a [trcks.SuccessSequence][],
+            If the given side effect returns a [trcks.SuccessTuple][],
             *the original* success element is repeated once per element
             in the side effect output.
 
     Example:
         >>> import asyncio
         >>> from trcks.fp.monads import awaitable_result_sequence as ars
-        >>> def _validate_positive_twice(n: int) -> ResultSequence[str, None]:
+        >>> def _validate_positive_twice(n: int) -> ResultTuple[str, None]:
         ...     if n <= 0:
         ...         return "failure", "bad"
         ...     return "success", (None, None)
@@ -1455,12 +1455,12 @@ def tap_successes_to_result_sequence(
         ...     _validate_positive_twice
         ... )
         >>> a_r_seq_1 = validate_positive_twice(
-        ...     ars.construct_successes_from_sequence((7,))
+        ...     ars.construct_successes_from_tuple((7,))
         ... )
         >>> asyncio.run(ars.to_coroutine_result_sequence(a_r_seq_1))
         ('success', (7, 7))
         >>> a_r_seq_2 = validate_positive_twice(
-        ...     ars.construct_successes_from_sequence((1, -1))
+        ...     ars.construct_successes_from_tuple((1, -1))
         ... )
         >>> asyncio.run(ars.to_coroutine_result_sequence(a_r_seq_2))
         ('failure', 'bad')
@@ -1471,11 +1471,11 @@ def tap_successes_to_result_sequence(
     return a.map_(rs.tap_successes_to_result_sequence(f))
 
 
-def tap_successes_to_sequence(
+def tap_successes_to_tuple(
     f: Callable[[_S1], tuple[object, ...]],
-) -> Callable[[AwaitableResultSequence[_F1, _S1]], AwaitableResultSequence[_F1, _S1]]:
+) -> Callable[[AwaitableResultTuple[_F1, _S1]], AwaitableResultTuple[_F1, _S1]]:
     """Apply a sequence-returning side effect to each element
-    in a [trcks.AwaitableResultSequence][].
+    in a [trcks.AwaitableResultTuple][].
 
     The number of side effect outputs determines how many times each original
     element is repeated in the resulting sequence.
@@ -1487,7 +1487,7 @@ def tap_successes_to_sequence(
 
     Returns:
         Applies the given side effect and returns a
-            [trcks.AwaitableResultSequence][] where each original success element
+            [trcks.AwaitableResultTuple][] where each original success element
             is repeated once per element returned by the side effect.
 
     Example:
@@ -1496,38 +1496,38 @@ def tap_successes_to_sequence(
         >>> def _log_twice(n: int) -> tuple[None, None]:
         ...     return print(f"Received: {n}"), print(f"Received: {n}")
         ...
-        >>> log_twice = ars.tap_successes_to_sequence(_log_twice)
-        >>> a_r_seq = log_twice(ars.construct_successes_from_sequence((7,)))
+        >>> log_twice = ars.tap_successes_to_tuple(_log_twice)
+        >>> a_r_seq = log_twice(ars.construct_successes_from_tuple((7,)))
         >>> r_seq = asyncio.run(ars.to_coroutine_result_sequence(a_r_seq))
         Received: 7
         Received: 7
         >>> r_seq
         ('success', (7, 7))
     """
-    return a.map_(rs.tap_successes_to_sequence(f))
+    return a.map_(rs.tap_successes_to_tuple(f))
 
 
 async def to_coroutine_result_sequence(
-    a_r_seq: AwaitableResultSequence[_F, _S],
-) -> ResultSequence[_F, _S]:
-    """Turn a [trcks.AwaitableResultSequence][] into a [collections.abc.Coroutine][].
+    a_r_seq: AwaitableResultTuple[_F, _S],
+) -> ResultTuple[_F, _S]:
+    """Turn a [trcks.AwaitableResultTuple][] into a [collections.abc.Coroutine][].
 
     This is useful for functions that expect a coroutine (e.g. [asyncio.run][]).
 
     Args:
-        a_r_seq: The [trcks.AwaitableResultSequence][] to be transformed
+        a_r_seq: The [trcks.AwaitableResultTuple][] to be transformed
             into a [collections.abc.Coroutine][].
 
     Returns:
-        The given [trcks.AwaitableResultSequence][] transformed
+        The given [trcks.AwaitableResultTuple][] transformed
             into a [collections.abc.Coroutine][].
 
     Example:
         >>> import asyncio
-        >>> from trcks import ResultSequence
+        >>> from trcks import ResultTuple
         >>> from trcks.fp.monads import awaitable_result_sequence as ars
         >>> asyncio.set_event_loop(asyncio.new_event_loop())
-        >>> future = asyncio.Future[ResultSequence[str, int]]()
+        >>> future = asyncio.Future[ResultTuple[str, int]]()
         >>> future.set_result(("success", (1, 2)))
         >>> future
         <Future finished result=('success', (1, 2))>
@@ -1538,10 +1538,3 @@ async def to_coroutine_result_sequence(
         ('success', (1, 2))
     """
     return await a_r_seq
-
-
-construct_successes_from_tuple = construct_successes_from_sequence
-map_failure_to_tuple = map_failure_to_sequence
-map_successes_to_tuple = map_successes_to_sequence
-tap_failure_to_tuple = tap_failure_to_sequence
-tap_successes_to_tuple = tap_successes_to_sequence

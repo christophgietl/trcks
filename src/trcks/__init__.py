@@ -144,18 +144,3 @@ AwaitableSuccessTuple: TypeAlias = Awaitable[SuccessTuple[_S_co]]
 """[collections.abc.Awaitable][] that returns a [trcks.SuccessTuple][]
 when used in an `await` expression.
 """
-
-AwaitableSequence: TypeAlias = AwaitableTuple
-"""Alias of [trcks.AwaitableTuple][]."""
-
-ResultSequence: TypeAlias = ResultTuple
-"""Alias of [trcks.ResultTuple][]."""
-
-SuccessSequence: TypeAlias = SuccessTuple
-"""Alias of [trcks.SuccessTuple][]."""
-
-AwaitableResultSequence: TypeAlias = AwaitableResultTuple
-"""Alias of [trcks.AwaitableResultTuple][]."""
-
-AwaitableSuccessSequence: TypeAlias = AwaitableSuccessTuple
-"""Alias of [trcks.AwaitableSuccessTuple][]."""

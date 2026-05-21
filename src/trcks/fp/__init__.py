@@ -6,10 +6,10 @@ in a functional style:
 - [collections.abc.Awaitable][]
 - [tuple][]
 - [trcks.AwaitableResult][]
-- [trcks.AwaitableResultSequence][]
-- [trcks.AwaitableSequence][]
+- [trcks.AwaitableResultTuple][]
+- [trcks.AwaitableTuple][]
 - [trcks.Result][]
-- [trcks.ResultSequence][]
+- [trcks.ResultTuple][]
 
 Example:
     This example uses the modules

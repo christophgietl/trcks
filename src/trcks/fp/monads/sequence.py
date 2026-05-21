@@ -35,7 +35,7 @@ Example:
     >>> sequence = pipe(
     ...     (
     ...         (1, 2, 3),
-    ...         s.map_to_sequence(duplicate_integer),
+    ...         s.map_to_tuple(duplicate_integer),
     ...     )
     ... )
     >>> sequence
@@ -106,10 +106,10 @@ def map_(f: Callable[[_T1], _T2]) -> Callable[[tuple[_T1, ...]], tuple[_T2, ...]
         >>> double_integers((1, 2, 3))
         (2, 4, 6)
     """
-    return map_to_sequence(compose2((f, construct)))
+    return map_to_tuple(compose2((f, construct)))
 
 
-def map_to_sequence(
+def map_to_tuple(
     f: Callable[[_T1], tuple[_T2, ...]],
 ) -> Callable[[tuple[_T1, ...]], tuple[_T2, ...]]:
     """Create function that maps [tuple][]s to
@@ -131,7 +131,7 @@ def map_to_sequence(
         ...
         >>> duplicate_integers: Callable[
         ...     [tuple[int, ...]], tuple[int, ...]
-        ... ] = s.map_to_sequence(duplicate_integer)
+        ... ] = s.map_to_tuple(duplicate_integer)
         >>> duplicate_integers([1, 2, 3])
         (1, 1, 2, 2, 3, 3)
     """
@@ -175,7 +175,7 @@ def tap(
     return map_(i.tap(f))
 
 
-def tap_to_sequence(
+def tap_to_tuple(
     f: Callable[[_T1], tuple[object, ...]],
 ) -> Callable[[tuple[_T1, ...]], tuple[_T1, ...]]:
     """Create function that applies a side effect with return type
@@ -200,7 +200,7 @@ def tap_to_sequence(
         ...
         >>> repeat_integers_according_to_number_of_divisors: Callable[
         ...     [tuple[int, ...]], tuple[int, ...]
-        ... ] = s.tap_to_sequence(get_divisors)
+        ... ] = s.tap_to_tuple(get_divisors)
         >>> repeat_integers_according_to_number_of_divisors([1, 2, 3, 4])
         (1, 2, 2, 3, 3, 4, 4, 4)
     """
@@ -208,8 +208,4 @@ def tap_to_sequence(
     def bypassed_f(t1: _T1) -> tuple[_T1, ...]:
         return tuple(t1 for _t2 in f(t1))
 
-    return map_to_sequence(bypassed_f)
-
-
-map_to_tuple = map_to_sequence
-tap_to_tuple = tap_to_sequence
+    return map_to_tuple(bypassed_f)
