@@ -630,7 +630,7 @@ through the same chain of transformations:
     >>> def to_domain(email: str) -> str:
     ...     return email.split("@")[1]
     ...
-    >>> emails = ["  Erika@Domain.ORG ", "JOHN@Provider.COM  "]
+    >>> emails = ("  Erika@Domain.ORG ", "JOHN@Provider.COM  ")
     >>> (
     ...     TupleWrapper
     ...     .construct_from_tuple(emails)
@@ -651,10 +651,10 @@ let us have a look at the individual steps of the chain:
     >>> from collections.abc import Sequence
     >>> # 1. Wrap the input tuple:
     >>> wrapped: TupleWrapper[str] = TupleWrapper.construct_from_tuple(
-    ...     ["  Erika@Domain.ORG ", "JOHN@Provider.COM  "]
+    ...     ("  Erika@Domain.ORG ", "JOHN@Provider.COM  ")
     ... )
     >>> wrapped
-    TupleWrapper(core=['  Erika@Domain.ORG ', 'JOHN@Provider.COM  '])
+    TupleWrapper(core=('  Erika@Domain.ORG ', 'JOHN@Provider.COM  '))
     >>> # 2. Apply normalize_email to each element:
     >>> mapped: TupleWrapper[str] = wrapped.map(normalize_email)
     >>> mapped
@@ -673,7 +673,7 @@ let us have a look at the individual steps of the chain:
 ???+ note
     [trcks.oop.TupleWrapper.construct][] wraps a single value
     in a one-element tuple:
-    `TupleWrapper.construct(42)` produces `TupleWrapper(core=[42])`.
+    `TupleWrapper.construct(42)` produces `TupleWrapper(core=(42,))`.
 
     The method [trcks.oop.TupleWrapper.map_to_tuple][]
     applies a function that returns a [collections.abc.Sequence][]
@@ -681,7 +681,7 @@ let us have a look at the individual steps of the chain:
 
     ```pycon
     >>> TupleWrapper.construct_from_tuple(
-    ...     ["ab", "cd"]
+    ...     ("ab", "cd")
     ... ).map_to_tuple(list).core
     ('a', 'b', 'c', 'd')
 
