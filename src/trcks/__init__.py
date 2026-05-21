@@ -24,7 +24,7 @@ _T_co = TypeVar("_T_co", covariant=True)
 
 
 Failure: TypeAlias = tuple[Literal["failure"], _F_co]
-"""[tuple][] of length 2 containing ``"failure"`` followed by
+"""homogeneous [tuple][] of length 2 containing ``"failure"`` followed by
 a value of type `_F_co`.
 
 Example:
@@ -36,7 +36,7 @@ Note:
 """
 
 Success: TypeAlias = tuple[Literal["success"], _S_co]
-"""[tuple][] of length 2 containing ``"success"`` followed by
+"""homogeneous [tuple][] of length 2 containing ``"success"`` followed by
 a value of type `_S_co`.
 
 Example:
@@ -76,7 +76,7 @@ when used in an `await` expression.
 """
 
 AwaitableTuple: TypeAlias = Awaitable[tuple[_T_co, ...]]
-"""[collections.abc.Awaitable][] that returns a [tuple][]
+"""[collections.abc.Awaitable][] that returns a homogeneous [tuple][]
 when used in an `await` expression.
 """
 
@@ -132,10 +132,10 @@ Example:
 """
 
 ResultTuple: TypeAlias = Result[_F_co, tuple[_S_co, ...]]
-"""[trcks.Result][] where the success value is a [tuple][]."""
+"""[trcks.Result][] where the success value is a homogeneous [tuple][]."""
 
 SuccessTuple: TypeAlias = Success[tuple[_S_co, ...]]
-"""[trcks.Success][] that contains a [tuple][]."""
+"""[trcks.Success][] that contains a homogeneous [tuple][]."""
 
 AwaitableResultTuple: TypeAlias = Awaitable[ResultTuple[_F_co, _S_co]]
 """[collections.abc.Awaitable][] that returns a [trcks.ResultTuple][]
