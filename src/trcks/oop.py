@@ -3620,7 +3620,7 @@ class AwaitableTupleWrapper(_AwaitableWrapper[tuple[_T_co, ...]]):
         """
         return AwaitableTupleWrapper(as_.map_to_awaitable(f)(self.core))
 
-    def map_to_awaitable_sequence(
+    def map_to_awaitable_tuple(
         self, f: Callable[[_T_co], AwaitableTuple[_T]]
     ) -> AwaitableTupleWrapper[_T]:
         """Apply an asynchronous function returning a homogeneous [tuple][]
@@ -3646,14 +3646,14 @@ class AwaitableTupleWrapper(_AwaitableWrapper[tuple[_T_co, ...]]):
             ...     return await (
             ...         AwaitableTupleWrapper
             ...         .construct_from_tuple((1, 2))
-            ...         .map_to_awaitable_sequence(duplicate)
+            ...         .map_to_awaitable_tuple(duplicate)
             ...         .core_as_coroutine
             ...     )
             ...
             >>> asyncio.run(main())
             (1, 1, 2, 2)
         """
-        return AwaitableTupleWrapper(as_.map_to_awaitable_sequence(f)(self.core))
+        return AwaitableTupleWrapper(as_.map_to_awaitable_tuple(f)(self.core))
 
     def map_to_tuple(
         self, f: Callable[[_T_co], tuple[_T, ...]]
@@ -3753,7 +3753,7 @@ class AwaitableTupleWrapper(_AwaitableWrapper[tuple[_T_co, ...]]):
         """
         return AwaitableTupleWrapper(as_.tap_to_awaitable(f)(self.core))
 
-    def tap_to_awaitable_sequence(
+    def tap_to_awaitable_tuple(
         self, f: Callable[[_T_co], AwaitableTuple[object]]
     ) -> AwaitableTupleWrapper[_T_co]:
         """Apply an asynchronous side effect returning a [trcks.AwaitableTuple][]
@@ -3779,14 +3779,14 @@ class AwaitableTupleWrapper(_AwaitableWrapper[tuple[_T_co, ...]]):
             ...     return await (
             ...         AwaitableTupleWrapper
             ...         .construct_from_tuple((1, 2))
-            ...         .tap_to_awaitable_sequence(echo_twice)
+            ...         .tap_to_awaitable_tuple(echo_twice)
             ...         .core_as_coroutine
             ...     )
             ...
             >>> asyncio.run(main())
             (1, 1, 2, 2)
         """
-        return AwaitableTupleWrapper(as_.tap_to_awaitable_sequence(f)(self.core))
+        return AwaitableTupleWrapper(as_.tap_to_awaitable_tuple(f)(self.core))
 
     def tap_to_tuple(
         self, f: Callable[[_T_co], tuple[object, ...]]
@@ -4052,7 +4052,7 @@ class AwaitableWrapper(_AwaitableWrapper[_T_co]):
             self.core
         ).map_successes_to_awaitable_result_sequence(f)
 
-    def map_to_awaitable_sequence(
+    def map_to_awaitable_tuple(
         self, f: Callable[[_T_co], AwaitableTuple[_T]]
     ) -> AwaitableTupleWrapper[_T]:
         """Apply an asynchronous function returning a homogeneous [tuple][]
@@ -4077,7 +4077,7 @@ class AwaitableWrapper(_AwaitableWrapper[_T_co]):
             >>> awaitable_sequence_wrapper = (
             ...     AwaitableWrapper
             ...     .construct(21)
-            ...     .map_to_awaitable_sequence(duplicate_async)
+            ...     .map_to_awaitable_tuple(duplicate_async)
             ... )
             >>> awaitable_sequence_wrapper
             AwaitableTupleWrapper(core=<coroutine object ...>)
@@ -4330,7 +4330,7 @@ class AwaitableWrapper(_AwaitableWrapper[_T_co]):
             self.core
         ).tap_successes_to_awaitable_result_sequence(f)
 
-    def tap_to_awaitable_sequence(
+    def tap_to_awaitable_tuple(
         self, f: Callable[[_T_co], AwaitableTuple[object]]
     ) -> AwaitableTupleWrapper[_T_co]:
         """Apply an asynchronous side effect returning a homogeneous [tuple][]
@@ -4358,7 +4358,7 @@ class AwaitableWrapper(_AwaitableWrapper[_T_co]):
             ...     return await (
             ...         AwaitableWrapper
             ...         .construct(21)
-            ...         .tap_to_awaitable_sequence(duplicate_with_log_async)
+            ...         .tap_to_awaitable_tuple(duplicate_with_log_async)
             ...         .core_as_coroutine
             ...     )
             ...
@@ -4368,7 +4368,7 @@ class AwaitableWrapper(_AwaitableWrapper[_T_co]):
         """
         return AwaitableTupleWrapper.construct_from_awaitable(
             self.core
-        ).tap_to_awaitable_sequence(f)
+        ).tap_to_awaitable_tuple(f)
 
     def tap_to_result(
         self, f: Callable[[_T_co], Result[_F, object]]
@@ -7397,7 +7397,7 @@ class TupleWrapper(_Wrapper[tuple[_T_co, ...]]):
             self.core
         ).map_successes_to_awaitable_result_sequence(f)
 
-    def map_to_awaitable_sequence(
+    def map_to_awaitable_tuple(
         self, f: Callable[[_T_co], AwaitableTuple[_T]]
     ) -> AwaitableTupleWrapper[_T]:
         """Apply an asynchronous function returning a homogeneous [tuple][]
@@ -7423,7 +7423,7 @@ class TupleWrapper(_Wrapper[tuple[_T_co, ...]]):
             ...     return await (
             ...         TupleWrapper
             ...         .construct_from_tuple((1, 2))
-            ...         .map_to_awaitable_sequence(duplicate)
+            ...         .map_to_awaitable_tuple(duplicate)
             ...         .core_as_coroutine
             ...     )
             ...
@@ -7432,7 +7432,7 @@ class TupleWrapper(_Wrapper[tuple[_T_co, ...]]):
         """
         return AwaitableTupleWrapper.construct_from_tuple(
             self.core
-        ).map_to_awaitable_sequence(f)
+        ).map_to_awaitable_tuple(f)
 
     def map_to_result(
         self, f: Callable[[_T_co], Result[_F, _S]]
@@ -7710,7 +7710,7 @@ class TupleWrapper(_Wrapper[tuple[_T_co, ...]]):
             self.core
         ).tap_successes_to_awaitable_result_sequence(f)
 
-    def tap_to_awaitable_sequence(
+    def tap_to_awaitable_tuple(
         self, f: Callable[[_T_co], AwaitableTuple[object]]
     ) -> AwaitableTupleWrapper[_T_co]:
         """Apply an asynchronous side effect returning a homogeneous [tuple][]
@@ -7737,7 +7737,7 @@ class TupleWrapper(_Wrapper[tuple[_T_co, ...]]):
             ...     return await (
             ...         TupleWrapper
             ...         .construct_from_tuple((1, 2, 3))
-            ...         .tap_to_awaitable_sequence(write_to_disk)
+            ...         .tap_to_awaitable_tuple(write_to_disk)
             ...         .core_as_coroutine
             ...     )
             ...
@@ -7749,7 +7749,7 @@ class TupleWrapper(_Wrapper[tuple[_T_co, ...]]):
         """
         return AwaitableTupleWrapper.construct_from_tuple(
             self.core
-        ).tap_to_awaitable_sequence(f)
+        ).tap_to_awaitable_tuple(f)
 
     def tap_to_result(
         self, f: Callable[[_T_co], Result[_F, object]]
@@ -8023,7 +8023,7 @@ class Wrapper(_Wrapper[_T_co]):
         """
         return AwaitableResultTupleWrapper(f(self.core))
 
-    def map_to_awaitable_sequence(
+    def map_to_awaitable_tuple(
         self, f: Callable[[_T_co], AwaitableTuple[_T]]
     ) -> AwaitableTupleWrapper[_T]:
         """Apply an asynchronous function returning a homogeneous [tuple][]
@@ -8047,7 +8047,7 @@ class Wrapper(_Wrapper[_T_co]):
             ...
             >>> async def main() -> tuple[int, ...]:
             ...     awaitable_sequence_wrapper = (
-            ...         Wrapper.construct(7).map_to_awaitable_sequence(duplicate)
+            ...         Wrapper.construct(7).map_to_awaitable_tuple(duplicate)
             ...     )
             ...     sequence = await awaitable_sequence_wrapper.core_as_coroutine
             ...     assert len(sequence) == 2
@@ -8271,7 +8271,7 @@ class Wrapper(_Wrapper[_T_co]):
             self.core
         ).tap_successes_to_awaitable_result_sequence(f)
 
-    def tap_to_awaitable_sequence(
+    def tap_to_awaitable_tuple(
         self, f: Callable[[_T_co], AwaitableTuple[object]]
     ) -> AwaitableTupleWrapper[_T_co]:
         """Apply an asynchronous side effect returning a homogeneous [tuple][]
@@ -8296,12 +8296,12 @@ class Wrapper(_Wrapper[_T_co]):
             ...
             >>> awaitable_sequence_wrapper = Wrapper.construct(
             ...     3
-            ... ).tap_to_awaitable_sequence(write_to_disk)
+            ... ).tap_to_awaitable_tuple(write_to_disk)
             >>> asyncio.run(awaitable_sequence_wrapper.core_as_coroutine)
             Wrote 3 to disk.
             (3, 3)
         """
-        return AwaitableTupleWrapper.construct(self.core).tap_to_awaitable_sequence(f)
+        return AwaitableTupleWrapper.construct(self.core).tap_to_awaitable_tuple(f)
 
     def tap_to_result(
         self, f: Callable[[_T_co], Result[_F, object]]

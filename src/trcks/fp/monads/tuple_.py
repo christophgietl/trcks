@@ -14,7 +14,7 @@ Example:
     >>> def log_integer(n: int) -> None:
     ...     print(f"Received: {n}")
     ...
-    >>> sequence = pipe(
+    >>> tpl = pipe(
     ...     (
     ...         (1, 2, 3),
     ...         t.map_(double_integer),
@@ -24,21 +24,21 @@ Example:
     Received: 2
     Received: 4
     Received: 6
-    >>> sequence
+    >>> tpl
     (2, 4, 6)
 
-    Map each element to a sequence and flatten the result:
+    Map each element to a homogeneous tuple and flatten the result:
 
     >>> def duplicate_integer(n: int) -> tuple[int, int]:
     ...     return (n, n)
     ...
-    >>> sequence = pipe(
+    >>> tpl = pipe(
     ...     (
     ...         (1, 2, 3),
     ...         t.map_to_tuple(duplicate_integer),
     ...     )
     ... )
-    >>> sequence
+    >>> tpl
     (1, 1, 2, 2, 3, 3)
 """
 

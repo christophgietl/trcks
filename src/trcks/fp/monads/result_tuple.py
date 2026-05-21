@@ -648,13 +648,13 @@ def tap_successes(
         >>> log_integers: Callable[
         ...     [ResultTuple[str, int]], ResultTuple[str, int]
         ... ] = rs.tap_successes(_log_integer)
-        >>> r_seq_1 = log_integers(("success", (1, 2)))
+        >>> r_tpl_1 = log_integers(("success", (1, 2)))
         Received: 1
         Received: 2
-        >>> r_seq_1
+        >>> r_tpl_1
         ('success', (1, 2))
-        >>> r_seq_2 = log_integers(("failure", "oops"))
-        >>> r_seq_2
+        >>> r_tpl_2 = log_integers(("failure", "oops"))
+        >>> r_tpl_2
         ('failure', 'oops')
     """
     return r.map_success(s.tap(f))
