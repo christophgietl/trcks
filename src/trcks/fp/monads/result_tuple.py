@@ -401,17 +401,17 @@ def map_successes_to_result_tuple(
     """
 
     def partially_mapped_f(s1s: tuple[_S1, ...]) -> ResultTuple[_F2, _S2]:
-        s2s: tuple[_S2, ...] = ()
+        s2s_list: list[_S2] = []
         for s1 in s1s:
             rs = f(s1)
             match rs[0]:
                 case "failure":
                     return rs
                 case "success":
-                    s2s = (*s2s, *rs[1])
+                    s2s_list.extend(rs[1])
                 case _:  # pragma: no cover
                     return assert_never(rs[0])  # type: ignore[unreachable]  # pyright: ignore[reportUnreachable]
-        return "success", s2s
+        return "success", tuple(s2s_list)
 
     def mapped_f(rs: ResultTuple[_F1, _S1]) -> ResultTuple[_F1 | _F2, _S2]:
         match rs[0]:
