@@ -1,15 +1,14 @@
 """Monadic functions for [trcks.AwaitableTuple][].
 
 Provides utilities for functional composition of
-asynchronous homogeneous [tuple][]-returning functions.
+asynchronous homogeneous-[tuple][]-returning functions.
 
 Example:
-    Map and tap over an awaitable sequence:
+    Map and tap over an awaitable homogeneous tuple:
 
     >>> import asyncio
-    >>> from collections.abc import Sequence
     >>> from trcks.fp.composition import pipe
-    >>> from trcks.fp.monads import awaitable_tuple as as_
+    >>> from trcks.fp.monads import awaitable_tuple as at
     >>> def double_integer(n: int) -> int:
     ...     return n * 2
     ...
@@ -19,25 +18,24 @@ Example:
     >>> async def main() -> tuple[int, ...]:
     ...     return await pipe(
     ...         (
-    ...             as_.construct_from_tuple((4, 2, 0)),
-    ...             as_.map_(double_integer),
-    ...             as_.tap(log_integer),
+    ...             at.construct_from_tuple((4, 2, 0)),
+    ...             at.map_(double_integer),
+    ...             at.tap(log_integer),
     ...         )
     ...     )
     ...
-    >>> sequence = asyncio.run(main())
+    >>> tpl = asyncio.run(main())
     Received: 8
     Received: 4
     Received: 0
-    >>> sequence
+    >>> tpl
     (8, 4, 0)
 
-    Map each element to an awaitable sequence and flatten the result:
+    Map each element to an awaitable homogeneous tuple and flatten the result:
 
     >>> import asyncio
-    >>> from collections.abc import Sequence
     >>> from trcks.fp.composition import pipe
-    >>> from trcks.fp.monads import awaitable_tuple as as_
+    >>> from trcks.fp.monads import awaitable_tuple as at
     >>> async def slowly_duplicate_integer(n: int) -> tuple[int, int]:
     ...     await asyncio.sleep(0.001)
     ...     return n, n
@@ -45,8 +43,8 @@ Example:
     >>> async def main() -> tuple[int, ...]:
     ...     return await pipe(
     ...         (
-    ...             as_.construct_from_tuple((1, 2, 3)),
-    ...             as_.map_to_awaitable_sequence(slowly_duplicate_integer),
+    ...             at.construct_from_tuple((1, 2, 3)),
+    ...             at.map_to_awaitable_sequence(slowly_duplicate_integer),
     ...         )
     ...     )
     ...
@@ -61,7 +59,7 @@ from typing import TYPE_CHECKING
 from trcks._typing import TypeVar
 from trcks.fp.composition import compose2
 from trcks.fp.monads import awaitable as a
-from trcks.fp.monads import tuple_ as s
+from trcks.fp.monads import tuple_ as t
 
 if TYPE_CHECKING:  # pragma: no cover
     from collections.abc import Awaitable, Callable
@@ -87,12 +85,12 @@ def construct(value: _T) -> AwaitableTuple[_T]:
     Example:
         >>> import asyncio
         >>> from trcks import AwaitableTuple
-        >>> from trcks.fp.monads import awaitable_tuple as as_
-        >>> a_seq: AwaitableTuple[int] = as_.construct(42)
-        >>> asyncio.run(as_.to_coroutine_tuple(a_seq))
+        >>> from trcks.fp.monads import awaitable_tuple as at
+        >>> a_tpl: AwaitableTuple[int] = at.construct(42)
+        >>> asyncio.run(at.to_coroutine_tuple(a_tpl))
         (42,)
     """
-    return a.construct(s.construct(value))
+    return a.construct(t.construct(value))
 
 
 def construct_from_awaitable(awtbl: Awaitable[_T]) -> AwaitableTuple[_T]:
@@ -109,31 +107,31 @@ def construct_from_awaitable(awtbl: Awaitable[_T]) -> AwaitableTuple[_T]:
         >>> from collections.abc import Awaitable
         >>> from trcks import AwaitableTuple
         >>> from trcks.fp.monads import awaitable as a
-        >>> from trcks.fp.monads import awaitable_tuple as as_
+        >>> from trcks.fp.monads import awaitable_tuple as at
         >>> awtbl: Awaitable[int] = a.construct(7)
-        >>> a_seq: AwaitableTuple[int] = as_.construct_from_awaitable(awtbl)
-        >>> asyncio.run(as_.to_coroutine_tuple(a_seq))
+        >>> a_tpl: AwaitableTuple[int] = at.construct_from_awaitable(awtbl)
+        >>> asyncio.run(at.to_coroutine_tuple(a_tpl))
         (7,)
     """
-    return a.map_(s.construct)(awtbl)
+    return a.map_(t.construct)(awtbl)
 
 
 def construct_from_tuple(seq: tuple[_T, ...]) -> AwaitableTuple[_T]:
-    """Create a [trcks.AwaitableTuple][] from a sequence.
+    """Create a [trcks.AwaitableTuple][] from a homogeneous tuple.
 
     Args:
-        seq: The sequence to create
+        seq: The homogeneous tuple to create
             the [trcks.AwaitableTuple][] from.
 
     Returns:
-        The [trcks.AwaitableTuple][] created from the sequence.
+        The [trcks.AwaitableTuple][] created from the homogeneous tuple.
 
     Example:
         >>> import asyncio
         >>> from trcks import AwaitableTuple
-        >>> from trcks.fp.monads import awaitable_tuple as as_
-        >>> a_seq: AwaitableTuple[int] = as_.construct_from_tuple((1, 2))
-        >>> asyncio.run(as_.to_coroutine_tuple(a_seq))
+        >>> from trcks.fp.monads import awaitable_tuple as at
+        >>> a_tpl: AwaitableTuple[int] = at.construct_from_tuple((1, 2))
+        >>> asyncio.run(at.to_coroutine_tuple(a_tpl))
         (1, 2)
     """
     return a.construct(seq)
@@ -163,22 +161,21 @@ def map_(
 
     Example:
         >>> import asyncio
-        >>> from collections.abc import Sequence
         >>> from trcks.fp.composition import pipe
-        >>> from trcks.fp.monads import awaitable_tuple as as_
+        >>> from trcks.fp.monads import awaitable_tuple as at
         >>> def double_integer(n: int) -> int:
         ...     return n * 2
         >>> async def main() -> tuple[int, ...]:
         ...     return await pipe(
         ...         (
-        ...             as_.construct_from_tuple((1, 2, 3)),
-        ...             as_.map_(double_integer),
+        ...             at.construct_from_tuple((1, 2, 3)),
+        ...             at.map_(double_integer),
         ...         )
         ...     )
         >>> asyncio.run(main())
         (2, 4, 6)
     """
-    return a.map_(s.map_(f))
+    return a.map_(t.map_(f))
 
 
 def map_to_awaitable(
@@ -201,17 +198,16 @@ def map_to_awaitable(
 
     Example:
         >>> import asyncio
-        >>> from collections.abc import Sequence
         >>> from trcks.fp.composition import pipe
-        >>> from trcks.fp.monads import awaitable_tuple as as_
+        >>> from trcks.fp.monads import awaitable_tuple as at
         >>> async def slowly_add_one(n: int) -> int:
         ...     await asyncio.sleep(0.001)
         ...     return n + 1
         >>> async def main() -> tuple[int, ...]:
         ...     return await pipe(
         ...         (
-        ...             as_.construct_from_tuple((1, 2)),
-        ...             as_.map_to_awaitable(slowly_add_one),
+        ...             at.construct_from_tuple((1, 2)),
+        ...             at.map_to_awaitable(slowly_add_one),
         ...         )
         ...     )
         >>> asyncio.run(main())
@@ -240,17 +236,16 @@ def map_to_awaitable_sequence(
 
     Example:
         >>> import asyncio
-        >>> from collections.abc import Sequence
         >>> from trcks.fp.composition import pipe
-        >>> from trcks.fp.monads import awaitable_tuple as as_
+        >>> from trcks.fp.monads import awaitable_tuple as at
         >>> async def slowly_duplicate_integer(n: int) -> tuple[int, int]:
         ...     await asyncio.sleep(0.001)
         ...     return n, n
         >>> async def main() -> tuple[int, ...]:
         ...     return await pipe(
         ...         (
-        ...             as_.construct_from_tuple((1, 2)),
-        ...             as_.map_to_awaitable_sequence(slowly_duplicate_integer),
+        ...             at.construct_from_tuple((1, 2)),
+        ...             at.map_to_awaitable_sequence(slowly_duplicate_integer),
         ...         )
         ...     )
         >>> asyncio.run(main())
@@ -266,13 +261,13 @@ def map_to_awaitable_sequence(
 def map_to_tuple(
     f: Callable[[_T1], tuple[_T2, ...]],
 ) -> Callable[[AwaitableTuple[_T1]], AwaitableTuple[_T2]]:
-    """Turn sequence-returning function into a function
+    """Turn homogeneous-[tuple][]-returning function into a function
     expecting and returning [trcks.AwaitableTuple][]s
     of varying length.
 
     Args:
         f:
-            The sequence-returning function to be transformed
+            The homogeneous-[tuple][]-returning function to be transformed
             into a function expecting and returning
             [trcks.AwaitableTuple][]s of varying length.
 
@@ -283,22 +278,21 @@ def map_to_tuple(
 
     Example:
         >>> import asyncio
-        >>> from collections.abc import Sequence
         >>> from trcks.fp.composition import pipe
-        >>> from trcks.fp.monads import awaitable_tuple as as_
+        >>> from trcks.fp.monads import awaitable_tuple as at
         >>> def add_negative(n: int) -> tuple[int, int]:
         ...     return n, -n
         >>> async def main() -> tuple[int, ...]:
         ...     return await pipe(
         ...         (
-        ...             as_.construct_from_tuple((1, 2)),
-        ...             as_.map_to_tuple(add_negative),
+        ...             at.construct_from_tuple((1, 2)),
+        ...             at.map_to_tuple(add_negative),
         ...         )
         ...     )
         >>> asyncio.run(main())
         (1, -1, 2, -2)
     """
-    return a.map_(s.map_to_tuple(f))
+    return a.map_(t.map_to_tuple(f))
 
 
 def tap(
@@ -321,26 +315,25 @@ def tap(
 
     Example:
         >>> import asyncio
-        >>> from collections.abc import Sequence
         >>> from trcks.fp.composition import pipe
-        >>> from trcks.fp.monads import awaitable_tuple as as_
+        >>> from trcks.fp.monads import awaitable_tuple as at
         >>> def log_integer(n: int) -> None:
         ...     print(f"Received: {n}")
         ...
         >>> async def main() -> tuple[int, ...]:
         ...     return await pipe(
         ...         (
-        ...             as_.construct_from_tuple((1, 2)),
-        ...             as_.tap(log_integer),
+        ...             at.construct_from_tuple((1, 2)),
+        ...             at.tap(log_integer),
         ...         )
         ...     )
-        >>> sequence = asyncio.run(main())
+        >>> tpl = asyncio.run(main())
         Received: 1
         Received: 2
-        >>> sequence
+        >>> tpl
         (1, 2)
     """
-    return a.map_(s.tap(f))
+    return a.map_(t.tap(f))
 
 
 def tap_to_awaitable(
@@ -363,23 +356,22 @@ def tap_to_awaitable(
 
     Example:
         >>> import asyncio
-        >>> from collections.abc import Sequence
         >>> from trcks.fp.composition import pipe
-        >>> from trcks.fp.monads import awaitable_tuple as as_
+        >>> from trcks.fp.monads import awaitable_tuple as at
         >>> async def slowly_log_integer(n: int) -> None:
         ...     await asyncio.sleep(0.001)
         ...     print(f"Received: {n}")
         >>> async def main() -> tuple[int, ...]:
         ...     return await pipe(
         ...         (
-        ...             as_.construct_from_tuple((1, 2)),
-        ...             as_.tap_to_awaitable(slowly_log_integer),
+        ...             at.construct_from_tuple((1, 2)),
+        ...             at.tap_to_awaitable(slowly_log_integer),
         ...         )
         ...     )
-        >>> sequence = asyncio.run(main())
+        >>> tpl = asyncio.run(main())
         Received: 1
         Received: 2
-        >>> sequence
+        >>> tpl
         (1, 2)
     """
 
@@ -410,9 +402,8 @@ def tap_to_awaitable_sequence(
 
     Example:
         >>> import asyncio
-        >>> from collections.abc import Sequence
         >>> from trcks.fp.composition import pipe
-        >>> from trcks.fp.monads import awaitable_tuple as as_
+        >>> from trcks.fp.monads import awaitable_tuple as at
         >>> async def slowly_get_divisors(n: int) -> tuple[int, ...]:
         ...     await asyncio.sleep(0.001)
         ...     candidates = range(1, n + 1)
@@ -420,8 +411,8 @@ def tap_to_awaitable_sequence(
         >>> async def main() -> tuple[int, ...]:
         ...     return await pipe(
         ...         (
-        ...             as_.construct_from_tuple((1, 2, 3, 4)),
-        ...             as_.tap_to_awaitable_sequence(slowly_get_divisors),
+        ...             at.construct_from_tuple((1, 2, 3, 4)),
+        ...             at.tap_to_awaitable_sequence(slowly_get_divisors),
         ...         )
         ...     )
         >>> asyncio.run(main())
@@ -438,13 +429,13 @@ def tap_to_awaitable_sequence(
 def tap_to_tuple(
     f: Callable[[_T1], tuple[object, ...]],
 ) -> Callable[[AwaitableTuple[_T1]], AwaitableTuple[_T1]]:
-    """Turn sequence-returning function into a function
+    """Turn homogeneous-[tuple][]-returning function into a function
     expecting a [trcks.AwaitableTuple][] and
     returning the same [trcks.AwaitableTuple][].
 
     Args:
         f:
-            The sequence-returning function to be transformed
+            The homogeneous-[tuple][]-returning function to be transformed
             into a function expecting a [trcks.AwaitableTuple][] and
             returning the same [trcks.AwaitableTuple][].
 
@@ -455,23 +446,22 @@ def tap_to_tuple(
 
     Example:
         >>> import asyncio
-        >>> from collections.abc import Sequence
         >>> from trcks.fp.composition import pipe
-        >>> from trcks.fp.monads import awaitable_tuple as as_
+        >>> from trcks.fp.monads import awaitable_tuple as at
         >>> def get_divisors(n: int) -> tuple[int, ...]:
         ...     candidates = range(1, n + 1)
         ...     return tuple(c for c in candidates if n % c == 0)
         >>> async def main() -> tuple[int, ...]:
         ...     return await pipe(
         ...         (
-        ...             as_.construct_from_tuple((1, 2, 3, 4)),
-        ...             as_.tap_to_tuple(get_divisors),
+        ...             at.construct_from_tuple((1, 2, 3, 4)),
+        ...             at.tap_to_tuple(get_divisors),
         ...         )
         ...     )
         >>> asyncio.run(main())
         (1, 2, 2, 3, 3, 4, 4, 4)
     """
-    return a.map_(s.tap_to_tuple(f))
+    return a.map_(t.tap_to_tuple(f))
 
 
 async def to_coroutine_tuple(a_seq: AwaitableTuple[_T]) -> tuple[_T, ...]:
@@ -495,9 +485,9 @@ async def to_coroutine_tuple(a_seq: AwaitableTuple[_T]) -> tuple[_T, ...]:
     Example:
         >>> import asyncio
         >>> from trcks import AwaitableTuple
-        >>> from trcks.fp.monads import awaitable_tuple as as_
-        >>> a_seq: AwaitableTuple[int] = as_.construct_from_tuple((3, 4))
-        >>> asyncio.run(as_.to_coroutine_tuple(a_seq))
+        >>> from trcks.fp.monads import awaitable_tuple as at
+        >>> a_tpl: AwaitableTuple[int] = at.construct_from_tuple((3, 4))
+        >>> asyncio.run(at.to_coroutine_tuple(a_tpl))
         (3, 4)
     """
     return await a_seq
