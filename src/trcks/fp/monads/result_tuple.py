@@ -4,10 +4,10 @@ Provides utilities for functional composition of
 functions returning [trcks.ResultTuple][] values.
 
 Example:
-    Map and tap each element inside a success homogeneous tuple:
+    Map and tap each element inside a success tuple:
 
     >>> from trcks.fp.composition import pipe
-    >>> from trcks.fp.monads import result_tuple as rs
+    >>> from trcks.fp.monads import result_tuple as rt
     >>> def double_integer(n: int) -> int:
     ...     return n * 2
     ...
@@ -19,10 +19,10 @@ Example:
     ...
     >>> result_tuple = pipe(
     ...     (
-    ...         rs.construct_successes_from_tuple((1, 2, 3)),
-    ...         rs.map_successes(double_integer),
-    ...         rs.tap_successes(log_integer),
-    ...         rs.map_successes_to_tuple(duplicate_integer),
+    ...         rt.construct_successes_from_tuple((1, 2, 3)),
+    ...         rt.map_successes(double_integer),
+    ...         rt.tap_successes(log_integer),
+    ...         rt.map_successes_to_tuple(duplicate_integer),
     ...     )
     ... )
     Received: 2
@@ -70,8 +70,8 @@ def construct_failure(value: _F) -> Failure[_F]:
         [trcks.fp.monads.result.construct_failure][].
 
     Example:
-        >>> from trcks.fp.monads import result_tuple as rs
-        >>> rs.construct_failure("not found")
+        >>> from trcks.fp.monads import result_tuple as rt
+        >>> rt.construct_failure("not found")
         ('failure', 'not found')
     """
     return r.construct_failure(value)
@@ -88,10 +88,10 @@ def construct_from_result(rslt: Result[_F, _S]) -> ResultTuple[_F, _S]:
             wrapped in a homogeneous tuple.
 
     Example:
-        >>> from trcks.fp.monads import result_tuple as rs
-        >>> rs.construct_from_result(("success", 7))
+        >>> from trcks.fp.monads import result_tuple as rt
+        >>> rt.construct_from_result(("success", 7))
         ('success', (7,))
-        >>> rs.construct_from_result(("failure", "oops"))
+        >>> rt.construct_from_result(("failure", "oops"))
         ('failure', 'oops')
     """
     return r.map_success(t.construct)(rslt)
@@ -107,8 +107,8 @@ def construct_successes(value: _S) -> SuccessTuple[_S]:
         A new [trcks.SuccessTuple][] instance containing the single value.
 
     Example:
-        >>> from trcks.fp.monads import result_tuple as rs
-        >>> rs.construct_successes(42)
+        >>> from trcks.fp.monads import result_tuple as rt
+        >>> rt.construct_successes(42)
         ('success', (42,))
     """
     return r.construct_success(t.construct(value))
@@ -124,8 +124,8 @@ def construct_successes_from_tuple(tpl: tuple[_S, ...]) -> SuccessTuple[_S]:
         A new [trcks.SuccessTuple][] instance containing the given homogeneous tuple.
 
     Example:
-        >>> from trcks.fp.monads import result_tuple as rs
-        >>> rs.construct_successes_from_tuple((1, 2))
+        >>> from trcks.fp.monads import result_tuple as rt
+        >>> rt.construct_successes_from_tuple((1, 2))
         ('success', (1, 2))
     """
     return r.construct_success(tpl)
@@ -149,13 +149,13 @@ def map_failure(
     Example:
         >>> from collections.abc import Callable
         >>> from trcks import ResultTuple
-        >>> from trcks.fp.monads import result_tuple as rs
+        >>> from trcks.fp.monads import result_tuple as rt
         >>> def _add_prefix(description: str) -> str:
         ...     return f"err: {description}"
         ...
         >>> add_prefix: Callable[
         ...     [ResultTuple[str, int]], ResultTuple[str, int]
-        ... ] = rs.map_failure(_add_prefix)
+        ... ] = rt.map_failure(_add_prefix)
         >>> add_prefix(("failure", "not found"))
         ('failure', 'err: not found')
         >>> add_prefix(("success", (1, 2)))
@@ -183,7 +183,7 @@ def map_failure_to_result(
     Example:
         >>> from collections.abc import Callable
         >>> from trcks import ResultTuple
-        >>> from trcks.fp.monads import result_tuple as rs
+        >>> from trcks.fp.monads import result_tuple as rt
         >>> def _recover_from_not_found(description: str) -> Result[str, int]:
         ...     if description == "not found":
         ...         return "success", 0
@@ -191,7 +191,7 @@ def map_failure_to_result(
         ...
         >>> recover_from_not_found: Callable[
         ...     [ResultTuple[str, int]], ResultTuple[str, int]
-        ... ] = rs.map_failure_to_result(_recover_from_not_found)
+        ... ] = rt.map_failure_to_result(_recover_from_not_found)
         >>> recover_from_not_found(("failure", "not found"))
         ('success', (0,))
         >>> recover_from_not_found(("failure", "not authorized"))
@@ -221,7 +221,7 @@ def map_failure_to_result_tuple(
     Example:
         >>> from collections.abc import Callable
         >>> from trcks import ResultTuple
-        >>> from trcks.fp.monads import result_tuple as rs
+        >>> from trcks.fp.monads import result_tuple as rt
         >>> def _recover_from_not_found(description: str) -> ResultTuple[str, int]:
         ...     if description == "not found":
         ...         return "success", (0,)
@@ -229,7 +229,7 @@ def map_failure_to_result_tuple(
         ...
         >>> recover_from_not_found: Callable[
         ...     [ResultTuple[str, int]], ResultTuple[str, int]
-        ... ] = rs.map_failure_to_result_tuple(_recover_from_not_found)
+        ... ] = rt.map_failure_to_result_tuple(_recover_from_not_found)
         >>> recover_from_not_found(("failure", "not found"))
         ('success', (0,))
         >>> recover_from_not_found(("failure", "not authorized"))
@@ -259,7 +259,7 @@ def map_failure_to_tuple(
     Example:
         >>> from collections.abc import Callable
         >>> from trcks import ResultTuple, SuccessTuple
-        >>> from trcks.fp.monads import result_tuple as rs
+        >>> from trcks.fp.monads import result_tuple as rt
         >>> def _recover(description: str) -> tuple[int, ...]:
         ...     if description == "not found":
         ...         return (0,)
@@ -267,7 +267,7 @@ def map_failure_to_tuple(
         ...
         >>> recover: Callable[
         ...     [ResultTuple[str, int]], SuccessTuple[int]
-        ... ] = rs.map_failure_to_tuple(_recover)
+        ... ] = rt.map_failure_to_tuple(_recover)
         >>> recover(("failure", "not found"))
         ('success', (0,))
         >>> recover(("failure", "not authorized"))
@@ -277,15 +277,15 @@ def map_failure_to_tuple(
     """
 
     def mapped_f(
-        rs: ResultTuple[_F1, _S1],
+        r_tpl: ResultTuple[_F1, _S1],
     ) -> SuccessTuple[_S1] | SuccessTuple[_S2]:
-        match rs[0]:
-            case "failure":
-                return "success", f(rs[1])
-            case "success":
-                return rs
+        match r_tpl:
+            case ("failure", f1):
+                return "success", f(f1)
+            case ("success", _):
+                return r_tpl
             case _:  # pragma: no cover
-                return assert_never(rs[0])  # type: ignore[unreachable]  # pyright: ignore[reportUnreachable]
+                return assert_never(r_tpl)  # type: ignore[arg-type]  # pyright: ignore[reportArgumentType]
 
     return mapped_f
 
@@ -309,13 +309,13 @@ def map_successes(
     Example:
         >>> from collections.abc import Callable
         >>> from trcks import ResultTuple
-        >>> from trcks.fp.monads import result_tuple as rs
+        >>> from trcks.fp.monads import result_tuple as rt
         >>> def _double_integer(n: int) -> int:
         ...     return n * 2
         ...
         >>> double_integers: Callable[
         ...     [ResultTuple[str, int]], ResultTuple[str, int]
-        ... ] = rs.map_successes(_double_integer)
+        ... ] = rt.map_successes(_double_integer)
         >>> double_integers(("success", (1, 2, 3)))
         ('success', (2, 4, 6))
         >>> double_integers(("failure", "not found"))
@@ -344,7 +344,7 @@ def map_successes_to_result(
     Example:
         >>> from collections.abc import Callable
         >>> from trcks import Result, ResultTuple
-        >>> from trcks.fp.monads import result_tuple as rs
+        >>> from trcks.fp.monads import result_tuple as rt
         >>> def _double_if_positive(n: int) -> Result[str, int]:
         ...     if n > 0:
         ...         return "success", n * 2
@@ -352,7 +352,7 @@ def map_successes_to_result(
         ...
         >>> double_if_positive: Callable[
         ...     [ResultTuple[str, int]], ResultTuple[str, int]
-        ... ] = rs.map_successes_to_result(_double_if_positive)
+        ... ] = rt.map_successes_to_result(_double_if_positive)
         >>> double_if_positive(("success", (1, 2)))
         ('success', (2, 4))
         >>> double_if_positive(("success", (1, -1, 2)))
@@ -383,7 +383,7 @@ def map_successes_to_result_tuple(
     Example:
         >>> from collections.abc import Callable
         >>> from trcks import ResultTuple
-        >>> from trcks.fp.monads import result_tuple as rs
+        >>> from trcks.fp.monads import result_tuple as rt
         >>> def _duplicate_if_positive(n: int) -> ResultTuple[str, int]:
         ...     if n > 0:
         ...         return "success", (n, n)
@@ -391,7 +391,7 @@ def map_successes_to_result_tuple(
         ...
         >>> duplicate_if_positive: Callable[
         ...     [ResultTuple[str, int]], ResultTuple[str, int]
-        ... ] = rs.map_successes_to_result_tuple(_duplicate_if_positive)
+        ... ] = rt.map_successes_to_result_tuple(_duplicate_if_positive)
         >>> duplicate_if_positive(("success", (1, 2)))
         ('success', (1, 1, 2, 2))
         >>> duplicate_if_positive(("success", (1, -1, 2)))
@@ -401,26 +401,26 @@ def map_successes_to_result_tuple(
     """
 
     def partially_mapped_f(s1s: tuple[_S1, ...]) -> ResultTuple[_F2, _S2]:
-        s2s_list: list[_S2] = []
+        s2s: list[_S2] = []
         for s1 in s1s:
-            rs = f(s1)
-            match rs[0]:
-                case "failure":
-                    return rs
-                case "success":
-                    s2s_list.extend(rs[1])
+            r_tpl = f(s1)
+            match r_tpl:
+                case ("failure", failure_value):
+                    return "failure", failure_value
+                case ("success", next_s2s):
+                    s2s.extend(next_s2s)
                 case _:  # pragma: no cover
-                    return assert_never(rs[0])  # type: ignore[unreachable]  # pyright: ignore[reportUnreachable]
-        return "success", tuple(s2s_list)
+                    return assert_never(r_tpl)  # type: ignore[arg-type]  # pyright: ignore[reportArgumentType]
+        return "success", tuple(s2s)
 
-    def mapped_f(rs: ResultTuple[_F1, _S1]) -> ResultTuple[_F1 | _F2, _S2]:
-        match rs[0]:
-            case "failure":
-                return rs
-            case "success":
-                return partially_mapped_f(rs[1])
+    def mapped_f(r_tpl: ResultTuple[_F1, _S1]) -> ResultTuple[_F1 | _F2, _S2]:
+        match r_tpl:
+            case ("failure", failure_value):
+                return "failure", failure_value
+            case ("success", s1s):
+                return partially_mapped_f(s1s)
             case _:  # pragma: no cover
-                return assert_never(rs[0])  # type: ignore[unreachable]  # pyright: ignore[reportUnreachable]
+                return assert_never(r_tpl)  # type: ignore[arg-type]  # pyright: ignore[reportArgumentType]
 
     return mapped_f
 
@@ -444,13 +444,13 @@ def map_successes_to_tuple(
     Example:
         >>> from collections.abc import Callable
         >>> from trcks import ResultTuple
-        >>> from trcks.fp.monads import result_tuple as rs
+        >>> from trcks.fp.monads import result_tuple as rt
         >>> def _duplicate_integer(n: int) -> tuple[int, int]:
         ...     return n, n
         ...
         >>> duplicate_integers: Callable[
         ...     [ResultTuple[str, int]], ResultTuple[str, int]
-        ... ] = rs.map_successes_to_tuple(_duplicate_integer)
+        ... ] = rt.map_successes_to_tuple(_duplicate_integer)
         >>> duplicate_integers(("success", (1, 2)))
         ('success', (1, 1, 2, 2))
         >>> duplicate_integers(("failure", "not found"))
@@ -477,13 +477,13 @@ def tap_failure(
     Example:
         >>> from collections.abc import Callable
         >>> from trcks import ResultTuple
-        >>> from trcks.fp.monads import result_tuple as rs
+        >>> from trcks.fp.monads import result_tuple as rt
         >>> def _log_error(description: str) -> None:
         ...     print(f"Error: {description}")
         ...
         >>> log_error: Callable[
         ...     [ResultTuple[str, int]], ResultTuple[str, int]
-        ... ] = rs.tap_failure(_log_error)
+        ... ] = rt.tap_failure(_log_error)
         >>> log_error(("failure", "oops"))
         Error: oops
         ('failure', 'oops')
@@ -515,14 +515,14 @@ def tap_failure_to_result(
     Example:
         >>> from collections.abc import Callable
         >>> from trcks import Result, ResultTuple
-        >>> from trcks.fp.monads import result_tuple as rs
+        >>> from trcks.fp.monads import result_tuple as rt
         >>> def _recover_from_not_found(description: str) -> Result[None, int]:
         ...     if description == "not found":
         ...         return "success", 42
         ...     return "failure", None
         >>> recover_from_not_found: Callable[
         ...     [ResultTuple[str, int]], Result[str, tuple[int, ...]]
-        ... ] = rs.tap_failure_to_result(_recover_from_not_found)
+        ... ] = rt.tap_failure_to_result(_recover_from_not_found)
         >>> recover_from_not_found(("failure", "not found"))
         ('success', (42,))
         >>> recover_from_not_found(("failure", "fatal"))
@@ -558,14 +558,14 @@ def tap_failure_to_result_tuple(
     Example:
         >>> from collections.abc import Callable
         >>> from trcks import Result, ResultTuple
-        >>> from trcks.fp.monads import result_tuple as rs
+        >>> from trcks.fp.monads import result_tuple as rt
         >>> def _recover_from_not_found(description: str) -> ResultTuple[None, int]:
         ...     if description == "not found":
         ...         return "success", (42,)
         ...     return "failure", None
         >>> recover_from_not_found: Callable[
         ...     [ResultTuple[str, int]], Result[str, tuple[int, ...]]
-        ... ] = rs.tap_failure_to_result_tuple(_recover_from_not_found)
+        ... ] = rt.tap_failure_to_result_tuple(_recover_from_not_found)
         >>> recover_from_not_found(("failure", "not found"))
         ('success', (42,))
         >>> recover_from_not_found(("failure", "fatal"))
@@ -597,7 +597,7 @@ def tap_failure_to_tuple(
     Example:
         >>> from collections.abc import Callable
         >>> from trcks import ResultTuple, SuccessTuple
-        >>> from trcks.fp.monads import result_tuple as rs
+        >>> from trcks.fp.monads import result_tuple as rt
         >>> def _log_and_alert(description: str) -> tuple[None, None]:
         ...     return (
         ...         print(f"Error logged: {description}"),
@@ -607,7 +607,7 @@ def tap_failure_to_tuple(
         >>> log_and_alert: Callable[
         ...     [ResultTuple[str, int]],
         ...     SuccessTuple[str] | SuccessTuple[int],
-        ... ] = rs.tap_failure_to_tuple(_log_and_alert)
+        ... ] = rt.tap_failure_to_tuple(_log_and_alert)
         >>> log_and_alert(("failure", "critical"))
         Error logged: critical
         Alert sent: critical
@@ -642,13 +642,13 @@ def tap_successes(
     Example:
         >>> from collections.abc import Callable
         >>> from trcks import ResultTuple
-        >>> from trcks.fp.monads import result_tuple as rs
+        >>> from trcks.fp.monads import result_tuple as rt
         >>> def _log_integer(n: int) -> None:
         ...     print(f"Received: {n}")
         ...
         >>> log_integers: Callable[
         ...     [ResultTuple[str, int]], ResultTuple[str, int]
-        ... ] = rs.tap_successes(_log_integer)
+        ... ] = rt.tap_successes(_log_integer)
         >>> r_tpl_1 = log_integers(("success", (1, 2)))
         Received: 1
         Received: 2
@@ -684,7 +684,7 @@ def tap_successes_to_result(
     Example:
         >>> from collections.abc import Callable
         >>> from trcks import Result, ResultTuple
-        >>> from trcks.fp.monads import result_tuple as rs
+        >>> from trcks.fp.monads import result_tuple as rt
         >>> def _validate_positive(n: int) -> Result[str, None]:
         ...     if n > 0:
         ...         return "success", None
@@ -692,7 +692,7 @@ def tap_successes_to_result(
         ...
         >>> validate_positive: Callable[
         ...     [ResultTuple[str, int]], ResultTuple[str, int]
-        ... ] = rs.tap_successes_to_result(_validate_positive)
+        ... ] = rt.tap_successes_to_result(_validate_positive)
         >>> validate_positive(("success", (1, 2)))
         ('success', (1, 2))
         >>> validate_positive(("success", (1, -1, 2)))
@@ -730,7 +730,7 @@ def tap_successes_to_result_tuple(
     Example:
         >>> from collections.abc import Callable
         >>> from trcks import ResultTuple
-        >>> from trcks.fp.monads import result_tuple as rs
+        >>> from trcks.fp.monads import result_tuple as rt
         >>> def _validate_positive_twice(n: int) -> ResultTuple[str, None]:
         ...     if n > 0:
         ...         return "success", (None, None)
@@ -738,7 +738,7 @@ def tap_successes_to_result_tuple(
         ...
         >>> validate_positive_twice: Callable[
         ...     [ResultTuple[str, int]], ResultTuple[str, int]
-        ... ] = rs.tap_successes_to_result_tuple(_validate_positive_twice)
+        ... ] = rt.tap_successes_to_result_tuple(_validate_positive_twice)
         >>> validate_positive_twice(("success", (7,)))
         ('success', (7, 7))
         >>> validate_positive_twice(("success", (1, -1)))
@@ -746,14 +746,14 @@ def tap_successes_to_result_tuple(
     """
 
     def tapped_f(s1: _S1) -> ResultTuple[_F2, _S1]:
-        rs = f(s1)
-        match rs[0]:
-            case "failure":
-                return rs
-            case "success":
-                return "success", tuple(s1 for _s2 in rs[1])
+        r_tpl = f(s1)
+        match r_tpl:
+            case ("failure", failure_value):
+                return "failure", failure_value
+            case ("success", s2s):
+                return "success", tuple(s1 for _s2 in s2s)
             case _:  # pragma: no cover
-                return assert_never(rs[0])  # type: ignore[unreachable] # pyright: ignore[reportUnreachable]
+                return assert_never(r_tpl)  # type: ignore[arg-type] # pyright: ignore[reportArgumentType]
 
     return map_successes_to_result_tuple(tapped_f)
 
@@ -779,13 +779,13 @@ def tap_successes_to_tuple(
     Example:
         >>> from collections.abc import Callable
         >>> from trcks import ResultTuple
-        >>> from trcks.fp.monads import result_tuple as rs
+        >>> from trcks.fp.monads import result_tuple as rt
         >>> def _log_twice(n: int) -> tuple[None, None]:
         ...     return print(f"Received: {n}"), print(f"Received: {n}")
         ...
         >>> log_twice: Callable[
         ...     [ResultTuple[str, int]], ResultTuple[str, int]
-        ... ] = rs.tap_successes_to_tuple(_log_twice)
+        ... ] = rt.tap_successes_to_tuple(_log_twice)
         >>> log_twice(("success", (7,)))
         Received: 7
         Received: 7
