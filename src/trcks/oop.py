@@ -8049,9 +8049,9 @@ class Wrapper(_Wrapper[_T_co]):
             ...     awaitable_tuple_wrapper = (
             ...         Wrapper.construct(7).map_to_awaitable_tuple(duplicate)
             ...     )
-            ...     tuple = await awaitable_tuple_wrapper.core_as_coroutine
-            ...     assert len(tuple) == 2
-            ...     return tuple
+            ...     result_tuple = await awaitable_tuple_wrapper.core_as_coroutine
+            ...     assert len(result_tuple) == 2
+            ...     return result_tuple
             ...
             >>> asyncio.run(main())
             (7, 7)
