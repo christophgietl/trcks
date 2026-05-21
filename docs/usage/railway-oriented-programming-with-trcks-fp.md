@@ -634,11 +634,11 @@ the original success value is preserved:
 
     ```
 
-## Synchronous single-track code for a sequence with [trcks.fp.composition][] and [trcks.fp.monads.tuple][]
+## Synchronous single-track code for a sequence with [trcks.fp.composition][] and [trcks.fp.monads.tuple_][]
 
 If we want to apply a pipeline of functions to each element
 in a [collections.abc.Sequence][],
-the module [trcks.fp.monads.tuple][] provides
+the module [trcks.fp.monads.tuple_][] provides
 some higher-order functions named `map_*` and `tap`
 that turn element-wise functions into functions
 operating on entire sequences.
@@ -647,7 +647,7 @@ operating on entire sequences.
 
     ```pycon
     >>> from collections.abc import Sequence
-    >>> from trcks.fp.monads import tuple as s
+    >>> from trcks.fp.monads import tuple_ as s
     >>>
     >>> def normalize_email(email: str) -> str:
     ...     return email.strip().lower()
@@ -704,7 +704,7 @@ let us have a look at the individual steps of the chain:
     ```
 
 ???+ note
-    The higher-order function [trcks.fp.monads.tuple.map_to_tuple][]
+    The higher-order function [trcks.fp.monads.tuple_.map_to_tuple][]
     applies a function that returns a [collections.abc.Sequence][]
     to each element and flattens the results (like a "flat map"):
 
@@ -719,7 +719,7 @@ let us have a look at the individual steps of the chain:
 
     ```
 
-The higher-order function [trcks.fp.monads.tuple.tap][]
+The higher-order function [trcks.fp.monads.tuple_.tap][]
 allows us to execute side effects for each element:
 
 ???+ example

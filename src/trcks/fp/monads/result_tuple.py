@@ -39,7 +39,7 @@ from typing import TYPE_CHECKING
 from trcks._typing import TypeVar, assert_never
 from trcks.fp.composition import compose2
 from trcks.fp.monads import result as r
-from trcks.fp.monads import tuple as s
+from trcks.fp.monads import tuple_ as s
 
 if TYPE_CHECKING:  # pragma: no cover
     from collections.abc import Callable

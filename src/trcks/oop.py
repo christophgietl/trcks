@@ -94,7 +94,7 @@ from trcks.fp.monads import awaitable_tuple as as_
 from trcks.fp.monads import identity as i
 from trcks.fp.monads import result as r
 from trcks.fp.monads import result_tuple as rs
-from trcks.fp.monads import tuple as s
+from trcks.fp.monads import tuple_ as s
 
 __docformat__ = "google"
 

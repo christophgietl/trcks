@@ -61,7 +61,7 @@ from typing import TYPE_CHECKING
 from trcks._typing import TypeVar
 from trcks.fp.composition import compose2
 from trcks.fp.monads import awaitable as a
-from trcks.fp.monads import tuple as s
+from trcks.fp.monads import tuple_ as s
 
 if TYPE_CHECKING:  # pragma: no cover
     from collections.abc import Awaitable, Callable
