@@ -76,6 +76,8 @@ in the following example.
 2. The class `trcks.oop.Wrapper` provides a convenient way to chain
    `trcks.Result`-returning functions and "regular" functions
    (in a type-safe way).
+3. The class `trcks.oop.TupleWrapper` provides the same method-chaining style
+   for mapping and tapping over tuple values.
 
 ### Functional style
 

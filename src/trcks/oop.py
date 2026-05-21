@@ -3,6 +3,7 @@
 This module provides wrapper classes for processing values of the following types
 in a method-chaining style:
 
+- `tuple`
 - [collections.abc.Awaitable][]
 - [trcks.AwaitableResult][]
 - [trcks.Result][]
@@ -2634,3 +2635,102 @@ class Wrapper(_Wrapper[_T_co]):
             ResultWrapper(core=('success', 3.5))
         """
         return ResultWrapper.construct_success(self.core).tap_success_to_result(f)
+
+
+class TupleWrapper(_Wrapper[tuple[_T_co, ...]]):
+    """Type-safe and immutable wrapper for `tuple` objects.
+
+    The wrapped tuple can be accessed via the attribute `trcks.oop.TupleWrapper.core`.
+    The `trcks.oop.TupleWrapper.map` method allows method chaining.
+    The `trcks.oop.TupleWrapper.tap` method allows for side effects
+    without changing the wrapped tuple.
+
+    Example:
+        >>> from trcks.oop import TupleWrapper
+        >>> def double(x: int) -> int:
+        ...     return x * 2
+        ...
+        >>> tuple_wrapper = (
+        ...     TupleWrapper
+        ...     .construct_from_tuple((1, 2, 3))
+        ...     .map(double)
+        ...     .tap(lambda x: print(f"Processing: {x}"))
+        ... )
+        Processing: 2
+        Processing: 4
+        Processing: 6
+        >>> tuple_wrapper
+        TupleWrapper(core=(2, 4, 6))
+    """
+
+    @staticmethod
+    def construct(value: _T) -> TupleWrapper[_T]:
+        """Construct and wrap a tuple from a single value.
+
+        Args:
+            value: The value to be wrapped in a tuple.
+
+        Returns:
+            A new [trcks.oop.TupleWrapper][] instance
+                with a tuple containing the given value.
+
+        Example:
+            >>> from trcks.oop import TupleWrapper
+            >>> TupleWrapper.construct(42)
+            TupleWrapper(core=(42,))
+        """
+        return TupleWrapper((value,))
+
+    @staticmethod
+    def construct_from_tuple(tpl: tuple[_T, ...]) -> TupleWrapper[_T]:
+        """Wrap a tuple object.
+
+        Args:
+            tpl: The tuple to be wrapped.
+
+        Returns:
+            A new [trcks.oop.TupleWrapper][] instance with the wrapped tuple.
+
+        Example:
+            >>> from trcks.oop import TupleWrapper
+            >>> TupleWrapper.construct_from_tuple((1, 2, 3))
+            TupleWrapper(core=(1, 2, 3))
+        """
+        return TupleWrapper(tpl)
+
+    def map(self, f: Callable[[_T_co], _T]) -> TupleWrapper[_T]:
+        """Apply a synchronous function to each value of the wrapped tuple.
+
+        Args:
+            f: The synchronous function to be applied to each tuple value.
+
+        Returns:
+            A new [trcks.oop.TupleWrapper][] instance with
+                the mapped tuple.
+
+        Example:
+            >>> from trcks.oop import TupleWrapper
+            >>> TupleWrapper.construct_from_tuple((1, 2, 3)).map(str)
+            TupleWrapper(core=('1', '2', '3'))
+        """
+        return TupleWrapper(tuple(f(value) for value in self.core))
+
+    def tap(self, f: Callable[[_T_co], object]) -> TupleWrapper[_T_co]:
+        """Apply a synchronous side effect to each value of the wrapped tuple.
+
+        Args:
+            f: The synchronous side effect to be applied to each tuple value.
+
+        Returns:
+            A new [trcks.oop.TupleWrapper][] instance with the original wrapped tuple,
+                allowing for further method chaining.
+
+        Example:
+            >>> from trcks.oop import TupleWrapper
+            >>> tuple_wrapper = TupleWrapper.construct_from_tuple((1, 2)).tap(print)
+            1
+            2
+            >>> tuple_wrapper
+            TupleWrapper(core=(1, 2))
+        """
+        return self.map(i.tap(f))

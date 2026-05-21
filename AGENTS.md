@@ -26,7 +26,7 @@
 ### Wrapper classes defined in `trcks.oop`
 
 - The module `trcks.oop` provides wrapper classes for OOP-style method chaining
-  (e.g. `trcks.oop.Wrapper`, `trcks.oop.ResultWrapper`).
+  (e.g. `trcks.oop.Wrapper`, `trcks.oop.TupleWrapper`, `trcks.oop.ResultWrapper`).
 - All wrapper classes are designed to be lightweight and immutable.
 - All wrapper class methods return new wrapper instances.
 
@@ -51,7 +51,7 @@ Use the following import patterns across code and documentation:
 >>> # Generic types from the main package:
 >>> from trcks import AwaitableResult, Result
 >>> # OOP wrapper classes:
->>> from trcks.oop import AwaitableResultWrapper, ResultWrapper, Wrapper
+>>> from trcks.oop import AwaitableResultWrapper, ResultWrapper, TupleWrapper, Wrapper
 >>> # FP composition helpers:
 >>> from trcks.fp.composition import Composable, Pipeline3, compose, pipe
 >>> # FP monads (with single-letter aliases for conciseness):

@@ -6,11 +6,18 @@ from typing import Final, Literal
 import pytest
 
 from trcks import Result
-from trcks.oop import AwaitableResultWrapper, AwaitableWrapper, ResultWrapper, Wrapper
+from trcks.oop import (
+    AwaitableResultWrapper,
+    AwaitableWrapper,
+    ResultWrapper,
+    TupleWrapper,
+    Wrapper,
+)
 
 _TO_PAIR: Final[Callable[[int], tuple[int, int]]] = lambda n: (n, n)  # noqa: E731
 
 _FLOATS: Final[tuple[float, ...]] = (0.0, 1.5, -2.3, 100.75, math.pi, -math.e)
+_INT_TUPLES: Final[tuple[tuple[int, ...], ...]] = ((), (1,), (1, 2, 3), (-2, 0, 5))
 _OBJECTS: Final[tuple[object, ...]] = (
     21,
     _TO_PAIR,
@@ -101,6 +108,34 @@ class TestAwaitableWrapper:
         assert await AwaitableWrapper.construct(value).map_to_result(
             _get_square_root_safely
         ).core == _get_square_root_safely(value)
+
+
+class TestTupleWrapper:
+    @pytest.mark.parametrize("tpl", _INT_TUPLES)
+    def test_tuple_wrapper_wraps_tuple(self, tpl: tuple[int, ...]) -> None:
+        assert TupleWrapper(tpl).core is tpl
+
+    @pytest.mark.parametrize("value", _OBJECTS)
+    def test_construct_wraps_value_in_singleton_tuple(self, value: object) -> None:
+        assert TupleWrapper.construct(value).core == (value,)
+
+    @pytest.mark.parametrize("tpl", _INT_TUPLES)
+    def test_construct_from_tuple_wraps_tuple(self, tpl: tuple[int, ...]) -> None:
+        assert TupleWrapper.construct_from_tuple(tpl).core is tpl
+
+    @pytest.mark.parametrize("tpl", _INT_TUPLES)
+    def test_map_maps_tuple_values(self, tpl: tuple[int, ...]) -> None:
+        assert TupleWrapper.construct_from_tuple(tpl).map(_TO_PAIR).core == tuple(
+            (n, n) for n in tpl
+        )
+
+    @pytest.mark.parametrize("tpl", _INT_TUPLES)
+    def test_tap_applies_side_effect_without_changing_tuple(
+        self, tpl: tuple[int, ...]
+    ) -> None:
+        seen: list[int] = []
+        assert TupleWrapper.construct_from_tuple(tpl).tap(seen.append).core == tpl
+        assert seen == list(tpl)
 
 
 class TestAwaitableResultWrapper:

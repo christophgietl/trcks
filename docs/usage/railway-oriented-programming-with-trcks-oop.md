@@ -55,6 +55,28 @@ By following the pattern of wrapping, mapping and unwrapping,
 we can write code that resembles a single-track railway
 (or maybe a single-pipe pipeline).
 
+The class [trcks.oop.TupleWrapper][] follows the same style
+for mapping over values inside a `tuple`:
+
+???+ example
+
+    ```pycon
+    >>> from trcks.oop import TupleWrapper
+    >>>
+    >>> tuple_wrapper = (
+    ...     TupleWrapper
+    ...     .construct_from_tuple((1, 2, 3))
+    ...     .map(lambda n: n * 2)
+    ...     .tap(lambda n: print(f"LOG: {n}"))
+    ... )
+    LOG: 2
+    LOG: 4
+    LOG: 6
+    >>> tuple_wrapper
+    TupleWrapper(core=(2, 4, 6))
+
+    ```
+
 Side effects like logging or writing to a file tend to
 "consume" their input and return [None][] instead.
 To avoid this, we can use the `tap` method available in
