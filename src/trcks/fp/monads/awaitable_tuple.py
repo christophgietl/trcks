@@ -116,11 +116,11 @@ def construct_from_awaitable(awtbl: Awaitable[_T]) -> AwaitableTuple[_T]:
     return a.map_(t.construct)(awtbl)
 
 
-def construct_from_tuple(seq: tuple[_T, ...]) -> AwaitableTuple[_T]:
+def construct_from_tuple(tpl: tuple[_T, ...]) -> AwaitableTuple[_T]:
     """Create a [trcks.AwaitableTuple][] from a homogeneous tuple.
 
     Args:
-        seq: The homogeneous tuple to create
+        tpl: The homogeneous tuple to create
             the [trcks.AwaitableTuple][] from.
 
     Returns:
@@ -134,7 +134,7 @@ def construct_from_tuple(seq: tuple[_T, ...]) -> AwaitableTuple[_T]:
         >>> asyncio.run(at.to_coroutine_tuple(a_tpl))
         (1, 2)
     """
-    return a.construct(seq)
+    return a.construct(tpl)
 
 
 def map_(
@@ -464,13 +464,13 @@ def tap_to_tuple(
     return a.map_(t.tap_to_tuple(f))
 
 
-async def to_coroutine_tuple(a_seq: AwaitableTuple[_T]) -> tuple[_T, ...]:
+async def to_coroutine_tuple(a_tpl: AwaitableTuple[_T]) -> tuple[_T, ...]:
     """Turn a [trcks.AwaitableTuple][] into a coroutine.
 
     This is useful for functions that expect a coroutine (e.g. [asyncio.run][]).
 
     Args:
-        a_seq: The [trcks.AwaitableTuple][] to be transformed
+        a_tpl: The [trcks.AwaitableTuple][] to be transformed
             into a coroutine.
 
     Returns:
@@ -490,4 +490,4 @@ async def to_coroutine_tuple(a_seq: AwaitableTuple[_T]) -> tuple[_T, ...]:
         >>> asyncio.run(at.to_coroutine_tuple(a_tpl))
         (3, 4)
     """
-    return await a_seq
+    return await a_tpl

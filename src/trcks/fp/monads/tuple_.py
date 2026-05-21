@@ -3,6 +3,10 @@
 Provides utilities for functional composition of
 functions returning homogeneous [tuple][] values.
 
+Note:
+    The underscore in the module name helps to avoid collisions
+    with the built-in class [tuple][].
+
 Example:
     Create and process a homogeneous [tuple][]:
 

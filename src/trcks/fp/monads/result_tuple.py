@@ -114,11 +114,11 @@ def construct_successes(value: _S) -> SuccessTuple[_S]:
     return r.construct_success(t.construct(value))
 
 
-def construct_successes_from_tuple(seq: tuple[_S, ...]) -> SuccessTuple[_S]:
+def construct_successes_from_tuple(tpl: tuple[_S, ...]) -> SuccessTuple[_S]:
     """Create a [trcks.SuccessTuple][] object from a homogeneous tuple.
 
     Args:
-        seq: Homogeneous tuple to be wrapped in a [trcks.SuccessTuple][].
+        tpl: Homogeneous tuple to be wrapped in a [trcks.SuccessTuple][].
 
     Returns:
         A new [trcks.SuccessTuple][] instance containing the given homogeneous tuple.
@@ -128,7 +128,7 @@ def construct_successes_from_tuple(seq: tuple[_S, ...]) -> SuccessTuple[_S]:
         >>> rs.construct_successes_from_tuple((1, 2))
         ('success', (1, 2))
     """
-    return r.construct_success(seq)
+    return r.construct_success(tpl)
 
 
 def map_failure(
