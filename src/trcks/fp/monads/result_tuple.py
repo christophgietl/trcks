@@ -7,7 +7,7 @@ Example:
     Map and tap each element inside a success sequence:
 
     >>> from trcks.fp.composition import pipe
-    >>> from trcks.fp.monads import result_sequence as rs
+    >>> from trcks.fp.monads import result_tuple as rs
     >>> def double_integer(n: int) -> int:
     ...     return n * 2
     ...
@@ -39,7 +39,7 @@ from typing import TYPE_CHECKING
 from trcks._typing import TypeVar, assert_never
 from trcks.fp.composition import compose2
 from trcks.fp.monads import result as r
-from trcks.fp.monads import sequence as s
+from trcks.fp.monads import tuple as s
 
 if TYPE_CHECKING:  # pragma: no cover
     from collections.abc import Callable
@@ -70,7 +70,7 @@ def construct_failure(value: _F) -> Failure[_F]:
         [trcks.fp.monads.result.construct_failure][].
 
     Example:
-        >>> from trcks.fp.monads import result_sequence as rs
+        >>> from trcks.fp.monads import result_tuple as rs
         >>> rs.construct_failure("not found")
         ('failure', 'not found')
     """
@@ -88,7 +88,7 @@ def construct_from_result(rslt: Result[_F, _S]) -> ResultTuple[_F, _S]:
             wrapped in a sequence.
 
     Example:
-        >>> from trcks.fp.monads import result_sequence as rs
+        >>> from trcks.fp.monads import result_tuple as rs
         >>> rs.construct_from_result(("success", 7))
         ('success', (7,))
         >>> rs.construct_from_result(("failure", "oops"))
@@ -107,7 +107,7 @@ def construct_successes(value: _S) -> SuccessTuple[_S]:
         A new [trcks.SuccessTuple][] instance containing the single value.
 
     Example:
-        >>> from trcks.fp.monads import result_sequence as rs
+        >>> from trcks.fp.monads import result_tuple as rs
         >>> rs.construct_successes(42)
         ('success', (42,))
     """
@@ -124,7 +124,7 @@ def construct_successes_from_tuple(seq: tuple[_S, ...]) -> SuccessTuple[_S]:
         A new [trcks.SuccessTuple][] instance containing the given sequence.
 
     Example:
-        >>> from trcks.fp.monads import result_sequence as rs
+        >>> from trcks.fp.monads import result_tuple as rs
         >>> rs.construct_successes_from_tuple((1, 2))
         ('success', (1, 2))
     """
@@ -149,7 +149,7 @@ def map_failure(
     Example:
         >>> from collections.abc import Callable
         >>> from trcks import ResultTuple
-        >>> from trcks.fp.monads import result_sequence as rs
+        >>> from trcks.fp.monads import result_tuple as rs
         >>> def _add_prefix(description: str) -> str:
         ...     return f"err: {description}"
         ...
@@ -183,7 +183,7 @@ def map_failure_to_result(
     Example:
         >>> from collections.abc import Callable
         >>> from trcks import ResultTuple
-        >>> from trcks.fp.monads import result_sequence as rs
+        >>> from trcks.fp.monads import result_tuple as rs
         >>> def _recover_from_not_found(description: str) -> Result[str, int]:
         ...     if description == "not found":
         ...         return "success", 0
@@ -221,7 +221,7 @@ def map_failure_to_result_sequence(
     Example:
         >>> from collections.abc import Callable
         >>> from trcks import ResultTuple
-        >>> from trcks.fp.monads import result_sequence as rs
+        >>> from trcks.fp.monads import result_tuple as rs
         >>> def _recover_from_not_found(description: str) -> ResultTuple[str, int]:
         ...     if description == "not found":
         ...         return "success", (0,)
@@ -259,7 +259,7 @@ def map_failure_to_tuple(
     Example:
         >>> from collections.abc import Callable
         >>> from trcks import ResultTuple, SuccessTuple
-        >>> from trcks.fp.monads import result_sequence as rs
+        >>> from trcks.fp.monads import result_tuple as rs
         >>> def _recover(description: str) -> tuple[int, ...]:
         ...     if description == "not found":
         ...         return (0,)
@@ -309,7 +309,7 @@ def map_successes(
     Example:
         >>> from collections.abc import Callable
         >>> from trcks import ResultTuple
-        >>> from trcks.fp.monads import result_sequence as rs
+        >>> from trcks.fp.monads import result_tuple as rs
         >>> def _double_integer(n: int) -> int:
         ...     return n * 2
         ...
@@ -344,7 +344,7 @@ def map_successes_to_result(
     Example:
         >>> from collections.abc import Callable
         >>> from trcks import Result, ResultTuple
-        >>> from trcks.fp.monads import result_sequence as rs
+        >>> from trcks.fp.monads import result_tuple as rs
         >>> def _double_if_positive(n: int) -> Result[str, int]:
         ...     if n > 0:
         ...         return "success", n * 2
@@ -383,7 +383,7 @@ def map_successes_to_result_sequence(
     Example:
         >>> from collections.abc import Callable
         >>> from trcks import ResultTuple
-        >>> from trcks.fp.monads import result_sequence as rs
+        >>> from trcks.fp.monads import result_tuple as rs
         >>> def _duplicate_if_positive(n: int) -> ResultTuple[str, int]:
         ...     if n > 0:
         ...         return "success", (n, n)
@@ -444,7 +444,7 @@ def map_successes_to_tuple(
     Example:
         >>> from collections.abc import Callable
         >>> from trcks import ResultTuple
-        >>> from trcks.fp.monads import result_sequence as rs
+        >>> from trcks.fp.monads import result_tuple as rs
         >>> def _duplicate_integer(n: int) -> tuple[int, int]:
         ...     return n, n
         ...
@@ -477,7 +477,7 @@ def tap_failure(
     Example:
         >>> from collections.abc import Callable
         >>> from trcks import ResultTuple
-        >>> from trcks.fp.monads import result_sequence as rs
+        >>> from trcks.fp.monads import result_tuple as rs
         >>> def _log_error(description: str) -> None:
         ...     print(f"Error: {description}")
         ...
@@ -515,7 +515,7 @@ def tap_failure_to_result(
     Example:
         >>> from collections.abc import Callable, Sequence
         >>> from trcks import Result, ResultTuple
-        >>> from trcks.fp.monads import result_sequence as rs
+        >>> from trcks.fp.monads import result_tuple as rs
         >>> def _recover_from_not_found(description: str) -> Result[None, int]:
         ...     if description == "not found":
         ...         return "success", 42
@@ -558,7 +558,7 @@ def tap_failure_to_result_sequence(
     Example:
         >>> from collections.abc import Callable, Sequence
         >>> from trcks import Result, ResultTuple
-        >>> from trcks.fp.monads import result_sequence as rs
+        >>> from trcks.fp.monads import result_tuple as rs
         >>> def _recover_from_not_found(description: str) -> ResultTuple[None, int]:
         ...     if description == "not found":
         ...         return "success", (42,)
@@ -596,7 +596,7 @@ def tap_failure_to_tuple(
     Example:
         >>> from collections.abc import Callable
         >>> from trcks import ResultTuple, SuccessTuple
-        >>> from trcks.fp.monads import result_sequence as rs
+        >>> from trcks.fp.monads import result_tuple as rs
         >>> def _log_and_alert(description: str) -> tuple[None, None]:
         ...     return (
         ...         print(f"Error logged: {description}"),
@@ -641,7 +641,7 @@ def tap_successes(
     Example:
         >>> from collections.abc import Callable
         >>> from trcks import ResultTuple
-        >>> from trcks.fp.monads import result_sequence as rs
+        >>> from trcks.fp.monads import result_tuple as rs
         >>> def _log_integer(n: int) -> None:
         ...     print(f"Received: {n}")
         ...
@@ -683,7 +683,7 @@ def tap_successes_to_result(
     Example:
         >>> from collections.abc import Callable
         >>> from trcks import Result, ResultTuple
-        >>> from trcks.fp.monads import result_sequence as rs
+        >>> from trcks.fp.monads import result_tuple as rs
         >>> def _validate_positive(n: int) -> Result[str, None]:
         ...     if n > 0:
         ...         return "success", None
@@ -729,7 +729,7 @@ def tap_successes_to_result_sequence(
     Example:
         >>> from collections.abc import Callable
         >>> from trcks import ResultTuple
-        >>> from trcks.fp.monads import result_sequence as rs
+        >>> from trcks.fp.monads import result_tuple as rs
         >>> def _validate_positive_twice(n: int) -> ResultTuple[str, None]:
         ...     if n > 0:
         ...         return "success", (None, None)
@@ -778,7 +778,7 @@ def tap_successes_to_tuple(
     Example:
         >>> from collections.abc import Callable
         >>> from trcks import ResultTuple
-        >>> from trcks.fp.monads import result_sequence as rs
+        >>> from trcks.fp.monads import result_tuple as rs
         >>> def _log_twice(n: int) -> tuple[None, None]:
         ...     return print(f"Received: {n}"), print(f"Received: {n}")
         ...

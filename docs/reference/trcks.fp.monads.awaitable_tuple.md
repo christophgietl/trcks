@@ -1,3 +1,3 @@
-# trcks.fp.monads.awaitable_sequence
+# trcks.fp.monads.awaitable_tuple
 
-::: trcks.fp.monads.awaitable_sequence
+::: trcks.fp.monads.awaitable_tuple

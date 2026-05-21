@@ -634,11 +634,11 @@ the original success value is preserved:
 
     ```
 
-## Synchronous single-track code for a sequence with [trcks.fp.composition][] and [trcks.fp.monads.sequence][]
+## Synchronous single-track code for a sequence with [trcks.fp.composition][] and [trcks.fp.monads.tuple][]
 
 If we want to apply a pipeline of functions to each element
 in a [collections.abc.Sequence][],
-the module [trcks.fp.monads.sequence][] provides
+the module [trcks.fp.monads.tuple][] provides
 some higher-order functions named `map_*` and `tap`
 that turn element-wise functions into functions
 operating on entire sequences.
@@ -647,7 +647,7 @@ operating on entire sequences.
 
     ```pycon
     >>> from collections.abc import Sequence
-    >>> from trcks.fp.monads import sequence as s
+    >>> from trcks.fp.monads import tuple as s
     >>>
     >>> def normalize_email(email: str) -> str:
     ...     return email.strip().lower()
@@ -704,7 +704,7 @@ let us have a look at the individual steps of the chain:
     ```
 
 ???+ note
-    The higher-order function [trcks.fp.monads.sequence.map_to_tuple][]
+    The higher-order function [trcks.fp.monads.tuple.map_to_tuple][]
     applies a function that returns a [collections.abc.Sequence][]
     to each element and flattens the results (like a "flat map"):
 
@@ -719,7 +719,7 @@ let us have a look at the individual steps of the chain:
 
     ```
 
-The higher-order function [trcks.fp.monads.sequence.tap][]
+The higher-order function [trcks.fp.monads.tuple.tap][]
 allows us to execute side effects for each element:
 
 ???+ example
@@ -747,11 +747,11 @@ allows us to execute side effects for each element:
 
     ```
 
-## Synchronous double-track code for a sequence with [trcks.fp.composition][] and [trcks.fp.monads.result_sequence][]
+## Synchronous double-track code for a sequence with [trcks.fp.composition][] and [trcks.fp.monads.result_tuple][]
 
 If one of the functions in a [trcks.fp.composition.Pipeline][]
 returns a [trcks.ResultTuple][][F, S] type,
-the module [trcks.fp.monads.result_sequence][] provides
+the module [trcks.fp.monads.result_tuple][] provides
 some higher-order functions named `map_successes*` and `tap_successes*`
 that turn element-wise functions into functions
 operating on [trcks.ResultTuple][] values.
@@ -763,7 +763,7 @@ Processing short-circuits on the first [trcks.Failure][].
 
     ```pycon
     >>> from trcks import ResultTuple, SuccessTuple
-    >>> from trcks.fp.monads import result_sequence as rs_
+    >>> from trcks.fp.monads import result_tuple as rs_
     >>>
     >>> UserDoesNotExist = Literal["User does not exist"]
     >>> UserDoesNotHaveASubscription = Literal["User does not have a subscription"]
@@ -882,19 +882,19 @@ let us have a look at the individual steps of the chain:
     ```
 
 ???+ note
-    The function [trcks.fp.monads.result_sequence.construct_successes_from_tuple][]
+    The function [trcks.fp.monads.result_tuple.construct_successes_from_tuple][]
     wraps a [collections.abc.Sequence][] into a [trcks.SuccessTuple][],
     which can then be used with the higher-order functions
-    from [trcks.fp.monads.result_sequence][].
+    from [trcks.fp.monads.result_tuple][].
 
     While [trcks.fp.monads.result.map_failure][]
     and [trcks.fp.monads.result.map_success][]
     operate on single-value [trcks.Result][] types,
-    [trcks.fp.monads.result_sequence.map_successes][] (plural)
+    [trcks.fp.monads.result_tuple.map_successes][] (plural)
     operates on each element in the sequence.
 
-The higher-order functions [trcks.fp.monads.result_sequence.tap_successes][]
-and [trcks.fp.monads.result_sequence.tap_failure][]
+The higher-order functions [trcks.fp.monads.result_tuple.tap_successes][]
+and [trcks.fp.monads.result_tuple.tap_failure][]
 allow us to execute side effects
 in the success case (for each element) or in the failure case, respectively.
 
@@ -952,7 +952,7 @@ in the success case (for each element) or in the failure case, respectively.
 
 Sometimes, side effects themselves can fail and
 need to return a [trcks.Result][] value.
-The higher-order function [trcks.fp.monads.result_sequence.tap_successes_to_result][]
+The higher-order function [trcks.fp.monads.result_tuple.tap_successes_to_result][]
 allows us to execute such side effects for each element in the success case.
 If the side effect returns a [trcks.Failure][] for any element,
 that failure is propagated.
@@ -1000,13 +1000,13 @@ the original success values are preserved.
 
     ```
 
-## Asynchronous single-track code for a sequence with [trcks.fp.composition][] and [trcks.fp.monads.awaitable_sequence][]
+## Asynchronous single-track code for a sequence with [trcks.fp.composition][] and [trcks.fp.monads.awaitable_tuple][]
 
 If one of the functions in a [trcks.fp.composition.Pipeline][] returns
 a [trcks.AwaitableTuple][][T] type,
 the following function must accept this [trcks.AwaitableTuple][][T] type
 as its input.
-The module [trcks.fp.monads.awaitable_sequence][] provides
+The module [trcks.fp.monads.awaitable_tuple][] provides
 some higher-order functions named `map_*`
 that turn element-wise functions
 into functions operating on [trcks.AwaitableTuple][] values.
@@ -1014,7 +1014,7 @@ into functions operating on [trcks.AwaitableTuple][] values.
 ???+ example
 
     ```pycon
-    >>> from trcks.fp.monads import awaitable_sequence as as_
+    >>> from trcks.fp.monads import awaitable_tuple as as_
     >>>
     >>> async def read_from_disk(path: str) -> str:
     ...     await asyncio.sleep(0.001)
@@ -1089,24 +1089,24 @@ let us have a look at the individual steps of the chain:
     ```
 
 ???+ note
-    The function [trcks.fp.monads.awaitable_sequence.construct_from_tuple][]
+    The function [trcks.fp.monads.awaitable_tuple.construct_from_tuple][]
     wraps a [collections.abc.Sequence][] into
     an [trcks.AwaitableTuple][],
     which can then be used with the higher-order functions
-    from [trcks.fp.monads.awaitable_sequence][].
+    from [trcks.fp.monads.awaitable_tuple][].
 
     The values `pipe(p1)`, `pipe(p2)` and `pipe(p3)` are all
     of type [trcks.AwaitableTuple][].
     Since [asyncio.run][] expects the input type [collections.abc.Coroutine][],
     we use the function
-    [trcks.fp.monads.awaitable_sequence.to_coroutine_tuple][]
+    [trcks.fp.monads.awaitable_tuple.to_coroutine_tuple][]
     to convert the [trcks.AwaitableTuple][]s
     to [collections.abc.Coroutine][]s.
 
-The higher-order function [trcks.fp.monads.awaitable_sequence.tap][]
+The higher-order function [trcks.fp.monads.awaitable_tuple.tap][]
 allows us to execute synchronous side effects for each element.
 Similarly, the higher-order function
-[trcks.fp.monads.awaitable_sequence.tap_to_awaitable][]
+[trcks.fp.monads.awaitable_tuple.tap_to_awaitable][]
 allows us to execute asynchronous side effects for each element.
 
 ???+ example
@@ -1146,11 +1146,11 @@ allows us to execute asynchronous side effects for each element.
 
     ```
 
-## Asynchronous double-track code for a sequence with [trcks.fp.composition][] and [trcks.fp.monads.awaitable_result_sequence][]
+## Asynchronous double-track code for a sequence with [trcks.fp.composition][] and [trcks.fp.monads.awaitable_result_tuple][]
 
 If one of the functions in a [trcks.fp.composition.Pipeline][] returns
 a [trcks.AwaitableResultTuple][][F, S] type,
-the module [trcks.fp.monads.awaitable_result_sequence][] provides
+the module [trcks.fp.monads.awaitable_result_tuple][] provides
 some higher-order functions named `map_successes*` and `tap_successes*`
 that turn element-wise functions into functions
 operating on [trcks.AwaitableResultTuple][] values.
@@ -1162,7 +1162,7 @@ Processing short-circuits on the first [trcks.Failure][].
 
     ```pycon
     >>> from trcks import AwaitableResultTuple, AwaitableSuccessTuple
-    >>> from trcks.fp.monads import awaitable_result_sequence as ars
+    >>> from trcks.fp.monads import awaitable_result_tuple as ars
     >>>
     >>> ReadErrorLiteral = Literal["read error"]
     >>> WriteErrorLiteral = Literal["write error"]
@@ -1280,23 +1280,23 @@ let us have a look at the individual steps of the chain:
 
 ???+ note
     The function
-    [trcks.fp.monads.awaitable_result_sequence.construct_successes_from_tuple][]
+    [trcks.fp.monads.awaitable_result_tuple.construct_successes_from_tuple][]
     wraps a [collections.abc.Sequence][]
     into an [trcks.AwaitableSuccessTuple][],
     which can then be used with the higher-order functions
-    from [trcks.fp.monads.awaitable_result_sequence][].
+    from [trcks.fp.monads.awaitable_result_tuple][].
 
     The values `pipe(p1)`, `pipe(p2)`, `pipe(p3)` and `pipe(p4)` are all
     of type [trcks.AwaitableResultTuple][].
     Since [asyncio.run][] expects the input type [collections.abc.Coroutine][],
     we use the function
-    [trcks.fp.monads.awaitable_result_sequence.to_coroutine_result_sequence][]
+    [trcks.fp.monads.awaitable_result_tuple.to_coroutine_result_sequence][]
     to convert the [trcks.AwaitableResultTuple][]s
     to [collections.abc.Coroutine][]s.
 
 The higher-order functions
-[trcks.fp.monads.awaitable_result_sequence.tap_failure][]
-and [trcks.fp.monads.awaitable_result_sequence.tap_successes][]
+[trcks.fp.monads.awaitable_result_tuple.tap_failure][]
+and [trcks.fp.monads.awaitable_result_tuple.tap_successes][]
 allow us to execute synchronous side effects
 in the failure case or in the success case (for each element), respectively:
 
@@ -1366,7 +1366,7 @@ in the failure case or in the success case (for each element), respectively:
 Sometimes, side effects themselves can fail and
 need to return an [trcks.AwaitableResult][] type.
 The higher-order function
-[trcks.fp.monads.awaitable_result_sequence.tap_successes_to_awaitable_result][]
+[trcks.fp.monads.awaitable_result_tuple.tap_successes_to_awaitable_result][]
 allows us to execute such asynchronous side effects
 for each element in the success case.
 If the side effect returns a [trcks.Failure][] for any element,

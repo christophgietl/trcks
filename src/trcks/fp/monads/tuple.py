@@ -7,7 +7,7 @@ Example:
     Create and process a [tuple][]:
 
     >>> from trcks.fp.composition import pipe
-    >>> from trcks.fp.monads import sequence as s
+    >>> from trcks.fp.monads import tuple as s
     >>> def double_integer(n: int) -> int:
     ...     return n * 2
     ...
@@ -70,7 +70,7 @@ def construct(value: _T) -> tuple[_T, ...]:
         A [tuple][] containing the single value.
 
     Example:
-        >>> from trcks.fp.monads import sequence as s
+        >>> from trcks.fp.monads import tuple as s
         >>> s.construct(42)
         (42,)
     """
@@ -94,7 +94,7 @@ def map_(f: Callable[[_T1], _T2]) -> Callable[[tuple[_T1, ...]], tuple[_T2, ...]
 
     Example:
         >>> from collections.abc import Callable, Sequence
-        >>> from trcks.fp.monads import sequence as s
+        >>> from trcks.fp.monads import tuple as s
         >>> def double_integer(n: int) -> int:
         ...     return n * 2
         ...
@@ -125,7 +125,7 @@ def map_to_tuple(
 
     Example:
         >>> from collections.abc import Callable, Sequence
-        >>> from trcks.fp.monads import sequence as s
+        >>> from trcks.fp.monads import tuple as s
         >>> def duplicate_integer(n: int) -> tuple[int, int]:
         ...     return (n, n)
         ...
@@ -158,7 +158,7 @@ def tap(
 
     Example:
         >>> from collections.abc import Callable, Sequence
-        >>> from trcks.fp.monads import sequence as s
+        >>> from trcks.fp.monads import tuple as s
         >>> def log_integer(n: int) -> None:
         ...     print(f"Received: {n}")
         ...
@@ -193,7 +193,7 @@ def tap_to_tuple(
 
     Example:
         >>> from collections.abc import Callable, Sequence
-        >>> from trcks.fp.monads import sequence as s
+        >>> from trcks.fp.monads import tuple as s
         >>> def get_divisors(n: int) -> tuple[int, ...]:
         ...     candidates = range(1, n + 1)
         ...     return tuple(c for c in candidates if n % c == 0)

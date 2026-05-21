@@ -89,12 +89,12 @@ from trcks import (
 from trcks._typing import Never, TypeVar, override
 from trcks.fp.monads import awaitable as a
 from trcks.fp.monads import awaitable_result as ar
-from trcks.fp.monads import awaitable_result_sequence as ars
-from trcks.fp.monads import awaitable_sequence as as_
+from trcks.fp.monads import awaitable_result_tuple as ars
+from trcks.fp.monads import awaitable_tuple as as_
 from trcks.fp.monads import identity as i
 from trcks.fp.monads import result as r
-from trcks.fp.monads import result_sequence as rs
-from trcks.fp.monads import sequence as s
+from trcks.fp.monads import result_tuple as rs
+from trcks.fp.monads import tuple as s
 
 __docformat__ = "google"
 

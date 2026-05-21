@@ -1,3 +1,3 @@
-# trcks.fp.monads.sequence
+# trcks.fp.monads.tuple
 
-::: trcks.fp.monads.sequence
+::: trcks.fp.monads.tuple
