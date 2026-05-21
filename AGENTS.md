@@ -22,11 +22,21 @@
 - `trcks.AwaitableResult[FailureType, SuccessType]`:
   an alias for `collections.abc.Awaitable[trcks.Result[FailureType, SuccessType]]`
   for annotating asynchronous functions.
+- `trcks.SuccessTuple[SuccessType]`:
+  a `trcks.Success` whose payload is a homogeneous `tuple[SuccessType, ...]`.
+- `trcks.ResultTuple[FailureType, SuccessType]`:
+  a `trcks.Result` whose success payload is a homogeneous `tuple[SuccessType, ...]`.
+- `trcks.AwaitableSuccessTuple[SuccessType]`:
+  an alias for `collections.abc.Awaitable[trcks.SuccessTuple[SuccessType]]`.
+- `trcks.AwaitableResultTuple[FailureType, SuccessType]`:
+  an alias for `collections.abc.Awaitable[trcks.ResultTuple[FailureType, SuccessType]]`.
 
 ### Wrapper classes defined in `trcks.oop`
 
 - The module `trcks.oop` provides wrapper classes for OOP-style method chaining
-  (e.g. `trcks.oop.Wrapper`, `trcks.oop.ResultWrapper`).
+  (e.g. `trcks.oop.Wrapper`, `trcks.oop.ResultWrapper`,
+  `trcks.oop.TupleWrapper`, `trcks.oop.ResultTupleWrapper`,
+  `trcks.oop.AwaitableTupleWrapper`, `trcks.oop.AwaitableResultTupleWrapper`).
 - All wrapper classes are designed to be lightweight and immutable.
 - All wrapper class methods return new wrapper instances.
 
@@ -36,7 +46,9 @@
   higher-order functions for composing functions
   (e.g. `trcks.fp.composition.pipe` and `trcks.fp.composition.compose`).
 - The package `trcks.fp.monads` provides type-specific mapping functions
-  for `trcks.Result`, `collections.abc.Awaitable` and `trcks.AwaitableResult` values.
+  for `trcks.Result`, `collections.abc.Awaitable`, `trcks.AwaitableResult`,
+  `tuple[T, ...]`, `trcks.ResultTuple`, `trcks.AwaitableSuccessTuple`, and
+  `trcks.AwaitableResultTuple` values.
 
 ### Providing typing features to all supported Python versions in `trcks._typing`
 
@@ -49,13 +61,28 @@ Use the following import patterns across code and documentation:
 
 ```pycon
 >>> # Generic types from the main package:
->>> from trcks import AwaitableResult, Result
+>>> from trcks import AwaitableResult, AwaitableResultTuple, Result
+>>> from trcks import AwaitableSuccessTuple, ResultTuple, SuccessTuple
 >>> # OOP wrapper classes:
->>> from trcks.oop import AwaitableResultWrapper, ResultWrapper, Wrapper
+>>> from trcks.oop import (
+...     AwaitableResultTupleWrapper,
+...     AwaitableResultWrapper,
+...     AwaitableTupleWrapper,
+...     ResultTupleWrapper,
+...     ResultWrapper,
+...     TupleWrapper,
+...     Wrapper,
+... )
 >>> # FP composition helpers:
 >>> from trcks.fp.composition import Composable, Pipeline3, compose, pipe
 >>> # FP monads (with single-letter aliases for conciseness):
 >>> from trcks.fp.monads import awaitable as a, awaitable_result as ar
+>>> from trcks.fp.monads import (
+...     awaitable_result_tuple as art,
+...     awaitable_tuple as at,
+...     result_tuple as rt,
+...     tuple_ as t,
+... )
 
 ```
 
