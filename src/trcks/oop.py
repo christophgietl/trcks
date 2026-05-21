@@ -298,14 +298,14 @@ class AwaitableResultTupleWrapper(
         """Construct and wrap an [trcks.AwaitableResultTuple][] from an
         [trcks.AwaitableResult][].
 
-        The success payload is wrapped in a single-element sequence.
+        The success payload is wrapped in a single-element tuple.
 
         Args:
             a_rslt: The [trcks.AwaitableResult][] object to be converted.
 
         Returns:
             A new [trcks.oop.AwaitableResultTupleWrapper][] instance where
-                the success payload is wrapped in a single-element sequence,
+                the success payload is wrapped in a single-element tuple,
                 or the original failure is preserved.
 
         Example:
@@ -339,14 +339,14 @@ class AwaitableResultTupleWrapper(
         """Construct and wrap an [trcks.AwaitableResultTuple][] from a
         [trcks.Result][].
 
-        The success payload is wrapped in a single-element sequence.
+        The success payload is wrapped in a single-element tuple.
 
         Args:
             rslt: The [trcks.Result][] object to be converted.
 
         Returns:
             A new [trcks.oop.AwaitableResultTupleWrapper][] instance where
-                the success payload is wrapped in a single-element sequence,
+                the success payload is wrapped in a single-element tuple,
                 or the original failure is preserved.
 
         Example:
@@ -404,7 +404,7 @@ class AwaitableResultTupleWrapper(
         """Construct and wrap an awaitable [trcks.SuccessTuple][] from a value.
 
         Args:
-            value: The value to be wrapped in a single-element sequence.
+            value: The value to be wrapped in a single-element tuple.
 
         Returns:
             A new [trcks.oop.AwaitableResultTupleWrapper][] instance with
@@ -429,7 +429,7 @@ class AwaitableResultTupleWrapper(
         awaitable value.
 
         Args:
-            awtbl: The awaitable value to be wrapped in a single-element sequence.
+            awtbl: The awaitable value to be wrapped in a single-element tuple.
 
         Returns:
             A new [trcks.oop.AwaitableResultTupleWrapper][] instance with
@@ -459,10 +459,10 @@ class AwaitableResultTupleWrapper(
     def construct_successes_from_tuple(
         seq: tuple[_S, ...],
     ) -> AwaitableResultTupleWrapper[Never, _S]:
-        """Construct and wrap an awaitable [trcks.SuccessTuple][] from a sequence.
+        """Construct and wrap an awaitable [trcks.SuccessTuple][] from a tuple.
 
         Args:
-            seq: The sequence to be wrapped.
+            seq: The tuple to be wrapped.
 
         Returns:
             A new [trcks.oop.AwaitableResultTupleWrapper][] instance with
@@ -734,13 +734,13 @@ class AwaitableResultTupleWrapper(
     def map_failure_to_tuple(
         self, f: Callable[[_F_default_co], tuple[_S, ...]]
     ) -> AwaitableResultTupleWrapper[Never, _S_default_co | _S]:
-        """Apply a synchronous function returning a sequence
+        """Apply a synchronous function returning a tuple
         to the wrapped [trcks.Failure][] object.
 
         Wrapped [trcks.SuccessTuple][] objects are passed on unchanged.
 
         Args:
-            f: The synchronous function returning a sequence to be applied.
+            f: The synchronous function returning a tuple to be applied.
 
         Returns:
             A new [trcks.oop.AwaitableResultTupleWrapper][] instance with
@@ -1089,7 +1089,7 @@ class AwaitableResultTupleWrapper(
     def map_successes_to_tuple(
         self, f: Callable[[_S_default_co], tuple[_S, ...]]
     ) -> AwaitableResultTupleWrapper[_F_default_co, _S]:
-        """Apply a synchronous function returning a sequence to each element in
+        """Apply a synchronous function returning a tuple to each element in
         the wrapped [trcks.AwaitableSuccessTuple][] and flatten.
 
         Wrapped [trcks.Failure][] objects are passed on unchanged.
@@ -1226,7 +1226,7 @@ class AwaitableResultTupleWrapper(
 
                 - *the original* [trcks.Failure][]
                     if the applied side effect returns a [trcks.Failure][],
-                - *the returned* [trcks.Success][] (wrapped as a sequence)
+                - *the returned* [trcks.Success][] (wrapped as a tuple)
                     if the applied side effect returns a [trcks.Success][] and
                 - *the original* [trcks.SuccessTuple][]
                     if no side effect was applied.
@@ -1331,7 +1331,7 @@ class AwaitableResultTupleWrapper(
 
                 - *the original* [trcks.Failure][]
                     if the applied side effect returns a [trcks.Failure][],
-                - *the returned* [trcks.Success][] (wrapped as a sequence)
+                - *the returned* [trcks.Success][] (wrapped as a tuple)
                     if the applied side effect returns a [trcks.Success][] and
                 - *the original* [trcks.SuccessTuple][]
                     if no side effect was applied.
@@ -1420,23 +1420,23 @@ class AwaitableResultTupleWrapper(
     def tap_failure_to_tuple(
         self, f: Callable[[_F_default_co], tuple[object, ...]]
     ) -> AwaitableResultTupleWrapper[Never, _F_default_co | _S_default_co]:
-        """Apply a synchronous side effect returning a sequence
+        """Apply a synchronous side effect returning a tuple
         to the wrapped [trcks.Failure][] object.
 
         The failure is converted to an [trcks.AwaitableSuccessTuple][] where
         the original failure value is repeated once per element in
-        the sequence returned by the side effect.
+        the tuple returned by the side effect.
 
         Wrapped [trcks.SuccessTuple][] objects are passed on without side effects.
 
         Args:
-            f: The synchronous side effect returning a sequence to be applied.
+            f: The synchronous side effect returning a tuple to be applied.
 
         Returns:
             A new [trcks.oop.AwaitableResultTupleWrapper][] instance with
 
                 - an [trcks.AwaitableSuccessTuple][] containing the original
-                    failure repeated once per element in the sequence returned by
+                    failure repeated once per element in the tuple returned by
                     the side effect if the original
                     [trcks.AwaitableResultTuple][] is a failure, or
                 - the original [trcks.AwaitableSuccessTuple][]
@@ -1782,16 +1782,16 @@ class AwaitableResultTupleWrapper(
     def tap_successes_to_tuple(
         self, f: Callable[[_S_default_co], tuple[object, ...]]
     ) -> AwaitableResultTupleWrapper[_F_default_co, _S_default_co]:
-        """Apply a synchronous side effect returning a sequence to each element in
+        """Apply a synchronous side effect returning a tuple to each element in
         the wrapped [trcks.AwaitableSuccessTuple][].
 
-        The original success elements are repeated once per element in the sequence
+        The original success elements are repeated once per element in the tuple
         returned by the side effect.
 
         Wrapped [trcks.Failure][] objects are passed on without side effects.
 
         Args:
-            f: The synchronous side effect returning a sequence to be applied
+            f: The synchronous side effect returning a tuple to be applied
                 to each success element.
 
         Returns:
@@ -1799,7 +1799,7 @@ class AwaitableResultTupleWrapper(
 
                 - the original [trcks.Failure][] if no side effect was applied, or
                 - an [trcks.AwaitableSuccessTuple][] where each original element
-                    is repeated once per element in the sequence returned by the
+                    is repeated once per element in the tuple returned by the
                     side effect.
 
         Example:
@@ -2552,7 +2552,7 @@ class AwaitableResultWrapper(_AwaitableResultWrapper[_F_default_co, _S_default_c
         """
         return AwaitableResultWrapper(ar.map_success_to_awaitable_result(f)(self.core))
 
-    def map_success_to_awaitable_result_sequence(
+    def map_success_to_awaitable_result_tuple(
         self, f: Callable[[_S_default_co], AwaitableResultTuple[_F, _S]]
     ) -> AwaitableResultTupleWrapper[_F_default_co | _F, _S]:
         """Apply an asynchronous function with return type
@@ -2585,7 +2585,7 @@ class AwaitableResultWrapper(_AwaitableResultWrapper[_F_default_co, _S_default_c
             >>> wrapper_1 = (
             ...     AwaitableResultWrapper
             ...     .construct_failure("not found")
-            ...     .map_success_to_awaitable_result_sequence(expand)
+            ...     .map_success_to_awaitable_result_tuple(expand)
             ... )
             >>> wrapper_1
             AwaitableResultTupleWrapper(core=<coroutine object ...>)
@@ -2595,7 +2595,7 @@ class AwaitableResultWrapper(_AwaitableResultWrapper[_F_default_co, _S_default_c
             >>> wrapper_2 = (
             ...     AwaitableResultWrapper
             ...     .construct_success(5.0)
-            ...     .map_success_to_awaitable_result_sequence(expand)
+            ...     .map_success_to_awaitable_result_tuple(expand)
             ... )
             >>> wrapper_2
             AwaitableResultTupleWrapper(core=<coroutine object ...>)
@@ -2666,7 +2666,7 @@ class AwaitableResultWrapper(_AwaitableResultWrapper[_F_default_co, _S_default_c
         """
         return AwaitableResultWrapper(ar.map_success_to_result(f)(self.core))
 
-    def map_success_to_result_sequence(
+    def map_success_to_result_tuple(
         self, f: Callable[[_S_default_co], ResultTuple[_F, _S]]
     ) -> AwaitableResultTupleWrapper[_F_default_co | _F, _S]:
         """Apply a synchronous function with return type [trcks.ResultTuple][]
@@ -2696,7 +2696,7 @@ class AwaitableResultWrapper(_AwaitableResultWrapper[_F_default_co, _S_default_c
             >>> wrapper_1 = (
             ...     AwaitableResultWrapper
             ...     .construct_failure("not found")
-            ...     .map_success_to_result_sequence(expand)
+            ...     .map_success_to_result_tuple(expand)
             ... )
             >>> wrapper_1
             AwaitableResultTupleWrapper(core=<coroutine object ...>)
@@ -2706,7 +2706,7 @@ class AwaitableResultWrapper(_AwaitableResultWrapper[_F_default_co, _S_default_c
             >>> wrapper_2 = (
             ...     AwaitableResultWrapper
             ...     .construct_success(5.0)
-            ...     .map_success_to_result_sequence(expand)
+            ...     .map_success_to_result_tuple(expand)
             ... )
             >>> wrapper_2
             AwaitableResultTupleWrapper(core=<coroutine object ...>)
@@ -3049,7 +3049,7 @@ class AwaitableResultWrapper(_AwaitableResultWrapper[_F_default_co, _S_default_c
 
         The failure is converted to a [trcks.SuccessTuple][] where
         the original failure value is repeated once per element in
-        the sequence returned by the side effect.
+        the tuple returned by the side effect.
 
         Wrapped [trcks.Success][] objects are passed on without side effects.
 
@@ -3254,7 +3254,7 @@ class AwaitableResultWrapper(_AwaitableResultWrapper[_F_default_co, _S_default_c
         """
         return AwaitableResultWrapper(ar.tap_success_to_awaitable_result(f)(self.core))
 
-    def tap_success_to_awaitable_result_sequence(
+    def tap_success_to_awaitable_result_tuple(
         self, f: Callable[[_S_default_co], AwaitableResultTuple[_F, object]]
     ) -> AwaitableResultTupleWrapper[_F_default_co | _F, _S_default_co]:
         """Apply an asynchronous side effect with return type
@@ -3289,7 +3289,7 @@ class AwaitableResultWrapper(_AwaitableResultWrapper[_F_default_co, _S_default_c
             >>> wrapper_1 = (
             ...     AwaitableResultWrapper
             ...     .construct_failure("missing text")
-            ...     .tap_success_to_awaitable_result_sequence(write_twice)
+            ...     .tap_success_to_awaitable_result_tuple(write_twice)
             ... )
             >>> wrapper_1
             AwaitableResultTupleWrapper(core=<coroutine object ...>)
@@ -3299,7 +3299,7 @@ class AwaitableResultWrapper(_AwaitableResultWrapper[_F_default_co, _S_default_c
             >>> wrapper_2 = (
             ...     AwaitableResultWrapper
             ...     .construct_success("Hello, world!")
-            ...     .tap_success_to_awaitable_result_sequence(write_twice)
+            ...     .tap_success_to_awaitable_result_tuple(write_twice)
             ... )
             >>> wrapper_2
             AwaitableResultTupleWrapper(core=<coroutine object ...>)
@@ -3334,7 +3334,7 @@ class AwaitableResultWrapper(_AwaitableResultWrapper[_F_default_co, _S_default_c
         """
         return AwaitableResultWrapper(ar.tap_success_to_result(f)(self.core))
 
-    def tap_success_to_result_sequence(
+    def tap_success_to_result_tuple(
         self, f: Callable[[_S_default_co], ResultTuple[_F, object]]
     ) -> AwaitableResultTupleWrapper[_F_default_co | _F, _S_default_co]:
         """Apply a synchronous side effect with return type [trcks.ResultTuple][]
@@ -3367,7 +3367,7 @@ class AwaitableResultWrapper(_AwaitableResultWrapper[_F_default_co, _S_default_c
             >>> wrapper_1 = (
             ...     AwaitableResultWrapper
             ...     .construct_failure("missing")
-            ...     .tap_success_to_result_sequence(audit)
+            ...     .tap_success_to_result_tuple(audit)
             ... )
             >>> wrapper_1
             AwaitableResultTupleWrapper(core=<coroutine object ...>)
@@ -3377,7 +3377,7 @@ class AwaitableResultWrapper(_AwaitableResultWrapper[_F_default_co, _S_default_c
             >>> wrapper_2 = (
             ...     AwaitableResultWrapper
             ...     .construct_success("Hello, world!")
-            ...     .tap_success_to_result_sequence(audit)
+            ...     .tap_success_to_result_tuple(audit)
             ... )
             >>> wrapper_2
             AwaitableResultTupleWrapper(core=<coroutine object ...>)
@@ -3395,7 +3395,7 @@ class AwaitableResultWrapper(_AwaitableResultWrapper[_F_default_co, _S_default_c
         to the wrapped [trcks.Success][] object.
 
         The original success value is repeated once per element
-        in the sequence returned by the side effect.
+        in the tuple returned by the side effect.
 
         Wrapped [trcks.Failure][] objects are passed on without side effects.
 
@@ -3408,7 +3408,7 @@ class AwaitableResultWrapper(_AwaitableResultWrapper[_F_default_co, _S_default_c
 
                 - *the original* [trcks.Failure][] if no side effect was applied, or
                 - an awaitable [trcks.SuccessTuple][] where the original element
-                    is repeated once per element in the sequence returned by the
+                    is repeated once per element in the tuple returned by the
                     side effect.
 
         Example:
@@ -3454,7 +3454,7 @@ class AwaitableTupleWrapper(_AwaitableWrapper[tuple[_T_co, ...]]):
     via the attribute `trcks.oop.AwaitableTupleWrapper.core`.
     The `trcks.oop.AwaitableTupleWrapper.map*` methods allow method chaining.
     The `trcks.oop.AwaitableTupleWrapper.tap*` methods allow for side effects
-    without changing the wrapped sequence.
+    without changing the wrapped tuple.
 
     Example:
         >>> import asyncio
@@ -3465,12 +3465,12 @@ class AwaitableTupleWrapper(_AwaitableWrapper[tuple[_T_co, ...]]):
         ...     return x * 2
         ...
         >>> async def main() -> tuple[int, ...]:
-        ...     awaitable_sequence_wrapper = (
+        ...     awaitable_tuple_wrapper = (
         ...         AwaitableTupleWrapper
         ...         .construct_from_tuple((1, 2, 3))
         ...         .map_to_awaitable(double)
         ...     )
-        ...     return await awaitable_sequence_wrapper.core_as_coroutine
+        ...     return await awaitable_tuple_wrapper.core_as_coroutine
         ...
         >>> asyncio.run(main())
         (2, 4, 6)
@@ -3490,10 +3490,10 @@ class AwaitableTupleWrapper(_AwaitableWrapper[tuple[_T_co, ...]]):
         Example:
             >>> import asyncio
             >>> from trcks.oop import AwaitableTupleWrapper
-            >>> awaitable_sequence_wrapper = AwaitableTupleWrapper.construct(42)
-            >>> awaitable_sequence_wrapper
+            >>> awaitable_tuple_wrapper = AwaitableTupleWrapper.construct(42)
+            >>> awaitable_tuple_wrapper
             AwaitableTupleWrapper(core=<coroutine object ...>)
-            >>> asyncio.run(awaitable_sequence_wrapper.core_as_coroutine)
+            >>> asyncio.run(awaitable_tuple_wrapper.core_as_coroutine)
             (42,)
         """
         return AwaitableTupleWrapper(at.construct(value))
@@ -3518,13 +3518,13 @@ class AwaitableTupleWrapper(_AwaitableWrapper[tuple[_T_co, ...]]):
             ...     await asyncio.sleep(0.001)
             ...     return 7
             ...
-            >>> awaitable_sequence_wrapper = (
+            >>> awaitable_tuple_wrapper = (
             ...     AwaitableTupleWrapper
             ...     .construct_from_awaitable(get_value())
             ... )
-            >>> awaitable_sequence_wrapper
+            >>> awaitable_tuple_wrapper
             AwaitableTupleWrapper(core=<coroutine object ...>)
-            >>> asyncio.run(awaitable_sequence_wrapper.core_as_coroutine)
+            >>> asyncio.run(awaitable_tuple_wrapper.core_as_coroutine)
             (7,)
         """
         return AwaitableTupleWrapper(at.construct_from_awaitable(awtbl))
@@ -3533,10 +3533,10 @@ class AwaitableTupleWrapper(_AwaitableWrapper[tuple[_T_co, ...]]):
     def construct_from_tuple(
         seq: tuple[_T, ...],
     ) -> AwaitableTupleWrapper[_T]:
-        """Construct and wrap a [trcks.AwaitableTuple][] from a sequence.
+        """Construct and wrap a [trcks.AwaitableTuple][] from a tuple.
 
         Args:
-            seq: The sequence to be wrapped.
+            seq: The tuple to be wrapped.
 
         Returns:
             A new [trcks.oop.AwaitableTupleWrapper][] instance with
@@ -3545,13 +3545,13 @@ class AwaitableTupleWrapper(_AwaitableWrapper[tuple[_T_co, ...]]):
         Example:
             >>> import asyncio
             >>> from trcks.oop import AwaitableTupleWrapper
-            >>> awaitable_sequence_wrapper = (
+            >>> awaitable_tuple_wrapper = (
             ...     AwaitableTupleWrapper
             ...     .construct_from_tuple((1, 2, 3))
             ... )
-            >>> awaitable_sequence_wrapper
+            >>> awaitable_tuple_wrapper
             AwaitableTupleWrapper(core=<coroutine object ...>)
-            >>> asyncio.run(awaitable_sequence_wrapper.core_as_coroutine)
+            >>> asyncio.run(awaitable_tuple_wrapper.core_as_coroutine)
             (1, 2, 3)
         """
         return AwaitableTupleWrapper(at.construct_from_tuple(seq))
@@ -3658,12 +3658,12 @@ class AwaitableTupleWrapper(_AwaitableWrapper[tuple[_T_co, ...]]):
     def map_to_tuple(
         self, f: Callable[[_T_co], tuple[_T, ...]]
     ) -> AwaitableTupleWrapper[_T]:
-        """Apply a synchronous function returning a sequence to each element in
+        """Apply a synchronous function returning a tuple to each element in
         the wrapped [trcks.AwaitableTuple][] object and flatten.
 
         Args:
             f: The synchronous function to be applied to each element,
-                returning a sequence.
+                returning a tuple.
 
         Returns:
             A new [trcks.oop.AwaitableTupleWrapper][] instance with
@@ -3791,12 +3791,12 @@ class AwaitableTupleWrapper(_AwaitableWrapper[tuple[_T_co, ...]]):
     def tap_to_tuple(
         self, f: Callable[[_T_co], tuple[object, ...]]
     ) -> AwaitableTupleWrapper[_T_co]:
-        """Apply a synchronous side effect returning a sequence to each element in
+        """Apply a synchronous side effect returning a tuple to each element in
         the wrapped [trcks.AwaitableTuple][] object.
 
         Args:
             f: The synchronous side effect to be applied to each element,
-                returning a sequence.
+                returning a tuple.
 
         Returns:
             A new [trcks.oop.AwaitableTupleWrapper][] instance with
@@ -4012,7 +4012,7 @@ class AwaitableWrapper(_AwaitableWrapper[_T_co]):
             self.core
         ).map_success_to_awaitable_result(f)
 
-    def map_to_awaitable_result_sequence(
+    def map_to_awaitable_result_tuple(
         self, f: Callable[[_T_co], AwaitableResultTuple[_F, _S]]
     ) -> AwaitableResultTupleWrapper[_F, _S]:
         """Apply an asynchronous function with return type
@@ -4041,7 +4041,7 @@ class AwaitableWrapper(_AwaitableWrapper[_T_co]):
             >>> wrapper = (
             ...     AwaitableWrapper
             ...     .construct(5.0)
-            ...     .map_to_awaitable_result_sequence(validate)
+            ...     .map_to_awaitable_result_tuple(validate)
             ... )
             >>> wrapper
             AwaitableResultTupleWrapper(core=<coroutine object ...>)
@@ -4074,14 +4074,14 @@ class AwaitableWrapper(_AwaitableWrapper[_T_co]):
             ...     await asyncio.sleep(0.001)
             ...     return (x, x)
             ...
-            >>> awaitable_sequence_wrapper = (
+            >>> awaitable_tuple_wrapper = (
             ...     AwaitableWrapper
             ...     .construct(21)
             ...     .map_to_awaitable_tuple(duplicate_async)
             ... )
-            >>> awaitable_sequence_wrapper
+            >>> awaitable_tuple_wrapper
             AwaitableTupleWrapper(core=<coroutine object ...>)
-            >>> asyncio.run(awaitable_sequence_wrapper.core_as_coroutine)
+            >>> asyncio.run(awaitable_tuple_wrapper.core_as_coroutine)
             (21, 21)
         """
         return AwaitableTupleWrapper(a.map_to_awaitable(f)(self.core))
@@ -4120,7 +4120,7 @@ class AwaitableWrapper(_AwaitableWrapper[_T_co]):
             self.core
         ).map_success_to_result(f)
 
-    def map_to_result_sequence(
+    def map_to_result_tuple(
         self, f: Callable[[_T_co], ResultTuple[_F, _S]]
     ) -> AwaitableResultTupleWrapper[_F, _S]:
         """Apply a synchronous function with return type [trcks.ResultTuple][]
@@ -4142,7 +4142,7 @@ class AwaitableWrapper(_AwaitableWrapper[_T_co]):
             ...         return "failure", "negative value"
             ...     return "success", (x, x * 2)
             ...
-            >>> wrapper = AwaitableWrapper.construct(5.0).map_to_result_sequence(
+            >>> wrapper = AwaitableWrapper.construct(5.0).map_to_result_tuple(
             ...     validate
             ... )
             >>> wrapper
@@ -4171,14 +4171,14 @@ class AwaitableWrapper(_AwaitableWrapper[_T_co]):
             >>> import asyncio
             >>> from collections.abc import Sequence
             >>> from trcks.oop import AwaitableWrapper
-            >>> awaitable_sequence_wrapper = (
+            >>> awaitable_tuple_wrapper = (
             ...     AwaitableWrapper
             ...     .construct(3)
             ...     .map_to_tuple(lambda x: (x, -x))
             ... )
-            >>> awaitable_sequence_wrapper
+            >>> awaitable_tuple_wrapper
             AwaitableTupleWrapper(core=<coroutine object ...>)
-            >>> asyncio.run(awaitable_sequence_wrapper.core_as_coroutine)
+            >>> asyncio.run(awaitable_tuple_wrapper.core_as_coroutine)
             (3, -3)
         """
         return AwaitableTupleWrapper(a.map_(f)(self.core))
@@ -4286,7 +4286,7 @@ class AwaitableWrapper(_AwaitableWrapper[_T_co]):
             self.core
         ).tap_success_to_awaitable_result(f)
 
-    def tap_to_awaitable_result_sequence(
+    def tap_to_awaitable_result_tuple(
         self, f: Callable[[_T_co], AwaitableResultTuple[_F, object]]
     ) -> AwaitableResultTupleWrapper[_F, _T_co]:
         """Apply an asynchronous side effect with return type
@@ -4318,7 +4318,7 @@ class AwaitableWrapper(_AwaitableWrapper[_T_co]):
             ...
             >>> wrapper = AwaitableWrapper.construct(
             ...     "Hello, world!"
-            ... ).tap_to_awaitable_result_sequence(write_twice)
+            ... ).tap_to_awaitable_result_tuple(write_twice)
             >>> wrapper
             AwaitableResultTupleWrapper(core=<coroutine object ...>)
             >>> result = asyncio.run(wrapper.core_as_coroutine)
@@ -4415,7 +4415,7 @@ class AwaitableWrapper(_AwaitableWrapper[_T_co]):
             self.core
         ).tap_success_to_result(f)
 
-    def tap_to_result_sequence(
+    def tap_to_result_tuple(
         self, f: Callable[[_T_co], ResultTuple[_F, object]]
     ) -> AwaitableResultTupleWrapper[_F, _T_co]:
         """Apply a synchronous side effect with return type [trcks.ResultTuple][]
@@ -4443,7 +4443,7 @@ class AwaitableWrapper(_AwaitableWrapper[_T_co]):
             ...
             >>> wrapper = AwaitableWrapper.construct(
             ...     "Hello, world!"
-            ... ).tap_to_result_sequence(write_twice)
+            ... ).tap_to_result_tuple(write_twice)
             >>> wrapper
             AwaitableResultTupleWrapper(core=<coroutine object ...>)
             >>> result = asyncio.run(wrapper.core_as_coroutine)
@@ -4833,7 +4833,7 @@ class ResultWrapper(_ResultWrapper[_F_default_co, _S_default_co]):
 
                 - the result of the function application if
                     the original [trcks.Result][] is a failure, or
-                - the original [trcks.Result][] object (wrapped as a sequence)
+                - the original [trcks.Result][] object (wrapped as a tuple)
                     if it is a success.
 
         Example:
@@ -4882,7 +4882,7 @@ class ResultWrapper(_ResultWrapper[_F_default_co, _S_default_co]):
                 - a [trcks.SuccessTuple][] containing the result
                     of the function application if
                     the original [trcks.Result][] is a failure, or
-                - the original [trcks.Result][] object (wrapped as a sequence)
+                - the original [trcks.Result][] object (wrapped as a tuple)
                     if it is a success.
 
         Example:
@@ -5048,7 +5048,7 @@ class ResultWrapper(_ResultWrapper[_F_default_co, _S_default_co]):
             self.core
         ).map_success_to_awaitable_result(f)
 
-    def map_success_to_awaitable_result_sequence(
+    def map_success_to_awaitable_result_tuple(
         self, f: Callable[[_S_default_co], AwaitableResultTuple[_F, _S]]
     ) -> AwaitableResultTupleWrapper[_F_default_co | _F, _S]:
         """Apply an asynchronous function with return type
@@ -5081,7 +5081,7 @@ class ResultWrapper(_ResultWrapper[_F_default_co, _S_default_co]):
             >>> wrapper_1 = (
             ...     ResultWrapper
             ...     .construct_failure("not found")
-            ...     .map_success_to_awaitable_result_sequence(expand)
+            ...     .map_success_to_awaitable_result_tuple(expand)
             ... )
             >>> wrapper_1
             AwaitableResultTupleWrapper(core=<coroutine object ...>)
@@ -5091,7 +5091,7 @@ class ResultWrapper(_ResultWrapper[_F_default_co, _S_default_co]):
             >>> wrapper_2 = (
             ...     ResultWrapper
             ...     .construct_success(5.0)
-            ...     .map_success_to_awaitable_result_sequence(expand)
+            ...     .map_success_to_awaitable_result_tuple(expand)
             ... )
             >>> wrapper_2
             AwaitableResultTupleWrapper(core=<coroutine object ...>)
@@ -5146,7 +5146,7 @@ class ResultWrapper(_ResultWrapper[_F_default_co, _S_default_co]):
         """
         return ResultWrapper(r.map_success_to_result(f)(self.core))
 
-    def map_success_to_result_sequence(
+    def map_success_to_result_tuple(
         self, f: Callable[[_S_default_co], ResultTuple[_F, _S]]
     ) -> ResultTupleWrapper[_F_default_co | _F, _S]:
         """Apply a synchronous function with return type [trcks.ResultTuple][]
@@ -5174,17 +5174,17 @@ class ResultWrapper(_ResultWrapper[_F_default_co, _S_default_co]):
             ...
             >>> ResultWrapper.construct_failure(
             ...     "not found"
-            ... ).map_success_to_result_sequence(expand)
+            ... ).map_success_to_result_tuple(expand)
             ResultTupleWrapper(core=('failure', 'not found'))
             >>>
             >>> ResultWrapper.construct_success(
             ...     5.0
-            ... ).map_success_to_result_sequence(expand)
+            ... ).map_success_to_result_tuple(expand)
             ResultTupleWrapper(core=('success', (5.0, 10.0)))
             >>>
             >>> ResultWrapper.construct_success(
             ...     -5.0
-            ... ).map_success_to_result_sequence(expand)
+            ... ).map_success_to_result_tuple(expand)
             ResultTupleWrapper(core=('failure', 'negative'))
         """
         return ResultTupleWrapper.construct_from_result(
@@ -5486,7 +5486,7 @@ class ResultWrapper(_ResultWrapper[_F_default_co, _S_default_co]):
                     if the applied side effect returns a [trcks.Failure][],
                 - *the returned* [trcks.SuccessTuple][]
                     if the applied side effect returns a [trcks.SuccessTuple][] and
-                - *the original* [trcks.Success][] (wrapped as a sequence)
+                - *the original* [trcks.Success][] (wrapped as a tuple)
                     if no side effect was applied.
 
         Example:
@@ -5524,7 +5524,7 @@ class ResultWrapper(_ResultWrapper[_F_default_co, _S_default_co]):
 
         The failure is converted to a [trcks.SuccessTuple][] where
         the original failure value is repeated once per element in
-        the sequence returned by the side effect.
+        the tuple returned by the side effect.
 
         Wrapped [trcks.Success][] objects are passed on without side effects.
 
@@ -5537,9 +5537,9 @@ class ResultWrapper(_ResultWrapper[_F_default_co, _S_default_co]):
 
                 - a [trcks.SuccessTuple][] containing the original failure
                     repeated once per element
-                    in the sequence returned by the side effect
+                    in the tuple returned by the side effect
                     if the original [trcks.Result][] is a failure, or
-                - *the original* [trcks.Success][] (wrapped as a sequence)
+                - *the original* [trcks.Success][] (wrapped as a tuple)
                     if no side effect was applied.
 
         Example:
@@ -5716,7 +5716,7 @@ class ResultWrapper(_ResultWrapper[_F_default_co, _S_default_co]):
             self.core
         ).tap_success_to_awaitable_result(f)
 
-    def tap_success_to_awaitable_result_sequence(
+    def tap_success_to_awaitable_result_tuple(
         self, f: Callable[[_S_default_co], AwaitableResultTuple[_F, object]]
     ) -> AwaitableResultTupleWrapper[_F_default_co | _F, _S_default_co]:
         """Apply an asynchronous side effect with return type
@@ -5751,7 +5751,7 @@ class ResultWrapper(_ResultWrapper[_F_default_co, _S_default_co]):
             >>> wrapper_1 = (
             ...     ResultWrapper
             ...     .construct_failure("missing text")
-            ...     .tap_success_to_awaitable_result_sequence(write_twice)
+            ...     .tap_success_to_awaitable_result_tuple(write_twice)
             ... )
             >>> wrapper_1
             AwaitableResultTupleWrapper(core=<coroutine object ...>)
@@ -5761,7 +5761,7 @@ class ResultWrapper(_ResultWrapper[_F_default_co, _S_default_co]):
             >>> wrapper_2 = (
             ...     ResultWrapper
             ...     .construct_success("Hello, world!")
-            ...     .tap_success_to_awaitable_result_sequence(write_twice)
+            ...     .tap_success_to_awaitable_result_tuple(write_twice)
             ... )
             >>> wrapper_2
             AwaitableResultTupleWrapper(core=<coroutine object ...>)
@@ -5796,7 +5796,7 @@ class ResultWrapper(_ResultWrapper[_F_default_co, _S_default_co]):
         """
         return ResultWrapper(r.tap_success_to_result(f)(self.core))
 
-    def tap_success_to_result_sequence(
+    def tap_success_to_result_tuple(
         self, f: Callable[[_S_default_co], ResultTuple[_F, object]]
     ) -> ResultTupleWrapper[_F_default_co | _F, _S_default_co]:
         """Apply a synchronous side effect with return type [trcks.ResultTuple][]
@@ -5827,17 +5827,17 @@ class ResultWrapper(_ResultWrapper[_F_default_co, _S_default_co]):
             ...
             >>> ResultWrapper.construct_failure(
             ...     "oops"
-            ... ).tap_success_to_result_sequence(audit)
+            ... ).tap_success_to_result_tuple(audit)
             ResultTupleWrapper(core=('failure', 'oops'))
             >>>
             >>> ResultWrapper.construct_success(
             ...     7
-            ... ).tap_success_to_result_sequence(audit)
+            ... ).tap_success_to_result_tuple(audit)
             ResultTupleWrapper(core=('success', (7, 7)))
             >>>
             >>> ResultWrapper.construct_success(
             ...     -1
-            ... ).tap_success_to_result_sequence(audit)
+            ... ).tap_success_to_result_tuple(audit)
             ResultTupleWrapper(core=('failure', 'bad'))
         """
         return ResultTupleWrapper.construct_from_result(
@@ -5851,7 +5851,7 @@ class ResultWrapper(_ResultWrapper[_F_default_co, _S_default_co]):
         to the wrapped [trcks.Success][] object.
 
         The original success value is repeated once per element
-        in the sequence returned by the side effect.
+        in the tuple returned by the side effect.
 
         Wrapped [trcks.Failure][] objects are passed on without side effects.
 
@@ -5864,7 +5864,7 @@ class ResultWrapper(_ResultWrapper[_F_default_co, _S_default_co]):
 
                 - *the original* [trcks.Failure][] if no side effect was applied, or
                 - a [trcks.SuccessTuple][] where the original element is repeated
-                    once per element in the sequence returned by the side effect.
+                    once per element in the tuple returned by the side effect.
 
         Example:
             >>> from trcks.oop import ResultWrapper
@@ -5900,7 +5900,7 @@ class ResultTupleWrapper(_ResultWrapper[_F_default_co, tuple[_S_default_co, ...]
 
     Example:
         >>> from trcks.oop import ResultTupleWrapper
-        >>> result_sequence_wrapper = (
+        >>> result_tuple_wrapper = (
         ...     ResultTupleWrapper
         ...     .construct_successes_from_tuple((1, 2, 3))
         ...     .map_successes(lambda x: x * 2)
@@ -5909,9 +5909,9 @@ class ResultTupleWrapper(_ResultWrapper[_F_default_co, tuple[_S_default_co, ...]
         Processed: 2
         Processed: 4
         Processed: 6
-        >>> result_sequence_wrapper
+        >>> result_tuple_wrapper
         ResultTupleWrapper(core=('success', (2, 4, 6)))
-        >>> result_sequence_wrapper.core
+        >>> result_tuple_wrapper.core
         ('success', (2, 4, 6))
     """
 
@@ -5976,10 +5976,10 @@ class ResultTupleWrapper(_ResultWrapper[_F_default_co, tuple[_S_default_co, ...]
     def construct_successes_from_tuple(
         seq: tuple[_S, ...],
     ) -> ResultTupleWrapper[Never, _S]:
-        """Construct and wrap a [trcks.SuccessTuple][] object from a sequence.
+        """Construct and wrap a [trcks.SuccessTuple][] object from a tuple.
 
         Args:
-            seq: The sequence to be wrapped.
+            seq: The tuple to be wrapped.
 
         Returns:
             A new [trcks.oop.ResultTupleWrapper][] instance with
@@ -6202,7 +6202,7 @@ class ResultTupleWrapper(_ResultWrapper[_F_default_co, tuple[_S_default_co, ...]
     def map_failure_to_tuple(
         self, f: Callable[[_F_default_co], tuple[_S, ...]]
     ) -> ResultTupleWrapper[Never, _S_default_co | _S]:
-        """Apply a synchronous function returning a sequence
+        """Apply a synchronous function returning a tuple
         to the wrapped [trcks.Failure][] object.
 
         Wrapped [trcks.SuccessTuple][] objects are passed on unchanged.
@@ -6507,7 +6507,7 @@ class ResultTupleWrapper(_ResultWrapper[_F_default_co, tuple[_S_default_co, ...]
     def map_successes_to_tuple(
         self, f: Callable[[_S_default_co], tuple[_S, ...]]
     ) -> ResultTupleWrapper[_F_default_co, _S]:
-        """Apply a synchronous function returning a sequence
+        """Apply a synchronous function returning a tuple
         to each element in the wrapped [trcks.SuccessTuple][] and flatten.
 
         Wrapped [trcks.Failure][] objects are passed on unchanged.
@@ -6547,18 +6547,18 @@ class ResultTupleWrapper(_ResultWrapper[_F_default_co, tuple[_S_default_co, ...]
                 allowing for further method chaining.
 
         Example:
-            >>> result_sequence_wrapper_1 = ResultTupleWrapper.construct_failure(
+            >>> result_tuple_wrapper_1 = ResultTupleWrapper.construct_failure(
             ...     "oops"
             ... ).tap_failure(lambda e: print(f"Error: {e}"))
             Error: oops
-            >>> result_sequence_wrapper_1
+            >>> result_tuple_wrapper_1
             ResultTupleWrapper(core=('failure', 'oops'))
-            >>> result_sequence_wrapper_2 = (
+            >>> result_tuple_wrapper_2 = (
             ...     ResultTupleWrapper.construct_successes(1).tap_failure(
             ...         lambda e: print(f"Error: {e}")
             ...     )
             ... )
-            >>> result_sequence_wrapper_2
+            >>> result_tuple_wrapper_2
             ResultTupleWrapper(core=('success', (1,)))
         """
         return ResultTupleWrapper(rt.tap_failure(f)(self.core))
@@ -6625,7 +6625,7 @@ class ResultTupleWrapper(_ResultWrapper[_F_default_co, tuple[_S_default_co, ...]
 
                 - *the original* [trcks.Failure][]
                     if the applied side effect returns a [trcks.Failure][],
-                - *the returned* [trcks.Success][] (wrapped as a sequence)
+                - *the returned* [trcks.Success][] (wrapped as a tuple)
                     if the applied side effect returns a [trcks.Success][] and
                 - *the original* [trcks.SuccessTuple][]
                     if no side effect was applied.
@@ -6731,7 +6731,7 @@ class ResultTupleWrapper(_ResultWrapper[_F_default_co, tuple[_S_default_co, ...]
 
                 - *the original* [trcks.Failure][]
                     if the applied side effect returns a [trcks.Failure][],
-                - *the returned* [trcks.Success][] (wrapped as a sequence)
+                - *the returned* [trcks.Success][] (wrapped as a tuple)
                     if the applied side effect returns a [trcks.Success][] and
                 - *the original* [trcks.SuccessTuple][]
                     if no side effect was applied.
@@ -6810,12 +6810,12 @@ class ResultTupleWrapper(_ResultWrapper[_F_default_co, tuple[_S_default_co, ...]
     def tap_failure_to_tuple(
         self, f: Callable[[_F_default_co], tuple[object, ...]]
     ) -> ResultTupleWrapper[Never, _F_default_co | _S_default_co]:
-        """Apply a synchronous side effect returning a sequence
+        """Apply a synchronous side effect returning a tuple
         to the wrapped [trcks.Failure][] object.
 
         The failure is converted to a [trcks.SuccessTuple][] where
         the original failure value is repeated once per element in
-        the sequence returned by the side effect.
+        the tuple returned by the side effect.
 
         Wrapped [trcks.SuccessTuple][] objects are passed on without side effects.
 
@@ -6827,7 +6827,7 @@ class ResultTupleWrapper(_ResultWrapper[_F_default_co, tuple[_S_default_co, ...]
 
                 - a [trcks.SuccessTuple][] containing the original failure
                     repeated once per element
-                    in the sequence returned by the side effect
+                    in the tuple returned by the side effect
                     if the original [trcks.ResultTuple][] is a failure, or
                 - the original [trcks.SuccessTuple][] if no side effect was applied.
 
@@ -6873,18 +6873,18 @@ class ResultTupleWrapper(_ResultWrapper[_F_default_co, tuple[_S_default_co, ...]
                 allowing for further method chaining.
 
         Example:
-            >>> result_sequence_wrapper_1 = ResultTupleWrapper.construct_failure(
+            >>> result_tuple_wrapper_1 = ResultTupleWrapper.construct_failure(
             ...     "oops"
             ... ).tap_successes(lambda x: print(f"Value: {x}"))
-            >>> result_sequence_wrapper_1
+            >>> result_tuple_wrapper_1
             ResultTupleWrapper(core=('failure', 'oops'))
-            >>> result_sequence_wrapper_2 = (
+            >>> result_tuple_wrapper_2 = (
             ...     ResultTupleWrapper.construct_successes_from_tuple((1, 2))
             ...     .tap_successes(lambda x: print(f"Value: {x}"))
             ... )
             Value: 1
             Value: 2
-            >>> result_sequence_wrapper_2
+            >>> result_tuple_wrapper_2
             ResultTupleWrapper(core=('success', (1, 2)))
         """
         return ResultTupleWrapper(rt.tap_successes(f)(self.core))
@@ -7124,11 +7124,11 @@ class ResultTupleWrapper(_ResultWrapper[_F_default_co, tuple[_S_default_co, ...]
     def tap_successes_to_tuple(
         self, f: Callable[[_S_default_co], tuple[object, ...]]
     ) -> ResultTupleWrapper[_F_default_co, _S_default_co]:
-        """Apply a synchronous side effect returning a sequence
+        """Apply a synchronous side effect returning a tuple
         to each element in the wrapped [trcks.SuccessTuple][].
 
         The original success elements are repeated once per element
-        in the sequence returned by the side effect.
+        in the tuple returned by the side effect.
 
         Wrapped [trcks.Failure][] objects are passed on without side effects.
 
@@ -7140,7 +7140,7 @@ class ResultTupleWrapper(_ResultWrapper[_F_default_co, tuple[_S_default_co, ...]
 
                 - the original [trcks.Failure][] if no side effect was applied, or
                 - a [trcks.SuccessTuple][] where each original element is repeated
-                    once per element in the sequence returned by the side effect.
+                    once per element in the tuple returned by the side effect.
 
         Example:
             >>> from trcks.oop import ResultTupleWrapper
@@ -7166,14 +7166,14 @@ class TupleWrapper(_Wrapper[tuple[_T_co, ...]]):
     via the attribute `trcks.oop.TupleWrapper.core`.
     The `trcks.oop.TupleWrapper.map*` methods allow method chaining.
     The `trcks.oop.TupleWrapper.tap*` methods allow for side effects
-    without changing the wrapped sequence.
+    without changing the wrapped tuple.
 
     Example:
         >>> from trcks.oop import TupleWrapper
         >>> def double(x: int) -> int:
         ...     return x * 2
         ...
-        >>> sequence_wrapper = (
+        >>> tuple_wrapper = (
         ...     TupleWrapper
         ...     .construct_from_tuple((1, 2, 3))
         ...     .map(double)
@@ -7182,7 +7182,7 @@ class TupleWrapper(_Wrapper[tuple[_T_co, ...]]):
         Processing: 2
         Processing: 4
         Processing: 6
-        >>> sequence_wrapper
+        >>> tuple_wrapper
         TupleWrapper(core=(2, 4, 6))
     """
 
@@ -7199,8 +7199,8 @@ class TupleWrapper(_Wrapper[tuple[_T_co, ...]]):
 
         Example:
             >>> from trcks.oop import TupleWrapper
-            >>> sequence_wrapper = TupleWrapper.construct(42)
-            >>> sequence_wrapper
+            >>> tuple_wrapper = TupleWrapper.construct(42)
+            >>> tuple_wrapper
             TupleWrapper(core=(42,))
         """
         return TupleWrapper(t.construct(value))
@@ -7218,8 +7218,8 @@ class TupleWrapper(_Wrapper[tuple[_T_co, ...]]):
 
         Example:
             >>> from trcks.oop import TupleWrapper
-            >>> sequence_wrapper = TupleWrapper.construct_from_tuple((1, 2, 3))
-            >>> sequence_wrapper
+            >>> tuple_wrapper = TupleWrapper.construct_from_tuple((1, 2, 3))
+            >>> tuple_wrapper
             TupleWrapper(core=(1, 2, 3))
         """
         return TupleWrapper(seq)
@@ -7241,12 +7241,12 @@ class TupleWrapper(_Wrapper[tuple[_T_co, ...]]):
             >>> def triple(x: int) -> int:
             ...     return x * 3
             ...
-            >>> sequence_wrapper = (
+            >>> tuple_wrapper = (
             ...     TupleWrapper
             ...     .construct_from_tuple((1, 2, 3))
             ...     .map(triple)
             ... )
-            >>> sequence_wrapper
+            >>> tuple_wrapper
             TupleWrapper(core=(3, 6, 9))
         """
         return TupleWrapper(t.map_(f)(self.core))
@@ -7340,7 +7340,7 @@ class TupleWrapper(_Wrapper[tuple[_T_co, ...]]):
             self.core
         ).map_successes_to_awaitable_result(f)
 
-    def map_to_awaitable_result_sequence(
+    def map_to_awaitable_result_tuple(
         self, f: Callable[[_T_co], AwaitableResultTuple[_F, _S]]
     ) -> AwaitableResultTupleWrapper[_F, _S]:
         """Apply an asynchronous function with return type
@@ -7376,7 +7376,7 @@ class TupleWrapper(_Wrapper[tuple[_T_co, ...]]):
             ...     return await (
             ...         TupleWrapper
             ...         .construct_from_tuple((1, 2))
-            ...         .map_to_awaitable_result_sequence(expand)
+            ...         .map_to_awaitable_result_tuple(expand)
             ...         .core_as_coroutine
             ...     )
             ...
@@ -7386,7 +7386,7 @@ class TupleWrapper(_Wrapper[tuple[_T_co, ...]]):
             ...     return await (
             ...         TupleWrapper
             ...         .construct_from_tuple((1, -1, 2))
-            ...         .map_to_awaitable_result_sequence(expand)
+            ...         .map_to_awaitable_result_tuple(expand)
             ...         .core_as_coroutine
             ...     )
             ...
@@ -7472,7 +7472,7 @@ class TupleWrapper(_Wrapper[tuple[_T_co, ...]]):
             self.core
         ).map_successes_to_result(f)
 
-    def map_to_result_sequence(
+    def map_to_result_tuple(
         self, f: Callable[[_T_co], ResultTuple[_F, _S]]
     ) -> ResultTupleWrapper[_F, _S]:
         """Apply a synchronous function with return type [trcks.ResultTuple][]
@@ -7499,12 +7499,12 @@ class TupleWrapper(_Wrapper[tuple[_T_co, ...]]):
             ...
             >>> TupleWrapper.construct_from_tuple(
             ...     (1, 2)
-            ... ).map_to_result_sequence(expand)
+            ... ).map_to_result_tuple(expand)
             ResultTupleWrapper(core=('success', (1, -1, 2, -2)))
             >>>
             >>> TupleWrapper.construct_from_tuple(
             ...     (1, -1, 2)
-            ... ).map_to_result_sequence(expand)
+            ... ).map_to_result_tuple(expand)
             ResultTupleWrapper(core=('failure', 'bad'))
         """
         return ResultTupleWrapper.construct_successes_from_tuple(
@@ -7528,12 +7528,12 @@ class TupleWrapper(_Wrapper[tuple[_T_co, ...]]):
             >>> def duplicate(x: int) -> tuple[int, int]:
             ...     return x, x
             ...
-            >>> sequence_wrapper = (
+            >>> tuple_wrapper = (
             ...     TupleWrapper
             ...     .construct_from_tuple((1, 2, 3))
             ...     .map_to_tuple(duplicate)
             ... )
-            >>> sequence_wrapper
+            >>> tuple_wrapper
             TupleWrapper(core=(1, 1, 2, 2, 3, 3))
         """
         return TupleWrapper(t.map_to_tuple(f)(self.core))
@@ -7551,7 +7551,7 @@ class TupleWrapper(_Wrapper[tuple[_T_co, ...]]):
 
         Example:
             >>> from trcks.oop import TupleWrapper
-            >>> sequence_wrapper = (
+            >>> tuple_wrapper = (
             ...     TupleWrapper
             ...     .construct_from_tuple((1, 2, 3))
             ...     .tap(lambda x: print(f"Value: {x}"))
@@ -7559,7 +7559,7 @@ class TupleWrapper(_Wrapper[tuple[_T_co, ...]]):
             Value: 1
             Value: 2
             Value: 3
-            >>> sequence_wrapper
+            >>> tuple_wrapper
             TupleWrapper(core=(1, 2, 3))
         """
         return TupleWrapper(t.tap(f)(self.core))
@@ -7654,7 +7654,7 @@ class TupleWrapper(_Wrapper[tuple[_T_co, ...]]):
             self.core
         ).tap_successes_to_awaitable_result(f)
 
-    def tap_to_awaitable_result_sequence(
+    def tap_to_awaitable_result_tuple(
         self, f: Callable[[_T_co], AwaitableResultTuple[_F, object]]
     ) -> AwaitableResultTupleWrapper[_F, _T_co]:
         """Apply an asynchronous side effect with return type
@@ -7689,7 +7689,7 @@ class TupleWrapper(_Wrapper[tuple[_T_co, ...]]):
             ...     return await (
             ...         TupleWrapper
             ...         .construct_from_tuple((1, 2))
-            ...         .tap_to_awaitable_result_sequence(audit)
+            ...         .tap_to_awaitable_result_tuple(audit)
             ...         .core_as_coroutine
             ...     )
             ...
@@ -7699,7 +7699,7 @@ class TupleWrapper(_Wrapper[tuple[_T_co, ...]]):
             ...     return await (
             ...         TupleWrapper
             ...         .construct_from_tuple((1, -1, 2))
-            ...         .tap_to_awaitable_result_sequence(audit)
+            ...         .tap_to_awaitable_result_tuple(audit)
             ...         .core_as_coroutine
             ...     )
             ...
@@ -7791,7 +7791,7 @@ class TupleWrapper(_Wrapper[tuple[_T_co, ...]]):
             self.core
         ).tap_successes_to_result(f)
 
-    def tap_to_result_sequence(
+    def tap_to_result_tuple(
         self, f: Callable[[_T_co], ResultTuple[_F, object]]
     ) -> ResultTupleWrapper[_F, _T_co]:
         """Apply a synchronous side effect with return type [trcks.ResultTuple][]
@@ -7819,12 +7819,12 @@ class TupleWrapper(_Wrapper[tuple[_T_co, ...]]):
             ...
             >>> TupleWrapper.construct_from_tuple(
             ...     (7,)
-            ... ).tap_to_result_sequence(audit)
+            ... ).tap_to_result_tuple(audit)
             ResultTupleWrapper(core=('success', (7, 7)))
             >>>
             >>> TupleWrapper.construct_from_tuple(
             ...     (1, -1)
-            ... ).tap_to_result_sequence(audit)
+            ... ).tap_to_result_tuple(audit)
             ResultTupleWrapper(core=('failure', 'bad'))
         """
         return ResultTupleWrapper.construct_successes_from_tuple(
@@ -7851,7 +7851,7 @@ class TupleWrapper(_Wrapper[tuple[_T_co, ...]]):
             ...     print(f"Wrote {x} to disk.")
             ...     return str(x), str(x)
             ...
-            >>> sequence_wrapper = (
+            >>> tuple_wrapper = (
             ...     TupleWrapper
             ...     .construct_from_tuple((1, 2, 3))
             ...     .tap_to_tuple(write_to_disk)
@@ -7859,7 +7859,7 @@ class TupleWrapper(_Wrapper[tuple[_T_co, ...]]):
             Wrote 1 to disk.
             Wrote 2 to disk.
             Wrote 3 to disk.
-            >>> sequence_wrapper
+            >>> tuple_wrapper
             TupleWrapper(core=(1, 1, 2, 2, 3, 3))
         """
         return TupleWrapper(t.tap_to_tuple(f)(self.core))
@@ -7988,7 +7988,7 @@ class Wrapper(_Wrapper[_T_co]):
         """
         return AwaitableResultWrapper(f(self.core))
 
-    def map_to_awaitable_result_sequence(
+    def map_to_awaitable_result_tuple(
         self, f: Callable[[_T_co], AwaitableResultTuple[_F, _S]]
     ) -> AwaitableResultTupleWrapper[_F, _S]:
         """Apply an asynchronous function with return type
@@ -8014,7 +8014,7 @@ class Wrapper(_Wrapper[_T_co]):
             >>> wrapper = (
             ...     Wrapper
             ...     .construct(5.0)
-            ...     .map_to_awaitable_result_sequence(validate)
+            ...     .map_to_awaitable_result_tuple(validate)
             ... )
             >>> wrapper
             AwaitableResultTupleWrapper(core=<coroutine object ...>)
@@ -8046,12 +8046,12 @@ class Wrapper(_Wrapper[_T_co]):
             ...     return x, x
             ...
             >>> async def main() -> tuple[int, ...]:
-            ...     awaitable_sequence_wrapper = (
+            ...     awaitable_tuple_wrapper = (
             ...         Wrapper.construct(7).map_to_awaitable_tuple(duplicate)
             ...     )
-            ...     sequence = await awaitable_sequence_wrapper.core_as_coroutine
-            ...     assert len(sequence) == 2
-            ...     return sequence
+            ...     tuple = await awaitable_tuple_wrapper.core_as_coroutine
+            ...     assert len(tuple) == 2
+            ...     return tuple
             ...
             >>> asyncio.run(main())
             (7, 7)
@@ -8081,7 +8081,7 @@ class Wrapper(_Wrapper[_T_co]):
         """
         return ResultWrapper(f(self.core))
 
-    def map_to_result_sequence(
+    def map_to_result_tuple(
         self, f: Callable[[_T_co], ResultTuple[_F, _S]]
     ) -> ResultTupleWrapper[_F, _S]:
         """Apply a synchronous function with return type [trcks.ResultTuple][]
@@ -8096,7 +8096,7 @@ class Wrapper(_Wrapper[_T_co]):
 
         Example:
             >>> from trcks import ResultTuple
-            >>> Wrapper.construct(-1).map_to_result_sequence(
+            >>> Wrapper.construct(-1).map_to_result_tuple(
             ...     lambda x: ("success", (x, x))
             ...     if x >= 0
             ...     else ("failure", "negative value")
@@ -8228,7 +8228,7 @@ class Wrapper(_Wrapper[_T_co]):
             self.core
         ).tap_success_to_awaitable_result(f)
 
-    def tap_to_awaitable_result_sequence(
+    def tap_to_awaitable_result_tuple(
         self, f: Callable[[_T_co], AwaitableResultTuple[_F, object]]
     ) -> AwaitableResultTupleWrapper[_F, _T_co]:
         """Apply an asynchronous side effect with return type
@@ -8259,7 +8259,7 @@ class Wrapper(_Wrapper[_T_co]):
             ...
             >>> wrapper = Wrapper.construct(
             ...     "Hello, world!"
-            ... ).tap_to_awaitable_result_sequence(write_twice)
+            ... ).tap_to_awaitable_result_tuple(write_twice)
             >>> wrapper
             AwaitableResultTupleWrapper(core=<coroutine object ...>)
             >>> result = asyncio.run(wrapper.core_as_coroutine)
@@ -8294,10 +8294,10 @@ class Wrapper(_Wrapper[_T_co]):
             ...     print(f"Wrote {x} to disk.")
             ...     return "left", "right"
             ...
-            >>> awaitable_sequence_wrapper = Wrapper.construct(
+            >>> awaitable_tuple_wrapper = Wrapper.construct(
             ...     3
             ... ).tap_to_awaitable_tuple(write_to_disk)
-            >>> asyncio.run(awaitable_sequence_wrapper.core_as_coroutine)
+            >>> asyncio.run(awaitable_tuple_wrapper.core_as_coroutine)
             Wrote 3 to disk.
             (3, 3)
         """
@@ -8342,7 +8342,7 @@ class Wrapper(_Wrapper[_T_co]):
         """
         return ResultWrapper.construct_success(self.core).tap_success_to_result(f)
 
-    def tap_to_result_sequence(
+    def tap_to_result_tuple(
         self, f: Callable[[_T_co], ResultTuple[_F, object]]
     ) -> ResultTupleWrapper[_F, _T_co]:
         """Apply a synchronous side effect with return type [trcks.ResultTuple][]
@@ -8370,17 +8370,17 @@ class Wrapper(_Wrapper[_T_co]):
             ...         "success",
             ...         (print(f"Positive float: {x}"), print(f"Positive float: {x}"))
             ...     )
-            >>> result_sequence_wrapper_1 = Wrapper.construct(
+            >>> result_tuple_wrapper_1 = Wrapper.construct(
             ...     -2.3
-            ... ).tap_to_result_sequence(print_positive_float)
-            >>> result_sequence_wrapper_1
+            ... ).tap_to_result_tuple(print_positive_float)
+            >>> result_tuple_wrapper_1
             ResultTupleWrapper(core=('failure', 'not positive'))
-            >>> result_sequence_wrapper_2 = Wrapper.construct(
+            >>> result_tuple_wrapper_2 = Wrapper.construct(
             ...     3.5
-            ... ).tap_to_result_sequence(print_positive_float)
+            ... ).tap_to_result_tuple(print_positive_float)
             Positive float: 3.5
             Positive float: 3.5
-            >>> result_sequence_wrapper_2
+            >>> result_tuple_wrapper_2
             ResultTupleWrapper(core=('success', (3.5, 3.5)))
         """
         return ResultTupleWrapper.construct_successes(
