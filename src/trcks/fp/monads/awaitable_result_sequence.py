@@ -50,7 +50,7 @@ from trcks.fp.monads import result as r
 from trcks.fp.monads import result_sequence as rs
 
 if TYPE_CHECKING:  # pragma: no cover
-    from collections.abc import Awaitable, Callable, Sequence
+    from collections.abc import Awaitable, Callable
 
     from trcks import (
         AwaitableFailure,
@@ -258,7 +258,7 @@ def construct_successes_from_awaitable(
 
 
 def construct_successes_from_sequence(
-    seq: Sequence[_S],
+    seq: tuple[_S, ...],
 ) -> AwaitableSuccessSequence[_S]:
     """Create a [trcks.AwaitableSuccessSequence][] object from a sequence.
 
@@ -499,7 +499,7 @@ def map_failure_to_result_sequence(
 
 
 def map_failure_to_sequence(
-    f: Callable[[_F1], Sequence[_S2]],
+    f: Callable[[_F1], tuple[_S2, ...]],
 ) -> Callable[
     [AwaitableResultSequence[_F1, _S1]],
     Awaitable[SuccessSequence[_S1] | SuccessSequence[_S2]],
@@ -828,7 +828,7 @@ def map_successes_to_result_sequence(
 
 
 def map_successes_to_sequence(
-    f: Callable[[_S1], Sequence[_S2]],
+    f: Callable[[_S1], tuple[_S2, ...]],
 ) -> Callable[[AwaitableResultSequence[_F1, _S1]], AwaitableResultSequence[_F1, _S2]]:
     """Map a sequence-returning function over each element
     in a [trcks.AwaitableResultSequence][].
@@ -1136,7 +1136,7 @@ def tap_failure_to_result_sequence(
 
 
 def tap_failure_to_sequence(
-    f: Callable[[_F1], Sequence[object]],
+    f: Callable[[_F1], tuple[object, ...]],
 ) -> Callable[
     [AwaitableResultSequence[_F1, _S1]],
     Awaitable[SuccessSequence[_F1] | SuccessSequence[_S1]],
@@ -1472,7 +1472,7 @@ def tap_successes_to_result_sequence(
 
 
 def tap_successes_to_sequence(
-    f: Callable[[_S1], Sequence[object]],
+    f: Callable[[_S1], tuple[object, ...]],
 ) -> Callable[[AwaitableResultSequence[_F1, _S1]], AwaitableResultSequence[_F1, _S1]]:
     """Apply a sequence-returning side effect to each element
     in a [trcks.AwaitableResultSequence][].
@@ -1538,3 +1538,10 @@ async def to_coroutine_result_sequence(
         ('success', (1, 2))
     """
     return await a_r_seq
+
+
+construct_successes_from_tuple = construct_successes_from_sequence
+map_failure_to_tuple = map_failure_to_sequence
+map_successes_to_tuple = map_successes_to_sequence
+tap_failure_to_tuple = tap_failure_to_sequence
+tap_successes_to_tuple = tap_successes_to_sequence

@@ -4,7 +4,7 @@ This module provides wrapper classes for processing values of the following type
 in a method-chaining style:
 
 - [collections.abc.Awaitable][]
-- [collections.abc.Sequence][]
+- [tuple][]
 - [trcks.AwaitableResult][]
 - [trcks.AwaitableResultSequence][]
 - [trcks.AwaitableSequence][]
@@ -76,7 +76,7 @@ See:
 
 from __future__ import annotations
 
-from collections.abc import Awaitable, Callable, Sequence
+from collections.abc import Awaitable, Callable
 from typing import Generic, Literal
 
 from trcks import (
@@ -205,7 +205,7 @@ class _ResultWrapper(_Wrapper[Result[_F_default_co, _S_default_co]]):
 
 
 class AwaitableResultSequenceWrapper(
-    _AwaitableResultWrapper[_F_default_co, Sequence[_S_default_co]]
+    _AwaitableResultWrapper[_F_default_co, tuple[_S_default_co, ...]]
 ):
     """Type-safe and immutable wrapper for [trcks.AwaitableResultSequence][] objects.
 
@@ -463,7 +463,7 @@ class AwaitableResultSequenceWrapper(
 
     @staticmethod
     def construct_successes_from_sequence(
-        seq: Sequence[_S],
+        seq: tuple[_S, ...],
     ) -> AwaitableResultSequenceWrapper[Never, _S]:
         """Construct and wrap an awaitable [trcks.SuccessSequence][] from a sequence.
 
@@ -742,7 +742,7 @@ class AwaitableResultSequenceWrapper(
         )
 
     def map_failure_to_sequence(
-        self, f: Callable[[_F_default_co], Sequence[_S]]
+        self, f: Callable[[_F_default_co], tuple[_S, ...]]
     ) -> AwaitableResultSequenceWrapper[Never, _S_default_co | _S]:
         """Apply a synchronous function returning a sequence
         to the wrapped [trcks.Failure][] object.
@@ -1099,7 +1099,7 @@ class AwaitableResultSequenceWrapper(
         )
 
     def map_successes_to_sequence(
-        self, f: Callable[[_S_default_co], Sequence[_S]]
+        self, f: Callable[[_S_default_co], tuple[_S, ...]]
     ) -> AwaitableResultSequenceWrapper[_F_default_co, _S]:
         """Apply a synchronous function returning a sequence to each element in
         the wrapped [trcks.AwaitableSuccessSequence][] and flatten.
@@ -1434,7 +1434,7 @@ class AwaitableResultSequenceWrapper(
         )
 
     def tap_failure_to_sequence(
-        self, f: Callable[[_F_default_co], Sequence[object]]
+        self, f: Callable[[_F_default_co], tuple[object, ...]]
     ) -> AwaitableResultSequenceWrapper[Never, _F_default_co | _S_default_co]:
         """Apply a synchronous side effect returning a sequence
         to the wrapped [trcks.Failure][] object.
@@ -1798,7 +1798,7 @@ class AwaitableResultSequenceWrapper(
         )
 
     def tap_successes_to_sequence(
-        self, f: Callable[[_S_default_co], Sequence[object]]
+        self, f: Callable[[_S_default_co], tuple[object, ...]]
     ) -> AwaitableResultSequenceWrapper[_F_default_co, _S_default_co]:
         """Apply a synchronous side effect returning a sequence to each element in
         the wrapped [trcks.AwaitableSuccessSequence][].
@@ -2370,9 +2370,9 @@ class AwaitableResultWrapper(_AwaitableResultWrapper[_F_default_co, _S_default_c
         ).map_failure_to_result_sequence(f)
 
     def map_failure_to_sequence(
-        self, f: Callable[[_F_default_co], Sequence[_S]]
+        self, f: Callable[[_F_default_co], tuple[_S, ...]]
     ) -> AwaitableResultSequenceWrapper[Never, _S_default_co | _S]:
-        """Apply a synchronous function returning a [collections.abc.Sequence][]
+        """Apply a synchronous function returning a [tuple][]
         to the wrapped [trcks.Failure][] object.
 
         The failure is converted to a [trcks.SuccessSequence][].
@@ -2380,7 +2380,7 @@ class AwaitableResultWrapper(_AwaitableResultWrapper[_F_default_co, _S_default_c
 
         Args:
             f: The synchronous function to be applied,
-                returning a [collections.abc.Sequence][].
+                returning a [tuple][].
 
         Returns:
             A [trcks.oop.AwaitableResultSequenceWrapper][] instance with
@@ -2738,16 +2738,16 @@ class AwaitableResultWrapper(_AwaitableResultWrapper[_F_default_co, _S_default_c
         ).map_successes_to_result_sequence(f)
 
     def map_success_to_sequence(
-        self, f: Callable[[_S_default_co], Sequence[_S]]
+        self, f: Callable[[_S_default_co], tuple[_S, ...]]
     ) -> AwaitableResultSequenceWrapper[_F_default_co, _S]:
-        """Apply a synchronous function returning a [collections.abc.Sequence][]
+        """Apply a synchronous function returning a [tuple][]
         to the wrapped [trcks.Success][] object.
 
         Wrapped [trcks.Failure][] objects are passed on unchanged.
 
         Args:
             f: The synchronous function to be applied,
-                returning a [collections.abc.Sequence][].
+                returning a [tuple][].
 
         Returns:
             A [trcks.oop.AwaitableResultSequenceWrapper][] instance with
@@ -3062,9 +3062,9 @@ class AwaitableResultWrapper(_AwaitableResultWrapper[_F_default_co, _S_default_c
         ).tap_failure_to_result_sequence(f)
 
     def tap_failure_to_sequence(
-        self, f: Callable[[_F_default_co], Sequence[object]]
+        self, f: Callable[[_F_default_co], tuple[object, ...]]
     ) -> AwaitableResultSequenceWrapper[Never, _F_default_co | _S_default_co]:
-        """Apply a synchronous side effect returning a [collections.abc.Sequence][]
+        """Apply a synchronous side effect returning a [tuple][]
         to the wrapped [trcks.Failure][] object.
 
         The failure is converted to a [trcks.SuccessSequence][] where
@@ -3409,9 +3409,9 @@ class AwaitableResultWrapper(_AwaitableResultWrapper[_F_default_co, _S_default_c
         ).tap_successes_to_result_sequence(f)
 
     def tap_success_to_sequence(
-        self, f: Callable[[_S_default_co], Sequence[object]]
+        self, f: Callable[[_S_default_co], tuple[object, ...]]
     ) -> AwaitableResultSequenceWrapper[_F_default_co, _S_default_co]:
-        """Apply a synchronous side effect returning a [collections.abc.Sequence][]
+        """Apply a synchronous side effect returning a [tuple][]
         to the wrapped [trcks.Success][] object.
 
         The original success value is repeated once per element
@@ -3421,7 +3421,7 @@ class AwaitableResultWrapper(_AwaitableResultWrapper[_F_default_co, _S_default_c
 
         Args:
             f: The synchronous side effect to be applied,
-                returning a [collections.abc.Sequence][].
+                returning a [tuple][].
 
         Returns:
             A [trcks.oop.AwaitableResultSequenceWrapper][] instance with
@@ -3467,7 +3467,7 @@ class AwaitableResultWrapper(_AwaitableResultWrapper[_F_default_co, _S_default_c
         ).tap_successes_to_sequence(f)
 
 
-class AwaitableSequenceWrapper(_AwaitableWrapper[Sequence[_T_co]]):
+class AwaitableSequenceWrapper(_AwaitableWrapper[tuple[_T_co, ...]]):
     """Type-safe and immutable wrapper for [trcks.AwaitableSequence][] objects.
 
     The wrapped object can be accessed
@@ -3484,7 +3484,7 @@ class AwaitableSequenceWrapper(_AwaitableWrapper[Sequence[_T_co]]):
         ...     await asyncio.sleep(0.001)
         ...     return x * 2
         ...
-        >>> async def main() -> Sequence[int]:
+        >>> async def main() -> tuple[int, ...]:
         ...     awaitable_sequence_wrapper = (
         ...         AwaitableSequenceWrapper
         ...         .construct_from_sequence((1, 2, 3))
@@ -3551,7 +3551,7 @@ class AwaitableSequenceWrapper(_AwaitableWrapper[Sequence[_T_co]]):
 
     @staticmethod
     def construct_from_sequence(
-        seq: Sequence[_T],
+        seq: tuple[_T, ...],
     ) -> AwaitableSequenceWrapper[_T]:
         """Construct and wrap a [trcks.AwaitableSequence][] from a sequence.
 
@@ -3592,7 +3592,7 @@ class AwaitableSequenceWrapper(_AwaitableWrapper[Sequence[_T_co]]):
             >>> import asyncio
             >>> from collections.abc import Sequence
             >>> from trcks.oop import AwaitableSequenceWrapper
-            >>> async def main() -> Sequence[int]:
+            >>> async def main() -> tuple[int, ...]:
             ...     return await (
             ...         AwaitableSequenceWrapper
             ...         .construct_from_sequence((1, 2, 3))
@@ -3627,7 +3627,7 @@ class AwaitableSequenceWrapper(_AwaitableWrapper[Sequence[_T_co]]):
             ...     await asyncio.sleep(0.001)
             ...     return x + 1
             ...
-            >>> async def main() -> Sequence[int]:
+            >>> async def main() -> tuple[int, ...]:
             ...     return await (
             ...         AwaitableSequenceWrapper
             ...         .construct_from_sequence((1, 2, 3))
@@ -3643,7 +3643,7 @@ class AwaitableSequenceWrapper(_AwaitableWrapper[Sequence[_T_co]]):
     def map_to_awaitable_sequence(
         self, f: Callable[[_T_co], AwaitableSequence[_T]]
     ) -> AwaitableSequenceWrapper[_T]:
-        """Apply an asynchronous function returning a [collections.abc.Sequence][]
+        """Apply an asynchronous function returning a [tuple][]
         to each element in the wrapped [trcks.AwaitableSequence][] and flatten.
 
         Args:
@@ -3662,7 +3662,7 @@ class AwaitableSequenceWrapper(_AwaitableWrapper[Sequence[_T_co]]):
             ...     await asyncio.sleep(0.001)
             ...     return x, x
             ...
-            >>> async def main() -> Sequence[int]:
+            >>> async def main() -> tuple[int, ...]:
             ...     return await (
             ...         AwaitableSequenceWrapper
             ...         .construct_from_sequence((1, 2))
@@ -3676,7 +3676,7 @@ class AwaitableSequenceWrapper(_AwaitableWrapper[Sequence[_T_co]]):
         return AwaitableSequenceWrapper(as_.map_to_awaitable_sequence(f)(self.core))
 
     def map_to_sequence(
-        self, f: Callable[[_T_co], Sequence[_T]]
+        self, f: Callable[[_T_co], tuple[_T, ...]]
     ) -> AwaitableSequenceWrapper[_T]:
         """Apply a synchronous function returning a sequence to each element in
         the wrapped [trcks.AwaitableSequence][] object and flatten.
@@ -3693,7 +3693,7 @@ class AwaitableSequenceWrapper(_AwaitableWrapper[Sequence[_T_co]]):
             >>> import asyncio
             >>> from collections.abc import Sequence
             >>> from trcks.oop import AwaitableSequenceWrapper
-            >>> async def main() -> Sequence[int]:
+            >>> async def main() -> tuple[int, ...]:
             ...     return await (
             ...         AwaitableSequenceWrapper
             ...         .construct_from_sequence((1, 2, 3))
@@ -3721,7 +3721,7 @@ class AwaitableSequenceWrapper(_AwaitableWrapper[Sequence[_T_co]]):
             >>> import asyncio
             >>> from collections.abc import Sequence
             >>> from trcks.oop import AwaitableSequenceWrapper
-            >>> async def main() -> Sequence[int]:
+            >>> async def main() -> tuple[int, ...]:
             ...     return await (
             ...         AwaitableSequenceWrapper
             ...         .construct_from_sequence((1, 2, 3))
@@ -3758,7 +3758,7 @@ class AwaitableSequenceWrapper(_AwaitableWrapper[Sequence[_T_co]]):
             ...     await asyncio.sleep(0.001)
             ...     print(f"Logged: {x}")
             ...
-            >>> async def main() -> Sequence[int]:
+            >>> async def main() -> tuple[int, ...]:
             ...     return await (
             ...         AwaitableSequenceWrapper
             ...         .construct_from_sequence((1, 2))
@@ -3795,7 +3795,7 @@ class AwaitableSequenceWrapper(_AwaitableWrapper[Sequence[_T_co]]):
             ...     await asyncio.sleep(0.001)
             ...     return str(x), str(x)
             ...
-            >>> async def main() -> Sequence[int]:
+            >>> async def main() -> tuple[int, ...]:
             ...     return await (
             ...         AwaitableSequenceWrapper
             ...         .construct_from_sequence((1, 2))
@@ -3809,7 +3809,7 @@ class AwaitableSequenceWrapper(_AwaitableWrapper[Sequence[_T_co]]):
         return AwaitableSequenceWrapper(as_.tap_to_awaitable_sequence(f)(self.core))
 
     def tap_to_sequence(
-        self, f: Callable[[_T_co], Sequence[object]]
+        self, f: Callable[[_T_co], tuple[object, ...]]
     ) -> AwaitableSequenceWrapper[_T_co]:
         """Apply a synchronous side effect returning a sequence to each element in
         the wrapped [trcks.AwaitableSequence][] object.
@@ -3826,7 +3826,7 @@ class AwaitableSequenceWrapper(_AwaitableWrapper[Sequence[_T_co]]):
             >>> import asyncio
             >>> from collections.abc import Sequence
             >>> from trcks.oop import AwaitableSequenceWrapper
-            >>> async def main() -> Sequence[int]:
+            >>> async def main() -> tuple[int, ...]:
             ...     return await (
             ...         AwaitableSequenceWrapper
             ...         .construct_from_sequence((1, 2))
@@ -4075,12 +4075,12 @@ class AwaitableWrapper(_AwaitableWrapper[_T_co]):
     def map_to_awaitable_sequence(
         self, f: Callable[[_T_co], AwaitableSequence[_T]]
     ) -> AwaitableSequenceWrapper[_T]:
-        """Apply an asynchronous function returning a [collections.abc.Sequence][]
+        """Apply an asynchronous function returning a [tuple][]
         to the wrapped [collections.abc.Awaitable][] object.
 
         Args:
             f: The asynchronous function to be applied, returning an awaitable
-                [collections.abc.Sequence][].
+                [tuple][].
 
         Returns:
             A new [trcks.oop.AwaitableSequenceWrapper][] instance with
@@ -4090,7 +4090,7 @@ class AwaitableWrapper(_AwaitableWrapper[_T_co]):
             >>> import asyncio
             >>> from collections.abc import Sequence
             >>> from trcks.oop import AwaitableWrapper
-            >>> async def duplicate_async(x: int) -> Sequence[int]:
+            >>> async def duplicate_async(x: int) -> tuple[int, ...]:
             ...     await asyncio.sleep(0.001)
             ...     return (x, x)
             ...
@@ -4175,9 +4175,9 @@ class AwaitableWrapper(_AwaitableWrapper[_T_co]):
         ).map_successes_to_result_sequence(f)
 
     def map_to_sequence(
-        self, f: Callable[[_T_co], Sequence[_T]]
+        self, f: Callable[[_T_co], tuple[_T, ...]]
     ) -> AwaitableSequenceWrapper[_T]:
-        """Apply a synchronous function returning a [collections.abc.Sequence][]
+        """Apply a synchronous function returning a [tuple][]
         to the wrapped [collections.abc.Awaitable][] object.
 
         Args:
@@ -4353,12 +4353,12 @@ class AwaitableWrapper(_AwaitableWrapper[_T_co]):
     def tap_to_awaitable_sequence(
         self, f: Callable[[_T_co], AwaitableSequence[object]]
     ) -> AwaitableSequenceWrapper[_T_co]:
-        """Apply an asynchronous side effect returning a [collections.abc.Sequence][]
+        """Apply an asynchronous side effect returning a [tuple][]
         to the wrapped [collections.abc.Awaitable][] object.
 
         Args:
             f: The asynchronous side effect to be applied,
-                returning an awaitable [collections.abc.Sequence][].
+                returning an awaitable [tuple][].
 
         Returns:
             A new [trcks.oop.AwaitableSequenceWrapper][] instance with
@@ -4369,12 +4369,12 @@ class AwaitableWrapper(_AwaitableWrapper[_T_co]):
             >>> import asyncio
             >>> from collections.abc import Sequence
             >>> from trcks.oop import AwaitableWrapper
-            >>> async def duplicate_with_log_async(x: int) -> Sequence[int]:
+            >>> async def duplicate_with_log_async(x: int) -> tuple[int, ...]:
             ...     await asyncio.sleep(0.001)
             ...     print(f"Processing: {x}")
             ...     return (x, x)
             ...
-            >>> async def main() -> Sequence[int]:
+            >>> async def main() -> tuple[int, ...]:
             ...     return await (
             ...         AwaitableWrapper
             ...         .construct(21)
@@ -4476,14 +4476,14 @@ class AwaitableWrapper(_AwaitableWrapper[_T_co]):
         ).tap_successes_to_result_sequence(f)
 
     def tap_to_sequence(
-        self, f: Callable[[_T_co], Sequence[object]]
+        self, f: Callable[[_T_co], tuple[object, ...]]
     ) -> AwaitableSequenceWrapper[_T_co]:
-        """Apply a synchronous side effect returning a [collections.abc.Sequence][]
+        """Apply a synchronous side effect returning a [tuple][]
         to the wrapped [collections.abc.Awaitable][] object.
 
         Args:
             f: The synchronous side effect to be applied,
-                returning a [collections.abc.Sequence][].
+                returning a [tuple][].
 
         Returns:
             A new [trcks.oop.AwaitableSequenceWrapper][] instance with
@@ -4494,11 +4494,11 @@ class AwaitableWrapper(_AwaitableWrapper[_T_co]):
             >>> import asyncio
             >>> from collections.abc import Sequence
             >>> from trcks.oop import AwaitableWrapper
-            >>> def duplicate_with_log(x: int) -> Sequence[object]:
+            >>> def duplicate_with_log(x: int) -> tuple[object, ...]:
             ...     print(f"Processing: {x}")
             ...     return (x, x)
             ...
-            >>> async def main() -> Sequence[int]:
+            >>> async def main() -> tuple[int, ...]:
             ...     return await (
             ...         AwaitableWrapper
             ...         .construct(42)
@@ -4886,9 +4886,9 @@ class ResultWrapper(_ResultWrapper[_F_default_co, _S_default_co]):
         ).map_failure_to_result_sequence(f)
 
     def map_failure_to_sequence(
-        self, f: Callable[[_F_default_co], Sequence[_S]]
+        self, f: Callable[[_F_default_co], tuple[_S, ...]]
     ) -> ResultSequenceWrapper[Never, _S_default_co | _S]:
-        """Apply a synchronous function returning a [collections.abc.Sequence][]
+        """Apply a synchronous function returning a [tuple][]
         to the wrapped [trcks.Failure][] object.
 
         The failure is converted to a [trcks.SuccessSequence][].
@@ -4896,7 +4896,7 @@ class ResultWrapper(_ResultWrapper[_F_default_co, _S_default_co]):
 
         Args:
             f: The synchronous function to be applied,
-                returning a [collections.abc.Sequence][].
+                returning a [tuple][].
 
         Returns:
             A [trcks.oop.ResultSequenceWrapper][] instance with
@@ -5214,16 +5214,16 @@ class ResultWrapper(_ResultWrapper[_F_default_co, _S_default_co]):
         ).map_successes_to_result_sequence(f)
 
     def map_success_to_sequence(
-        self, f: Callable[[_S_default_co], Sequence[_S]]
+        self, f: Callable[[_S_default_co], tuple[_S, ...]]
     ) -> ResultSequenceWrapper[_F_default_co, _S]:
-        """Apply a synchronous function returning a [collections.abc.Sequence][]
+        """Apply a synchronous function returning a [tuple][]
         to the wrapped [trcks.Success][] object.
 
         Wrapped [trcks.Failure][] objects are passed on unchanged.
 
         Args:
             f: The synchronous function to be applied,
-                returning a [collections.abc.Sequence][].
+                returning a [tuple][].
 
         Returns:
             A [trcks.oop.ResultSequenceWrapper][] instance with
@@ -5539,9 +5539,9 @@ class ResultWrapper(_ResultWrapper[_F_default_co, _S_default_co]):
         ).tap_failure_to_result_sequence(f)
 
     def tap_failure_to_sequence(
-        self, f: Callable[[_F_default_co], Sequence[object]]
+        self, f: Callable[[_F_default_co], tuple[object, ...]]
     ) -> ResultSequenceWrapper[Never, _F_default_co | _S_default_co]:
-        """Apply a synchronous side effect returning a [collections.abc.Sequence][]
+        """Apply a synchronous side effect returning a [tuple][]
         to the wrapped [trcks.Failure][] object.
 
         The failure is converted to a [trcks.SuccessSequence][] where
@@ -5552,7 +5552,7 @@ class ResultWrapper(_ResultWrapper[_F_default_co, _S_default_co]):
 
         Args:
             f: The synchronous side effect to be applied,
-                returning a [collections.abc.Sequence][].
+                returning a [tuple][].
 
         Returns:
             A [trcks.oop.ResultSequenceWrapper][] instance with
@@ -5867,9 +5867,9 @@ class ResultWrapper(_ResultWrapper[_F_default_co, _S_default_co]):
         ).tap_successes_to_result_sequence(f)
 
     def tap_success_to_sequence(
-        self, f: Callable[[_S_default_co], Sequence[object]]
+        self, f: Callable[[_S_default_co], tuple[object, ...]]
     ) -> ResultSequenceWrapper[_F_default_co, _S_default_co]:
-        """Apply a synchronous side effect returning a [collections.abc.Sequence][]
+        """Apply a synchronous side effect returning a [tuple][]
         to the wrapped [trcks.Success][] object.
 
         The original success value is repeated once per element
@@ -5879,7 +5879,7 @@ class ResultWrapper(_ResultWrapper[_F_default_co, _S_default_co]):
 
         Args:
             f: The synchronous side effect to be applied,
-                returning a [collections.abc.Sequence][].
+                returning a [tuple][].
 
         Returns:
             A [trcks.oop.ResultSequenceWrapper][] instance with
@@ -5912,7 +5912,7 @@ class ResultWrapper(_ResultWrapper[_F_default_co, _S_default_co]):
         ).tap_successes_to_sequence(f)
 
 
-class ResultSequenceWrapper(_ResultWrapper[_F_default_co, Sequence[_S_default_co]]):
+class ResultSequenceWrapper(_ResultWrapper[_F_default_co, tuple[_S_default_co, ...]]):
     """Type-safe and immutable wrapper for [trcks.ResultSequence][] objects.
 
     The wrapped object can be accessed via the attribute
@@ -5996,7 +5996,7 @@ class ResultSequenceWrapper(_ResultWrapper[_F_default_co, Sequence[_S_default_co
 
     @staticmethod
     def construct_successes_from_sequence(
-        seq: Sequence[_S],
+        seq: tuple[_S, ...],
     ) -> ResultSequenceWrapper[Never, _S]:
         """Construct and wrap a [trcks.SuccessSequence][] object from a sequence.
 
@@ -6222,7 +6222,7 @@ class ResultSequenceWrapper(_ResultWrapper[_F_default_co, Sequence[_S_default_co
         return ResultSequenceWrapper(mapped_f(self.core))
 
     def map_failure_to_sequence(
-        self, f: Callable[[_F_default_co], Sequence[_S]]
+        self, f: Callable[[_F_default_co], tuple[_S, ...]]
     ) -> ResultSequenceWrapper[Never, _S_default_co | _S]:
         """Apply a synchronous function returning a sequence
         to the wrapped [trcks.Failure][] object.
@@ -6527,7 +6527,7 @@ class ResultSequenceWrapper(_ResultWrapper[_F_default_co, Sequence[_S_default_co
         return ResultSequenceWrapper(mapped_f(self.core))
 
     def map_successes_to_sequence(
-        self, f: Callable[[_S_default_co], Sequence[_S]]
+        self, f: Callable[[_S_default_co], tuple[_S, ...]]
     ) -> ResultSequenceWrapper[_F_default_co, _S]:
         """Apply a synchronous function returning a sequence
         to each element in the wrapped [trcks.SuccessSequence][] and flatten.
@@ -6830,7 +6830,7 @@ class ResultSequenceWrapper(_ResultWrapper[_F_default_co, Sequence[_S_default_co
         return ResultSequenceWrapper(tapped_f(self.core))
 
     def tap_failure_to_sequence(
-        self, f: Callable[[_F_default_co], Sequence[object]]
+        self, f: Callable[[_F_default_co], tuple[object, ...]]
     ) -> ResultSequenceWrapper[Never, _F_default_co | _S_default_co]:
         """Apply a synchronous side effect returning a sequence
         to the wrapped [trcks.Failure][] object.
@@ -7144,7 +7144,7 @@ class ResultSequenceWrapper(_ResultWrapper[_F_default_co, Sequence[_S_default_co
         return ResultSequenceWrapper(rs.tap_successes_to_result_sequence(f)(self.core))
 
     def tap_successes_to_sequence(
-        self, f: Callable[[_S_default_co], Sequence[object]]
+        self, f: Callable[[_S_default_co], tuple[object, ...]]
     ) -> ResultSequenceWrapper[_F_default_co, _S_default_co]:
         """Apply a synchronous side effect returning a sequence
         to each element in the wrapped [trcks.SuccessSequence][].
@@ -7181,10 +7181,10 @@ class ResultSequenceWrapper(_ResultWrapper[_F_default_co, Sequence[_S_default_co
         return ResultSequenceWrapper(rs.tap_successes_to_sequence(f)(self.core))
 
 
-class SequenceWrapper(_Wrapper[Sequence[_T_co]]):
-    """Type-safe and immutable wrapper for [collections.abc.Sequence][] objects.
+class SequenceWrapper(_Wrapper[tuple[_T_co, ...]]):
+    """Type-safe and immutable wrapper for [tuple][] objects.
 
-    The wrapped [collections.abc.Sequence][] can be accessed
+    The wrapped [tuple][] can be accessed
     via the attribute `trcks.oop.SequenceWrapper.core`.
     The `trcks.oop.SequenceWrapper.map*` methods allow method chaining.
     The `trcks.oop.SequenceWrapper.tap*` methods allow for side effects
@@ -7210,14 +7210,14 @@ class SequenceWrapper(_Wrapper[Sequence[_T_co]]):
 
     @staticmethod
     def construct(value: _T) -> SequenceWrapper[_T]:
-        """Construct and wrap a [collections.abc.Sequence][] from a single value.
+        """Construct and wrap a [tuple][] from a single value.
 
         Args:
-            value: The value to be wrapped in a [collections.abc.Sequence][].
+            value: The value to be wrapped in a [tuple][].
 
         Returns:
             A new [trcks.oop.SequenceWrapper][] instance with
-                a [collections.abc.Sequence][] containing the single value.
+                a [tuple][] containing the single value.
 
         Example:
             >>> from trcks.oop import SequenceWrapper
@@ -7228,15 +7228,15 @@ class SequenceWrapper(_Wrapper[Sequence[_T_co]]):
         return SequenceWrapper(s.construct(value))
 
     @staticmethod
-    def construct_from_sequence(seq: Sequence[_T]) -> SequenceWrapper[_T]:
-        """Wrap a [collections.abc.Sequence][] object.
+    def construct_from_sequence(seq: tuple[_T, ...]) -> SequenceWrapper[_T]:
+        """Wrap a [tuple][] object.
 
         Args:
-            seq: The [collections.abc.Sequence][] to be wrapped.
+            seq: The [tuple][] to be wrapped.
 
         Returns:
             A new [trcks.oop.SequenceWrapper][] instance with
-                the wrapped [collections.abc.Sequence][].
+                the wrapped [tuple][].
 
         Example:
             >>> from trcks.oop import SequenceWrapper
@@ -7248,14 +7248,14 @@ class SequenceWrapper(_Wrapper[Sequence[_T_co]]):
 
     def map(self, f: Callable[[_T_co], _T]) -> SequenceWrapper[_T]:
         """Apply a synchronous function to each element in the wrapped
-        [collections.abc.Sequence][].
+        [tuple][].
 
         Args:
             f: The synchronous function to be applied to each element.
 
         Returns:
             A new [trcks.oop.SequenceWrapper][] instance with
-                a [collections.abc.Sequence][] containing
+                a [tuple][] containing
                 the results of applying the function to each element.
 
         Example:
@@ -7277,14 +7277,14 @@ class SequenceWrapper(_Wrapper[Sequence[_T_co]]):
         self, f: Callable[[_T_co], Awaitable[_T]]
     ) -> AwaitableSequenceWrapper[_T]:
         """Apply an asynchronous function to each element in the wrapped
-        [collections.abc.Sequence][].
+        [tuple][].
 
         Args:
             f: The asynchronous function to be applied to each element.
 
         Returns:
             An [trcks.oop.AwaitableSequenceWrapper][] instance with
-                an awaitable [collections.abc.Sequence][] containing
+                an awaitable [tuple][] containing
                 the results of applying the function to each element.
 
         Example:
@@ -7295,7 +7295,7 @@ class SequenceWrapper(_Wrapper[Sequence[_T_co]]):
             ...     await asyncio.sleep(0.001)
             ...     return x + 1
             ...
-            >>> async def main() -> Sequence[int]:
+            >>> async def main() -> tuple[int, ...]:
             ...     return await (
             ...         SequenceWrapper
             ...         .construct_from_sequence((1, 2, 3))
@@ -7314,7 +7314,7 @@ class SequenceWrapper(_Wrapper[Sequence[_T_co]]):
         self, f: Callable[[_T_co], AwaitableResult[_F, _S]]
     ) -> AwaitableResultSequenceWrapper[_F, _S]:
         """Apply an asynchronous function with return type [trcks.Result][]
-        to each element in the wrapped [collections.abc.Sequence][].
+        to each element in the wrapped [tuple][].
 
         Wrapped objects short-circuit on the first [trcks.Failure][].
 
@@ -7339,7 +7339,7 @@ class SequenceWrapper(_Wrapper[Sequence[_T_co]]):
             ...         return "success", x * 2
             ...     return "failure", "bad"
             ...
-            >>> async def main_1() -> Sequence[int]:
+            >>> async def main_1() -> tuple[int, ...]:
             ...     return await (
             ...         SequenceWrapper
             ...         .construct_from_sequence((1, 2))
@@ -7369,7 +7369,7 @@ class SequenceWrapper(_Wrapper[Sequence[_T_co]]):
     ) -> AwaitableResultSequenceWrapper[_F, _S]:
         """Apply an asynchronous function with return type
         [trcks.ResultSequence][] to each element in the wrapped
-        [collections.abc.Sequence][] and flatten.
+        [tuple][] and flatten.
 
         Wrapped objects short-circuit on the first [trcks.Failure][].
 
@@ -7424,16 +7424,16 @@ class SequenceWrapper(_Wrapper[Sequence[_T_co]]):
     def map_to_awaitable_sequence(
         self, f: Callable[[_T_co], AwaitableSequence[_T]]
     ) -> AwaitableSequenceWrapper[_T]:
-        """Apply an asynchronous function returning a [collections.abc.Sequence][]
-        to each element in the wrapped [collections.abc.Sequence][] and flatten.
+        """Apply an asynchronous function returning a [tuple][]
+        to each element in the wrapped [tuple][] and flatten.
 
         Args:
             f: The asynchronous function to be applied to each element,
-                returning an awaitable [collections.abc.Sequence][].
+                returning an awaitable [tuple][].
 
         Returns:
             An [trcks.oop.AwaitableSequenceWrapper][] instance with
-                the flattened awaitable [collections.abc.Sequence][].
+                the flattened awaitable [tuple][].
 
         Example:
             >>> import asyncio
@@ -7443,7 +7443,7 @@ class SequenceWrapper(_Wrapper[Sequence[_T_co]]):
             ...     await asyncio.sleep(0.001)
             ...     return x, x
             ...
-            >>> async def main() -> Sequence[int]:
+            >>> async def main() -> tuple[int, ...]:
             ...     return await (
             ...         SequenceWrapper
             ...         .construct_from_sequence((1, 2))
@@ -7462,7 +7462,7 @@ class SequenceWrapper(_Wrapper[Sequence[_T_co]]):
         self, f: Callable[[_T_co], Result[_F, _S]]
     ) -> ResultSequenceWrapper[_F, _S]:
         """Apply a synchronous function with return type [trcks.Result][]
-        to each element in the wrapped [collections.abc.Sequence][].
+        to each element in the wrapped [tuple][].
 
         Args:
             f: The synchronous function to be applied to each element.
@@ -7500,7 +7500,7 @@ class SequenceWrapper(_Wrapper[Sequence[_T_co]]):
         self, f: Callable[[_T_co], ResultSequence[_F, _S]]
     ) -> ResultSequenceWrapper[_F, _S]:
         """Apply a synchronous function with return type [trcks.ResultSequence][]
-        to each element in the wrapped [collections.abc.Sequence][] and flatten.
+        to each element in the wrapped [tuple][] and flatten.
 
         Args:
             f: The synchronous function to be applied to each element,
@@ -7536,18 +7536,18 @@ class SequenceWrapper(_Wrapper[Sequence[_T_co]]):
         ).map_successes_to_result_sequence(f)
 
     def map_to_sequence(
-        self, f: Callable[[_T_co], Sequence[_T]]
+        self, f: Callable[[_T_co], tuple[_T, ...]]
     ) -> SequenceWrapper[_T]:
-        """Apply a function returning a [collections.abc.Sequence][] to each element
-        in the wrapped [collections.abc.Sequence][] and flatten the result.
+        """Apply a function returning a [tuple][] to each element
+        in the wrapped [tuple][] and flatten the result.
 
         Args:
             f: The function to be applied to each element,
-                returning a [collections.abc.Sequence][].
+                returning a [tuple][].
 
         Returns:
             A new [trcks.oop.SequenceWrapper][] instance with
-                the flattened [collections.abc.Sequence][].
+                the flattened [tuple][].
 
         Example:
             >>> from trcks.oop import SequenceWrapper
@@ -7566,14 +7566,14 @@ class SequenceWrapper(_Wrapper[Sequence[_T_co]]):
 
     def tap(self, f: Callable[[_T_co], object]) -> SequenceWrapper[_T_co]:
         """Apply a synchronous side effect to each element in the wrapped
-        [collections.abc.Sequence][].
+        [tuple][].
 
         Args:
             f: The synchronous side effect to be applied to each element.
 
         Returns:
             A new [trcks.oop.SequenceWrapper][] instance with
-                the original [collections.abc.Sequence][].
+                the original [tuple][].
 
         Example:
             >>> from trcks.oop import SequenceWrapper
@@ -7594,14 +7594,14 @@ class SequenceWrapper(_Wrapper[Sequence[_T_co]]):
         self, f: Callable[[_T_co], Awaitable[object]]
     ) -> AwaitableSequenceWrapper[_T_co]:
         """Apply an asynchronous side effect to each element in the wrapped
-        [collections.abc.Sequence][].
+        [tuple][].
 
         Args:
             f: The asynchronous side effect to be applied to each element.
 
         Returns:
             An [trcks.oop.AwaitableSequenceWrapper][] instance with
-                the original awaitable [collections.abc.Sequence][].
+                the original awaitable [tuple][].
 
         Example:
             >>> import asyncio
@@ -7611,7 +7611,7 @@ class SequenceWrapper(_Wrapper[Sequence[_T_co]]):
             ...     await asyncio.sleep(0.001)
             ...     print(f"Value: {x}")
             ...
-            >>> async def main() -> Sequence[int]:
+            >>> async def main() -> tuple[int, ...]:
             ...     return await (
             ...         SequenceWrapper
             ...         .construct_from_sequence((1, 2, 3))
@@ -7633,7 +7633,7 @@ class SequenceWrapper(_Wrapper[Sequence[_T_co]]):
         self, f: Callable[[_T_co], AwaitableResult[_F, object]]
     ) -> AwaitableResultSequenceWrapper[_F, _T_co]:
         """Apply an asynchronous side effect with return type [trcks.Result][]
-        to each element in the wrapped [collections.abc.Sequence][].
+        to each element in the wrapped [tuple][].
 
         Args:
             f: The asynchronous side effect to be applied to each element.
@@ -7643,7 +7643,7 @@ class SequenceWrapper(_Wrapper[Sequence[_T_co]]):
 
                 - *the returned* [trcks.Failure][]
                     if the applied side effect returns a [trcks.Failure][] or
-                - *the original* [collections.abc.Sequence][] with each element
+                - *the original* [tuple][] with each element
                     repeated for the first [trcks.Success][] if all succeed.
 
         Example:
@@ -7687,7 +7687,7 @@ class SequenceWrapper(_Wrapper[Sequence[_T_co]]):
     ) -> AwaitableResultSequenceWrapper[_F, _T_co]:
         """Apply an asynchronous side effect with return type
         [trcks.ResultSequence][] to each element in the wrapped
-        [collections.abc.Sequence][].
+        [tuple][].
 
         Args:
             f: The asynchronous side effect to be applied to each element.
@@ -7741,16 +7741,16 @@ class SequenceWrapper(_Wrapper[Sequence[_T_co]]):
     def tap_to_awaitable_sequence(
         self, f: Callable[[_T_co], AwaitableSequence[object]]
     ) -> AwaitableSequenceWrapper[_T_co]:
-        """Apply an asynchronous side effect returning a [collections.abc.Sequence][]
-        to each element in the wrapped [collections.abc.Sequence][].
+        """Apply an asynchronous side effect returning a [tuple][]
+        to each element in the wrapped [tuple][].
 
         Args:
             f: The asynchronous side effect to be applied to each element,
-                returning an awaitable [collections.abc.Sequence][].
+                returning an awaitable [tuple][].
 
         Returns:
             An [trcks.oop.AwaitableSequenceWrapper][] instance with
-                the original awaitable [collections.abc.Sequence][].
+                the original awaitable [tuple][].
 
         Example:
             >>> import asyncio
@@ -7761,7 +7761,7 @@ class SequenceWrapper(_Wrapper[Sequence[_T_co]]):
             ...     print(f"Wrote {x} to disk.")
             ...     return str(x), str(x)
             ...
-            >>> async def main() -> Sequence[int]:
+            >>> async def main() -> tuple[int, ...]:
             ...     return await (
             ...         SequenceWrapper
             ...         .construct_from_sequence((1, 2, 3))
@@ -7783,7 +7783,7 @@ class SequenceWrapper(_Wrapper[Sequence[_T_co]]):
         self, f: Callable[[_T_co], Result[_F, object]]
     ) -> ResultSequenceWrapper[_F, _T_co]:
         """Apply a synchronous side effect with return type [trcks.Result][]
-        to each element in the wrapped [collections.abc.Sequence][].
+        to each element in the wrapped [tuple][].
 
         Args:
             f: The synchronous side effect to be applied to each element.
@@ -7823,7 +7823,7 @@ class SequenceWrapper(_Wrapper[Sequence[_T_co]]):
         self, f: Callable[[_T_co], ResultSequence[_F, object]]
     ) -> ResultSequenceWrapper[_F, _T_co]:
         """Apply a synchronous side effect with return type [trcks.ResultSequence][]
-        to each element in the wrapped [collections.abc.Sequence][].
+        to each element in the wrapped [tuple][].
 
         Args:
             f: The synchronous side effect to be applied to each element.
@@ -7860,18 +7860,18 @@ class SequenceWrapper(_Wrapper[Sequence[_T_co]]):
         ).tap_successes_to_result_sequence(f)
 
     def tap_to_sequence(
-        self, f: Callable[[_T_co], Sequence[object]]
+        self, f: Callable[[_T_co], tuple[object, ...]]
     ) -> SequenceWrapper[_T_co]:
-        """Apply a side effect returning a [collections.abc.Sequence][] to each element
-        in the wrapped [collections.abc.Sequence][].
+        """Apply a side effect returning a [tuple][] to each element
+        in the wrapped [tuple][].
 
         Args:
             f: The side effect to be applied to each element,
-                returning a [collections.abc.Sequence][].
+                returning a [tuple][].
 
         Returns:
             A new [trcks.oop.SequenceWrapper][] instance with
-                the original [collections.abc.Sequence][].
+                the original [tuple][].
 
         Example:
             >>> from trcks.oop import SequenceWrapper
@@ -8054,12 +8054,12 @@ class Wrapper(_Wrapper[_T_co]):
     def map_to_awaitable_sequence(
         self, f: Callable[[_T_co], AwaitableSequence[_T]]
     ) -> AwaitableSequenceWrapper[_T]:
-        """Apply an asynchronous function returning a [collections.abc.Sequence][]
+        """Apply an asynchronous function returning a [tuple][]
         to the wrapped object.
 
         Args:
             f: The asynchronous function to be applied, returning a
-                [collections.abc.Sequence][].
+                [tuple][].
 
         Returns:
             A [trcks.oop.AwaitableSequenceWrapper][] instance with
@@ -8073,7 +8073,7 @@ class Wrapper(_Wrapper[_T_co]):
             ...     await asyncio.sleep(0.001)
             ...     return x, x
             ...
-            >>> async def main() -> Sequence[int]:
+            >>> async def main() -> tuple[int, ...]:
             ...     awaitable_sequence_wrapper = (
             ...         Wrapper.construct(7).map_to_awaitable_sequence(duplicate)
             ...     )
@@ -8134,13 +8134,13 @@ class Wrapper(_Wrapper[_T_co]):
         return ResultSequenceWrapper(f(self.core))
 
     def map_to_sequence(
-        self, f: Callable[[_T_co], Sequence[_T]]
+        self, f: Callable[[_T_co], tuple[_T, ...]]
     ) -> SequenceWrapper[_T]:
-        """Apply a function returning a [collections.abc.Sequence][]
+        """Apply a function returning a [tuple][]
         to the wrapped object.
 
         Args:
-            f: The function to be applied, returning a [collections.abc.Sequence][].
+            f: The function to be applied, returning a [tuple][].
 
         Returns:
             A [trcks.oop.SequenceWrapper][] instance with
@@ -8304,12 +8304,12 @@ class Wrapper(_Wrapper[_T_co]):
     def tap_to_awaitable_sequence(
         self, f: Callable[[_T_co], AwaitableSequence[object]]
     ) -> AwaitableSequenceWrapper[_T_co]:
-        """Apply an asynchronous side effect returning a [collections.abc.Sequence][]
+        """Apply an asynchronous side effect returning a [tuple][]
         to the wrapped object.
 
         Args:
             f: The asynchronous side effect to be applied,
-                returning a [collections.abc.Sequence][].
+                returning a [tuple][].
 
         Returns:
             A [trcks.oop.AwaitableSequenceWrapper][] instance with
@@ -8420,14 +8420,14 @@ class Wrapper(_Wrapper[_T_co]):
         ).tap_successes_to_result_sequence(f)
 
     def tap_to_sequence(
-        self, f: Callable[[_T_co], Sequence[object]]
+        self, f: Callable[[_T_co], tuple[object, ...]]
     ) -> SequenceWrapper[_T_co]:
-        """Apply a side effect returning a [collections.abc.Sequence][] to the
+        """Apply a side effect returning a [tuple][] to the
         wrapped object.
 
         Args:
             f: The side effect to be applied, returning a
-                [collections.abc.Sequence][].
+                [tuple][].
 
         Returns:
             A [trcks.oop.SequenceWrapper][] instance with the original wrapped
@@ -8444,3 +8444,9 @@ class Wrapper(_Wrapper[_T_co]):
             SequenceWrapper(core=(3, 3))
         """
         return SequenceWrapper.construct(self.core).tap_to_sequence(f)
+
+
+AwaitableResultTupleWrapper = AwaitableResultSequenceWrapper
+AwaitableTupleWrapper = AwaitableSequenceWrapper
+ResultTupleWrapper = ResultSequenceWrapper
+TupleWrapper = SequenceWrapper

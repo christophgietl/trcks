@@ -1,10 +1,10 @@
-"""Monadic functions for [collections.abc.Sequence][].
+"""Monadic functions for [tuple][].
 
 Provides utilities for functional composition of
-functions returning [collections.abc.Sequence][] values.
+functions returning [tuple][] values.
 
 Example:
-    Create and process a [collections.abc.Sequence][]:
+    Create and process a [tuple][]:
 
     >>> from trcks.fp.composition import pipe
     >>> from trcks.fp.monads import sequence as s
@@ -51,7 +51,7 @@ from trcks.fp.composition import compose2
 from trcks.fp.monads import identity as i
 
 if TYPE_CHECKING:
-    from collections.abc import Callable, Sequence
+    from collections.abc import Callable
 
 __docformat__ = "google"
 
@@ -60,14 +60,14 @@ _T1 = TypeVar("_T1")
 _T2 = TypeVar("_T2")
 
 
-def construct(value: _T) -> Sequence[_T]:
-    """Create a [collections.abc.Sequence][] from a single value.
+def construct(value: _T) -> tuple[_T, ...]:
+    """Create a [tuple][] from a single value.
 
     Args:
         value: A single value.
 
     Returns:
-        A [collections.abc.Sequence][] containing the single value.
+        A [tuple][] containing the single value.
 
     Example:
         >>> from trcks.fp.monads import sequence as s
@@ -77,15 +77,15 @@ def construct(value: _T) -> Sequence[_T]:
     return (value,)
 
 
-def map_(f: Callable[[_T1], _T2]) -> Callable[[Sequence[_T1]], Sequence[_T2]]:
-    """Create function that maps [collections.abc.Sequence][]s to
-    [collections.abc.Sequence][]s of the same length.
+def map_(f: Callable[[_T1], _T2]) -> Callable[[tuple[_T1, ...]], tuple[_T2, ...]]:
+    """Create function that maps [tuple][]s to
+    [tuple][]s of the same length.
 
     Args:
         f: Function to apply to each element.
 
     Returns:
-        Maps [collections.abc.Sequence][]s to [collections.abc.Sequence][]s
+        Maps [tuple][]s to [tuple][]s
             of the same length according to the given function.
 
     Note:
@@ -99,7 +99,7 @@ def map_(f: Callable[[_T1], _T2]) -> Callable[[Sequence[_T1]], Sequence[_T2]]:
         ...     return n * 2
         ...
         >>> double_integers: Callable[
-        ...     [Sequence[int]], Sequence[int]
+        ...     [tuple[int, ...]], tuple[int, ...]
         ... ] = s.map_(double_integer)
         >>> double_integers([1, 2, 3])
         (2, 4, 6)
@@ -110,17 +110,17 @@ def map_(f: Callable[[_T1], _T2]) -> Callable[[Sequence[_T1]], Sequence[_T2]]:
 
 
 def map_to_sequence(
-    f: Callable[[_T1], Sequence[_T2]],
-) -> Callable[[Sequence[_T1]], Sequence[_T2]]:
-    """Create function that maps [collections.abc.Sequence][]s to
-    [collections.abc.Sequence][]s of varying length.
+    f: Callable[[_T1], tuple[_T2, ...]],
+) -> Callable[[tuple[_T1, ...]], tuple[_T2, ...]]:
+    """Create function that maps [tuple][]s to
+    [tuple][]s of varying length.
 
     Args:
         f: Function to apply to each element that returns a
-            [collections.abc.Sequence][].
+            [tuple][].
 
     Returns:
-        Maps [collections.abc.Sequence][]s to [collections.abc.Sequence][]s
+        Maps [tuple][]s to [tuple][]s
             of varying length according to the given function.
 
     Example:
@@ -130,13 +130,13 @@ def map_to_sequence(
         ...     return (n, n)
         ...
         >>> duplicate_integers: Callable[
-        ...     [Sequence[int]], Sequence[int]
+        ...     [tuple[int, ...]], tuple[int, ...]
         ... ] = s.map_to_sequence(duplicate_integer)
         >>> duplicate_integers([1, 2, 3])
         (1, 1, 2, 2, 3, 3)
     """
 
-    def mapped_f(t1s: Sequence[_T1]) -> Sequence[_T2]:
+    def mapped_f(t1s: tuple[_T1, ...]) -> tuple[_T2, ...]:
         return tuple(t2 for t1 in t1s for t2 in f(t1))
 
     return mapped_f
@@ -144,17 +144,17 @@ def map_to_sequence(
 
 def tap(
     f: Callable[[_T1], object],
-) -> Callable[[Sequence[_T1]], Sequence[_T1]]:
+) -> Callable[[tuple[_T1, ...]], tuple[_T1, ...]]:
     """Create function that applies a side effect to each element
-    of a [collections.abc.Sequence][].
+    of a [tuple][].
 
     Args:
         f: Side effect to apply to each element.
 
     Returns:
         Applies the given side effect to each element of a
-            [collections.abc.Sequence][] and returns the original
-            [collections.abc.Sequence][].
+            [tuple][] and returns the original
+            [tuple][].
 
     Example:
         >>> from collections.abc import Callable, Sequence
@@ -163,7 +163,7 @@ def tap(
         ...     print(f"Received: {n}")
         ...
         >>> log_and_pass_integers: Callable[
-        ...     [Sequence[int]], Sequence[int]
+        ...     [tuple[int, ...]], tuple[int, ...]
         ... ] = s.tap(log_integer)
         >>> sequence = log_and_pass_integers([1, 2, 3])
         Received: 1
@@ -176,19 +176,19 @@ def tap(
 
 
 def tap_to_sequence(
-    f: Callable[[_T1], Sequence[object]],
-) -> Callable[[Sequence[_T1]], Sequence[_T1]]:
+    f: Callable[[_T1], tuple[object, ...]],
+) -> Callable[[tuple[_T1, ...]], tuple[_T1, ...]]:
     """Create function that applies a side effect with return type
-    [collections.abc.Sequence][] to each element of a
-    [collections.abc.Sequence][].
+    [tuple][] to each element of a
+    [tuple][].
 
     Args:
         f: Side effect to apply to each element that returns a
-            [collections.abc.Sequence][].
+            [tuple][].
 
     Returns:
         Applies the given side effect to each element of a
-            [collections.abc.Sequence][]. Returns each element as
+            [tuple][]. Returns each element as
             many times as the side effect returns elements.
 
     Example:
@@ -199,13 +199,17 @@ def tap_to_sequence(
         ...     return tuple(c for c in candidates if n % c == 0)
         ...
         >>> repeat_integers_according_to_number_of_divisors: Callable[
-        ...     [Sequence[int]], Sequence[int]
+        ...     [tuple[int, ...]], tuple[int, ...]
         ... ] = s.tap_to_sequence(get_divisors)
         >>> repeat_integers_according_to_number_of_divisors([1, 2, 3, 4])
         (1, 2, 2, 3, 3, 4, 4, 4)
     """
 
-    def bypassed_f(t1: _T1) -> Sequence[_T1]:
+    def bypassed_f(t1: _T1) -> tuple[_T1, ...]:
         return tuple(t1 for _t2 in f(t1))
 
     return map_to_sequence(bypassed_f)
+
+
+map_to_tuple = map_to_sequence
+tap_to_tuple = tap_to_sequence

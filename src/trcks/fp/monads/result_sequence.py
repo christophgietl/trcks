@@ -42,7 +42,7 @@ from trcks.fp.monads import result as r
 from trcks.fp.monads import sequence as s
 
 if TYPE_CHECKING:  # pragma: no cover
-    from collections.abc import Callable, Sequence
+    from collections.abc import Callable
 
     from trcks import Failure, Result, ResultSequence, SuccessSequence
 
@@ -114,7 +114,7 @@ def construct_successes(value: _S) -> SuccessSequence[_S]:
     return r.construct_success(s.construct(value))
 
 
-def construct_successes_from_sequence(seq: Sequence[_S]) -> SuccessSequence[_S]:
+def construct_successes_from_sequence(seq: tuple[_S, ...]) -> SuccessSequence[_S]:
     """Create a [trcks.SuccessSequence][] object from a sequence.
 
     Args:
@@ -166,7 +166,9 @@ def map_failure(
 
 def map_failure_to_result(
     f: Callable[[_F1], Result[_F2, _S2]],
-) -> Callable[[ResultSequence[_F1, _S1]], Result[_F2, Sequence[_S1] | Sequence[_S2]]]:
+) -> Callable[
+    [ResultSequence[_F1, _S1]], Result[_F2, tuple[_S1, ...] | tuple[_S2, ...]]
+]:
     """Create function that maps [trcks.Failure][] values
     to [trcks.Failure][] and [trcks.Success][] values.
 
@@ -204,7 +206,9 @@ def map_failure_to_result(
 
 def map_failure_to_result_sequence(
     f: Callable[[_F1], ResultSequence[_F2, _S2]],
-) -> Callable[[ResultSequence[_F1, _S1]], Result[_F2, Sequence[_S1] | Sequence[_S2]]]:
+) -> Callable[
+    [ResultSequence[_F1, _S1]], Result[_F2, tuple[_S1, ...] | tuple[_S2, ...]]
+]:
     """Create function that maps [trcks.Failure][] values
     to new [trcks.ResultSequence][] values.
 
@@ -241,10 +245,10 @@ def map_failure_to_result_sequence(
 
 
 def map_failure_to_sequence(
-    f: Callable[[_F1], Sequence[_S2]],
+    f: Callable[[_F1], tuple[_S2, ...]],
 ) -> Callable[[ResultSequence[_F1, _S1]], SuccessSequence[_S1] | SuccessSequence[_S2]]:
     """Create function that maps [trcks.Failure][] values
-    to [collections.abc.Sequence][]s.
+    to [tuple][]s.
 
     [trcks.SuccessSequence][] values are left unchanged.
 
@@ -252,7 +256,7 @@ def map_failure_to_sequence(
         f: Function to apply to the [trcks.Failure][] values.
 
     Returns:
-        Maps [trcks.Failure][] values to [collections.abc.Sequence][]s wrapped
+        Maps [trcks.Failure][] values to [tuple][]s wrapped
             in a [trcks.Success][] according to the given function and
             leaves [trcks.SuccessSequence][] values unchanged.
 
@@ -400,7 +404,7 @@ def map_successes_to_result_sequence(
         ('failure', 'oops')
     """
 
-    def partially_mapped_f(s1s: Sequence[_S1]) -> ResultSequence[_F2, _S2]:
+    def partially_mapped_f(s1s: tuple[_S1, ...]) -> ResultSequence[_F2, _S2]:
         s2s: tuple[_S2, ...] = ()
         for s1 in s1s:
             rs = f(s1)
@@ -426,10 +430,10 @@ def map_successes_to_result_sequence(
 
 
 def map_successes_to_sequence(
-    f: Callable[[_S1], Sequence[_S2]],
+    f: Callable[[_S1], tuple[_S2, ...]],
 ) -> Callable[[ResultSequence[_F1, _S1]], ResultSequence[_F1, _S2]]:
     """Create function that maps each element of a [trcks.SuccessSequence][]
-    to a [collections.abc.Sequence][].
+    to a [tuple][].
 
     [trcks.Failure][] values are left unchanged.
 
@@ -439,7 +443,7 @@ def map_successes_to_sequence(
     Returns:
         Leaves [trcks.Failure][] values unchanged and
             flat-maps each element of a [trcks.SuccessSequence][] to a
-            [collections.abc.Sequence][] according to the given function.
+            [tuple][] according to the given function.
 
     Example:
         >>> from collections.abc import Callable
@@ -495,7 +499,9 @@ def tap_failure(
 
 def tap_failure_to_result(
     f: Callable[[_F1], Result[object, _S2]],
-) -> Callable[[ResultSequence[_F1, _S1]], Result[_F1, Sequence[_S1] | Sequence[_S2]]]:
+) -> Callable[
+    [ResultSequence[_F1, _S1]], Result[_F1, tuple[_S1, ...] | tuple[_S2, ...]]
+]:
     """Create function that applies a side effect with return type [trcks.Result][]
     to [trcks.Failure][] values.
 
@@ -521,7 +527,7 @@ def tap_failure_to_result(
         ...         return "success", 42
         ...     return "failure", None
         >>> recover_from_not_found: Callable[
-        ...     [ResultSequence[str, int]], Result[str, Sequence[int]]
+        ...     [ResultSequence[str, int]], Result[str, tuple[int, ...]]
         ... ] = rs.tap_failure_to_result(_recover_from_not_found)
         >>> recover_from_not_found(("failure", "not found"))
         ('success', (42,))
@@ -538,7 +544,9 @@ def tap_failure_to_result(
 
 def tap_failure_to_result_sequence(
     f: Callable[[_F1], ResultSequence[object, _S2]],
-) -> Callable[[ResultSequence[_F1, _S1]], Result[_F1, Sequence[_S1] | Sequence[_S2]]]:
+) -> Callable[
+    [ResultSequence[_F1, _S1]], Result[_F1, tuple[_S1, ...] | tuple[_S2, ...]]
+]:
     """Create function that applies a side effect with return type
     [trcks.ResultSequence][] to [trcks.Failure][] values.
 
@@ -564,7 +572,7 @@ def tap_failure_to_result_sequence(
         ...         return "success", (42,)
         ...     return "failure", None
         >>> recover_from_not_found: Callable[
-        ...     [ResultSequence[str, int]], Result[str, Sequence[int]]
+        ...     [ResultSequence[str, int]], Result[str, tuple[int, ...]]
         ... ] = rs.tap_failure_to_result_sequence(_recover_from_not_found)
         >>> recover_from_not_found(("failure", "not found"))
         ('success', (42,))
@@ -577,7 +585,7 @@ def tap_failure_to_result_sequence(
 
 
 def tap_failure_to_sequence(
-    f: Callable[[_F1], Sequence[object]],
+    f: Callable[[_F1], tuple[object, ...]],
 ) -> Callable[[ResultSequence[_F1, _S1]], SuccessSequence[_F1] | SuccessSequence[_S1]]:
     """Create function that applies a sequence-returning side effect
     to [trcks.Failure][] values.
@@ -615,7 +623,7 @@ def tap_failure_to_sequence(
         ('success', (1, 2))
     """
 
-    def tapped_f(f1: _F1) -> Sequence[_F1]:
+    def tapped_f(f1: _F1) -> tuple[_F1, ...]:
         return tuple(f1 for _s2 in f(f1))
 
     return map_failure_to_sequence(tapped_f)
@@ -758,7 +766,7 @@ def tap_successes_to_result_sequence(
 
 
 def tap_successes_to_sequence(
-    f: Callable[[_S1], Sequence[object]],
+    f: Callable[[_S1], tuple[object, ...]],
 ) -> Callable[[ResultSequence[_F1, _S1]], ResultSequence[_F1, _S1]]:
     """Create function that applies a sequence-returning side effect
     to each element of a [trcks.SuccessSequence][].
@@ -791,3 +799,10 @@ def tap_successes_to_sequence(
         ('success', (7, 7))
     """
     return r.map_success(s.tap_to_sequence(f))
+
+
+construct_successes_from_tuple = construct_successes_from_sequence
+map_failure_to_tuple = map_failure_to_sequence
+map_successes_to_tuple = map_successes_to_sequence
+tap_failure_to_tuple = tap_failure_to_sequence
+tap_successes_to_tuple = tap_successes_to_sequence
