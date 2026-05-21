@@ -9,7 +9,7 @@ in a method-chaining style:
 - [trcks.AwaitableTuple][]
 - [trcks.Result][]
 - [trcks.ResultTuple][]
-- homogeneous [tuple][]
+- [tuple][]
 
 Example:
     This example uses the classes [trcks.oop.Wrapper][] and [trcks.oop.ResultWrapper][]
