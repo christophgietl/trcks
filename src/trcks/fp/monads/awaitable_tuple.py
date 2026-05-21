@@ -44,7 +44,7 @@ Example:
     ...     return await pipe(
     ...         (
     ...             at.construct_from_tuple((1, 2, 3)),
-    ...             at.map_to_awaitable_sequence(slowly_duplicate_integer),
+    ...             at.map_to_awaitable_tuple(slowly_duplicate_integer),
     ...         )
     ...     )
     ...
@@ -213,10 +213,10 @@ def map_to_awaitable(
         >>> asyncio.run(main())
         (2, 3)
     """
-    return map_to_awaitable_sequence(compose2((f, construct_from_awaitable)))
+    return map_to_awaitable_tuple(compose2((f, construct_from_awaitable)))
 
 
-def map_to_awaitable_sequence(
+def map_to_awaitable_tuple(
     f: Callable[[_T1], AwaitableTuple[_T2]],
 ) -> Callable[[AwaitableTuple[_T1]], AwaitableTuple[_T2]]:
     """Turn [trcks.AwaitableTuple][]-returning function into a function
@@ -245,7 +245,7 @@ def map_to_awaitable_sequence(
         ...     return await pipe(
         ...         (
         ...             at.construct_from_tuple((1, 2)),
-        ...             at.map_to_awaitable_sequence(slowly_duplicate_integer),
+        ...             at.map_to_awaitable_tuple(slowly_duplicate_integer),
         ...         )
         ...     )
         >>> asyncio.run(main())
@@ -382,7 +382,7 @@ def tap_to_awaitable(
     return map_to_awaitable(bypassed_f)
 
 
-def tap_to_awaitable_sequence(
+def tap_to_awaitable_tuple(
     f: Callable[[_T1], AwaitableTuple[object]],
 ) -> Callable[[AwaitableTuple[_T1]], AwaitableTuple[_T1]]:
     """Turn [trcks.AwaitableTuple][]-returning function into a function
@@ -412,7 +412,7 @@ def tap_to_awaitable_sequence(
         ...     return await pipe(
         ...         (
         ...             at.construct_from_tuple((1, 2, 3, 4)),
-        ...             at.tap_to_awaitable_sequence(slowly_get_divisors),
+        ...             at.tap_to_awaitable_tuple(slowly_get_divisors),
         ...         )
         ...     )
         >>> asyncio.run(main())
@@ -423,7 +423,7 @@ def tap_to_awaitable_sequence(
         objs = await f(t1)
         return tuple(t1 for _ in objs)
 
-    return map_to_awaitable_sequence(bypassed_f)
+    return map_to_awaitable_tuple(bypassed_f)
 
 
 def tap_to_tuple(
