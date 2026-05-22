@@ -54,7 +54,7 @@ from trcks._typing import TypeVar
 from trcks.fp.composition import compose2
 from trcks.fp.monads import identity as i
 
-if TYPE_CHECKING:  # pragma: no cover
+if TYPE_CHECKING:
     from collections.abc import Callable
 
 __docformat__ = "google"

@@ -93,8 +93,8 @@ uv build
   (run as doctest by `pytest`).
 - `pytest` also collects all "pycon" code blocks in `**/*.md` files and
   all `tests/trcks/**/test_*.py` files (mirroring `src/trcks/`).
-- Test coverage must be 100%; unreachable code and `if TYPE_CHECKING` blocks
-  must be marked with `# pragma: no cover`.
+- Test coverage must be 100%;
+  unreachable code must be marked with `# pragma: no cover`.
 
 ## Documentation requirements
 

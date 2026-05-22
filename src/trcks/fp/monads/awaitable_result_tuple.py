@@ -49,7 +49,7 @@ from trcks.fp.monads import awaitable as a
 from trcks.fp.monads import result as r
 from trcks.fp.monads import result_tuple as rt
 
-if TYPE_CHECKING:  # pragma: no cover
+if TYPE_CHECKING:
     from collections.abc import Awaitable, Callable
 
     from trcks import (
