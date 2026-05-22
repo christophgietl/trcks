@@ -1159,7 +1159,7 @@ Processing short-circuits on the first [trcks.Failure][].
 
     ```pycon
     >>> from trcks import AwaitableResultTuple, AwaitableSuccessTuple
-    >>> from trcks.fp.monads import awaitable_result_tuple as ars
+    >>> from trcks.fp.monads import awaitable_result_tuple as art
     >>>
     >>> ReadErrorLiteral = Literal["read error"]
     >>> WriteErrorLiteral = Literal["write error"]
@@ -1193,10 +1193,10 @@ Processing short-circuits on the first [trcks.Failure][].
     ...         AwaitableResultTuple[ReadErrorLiteral | WriteErrorLiteral, str],
     ...     ] = (
     ...         input_paths,
-    ...         ars.construct_successes_from_tuple,
-    ...         ars.map_successes_to_awaitable_result(read_from_disk),
-    ...         ars.map_successes(transform),
-    ...         ars.tap_successes_to_awaitable_result(
+    ...         art.construct_successes_from_tuple,
+    ...         art.map_successes_to_awaitable_result(read_from_disk),
+    ...         art.map_successes(transform),
+    ...         art.tap_successes_to_awaitable_result(
     ...             lambda s: write_to_disk(s, output_path)
     ...         ),
     ...     )
@@ -1222,9 +1222,9 @@ let us have a look at the individual steps of the chain:
     ...     AwaitableSuccessTuple[str],
     ... ] = (
     ...     ("a.txt", "b.txt"),
-    ...     ars.construct_successes_from_tuple,
+    ...     art.construct_successes_from_tuple,
     ... )
-    >>> asyncio.run(ars.to_coroutine_result_tuple(pipe(p1)))
+    >>> asyncio.run(art.to_coroutine_result_tuple(pipe(p1)))
     ('success', ('a.txt', 'b.txt'))
     >>>
     >>> p2: Pipeline2[
@@ -1233,10 +1233,10 @@ let us have a look at the individual steps of the chain:
     ...     AwaitableResultTuple[ReadErrorLiteral, str],
     ... ] = (
     ...     ("a.txt", "b.txt"),
-    ...     ars.construct_successes_from_tuple,
-    ...     ars.map_successes_to_awaitable_result(read_from_disk),
+    ...     art.construct_successes_from_tuple,
+    ...     art.map_successes_to_awaitable_result(read_from_disk),
     ... )
-    >>> asyncio.run(ars.to_coroutine_result_tuple(pipe(p2)))
+    >>> asyncio.run(art.to_coroutine_result_tuple(pipe(p2)))
     ('success', ('Hello', 'World'))
     >>>
     >>> p3: Pipeline3[
@@ -1246,11 +1246,11 @@ let us have a look at the individual steps of the chain:
     ...     AwaitableResultTuple[ReadErrorLiteral, str],
     ... ] = (
     ...     ("a.txt", "b.txt"),
-    ...     ars.construct_successes_from_tuple,
-    ...     ars.map_successes_to_awaitable_result(read_from_disk),
-    ...     ars.map_successes(transform),
+    ...     art.construct_successes_from_tuple,
+    ...     art.map_successes_to_awaitable_result(read_from_disk),
+    ...     art.map_successes(transform),
     ... )
-    >>> asyncio.run(ars.to_coroutine_result_tuple(pipe(p3)))
+    >>> asyncio.run(art.to_coroutine_result_tuple(pipe(p3)))
     ('success', ('Length: 5', 'Length: 5'))
     >>>
     >>> p4: Pipeline4[
@@ -1261,14 +1261,14 @@ let us have a look at the individual steps of the chain:
     ...     AwaitableResultTuple[ReadErrorLiteral | WriteErrorLiteral, str],
     ... ] = (
     ...     ("a.txt", "b.txt"),
-    ...     ars.construct_successes_from_tuple,
-    ...     ars.map_successes_to_awaitable_result(read_from_disk),
-    ...     ars.map_successes(transform),
-    ...     ars.tap_successes_to_awaitable_result(
+    ...     art.construct_successes_from_tuple,
+    ...     art.map_successes_to_awaitable_result(read_from_disk),
+    ...     art.map_successes(transform),
+    ...     art.tap_successes_to_awaitable_result(
     ...         lambda s: write_to_disk(s, "output.txt")
     ...     ),
     ... )
-    >>> asyncio.run(ars.to_coroutine_result_tuple(pipe(p4)))
+    >>> asyncio.run(art.to_coroutine_result_tuple(pipe(p4)))
     Wrote 'Length: 5' to file output.txt.
     Wrote 'Length: 5' to file output.txt.
     ('success', ('Length: 5', 'Length: 5'))
@@ -1329,15 +1329,15 @@ in the failure case or in the success case (for each element), respectively:
     ...         AwaitableResultTuple[ReadErrorLiteral | WriteErrorLiteral, str],
     ...     ] = (
     ...         input_paths,
-    ...         ars.construct_successes_from_tuple,
-    ...         ars.map_successes_to_awaitable_result(read_from_disk),
-    ...         ars.tap_successes(lambda s: print(f"LOG: Read '{s}' from disk.")),
-    ...         ars.map_successes(transform),
-    ...         ars.tap_successes_to_awaitable_result(
+    ...         art.construct_successes_from_tuple,
+    ...         art.map_successes_to_awaitable_result(read_from_disk),
+    ...         art.tap_successes(lambda s: print(f"LOG: Read '{s}' from disk.")),
+    ...         art.map_successes(transform),
+    ...         art.tap_successes_to_awaitable_result(
     ...             lambda s: write_to_disk(s, output_path)
     ...         ),
-    ...         ars.tap_successes(lambda _: print("LOG: Successfully wrote to disk.")),
-    ...         ars.tap_failure(lambda err: print(f"LOG: Failed with error: {err}")),
+    ...         art.tap_successes(lambda _: print("LOG: Successfully wrote to disk.")),
+    ...         art.tap_failure(lambda err: print(f"LOG: Failed with error: {err}")),
     ...     )
     ...     return await pipe(pipeline)
     ...
@@ -1398,10 +1398,10 @@ the original success values are preserved:
     ...         AwaitableResultTuple[ReadErrorLiteral | OutOfDiskSpace, str],
     ...     ] = (
     ...         input_paths,
-    ...         ars.construct_successes_from_tuple,
-    ...         ars.map_successes_to_awaitable_result(read_from_disk),
-    ...         ars.tap_successes(lambda s: print(f"LOG: Persisting '{s}'.")),
-    ...         ars.tap_successes_to_awaitable_result(write_to_disk),
+    ...         art.construct_successes_from_tuple,
+    ...         art.map_successes_to_awaitable_result(read_from_disk),
+    ...         art.tap_successes(lambda s: print(f"LOG: Persisting '{s}'.")),
+    ...         art.tap_successes_to_awaitable_result(write_to_disk),
     ...     )
     ...     return await pipe(pipeline)
     ...
