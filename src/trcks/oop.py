@@ -374,12 +374,12 @@ class AwaitableResultTupleWrapper(
 
     @staticmethod
     def construct_from_result_tuple(
-        rslt_seq: ResultTuple[_F_default, _S_default],
+        rslt_tpl: ResultTuple[_F_default, _S_default],
     ) -> AwaitableResultTupleWrapper[_F_default, _S_default]:
         """Wrap a [trcks.ResultTuple][] object.
 
         Args:
-            rslt_seq: The [trcks.ResultTuple][] object to be wrapped.
+            rslt_tpl: The [trcks.ResultTuple][] object to be wrapped.
 
         Returns:
             A new [trcks.oop.AwaitableResultTupleWrapper][] instance with
@@ -397,7 +397,7 @@ class AwaitableResultTupleWrapper(
             >>> asyncio.run(wrapper.core_as_coroutine)
             ('success', (1, 2))
         """
-        return AwaitableResultTupleWrapper(art.construct_from_result_tuple(rslt_seq))
+        return AwaitableResultTupleWrapper(art.construct_from_result_tuple(rslt_tpl))
 
     @staticmethod
     def construct_successes(value: _S) -> AwaitableResultTupleWrapper[Never, _S]:
@@ -457,12 +457,12 @@ class AwaitableResultTupleWrapper(
 
     @staticmethod
     def construct_successes_from_tuple(
-        seq: tuple[_S, ...],
+        tpl: tuple[_S, ...],
     ) -> AwaitableResultTupleWrapper[Never, _S]:
         """Construct and wrap an awaitable [trcks.SuccessTuple][] from a tuple.
 
         Args:
-            seq: The tuple to be wrapped.
+            tpl: The tuple to be wrapped.
 
         Returns:
             A new [trcks.oop.AwaitableResultTupleWrapper][] instance with
@@ -480,7 +480,7 @@ class AwaitableResultTupleWrapper(
             >>> asyncio.run(wrapper.core_as_coroutine)
             ('success', (1, 2))
         """
-        return AwaitableResultTupleWrapper(art.construct_successes_from_tuple(seq))
+        return AwaitableResultTupleWrapper(art.construct_successes_from_tuple(tpl))
 
     def map_failure(
         self, f: Callable[[_F_default_co], _F]
@@ -3458,7 +3458,6 @@ class AwaitableTupleWrapper(_AwaitableWrapper[tuple[_T_co, ...]]):
 
     Example:
         >>> import asyncio
-        >>> from collections.abc import Sequence
         >>> from trcks.oop import AwaitableTupleWrapper
         >>> async def double(x: int) -> int:
         ...     await asyncio.sleep(0.001)
@@ -3531,12 +3530,12 @@ class AwaitableTupleWrapper(_AwaitableWrapper[tuple[_T_co, ...]]):
 
     @staticmethod
     def construct_from_tuple(
-        seq: tuple[_T, ...],
+        tpl: tuple[_T, ...],
     ) -> AwaitableTupleWrapper[_T]:
         """Construct and wrap a [trcks.AwaitableTuple][] from a tuple.
 
         Args:
-            seq: The tuple to be wrapped.
+            tpl: The tuple to be wrapped.
 
         Returns:
             A new [trcks.oop.AwaitableTupleWrapper][] instance with
@@ -3554,7 +3553,7 @@ class AwaitableTupleWrapper(_AwaitableWrapper[tuple[_T_co, ...]]):
             >>> asyncio.run(awaitable_tuple_wrapper.core_as_coroutine)
             (1, 2, 3)
         """
-        return AwaitableTupleWrapper(at.construct_from_tuple(seq))
+        return AwaitableTupleWrapper(at.construct_from_tuple(tpl))
 
     def map(self, f: Callable[[_T_co], _T]) -> AwaitableTupleWrapper[_T]:
         """Apply a synchronous function to each element in the wrapped
@@ -3570,7 +3569,6 @@ class AwaitableTupleWrapper(_AwaitableWrapper[tuple[_T_co, ...]]):
 
         Example:
             >>> import asyncio
-            >>> from collections.abc import Sequence
             >>> from trcks.oop import AwaitableTupleWrapper
             >>> async def main() -> tuple[int, ...]:
             ...     return await (
@@ -3601,7 +3599,6 @@ class AwaitableTupleWrapper(_AwaitableWrapper[tuple[_T_co, ...]]):
 
         Example:
             >>> import asyncio
-            >>> from collections.abc import Sequence
             >>> from trcks.oop import AwaitableTupleWrapper
             >>> async def add_one(x: int) -> int:
             ...     await asyncio.sleep(0.001)
@@ -3636,7 +3633,6 @@ class AwaitableTupleWrapper(_AwaitableWrapper[tuple[_T_co, ...]]):
 
         Example:
             >>> import asyncio
-            >>> from collections.abc import Sequence
             >>> from trcks.oop import AwaitableTupleWrapper
             >>> async def duplicate(x: int) -> tuple[int, int]:
             ...     await asyncio.sleep(0.001)
@@ -3671,7 +3667,6 @@ class AwaitableTupleWrapper(_AwaitableWrapper[tuple[_T_co, ...]]):
 
         Example:
             >>> import asyncio
-            >>> from collections.abc import Sequence
             >>> from trcks.oop import AwaitableTupleWrapper
             >>> async def main() -> tuple[int, ...]:
             ...     return await (
@@ -3699,7 +3694,6 @@ class AwaitableTupleWrapper(_AwaitableWrapper[tuple[_T_co, ...]]):
 
         Example:
             >>> import asyncio
-            >>> from collections.abc import Sequence
             >>> from trcks.oop import AwaitableTupleWrapper
             >>> async def main() -> tuple[int, ...]:
             ...     return await (
@@ -3732,7 +3726,6 @@ class AwaitableTupleWrapper(_AwaitableWrapper[tuple[_T_co, ...]]):
 
         Example:
             >>> import asyncio
-            >>> from collections.abc import Sequence
             >>> from trcks.oop import AwaitableTupleWrapper
             >>> async def log_async(x: int) -> None:
             ...     await asyncio.sleep(0.001)
@@ -3769,7 +3762,6 @@ class AwaitableTupleWrapper(_AwaitableWrapper[tuple[_T_co, ...]]):
 
         Example:
             >>> import asyncio
-            >>> from collections.abc import Sequence
             >>> from trcks.oop import AwaitableTupleWrapper
             >>> async def echo_twice(x: int) -> tuple[str, str]:
             ...     await asyncio.sleep(0.001)
@@ -3804,7 +3796,6 @@ class AwaitableTupleWrapper(_AwaitableWrapper[tuple[_T_co, ...]]):
 
         Example:
             >>> import asyncio
-            >>> from collections.abc import Sequence
             >>> from trcks.oop import AwaitableTupleWrapper
             >>> async def main() -> tuple[int, ...]:
             ...     return await (
@@ -4068,7 +4059,6 @@ class AwaitableWrapper(_AwaitableWrapper[_T_co]):
 
         Example:
             >>> import asyncio
-            >>> from collections.abc import Sequence
             >>> from trcks.oop import AwaitableWrapper
             >>> async def duplicate_async(x: int) -> tuple[int, ...]:
             ...     await asyncio.sleep(0.001)
@@ -4169,7 +4159,6 @@ class AwaitableWrapper(_AwaitableWrapper[_T_co]):
 
         Example:
             >>> import asyncio
-            >>> from collections.abc import Sequence
             >>> from trcks.oop import AwaitableWrapper
             >>> awaitable_tuple_wrapper = (
             ...     AwaitableWrapper
@@ -4347,7 +4336,6 @@ class AwaitableWrapper(_AwaitableWrapper[_T_co]):
 
         Example:
             >>> import asyncio
-            >>> from collections.abc import Sequence
             >>> from trcks.oop import AwaitableWrapper
             >>> async def duplicate_with_log_async(x: int) -> tuple[int, ...]:
             ...     await asyncio.sleep(0.001)
@@ -4472,7 +4460,6 @@ class AwaitableWrapper(_AwaitableWrapper[_T_co]):
 
         Example:
             >>> import asyncio
-            >>> from collections.abc import Sequence
             >>> from trcks.oop import AwaitableWrapper
             >>> def duplicate_with_log(x: int) -> tuple[object, ...]:
             ...     print(f"Processing: {x}")
@@ -5974,12 +5961,12 @@ class ResultTupleWrapper(_ResultWrapper[_F_default_co, tuple[_S_default_co, ...]
 
     @staticmethod
     def construct_successes_from_tuple(
-        seq: tuple[_S, ...],
+        tpl: tuple[_S, ...],
     ) -> ResultTupleWrapper[Never, _S]:
         """Construct and wrap a [trcks.SuccessTuple][] object from a tuple.
 
         Args:
-            seq: The tuple to be wrapped.
+            tpl: The tuple to be wrapped.
 
         Returns:
             A new [trcks.oop.ResultTupleWrapper][] instance with
@@ -5989,7 +5976,7 @@ class ResultTupleWrapper(_ResultWrapper[_F_default_co, tuple[_S_default_co, ...]
             >>> ResultTupleWrapper.construct_successes_from_tuple((1, 2, 3))
             ResultTupleWrapper(core=('success', (1, 2, 3)))
         """
-        return ResultTupleWrapper(rt.construct_successes_from_tuple(seq))
+        return ResultTupleWrapper(rt.construct_successes_from_tuple(tpl))
 
     def map_failure(
         self, f: Callable[[_F_default_co], _F]
@@ -7206,11 +7193,11 @@ class TupleWrapper(_Wrapper[tuple[_T_co, ...]]):
         return TupleWrapper(t.construct(value))
 
     @staticmethod
-    def construct_from_tuple(seq: tuple[_T, ...]) -> TupleWrapper[_T]:
+    def construct_from_tuple(tpl: tuple[_T, ...]) -> TupleWrapper[_T]:
         """Wrap a homogeneous [tuple][] object.
 
         Args:
-            seq: The homogeneous [tuple][] to be wrapped.
+            tpl: The homogeneous [tuple][] to be wrapped.
 
         Returns:
             A new [trcks.oop.TupleWrapper][] instance with
@@ -7222,7 +7209,7 @@ class TupleWrapper(_Wrapper[tuple[_T_co, ...]]):
             >>> tuple_wrapper
             TupleWrapper(core=(1, 2, 3))
         """
-        return TupleWrapper(seq)
+        return TupleWrapper(tpl)
 
     def map(self, f: Callable[[_T_co], _T]) -> TupleWrapper[_T]:
         """Apply a synchronous function to each element in the wrapped
@@ -7267,7 +7254,6 @@ class TupleWrapper(_Wrapper[tuple[_T_co, ...]]):
 
         Example:
             >>> import asyncio
-            >>> from collections.abc import Sequence
             >>> from trcks.oop import TupleWrapper
             >>> async def add_one(x: int) -> int:
             ...     await asyncio.sleep(0.001)
@@ -7306,7 +7292,6 @@ class TupleWrapper(_Wrapper[tuple[_T_co, ...]]):
 
         Example:
             >>> import asyncio
-            >>> from collections.abc import Sequence
             >>> from trcks import Result
             >>> from trcks.oop import TupleWrapper
             >>> async def check(x: int) -> Result[str, int]:
@@ -7361,7 +7346,6 @@ class TupleWrapper(_Wrapper[tuple[_T_co, ...]]):
 
         Example:
             >>> import asyncio
-            >>> from collections.abc import Sequence
             >>> from trcks import AwaitableResultTuple
             >>> from trcks.oop import TupleWrapper
             >>> async def expand(
@@ -7413,7 +7397,6 @@ class TupleWrapper(_Wrapper[tuple[_T_co, ...]]):
 
         Example:
             >>> import asyncio
-            >>> from collections.abc import Sequence
             >>> from trcks.oop import TupleWrapper
             >>> async def duplicate(x: int) -> tuple[int, int]:
             ...     await asyncio.sleep(0.001)
@@ -7579,7 +7562,6 @@ class TupleWrapper(_Wrapper[tuple[_T_co, ...]]):
 
         Example:
             >>> import asyncio
-            >>> from collections.abc import Sequence
             >>> from trcks.oop import TupleWrapper
             >>> async def print_value(x: int) -> None:
             ...     await asyncio.sleep(0.001)
@@ -7620,7 +7602,6 @@ class TupleWrapper(_Wrapper[tuple[_T_co, ...]]):
 
         Example:
             >>> import asyncio
-            >>> from collections.abc import Sequence
             >>> from trcks import Result
             >>> from trcks.oop import TupleWrapper
             >>> async def check(x: int) -> Result[str, None]:
@@ -7674,7 +7655,6 @@ class TupleWrapper(_Wrapper[tuple[_T_co, ...]]):
 
         Example:
             >>> import asyncio
-            >>> from collections.abc import Sequence
             >>> from trcks import AwaitableResultTuple
             >>> from trcks.oop import TupleWrapper
             >>> async def audit(
@@ -7726,7 +7706,6 @@ class TupleWrapper(_Wrapper[tuple[_T_co, ...]]):
 
         Example:
             >>> import asyncio
-            >>> from collections.abc import Sequence
             >>> from trcks.oop import TupleWrapper
             >>> async def write_to_disk(x: int) -> tuple[str, str]:
             ...     await asyncio.sleep(0.001)
@@ -8039,7 +8018,6 @@ class Wrapper(_Wrapper[_T_co]):
 
         Example:
             >>> import asyncio
-            >>> from collections.abc import Sequence
             >>> from trcks.oop import Wrapper
             >>> async def duplicate(x: int) -> tuple[int, int]:
             ...     await asyncio.sleep(0.001)
