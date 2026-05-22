@@ -723,13 +723,12 @@ def map_successes_to_awaitable_result_tuple(
             case ("success", s1s):
                 s2s: list[_S2] = []
                 for s1 in s1s:
-                    inner = await f(s1)
-                    match inner:
-                        case ("failure", _):
+                    match await f(s1):
+                        case ("failure", _) as inner:
                             return inner
                         case ("success", s2_batch):
                             s2s.extend(s2_batch)
-                        case _:  # pragma: no cover
+                        case _ as inner:  # pragma: no cover
                             return assert_never(inner)  # type: ignore [unreachable]  # pyright: ignore [reportUnreachable]
                 return "success", tuple(s2s)
             case _:  # pragma: no cover
@@ -973,13 +972,12 @@ def tap_failure_to_awaitable_result(
     """
 
     async def bypassed_f(value: _F1) -> ResultTuple[_F1, _S2]:
-        rslt: Result[object, _S2] = await f(value)
-        match rslt:
+        match await f(value):
             case ("failure", _):
                 return r.construct_failure(value)
-            case ("success", _):
+            case ("success", _) as rslt:
                 return rt.construct_from_result(rslt)
-            case _:  # pragma: no cover
+            case _ as rslt:  # pragma: no cover
                 return assert_never(rslt)  # type: ignore [unreachable]  # pyright: ignore [reportUnreachable]
 
     return map_failure_to_awaitable_result_tuple(bypassed_f)
@@ -1029,13 +1027,12 @@ def tap_failure_to_awaitable_result_tuple(
     """
 
     async def bypassed_f(value: _F1) -> ResultTuple[_F1, _S2]:
-        rslt_tpl: ResultTuple[object, _S2] = await f(value)
-        match rslt_tpl:
+        match await f(value):
             case ("failure", _):
                 return r.construct_failure(value)
-            case ("success", _):
+            case ("success", _) as rslt_tpl:
                 return rslt_tpl
-            case _:  # pragma: no cover
+            case _ as rslt_tpl:  # pragma: no cover
                 return assert_never(rslt_tpl)  # type: ignore [unreachable]  # pyright: ignore [reportUnreachable]
 
     return map_failure_to_awaitable_result_tuple(bypassed_f)
@@ -1364,13 +1361,12 @@ def tap_successes_to_awaitable_result_tuple(
     """
 
     async def tapped_f(s1: _S1) -> ResultTuple[_F2, _S1]:
-        rslt_tpl: ResultTuple[_F2, object] = await f(s1)
-        match rslt_tpl:
-            case ("failure", _):
+        match await f(s1):
+            case ("failure", _) as rslt_tpl:
                 return rslt_tpl
             case ("success", objs):
                 return "success", tuple(s1 for _ in objs)
-            case _:  # pragma: no cover
+            case _ as rslt_tpl:  # pragma: no cover
                 return assert_never(rslt_tpl)  # type: ignore [unreachable]  # pyright: ignore [reportUnreachable]
 
     return map_successes_to_awaitable_result_tuple(tapped_f)
