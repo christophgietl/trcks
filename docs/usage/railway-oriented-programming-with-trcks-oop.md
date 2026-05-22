@@ -357,7 +357,7 @@ let us have a look at the individual steps of the chain:
     >>> wrapped: Wrapper[str] = Wrapper(core="input.txt")
     >>> wrapped
     Wrapper(core='input.txt')
-    >>> # 2. Apply the Awaitable function read_from_disk:
+    >>> # 2. Apply the asynchronous function read_from_disk:
     >>> mapped_once: AwaitableWrapper[str] = wrapped.map_to_awaitable(read_from_disk)
     >>> mapped_once
     AwaitableWrapper(core=<coroutine object ...>)
@@ -365,7 +365,7 @@ let us have a look at the individual steps of the chain:
     >>> mapped_twice: AwaitableWrapper[str] = mapped_once.map(transform)
     >>> mapped_twice
     AwaitableWrapper(core=<coroutine object ...>)
-    >>> # 4. Apply the Awaitable function write_to_disk:
+    >>> # 4. Apply the asynchronous function write_to_disk:
     >>> mapped_thrice: AwaitableWrapper[None] = mapped_twice.map_to_awaitable(
     ...     lambda s: write_to_disk(s, "output.txt")
     ... )
@@ -614,7 +614,7 @@ the original success value is preserved:
 ## Synchronous single-track code for a homogeneous tuple with [trcks.oop.TupleWrapper][]
 
 While the class [trcks.oop.Wrapper][] wraps and operates on a single value,
-the class [trcks.oop.TupleWrapper][] wraps a [tuple][]
+the class [trcks.oop.TupleWrapper][] wraps a homogeneous [tuple][]
 and applies operations to each element individually.
 This is useful when we need to process multiple values
 through the same chain of transformations:
@@ -675,7 +675,7 @@ let us have a look at the individual steps of the chain:
     `TupleWrapper.construct(42)` produces `TupleWrapper(core=(42,))`.
 
     The method [trcks.oop.TupleWrapper.map_to_tuple][]
-    applies a function that returns a [tuple][]
+    applies a function that returns a homogeneous [tuple][]
     to each element and flattens the results (like a "flat map"):
 
     ```pycon
@@ -929,7 +929,7 @@ applied to each element in the tuple:
     ... ) -> tuple[str, ...]:
     ...     return await (
     ...         TupleWrapper
-    ...         .construct_from_tuple(tuple(input_paths))
+    ...         .construct_from_tuple(input_paths)
     ...         .map_to_awaitable(read_from_disk)
     ...         .map(transform)
     ...         .core
@@ -953,7 +953,7 @@ let us have a look at the individual steps of the chain:
     ... )
     >>> wrapped
     TupleWrapper(core=('a.txt', 'b.txt'))
-    >>> # 2. Apply the Awaitable function read_from_disk to each element:
+    >>> # 2. Apply the asynchronous function read_from_disk to each element:
     >>> mapped_once: AwaitableTupleWrapper[str] = wrapped.map_to_awaitable(
     ...     read_from_disk
     ... )
@@ -993,7 +993,7 @@ allows us to execute asynchronous side effects for each element.
     ... ) -> tuple[str, ...]:
     ...     return await (
     ...         TupleWrapper
-    ...         .construct_from_tuple(tuple(input_paths))
+    ...         .construct_from_tuple(input_paths)
     ...         .map_to_awaitable(read_from_disk)
     ...         .tap(lambda s: print(f"Read '{s}' from disk."))
     ...         .map(transform)
