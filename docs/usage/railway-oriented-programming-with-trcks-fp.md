@@ -1361,7 +1361,7 @@ in the failure case or in the success case (for each element), respectively:
     ```
 
 Sometimes, side effects themselves can fail and
-need to return an [trcks.AwaitableResult][] type.
+need to return a [trcks.AwaitableResult][] type.
 The higher-order function
 [trcks.fp.monads.awaitable_result_tuple.tap_successes_to_awaitable_result][]
 allows us to execute such asynchronous side effects
