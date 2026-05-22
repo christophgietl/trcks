@@ -238,7 +238,7 @@ allow us to execute side effects in the failure case or in the success case, res
     ```
 
 Sometimes, side effects themselves can fail and
-need to return a [trcks.Result][] value.
+need to return a [trcks.Result][] type.
 The higher-order function [trcks.fp.monads.result.tap_success_to_result][]
 allows us to execute such side effects in the success case.
 If the side effect returns a [trcks.Failure][], that failure is propagated.
@@ -948,7 +948,7 @@ in the success case (for each element) or in the failure case, respectively.
     ```
 
 Sometimes, side effects themselves can fail and
-need to return a [trcks.Result][] value.
+need to return a [trcks.Result][] type.
 The higher-order function [trcks.fp.monads.result_tuple.tap_successes_to_result][]
 allows us to execute such side effects for each element in the success case.
 If the side effect returns a [trcks.Failure][] for any element,

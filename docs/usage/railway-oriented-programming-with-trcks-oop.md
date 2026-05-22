@@ -1,6 +1,6 @@
 # Railway-oriented programming with [trcks.oop][]
 
-The following subsections describe how to use [trcks.oop][]
+This page describes how to use [trcks.oop][]
 for railway-oriented programming.
 Single-track and double-track code are both discussed.
 So are synchronous and asynchronous code.
@@ -84,27 +84,14 @@ This method allows executing side effects while preserving the original value:
 
 ## Synchronous double-track code for a single value with [trcks.Result][] and [trcks.oop.ResultWrapper][]
 
-Whenever we encounter something exceptional in conventional Python programming
-(e.g. something not working as expected or some edge case in our business logic),
-we usually jump
-(via `raise` and `try ... except`)
-to a completely different place in our codebase
-that (hopefully) handles our exception.
-
-In railway-oriented programming, however,
-we tend to have two parallel code tracks:
-
-1. a failure track and
-2. a success track (a.k.a. "happy path").
-
-This can be achieved by using the generic type [trcks.Result][][F, S]
-that contains either
-
-1. a failure value of type `F` or
-2. a success value of type `S`.
-
-The generic class [trcks.oop.ResultWrapper][][F, S] simplifies
-the implementation of the parallel code tracks.
+Whenever a function in a chain returns a [trcks.Result][][F, S] type,
+the next operation must handle the [trcks.Result][][F, S] value.
+However, methods that directly handle [trcks.Result][][F, S] values tend to violate
+the "do one thing and do it well" principle.
+Therefore, the class [trcks.oop.ResultWrapper][][F, S] provides
+some methods named `map_failure*` and `map_success*`
+that call functions with input type `F` and functions with input type `S`
+on a wrapped [trcks.Result][][F, S] value.
 
 ???+ example
 
@@ -223,11 +210,13 @@ in the success case or in the failure case, respectively:
     LOG: Subscription fee: 4.2.
     >>> fee_erika
     ('success', 4.2)
+    >>>
     >>> fee_john = get_subscription_fee_by_email("john_doe@provider.com")
     LOG: User ID: 2.
     LOG: Failure description: User does not have a subscription.
     >>> fee_john
     ('failure', 'User does not have a subscription')
+    >>>
     >>> fee_jane = get_subscription_fee_by_email("jane_doe@provider.com")
     LOG: Failure description: User does not exist.
     >>> fee_jane
@@ -246,6 +235,7 @@ If the side effect returns a [trcks.Success][], the original success value is pr
 
     ```pycon
     >>> OutOfDiskSpace = Literal["Out of disk space"]
+    >>>
     >>> def write_to_disk(n: int) -> Result[OutOfDiskSpace, None]:
     ...     if n > 1:
     ...         return "failure", "Out of disk space"
@@ -265,9 +255,11 @@ If the side effect returns a [trcks.Success][], the original success value is pr
     LOG: Wrote 1 to disk.
     >>> id_erika
     ('success', 1)
+    >>>
     >>> id_john = get_and_persist_user_id("john_doe@provider.com")
     >>> id_john
     ('failure', 'Out of disk space')
+    >>>
     >>> id_jane = get_and_persist_user_id("jane_doe@provider.com")
     >>> id_jane
     ('failure', 'User does not exist')
@@ -567,6 +559,7 @@ in the failure case or in the success case, respectively:
     LOG: Successfully wrote to disk.
     >>> result_1
     ('success', None)
+    >>>
     >>> result_2 = asyncio.run(read_and_transform_and_write("missing.txt", "output.txt"))
     LOG: Failed with error: read error
     >>> result_2
@@ -597,14 +590,12 @@ the original success value is preserved:
     ...     return await (
     ...         Wrapper(core=input_path)
     ...         .map_to_awaitable_result(read_from_disk)
-    ...         .tap_success(lambda s: print(f"LOG: Read '{s}' from disk."))
     ...         .tap_success(lambda s: print(f"LOG: Persisting '{s}'."))
     ...         .tap_success_to_awaitable_result(write_to_disk)
     ...         .core
     ...     )
     ...
     >>> result = asyncio.run(read_and_persist("input.txt"))
-    LOG: Read 'Hello, world!' from disk.
     LOG: Persisting 'Hello, world!'.
     >>> result
     ('failure', 'Out of disk space')
@@ -706,7 +697,7 @@ while preserving the original tuple:
 
     ```
 
-## Synchronous double-track code for a tuple with [trcks.ResultTuple][] and [trcks.oop.ResultTupleWrapper][]
+## Synchronous double-track code for a homogeneous tuple with [trcks.ResultTuple][] and [trcks.oop.ResultTupleWrapper][]
 
 When applying a failable function to each element in a tuple,
 we need the [trcks.oop.ResultTupleWrapper][] class.
@@ -841,6 +832,7 @@ in the success case (for each element) or in the failure case, respectively:
     LOG: Subscription fee: 4.2.
     >>> fees_erika
     ('success', (4.2,))
+    >>>
     >>> fees_john = get_subscription_fees_by_email(
     ...     ("john_doe@provider.com",)
     ... )
@@ -848,6 +840,7 @@ in the success case (for each element) or in the failure case, respectively:
     LOG: Failure: User does not have a subscription.
     >>> fees_john
     ('failure', 'User does not have a subscription')
+    >>>
     >>> fees_jane = get_subscription_fees_by_email(
     ...     ("jane_doe@provider.com",)
     ... )
@@ -870,6 +863,7 @@ the original success values are preserved.
 
     ```pycon
     >>> OutOfDiskSpace = Literal["Out of disk space"]
+    >>>
     >>> def write_to_disk(n: int) -> Result[OutOfDiskSpace, None]:
     ...     if n > 1:
     ...         return "failure", "Out of disk space"
@@ -890,16 +884,18 @@ the original success values are preserved.
     LOG: Wrote 1 to disk.
     >>> ids_erika
     ('success', (1,))
+    >>>
     >>> ids_john = get_and_persist_user_ids(("john_doe@provider.com",))
     >>> ids_john
     ('failure', 'Out of disk space')
+    >>>
     >>> ids_jane = get_and_persist_user_ids(("jane_doe@provider.com",))
     >>> ids_jane
     ('failure', 'User does not exist')
 
     ```
 
-## Asynchronous single-track code for a tuple with [trcks.AwaitableTuple][] and [trcks.oop.AwaitableTupleWrapper][]
+## Asynchronous single-track code for a homogeneous tuple with [trcks.AwaitableTuple][] and [trcks.oop.AwaitableTupleWrapper][]
 
 While the class [trcks.oop.TupleWrapper][] and its method `map`
 allow the chaining of synchronous functions for each element,
@@ -1011,7 +1007,7 @@ allows us to execute asynchronous side effects for each element.
 
     ```
 
-## Asynchronous double-track code for a tuple with [trcks.AwaitableResultTuple][] and [trcks.oop.AwaitableResultTupleWrapper][]
+## Asynchronous double-track code for a homogeneous tuple with [trcks.AwaitableResultTuple][] and [trcks.oop.AwaitableResultTupleWrapper][]
 
 Whenever we define a function using
 the `async def ... -> Result[F, S]` syntax
@@ -1163,6 +1159,7 @@ in the failure case or in the success case (for each element), respectively:
     LOG: Successfully wrote to disk.
     >>> result_1
     ('success', ('Length: 5', 'Length: 5'))
+    >>>
     >>> result_2 = asyncio.run(
     ...     read_and_transform_and_write(("missing.txt",), "output.txt")
     ... )
