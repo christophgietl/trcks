@@ -41,7 +41,7 @@ from trcks.fp.composition import compose2
 from trcks.fp.monads import result as r
 from trcks.fp.monads import tuple_ as t
 
-if TYPE_CHECKING:  # pragma: no cover
+if TYPE_CHECKING:
     from collections.abc import Callable
 
     from trcks import Failure, Result, ResultTuple, SuccessTuple
