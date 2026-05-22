@@ -403,20 +403,19 @@ def map_successes_to_result_tuple(
     def partially_mapped_f(s1s: tuple[_S1, ...]) -> ResultTuple[_F2, _S2]:
         s2s: list[_S2] = []
         for s1 in s1s:
-            r_tpl = f(s1)
-            match r_tpl:
-                case ("failure", value):
-                    return "failure", value
+            match f(s1):
+                case ("failure", _) as r_tpl:
+                    return r_tpl
                 case ("success", s2):
                     s2s.extend(s2)
-                case _:  # pragma: no cover
+                case _ as r_tpl:  # pragma: no cover
                     return assert_never(r_tpl)  # type: ignore[unreachable]  # pyright: ignore[reportUnreachable]
         return "success", tuple(s2s)
 
     def mapped_f(r_tpl: ResultTuple[_F1, _S1]) -> ResultTuple[_F1 | _F2, _S2]:
         match r_tpl:
-            case ("failure", value):
-                return "failure", value
+            case ("failure", _):
+                return r_tpl
             case ("success", s1s):
                 return partially_mapped_f(s1s)
             case _:  # pragma: no cover
@@ -746,13 +745,12 @@ def tap_successes_to_result_tuple(
     """
 
     def tapped_f(s1: _S1) -> ResultTuple[_F2, _S1]:
-        r_tpl = f(s1)
-        match r_tpl:
-            case ("failure", value):
-                return "failure", value
+        match f(s1):
+            case ("failure", _) as r_tpl:
+                return r_tpl
             case ("success", s2s):
                 return "success", tuple(s1 for _ in s2s)
-            case _:  # pragma: no cover
+            case _ as r_tpl:  # pragma: no cover
                 return assert_never(r_tpl)  # type: ignore[unreachable] # pyright: ignore[reportUnreachable]
 
     return map_successes_to_result_tuple(tapped_f)
