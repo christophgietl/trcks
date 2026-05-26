@@ -3044,7 +3044,7 @@ class AwaitableResultWrapper(_AwaitableResultWrapper[_F_default_co, _S_default_c
     def tap_failure_to_tuple(
         self, f: Callable[[_F_default_co], tuple[object, ...]]
     ) -> AwaitableResultTupleWrapper[Never, _F_default_co | _S_default_co]:
-        """Apply a synchronous side effect returning a homogeneous [tuple][]
+        """Apply a synchronous side effect returning a [tuple][]
         to the wrapped [trcks.Failure][] object.
 
         The failure is converted to a [trcks.SuccessTuple][] where
@@ -3391,7 +3391,7 @@ class AwaitableResultWrapper(_AwaitableResultWrapper[_F_default_co, _S_default_c
     def tap_success_to_tuple(
         self, f: Callable[[_S_default_co], tuple[object, ...]]
     ) -> AwaitableResultTupleWrapper[_F_default_co, _S_default_co]:
-        """Apply a synchronous side effect returning a homogeneous [tuple][]
+        """Apply a synchronous side effect returning a [tuple][]
         to the wrapped [trcks.Success][] object.
 
         The original success value is repeated once per element
@@ -4322,7 +4322,7 @@ class AwaitableWrapper(_AwaitableWrapper[_T_co]):
     def tap_to_awaitable_tuple(
         self, f: Callable[[_T_co], AwaitableTuple[object]]
     ) -> AwaitableTupleWrapper[_T_co]:
-        """Apply an asynchronous side effect returning a homogeneous [tuple][]
+        """Apply an asynchronous side effect returning a [tuple][]
         to the wrapped [collections.abc.Awaitable][] object.
 
         Args:
@@ -4446,7 +4446,7 @@ class AwaitableWrapper(_AwaitableWrapper[_T_co]):
     def tap_to_tuple(
         self, f: Callable[[_T_co], tuple[object, ...]]
     ) -> AwaitableTupleWrapper[_T_co]:
-        """Apply a synchronous side effect returning a homogeneous [tuple][]
+        """Apply a synchronous side effect returning a [tuple][]
         to the wrapped [collections.abc.Awaitable][] object.
 
         Args:
@@ -5506,7 +5506,7 @@ class ResultWrapper(_ResultWrapper[_F_default_co, _S_default_co]):
     def tap_failure_to_tuple(
         self, f: Callable[[_F_default_co], tuple[object, ...]]
     ) -> ResultTupleWrapper[Never, _F_default_co | _S_default_co]:
-        """Apply a synchronous side effect returning a homogeneous [tuple][]
+        """Apply a synchronous side effect returning a [tuple][]
         to the wrapped [trcks.Failure][] object.
 
         The failure is converted to a [trcks.SuccessTuple][] where
@@ -5834,7 +5834,7 @@ class ResultWrapper(_ResultWrapper[_F_default_co, _S_default_co]):
     def tap_success_to_tuple(
         self, f: Callable[[_S_default_co], tuple[object, ...]]
     ) -> ResultTupleWrapper[_F_default_co, _S_default_co]:
-        """Apply a synchronous side effect returning a homogeneous [tuple][]
+        """Apply a synchronous side effect returning a [tuple][]
         to the wrapped [trcks.Success][] object.
 
         The original success value is repeated once per element
@@ -7693,7 +7693,7 @@ class TupleWrapper(_Wrapper[tuple[_T_co, ...]]):
     def tap_to_awaitable_tuple(
         self, f: Callable[[_T_co], AwaitableTuple[object]]
     ) -> AwaitableTupleWrapper[_T_co]:
-        """Apply an asynchronous side effect returning a homogeneous [tuple][]
+        """Apply an asynchronous side effect returning a [tuple][]
         to each element in the wrapped homogeneous [tuple][].
 
         Args:
@@ -7813,7 +7813,7 @@ class TupleWrapper(_Wrapper[tuple[_T_co, ...]]):
     def tap_to_tuple(
         self, f: Callable[[_T_co], tuple[object, ...]]
     ) -> TupleWrapper[_T_co]:
-        """Apply a side effect returning a homogeneous [tuple][] to each element
+        """Apply a side effect returning a [tuple][] to each element
         in the wrapped homogeneous [tuple][].
 
         Args:
@@ -8088,7 +8088,7 @@ class Wrapper(_Wrapper[_T_co]):
         to the wrapped object.
 
         Args:
-            f: The function to be applied, returning a homogeneous [tuple][].
+            f: The function to be applied, returning a [tuple][].
 
         Returns:
             A [trcks.oop.TupleWrapper][] instance with
@@ -8252,12 +8252,12 @@ class Wrapper(_Wrapper[_T_co]):
     def tap_to_awaitable_tuple(
         self, f: Callable[[_T_co], AwaitableTuple[object]]
     ) -> AwaitableTupleWrapper[_T_co]:
-        """Apply an asynchronous side effect returning a homogeneous [tuple][]
+        """Apply an asynchronous side effect returning a [tuple][]
         to the wrapped object.
 
         Args:
             f: The asynchronous side effect to be applied,
-                returning a homogeneous [tuple][].
+                returning a [tuple][].
 
         Returns:
             A [trcks.oop.AwaitableTupleWrapper][] instance with
@@ -8368,12 +8368,12 @@ class Wrapper(_Wrapper[_T_co]):
     def tap_to_tuple(
         self, f: Callable[[_T_co], tuple[object, ...]]
     ) -> TupleWrapper[_T_co]:
-        """Apply a side effect returning a homogeneous [tuple][] to the
+        """Apply a side effect returning a [tuple][] to the
         wrapped object.
 
         Args:
             f: The side effect to be applied, returning a
-                homogeneous [tuple][].
+                [tuple][].
 
         Returns:
             A [trcks.oop.TupleWrapper][] instance with the original wrapped
