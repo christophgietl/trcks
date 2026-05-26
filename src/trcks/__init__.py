@@ -2,7 +2,7 @@
 
 This package provides
 
-- the generic (return) types [trcks.Result][] and [trcks.AwaitableResult][] and
+- generic (return) types (e.g. [trcks.Result][] and [trcks.AwaitableResultTuple][]) and
 - the subpackages [trcks.fp][] and [trcks.oop][] for working with these types
   in a functional and object-oriented way, respectively.
 
@@ -68,18 +68,14 @@ Note:
     some functional programming languages and packages (e.g. Haskell and fp-ts).
 """
 
+ResultTuple: TypeAlias = Result[_F_co, tuple[_S_co, ...]]
+"""[trcks.Result][] where the success value is a homogeneous [tuple][]."""
+
+SuccessTuple: TypeAlias = Success[tuple[_S_co, ...]]
+"""[trcks.Success][] that contains a homogeneous [tuple][]."""
+
 AwaitableFailure: TypeAlias = Awaitable[Failure[_F_co]]
 """[collections.abc.Awaitable][] that returns a [trcks.Failure][]
-when used in an `await` expression.
-"""
-
-AwaitableTuple: TypeAlias = Awaitable[tuple[_T_co, ...]]
-"""[collections.abc.Awaitable][] that returns a homogeneous [tuple][]
-when used in an `await` expression.
-"""
-
-AwaitableSuccess: TypeAlias = Awaitable[Success[_S_co]]
-"""[collections.abc.Awaitable][] that returns a [trcks.Success][]
 when used in an `await` expression.
 """
 
@@ -129,18 +125,22 @@ Example:
     ... ] = divide_slowly
 """
 
-ResultTuple: TypeAlias = Result[_F_co, tuple[_S_co, ...]]
-"""[trcks.Result][] where the success value is a homogeneous [tuple][]."""
-
-SuccessTuple: TypeAlias = Success[tuple[_S_co, ...]]
-"""[trcks.Success][] that contains a homogeneous [tuple][]."""
-
 AwaitableResultTuple: TypeAlias = Awaitable[ResultTuple[_F_co, _S_co]]
 """[collections.abc.Awaitable][] that returns a [trcks.ResultTuple][]
 when used in an `await` expression.
 """
 
+AwaitableSuccess: TypeAlias = Awaitable[Success[_S_co]]
+"""[collections.abc.Awaitable][] that returns a [trcks.Success][]
+when used in an `await` expression.
+"""
+
 AwaitableSuccessTuple: TypeAlias = Awaitable[SuccessTuple[_S_co]]
 """[collections.abc.Awaitable][] that returns a [trcks.SuccessTuple][]
+when used in an `await` expression.
+"""
+
+AwaitableTuple: TypeAlias = Awaitable[tuple[_T_co, ...]]
+"""[collections.abc.Awaitable][] that returns a homogeneous [tuple][]
 when used in an `await` expression.
 """
