@@ -7368,7 +7368,7 @@ class TupleWrapper(_Wrapper[tuple[_T_co, ...]]):
             >>> import asyncio
             >>> from trcks import ResultTuple
             >>> from trcks.oop import TupleWrapper
-            >>> async def slowly_expand(n: int) -> ResultTuple[str, int]:
+            >>> async def slowly_expand_if_positive(n: int) -> ResultTuple[str, int]:
             ...     await asyncio.sleep(0.001)
             ...     if n > 0:
             ...         return "success", (n, -n)
@@ -7378,7 +7378,7 @@ class TupleWrapper(_Wrapper[tuple[_T_co, ...]]):
             ...     return await (
             ...         TupleWrapper
             ...         .construct_from_tuple((1, 2))
-            ...         .map_to_awaitable_result_tuple(slowly_expand)
+            ...         .map_to_awaitable_result_tuple(slowly_expand_if_positive)
             ...         .core
             ...     )
             ...
@@ -7388,7 +7388,7 @@ class TupleWrapper(_Wrapper[tuple[_T_co, ...]]):
             ...     return await (
             ...         TupleWrapper
             ...         .construct_from_tuple((1, -1, 2))
-            ...         .map_to_awaitable_result_tuple(slowly_expand)
+            ...         .map_to_awaitable_result_tuple(slowly_expand_if_positive)
             ...         .core
             ...     )
             ...
@@ -7480,8 +7480,7 @@ class TupleWrapper(_Wrapper[tuple[_T_co, ...]]):
         to each element in the wrapped homogeneous [tuple][] and flatten.
 
         Args:
-            f: The synchronous function to be applied to each element,
-                returning a [trcks.ResultTuple][].
+            f: The synchronous function to be applied to each element.
 
         Returns:
             A [trcks.oop.ResultTupleWrapper][] instance with
@@ -7584,7 +7583,7 @@ class TupleWrapper(_Wrapper[tuple[_T_co, ...]]):
         Example:
             >>> import asyncio
             >>> from trcks.oop import TupleWrapper
-            >>> async def print_value(n: int) -> None:
+            >>> async def slowly_print_value(n: int) -> None:
             ...     await asyncio.sleep(0.001)
             ...     print(f"Value: {n}")
             ...
@@ -7592,7 +7591,7 @@ class TupleWrapper(_Wrapper[tuple[_T_co, ...]]):
             ...     return await (
             ...         TupleWrapper
             ...         .construct_from_tuple((1, 2, 3))
-            ...         .tap_to_awaitable(print_value)
+            ...         .tap_to_awaitable(slowly_print_value)
             ...         .core
             ...     )
             ...
@@ -7631,7 +7630,7 @@ class TupleWrapper(_Wrapper[tuple[_T_co, ...]]):
             ...         return "success", None
             ...     return "failure", "bad"
             ...
-            >>> async def main_1() -> ResultTuple[str, None]:
+            >>> async def main_1() -> ResultTuple[str, int]:
             ...     return await (
             ...         TupleWrapper
             ...         .construct_from_tuple((1, 2))
@@ -7641,7 +7640,7 @@ class TupleWrapper(_Wrapper[tuple[_T_co, ...]]):
             ...
             >>> asyncio.run(main_1())
             ('success', (1, 2))
-            >>> async def main_2() -> ResultTuple[str, None]:
+            >>> async def main_2() -> ResultTuple[str, int]:
             ...     return await (
             ...         TupleWrapper
             ...         .construct_from_tuple((1, -1, 2))
@@ -7836,8 +7835,7 @@ class TupleWrapper(_Wrapper[tuple[_T_co, ...]]):
         in the wrapped homogeneous [tuple][].
 
         Args:
-            f: The side effect to be applied to each element,
-                returning a homogeneous [tuple][].
+            f: The side effect to be applied to each element.
 
         Returns:
             A new [trcks.oop.TupleWrapper][] instance with
