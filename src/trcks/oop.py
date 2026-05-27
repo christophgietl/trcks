@@ -7156,21 +7156,40 @@ class TupleWrapper(_Wrapper[tuple[_T_co, ...]]):
     without changing the wrapped tuple.
 
     Example:
+        Create and process a homogeneous [tuple][]:
+
         >>> from trcks.oop import TupleWrapper
-        >>> def double(n: int) -> int:
+        >>> def double_integer(n: int) -> int:
         ...     return n * 2
+        ...
+        >>> def log_integer(n: int) -> None:
+        ...     print(f"Received: {n}")
         ...
         >>> tuple_wrapper: TupleWrapper[int] = (
         ...     TupleWrapper
         ...     .construct_from_tuple((1, 2, 3))
-        ...     .map(double)
-        ...     .tap(lambda n: print(f"Processing: {n}"))
+        ...     .map(double_integer)
+        ...     .tap(log_integer)
         ... )
-        Processing: 2
-        Processing: 4
-        Processing: 6
+        Received: 2
+        Received: 4
+        Received: 6
         >>> tuple_wrapper
         TupleWrapper(core=(2, 4, 6))
+
+        Map each element to a homogeneous tuple and flatten the result:
+
+        >>> from trcks.oop import TupleWrapper
+        >>> def duplicate_integer(n: int) -> tuple[int, int]:
+        ...     return n, n
+        ...
+        >>> tuple_wrapper: TupleWrapper[int] = (
+        ...     TupleWrapper
+        ...     .construct_from_tuple((1, 2, 3))
+        ...     .map_to_tuple(duplicate_integer)
+        ... )
+        >>> tuple_wrapper
+        TupleWrapper(core=(1, 1, 2, 2, 3, 3))
     """
 
     @staticmethod
@@ -7226,13 +7245,13 @@ class TupleWrapper(_Wrapper[tuple[_T_co, ...]]):
 
         Example:
             >>> from trcks.oop import TupleWrapper
-            >>> def double(n: int) -> int:
+            >>> def double_integer(n: int) -> int:
             ...     return n * 2
             ...
             >>> tuple_wrapper: TupleWrapper[int] = (
             ...     TupleWrapper
             ...     .construct_from_tuple((1, 2, 3))
-            ...     .map(double)
+            ...     .map(double_integer)
             ... )
             >>> tuple_wrapper
             TupleWrapper(core=(2, 4, 6))
@@ -7509,13 +7528,13 @@ class TupleWrapper(_Wrapper[tuple[_T_co, ...]]):
 
         Example:
             >>> from trcks.oop import TupleWrapper
-            >>> def duplicate(n: int) -> tuple[int, int]:
+            >>> def duplicate_integer(n: int) -> tuple[int, int]:
             ...     return n, n
             ...
             >>> tuple_wrapper: TupleWrapper[int] = (
             ...     TupleWrapper
             ...     .construct_from_tuple((1, 2, 3))
-            ...     .map_to_tuple(duplicate)
+            ...     .map_to_tuple(duplicate_integer)
             ... )
             >>> tuple_wrapper
             TupleWrapper(core=(1, 1, 2, 2, 3, 3))
@@ -7535,14 +7554,17 @@ class TupleWrapper(_Wrapper[tuple[_T_co, ...]]):
 
         Example:
             >>> from trcks.oop import TupleWrapper
+            >>> def log_integer(n: int) -> None:
+            ...     print(f"Received: {n}")
+            ...
             >>> tuple_wrapper: TupleWrapper[int] = (
             ...     TupleWrapper
             ...     .construct_from_tuple((1, 2, 3))
-            ...     .tap(lambda n: print(f"Value: {n}"))
+            ...     .tap(log_integer)
             ... )
-            Value: 1
-            Value: 2
-            Value: 3
+            Received: 1
+            Received: 2
+            Received: 3
             >>> tuple_wrapper
             TupleWrapper(core=(1, 2, 3))
         """
@@ -7827,20 +7849,17 @@ class TupleWrapper(_Wrapper[tuple[_T_co, ...]]):
 
         Example:
             >>> from trcks.oop import TupleWrapper
-            >>> def write_to_disk(n: int) -> tuple[str, ...]:
-            ...     print(f"Wrote {n} to disk.")
-            ...     return str(n), str(n)
+            >>> def get_divisors(n: int) -> tuple[int, ...]:
+            ...     candidates = range(1, n + 1)
+            ...     return tuple(c for c in candidates if n % c == 0)
             ...
             >>> tuple_wrapper: TupleWrapper[int] = (
             ...     TupleWrapper
-            ...     .construct_from_tuple((1, 2, 3))
-            ...     .tap_to_tuple(write_to_disk)
+            ...     .construct_from_tuple((1, 2, 3, 4))
+            ...     .tap_to_tuple(get_divisors)
             ... )
-            Wrote 1 to disk.
-            Wrote 2 to disk.
-            Wrote 3 to disk.
             >>> tuple_wrapper
-            TupleWrapper(core=(1, 1, 2, 2, 3, 3))
+            TupleWrapper(core=(1, 2, 2, 3, 3, 4, 4, 4))
         """
         return TupleWrapper(t.tap_to_tuple(f)(self.core))
 
