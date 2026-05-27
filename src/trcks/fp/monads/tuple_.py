@@ -33,6 +33,8 @@ Example:
 
     Map each element to a homogeneous tuple and flatten the result:
 
+    >>> from trcks.fp.composition import pipe
+    >>> from trcks.fp.monads import tuple_ as t
     >>> def duplicate_integer(n: int) -> tuple[int, int]:
     ...     return n, n
     ...
@@ -118,7 +120,7 @@ def map_to_tuple(
     homogeneous [tuple][]s of varying length.
 
     Args:
-        f: Function to apply to each element that returns a homogeneous [tuple][].
+        f: Function to apply to each element.
 
     Returns:
         Maps homogeneous [tuple][]s to homogeneous [tuple][]s of varying length
@@ -182,7 +184,7 @@ def tap_to_tuple(
     to each element of a homogeneous [tuple][].
 
     Args:
-        f: Side effect to apply to each element that returns a [tuple][].
+        f: Side effect to apply to each element.
 
     Returns:
         Applies the given side effect to each element of a homogeneous [tuple][].
