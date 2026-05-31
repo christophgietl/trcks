@@ -45,7 +45,7 @@ from trcks.fp.composition import compose2
 from trcks.fp.monads import awaitable as a
 from trcks.fp.monads import result as r
 
-if TYPE_CHECKING:  # pragma: no cover
+if TYPE_CHECKING:
     from collections.abc import Awaitable, Callable
 
     from trcks import AwaitableFailure, AwaitableResult, AwaitableSuccess, Result
@@ -766,7 +766,7 @@ async def to_coroutine_result(a_rslt: AwaitableResult[_F, _S]) -> Result[_F, _S]
         <Future finished result=('success', 42)>
         >>> coro = ar.to_coroutine_result(future)
         >>> coro
-        <coroutine object to_coroutine_result at ...>
+        <coroutine object to_coroutine_result at 0x...>
         >>> asyncio.run(coro)
         ('success', 42)
     """

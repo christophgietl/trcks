@@ -14,19 +14,16 @@
 ### Return types defined in `trcks`
 
 - `trcks.Result[FailureType, SuccessType]`:
-  a `tuple`-based type with literal discriminants ("success"/"failure")
-  for type-safe pattern matching;
-  allows functions to return either
-  a domain error (`FailureType`) or a success value (`SuccessType`)
-  without raising exceptions.
-- `trcks.AwaitableResult[FailureType, SuccessType]`:
-  an alias for `collections.abc.Awaitable[trcks.Result[FailureType, SuccessType]]`
-  for annotating asynchronous functions.
+  `tuple`-based type with literal discriminants ("success" and "failure");
+  lets functions return domain errors instead of raising them.
+- Combinations with `collections.abc.Awaitable` and `tuple` for different use cases
+  (e.g. `trcks.AwaitableResultTuple[FailureType, SuccessType]`).
 
 ### Wrapper classes defined in `trcks.oop`
 
 - The module `trcks.oop` provides wrapper classes for OOP-style method chaining
-  (e.g. `trcks.oop.Wrapper`, `trcks.oop.ResultWrapper`).
+  (e.g. `trcks.oop.Wrapper`, `trcks.oop.AwaitableWrapper`, `trcks.oop.ResultWrapper`,
+  `trcks.oop.TupleWrapper`, `trcks.oop.AwaitableResultTupleWrapper`).
 - All wrapper classes are designed to be lightweight and immutable.
 - All wrapper class methods return new wrapper instances.
 
@@ -36,7 +33,9 @@
   higher-order functions for composing functions
   (e.g. `trcks.fp.composition.pipe` and `trcks.fp.composition.compose`).
 - The package `trcks.fp.monads` provides type-specific mapping functions
-  for `trcks.Result`, `collections.abc.Awaitable` and `trcks.AwaitableResult` values.
+  for `collections.abc.Awaitable`, `trcks.Result`, `tuple`,
+  `trcks.AwaitableResult`, `trcks.AwaitableTuple`, `trcks.ResultTuple` and
+  `trcks.AwaitableResultTuple` values.
 
 ### Providing typing features to all supported Python versions in `trcks._typing`
 
@@ -49,13 +48,22 @@ Use the following import patterns across code and documentation:
 
 ```pycon
 >>> # Generic types from the main package:
->>> from trcks import AwaitableResult, Result
+>>> from trcks import AwaitableResult, AwaitableResultTuple, Failure, ResultTuple
 >>> # OOP wrapper classes:
->>> from trcks.oop import AwaitableResultWrapper, ResultWrapper, Wrapper
+>>> from trcks.oop import ResultTupleWrapper, ResultWrapper, TupleWrapper
 >>> # FP composition helpers:
 >>> from trcks.fp.composition import Composable, Pipeline3, compose, pipe
 >>> # FP monads (with single-letter aliases for conciseness):
->>> from trcks.fp.monads import awaitable as a, awaitable_result as ar
+>>> from trcks.fp.monads import (
+...     awaitable as a,
+...     awaitable_result as ar,
+...     awaitable_result_tuple as art,
+...     awaitable_tuple as at,
+...     identity as i,
+...     result as r,
+...     result_tuple as rt,
+...     tuple_ as t,
+... )
 
 ```
 
@@ -81,12 +89,13 @@ uv build
 
 ## Testing strategy
 
-- Each function in `src/trcks/` must have a docstring with at least one example
-  (run as doctest by `pytest`).
-- `pytest` also collects all "pycon" code blocks in `**/*.md` files and
-  all `tests/trcks/**/test_*.py` files (mirroring `src/trcks/`).
-- Test coverage must be 100%; unreachable code and `if TYPE_CHECKING` blocks
-  must be marked with `# pragma: no cover`.
+- Every function in `src/trcks/` needs a docstring with ≥1 example
+  (run as doctest by `pytest`);
+  reuse example functions from existing doctests.
+- `pytest` also collects "pycon" blocks in `**/*.md` and `tests/trcks/**/test_*.py`
+  (mirroring `src/trcks/`).
+- 100% coverage required; mark unreachable code with `# pragma: no cover`
+  (not needed for `if TYPE_CHECKING` blocks).
 
 ## Documentation requirements
 

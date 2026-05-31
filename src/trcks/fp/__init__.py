@@ -5,7 +5,11 @@ in a functional style:
 
 - [collections.abc.Awaitable][]
 - [trcks.AwaitableResult][]
+- [trcks.AwaitableResultTuple][]
+- [trcks.AwaitableTuple][]
 - [trcks.Result][]
+- [trcks.ResultTuple][]
+- [tuple][] (homogeneous)
 
 Example:
     This example uses the modules
