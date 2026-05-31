@@ -902,7 +902,7 @@ class AwaitableResultTupleWrapper(
             >>> from trcks.oop import AwaitableResultTupleWrapper
             >>> async def slowly_double_if_positive(n: int) -> Result[str, int]:
             ...     await asyncio.sleep(0.001)
-            ...     return ("success", n * 2) if n > 0 else ("failure", "bad")
+            ...     return ("success", n * 2) if n > 0 else ("failure", "negative")
             ...
             >>> wrapper_1 = (
             ...     AwaitableResultTupleWrapper
@@ -922,7 +922,7 @@ class AwaitableResultTupleWrapper(
             >>> wrapper_2
             AwaitableResultTupleWrapper(core=<coroutine object ...>)
             >>> asyncio.run(wrapper_2.core_as_coroutine)
-            ('failure', 'bad')
+            ('failure', 'negative')
         """
         return AwaitableResultTupleWrapper(
             art.map_successes_to_awaitable_result(f)(self.core)
@@ -956,7 +956,7 @@ class AwaitableResultTupleWrapper(
             ...     await asyncio.sleep(0.001)
             ...     if n > 0:
             ...         return "success", (n, -n)
-            ...     return "failure", "bad"
+            ...     return "failure", "negative"
             ...
             >>> wrapper_1 = (
             ...     AwaitableResultTupleWrapper
@@ -976,7 +976,7 @@ class AwaitableResultTupleWrapper(
             >>> wrapper_2
             AwaitableResultTupleWrapper(core=<coroutine object ...>)
             >>> asyncio.run(wrapper_2.core_as_coroutine)
-            ('failure', 'bad')
+            ('failure', 'negative')
         """
         return AwaitableResultTupleWrapper(
             art.map_successes_to_awaitable_result_tuple(f)(self.core)
@@ -1009,7 +1009,7 @@ class AwaitableResultTupleWrapper(
             >>> def double_if_positive(n: int) -> Result[str, int]:
             ...     if n > 0:
             ...         return "success", n * 2
-            ...     return "failure", "bad"
+            ...     return "failure", "negative"
             ...
             >>> wrapper_1 = (
             ...     AwaitableResultTupleWrapper
@@ -1029,7 +1029,7 @@ class AwaitableResultTupleWrapper(
             >>> wrapper_2
             AwaitableResultTupleWrapper(core=<coroutine object ...>)
             >>> asyncio.run(wrapper_2.core_as_coroutine)
-            ('failure', 'bad')
+            ('failure', 'negative')
         """
         return AwaitableResultTupleWrapper(art.map_successes_to_result(f)(self.core))
 
@@ -1060,7 +1060,7 @@ class AwaitableResultTupleWrapper(
             >>> def expand(n: int) -> ResultTuple[str, int]:
             ...     if n > 0:
             ...         return "success", (n, -n)
-            ...     return "failure", "bad"
+            ...     return "failure", "negative"
             ...
             >>> wrapper_1 = (
             ...     AwaitableResultTupleWrapper
@@ -1080,7 +1080,7 @@ class AwaitableResultTupleWrapper(
             >>> wrapper_2
             AwaitableResultTupleWrapper(core=<coroutine object ...>)
             >>> asyncio.run(wrapper_2.core_as_coroutine)
-            ('failure', 'bad')
+            ('failure', 'negative')
         """
         return AwaitableResultTupleWrapper(
             art.map_successes_to_result_tuple(f)(self.core)
@@ -1593,7 +1593,7 @@ class AwaitableResultTupleWrapper(
             >>> from trcks.oop import AwaitableResultTupleWrapper
             >>> async def audit(n: int) -> Result[str, None]:
             ...     await asyncio.sleep(0.001)
-            ...     return ("success", None) if n > 0 else ("failure", "bad")
+            ...     return ("success", None) if n > 0 else ("failure", "negative")
             ...
             >>> wrapper_1 = (
             ...     AwaitableResultTupleWrapper
@@ -1613,7 +1613,7 @@ class AwaitableResultTupleWrapper(
             >>> wrapper_2
             AwaitableResultTupleWrapper(core=<coroutine object ...>)
             >>> asyncio.run(wrapper_2.core_as_coroutine)
-            ('failure', 'bad')
+            ('failure', 'negative')
         """
         return AwaitableResultTupleWrapper(
             art.tap_successes_to_awaitable_result(f)(self.core)
@@ -1648,7 +1648,7 @@ class AwaitableResultTupleWrapper(
             ...     await asyncio.sleep(0.001)
             ...     if n > 0:
             ...         return ("success", (None, None))
-            ...     return ("failure", "bad")
+            ...     return ("failure", "negative")
             ...
             >>> wrapper_1 = (
             ...     AwaitableResultTupleWrapper
@@ -1668,7 +1668,7 @@ class AwaitableResultTupleWrapper(
             >>> wrapper_2
             AwaitableResultTupleWrapper(core=<coroutine object ...>)
             >>> asyncio.run(wrapper_2.core_as_coroutine)
-            ('failure', 'bad')
+            ('failure', 'negative')
         """
         return AwaitableResultTupleWrapper(
             art.tap_successes_to_awaitable_result_tuple(f)(self.core)
@@ -1701,7 +1701,7 @@ class AwaitableResultTupleWrapper(
             >>> def audit(n: int) -> Result[str, None]:
             ...     if n > 0:
             ...         return "success", None
-            ...     return "failure", "bad"
+            ...     return "failure", "negative"
             ...
             >>> wrapper_1 = (
             ...     AwaitableResultTupleWrapper
@@ -1721,7 +1721,7 @@ class AwaitableResultTupleWrapper(
             >>> wrapper_2
             AwaitableResultTupleWrapper(core=<coroutine object ...>)
             >>> asyncio.run(wrapper_2.core_as_coroutine)
-            ('failure', 'bad')
+            ('failure', 'negative')
         """
         return AwaitableResultTupleWrapper(art.tap_successes_to_result(f)(self.core))
 
@@ -1753,7 +1753,7 @@ class AwaitableResultTupleWrapper(
             >>> def audit(n: int) -> ResultTuple[str, None]:
             ...     if n > 0:
             ...         return "success", (None, None)
-            ...     return "failure", "bad"
+            ...     return "failure", "negative"
             ...
             >>> wrapper_1 = (
             ...     AwaitableResultTupleWrapper
@@ -1773,7 +1773,7 @@ class AwaitableResultTupleWrapper(
             >>> wrapper_2
             AwaitableResultTupleWrapper(core=<coroutine object ...>)
             >>> asyncio.run(wrapper_2.core_as_coroutine)
-            ('failure', 'bad')
+            ('failure', 'negative')
         """
         return AwaitableResultTupleWrapper(
             art.tap_successes_to_result_tuple(f)(self.core)
@@ -3459,17 +3459,17 @@ class AwaitableTupleWrapper(_AwaitableWrapper[tuple[_T_co, ...]]):
     Example:
         >>> import asyncio
         >>> from trcks.oop import AwaitableTupleWrapper
-        >>> async def double(n: int) -> int:
+        >>> async def slowly_double(n: int) -> int:
         ...     await asyncio.sleep(0.001)
         ...     return n * 2
         ...
         >>> async def main() -> tuple[int, ...]:
-        ...     awaitable_tuple_wrapper = (
+        ...     return await (
         ...         AwaitableTupleWrapper
         ...         .construct_from_tuple((1, 2, 3))
-        ...         .map_to_awaitable(double)
+        ...         .map_to_awaitable(slowly_double)
+        ...         .core
         ...     )
-        ...     return await awaitable_tuple_wrapper.core_as_coroutine
         ...
         >>> asyncio.run(main())
         (2, 4, 6)
@@ -3513,13 +3513,13 @@ class AwaitableTupleWrapper(_AwaitableWrapper[tuple[_T_co, ...]]):
         Example:
             >>> import asyncio
             >>> from trcks.oop import AwaitableTupleWrapper
-            >>> async def get_value() -> int:
+            >>> async def slowly_get_value() -> int:
             ...     await asyncio.sleep(0.001)
             ...     return 7
             ...
             >>> awaitable_tuple_wrapper = (
             ...     AwaitableTupleWrapper
-            ...     .construct_from_awaitable(get_value())
+            ...     .construct_from_awaitable(slowly_get_value())
             ... )
             >>> awaitable_tuple_wrapper
             AwaitableTupleWrapper(core=<coroutine object ...>)
@@ -3546,12 +3546,12 @@ class AwaitableTupleWrapper(_AwaitableWrapper[tuple[_T_co, ...]]):
             >>> from trcks.oop import AwaitableTupleWrapper
             >>> awaitable_tuple_wrapper = (
             ...     AwaitableTupleWrapper
-            ...     .construct_from_tuple((1, 2, 3))
+            ...     .construct_from_tuple((1, 2))
             ... )
             >>> awaitable_tuple_wrapper
             AwaitableTupleWrapper(core=<coroutine object ...>)
             >>> asyncio.run(awaitable_tuple_wrapper.core_as_coroutine)
-            (1, 2, 3)
+            (1, 2)
         """
         return AwaitableTupleWrapper(at.construct_from_tuple(tpl))
 
@@ -3570,15 +3570,17 @@ class AwaitableTupleWrapper(_AwaitableWrapper[tuple[_T_co, ...]]):
         Example:
             >>> import asyncio
             >>> from trcks.oop import AwaitableTupleWrapper
-            >>> async def main() -> tuple[int, ...]:
-            ...     return await (
-            ...         AwaitableTupleWrapper
-            ...         .construct_from_tuple((1, 2, 3))
-            ...         .map(lambda n: n * 2)
-            ...         .core
-            ...     )
+            >>> def double_integer(n: int) -> int:
+            ...     return n * 2
             ...
-            >>> asyncio.run(main())
+            >>> awaitable_tuple_wrapper: AwaitableTupleWrapper[int] = (
+            ...     AwaitableTupleWrapper
+            ...     .construct_from_tuple((1, 2, 3))
+            ...     .map(double_integer)
+            ... )
+            >>> awaitable_tuple_wrapper
+            AwaitableTupleWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(awaitable_tuple_wrapper.core_as_coroutine)
             (2, 4, 6)
         """
         return AwaitableTupleWrapper(at.map_(f)(self.core))
@@ -3604,16 +3606,15 @@ class AwaitableTupleWrapper(_AwaitableWrapper[tuple[_T_co, ...]]):
             ...     await asyncio.sleep(0.001)
             ...     return n + 1
             ...
-            >>> async def main() -> tuple[int, ...]:
-            ...     return await (
-            ...         AwaitableTupleWrapper
-            ...         .construct_from_tuple((1, 2, 3))
-            ...         .map_to_awaitable(slowly_add_one)
-            ...         .core
-            ...     )
-            ...
-            >>> asyncio.run(main())
-            (2, 3, 4)
+            >>> awaitable_tuple_wrapper: AwaitableTupleWrapper[int] = (
+            ...     AwaitableTupleWrapper
+            ...     .construct_from_tuple((1, 2))
+            ...     .map_to_awaitable(slowly_add_one)
+            ... )
+            >>> awaitable_tuple_wrapper
+            AwaitableTupleWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(awaitable_tuple_wrapper.core_as_coroutine)
+            (2, 3)
         """
         return AwaitableTupleWrapper(at.map_to_awaitable(f)(self.core))
 
@@ -3634,19 +3635,18 @@ class AwaitableTupleWrapper(_AwaitableWrapper[tuple[_T_co, ...]]):
         Example:
             >>> import asyncio
             >>> from trcks.oop import AwaitableTupleWrapper
-            >>> async def duplicate(n: int) -> tuple[int, int]:
+            >>> async def slowly_duplicate(n: int) -> tuple[int, int]:
             ...     await asyncio.sleep(0.001)
             ...     return n, n
             ...
-            >>> async def main() -> tuple[int, ...]:
-            ...     return await (
-            ...         AwaitableTupleWrapper
-            ...         .construct_from_tuple((1, 2))
-            ...         .map_to_awaitable_tuple(duplicate)
-            ...         .core
-            ...     )
-            ...
-            >>> asyncio.run(main())
+            >>> awaitable_tuple_wrapper: AwaitableTupleWrapper[int] = (
+            ...     AwaitableTupleWrapper
+            ...     .construct_from_tuple((1, 2))
+            ...     .map_to_awaitable_tuple(slowly_duplicate)
+            ... )
+            >>> awaitable_tuple_wrapper
+            AwaitableTupleWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(awaitable_tuple_wrapper.core_as_coroutine)
             (1, 1, 2, 2)
         """
         return AwaitableTupleWrapper(at.map_to_awaitable_tuple(f)(self.core))
@@ -3668,16 +3668,18 @@ class AwaitableTupleWrapper(_AwaitableWrapper[tuple[_T_co, ...]]):
         Example:
             >>> import asyncio
             >>> from trcks.oop import AwaitableTupleWrapper
-            >>> async def main() -> tuple[int, ...]:
-            ...     return await (
-            ...         AwaitableTupleWrapper
-            ...         .construct_from_tuple((1, 2, 3))
-            ...         .map_to_tuple(lambda n: (n, -n))
-            ...         .core
-            ...     )
+            >>> def add_negative(n: int) -> tuple[int, int]:
+            ...     return n, -n
             ...
-            >>> asyncio.run(main())
-            (1, -1, 2, -2, 3, -3)
+            >>> awaitable_tuple_wrapper: AwaitableTupleWrapper[int] = (
+            ...     AwaitableTupleWrapper
+            ...     .construct_from_tuple((1, 2))
+            ...     .map_to_tuple(add_negative)
+            ... )
+            >>> awaitable_tuple_wrapper
+            AwaitableTupleWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(awaitable_tuple_wrapper.core_as_coroutine)
+            (1, -1, 2, -2)
         """
         return AwaitableTupleWrapper(at.map_to_tuple(f)(self.core))
 
@@ -3695,19 +3697,20 @@ class AwaitableTupleWrapper(_AwaitableWrapper[tuple[_T_co, ...]]):
         Example:
             >>> import asyncio
             >>> from trcks.oop import AwaitableTupleWrapper
-            >>> async def main() -> tuple[int, ...]:
-            ...     return await (
-            ...         AwaitableTupleWrapper
-            ...         .construct_from_tuple((1, 2, 3))
-            ...         .tap(lambda n: print(f"Processing: {n}"))
-            ...         .core
-            ...     )
+            >>> def log_integer(n: int) -> None:
+            ...     print(f"Received: {n}")
             ...
-            >>> asyncio.run(main())
-            Processing: 1
-            Processing: 2
-            Processing: 3
-            (1, 2, 3)
+            >>> awaitable_tuple_wrapper: AwaitableTupleWrapper[int] = (
+            ...     AwaitableTupleWrapper
+            ...     .construct_from_tuple((1, 2))
+            ...     .tap(log_integer)
+            ... )
+            >>> awaitable_tuple_wrapper
+            AwaitableTupleWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(awaitable_tuple_wrapper.core_as_coroutine)
+            Received: 1
+            Received: 2
+            (1, 2)
         """
         return AwaitableTupleWrapper(at.tap(f)(self.core))
 
@@ -3727,19 +3730,18 @@ class AwaitableTupleWrapper(_AwaitableWrapper[tuple[_T_co, ...]]):
         Example:
             >>> import asyncio
             >>> from trcks.oop import AwaitableTupleWrapper
-            >>> async def log_async(n: int) -> None:
+            >>> async def slowly_log(n: int) -> None:
             ...     await asyncio.sleep(0.001)
             ...     print(f"Logged: {n}")
             ...
-            >>> async def main() -> tuple[int, ...]:
-            ...     return await (
-            ...         AwaitableTupleWrapper
-            ...         .construct_from_tuple((1, 2))
-            ...         .tap_to_awaitable(log_async)
-            ...         .core
-            ...     )
-            ...
-            >>> asyncio.run(main())
+            >>> awaitable_tuple_wrapper: AwaitableTupleWrapper[int] = (
+            ...     AwaitableTupleWrapper
+            ...     .construct_from_tuple((1, 2))
+            ...     .tap_to_awaitable(slowly_log)
+            ... )
+            >>> awaitable_tuple_wrapper
+            AwaitableTupleWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(awaitable_tuple_wrapper.core_as_coroutine)
             Logged: 1
             Logged: 2
             (1, 2)
@@ -3763,20 +3765,20 @@ class AwaitableTupleWrapper(_AwaitableWrapper[tuple[_T_co, ...]]):
         Example:
             >>> import asyncio
             >>> from trcks.oop import AwaitableTupleWrapper
-            >>> async def echo_twice(n: int) -> tuple[str, str]:
+            >>> async def slowly_get_divisors(n: int) -> tuple[int, ...]:
             ...     await asyncio.sleep(0.001)
-            ...     return str(n), str(n)
+            ...     candidates = range(1, n + 1)
+            ...     return tuple(c for c in candidates if n % c == 0)
             ...
-            >>> async def main() -> tuple[int, ...]:
-            ...     return await (
-            ...         AwaitableTupleWrapper
-            ...         .construct_from_tuple((1, 2))
-            ...         .tap_to_awaitable_tuple(echo_twice)
-            ...         .core
-            ...     )
-            ...
-            >>> asyncio.run(main())
-            (1, 1, 2, 2)
+            >>> awaitable_tuple_wrapper: AwaitableTupleWrapper[int] = (
+            ...     AwaitableTupleWrapper
+            ...     .construct_from_tuple((1, 2, 3, 4))
+            ...     .tap_to_awaitable_tuple(slowly_get_divisors)
+            ... )
+            >>> awaitable_tuple_wrapper
+            AwaitableTupleWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(awaitable_tuple_wrapper.core_as_coroutine)
+            (1, 2, 2, 3, 3, 4, 4, 4)
         """
         return AwaitableTupleWrapper(at.tap_to_awaitable_tuple(f)(self.core))
 
@@ -3797,16 +3799,19 @@ class AwaitableTupleWrapper(_AwaitableWrapper[tuple[_T_co, ...]]):
         Example:
             >>> import asyncio
             >>> from trcks.oop import AwaitableTupleWrapper
-            >>> async def main() -> tuple[int, ...]:
-            ...     return await (
-            ...         AwaitableTupleWrapper
-            ...         .construct_from_tuple((1, 2))
-            ...         .tap_to_tuple(lambda n: (n, n))
-            ...         .core
-            ...     )
+            >>> def get_divisors(n: int) -> tuple[int, ...]:
+            ...     candidates = range(1, n + 1)
+            ...     return tuple(c for c in candidates if n % c == 0)
             ...
-            >>> asyncio.run(main())
-            (1, 1, 2, 2)
+            >>> awaitable_tuple_wrapper: AwaitableTupleWrapper[int] = (
+            ...     AwaitableTupleWrapper
+            ...     .construct_from_tuple((1, 2, 3, 4))
+            ...     .tap_to_tuple(get_divisors)
+            ... )
+            >>> awaitable_tuple_wrapper
+            AwaitableTupleWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(awaitable_tuple_wrapper.core_as_coroutine)
+            (1, 2, 2, 3, 3, 4, 4, 4)
         """
         return AwaitableTupleWrapper(at.tap_to_tuple(f)(self.core))
 
@@ -4060,14 +4065,14 @@ class AwaitableWrapper(_AwaitableWrapper[_T_co]):
         Example:
             >>> import asyncio
             >>> from trcks.oop import AwaitableWrapper
-            >>> async def duplicate_async(n: int) -> tuple[int, ...]:
+            >>> async def slowly_duplicate(n: int) -> tuple[int, ...]:
             ...     await asyncio.sleep(0.001)
             ...     return (n, n)
             ...
             >>> awaitable_tuple_wrapper = (
             ...     AwaitableWrapper
             ...     .construct(21)
-            ...     .map_to_awaitable_tuple(duplicate_async)
+            ...     .map_to_awaitable_tuple(slowly_duplicate)
             ... )
             >>> awaitable_tuple_wrapper
             AwaitableTupleWrapper(core=<coroutine object ...>)
@@ -4336,21 +4341,20 @@ class AwaitableWrapper(_AwaitableWrapper[_T_co]):
 
         Example:
             >>> import asyncio
-            >>> from trcks.oop import AwaitableWrapper
-            >>> async def duplicate_with_log_async(n: int) -> tuple[int, ...]:
+            >>> from trcks.oop import AwaitableTupleWrapper, AwaitableWrapper
+            >>> async def slowly_duplicate_with_log(n: int) -> tuple[int, ...]:
             ...     await asyncio.sleep(0.001)
             ...     print(f"Processing: {n}")
             ...     return (n, n)
             ...
-            >>> async def main() -> tuple[int, ...]:
-            ...     return await (
-            ...         AwaitableWrapper
-            ...         .construct(21)
-            ...         .tap_to_awaitable_tuple(duplicate_with_log_async)
-            ...         .core
-            ...     )
-            ...
-            >>> asyncio.run(main())
+            >>> awaitable_tuple_wrapper: AwaitableTupleWrapper[int] = (
+            ...     AwaitableWrapper
+            ...     .construct(21)
+            ...     .tap_to_awaitable_tuple(slowly_duplicate_with_log)
+            ... )
+            >>> awaitable_tuple_wrapper
+            AwaitableTupleWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(awaitable_tuple_wrapper.core_as_coroutine)
             Processing: 21
             (21, 21)
         """
@@ -4460,20 +4464,19 @@ class AwaitableWrapper(_AwaitableWrapper[_T_co]):
 
         Example:
             >>> import asyncio
-            >>> from trcks.oop import AwaitableWrapper
+            >>> from trcks.oop import AwaitableTupleWrapper, AwaitableWrapper
             >>> def duplicate_with_log(n: int) -> tuple[object, ...]:
             ...     print(f"Processing: {n}")
             ...     return (n, n)
             ...
-            >>> async def main() -> tuple[int, ...]:
-            ...     return await (
-            ...         AwaitableWrapper
-            ...         .construct(42)
-            ...         .tap_to_tuple(duplicate_with_log)
-            ...         .core
-            ...     )
-            ...
-            >>> asyncio.run(main())
+            >>> awaitable_tuple_wrapper: AwaitableTupleWrapper[int] = (
+            ...     AwaitableWrapper
+            ...     .construct(42)
+            ...     .tap_to_tuple(duplicate_with_log)
+            ... )
+            >>> awaitable_tuple_wrapper
+            AwaitableTupleWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(awaitable_tuple_wrapper.core_as_coroutine)
             Processing: 42
             (42, 42)
         """
@@ -5810,7 +5813,7 @@ class ResultWrapper(_ResultWrapper[_F_default_co, _S_default_co]):
             >>> def audit(n: int) -> ResultTuple[str, None]:
             ...     if n > 0:
             ...         return "success", (None, None)
-            ...     return "failure", "bad"
+            ...     return "failure", "negative"
             ...
             >>> ResultWrapper.construct_failure(
             ...     "oops"
@@ -5825,7 +5828,7 @@ class ResultWrapper(_ResultWrapper[_F_default_co, _S_default_co]):
             >>> ResultWrapper.construct_success(
             ...     -1
             ... ).tap_success_to_result_tuple(audit)
-            ResultTupleWrapper(core=('failure', 'bad'))
+            ResultTupleWrapper(core=('failure', 'negative'))
         """
         return ResultTupleWrapper.construct_from_result(
             self.core
@@ -6331,7 +6334,7 @@ class ResultTupleWrapper(_ResultWrapper[_F_default_co, tuple[_S_default_co, ...]
             ...     await asyncio.sleep(0.001)
             ...     if n > 0:
             ...         return "success", n * 2
-            ...     return "failure", "bad"
+            ...     return "failure", "negative"
             ...
             >>> wrapper_1 = ResultTupleWrapper.construct_failure(
             ...     "not found"
@@ -6383,7 +6386,7 @@ class ResultTupleWrapper(_ResultWrapper[_F_default_co, tuple[_S_default_co, ...]
             ...     await asyncio.sleep(0.001)
             ...     if n > 0:
             ...         return "success", (n, -n)
-            ...     return "failure", "bad"
+            ...     return "failure", "negative"
             ...
             >>> wrapper_1 = ResultTupleWrapper.construct_failure(
             ...     "not found"
@@ -6430,7 +6433,7 @@ class ResultTupleWrapper(_ResultWrapper[_F_default_co, tuple[_S_default_co, ...]
             >>> def double_if_positive(n: int) -> Result[str, int]:
             ...     if n > 0:
             ...         return "success", n * 2
-            ...     return "failure", "bad"
+            ...     return "failure", "negative"
             ...
             >>> ResultTupleWrapper.construct_successes_from_tuple(
             ...     (1, 2)
@@ -6440,7 +6443,7 @@ class ResultTupleWrapper(_ResultWrapper[_F_default_co, tuple[_S_default_co, ...]
             >>> ResultTupleWrapper.construct_successes_from_tuple(
             ...     (1, -1, 2)
             ... ).map_successes_to_result(double_if_positive)
-            ResultTupleWrapper(core=('failure', 'bad'))
+            ResultTupleWrapper(core=('failure', 'negative'))
         """
         mapped_f: Callable[
             [ResultTuple[_F_default_co, _S_default_co]],
@@ -6473,7 +6476,7 @@ class ResultTupleWrapper(_ResultWrapper[_F_default_co, tuple[_S_default_co, ...]
             >>> def expand(n: int) -> ResultTuple[str, int]:
             ...     if n > 0:
             ...         return "success", (n, -n)
-            ...     return "failure", "bad"
+            ...     return "failure", "negative"
             ...
             >>> ResultTupleWrapper.construct_successes_from_tuple(
             ...     (1, 2)
@@ -6483,7 +6486,7 @@ class ResultTupleWrapper(_ResultWrapper[_F_default_co, tuple[_S_default_co, ...]
             >>> ResultTupleWrapper.construct_successes_from_tuple(
             ...     (1, -1, 2)
             ... ).map_successes_to_result_tuple(expand)
-            ResultTupleWrapper(core=('failure', 'bad'))
+            ResultTupleWrapper(core=('failure', 'negative'))
         """
         mapped_f: Callable[
             [ResultTuple[_F_default_co, _S_default_co]],
@@ -6949,7 +6952,7 @@ class ResultTupleWrapper(_ResultWrapper[_F_default_co, tuple[_S_default_co, ...]
             ...     await asyncio.sleep(0.001)
             ...     if n > 0:
             ...         return "success", None
-            ...     return "failure", "bad"
+            ...     return "failure", "negative"
             ...
             >>> wrapper_1 = ResultTupleWrapper.construct_failure(
             ...     "oops"
@@ -7004,7 +7007,7 @@ class ResultTupleWrapper(_ResultWrapper[_F_default_co, tuple[_S_default_co, ...]
             ...     await asyncio.sleep(0.001)
             ...     if n > 0:
             ...         return "success", (None, None)
-            ...     return "failure", "bad"
+            ...     return "failure", "negative"
             ...
             >>> wrapper_1 = ResultTupleWrapper.construct_failure(
             ...     "oops"
@@ -7053,7 +7056,7 @@ class ResultTupleWrapper(_ResultWrapper[_F_default_co, tuple[_S_default_co, ...]
             >>> def audit(n: int) -> Result[str, None]:
             ...     if n > 0:
             ...         return "success", None
-            ...     return "failure", "bad"
+            ...     return "failure", "negative"
             ...
             >>> ResultTupleWrapper.construct_successes_from_tuple(
             ...     (1, 2)
@@ -7063,7 +7066,7 @@ class ResultTupleWrapper(_ResultWrapper[_F_default_co, tuple[_S_default_co, ...]
             >>> ResultTupleWrapper.construct_successes_from_tuple(
             ...     (1, -1, 2)
             ... ).tap_successes_to_result(audit)
-            ResultTupleWrapper(core=('failure', 'bad'))
+            ResultTupleWrapper(core=('failure', 'negative'))
         """
         return ResultTupleWrapper(rt.tap_successes_to_result(f)(self.core))
 
@@ -7094,7 +7097,7 @@ class ResultTupleWrapper(_ResultWrapper[_F_default_co, tuple[_S_default_co, ...]
             >>> def audit(n: int) -> ResultTuple[str, None]:
             ...     if n > 0:
             ...         return "success", (None, None)
-            ...     return "failure", "bad"
+            ...     return "failure", "negative"
             ...
             >>> ResultTupleWrapper.construct_successes(
             ...     7
@@ -7104,7 +7107,7 @@ class ResultTupleWrapper(_ResultWrapper[_F_default_co, tuple[_S_default_co, ...]
             >>> ResultTupleWrapper.construct_successes_from_tuple(
             ...     (1, -1)
             ... ).tap_successes_to_result_tuple(audit)
-            ResultTupleWrapper(core=('failure', 'bad'))
+            ResultTupleWrapper(core=('failure', 'negative'))
         """
         return ResultTupleWrapper(rt.tap_successes_to_result_tuple(f)(self.core))
 
@@ -7274,20 +7277,19 @@ class TupleWrapper(_Wrapper[tuple[_T_co, ...]]):
 
         Example:
             >>> import asyncio
-            >>> from trcks.oop import TupleWrapper
+            >>> from trcks.oop import AwaitableTupleWrapper, TupleWrapper
             >>> async def slowly_add_one(n: int) -> int:
             ...     await asyncio.sleep(0.001)
             ...     return n + 1
             ...
-            >>> async def main() -> tuple[int, ...]:
-            ...     return await (
-            ...         TupleWrapper
-            ...         .construct_from_tuple((1, 2, 3))
-            ...         .map_to_awaitable(slowly_add_one)
-            ...         .core
-            ...     )
-            ...
-            >>> asyncio.run(main())
+            >>> awaitable_tuple_wrapper: AwaitableTupleWrapper[int] = (
+            ...     TupleWrapper
+            ...     .construct_from_tuple((1, 2, 3))
+            ...     .map_to_awaitable(slowly_add_one)
+            ... )
+            >>> awaitable_tuple_wrapper
+            AwaitableTupleWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(awaitable_tuple_wrapper.core_as_coroutine)
             (2, 3, 4)
         """
         return AwaitableTupleWrapper.construct_from_tuple(self.core).map_to_awaitable(f)
@@ -7312,34 +7314,37 @@ class TupleWrapper(_Wrapper[tuple[_T_co, ...]]):
 
         Example:
             >>> import asyncio
-            >>> from trcks import Result, ResultTuple
-            >>> from trcks.oop import TupleWrapper
+            >>> from trcks import Result
+            >>> from trcks.oop import AwaitableResultTupleWrapper, TupleWrapper
             >>> async def slowly_double_if_positive(n: int) -> Result[str, int]:
             ...     await asyncio.sleep(0.001)
             ...     if n > 0:
             ...         return "success", n * 2
-            ...     return "failure", "bad"
+            ...     return "failure", "negative"
             ...
-            >>> async def main_1() -> ResultTuple[str, int]:
-            ...     return await (
-            ...         TupleWrapper
-            ...         .construct_from_tuple((1, 2))
-            ...         .map_to_awaitable_result(slowly_double_if_positive)
-            ...         .core
-            ...     )
-            ...
-            >>> asyncio.run(main_1())
+            >>> awaitable_result_tuple_wrapper_1: AwaitableResultTupleWrapper[
+            ...     str, int
+            ... ] = (
+            ...     TupleWrapper
+            ...     .construct_from_tuple((1, 2))
+            ...     .map_to_awaitable_result(slowly_double_if_positive)
+            ... )
+            >>> awaitable_result_tuple_wrapper_1
+            AwaitableResultTupleWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(awaitable_result_tuple_wrapper_1.core_as_coroutine)
             ('success', (2, 4))
-            >>> async def main_2() -> ResultTuple[str, int]:
-            ...     return await (
-            ...         TupleWrapper
-            ...         .construct_from_tuple((1, -1, 2))
-            ...         .map_to_awaitable_result(slowly_double_if_positive)
-            ...         .core
-            ...     )
-            ...
-            >>> asyncio.run(main_2())
-            ('failure', 'bad')
+            >>>
+            >>> awaitable_result_tuple_wrapper_2: AwaitableResultTupleWrapper[
+            ...     str, int
+            ... ] = (
+            ...     TupleWrapper
+            ...     .construct_from_tuple((1, -1, 2))
+            ...     .map_to_awaitable_result(slowly_double_if_positive)
+            ... )
+            >>> awaitable_result_tuple_wrapper_2
+            AwaitableResultTupleWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(awaitable_result_tuple_wrapper_2.core_as_coroutine)
+            ('failure', 'negative')
         """
         return AwaitableResultTupleWrapper.construct_successes_from_tuple(
             self.core
@@ -7367,33 +7372,36 @@ class TupleWrapper(_Wrapper[tuple[_T_co, ...]]):
         Example:
             >>> import asyncio
             >>> from trcks import ResultTuple
-            >>> from trcks.oop import TupleWrapper
+            >>> from trcks.oop import AwaitableResultTupleWrapper, TupleWrapper
             >>> async def slowly_expand_if_positive(n: int) -> ResultTuple[str, int]:
             ...     await asyncio.sleep(0.001)
             ...     if n > 0:
             ...         return "success", (n, -n)
-            ...     return "failure", "bad"
+            ...     return "failure", "negative"
             ...
-            >>> async def main_1() -> ResultTuple[str, int]:
-            ...     return await (
-            ...         TupleWrapper
-            ...         .construct_from_tuple((1, 2))
-            ...         .map_to_awaitable_result_tuple(slowly_expand_if_positive)
-            ...         .core
-            ...     )
-            ...
-            >>> asyncio.run(main_1())
+            >>> awaitable_result_tuple_wrapper_1: AwaitableResultTupleWrapper[
+            ...     str, int
+            ... ] = (
+            ...     TupleWrapper
+            ...     .construct_from_tuple((1, 2))
+            ...     .map_to_awaitable_result_tuple(slowly_expand_if_positive)
+            ... )
+            >>> awaitable_result_tuple_wrapper_1
+            AwaitableResultTupleWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(awaitable_result_tuple_wrapper_1.core_as_coroutine)
             ('success', (1, -1, 2, -2))
-            >>> async def main_2() -> ResultTuple[str, int]:
-            ...     return await (
-            ...         TupleWrapper
-            ...         .construct_from_tuple((1, -1, 2))
-            ...         .map_to_awaitable_result_tuple(slowly_expand_if_positive)
-            ...         .core
-            ...     )
-            ...
-            >>> asyncio.run(main_2())
-            ('failure', 'bad')
+            >>>
+            >>> awaitable_result_tuple_wrapper_2: AwaitableResultTupleWrapper[
+            ...     str, int
+            ... ] = (
+            ...     TupleWrapper
+            ...     .construct_from_tuple((1, -1, 2))
+            ...     .map_to_awaitable_result_tuple(slowly_expand_if_positive)
+            ... )
+            >>> awaitable_result_tuple_wrapper_2
+            AwaitableResultTupleWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(awaitable_result_tuple_wrapper_2.core_as_coroutine)
+            ('failure', 'negative')
         """
         return AwaitableResultTupleWrapper.construct_successes_from_tuple(
             self.core
@@ -7416,19 +7424,18 @@ class TupleWrapper(_Wrapper[tuple[_T_co, ...]]):
         Example:
             >>> import asyncio
             >>> from trcks.oop import TupleWrapper
-            >>> async def duplicate(n: int) -> tuple[int, int]:
+            >>> async def slowly_duplicate(n: int) -> tuple[int, int]:
             ...     await asyncio.sleep(0.001)
             ...     return n, n
             ...
-            >>> async def main() -> tuple[int, ...]:
-            ...     return await (
-            ...         TupleWrapper
-            ...         .construct_from_tuple((1, 2))
-            ...         .map_to_awaitable_tuple(duplicate)
-            ...         .core
-            ...     )
-            ...
-            >>> asyncio.run(main())
+            >>> awaitable_tuple_wrapper: AwaitableTupleWrapper[int] = (
+            ...     TupleWrapper
+            ...     .construct_from_tuple((1, 2))
+            ...     .map_to_awaitable_tuple(slowly_duplicate)
+            ... )
+            >>> awaitable_tuple_wrapper
+            AwaitableTupleWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(awaitable_tuple_wrapper.core_as_coroutine)
             (1, 1, 2, 2)
         """
         return AwaitableTupleWrapper.construct_from_tuple(
@@ -7457,7 +7464,7 @@ class TupleWrapper(_Wrapper[tuple[_T_co, ...]]):
             >>> def double_if_positive(n: int) -> Result[str, int]:
             ...     if n > 0:
             ...         return "success", n * 2
-            ...     return "failure", "bad"
+            ...     return "failure", "negative"
             ...
             >>> TupleWrapper.construct_from_tuple(
             ...     (1, 2, 3)
@@ -7467,7 +7474,7 @@ class TupleWrapper(_Wrapper[tuple[_T_co, ...]]):
             >>> TupleWrapper.construct_from_tuple(
             ...     (1, -1, 2)
             ... ).map_to_result(double_if_positive)
-            ResultTupleWrapper(core=('failure', 'bad'))
+            ResultTupleWrapper(core=('failure', 'negative'))
         """
         return ResultTupleWrapper.construct_successes_from_tuple(
             self.core
@@ -7583,22 +7590,21 @@ class TupleWrapper(_Wrapper[tuple[_T_co, ...]]):
         Example:
             >>> import asyncio
             >>> from trcks.oop import TupleWrapper
-            >>> async def slowly_print_value(n: int) -> None:
+            >>> async def slowly_log_integer(n: int) -> None:
             ...     await asyncio.sleep(0.001)
-            ...     print(f"Value: {n}")
+            ...     print(f"Received: {n}")
             ...
-            >>> async def main() -> tuple[int, ...]:
-            ...     return await (
-            ...         TupleWrapper
-            ...         .construct_from_tuple((1, 2, 3))
-            ...         .tap_to_awaitable(slowly_print_value)
-            ...         .core
-            ...     )
-            ...
-            >>> asyncio.run(main())
-            Value: 1
-            Value: 2
-            Value: 3
+            >>> awaitable_tuple_wrapper: AwaitableTupleWrapper[int] = (
+            ...     TupleWrapper
+            ...     .construct_from_tuple((1, 2, 3))
+            ...     .tap_to_awaitable(slowly_log_integer)
+            ... )
+            >>> awaitable_tuple_wrapper
+            AwaitableTupleWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(awaitable_tuple_wrapper.core_as_coroutine)
+            Received: 1
+            Received: 2
+            Received: 3
             (1, 2, 3)
         """
         return AwaitableTupleWrapper.construct_from_tuple(self.core).tap_to_awaitable(f)
@@ -7623,33 +7629,36 @@ class TupleWrapper(_Wrapper[tuple[_T_co, ...]]):
         Example:
             >>> import asyncio
             >>> from trcks import Result, ResultTuple
-            >>> from trcks.oop import TupleWrapper
+            >>> from trcks.oop import AwaitableResultTupleWrapper, TupleWrapper
             >>> async def slowly_check_if_positive(n: int) -> Result[str, None]:
             ...     await asyncio.sleep(0.001)
             ...     if n > 0:
             ...         return "success", None
-            ...     return "failure", "bad"
+            ...     return "failure", "negative"
             ...
-            >>> async def main_1() -> ResultTuple[str, int]:
-            ...     return await (
-            ...         TupleWrapper
-            ...         .construct_from_tuple((1, 2))
-            ...         .tap_to_awaitable_result(slowly_check_if_positive)
-            ...         .core
-            ...     )
-            ...
-            >>> asyncio.run(main_1())
+            >>> awaitable_result_tuple_wrapper_1: AwaitableResultTupleWrapper[
+            ...     str, int
+            ... ] = (
+            ...     TupleWrapper
+            ...     .construct_from_tuple((1, 2))
+            ...     .tap_to_awaitable_result(slowly_check_if_positive)
+            ... )
+            >>> awaitable_result_tuple_wrapper_1
+            AwaitableResultTupleWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(awaitable_result_tuple_wrapper_1.core_as_coroutine)
             ('success', (1, 2))
-            >>> async def main_2() -> ResultTuple[str, int]:
-            ...     return await (
-            ...         TupleWrapper
-            ...         .construct_from_tuple((1, -1, 2))
-            ...         .tap_to_awaitable_result(slowly_check_if_positive)
-            ...         .core
-            ...     )
-            ...
-            >>> asyncio.run(main_2())
-            ('failure', 'bad')
+            >>>
+            >>> awaitable_result_tuple_wrapper_2: AwaitableResultTupleWrapper[
+            ...     str, int
+            ... ] = (
+            ...     TupleWrapper
+            ...     .construct_from_tuple((1, -1, 2))
+            ...     .tap_to_awaitable_result(slowly_check_if_positive)
+            ... )
+            >>> awaitable_result_tuple_wrapper_2
+            AwaitableResultTupleWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(awaitable_result_tuple_wrapper_2.core_as_coroutine)
+            ('failure', 'negative')
         """
         return AwaitableResultTupleWrapper.construct_successes_from_tuple(
             self.core
@@ -7676,33 +7685,36 @@ class TupleWrapper(_Wrapper[tuple[_T_co, ...]]):
         Example:
             >>> import asyncio
             >>> from trcks import ResultTuple
-            >>> from trcks.oop import TupleWrapper
+            >>> from trcks.oop import AwaitableResultTupleWrapper, TupleWrapper
             >>> async def audit(n: int) -> ResultTuple[str, None]:
             ...     await asyncio.sleep(0.001)
             ...     if n > 0:
             ...         return "success", (None, None)
-            ...     return "failure", "bad"
+            ...     return "failure", "negative"
             ...
-            >>> async def main_1() -> ResultTuple[str, int]:
-            ...     return await (
-            ...         TupleWrapper
-            ...         .construct_from_tuple((1, 2))
-            ...         .tap_to_awaitable_result_tuple(audit)
-            ...         .core
-            ...     )
-            ...
-            >>> asyncio.run(main_1())
+            >>> awaitable_result_tuple_wrapper_1: AwaitableResultTupleWrapper[
+            ...     str, int
+            ... ] = (
+            ...     TupleWrapper
+            ...     .construct_from_tuple((1, 2))
+            ...     .tap_to_awaitable_result_tuple(audit)
+            ... )
+            >>> awaitable_result_tuple_wrapper_1
+            AwaitableResultTupleWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(awaitable_result_tuple_wrapper_1.core_as_coroutine)
             ('success', (1, 1, 2, 2))
-            >>> async def main_2() -> ResultTuple[str, int]:
-            ...     return await (
-            ...         TupleWrapper
-            ...         .construct_from_tuple((1, -1, 2))
-            ...         .tap_to_awaitable_result_tuple(audit)
-            ...         .core
-            ...     )
-            ...
-            >>> asyncio.run(main_2())
-            ('failure', 'bad')
+            >>>
+            >>> awaitable_result_tuple_wrapper_2: AwaitableResultTupleWrapper[
+            ...     str, int
+            ... ] = (
+            ...     TupleWrapper
+            ...     .construct_from_tuple((1, -1, 2))
+            ...     .tap_to_awaitable_result_tuple(audit)
+            ... )
+            >>> awaitable_result_tuple_wrapper_2
+            AwaitableResultTupleWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(awaitable_result_tuple_wrapper_2.core_as_coroutine)
+            ('failure', 'negative')
         """
         return AwaitableResultTupleWrapper.construct_successes_from_tuple(
             self.core
@@ -7724,21 +7736,20 @@ class TupleWrapper(_Wrapper[tuple[_T_co, ...]]):
 
         Example:
             >>> import asyncio
-            >>> from trcks.oop import TupleWrapper
+            >>> from trcks.oop import AwaitableTupleWrapper, TupleWrapper
             >>> async def write_to_disk(n: int) -> tuple[str, str]:
             ...     await asyncio.sleep(0.001)
             ...     print(f"Wrote {n} to disk.")
             ...     return str(n), str(n)
             ...
-            >>> async def main() -> tuple[int, ...]:
-            ...     return await (
-            ...         TupleWrapper
-            ...         .construct_from_tuple((1, 2, 3))
-            ...         .tap_to_awaitable_tuple(write_to_disk)
-            ...         .core
-            ...     )
-            ...
-            >>> asyncio.run(main())
+            >>> awaitable_tuple_wrapper: AwaitableTupleWrapper[int] = (
+            ...     TupleWrapper
+            ...     .construct_from_tuple((1, 2, 3))
+            ...     .tap_to_awaitable_tuple(write_to_disk)
+            ... )
+            >>> awaitable_tuple_wrapper
+            AwaitableTupleWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(awaitable_tuple_wrapper.core_as_coroutine)
             Wrote 1 to disk.
             Wrote 2 to disk.
             Wrote 3 to disk.
@@ -7772,7 +7783,7 @@ class TupleWrapper(_Wrapper[tuple[_T_co, ...]]):
             >>> def audit(n: int) -> Result[str, None]:
             ...     if n > 0:
             ...         return "success", None
-            ...     return "failure", "bad"
+            ...     return "failure", "negative"
             ...
             >>> TupleWrapper.construct_from_tuple(
             ...     (1, 2)
@@ -7782,7 +7793,7 @@ class TupleWrapper(_Wrapper[tuple[_T_co, ...]]):
             >>> TupleWrapper.construct_from_tuple(
             ...     (1, -1, 2)
             ... ).tap_to_result(audit)
-            ResultTupleWrapper(core=('failure', 'bad'))
+            ResultTupleWrapper(core=('failure', 'negative'))
         """
         return ResultTupleWrapper.construct_successes_from_tuple(
             self.core
@@ -7812,7 +7823,7 @@ class TupleWrapper(_Wrapper[tuple[_T_co, ...]]):
             >>> def audit(n: int) -> ResultTuple[str, None]:
             ...     if n > 0:
             ...         return "success", (None, None)
-            ...     return "failure", "bad"
+            ...     return "failure", "negative"
             ...
             >>> TupleWrapper.construct_from_tuple(
             ...     (7,)
@@ -7822,7 +7833,7 @@ class TupleWrapper(_Wrapper[tuple[_T_co, ...]]):
             >>> TupleWrapper.construct_from_tuple(
             ...     (1, -1)
             ... ).tap_to_result_tuple(audit)
-            ResultTupleWrapper(core=('failure', 'bad'))
+            ResultTupleWrapper(core=('failure', 'negative'))
         """
         return ResultTupleWrapper.construct_successes_from_tuple(
             self.core
@@ -8033,13 +8044,13 @@ class Wrapper(_Wrapper[_T_co]):
         Example:
             >>> import asyncio
             >>> from trcks.oop import Wrapper
-            >>> async def duplicate(n: int) -> tuple[int, int]:
+            >>> async def slowly_duplicate(n: int) -> tuple[int, int]:
             ...     await asyncio.sleep(0.001)
             ...     return n, n
             ...
             >>> async def main() -> tuple[int, ...]:
             ...     awaitable_tuple_wrapper = (
-            ...         Wrapper.construct(7).map_to_awaitable_tuple(duplicate)
+            ...         Wrapper.construct(7).map_to_awaitable_tuple(slowly_duplicate)
             ...     )
             ...     result_tuple = await awaitable_tuple_wrapper.core
             ...     assert len(result_tuple) == 2

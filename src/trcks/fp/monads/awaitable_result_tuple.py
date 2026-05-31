@@ -634,7 +634,7 @@ def map_successes_to_awaitable_result(
         >>> async def _slowly_double_integer_if_positive(x: int) -> Result[str, int]:
         ...     await asyncio.sleep(0.001)
         ...     if x <= 0:
-        ...         return "failure", "bad"
+        ...         return "failure", "negative"
         ...     return "success", x * 2
         ...
         >>> slowly_double_integers_if_positive = art.map_successes_to_awaitable_result(
@@ -649,7 +649,7 @@ def map_successes_to_awaitable_result(
         ...     art.construct_successes_from_tuple((1, -1, 2))
         ... )
         >>> asyncio.run(art.to_coroutine_result_tuple(a_r_tpl_2))
-        ('failure', 'bad')
+        ('failure', 'negative')
         >>> a_r_tpl_3 = slowly_double_integers_if_positive(
         ...     art.construct_failure("oops")
         ... )
@@ -689,7 +689,7 @@ def map_successes_to_awaitable_result_tuple(
         ... ) -> ResultTuple[str, int]:
         ...     await asyncio.sleep(0.001)
         ...     if x <= 0:
-        ...         return "failure", "bad"
+        ...         return "failure", "negative"
         ...     return "success", (x, x)
         ...
         >>> slowly_duplicate_integers_if_positive = (
@@ -706,7 +706,7 @@ def map_successes_to_awaitable_result_tuple(
         ...     art.construct_successes_from_tuple((1, -1, 2))
         ... )
         >>> asyncio.run(art.to_coroutine_result_tuple(a_r_tpl_2))
-        ('failure', 'bad')
+        ('failure', 'negative')
         >>> a_r_tpl_3 = slowly_duplicate_integers_if_positive(
         ...     art.construct_failure("oops")
         ... )
@@ -761,7 +761,7 @@ def map_successes_to_result(
         >>> from trcks.fp.monads import awaitable_result_tuple as art
         >>> def _double_integer_if_positive(n: int) -> Result[str, int]:
         ...     if n <= 0:
-        ...         return "failure", "bad"
+        ...         return "failure", "negative"
         ...     return "success", n * 2
         ...
         >>> double_integers_if_positive = art.map_successes_to_result(
@@ -776,7 +776,7 @@ def map_successes_to_result(
         ...     art.construct_successes_from_tuple((1, -1, 2))
         ... )
         >>> asyncio.run(art.to_coroutine_result_tuple(a_r_tpl_2))
-        ('failure', 'bad')
+        ('failure', 'negative')
         >>> a_r_tpl_3 = double_integers_if_positive(art.construct_failure("oops"))
         >>> asyncio.run(art.to_coroutine_result_tuple(a_r_tpl_3))
         ('failure', 'oops')
@@ -808,7 +808,7 @@ def map_successes_to_result_tuple(
         >>> from trcks.fp.monads import awaitable_result_tuple as art
         >>> def _duplicate_integer_if_positive(n: int) -> ResultTuple[str, int]:
         ...     if n <= 0:
-        ...         return "failure", "bad"
+        ...         return "failure", "negative"
         ...     return "success", (n, n)
         ...
         >>> duplicate_integers_if_positive = art.map_successes_to_result_tuple(
@@ -1288,7 +1288,7 @@ def tap_successes_to_awaitable_result(
         >>> async def _validate_positive(x: int) -> Result[str, None]:
         ...     await asyncio.sleep(0.001)
         ...     if x <= 0:
-        ...         return "failure", "bad"
+        ...         return "failure", "negative"
         ...     return "success", None
         ...
         >>> validate_positive = art.tap_successes_to_awaitable_result(
@@ -1301,7 +1301,7 @@ def tap_successes_to_awaitable_result(
         ...     art.construct_successes_from_tuple((1, -1))
         ... )
         >>> asyncio.run(art.to_coroutine_result_tuple(a_r_tpl_2))
-        ('failure', 'bad')
+        ('failure', 'negative')
         >>> a_r_tpl_3 = validate_positive(art.construct_failure("oops"))
         >>> asyncio.run(art.to_coroutine_result_tuple(a_r_tpl_3))
         ('failure', 'oops')
@@ -1341,7 +1341,7 @@ def tap_successes_to_awaitable_result_tuple(
         >>> async def _validate_positive(x: int) -> ResultTuple[str, None]:
         ...     await asyncio.sleep(0.001)
         ...     if x <= 0:
-        ...         return "failure", "bad"
+        ...         return "failure", "negative"
         ...     return "success", (None, None)
         ...
         >>> validate_positive = art.tap_successes_to_awaitable_result_tuple(
@@ -1354,7 +1354,7 @@ def tap_successes_to_awaitable_result_tuple(
         ...     art.construct_successes_from_tuple((1, -1))
         ... )
         >>> asyncio.run(art.to_coroutine_result_tuple(a_r_tpl_2))
-        ('failure', 'bad')
+        ('failure', 'negative')
         >>> a_r_tpl_3 = validate_positive(art.construct_failure("oops"))
         >>> asyncio.run(art.to_coroutine_result_tuple(a_r_tpl_3))
         ('failure', 'oops')
@@ -1398,7 +1398,7 @@ def tap_successes_to_result(
         >>> from trcks.fp.monads import awaitable_result_tuple as art
         >>> def _validate_positive(n: int) -> Result[str, None]:
         ...     if n <= 0:
-        ...         return "failure", "bad"
+        ...         return "failure", "negative"
         ...     return "success", None
         ...
         >>> validate_positive = art.tap_successes_to_result(_validate_positive)
@@ -1409,7 +1409,7 @@ def tap_successes_to_result(
         ...     art.construct_successes_from_tuple((1, -1))
         ... )
         >>> asyncio.run(art.to_coroutine_result_tuple(a_r_tpl_2))
-        ('failure', 'bad')
+        ('failure', 'negative')
         >>> a_r_tpl_3 = validate_positive(art.construct_failure("oops"))
         >>> asyncio.run(art.to_coroutine_result_tuple(a_r_tpl_3))
         ('failure', 'oops')
@@ -1444,7 +1444,7 @@ def tap_successes_to_result_tuple(
         >>> from trcks.fp.monads import awaitable_result_tuple as art
         >>> def _validate_positive_twice(n: int) -> ResultTuple[str, None]:
         ...     if n <= 0:
-        ...         return "failure", "bad"
+        ...         return "failure", "negative"
         ...     return "success", (None, None)
         ...
         >>> validate_positive_twice = art.tap_successes_to_result_tuple(
@@ -1459,7 +1459,7 @@ def tap_successes_to_result_tuple(
         ...     art.construct_successes_from_tuple((1, -1))
         ... )
         >>> asyncio.run(art.to_coroutine_result_tuple(a_r_tpl_2))
-        ('failure', 'bad')
+        ('failure', 'negative')
         >>> a_r_tpl_3 = validate_positive_twice(art.construct_failure("oops"))
         >>> asyncio.run(art.to_coroutine_result_tuple(a_r_tpl_3))
         ('failure', 'oops')

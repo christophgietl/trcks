@@ -766,7 +766,7 @@ async def to_coroutine_result(a_rslt: AwaitableResult[_F, _S]) -> Result[_F, _S]
         <Future finished result=('success', 42)>
         >>> coro = ar.to_coroutine_result(future)
         >>> coro
-        <coroutine object to_coroutine_result at ...>
+        <coroutine object to_coroutine_result at 0x...>
         >>> asyncio.run(coro)
         ('success', 42)
     """
