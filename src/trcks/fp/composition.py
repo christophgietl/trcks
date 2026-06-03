@@ -382,7 +382,7 @@ def compose(  # noqa: PLR0911
         case (_, _, _, _, _, _, _):
             return compose7(c)
         case _:  # pragma: no cover
-            return assert_never(c)  # type: ignore [unreachable]  # pyright: ignore [reportUnreachable]
+            return assert_never(c)  # type: ignore[unreachable]  # pyright: ignore[reportUnreachable]
 
 
 def pipe(p: Pipeline[_T0, _T1, _T2, _T3, _T4, _T5, _T6, _OUT]) -> _OUT:
