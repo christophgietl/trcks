@@ -81,12 +81,13 @@ uv build
 
 ## Testing strategy
 
-- Each function in `src/trcks/` must have a docstring with at least one example
-  (run as doctest by `pytest`).
-- `pytest` also collects all "pycon" code blocks in `**/*.md` files and
-  all `tests/trcks/**/test_*.py` files (mirroring `src/trcks/`).
-- Test coverage must be 100%; unreachable code and `if TYPE_CHECKING` blocks
-  must be marked with `# pragma: no cover`.
+- Every function in `src/trcks/` needs a docstring with ≥1 example
+  (run as doctest by `pytest`);
+  reuse example functions from existing doctests.
+- `pytest` also collects "pycon" blocks in `**/*.md` and `tests/trcks/**/test_*.py`
+  (mirroring `src/trcks/`).
+- 100% coverage required; mark unreachable code with `# pragma: no cover`
+  (not needed for `if TYPE_CHECKING` blocks).
 
 ## Documentation requirements
 

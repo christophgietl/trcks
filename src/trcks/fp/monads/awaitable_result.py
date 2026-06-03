@@ -45,7 +45,7 @@ from trcks.fp.composition import compose2
 from trcks.fp.monads import awaitable as a
 from trcks.fp.monads import result as r
 
-if TYPE_CHECKING:  # pragma: no cover
+if TYPE_CHECKING:
     from collections.abc import Awaitable, Callable
 
     from trcks import AwaitableFailure, AwaitableResult, AwaitableSuccess, Result
