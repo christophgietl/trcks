@@ -366,21 +366,23 @@ def compose(  # noqa: PLR0911
         >>> get_length_string("Hello, world!")
         'Length: 13'
     """
-    if len(c) == 1:
-        return compose1(c)
-    if len(c) == 2:  # noqa: PLR2004
-        return compose2(c)
-    if len(c) == 3:  # noqa: PLR2004
-        return compose3(c)
-    if len(c) == 4:  # noqa: PLR2004
-        return compose4(c)
-    if len(c) == 5:  # noqa: PLR2004
-        return compose5(c)
-    if len(c) == 6:  # noqa: PLR2004
-        return compose6(c)
-    if len(c) == 7:  # noqa: PLR2004
-        return compose7(c)
-    return assert_never(c)  # type: ignore [unreachable]  # pyright: ignore [reportUnreachable]  # pragma: no cover
+    match c:
+        case (_,):
+            return compose1(c)
+        case (_, _):
+            return compose2(c)
+        case (_, _, _):
+            return compose3(c)
+        case (_, _, _, _):
+            return compose4(c)
+        case (_, _, _, _, _):
+            return compose5(c)
+        case (_, _, _, _, _, _):
+            return compose6(c)
+        case (_, _, _, _, _, _, _):
+            return compose7(c)
+        case _:  # pragma: no cover
+            return assert_never(c)  # type: ignore [unreachable]  # pyright: ignore [reportUnreachable]
 
 
 def pipe(p: Pipeline[_T0, _T1, _T2, _T3, _T4, _T5, _T6, _OUT]) -> _OUT:
