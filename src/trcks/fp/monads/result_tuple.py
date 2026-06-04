@@ -751,7 +751,7 @@ def tap_successes_to_result_tuple(
             case ("success", s2s):
                 return "success", tuple(s1 for _ in s2s)
             case _ as r_tpl:  # pragma: no cover
-                return assert_never(r_tpl)  # type: ignore[unreachable] # pyright: ignore[reportUnreachable]
+                return assert_never(r_tpl)  # type: ignore[unreachable]  # pyright: ignore[reportUnreachable]
 
     return map_successes_to_result_tuple(tapped_f)
 
