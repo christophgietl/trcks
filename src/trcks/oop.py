@@ -867,6 +867,35 @@ class AwaitableResultTupleWrapper(
         """
         return AwaitableResultTupleWrapper(art.map_successes(f)(self.core))
 
+    def map_successes_iterable(
+        self, f: Callable[[_S_default_co], _S]
+    ) -> AwaitableResultTupleWrapper[_F_default_co, _S]:
+        """Apply a synchronous function to each element in the wrapped
+        [trcks.AwaitableSuccessTuple][] and normalize iterable payloads.
+
+        Wrapped [trcks.Failure][] objects are passed on unchanged.
+
+        Args:
+            f: The synchronous function to be applied to each success element.
+
+        Returns:
+            A new [trcks.oop.AwaitableResultTupleWrapper][] instance with
+            iterable success payloads normalized to [tuple][] before mapping.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks.oop import AwaitableResultTupleWrapper
+            >>> wrapper = AwaitableResultTupleWrapper(
+            ...     asyncio.sleep(0.001, result=("success", [1, 2]))
+            ... )
+            >>> mapped = wrapper.map_successes_iterable(lambda n: n * 2)
+            >>> asyncio.run(mapped.core_as_coroutine)
+            ('success', (2, 4))
+        """
+        return AwaitableResultTupleWrapper(
+            art.map_successes(f)(ar.map_success(tuple)(self.core))
+        )
+
     def map_successes_to_awaitable(
         self, f: Callable[[_S_default_co], Awaitable[_S]]
     ) -> AwaitableResultTupleWrapper[_F_default_co, _S]:
@@ -1643,6 +1672,37 @@ class AwaitableResultTupleWrapper(
             ('failure', 'oops')
         """
         return AwaitableResultTupleWrapper(art.tap_successes(f)(self.core))
+
+    def tap_successes_iterable(
+        self, f: Callable[[_S_default_co], object]
+    ) -> AwaitableResultTupleWrapper[_F_default_co, _S_default_co]:
+        """Apply a synchronous side effect to each element in the wrapped
+        [trcks.AwaitableSuccessTuple][] and normalize iterable payloads.
+
+        Wrapped [trcks.Failure][] objects are passed on without side effects.
+
+        Args:
+            f: The synchronous side effect to be applied to each success element.
+
+        Returns:
+            A new [trcks.oop.AwaitableResultTupleWrapper][] instance with
+            iterable success payloads normalized to [tuple][] before tapping.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks.oop import AwaitableResultTupleWrapper
+            >>> wrapper = AwaitableResultTupleWrapper(
+            ...     asyncio.sleep(0.001, result=("success", [1, 2]))
+            ... )
+            >>> tapped = wrapper.tap_successes_iterable(lambda n: print(n))
+            >>> asyncio.run(tapped.core_as_coroutine)
+            1
+            2
+            ('success', (1, 2))
+        """
+        return AwaitableResultTupleWrapper(
+            art.tap_successes(f)(ar.map_success(tuple)(self.core))
+        )
 
     def tap_successes_to_awaitable(
         self, f: Callable[[_S_default_co], Awaitable[object]]
@@ -3749,6 +3809,29 @@ class AwaitableTupleWrapper(_AwaitableWrapper[tuple[_T_co, ...]]):
         """
         return AwaitableTupleWrapper(at.map_(f)(self.core))
 
+    def map_iterable(self, f: Callable[[_T_co], _T]) -> AwaitableTupleWrapper[_T]:
+        """Apply a synchronous function to each element in the wrapped
+        [trcks.AwaitableTuple][] and normalize iterable payloads.
+
+        Args:
+            f: The synchronous function to be applied to each element.
+
+        Returns:
+            A new [trcks.oop.AwaitableTupleWrapper][] instance with iterable
+            payloads normalized to [tuple][] before mapping.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks.oop import AwaitableTupleWrapper
+            >>> wrapper = AwaitableTupleWrapper(
+            ...     asyncio.sleep(0.001, result=[1, 2, 3])
+            ... )
+            >>> mapped = wrapper.map_iterable(lambda n: n * 2)
+            >>> asyncio.run(mapped.core_as_coroutine)
+            (2, 4, 6)
+        """
+        return AwaitableTupleWrapper(at.map_(f)(a.map_(tuple)(self.core)))
+
     def map_to_awaitable(
         self, f: Callable[[_T_co], Awaitable[_T]]
     ) -> AwaitableTupleWrapper[_T]:
@@ -3877,6 +3960,33 @@ class AwaitableTupleWrapper(_AwaitableWrapper[tuple[_T_co, ...]]):
             (1, 2)
         """
         return AwaitableTupleWrapper(at.tap(f)(self.core))
+
+    def tap_iterable(
+        self, f: Callable[[_T_co], object]
+    ) -> AwaitableTupleWrapper[_T_co]:
+        """Apply a synchronous side effect to each element in the wrapped
+        [trcks.AwaitableTuple][] and normalize iterable payloads.
+
+        Args:
+            f: The synchronous side effect to be applied to each element.
+
+        Returns:
+            A new [trcks.oop.AwaitableTupleWrapper][] instance with iterable
+            payloads normalized to [tuple][] before tapping.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks.oop import AwaitableTupleWrapper
+            >>> wrapper = AwaitableTupleWrapper(
+            ...     asyncio.sleep(0.001, result=[1, 2])
+            ... )
+            >>> tapped = wrapper.tap_iterable(lambda n: print(f"Received: {n}"))
+            >>> asyncio.run(tapped.core_as_coroutine)
+            Received: 1
+            Received: 2
+            (1, 2)
+        """
+        return AwaitableTupleWrapper(at.tap(f)(a.map_(tuple)(self.core)))
 
     def tap_to_awaitable(
         self, f: Callable[[_T_co], Awaitable[object]]
@@ -6459,6 +6569,29 @@ class ResultTupleWrapper(_ResultWrapper[_F_default_co, tuple[_S_default_co, ...]
         """
         return ResultTupleWrapper(rt.map_successes(f)(self.core))
 
+    def map_successes_iterable(
+        self, f: Callable[[_S_default_co], _S]
+    ) -> ResultTupleWrapper[_F_default_co, _S]:
+        """Apply a synchronous function to each element in the wrapped
+        [trcks.SuccessTuple][] and normalize iterable payloads.
+
+        Wrapped [trcks.Failure][] objects are passed on unchanged.
+
+        Args:
+            f: The synchronous function to be applied to each success element.
+
+        Returns:
+            A new [trcks.oop.ResultTupleWrapper][] instance with iterable success
+            payloads normalized to [tuple][] before mapping.
+
+        Example:
+            >>> from trcks.oop import ResultTupleWrapper
+            >>> wrapper = ResultTupleWrapper(("success", [1, 2]))
+            >>> wrapper.map_successes_iterable(lambda n: n * 2)
+            ResultTupleWrapper(core=('success', (2, 4)))
+        """
+        return ResultTupleWrapper(rt.map_successes(f)(r.map_success(tuple)(self.core)))
+
     def map_successes_to_awaitable(
         self, f: Callable[[_S_default_co], Awaitable[_S]]
     ) -> AwaitableResultTupleWrapper[_F_default_co, _S]:
@@ -7111,6 +7244,31 @@ class ResultTupleWrapper(_ResultWrapper[_F_default_co, tuple[_S_default_co, ...]
         """
         return ResultTupleWrapper(rt.tap_successes(f)(self.core))
 
+    def tap_successes_iterable(
+        self, f: Callable[[_S_default_co], object]
+    ) -> ResultTupleWrapper[_F_default_co, _S_default_co]:
+        """Apply a synchronous side effect to each element in the wrapped
+        [trcks.SuccessTuple][] and normalize iterable payloads.
+
+        Wrapped [trcks.Failure][] objects are passed on without side effects.
+
+        Args:
+            f: The synchronous side effect to be applied to each success element.
+
+        Returns:
+            A new [trcks.oop.ResultTupleWrapper][] instance with iterable success
+            payloads normalized to [tuple][] before tapping.
+
+        Example:
+            >>> from trcks.oop import ResultTupleWrapper
+            >>> wrapper = ResultTupleWrapper(("success", [1, 2]))
+            >>> wrapper.tap_successes_iterable(lambda n: print(f"Received: {n}"))
+            Received: 1
+            Received: 2
+            ResultTupleWrapper(core=('success', (1, 2)))
+        """
+        return ResultTupleWrapper(rt.tap_successes(f)(r.map_success(tuple)(self.core)))
+
     def tap_successes_to_awaitable(
         self, f: Callable[[_S_default_co], Awaitable[object]]
     ) -> AwaitableResultTupleWrapper[_F_default_co, _S_default_co]:
@@ -7496,6 +7654,25 @@ class TupleWrapper(_Wrapper[tuple[_T_co, ...]]):
         """
         return TupleWrapper(t.map_(f)(self.core))
 
+    def map_iterable(self, f: Callable[[_T_co], _T]) -> TupleWrapper[_T]:
+        """Apply a synchronous function to each element in the wrapped
+        homogeneous [tuple][] or [collections.abc.Iterable][].
+
+        Args:
+            f: The synchronous function to be applied to each element.
+
+        Returns:
+            A new [trcks.oop.TupleWrapper][] instance with a homogeneous [tuple][]
+                containing the results of applying the function to each element.
+
+        Example:
+            >>> from trcks.oop import TupleWrapper
+            >>> tuple_wrapper = TupleWrapper([1, 2, 3]).map_iterable(lambda n: n * 2)
+            >>> tuple_wrapper
+            TupleWrapper(core=(2, 4, 6))
+        """
+        return TupleWrapper(t.map_(f)(tuple(self.core)))
+
     def map_to_awaitable(
         self, f: Callable[[_T_co], Awaitable[_T]]
     ) -> AwaitableTupleWrapper[_T]:
@@ -7808,6 +7985,27 @@ class TupleWrapper(_Wrapper[tuple[_T_co, ...]]):
             TupleWrapper(core=(1, 2, 3))
         """
         return TupleWrapper(t.tap(f)(self.core))
+
+    def tap_iterable(self, f: Callable[[_T_co], object]) -> TupleWrapper[_T_co]:
+        """Apply a synchronous side effect to each element in the wrapped
+        homogeneous [tuple][] or [collections.abc.Iterable][].
+
+        Args:
+            f: The synchronous side effect to be applied to each element.
+
+        Returns:
+            A new [trcks.oop.TupleWrapper][] instance with
+                the original homogeneous [tuple][].
+
+        Example:
+            >>> from trcks.oop import TupleWrapper
+            >>> tuple_wrapper = TupleWrapper([1, 2]).tap_iterable(print)
+            1
+            2
+            >>> tuple_wrapper
+            TupleWrapper(core=(1, 2))
+        """
+        return TupleWrapper(t.tap(f)(tuple(self.core)))
 
     def tap_to_awaitable(
         self, f: Callable[[_T_co], Awaitable[object]]

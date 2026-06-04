@@ -6,7 +6,16 @@ from typing import Final, Literal
 import pytest
 
 from trcks import Result
-from trcks.oop import AwaitableResultWrapper, AwaitableWrapper, ResultWrapper, Wrapper
+from trcks.oop import (
+    AwaitableResultTupleWrapper,
+    AwaitableResultWrapper,
+    AwaitableTupleWrapper,
+    AwaitableWrapper,
+    ResultTupleWrapper,
+    ResultWrapper,
+    TupleWrapper,
+    Wrapper,
+)
 
 _TO_PAIR: Final[Callable[[int], tuple[int, int]]] = lambda n: (n, n)  # noqa: E731
 
@@ -379,6 +388,70 @@ class TestWrapper:
         assert await Wrapper(value).map_to_awaitable_result(
             _get_square_root_safely_and_slowly
         ).core == await _get_square_root_safely_and_slowly(value)
+
+
+class TestTupleLikeIterableMethods:
+    def test_tuple_wrapper_map_iterable_maps_list_payload(self) -> None:
+        tuple_wrapper = TupleWrapper([1, 2, 3])  # type: ignore[arg-type]
+        assert tuple_wrapper.map_iterable(lambda n: n * 2).core == (2, 4, 6)
+
+    def test_tuple_wrapper_tap_iterable_taps_list_payload(self) -> None:
+        seen: list[int] = []
+        tuple_wrapper = TupleWrapper([1, 2])  # type: ignore[arg-type]
+        tapped = tuple_wrapper.tap_iterable(seen.append)
+        assert seen == [1, 2]
+        assert tapped.core == (1, 2)
+
+    async def test_awaitable_tuple_wrapper_map_iterable_maps_list_payload(self) -> None:
+        wrapper = AwaitableTupleWrapper(
+            asyncio.sleep(0.001, result=[1, 2, 3])  # type: ignore[arg-type]
+        )
+        assert await wrapper.map_iterable(lambda n: n * 2).core == (2, 4, 6)
+
+    async def test_awaitable_tuple_wrapper_tap_iterable_taps_list_payload(self) -> None:
+        seen: list[int] = []
+        wrapper = AwaitableTupleWrapper(
+            asyncio.sleep(0.001, result=[1, 2])  # type: ignore[arg-type]
+        )
+        tapped = wrapper.tap_iterable(seen.append)
+        assert await tapped.core == (1, 2)
+        assert seen == [1, 2]
+
+    def test_result_tuple_wrapper_map_successes_iterable_maps_list_payload(
+        self,
+    ) -> None:
+        result_wrapper = ResultTupleWrapper(("success", [1, 2]))  # type: ignore[arg-type]
+        assert result_wrapper.map_successes_iterable(lambda n: n * 2).core == (
+            "success",
+            (2, 4),
+        )
+
+    def test_result_tuple_wrapper_tap_successes_iterable_taps_list_payload(
+        self,
+    ) -> None:
+        seen: list[int] = []
+        result_wrapper = ResultTupleWrapper(("success", [1, 2]))  # type: ignore[arg-type]
+        tapped = result_wrapper.tap_successes_iterable(seen.append)
+        assert tapped.core == ("success", (1, 2))
+        assert seen == [1, 2]
+
+    async def test_awaitable_result_tuple_wrapper_map_successes_iterable(self) -> None:
+        wrapper = AwaitableResultTupleWrapper(
+            asyncio.sleep(0.001, result=("success", [1, 2]))  # type: ignore[arg-type]
+        )
+        assert await wrapper.map_successes_iterable(lambda n: n * 2).core == (
+            "success",
+            (2, 4),
+        )
+
+    async def test_awaitable_result_tuple_wrapper_tap_successes_iterable(self) -> None:
+        seen: list[int] = []
+        wrapper = AwaitableResultTupleWrapper(
+            asyncio.sleep(0.001, result=("success", [1, 2]))  # type: ignore[arg-type]
+        )
+        tapped = wrapper.tap_successes_iterable(seen.append)
+        assert await tapped.core == ("success", (1, 2))
+        assert seen == [1, 2]
 
 
 class TestResultWrapper:
