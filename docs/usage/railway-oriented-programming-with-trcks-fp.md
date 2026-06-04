@@ -1321,7 +1321,7 @@ let us have a look at the individual steps of the chain:
     The function
     [trcks.fp.monads.awaitable_result_tuple.construct_successes_from_tuple][]
     wraps a [tuple][]
-    into an [trcks.AwaitableSuccessTuple][],
+    into a [trcks.AwaitableSuccessTuple][],
     which can then be used with the higher-order functions
     from [trcks.fp.monads.awaitable_result_tuple][].
 

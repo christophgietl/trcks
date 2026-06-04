@@ -388,7 +388,7 @@ def tap_to_awaitable(
 def tap_to_awaitable_tuple(
     f: Callable[[_T1], AwaitableTuple[object]],
 ) -> Callable[[AwaitableTuple[_T1]], AwaitableTuple[_T1]]:
-    """Turn an [trcks.AwaitableTuple][]-returning side effect into a function
+    """Turn a [trcks.AwaitableTuple][]-returning side effect into a function
     expecting a [trcks.AwaitableTuple][] and returning a [trcks.AwaitableTuple][]
     where each original element is repeated once per element returned by
     the side effect.
