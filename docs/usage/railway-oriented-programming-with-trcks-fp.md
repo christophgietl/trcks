@@ -1050,8 +1050,9 @@ into functions operating on [trcks.AwaitableTuple][] values.
 ???+ example
 
     ```pycon
-    >>> from trcks.fp.monads import awaitable_tuple as at
-    >>>
+>>> from trcks import AwaitableTuple
+>>> from trcks.fp.monads import awaitable_tuple as at
+>>>
     >>> async def read_from_disk(path: str) -> str:
     ...     await asyncio.sleep(0.001)
     ...     contents = {"a.txt": "Hello", "b.txt": "World"}
