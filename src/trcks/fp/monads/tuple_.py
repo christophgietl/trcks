@@ -57,7 +57,7 @@ from trcks.fp.composition import compose2
 from trcks.fp.monads import identity as i
 
 if TYPE_CHECKING:
-    from collections.abc import Callable
+    from collections.abc import Callable, Iterable
 
 __docformat__ = "google"
 
@@ -111,6 +111,42 @@ def map_(f: Callable[[_T1], _T2]) -> Callable[[tuple[_T1, ...]], tuple[_T2, ...]
         (2, 4, 6)
     """
     return map_to_tuple(compose2((f, construct)))
+
+
+def map_to_iterable(
+    f: Callable[[_T1], Iterable[_T2]],
+) -> Callable[[tuple[_T1, ...]], tuple[_T2, ...]]:
+    """Create function that maps homogeneous [tuple][]s to
+    homogeneous [tuple][]s of varying length.
+
+    Like [trcks.fp.monads.tuple_.map_to_tuple][], but accepts a function
+    returning any [collections.abc.Iterable][] instead of only a [tuple][].
+
+    Args:
+        f: Function to apply to each element, returning an
+            [collections.abc.Iterable][].
+
+    Returns:
+        Maps homogeneous [tuple][]s to homogeneous [tuple][]s of varying length
+            according to the given function.
+
+    Example:
+        >>> from collections.abc import Callable
+        >>> from trcks.fp.monads import tuple_ as t
+        >>> def range_up_to(n: int) -> range:
+        ...     return range(n)
+        ...
+        >>> up_to: Callable[
+        ...     [tuple[int, ...]], tuple[int, ...]
+        ... ] = t.map_to_iterable(range_up_to)
+        >>> up_to((1, 3, 2))
+        (0, 0, 1, 2, 0, 1)
+    """
+
+    def f_wrapped(t1: _T1) -> tuple[_T2, ...]:
+        return tuple(f(t1))
+
+    return map_to_tuple(f_wrapped)
 
 
 def map_to_tuple(
@@ -175,6 +211,41 @@ def tap(
         (1, 2, 3)
     """
     return map_(i.tap(f))
+
+
+def tap_to_iterable(
+    f: Callable[[_T1], Iterable[object]],
+) -> Callable[[tuple[_T1, ...]], tuple[_T1, ...]]:
+    """Create function that applies a side effect with return type
+    [collections.abc.Iterable][] to each element of a homogeneous [tuple][].
+
+    Like [trcks.fp.monads.tuple_.tap_to_tuple][], but accepts a function
+    returning any [collections.abc.Iterable][] instead of only a [tuple][].
+
+    Args:
+        f: Side effect to apply to each element.
+
+    Returns:
+        Applies the given side effect to each element of a homogeneous [tuple][].
+            Returns each element as many times as the side effect yields elements.
+
+    Example:
+        >>> from collections.abc import Callable
+        >>> from trcks.fp.monads import tuple_ as t
+        >>> def get_divisors(n: int) -> range:
+        ...     return (c for c in range(1, n + 1) if n % c == 0)
+        ...
+        >>> repeat_by_divisors: Callable[
+        ...     [tuple[int, ...]], tuple[int, ...]
+        ... ] = t.tap_to_iterable(get_divisors)
+        >>> repeat_by_divisors((1, 2, 3, 4))
+        (1, 2, 2, 3, 3, 4, 4, 4)
+    """
+
+    def f_wrapped(t1: _T1) -> tuple[object, ...]:
+        return tuple(f(t1))
+
+    return tap_to_tuple(f_wrapped)
 
 
 def tap_to_tuple(

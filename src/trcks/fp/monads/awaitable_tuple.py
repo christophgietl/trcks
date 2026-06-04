@@ -62,9 +62,9 @@ from trcks.fp.monads import awaitable as a
 from trcks.fp.monads import tuple_ as t
 
 if TYPE_CHECKING:
-    from collections.abc import Awaitable, Callable
+    from collections.abc import Awaitable, Callable, Iterable
 
-    from trcks import AwaitableTuple
+    from trcks import AwaitableIterable, AwaitableTuple
 
 __docformat__ = "google"
 
@@ -114,6 +114,30 @@ def construct_from_awaitable(awtbl: Awaitable[_T]) -> AwaitableTuple[_T]:
         (7,)
     """
     return a.map_(t.construct)(awtbl)
+
+
+def construct_from_iterable(it: Iterable[_T]) -> AwaitableTuple[_T]:
+    """Create a [trcks.AwaitableTuple][] from an [collections.abc.Iterable][].
+
+    Like [trcks.fp.monads.awaitable_tuple.construct_from_tuple][], but accepts
+    any [collections.abc.Iterable][] instead of only a [tuple][].
+
+    Args:
+        it: The [collections.abc.Iterable][] to create
+            the [trcks.AwaitableTuple][] from.
+
+    Returns:
+        The [trcks.AwaitableTuple][] created from the [collections.abc.Iterable][].
+
+    Example:
+        >>> import asyncio
+        >>> from trcks import AwaitableTuple
+        >>> from trcks.fp.monads import awaitable_tuple as at
+        >>> a_tpl: AwaitableTuple[int] = at.construct_from_iterable(range(3))
+        >>> asyncio.run(at.to_coroutine_tuple(a_tpl))
+        (0, 1, 2)
+    """
+    return construct_from_tuple(tuple(it))
 
 
 def construct_from_tuple(tpl: tuple[_T, ...]) -> AwaitableTuple[_T]:
@@ -216,6 +240,52 @@ def map_to_awaitable(
     return map_to_awaitable_tuple(compose2((f, construct_from_awaitable)))
 
 
+def map_to_awaitable_iterable(
+    f: Callable[[_T1], AwaitableIterable[_T2]],
+) -> Callable[[AwaitableTuple[_T1]], AwaitableTuple[_T2]]:
+    """Turn [trcks.AwaitableIterable][]-returning function into a function
+    expecting and returning [trcks.AwaitableTuple][]s
+    of varying length.
+
+    Like [trcks.fp.monads.awaitable_tuple.map_to_awaitable_tuple][], but accepts
+    a function returning any [trcks.AwaitableIterable][] instead of only a
+    [trcks.AwaitableTuple][].
+
+    Args:
+        f:
+            The [trcks.AwaitableIterable][]-returning function to be transformed
+            into a function expecting and returning
+            [trcks.AwaitableTuple][]s of varying length.
+
+    Returns:
+        The given function transformed into
+            a function expecting and returning
+            [trcks.AwaitableTuple][]s of varying length.
+
+    Example:
+        >>> import asyncio
+        >>> from trcks import AwaitableTuple
+        >>> from trcks.fp.composition import pipe
+        >>> from trcks.fp.monads import awaitable_tuple as at
+        >>> async def slowly_range_up_to(n: int) -> range:
+        ...     await asyncio.sleep(0.001)
+        ...     return range(n)
+        >>> a_tpl: AwaitableTuple[int] = pipe(
+        ...     (
+        ...         at.construct_from_tuple((1, 3, 2)),
+        ...         at.map_to_awaitable_iterable(slowly_range_up_to),
+        ...     )
+        ... )
+        >>> asyncio.run(at.to_coroutine_tuple(a_tpl))
+        (0, 0, 1, 2, 0, 1)
+    """
+
+    async def to_awaitable_tuple(t1: _T1) -> AwaitableTuple[_T2]:
+        return tuple(await f(t1))
+
+    return map_to_awaitable_tuple(to_awaitable_tuple)
+
+
 def map_to_awaitable_tuple(
     f: Callable[[_T1], AwaitableTuple[_T2]],
 ) -> Callable[[AwaitableTuple[_T1]], AwaitableTuple[_T2]]:
@@ -259,6 +329,50 @@ def map_to_awaitable_tuple(
         return tuple(t2s)
 
     return mapped_f
+
+
+def map_to_iterable(
+    f: Callable[[_T1], Iterable[_T2]],
+) -> Callable[[AwaitableTuple[_T1]], AwaitableTuple[_T2]]:
+    """Turn [collections.abc.Iterable][]-returning function into a function
+    expecting and returning [trcks.AwaitableTuple][]s
+    of varying length.
+
+    Like [trcks.fp.monads.awaitable_tuple.map_to_tuple][], but accepts a function
+    returning any [collections.abc.Iterable][] instead of only a [tuple][].
+
+    Args:
+        f:
+            The [collections.abc.Iterable][]-returning function to be transformed
+            into a function expecting and returning
+            [trcks.AwaitableTuple][]s of varying length.
+
+    Returns:
+        The given function transformed into
+            a function expecting and returning
+            [trcks.AwaitableTuple][]s of varying length.
+
+    Example:
+        >>> import asyncio
+        >>> from trcks import AwaitableTuple
+        >>> from trcks.fp.composition import pipe
+        >>> from trcks.fp.monads import awaitable_tuple as at
+        >>> def range_up_to(n: int) -> range:
+        ...     return range(n)
+        >>> a_tpl: AwaitableTuple[int] = pipe(
+        ...     (
+        ...         at.construct_from_tuple((1, 3, 2)),
+        ...         at.map_to_iterable(range_up_to),
+        ...     )
+        ... )
+        >>> asyncio.run(at.to_coroutine_tuple(a_tpl))
+        (0, 0, 1, 2, 0, 1)
+    """
+
+    def f_wrapped(t1: _T1) -> tuple[_T2, ...]:
+        return tuple(f(t1))
+
+    return map_to_tuple(f_wrapped)
 
 
 def map_to_tuple(
@@ -385,6 +499,56 @@ def tap_to_awaitable(
     return map_to_awaitable(bypassed_f)
 
 
+def tap_to_awaitable_iterable(
+    f: Callable[[_T1], AwaitableIterable[object]],
+) -> Callable[[AwaitableTuple[_T1]], AwaitableTuple[_T1]]:
+    """Turn a [trcks.AwaitableIterable][]-returning side effect into a function
+    expecting a [trcks.AwaitableTuple][] and returning a [trcks.AwaitableTuple][]
+    where each original element is repeated once per element returned by
+    the side effect.
+
+    Like [trcks.fp.monads.awaitable_tuple.tap_to_awaitable_tuple][], but accepts
+    a side effect returning any [trcks.AwaitableIterable][] instead of only a
+    [trcks.AwaitableTuple][].
+
+    Args:
+        f:
+            The [trcks.AwaitableIterable][]-returning function to be transformed
+            into a function expecting a [trcks.AwaitableTuple][] and
+            returning a [trcks.AwaitableTuple][] where each original element is
+            repeated once per element returned by the side effect.
+
+    Returns:
+        The given function transformed into a function
+            expecting a [trcks.AwaitableTuple][] and
+            returning a [trcks.AwaitableTuple][] where each original element is
+            repeated once per element returned by the side effect.
+
+    Example:
+        >>> import asyncio
+        >>> from trcks import AwaitableTuple
+        >>> from trcks.fp.composition import pipe
+        >>> from trcks.fp.monads import awaitable_tuple as at
+        >>> async def slowly_get_divisors(n: int) -> range:
+        ...     await asyncio.sleep(0.001)
+        ...     candidates = range(1, n + 1)
+        ...     return (c for c in candidates if n % c == 0)
+        >>> a_tpl: AwaitableTuple[int] = pipe(
+        ...     (
+        ...         at.construct_from_tuple((1, 2, 3, 4)),
+        ...         at.tap_to_awaitable_iterable(slowly_get_divisors),
+        ...     )
+        ... )
+        >>> asyncio.run(at.to_coroutine_tuple(a_tpl))
+        (1, 2, 2, 3, 3, 4, 4, 4)
+    """
+
+    async def to_awaitable_tuple(t1: _T1) -> AwaitableTuple[object]:
+        return tuple(await f(t1))
+
+    return tap_to_awaitable_tuple(to_awaitable_tuple)
+
+
 def tap_to_awaitable_tuple(
     f: Callable[[_T1], AwaitableTuple[object]],
 ) -> Callable[[AwaitableTuple[_T1]], AwaitableTuple[_T1]]:
@@ -430,6 +594,53 @@ def tap_to_awaitable_tuple(
         return tuple(t1 for _ in objs)
 
     return map_to_awaitable_tuple(bypassed_f)
+
+
+def tap_to_iterable(
+    f: Callable[[_T1], Iterable[object]],
+) -> Callable[[AwaitableTuple[_T1]], AwaitableTuple[_T1]]:
+    """Turn a [collections.abc.Iterable][]-returning side effect into a function
+    expecting a [trcks.AwaitableTuple][] and returning a [trcks.AwaitableTuple][]
+    where each original element is repeated once per element returned by
+    the side effect.
+
+    Like [trcks.fp.monads.awaitable_tuple.tap_to_tuple][], but accepts a side
+    effect returning any [collections.abc.Iterable][] instead of only a [tuple][].
+
+    Args:
+        f:
+            The [collections.abc.Iterable][]-returning function to be transformed
+            into a function expecting a [trcks.AwaitableTuple][] and
+            returning a [trcks.AwaitableTuple][] where each original element is
+            repeated once per element returned by the side effect.
+
+    Returns:
+        The given function transformed into a function
+            expecting a [trcks.AwaitableTuple][] and
+            returning a [trcks.AwaitableTuple][] where each original element is
+            repeated once per element returned by the side effect.
+
+    Example:
+        >>> import asyncio
+        >>> from trcks import AwaitableTuple
+        >>> from trcks.fp.composition import pipe
+        >>> from trcks.fp.monads import awaitable_tuple as at
+        >>> def get_divisors(n: int) -> range:
+        ...     return (c for c in range(1, n + 1) if n % c == 0)
+        >>> a_tpl: AwaitableTuple[int] = pipe(
+        ...     (
+        ...         at.construct_from_tuple((1, 2, 3, 4)),
+        ...         at.tap_to_iterable(get_divisors),
+        ...     )
+        ... )
+        >>> asyncio.run(at.to_coroutine_tuple(a_tpl))
+        (1, 2, 2, 3, 3, 4, 4, 4)
+    """
+
+    def f_wrapped(t1: _T1) -> tuple[object, ...]:
+        return tuple(f(t1))
+
+    return tap_to_tuple(f_wrapped)
 
 
 def tap_to_tuple(

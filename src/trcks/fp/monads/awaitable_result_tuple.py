@@ -50,14 +50,16 @@ from trcks.fp.monads import result as r
 from trcks.fp.monads import result_tuple as rt
 
 if TYPE_CHECKING:
-    from collections.abc import Awaitable, Callable
+    from collections.abc import Awaitable, Callable, Iterable
 
     from trcks import (
         AwaitableFailure,
         AwaitableResult,
+        AwaitableResultIterable,
         AwaitableResultTuple,
         AwaitableSuccessTuple,
         Result,
+        ResultIterable,
         ResultTuple,
         SuccessTuple,
     )
@@ -182,6 +184,45 @@ def construct_from_result(rslt: Result[_F, _S]) -> AwaitableResultTuple[_F, _S]:
     return a.construct(rt.construct_from_result(rslt))
 
 
+def construct_from_result_iterable(
+    r_it: ResultIterable[_F, _S],
+) -> AwaitableResultTuple[_F, _S]:
+    """Create a [trcks.AwaitableResultTuple][] object
+    from a [trcks.ResultIterable][] object.
+
+    Like [trcks.fp.monads.awaitable_result_tuple.construct_from_result_tuple][], but
+    accepts a [trcks.ResultIterable][] instead of a [trcks.ResultTuple][].
+
+    Args:
+        r_it: [trcks.ResultIterable][] object to be converted.
+
+    Returns:
+        A new [trcks.AwaitableResultTuple][] instance where
+            the success payload is converted to a tuple,
+            or the original failure is preserved.
+
+    Example:
+        >>> import asyncio
+        >>> from trcks import ResultIterable
+        >>> from trcks.fp.monads import awaitable_result_tuple as art
+        >>> r_it_1: ResultIterable[str, int] = ("success", range(3))
+        >>> a_r_tpl_1 = art.construct_from_result_iterable(r_it_1)
+        >>> asyncio.run(art.to_coroutine_result_tuple(a_r_tpl_1))
+        ('success', (0, 1, 2))
+        >>> r_it_2: ResultIterable[str, int] = ("failure", "oops")
+        >>> a_r_tpl_2 = art.construct_from_result_iterable(r_it_2)
+        >>> asyncio.run(art.to_coroutine_result_tuple(a_r_tpl_2))
+        ('failure', 'oops')
+    """
+    match r_it:
+        case ("success", s2s):
+            return construct_from_result_tuple(("success", tuple(s2s)))
+        case ("failure", _) as r_tpl:
+            return construct_from_result_tuple(r_tpl)
+        case _ as r_tpl:  # pragma: no cover
+            return assert_never(r_tpl)  # type: ignore[unreachable]  # pyright: ignore[reportUnreachable]
+
+
 def construct_from_result_tuple(
     r_tpl: ResultTuple[_F, _S],
 ) -> AwaitableResultTuple[_F, _S]:
@@ -255,6 +296,31 @@ def construct_successes_from_awaitable(
         ('success', (7,))
     """
     return a.map_(rt.construct_successes)(awtbl)
+
+
+def construct_successes_from_iterable(it: Iterable[_S]) -> AwaitableSuccessTuple[_S]:
+    """Create a [trcks.AwaitableSuccessTuple][] object
+    from an [collections.abc.Iterable][].
+
+    Like [trcks.fp.monads.awaitable_result_tuple.construct_successes_from_tuple][], but
+    accepts any [collections.abc.Iterable][] instead of only a [tuple][].
+
+    Args:
+        it: [collections.abc.Iterable][] whose elements will be wrapped in
+            a [trcks.AwaitableSuccessTuple][].
+
+    Returns:
+        A new [trcks.AwaitableSuccessTuple][] instance containing
+            the elements of the iterable.
+
+    Example:
+        >>> import asyncio
+        >>> from trcks.fp.monads import awaitable_result_tuple as art
+        >>> a_r_tpl = art.construct_successes_from_iterable(range(3))
+        >>> asyncio.run(art.to_coroutine_result_tuple(a_r_tpl))
+        ('success', (0, 1, 2))
+    """
+    return construct_successes_from_tuple(tuple(it))
 
 
 def construct_successes_from_tuple(
@@ -348,6 +414,68 @@ def map_failure_to_awaitable(
     return map_failure_to_awaitable_result_tuple(
         compose2((f, construct_failure_from_awaitable))
     )
+
+
+def map_failure_to_awaitable_result_iterable(
+    f: Callable[[_F1], AwaitableResultIterable[_F2, _S2]],
+) -> Callable[
+    [AwaitableResultTuple[_F1, _S1]],
+    AwaitableResultTuple[_F2, _S1 | _S2],
+]:
+    """Create function that maps [trcks.AwaitableFailure][] values
+    to [trcks.AwaitableResultTuple][] values via an
+    [trcks.AwaitableResultIterable][]-returning function.
+
+    Like
+    [trcks.fp.monads.awaitable_result_tuple.map_failure_to_awaitable_result_tuple][],
+    but accepts a function returning a [trcks.AwaitableResultIterable][] instead of a
+    [trcks.AwaitableResultTuple][].
+
+    [trcks.AwaitableSuccessTuple][] values are left unchanged.
+
+    Args:
+        f: Asynchronous function to apply to the [trcks.AwaitableFailure][] values.
+
+    Returns:
+        Maps [trcks.AwaitableFailure][] values to new
+            [trcks.AwaitableResultTuple][] values
+            according to the given asynchronous function and
+            leaves [trcks.AwaitableSuccessTuple][] values unchanged.
+
+    Example:
+        >>> import asyncio
+        >>> from trcks import AwaitableResultIterable
+        >>> from trcks.fp.monads import awaitable_result_tuple as art
+        >>> async def _slowly_recover(e: str) -> AwaitableResultIterable[str, int]:
+        ...     await asyncio.sleep(0.001)
+        ...     if e == "not found":
+        ...         return "success", range(2)
+        ...     return "failure", e
+        ...
+        >>> slowly_recover = art.map_failure_to_awaitable_result_iterable(
+        ...     _slowly_recover
+        ... )
+        >>> a_r_tpl_1 = slowly_recover(art.construct_failure("not found"))
+        >>> asyncio.run(art.to_coroutine_result_tuple(a_r_tpl_1))
+        ('success', (0, 1))
+        >>> a_r_tpl_2 = slowly_recover(art.construct_failure("fatal"))
+        >>> asyncio.run(art.to_coroutine_result_tuple(a_r_tpl_2))
+        ('failure', 'fatal')
+        >>> a_r_tpl_3 = slowly_recover(art.construct_successes_from_tuple((1, 2)))
+        >>> asyncio.run(art.to_coroutine_result_tuple(a_r_tpl_3))
+        ('success', (1, 2))
+    """
+
+    async def to_awaitable_result_tuple(f1: _F1) -> AwaitableResultTuple[_F2, _S2]:
+        match await f(f1):
+            case ("success", s2s):
+                return "success", tuple(s2s)
+            case ("failure", _) as r_tpl:
+                return r_tpl
+            case _ as r_tpl:  # pragma: no cover
+                return assert_never(r_tpl)  # type: ignore[unreachable]  # pyright: ignore[reportUnreachable]
+
+    return map_failure_to_awaitable_result_tuple(to_awaitable_result_tuple)
 
 
 def map_failure_to_awaitable_result_tuple(
@@ -456,6 +584,55 @@ def map_failure_to_result(
     return a.map_(rt.map_failure_to_result(f))
 
 
+def map_failure_to_result_iterable(
+    f: Callable[[_F1], ResultIterable[_F2, _S2]],
+) -> Callable[
+    [AwaitableResultTuple[_F1, _S1]],
+    AwaitableResultTuple[_F2, _S1 | _S2],
+]:
+    """Create function that maps [trcks.AwaitableFailure][] values
+    to [trcks.AwaitableResultTuple][] values via a
+    [trcks.ResultIterable][]-returning function.
+
+    Like [trcks.fp.monads.awaitable_result_tuple.map_failure_to_result_tuple][], but
+    accepts a function returning a [trcks.ResultIterable][] instead of a
+    [trcks.ResultTuple][].
+
+    [trcks.AwaitableSuccessTuple][] values are left unchanged.
+
+    Args:
+        f: Function to apply to the [trcks.AwaitableFailure][] value, returning a
+            [trcks.ResultIterable][].
+
+    Returns:
+        Maps [trcks.AwaitableFailure][] values to new
+            [trcks.AwaitableResultTuple][] values
+            according to the given function and
+            leaves [trcks.AwaitableSuccessTuple][] values unchanged.
+
+    Example:
+        >>> import asyncio
+        >>> from trcks import ResultIterable
+        >>> from trcks.fp.monads import awaitable_result_tuple as art
+        >>> def _recover(description: str) -> ResultIterable[str, int]:
+        ...     if description == "not found":
+        ...         return "success", range(2)
+        ...     return "failure", description
+        ...
+        >>> recover = art.map_failure_to_result_iterable(_recover)
+        >>> a_r_tpl_1 = recover(art.construct_failure("not found"))
+        >>> asyncio.run(art.to_coroutine_result_tuple(a_r_tpl_1))
+        ('success', (0, 1))
+        >>> a_r_tpl_2 = recover(art.construct_failure("fatal"))
+        >>> asyncio.run(art.to_coroutine_result_tuple(a_r_tpl_2))
+        ('failure', 'fatal')
+        >>> a_r_tpl_3 = recover(art.construct_successes_from_tuple((1, 2)))
+        >>> asyncio.run(art.to_coroutine_result_tuple(a_r_tpl_3))
+        ('success', (1, 2))
+    """
+    return a.map_(rt.map_failure_to_result_iterable(f))
+
+
 def map_failure_to_result_tuple(
     f: Callable[[_F1], ResultTuple[_F2, _S2]],
 ) -> Callable[
@@ -500,6 +677,44 @@ def map_failure_to_result_tuple(
         ('success', (1, 2))
     """
     return a.map_(rt.map_failure_to_result_tuple(f))
+
+
+def map_failure_to_iterable(
+    f: Callable[[_F1], Iterable[_S2]],
+) -> Callable[[AwaitableResultTuple[_F1, _S1]], AwaitableResultTuple[_F1, _S1 | _S2]]:
+    """Create function that maps [trcks.AwaitableFailure][] values to
+    [trcks.AwaitableSuccessTuple][] values via an
+    [collections.abc.Iterable][]-returning function.
+
+    Like [trcks.fp.monads.awaitable_result_tuple.map_failure_to_tuple][], but accepts
+    a function returning any [collections.abc.Iterable][] instead of only a [tuple][].
+
+    [trcks.AwaitableSuccessTuple][] values are left unchanged.
+
+    Args:
+        f: Function to apply to the [trcks.AwaitableFailure][] value, returning an
+            [collections.abc.Iterable][].
+
+    Returns:
+        Maps [trcks.AwaitableFailure][] values to new [trcks.AwaitableSuccessTuple][]
+            values according to the given function and
+            leaves [trcks.AwaitableSuccessTuple][] values unchanged.
+
+    Example:
+        >>> import asyncio
+        >>> from trcks.fp.monads import awaitable_result_tuple as art
+        >>> def _recover(description: str) -> range:
+        ...     return range(int(description))
+        ...
+        >>> recover = art.map_failure_to_iterable(_recover)
+        >>> a_r_tpl_1 = recover(art.construct_failure("3"))
+        >>> asyncio.run(art.to_coroutine_result_tuple(a_r_tpl_1))
+        ('success', (0, 1, 2))
+        >>> a_r_tpl_2 = recover(art.construct_successes_from_tuple((1, 2)))
+        >>> asyncio.run(art.to_coroutine_result_tuple(a_r_tpl_2))
+        ('success', (1, 2))
+    """
+    return a.map_(rt.map_failure_to_iterable(f))
 
 
 def map_failure_to_tuple(
@@ -670,6 +885,74 @@ def map_successes_to_awaitable_result(
     )
 
 
+def map_successes_to_awaitable_result_iterable(
+    f: Callable[[_S1], AwaitableResultIterable[_F2, _S2]],
+) -> Callable[
+    [AwaitableResultTuple[_F1, _S1]],
+    AwaitableResultTuple[_F1 | _F2, _S2],
+]:
+    """Map an [trcks.AwaitableResultIterable][]-returning function over each element
+    in a [trcks.AwaitableResultTuple][].
+
+    Like
+    [trcks.fp.monads.awaitable_result_tuple.map_successes_to_awaitable_result_tuple][],
+    but accepts a function returning a [trcks.AwaitableResultIterable][] instead of a
+    [trcks.AwaitableResultTuple][].
+
+    [trcks.AwaitableFailure][] values are left unchanged.
+    Short-circuits on the first failure returned by `f`.
+
+    Args:
+        f: Asynchronous function to apply to each success element.
+
+    Returns:
+        Function that flat-maps [trcks.AwaitableSuccessTuple][] values and
+            short-circuits on the first [trcks.AwaitableFailure][] returned by `f`.
+
+    Example:
+        >>> import asyncio
+        >>> from trcks import AwaitableResultIterable
+        >>> from trcks.fp.monads import awaitable_result_tuple as art
+        >>> async def _slowly_expand_if_positive(
+        ...     n: int,
+        ... ) -> AwaitableResultIterable[str, int]:
+        ...     await asyncio.sleep(0.001)
+        ...     if n <= 0:
+        ...         return "failure", "negative"
+        ...     return "success", range(n)
+        ...
+        >>> slowly_expand_if_positive = (
+        ...     art.map_successes_to_awaitable_result_iterable(
+        ...         _slowly_expand_if_positive
+        ...     )
+        ... )
+        >>> a_r_tpl_1 = slowly_expand_if_positive(
+        ...     art.construct_successes_from_tuple((1, 3))
+        ... )
+        >>> asyncio.run(art.to_coroutine_result_tuple(a_r_tpl_1))
+        ('success', (0, 0, 1, 2))
+        >>> a_r_tpl_2 = slowly_expand_if_positive(
+        ...     art.construct_successes_from_tuple((1, -1, 3))
+        ... )
+        >>> asyncio.run(art.to_coroutine_result_tuple(a_r_tpl_2))
+        ('failure', 'negative')
+        >>> a_r_tpl_3 = slowly_expand_if_positive(art.construct_failure("oops"))
+        >>> asyncio.run(art.to_coroutine_result_tuple(a_r_tpl_3))
+        ('failure', 'oops')
+    """
+
+    async def to_awaitable_result_tuple(s1: _S1) -> AwaitableResultTuple[_F2, _S2]:
+        match await f(s1):
+            case ("success", s2s):
+                return "success", tuple(s2s)
+            case ("failure", _) as r_tpl:
+                return r_tpl
+            case _ as r_tpl:  # pragma: no cover
+                return assert_never(r_tpl)  # type: ignore[unreachable]  # pyright: ignore[reportUnreachable]
+
+    return map_successes_to_awaitable_result_tuple(to_awaitable_result_tuple)
+
+
 def map_successes_to_awaitable_result_tuple(
     f: Callable[[_S1], AwaitableResultTuple[_F2, _S2]],
 ) -> Callable[
@@ -793,6 +1076,55 @@ def map_successes_to_result(
     return a.map_(rt.map_successes_to_result(f))
 
 
+def map_successes_to_result_iterable(
+    f: Callable[[_S1], ResultIterable[_F2, _S2]],
+) -> Callable[
+    [AwaitableResultTuple[_F1, _S1]],
+    AwaitableResultTuple[_F1 | _F2, _S2],
+]:
+    """Map each success element to a [trcks.ResultIterable][] and flatten.
+
+    Like [trcks.fp.monads.awaitable_result_tuple.map_successes_to_result_tuple][], but
+    accepts a function returning a [trcks.ResultIterable][] instead of a
+    [trcks.ResultTuple][].
+
+    [trcks.AwaitableFailure][] values are left unchanged.
+    Short-circuits on the first failure returned by `f`.
+
+    Args:
+        f: Function to apply to each success element.
+
+    Returns:
+        Function that flat-maps [trcks.AwaitableSuccessTuple][] values and
+            returns the first [trcks.AwaitableFailure][] encountered, if any.
+
+    Example:
+        >>> import asyncio
+        >>> from trcks import ResultIterable
+        >>> from trcks.fp.monads import awaitable_result_tuple as art
+        >>> def _expand_if_positive(n: int) -> ResultIterable[str, int]:
+        ...     if n <= 0:
+        ...         return "failure", "negative"
+        ...     return "success", range(n)
+        ...
+        >>> expand_if_positive = art.map_successes_to_result_iterable(
+        ...     _expand_if_positive
+        ... )
+        >>> a_r_tpl_1 = expand_if_positive(art.construct_successes_from_tuple((1, 3)))
+        >>> asyncio.run(art.to_coroutine_result_tuple(a_r_tpl_1))
+        ('success', (0, 0, 1, 2))
+        >>> a_r_tpl_2 = expand_if_positive(
+        ...     art.construct_successes_from_tuple((1, -1, 3))
+        ... )
+        >>> asyncio.run(art.to_coroutine_result_tuple(a_r_tpl_2))
+        ('failure', 'negative')
+        >>> a_r_tpl_3 = expand_if_positive(art.construct_failure("oops"))
+        >>> asyncio.run(art.to_coroutine_result_tuple(a_r_tpl_3))
+        ('failure', 'oops')
+    """
+    return a.map_(rt.map_successes_to_result_iterable(f))
+
+
 def map_successes_to_result_tuple(
     f: Callable[[_S1], ResultTuple[_F2, _S2]],
 ) -> Callable[
@@ -833,6 +1165,43 @@ def map_successes_to_result_tuple(
         ('failure', 'oops')
     """
     return a.map_(rt.map_successes_to_result_tuple(f))
+
+
+def map_successes_to_iterable(
+    f: Callable[[_S1], Iterable[_S2]],
+) -> Callable[[AwaitableResultTuple[_F1, _S1]], AwaitableResultTuple[_F1, _S2]]:
+    """Map each success element to an [collections.abc.Iterable][] and flatten.
+
+    Like [trcks.fp.monads.awaitable_result_tuple.map_successes_to_tuple][], but
+    accepts a function returning any [collections.abc.Iterable][] instead of only
+    a [tuple][].
+
+    [trcks.AwaitableFailure][] values are left unchanged.
+
+    Args:
+        f: Function to apply to each element of the [trcks.AwaitableSuccessTuple][],
+            returning an [collections.abc.Iterable][].
+
+    Returns:
+        Maps each success element to an [collections.abc.Iterable][] and flattens
+            the results into a new [trcks.AwaitableSuccessTuple][].
+            [trcks.AwaitableFailure][] values are left unchanged.
+
+    Example:
+        >>> import asyncio
+        >>> from trcks.fp.monads import awaitable_result_tuple as art
+        >>> def range_up_to(n: int) -> range:
+        ...     return range(n)
+        ...
+        >>> expand = art.map_successes_to_iterable(range_up_to)
+        >>> a_r_tpl_1 = expand(art.construct_successes_from_tuple((1, 3, 2)))
+        >>> asyncio.run(art.to_coroutine_result_tuple(a_r_tpl_1))
+        ('success', (0, 0, 1, 2, 0, 1))
+        >>> a_r_tpl_2 = expand(art.construct_failure("oops"))
+        >>> asyncio.run(art.to_coroutine_result_tuple(a_r_tpl_2))
+        ('failure', 'oops')
+    """
+    return a.map_(rt.map_successes_to_iterable(f))
 
 
 def map_successes_to_tuple(
@@ -996,6 +1365,80 @@ def tap_failure_to_awaitable_result(
     return map_failure_to_awaitable_result_tuple(bypassed_f)
 
 
+def tap_failure_to_awaitable_result_iterable(
+    f: Callable[[_F1], AwaitableResultIterable[_F2, object]],
+) -> Callable[
+    [AwaitableResultTuple[_F1, _S1]],
+    AwaitableResultTuple[_F1 | _F2, _S1],
+]:
+    """Create function that applies an [trcks.AwaitableResultIterable][]-returning side
+    effect to [trcks.AwaitableFailure][] values.
+
+    Like
+    [trcks.fp.monads.awaitable_result_tuple.tap_failure_to_awaitable_result_tuple][],
+    but accepts a side effect returning a [trcks.AwaitableResultIterable][] instead of a
+    [trcks.AwaitableResultTuple][].
+
+    [trcks.AwaitableSuccessTuple][] values are left unchanged.
+
+    Args:
+        f: Asynchronous side effect to apply to the [trcks.AwaitableFailure][] value.
+
+    Returns:
+        Passes on [trcks.AwaitableSuccessTuple][] values without side effects.
+            Applies the given side effect to [trcks.AwaitableFailure][] values.
+            If the side effect returns a [trcks.AwaitableFailure][], it is returned.
+            If the side effect returns an [trcks.AwaitableSuccessIterable][],
+            the original failure is repeated once per element.
+
+    Example:
+        >>> import asyncio
+        >>> from trcks import AwaitableResultIterable
+        >>> from trcks.fp.monads import awaitable_result_tuple as art
+        >>> async def _slowly_validate_retryable(
+        ...     e: str,
+        ... ) -> AwaitableResultIterable[str, None]:
+        ...     await asyncio.sleep(0.001)
+        ...     if e == "retryable":
+        ...         return "success", [None, None]
+        ...     return "failure", e
+        ...
+        >>> slowly_validate_retryable = art.tap_failure_to_awaitable_result_iterable(
+        ...     _slowly_validate_retryable
+        ... )
+        >>> a_r_tpl_1 = slowly_validate_retryable(art.construct_failure("retryable"))
+        >>> asyncio.run(art.to_coroutine_result_tuple(a_r_tpl_1))
+        ('success', ('retryable', 'retryable'))
+        >>> a_r_tpl_2 = slowly_validate_retryable(art.construct_failure("fatal"))
+        >>> asyncio.run(art.to_coroutine_result_tuple(a_r_tpl_2))
+        ('failure', 'fatal')
+        >>> a_r_tpl_3 = slowly_validate_retryable(
+        ...     art.construct_successes_from_tuple((1, 2))
+        ... )
+        >>> asyncio.run(art.to_coroutine_result_tuple(a_r_tpl_3))
+        ('success', (1, 2))
+    """
+
+    async def partially_mapped_f(
+        rslt_tpl: ResultTuple[_F1, _S1],
+    ) -> ResultTuple[_F1 | _F2, _S1]:
+        match rslt_tpl:
+            case ("failure", f1):
+                match await f(f1):
+                    case ("success", objs):
+                        return "success", tuple(f1 for _ in objs)
+                    case ("failure", _) as r_tpl:
+                        return r_tpl
+                    case _ as r_tpl:  # pragma: no cover
+                        return assert_never(r_tpl)  # type: ignore[unreachable]  # pyright: ignore[reportUnreachable]
+            case ("success", _):
+                return rslt_tpl
+            case _:  # pragma: no cover
+                return assert_never(rslt_tpl)  # type: ignore[unreachable]  # pyright: ignore[reportUnreachable]
+
+    return a.map_to_awaitable(partially_mapped_f)
+
+
 def tap_failure_to_awaitable_result_tuple(
     f: Callable[[_F1], AwaitableResultTuple[object, _S2]],
 ) -> Callable[
@@ -1099,6 +1542,56 @@ def tap_failure_to_result(
     return a.map_(rt.tap_failure_to_result(f))
 
 
+def tap_failure_to_result_iterable(
+    f: Callable[[_F1], ResultIterable[_F2, object]],
+) -> Callable[
+    [AwaitableResultTuple[_F1, _S1]],
+    AwaitableResultTuple[_F1 | _F2, _S1],
+]:
+    """Create function that applies a [trcks.ResultIterable][]-returning side effect
+    to [trcks.AwaitableFailure][] values.
+
+    Like [trcks.fp.monads.awaitable_result_tuple.tap_failure_to_result_tuple][], but
+    accepts a side effect returning a [trcks.ResultIterable][] instead of a
+    [trcks.ResultTuple][].
+
+    [trcks.AwaitableSuccessTuple][] values are left unchanged.
+
+    Args:
+        f: Side effect to apply to the [trcks.AwaitableFailure][] value.
+
+    Returns:
+        Passes on [trcks.AwaitableSuccessTuple][] values without side effects.
+            Applies the given side effect to [trcks.AwaitableFailure][] values.
+            If the side effect returns a [trcks.Failure][], it is returned.
+            If the side effect returns a [trcks.SuccessIterable][],
+            the original failure is repeated once per element.
+
+    Example:
+        >>> import asyncio
+        >>> from trcks import ResultIterable
+        >>> from trcks.fp.monads import awaitable_result_tuple as art
+        >>> def _validate_retryable(e: str) -> ResultIterable[str, None]:
+        ...     if e == "retryable":
+        ...         return "success", [None, None]
+        ...     return "failure", e
+        ...
+        >>> validate_retryable = art.tap_failure_to_result_iterable(
+        ...     _validate_retryable
+        ... )
+        >>> a_r_tpl_1 = validate_retryable(art.construct_failure("retryable"))
+        >>> asyncio.run(art.to_coroutine_result_tuple(a_r_tpl_1))
+        ('success', ('retryable', 'retryable'))
+        >>> a_r_tpl_2 = validate_retryable(art.construct_failure("fatal"))
+        >>> asyncio.run(art.to_coroutine_result_tuple(a_r_tpl_2))
+        ('failure', 'fatal')
+        >>> a_r_tpl_3 = validate_retryable(art.construct_successes_from_tuple((1, 2)))
+        >>> asyncio.run(art.to_coroutine_result_tuple(a_r_tpl_3))
+        ('success', (1, 2))
+    """
+    return a.map_(rt.tap_failure_to_result_iterable(f))
+
+
 def tap_failure_to_result_tuple(
     f: Callable[[_F1], ResultTuple[object, _S2]],
 ) -> Callable[
@@ -1145,6 +1638,47 @@ def tap_failure_to_result_tuple(
         ('success', (1,))
     """
     return a.map_(rt.tap_failure_to_result_tuple(f))
+
+
+def tap_failure_to_iterable(
+    f: Callable[[_F1], Iterable[object]],
+) -> Callable[[AwaitableResultTuple[_F1, _S1]], AwaitableResultTuple[_F1, _S1]]:
+    """Create function that applies an [collections.abc.Iterable][]-returning side
+    effect to [trcks.AwaitableFailure][] values.
+
+    Like [trcks.fp.monads.awaitable_result_tuple.tap_failure_to_tuple][], but accepts a
+    side effect returning any [collections.abc.Iterable][] instead of only a [tuple][].
+
+    [trcks.AwaitableSuccessTuple][] values are left unchanged.
+
+    Args:
+        f: Side effect to apply to the [trcks.AwaitableFailure][] value.
+
+    Returns:
+        Applies the given side effect to [trcks.AwaitableFailure][] values and
+            repeats the failure as many times as the side effect yields elements.
+            Leaves [trcks.AwaitableSuccessTuple][] values unchanged.
+
+    Example:
+        >>> import asyncio
+        >>> from trcks.fp.monads import awaitable_result_tuple as art
+        >>> def _log_and_alert(description: str) -> list[None]:
+        ...     return [
+        ...         print(f"Error logged: {description}"),
+        ...         print(f"Alert sent: {description}"),
+        ...     ]
+        ...
+        >>> log_and_alert = art.tap_failure_to_iterable(_log_and_alert)
+        >>> a_r_tpl_1 = log_and_alert(art.construct_failure("critical"))
+        >>> asyncio.run(art.to_coroutine_result_tuple(a_r_tpl_1))
+        Error logged: critical
+        Alert sent: critical
+        ('success', ('critical', 'critical'))
+        >>> a_r_tpl_2 = log_and_alert(art.construct_successes_from_tuple((1, 2)))
+        >>> asyncio.run(art.to_coroutine_result_tuple(a_r_tpl_2))
+        ('success', (1, 2))
+    """
+    return a.map_(rt.tap_failure_to_iterable(f))
 
 
 def tap_failure_to_tuple(
@@ -1324,6 +1858,78 @@ def tap_successes_to_awaitable_result(
     )
 
 
+def tap_successes_to_awaitable_result_iterable(
+    f: Callable[[_S1], AwaitableResultIterable[_F2, object]],
+) -> Callable[
+    [AwaitableResultTuple[_F1, _S1]],
+    AwaitableResultTuple[_F1 | _F2, _S1],
+]:
+    """Create function that applies an [trcks.AwaitableResultIterable][]-returning side
+    effect to each element of a [trcks.AwaitableSuccessTuple][].
+
+    Like
+    [trcks.fp.monads.awaitable_result_tuple.tap_successes_to_awaitable_result_tuple][],
+    but accepts a side effect returning a [trcks.AwaitableResultIterable][] instead of a
+    [trcks.AwaitableResultTuple][].
+
+    [trcks.AwaitableFailure][] values are left unchanged.
+
+    Args:
+        f: Asynchronous side effect to apply to each success element.
+
+    Returns:
+        Passes on [trcks.AwaitableFailure][] values without side effects.
+            Applies the given side effect to each element of the
+            [trcks.AwaitableSuccessTuple][].
+            If the given side effect returns a [trcks.AwaitableFailure][],
+            it is returned.
+            If the given side effect returns an [trcks.AwaitableSuccessIterable][],
+            *the original* element is repeated once per element in the iterable.
+
+    Example:
+        >>> import asyncio
+        >>> from trcks import AwaitableResultIterable
+        >>> from trcks.fp.monads import awaitable_result_tuple as art
+        >>> async def _slowly_validate_positive_twice(
+        ...     n: int,
+        ... ) -> AwaitableResultIterable[str, None]:
+        ...     await asyncio.sleep(0.001)
+        ...     if n > 0:
+        ...         return "success", [None, None]
+        ...     return "failure", "not positive"
+        ...
+        >>> slowly_validate_positive_twice = (
+        ...     art.tap_successes_to_awaitable_result_iterable(
+        ...         _slowly_validate_positive_twice
+        ...     )
+        ... )
+        >>> a_r_tpl_1 = slowly_validate_positive_twice(
+        ...     art.construct_successes_from_tuple((7,))
+        ... )
+        >>> asyncio.run(art.to_coroutine_result_tuple(a_r_tpl_1))
+        ('success', (7, 7))
+        >>> a_r_tpl_2 = slowly_validate_positive_twice(
+        ...     art.construct_successes_from_tuple((1, -1))
+        ... )
+        >>> asyncio.run(art.to_coroutine_result_tuple(a_r_tpl_2))
+        ('failure', 'not positive')
+        >>> a_r_tpl_3 = slowly_validate_positive_twice(art.construct_failure("oops"))
+        >>> asyncio.run(art.to_coroutine_result_tuple(a_r_tpl_3))
+        ('failure', 'oops')
+    """
+
+    async def to_awaitable_result_tuple(s1: _S1) -> AwaitableResultTuple[_F2, object]:
+        match await f(s1):
+            case ("success", objs):
+                return "success", tuple(objs)
+            case ("failure", _) as r_tpl:
+                return r_tpl
+            case _ as r_tpl:  # pragma: no cover
+                return assert_never(r_tpl)  # type: ignore[unreachable]  # pyright: ignore[reportUnreachable]
+
+    return tap_successes_to_awaitable_result_tuple(to_awaitable_result_tuple)
+
+
 def tap_successes_to_awaitable_result_tuple(
     f: Callable[[_S1], AwaitableResultTuple[_F2, object]],
 ) -> Callable[
@@ -1430,6 +2036,58 @@ def tap_successes_to_result(
     return a.map_(rt.tap_successes_to_result(f))
 
 
+def tap_successes_to_result_iterable(
+    f: Callable[[_S1], ResultIterable[_F2, object]],
+) -> Callable[
+    [AwaitableResultTuple[_F1, _S1]],
+    AwaitableResultTuple[_F1 | _F2, _S1],
+]:
+    """Create function that applies a [trcks.ResultIterable][]-returning side effect
+    to each element of a [trcks.AwaitableSuccessTuple][].
+
+    Like [trcks.fp.monads.awaitable_result_tuple.tap_successes_to_result_tuple][], but
+    accepts a side effect returning a [trcks.ResultIterable][] instead of a
+    [trcks.ResultTuple][].
+
+    [trcks.AwaitableFailure][] values are left unchanged.
+
+    Args:
+        f: Side effect to apply to each element of the [trcks.AwaitableSuccessTuple][].
+
+    Returns:
+        Passes on [trcks.AwaitableFailure][] values without side effects.
+            Applies the given side effect to each element of the
+            [trcks.AwaitableSuccessTuple][].
+            If the given side effect returns a [trcks.Failure][], it is returned.
+            If the given side effect returns a [trcks.SuccessIterable][],
+            *the original* element is repeated once per element in the iterable.
+
+    Example:
+        >>> import asyncio
+        >>> from trcks import ResultIterable
+        >>> from trcks.fp.monads import awaitable_result_tuple as art
+        >>> def _validate_positive_twice(n: int) -> ResultIterable[str, None]:
+        ...     if n > 0:
+        ...         return "success", [None, None]
+        ...     return "failure", "not positive"
+        ...
+        >>> validate_positive_twice = art.tap_successes_to_result_iterable(
+        ...     _validate_positive_twice
+        ... )
+        >>> a_r_tpl_1 = validate_positive_twice(
+        ...     art.construct_successes_from_tuple((7,))
+        ... )
+        >>> asyncio.run(art.to_coroutine_result_tuple(a_r_tpl_1))
+        ('success', (7, 7))
+        >>> a_r_tpl_2 = validate_positive_twice(
+        ...     art.construct_successes_from_tuple((1, -1))
+        ... )
+        >>> asyncio.run(art.to_coroutine_result_tuple(a_r_tpl_2))
+        ('failure', 'not positive')
+    """
+    return a.map_(rt.tap_successes_to_result_iterable(f))
+
+
 def tap_successes_to_result_tuple(
     f: Callable[[_S1], ResultTuple[_F2, object]],
 ) -> Callable[
@@ -1478,6 +2136,44 @@ def tap_successes_to_result_tuple(
         ('failure', 'oops')
     """
     return a.map_(rt.tap_successes_to_result_tuple(f))
+
+
+def tap_successes_to_iterable(
+    f: Callable[[_S1], Iterable[object]],
+) -> Callable[[AwaitableResultTuple[_F1, _S1]], AwaitableResultTuple[_F1, _S1]]:
+    """Create function that applies an [collections.abc.Iterable][]-returning side
+    effect to each element of a [trcks.AwaitableSuccessTuple][].
+
+    Like [trcks.fp.monads.awaitable_result_tuple.tap_successes_to_tuple][],
+    but accepts a
+    side effect returning any [collections.abc.Iterable][] instead of only a [tuple][].
+
+    [trcks.AwaitableFailure][] values are left unchanged.
+
+    Args:
+        f: Side effect to apply to each element of the [trcks.AwaitableSuccessTuple][].
+
+    Returns:
+        Passes on [trcks.AwaitableFailure][] values without side effects.
+            Applies the given side effect to each element of the
+            [trcks.AwaitableSuccessTuple][]
+            and repeats each original element once per element in the iterable
+            returned by the side effect.
+
+    Example:
+        >>> import asyncio
+        >>> from trcks.fp.monads import awaitable_result_tuple as art
+        >>> def _log_twice(n: int) -> list[None]:
+        ...     return [print(f"Received: {n}"), print(f"Received: {n}")]
+        ...
+        >>> log_twice = art.tap_successes_to_iterable(_log_twice)
+        >>> a_r_tpl_1 = log_twice(art.construct_successes_from_tuple((7,)))
+        >>> asyncio.run(art.to_coroutine_result_tuple(a_r_tpl_1))
+        Received: 7
+        Received: 7
+        ('success', (7, 7))
+    """
+    return a.map_(rt.tap_successes_to_iterable(f))
 
 
 def tap_successes_to_tuple(

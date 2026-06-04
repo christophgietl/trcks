@@ -42,9 +42,15 @@ from trcks.fp.monads import result as r
 from trcks.fp.monads import tuple_ as t
 
 if TYPE_CHECKING:
-    from collections.abc import Callable
+    from collections.abc import Callable, Iterable
 
-    from trcks import Failure, Result, ResultTuple, SuccessTuple
+    from trcks import (
+        Failure,
+        Result,
+        ResultIterable,
+        ResultTuple,
+        SuccessTuple,
+    )
 
 __docformat__ = "google"
 
@@ -112,6 +118,27 @@ def construct_successes(value: _S) -> SuccessTuple[_S]:
         ('success', (42,))
     """
     return r.construct_success(t.construct(value))
+
+
+def construct_successes_from_iterable(it: Iterable[_S]) -> SuccessTuple[_S]:
+    """Create a [trcks.SuccessTuple][] from an [collections.abc.Iterable][].
+
+    Like [trcks.fp.monads.result_tuple.construct_successes_from_tuple][], but
+    accepts any [collections.abc.Iterable][] instead of only a [tuple][].
+
+    Args:
+        it: The [collections.abc.Iterable][] to create
+            the [trcks.SuccessTuple][] from.
+
+    Returns:
+        A new [trcks.SuccessTuple][] containing the elements of the iterable.
+
+    Example:
+        >>> from trcks.fp.monads import result_tuple as rt
+        >>> rt.construct_successes_from_iterable(range(3))
+        ('success', (0, 1, 2))
+    """
+    return construct_successes_from_tuple(tuple(it))
 
 
 def construct_successes_from_tuple(tpl: tuple[_S, ...]) -> SuccessTuple[_S]:
@@ -202,6 +229,58 @@ def map_failure_to_result(
     return map_failure_to_result_tuple(compose2((f, construct_from_result)))
 
 
+def map_failure_to_result_iterable(
+    f: Callable[[_F1], ResultIterable[_F2, _S2]],
+) -> Callable[[ResultTuple[_F1, _S1]], ResultTuple[_F2, _S1 | _S2]]:
+    """Create function that maps [trcks.Failure][] values to
+    [trcks.ResultTuple][] values via a [trcks.ResultIterable][]-returning function.
+
+    Like [trcks.fp.monads.result_tuple.map_failure_to_result_tuple][], but accepts
+    a function returning a [trcks.ResultIterable][] instead of a [trcks.ResultTuple][].
+
+    [trcks.SuccessTuple][] values are left unchanged.
+
+    Args:
+        f: Function to apply to the [trcks.Failure][] value, returning a
+            [trcks.ResultIterable][].
+
+    Returns:
+        Maps [trcks.Failure][] values to new [trcks.ResultTuple][] values
+            according to the given function and
+            leaves [trcks.SuccessTuple][] values unchanged.
+
+    Example:
+        >>> from collections.abc import Callable
+        >>> from trcks import ResultIterable, ResultTuple
+        >>> from trcks.fp.monads import result_tuple as rt
+        >>> def _recover(description: str) -> ResultIterable[str, int]:
+        ...     if description == "not found":
+        ...         return "success", range(2)
+        ...     return "failure", description
+        ...
+        >>> recover: Callable[
+        ...     [ResultTuple[str, int]], ResultTuple[str, int]
+        ... ] = rt.map_failure_to_result_iterable(_recover)
+        >>> recover(("failure", "not found"))
+        ('success', (0, 1))
+        >>> recover(("failure", "fatal"))
+        ('failure', 'fatal')
+        >>> recover(("success", (1, 2)))
+        ('success', (1, 2))
+    """
+
+    def f_wrapped(f1: _F1) -> ResultTuple[_F2, _S2]:
+        match f(f1):
+            case ("success", s2s):
+                return "success", tuple(s2s)
+            case ("failure", _) as r_it:
+                return r_it
+            case _ as r_it:  # pragma: no cover
+                return assert_never(r_it)  # type: ignore[unreachable]  # pyright: ignore[reportUnreachable]
+
+    return map_failure_to_result_tuple(f_wrapped)
+
+
 def map_failure_to_result_tuple(
     f: Callable[[_F1], ResultTuple[_F2, _S2]],
 ) -> Callable[[ResultTuple[_F1, _S1]], Result[_F2, tuple[_S1, ...] | tuple[_S2, ...]]]:
@@ -238,6 +317,49 @@ def map_failure_to_result_tuple(
         ('success', (1, 2))
     """
     return r.map_failure_to_result(f)
+
+
+def map_failure_to_iterable(
+    f: Callable[[_F1], Iterable[_S2]],
+) -> Callable[[ResultTuple[_F1, _S1]], ResultTuple[_F1, _S1 | _S2]]:
+    """Create function that maps [trcks.Failure][] values to
+    homogeneous-[tuple][]s of success elements via an
+    [collections.abc.Iterable][]-returning function.
+
+    Like [trcks.fp.monads.result_tuple.map_failure_to_tuple][], but accepts a
+    function returning any [collections.abc.Iterable][] instead of only a [tuple][].
+
+    [trcks.SuccessTuple][] values are left unchanged.
+
+    Args:
+        f: Function to apply to the [trcks.Failure][] value, returning an
+            [collections.abc.Iterable][].
+
+    Returns:
+        Maps [trcks.Failure][] values to new [trcks.SuccessTuple][] values
+            according to the given function and
+            leaves [trcks.SuccessTuple][] values unchanged.
+
+    Example:
+        >>> from collections.abc import Callable
+        >>> from trcks import ResultTuple
+        >>> from trcks.fp.monads import result_tuple as rt
+        >>> def _recover(description: str) -> range:
+        ...     return range(int(description))
+        ...
+        >>> recover: Callable[
+        ...     [ResultTuple[str, int]], ResultTuple[str, int]
+        ... ] = rt.map_failure_to_iterable(_recover)
+        >>> recover(("failure", "3"))
+        ('success', (0, 1, 2))
+        >>> recover(("success", (1, 2)))
+        ('success', (1, 2))
+    """
+
+    def f_wrapped(f1: _F1) -> tuple[_S2, ...]:
+        return tuple(f(f1))
+
+    return map_failure_to_tuple(f_wrapped)
 
 
 def map_failure_to_tuple(
@@ -363,6 +485,57 @@ def map_successes_to_result(
     return map_successes_to_result_tuple(compose2((f, construct_from_result)))
 
 
+def map_successes_to_result_iterable(
+    f: Callable[[_S1], ResultIterable[_F2, _S2]],
+) -> Callable[[ResultTuple[_F1, _S1]], ResultTuple[_F1 | _F2, _S2]]:
+    """Map each success element to a [trcks.ResultIterable][] and flatten.
+
+    Like [trcks.fp.monads.result_tuple.map_successes_to_result_tuple][], but accepts
+    a function returning a [trcks.ResultIterable][] instead of a [trcks.ResultTuple][].
+
+    [trcks.Failure][] values are left unchanged.
+    Short-circuits on the first failure returned by `f`.
+
+    Args:
+        f: Function to apply to each element of the [trcks.SuccessTuple][],
+            returning a [trcks.ResultIterable][].
+
+    Returns:
+        Function that flat-maps [trcks.SuccessTuple][] values and
+            short-circuits on the first [trcks.Failure][] returned by `f`.
+
+    Example:
+        >>> from collections.abc import Callable
+        >>> from trcks import ResultIterable, ResultTuple
+        >>> from trcks.fp.monads import result_tuple as rt
+        >>> def _expand_if_positive(n: int) -> ResultIterable[str, int]:
+        ...     if n <= 0:
+        ...         return "failure", "negative"
+        ...     return "success", range(n)
+        ...
+        >>> expand_if_positive: Callable[
+        ...     [ResultTuple[str, int]], ResultTuple[str, int]
+        ... ] = rt.map_successes_to_result_iterable(_expand_if_positive)
+        >>> expand_if_positive(("success", (1, 3)))
+        ('success', (0, 0, 1, 2))
+        >>> expand_if_positive(("success", (1, -1, 3)))
+        ('failure', 'negative')
+        >>> expand_if_positive(("failure", "oops"))
+        ('failure', 'oops')
+    """
+
+    def f_wrapped(s1: _S1) -> ResultTuple[_F2, _S2]:
+        match f(s1):
+            case ("success", s2s):
+                return "success", tuple(s2s)
+            case ("failure", _) as r_it:
+                return r_it
+            case _ as r_it:  # pragma: no cover
+                return assert_never(r_it)  # type: ignore[unreachable]  # pyright: ignore[reportUnreachable]
+
+    return map_successes_to_result_tuple(f_wrapped)
+
+
 def map_successes_to_result_tuple(
     f: Callable[[_S1], ResultTuple[_F2, _S2]],
 ) -> Callable[[ResultTuple[_F1, _S1]], ResultTuple[_F1 | _F2, _S2]]:
@@ -422,6 +595,47 @@ def map_successes_to_result_tuple(
                 return assert_never(r_tpl)  # type: ignore[unreachable]  # pyright: ignore[reportUnreachable]
 
     return mapped_f
+
+
+def map_successes_to_iterable(
+    f: Callable[[_S1], Iterable[_S2]],
+) -> Callable[[ResultTuple[_F1, _S1]], ResultTuple[_F1, _S2]]:
+    """Map each success element to an [collections.abc.Iterable][] and flatten.
+
+    Like [trcks.fp.monads.result_tuple.map_successes_to_tuple][], but accepts a
+    function returning any [collections.abc.Iterable][] instead of only a [tuple][].
+
+    [trcks.Failure][] values are left unchanged.
+
+    Args:
+        f: Function to apply to each element of the [trcks.SuccessTuple][],
+            returning an [collections.abc.Iterable][].
+
+    Returns:
+        Maps each success element to an [collections.abc.Iterable][] and flattens
+            the results into a new [trcks.SuccessTuple][].
+            [trcks.Failure][] values are left unchanged.
+
+    Example:
+        >>> from collections.abc import Callable
+        >>> from trcks import ResultTuple
+        >>> from trcks.fp.monads import result_tuple as rt
+        >>> def range_up_to(n: int) -> range:
+        ...     return range(n)
+        ...
+        >>> expand: Callable[
+        ...     [ResultTuple[str, int]], ResultTuple[str, int]
+        ... ] = rt.map_successes_to_iterable(range_up_to)
+        >>> expand(("success", (1, 3, 2)))
+        ('success', (0, 0, 1, 2, 0, 1))
+        >>> expand(("failure", "oops"))
+        ('failure', 'oops')
+    """
+
+    def f_wrapped(s1: _S1) -> tuple[_S2, ...]:
+        return tuple(f(s1))
+
+    return map_successes_to_tuple(f_wrapped)
 
 
 def map_successes_to_tuple(
@@ -535,6 +749,66 @@ def tap_failure_to_result(
     return tap_failure_to_result_tuple(composed_f)
 
 
+def tap_failure_to_result_iterable(
+    f: Callable[[_F1], ResultIterable[_F2, object]],
+) -> Callable[[ResultTuple[_F1, _S1]], ResultTuple[_F1 | _F2, _S1]]:
+    """Create function that applies a [trcks.ResultIterable][]-returning side effect
+    to [trcks.Failure][] values.
+
+    Like [trcks.fp.monads.result_tuple.tap_failure_to_result_tuple][], but accepts
+    a side effect returning a [trcks.ResultIterable][] instead of a
+    [trcks.ResultTuple][].
+
+    [trcks.SuccessTuple][] values are left unchanged.
+
+    Args:
+        f: Side effect to apply to the [trcks.Failure][] value.
+
+    Returns:
+        Passes on [trcks.SuccessTuple][] values without side effects.
+            Applies the given side effect to [trcks.Failure][] values.
+            If the side effect returns a [trcks.Failure][], it is returned.
+            If the side effect returns a [trcks.SuccessIterable][],
+            the original failure is repeated once per element.
+
+    Example:
+        >>> from collections.abc import Callable
+        >>> from trcks import ResultIterable, ResultTuple
+        >>> from trcks.fp.monads import result_tuple as rt
+        >>> def _validate_retryable(e: str) -> ResultIterable[str, None]:
+        ...     if e == "retryable":
+        ...         return "success", [None, None]
+        ...     return "failure", e
+        ...
+        >>> validate_retryable: Callable[
+        ...     [ResultTuple[str, int]], ResultTuple[str, int]
+        ... ] = rt.tap_failure_to_result_iterable(_validate_retryable)
+        >>> validate_retryable(("failure", "retryable"))
+        ('success', ('retryable', 'retryable'))
+        >>> validate_retryable(("failure", "fatal"))
+        ('failure', 'fatal')
+        >>> validate_retryable(("success", (1, 2)))
+        ('success', (1, 2))
+    """
+
+    def mapped_f(r_tpl: ResultTuple[_F1, _S1]) -> ResultTuple[_F1 | _F2, _S1]:
+        match r_tpl:
+            case ("failure", f1):
+                match f(f1):
+                    case ("success", objs):
+                        return "success", tuple(f1 for _ in objs)
+                    case ("failure", _) as r_it:
+                        return r_it
+                    case _ as r_it:  # pragma: no cover
+                        return assert_never(r_it)  # type: ignore[unreachable]  # pyright: ignore[reportUnreachable]
+            case ("success", _):
+                return r_tpl
+            case _:  # pragma: no cover
+                return assert_never(r_tpl)  # type: ignore[unreachable]  # pyright: ignore[reportUnreachable]
+
+    return mapped_f
+
+
 def tap_failure_to_result_tuple(
     f: Callable[[_F1], ResultTuple[object, _S2]],
 ) -> Callable[[ResultTuple[_F1, _S1]], Result[_F1, tuple[_S1, ...] | tuple[_S2, ...]]]:
@@ -573,6 +847,53 @@ def tap_failure_to_result_tuple(
         ('success', (1, 2))
     """
     return r.tap_failure_to_result(f)
+
+
+def tap_failure_to_iterable(
+    f: Callable[[_F1], Iterable[object]],
+) -> Callable[[ResultTuple[_F1, _S1]], ResultTuple[_F1, _S1]]:
+    """Create function that applies an [collections.abc.Iterable][]-returning side
+    effect to [trcks.Failure][] values.
+
+    Like [trcks.fp.monads.result_tuple.tap_failure_to_tuple][], but accepts a
+    side effect returning any [collections.abc.Iterable][] instead of only a [tuple][].
+
+    [trcks.SuccessTuple][] values are left unchanged.
+
+    Args:
+        f: Side effect to apply to the [trcks.Failure][] value.
+
+    Returns:
+        Applies the given side effect to [trcks.Failure][] values and
+            repeats the failure as many times as the side effect yields elements.
+            Leaves [trcks.SuccessTuple][] values unchanged.
+
+    Example:
+        >>> from collections.abc import Callable
+        >>> from trcks import ResultTuple, SuccessTuple
+        >>> from trcks.fp.monads import result_tuple as rt
+        >>> def _log_and_alert(description: str) -> list[None]:
+        ...     return [
+        ...         print(f"Error logged: {description}"),
+        ...         print(f"Alert sent: {description}"),
+        ...     ]
+        ...
+        >>> log_and_alert: Callable[
+        ...     [ResultTuple[str, int]],
+        ...     SuccessTuple[str] | SuccessTuple[int],
+        ... ] = rt.tap_failure_to_iterable(_log_and_alert)
+        >>> log_and_alert(("failure", "critical"))
+        Error logged: critical
+        Alert sent: critical
+        ('success', ('critical', 'critical'))
+        >>> log_and_alert(("success", (1, 2)))
+        ('success', (1, 2))
+    """
+
+    def f_wrapped(f1: _F1) -> tuple[object, ...]:
+        return tuple(f(f1))
+
+    return tap_failure_to_tuple(f_wrapped)
 
 
 def tap_failure_to_tuple(
@@ -705,6 +1026,61 @@ def tap_successes_to_result(
     return tap_successes_to_result_tuple(composed_f)
 
 
+def tap_successes_to_result_iterable(
+    f: Callable[[_S1], ResultIterable[_F2, object]],
+) -> Callable[[ResultTuple[_F1, _S1]], ResultTuple[_F1 | _F2, _S1]]:
+    """Create function that applies a [trcks.ResultIterable][]-returning side effect
+    to each element of a [trcks.SuccessTuple][].
+
+    Like [trcks.fp.monads.result_tuple.tap_successes_to_result_tuple][], but accepts
+    a side effect returning a [trcks.ResultIterable][] instead of a
+    [trcks.ResultTuple][].
+
+    [trcks.Failure][] values are left unchanged.
+
+    Args:
+        f: Side effect to apply to each element of the [trcks.SuccessTuple][].
+
+    Returns:
+        Passes on [trcks.Failure][] values without side effects.
+            Applies the given side effect to each element of the
+            [trcks.SuccessTuple][].
+            If the given side effect returns a [trcks.Failure][],
+            *this* [trcks.Failure][] is returned.
+            If the given side effect returns a [trcks.SuccessIterable][],
+            *the original* [trcks.SuccessTuple][] element is repeated once
+            per element in the side effect output.
+
+    Example:
+        >>> from collections.abc import Callable
+        >>> from trcks import ResultIterable, ResultTuple
+        >>> from trcks.fp.monads import result_tuple as rt
+        >>> def _validate_positive_twice(n: int) -> ResultIterable[str, None]:
+        ...     if n > 0:
+        ...         return "success", [None, None]
+        ...     return "failure", "not positive"
+        ...
+        >>> validate_positive_twice: Callable[
+        ...     [ResultTuple[str, int]], ResultTuple[str, int]
+        ... ] = rt.tap_successes_to_result_iterable(_validate_positive_twice)
+        >>> validate_positive_twice(("success", (7,)))
+        ('success', (7, 7))
+        >>> validate_positive_twice(("success", (1, -1)))
+        ('failure', 'not positive')
+    """
+
+    def f_wrapped(s1: _S1) -> ResultTuple[_F2, object]:
+        match f(s1):
+            case ("success", objs):
+                return "success", tuple(objs)
+            case ("failure", _) as r_it:
+                return r_it
+            case _ as r_it:  # pragma: no cover
+                return assert_never(r_it)  # type: ignore[unreachable]  # pyright: ignore[reportUnreachable]
+
+    return tap_successes_to_result_tuple(f_wrapped)
+
+
 def tap_successes_to_result_tuple(
     f: Callable[[_S1], ResultTuple[_F2, object]],
 ) -> Callable[[ResultTuple[_F1, _S1]], ResultTuple[_F1 | _F2, _S1]]:
@@ -754,6 +1130,49 @@ def tap_successes_to_result_tuple(
                 return assert_never(r_tpl)  # type: ignore[unreachable]  # pyright: ignore[reportUnreachable]
 
     return map_successes_to_result_tuple(tapped_f)
+
+
+def tap_successes_to_iterable(
+    f: Callable[[_S1], Iterable[object]],
+) -> Callable[[ResultTuple[_F1, _S1]], ResultTuple[_F1, _S1]]:
+    """Create function that applies an [collections.abc.Iterable][]-returning side
+    effect to each element of a [trcks.SuccessTuple][].
+
+    Like [trcks.fp.monads.result_tuple.tap_successes_to_tuple][], but accepts a
+    side effect returning any [collections.abc.Iterable][] instead of only a [tuple][].
+
+    [trcks.Failure][] values are left unchanged.
+
+    Args:
+        f: Side effect to apply to each element of the [trcks.SuccessTuple][].
+
+    Returns:
+        Passes on [trcks.Failure][] values without side effects.
+            Applies the given side effect to each element of the
+            [trcks.SuccessTuple][]
+            and repeats each original element once per element in the iterable
+            returned by the side effect.
+
+    Example:
+        >>> from collections.abc import Callable
+        >>> from trcks import ResultTuple
+        >>> from trcks.fp.monads import result_tuple as rt
+        >>> def _log_twice(n: int) -> list[None]:
+        ...     return [print(f"Received: {n}"), print(f"Received: {n}")]
+        ...
+        >>> log_twice: Callable[
+        ...     [ResultTuple[str, int]], ResultTuple[str, int]
+        ... ] = rt.tap_successes_to_iterable(_log_twice)
+        >>> log_twice(("success", (7,)))
+        Received: 7
+        Received: 7
+        ('success', (7, 7))
+    """
+
+    def f_wrapped(s1: _S1) -> tuple[object, ...]:
+        return tuple(f(s1))
+
+    return tap_successes_to_tuple(f_wrapped)
 
 
 def tap_successes_to_tuple(
