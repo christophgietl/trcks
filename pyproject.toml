@@ -136,11 +136,21 @@ layers = [
 ]
 
 [[tool.importlinter.contracts]]
-name = "Independence within trcks.fp.monads.*"
+name = "Independence of simple monads"
 type = "independence"
 modules = [
     "trcks.fp.monads.awaitable",
     "trcks.fp.monads.result",
+    "trcks.fp.monads.tuple_",
+]
+
+[[tool.importlinter.contracts]]
+name = "Independence of dual monads"
+type = "independence"
+modules = [
+    "trcks.fp.monads.awaitable_result",
+    "trcks.fp.monads.awaitable_tuple",
+    "trcks.fp.monads.result_tuple",
 ]
 
 [[tool.importlinter.contracts]]
