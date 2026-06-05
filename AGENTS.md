@@ -38,11 +38,6 @@
   `trcks.AwaitableResult`, `trcks.AwaitableTuple`, `trcks.ResultTuple` and
   `trcks.AwaitableResultTuple` values.
 
-### Providing typing features to all supported Python versions in `trcks._typing`
-
-- `trcks._typing` provides recent features from Python's `typing` library.
-- `trcks._typing` can be used by all supported Python versions.
-
 ## Code style
 
 - Sort functions alphabetically within each module.
