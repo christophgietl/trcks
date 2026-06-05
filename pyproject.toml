@@ -88,6 +88,11 @@ include_external_packages = true
 root_package = "trcks"
 
 [[tool.importlinter.contracts]]
+name = "No dependency cycles between siblings"
+type = "acyclic_siblings"
+ancestors = ["trcks"]
+
+[[tool.importlinter.contracts]]
 name = "Layers within trcks.*"
 type = "layers"
 containers = [
