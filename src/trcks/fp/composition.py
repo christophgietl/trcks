@@ -401,6 +401,11 @@ def pipe(p: Pipeline[_T0, _T1, _T2, _T3, _T4, _T5, _T6, _OUT]) -> _OUT:
         >>> pipe(("Hello, world!", len, lambda n: f"Length: {n}"))
         'Length: 13'
     """
-    if len(p) == 1:
-        return p[0]
-    return compose(p[1:])(p[0])
+    match p:
+        case (value,):
+            return value
+        case (value, *_):
+            composable = p[1:]
+            return compose(composable)(value)
+        case _:  # pragma: no cover
+            return assert_never(p)  # type: ignore[unreachable]  # pyright: ignore[reportUnreachable]
