@@ -108,8 +108,8 @@ uv build
 
 ## Testing strategy
 
-- Every function in `src/trcks/` needs a docstring with ≥1 example
-  (run as doctest by `pytest`);
+- Every function in `src/trcks/` (except for dunder methods) needs
+  a docstring with ≥1 example (run as doctest by `pytest`);
   reuse example functions from existing doctests.
 - `pytest` also collects "pycon" blocks in `**/*.md` and `tests/trcks/**/test_*.py`
   (mirroring `src/trcks/`).

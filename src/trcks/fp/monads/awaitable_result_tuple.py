@@ -408,7 +408,9 @@ def map_failure_to_awaitable_result_tuple(
             case ("success", _):
                 return rslt_tpl
             case _:  # pragma: no cover
-                raise TrcksTypeError(rslt_tpl, "ResultTuple")  # pyright: ignore[reportUnreachable]
+                raise TrcksTypeError.construct_from_offending_object(  # pyright: ignore[reportUnreachable]
+                    rslt_tpl, "ResultTuple"
+                )
 
     return a.map_to_awaitable(partially_mapped_f)
 
@@ -739,10 +741,14 @@ def map_successes_to_awaitable_result_tuple(
                         case ("success", s2_batch):
                             s2s.extend(s2_batch)
                         case _ as inner:  # pragma: no cover
-                            raise TrcksTypeError(inner, "ResultTuple")  # pyright: ignore[reportUnreachable]
+                            raise TrcksTypeError.construct_from_offending_object(  # pyright: ignore[reportUnreachable]
+                                inner, "ResultTuple"
+                            )
                 return "success", tuple(s2s)
             case _:  # pragma: no cover
-                raise TrcksTypeError(rslt_tpl, "ResultTuple")  # pyright: ignore[reportUnreachable]
+                raise TrcksTypeError.construct_from_offending_object(  # pyright: ignore[reportUnreachable]
+                    rslt_tpl, "ResultTuple"
+                )
 
     return a.map_to_awaitable(partially_mapped_f)
 
@@ -992,7 +998,9 @@ def tap_failure_to_awaitable_result(
             case ("success", s2):
                 return rt.construct_successes(s2)
             case _ as rslt:  # pragma: no cover
-                raise TrcksTypeError(rslt, "ResultTuple")  # pyright: ignore[reportUnreachable]
+                raise TrcksTypeError.construct_from_offending_object(  # pyright: ignore[reportUnreachable]
+                    rslt, "ResultTuple"
+                )
 
     return map_failure_to_awaitable_result_tuple(bypassed_f)
 
@@ -1049,7 +1057,9 @@ def tap_failure_to_awaitable_result_tuple(
             case ("success", _) as rslt_tpl:
                 return rslt_tpl
             case _ as rslt_tpl:  # pragma: no cover
-                raise TrcksTypeError(rslt_tpl, "ResultTuple")  # pyright: ignore[reportUnreachable]
+                raise TrcksTypeError.construct_from_offending_object(  # pyright: ignore[reportUnreachable]
+                    rslt_tpl, "ResultTuple"
+                )
 
     return map_failure_to_awaitable_result_tuple(bypassed_f)
 
@@ -1381,7 +1391,9 @@ def tap_successes_to_awaitable_result_tuple(
             case ("success", objs):
                 return "success", tuple(s1 for _ in objs)
             case _ as rslt_tpl:  # pragma: no cover
-                raise TrcksTypeError(rslt_tpl, "ResultTuple")  # pyright: ignore[reportUnreachable]
+                raise TrcksTypeError.construct_from_offending_object(  # pyright: ignore[reportUnreachable]
+                    rslt_tpl, "ResultTuple"
+                )
 
     return map_successes_to_awaitable_result_tuple(tapped_f)
 
