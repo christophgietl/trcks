@@ -36,7 +36,8 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from trcks._typing import TypeVar, assert_never
+from trcks._typing import TypeVar
+from trcks.exceptions import TrcksTypeError
 from trcks.fp.composition import compose2
 from trcks.fp.monads import result as r
 from trcks.fp.monads import tuple_ as t
@@ -285,7 +286,7 @@ def map_failure_to_tuple(
             case ("success", _):
                 return r_tpl
             case _:  # pragma: no cover
-                return assert_never(r_tpl)  # type: ignore[unreachable]  # pyright: ignore[reportUnreachable]
+                raise TrcksTypeError(r_tpl, "ResultTuple")  # pyright: ignore[reportUnreachable]
 
     return mapped_f
 
@@ -409,7 +410,7 @@ def map_successes_to_result_tuple(
                 case ("success", s2_batch):
                     s2s.extend(s2_batch)
                 case _ as r_tpl:  # pragma: no cover
-                    return assert_never(r_tpl)  # type: ignore[unreachable]  # pyright: ignore[reportUnreachable]
+                    raise TrcksTypeError(r_tpl, "ResultTuple")  # pyright: ignore[reportUnreachable]
         return "success", tuple(s2s)
 
     def mapped_f(r_tpl: ResultTuple[_F1, _S1]) -> ResultTuple[_F1 | _F2, _S2]:
@@ -419,7 +420,7 @@ def map_successes_to_result_tuple(
             case ("success", s1s):
                 return partially_mapped_f(s1s)
             case _:  # pragma: no cover
-                return assert_never(r_tpl)  # type: ignore[unreachable]  # pyright: ignore[reportUnreachable]
+                raise TrcksTypeError(r_tpl, "ResultTuple")  # pyright: ignore[reportUnreachable]
 
     return mapped_f
 
@@ -751,7 +752,7 @@ def tap_successes_to_result_tuple(
             case ("success", s2s):
                 return "success", tuple(s1 for _ in s2s)
             case _ as r_tpl:  # pragma: no cover
-                return assert_never(r_tpl)  # type: ignore[unreachable]  # pyright: ignore[reportUnreachable]
+                raise TrcksTypeError(r_tpl, "ResultTuple")  # pyright: ignore[reportUnreachable]
 
     return map_successes_to_result_tuple(tapped_f)
 

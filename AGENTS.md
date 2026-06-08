@@ -19,6 +19,11 @@
 - Combinations with `collections.abc.Awaitable` and `tuple` for different use cases
   (e.g. `trcks.AwaitableResultTuple[FailureType, SuccessType]`).
 
+### Exception types defined in `trcks.exceptions`
+
+- The module `trcks.exceptions` provides exception classes for `trcks`
+  (e.g. `trcks.exceptions.TrcksTypeError`).
+
 ### Wrapper classes defined in `trcks.oop`
 
 - The module `trcks.oop` provides wrapper classes for OOP-style method chaining

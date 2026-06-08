@@ -20,6 +20,8 @@ nav:
   - frequently-asked-questions.md
   - Reference:
       - reference/trcks.md
+      - reference/trcks.exceptions.md
+      - reference/trcks.exceptions.TrcksTypeError.md
       - reference/trcks.fp.md
       - reference/trcks.fp.composition.md
       - reference/trcks.fp.monads.md

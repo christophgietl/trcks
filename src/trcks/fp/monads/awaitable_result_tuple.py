@@ -43,7 +43,8 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from trcks._typing import TypeVar, assert_never
+from trcks._typing import TypeVar
+from trcks.exceptions import TrcksTypeError
 from trcks.fp.composition import compose2
 from trcks.fp.monads import awaitable as a
 from trcks.fp.monads import result as r
@@ -407,7 +408,7 @@ def map_failure_to_awaitable_result_tuple(
             case ("success", _):
                 return rslt_tpl
             case _:  # pragma: no cover
-                return assert_never(rslt_tpl)  # type: ignore[unreachable]  # pyright: ignore[reportUnreachable]
+                raise TrcksTypeError(rslt_tpl, "ResultTuple")  # pyright: ignore[reportUnreachable]
 
     return a.map_to_awaitable(partially_mapped_f)
 
@@ -738,10 +739,10 @@ def map_successes_to_awaitable_result_tuple(
                         case ("success", s2_batch):
                             s2s.extend(s2_batch)
                         case _ as inner:  # pragma: no cover
-                            return assert_never(inner)  # type: ignore[unreachable]  # pyright: ignore[reportUnreachable]
+                            raise TrcksTypeError(inner, "ResultTuple")  # pyright: ignore[reportUnreachable]
                 return "success", tuple(s2s)
             case _:  # pragma: no cover
-                return assert_never(rslt_tpl)  # type: ignore[unreachable]  # pyright: ignore[reportUnreachable]
+                raise TrcksTypeError(rslt_tpl, "ResultTuple")  # pyright: ignore[reportUnreachable]
 
     return a.map_to_awaitable(partially_mapped_f)
 
@@ -991,7 +992,7 @@ def tap_failure_to_awaitable_result(
             case ("success", s2):
                 return rt.construct_successes(s2)
             case _ as rslt:  # pragma: no cover
-                return assert_never(rslt)  # type: ignore[unreachable]  # pyright: ignore[reportUnreachable]
+                raise TrcksTypeError(rslt, "ResultTuple")  # pyright: ignore[reportUnreachable]
 
     return map_failure_to_awaitable_result_tuple(bypassed_f)
 
@@ -1048,7 +1049,7 @@ def tap_failure_to_awaitable_result_tuple(
             case ("success", _) as rslt_tpl:
                 return rslt_tpl
             case _ as rslt_tpl:  # pragma: no cover
-                return assert_never(rslt_tpl)  # type: ignore[unreachable]  # pyright: ignore[reportUnreachable]
+                raise TrcksTypeError(rslt_tpl, "ResultTuple")  # pyright: ignore[reportUnreachable]
 
     return map_failure_to_awaitable_result_tuple(bypassed_f)
 
@@ -1380,7 +1381,7 @@ def tap_successes_to_awaitable_result_tuple(
             case ("success", objs):
                 return "success", tuple(s1 for _ in objs)
             case _ as rslt_tpl:  # pragma: no cover
-                return assert_never(rslt_tpl)  # type: ignore[unreachable]  # pyright: ignore[reportUnreachable]
+                raise TrcksTypeError(rslt_tpl, "ResultTuple")  # pyright: ignore[reportUnreachable]
 
     return map_successes_to_awaitable_result_tuple(tapped_f)
 
