@@ -17,14 +17,13 @@ else:  # pragma: no cover
     from typing_extensions import override
 
 if sys.version_info >= (3, 11):  # pragma: no cover
-    from typing import Never, assert_never
+    from typing import Never
 else:  # pragma: no cover
-    from typing_extensions import Never, assert_never
+    from typing_extensions import Never
 
 __all__ = [
     "Never",
     "TypeVar",
-    "assert_never",
     "override",
 ]
 __docformat__ = "google"

@@ -102,6 +102,7 @@ exhaustive = true
 layers = [
     "oop",
     "fp",
+    "exceptions",
     "_typing",
 ]
 
