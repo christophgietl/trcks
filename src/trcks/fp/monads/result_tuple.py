@@ -286,7 +286,9 @@ def map_failure_to_tuple(
             case ("success", _):
                 return r_tpl
             case _:  # pragma: no cover
-                raise TrcksTypeError(r_tpl, "ResultTuple")  # pyright: ignore[reportUnreachable]
+                raise TrcksTypeError.construct_from_offending_object(  # pyright: ignore[reportUnreachable]
+                    r_tpl, "ResultTuple"
+                )
 
     return mapped_f
 
@@ -410,7 +412,9 @@ def map_successes_to_result_tuple(
                 case ("success", s2_batch):
                     s2s.extend(s2_batch)
                 case _ as r_tpl:  # pragma: no cover
-                    raise TrcksTypeError(r_tpl, "ResultTuple")  # pyright: ignore[reportUnreachable]
+                    raise TrcksTypeError.construct_from_offending_object(  # pyright: ignore[reportUnreachable]
+                        r_tpl, "ResultTuple"
+                    )
         return "success", tuple(s2s)
 
     def mapped_f(r_tpl: ResultTuple[_F1, _S1]) -> ResultTuple[_F1 | _F2, _S2]:
@@ -420,7 +424,9 @@ def map_successes_to_result_tuple(
             case ("success", s1s):
                 return partially_mapped_f(s1s)
             case _:  # pragma: no cover
-                raise TrcksTypeError(r_tpl, "ResultTuple")  # pyright: ignore[reportUnreachable]
+                raise TrcksTypeError.construct_from_offending_object(  # pyright: ignore[reportUnreachable]
+                    r_tpl, "ResultTuple"
+                )
 
     return mapped_f
 
@@ -752,7 +758,9 @@ def tap_successes_to_result_tuple(
             case ("success", s2s):
                 return "success", tuple(s1 for _ in s2s)
             case _ as r_tpl:  # pragma: no cover
-                raise TrcksTypeError(r_tpl, "ResultTuple")  # pyright: ignore[reportUnreachable]
+                raise TrcksTypeError.construct_from_offending_object(  # pyright: ignore[reportUnreachable]
+                    r_tpl, "ResultTuple"
+                )
 
     return map_successes_to_result_tuple(tapped_f)
 

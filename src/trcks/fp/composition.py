@@ -383,7 +383,7 @@ def compose(  # noqa: PLR0911
         case (_, _, _, _, _, _, _):
             return compose7(c)
         case _:  # pragma: no cover
-            raise TrcksTypeError(c, "Composable")  # pyright: ignore[reportUnreachable]
+            raise TrcksTypeError.construct_from_offending_object(c, "Composable")  # pyright: ignore[reportUnreachable]
 
 
 def pipe(p: Pipeline[_T0, _T1, _T2, _T3, _T4, _T5, _T6, _OUT]) -> _OUT:
@@ -409,4 +409,4 @@ def pipe(p: Pipeline[_T0, _T1, _T2, _T3, _T4, _T5, _T6, _OUT]) -> _OUT:
             composable = p[1:]
             return compose(composable)(value)
         case _:  # pragma: no cover
-            raise TrcksTypeError(p, "Pipeline")  # pyright: ignore[reportUnreachable]
+            raise TrcksTypeError.construct_from_offending_object(p, "Pipeline")  # pyright: ignore[reportUnreachable]

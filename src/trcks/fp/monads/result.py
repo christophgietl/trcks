@@ -191,7 +191,7 @@ def map_failure_to_result(
             case ("success", _):
                 return rslt
             case _:  # pragma: no cover
-                raise TrcksTypeError(rslt, "Result")  # pyright: ignore[reportUnreachable]
+                raise TrcksTypeError.construct_from_offending_object(rslt, "Result")  # pyright: ignore[reportUnreachable]
 
     return mapped_f
 
@@ -266,7 +266,7 @@ def map_success_to_result(
             case ("success", value):
                 return f(value)
             case _:  # pragma: no cover
-                raise TrcksTypeError(rslt, "Result")  # pyright: ignore[reportUnreachable]
+                raise TrcksTypeError.construct_from_offending_object(rslt, "Result")  # pyright: ignore[reportUnreachable]
 
     return mapped_f
 
@@ -316,7 +316,7 @@ def tap_failure_to_result(
             case ("success", _) as rslt:
                 return rslt
             case _ as rslt:  # pragma: no cover
-                raise TrcksTypeError(rslt, "Result")  # pyright: ignore[reportUnreachable]
+                raise TrcksTypeError.construct_from_offending_object(rslt, "Result")  # pyright: ignore[reportUnreachable]
 
     return map_failure_to_result(bypassed_f)
 
@@ -366,6 +366,6 @@ def tap_success_to_result(
             case ("success", _):
                 return construct_success(value)
             case _ as rslt:  # pragma: no cover
-                raise TrcksTypeError(rslt, "Result")  # pyright: ignore[reportUnreachable]
+                raise TrcksTypeError.construct_from_offending_object(rslt, "Result")  # pyright: ignore[reportUnreachable]
 
     return map_success_to_result(bypassed_f)
