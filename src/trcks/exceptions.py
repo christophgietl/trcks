@@ -34,10 +34,6 @@ class TrcksTypeError(TypeError):
         "_offending_object_length",
     )
 
-    _offending_object_class: type
-    _offending_object_length: int | None
-    _expected_type_name: str
-
     def __init__(
         self,
         offending_object_class: type,
@@ -51,9 +47,9 @@ class TrcksTypeError(TypeError):
             offending_object_length: Length of the object that caused the error.
             expected_type_name: Name of the expected type.
         """
-        self._offending_object_class = offending_object_class
-        self._offending_object_length = offending_object_length
-        self._expected_type_name = expected_type_name
+        self._offending_object_class: type = offending_object_class
+        self._offending_object_length: int | None = offending_object_length
+        self._expected_type_name: str = expected_type_name
 
         prefix = f"object of type '{self._offending_object_class.__name__}' "
         if self._offending_object_length is None:
