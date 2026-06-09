@@ -120,8 +120,6 @@ class _Wrapper(Generic[_T_co]):
 
     __slots__ = ("_core",)
 
-    _core: _T_co
-
     def __init__(self, core: _T_co) -> None:
         """Construct wrapper.
 
@@ -129,7 +127,7 @@ class _Wrapper(Generic[_T_co]):
             core: The value to be wrapped.
         """
         super().__init__()
-        self._core = core
+        self._core: _T_co = core
 
     @override
     def __repr__(self) -> str:
@@ -138,7 +136,7 @@ class _Wrapper(Generic[_T_co]):
 
     @property
     def core(self) -> _T_co:
-        """The wrapped object."""
+        """The wrapped value."""
         return self._core
 
 
