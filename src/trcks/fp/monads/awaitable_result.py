@@ -23,10 +23,10 @@ Example:
     ...     print(f"Wrote '{output}' to disk.")
     ...
     >>> async def main() -> Result[str, float]:
-    ...     awaitable_result = read_from_disk()
+    ...     a_rslt = read_from_disk()
     ...     return await pipe(
     ...         (
-    ...             awaitable_result,
+    ...             a_rslt,
     ...             ar.map_success_to_result(get_square_root),
     ...             ar.tap_success_to_awaitable(write_to_disk),
     ...         )

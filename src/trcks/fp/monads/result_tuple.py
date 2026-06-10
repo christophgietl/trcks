@@ -409,8 +409,8 @@ def map_successes_to_result_tuple(
             match f(s1):
                 case ("failure", _) as r_tpl:
                     return r_tpl
-                case ("success", s2_batch):
-                    s2s.extend(s2_batch)  # pyrefly: ignore[bad-argument-type]
+                case ("success", additional_s2s):
+                    s2s.extend(additional_s2s)  # pyrefly: ignore[bad-argument-type]
                 case _ as r_tpl:  # pragma: no cover
                     raise TrcksTypeError.construct_from_offending_object(  # pyright: ignore[reportUnreachable]
                         r_tpl, "ResultTuple"

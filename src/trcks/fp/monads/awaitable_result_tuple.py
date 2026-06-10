@@ -400,16 +400,16 @@ def map_failure_to_awaitable_result_tuple(
     """
 
     async def partially_mapped_f(
-        rslt_tpl: ResultTuple[_F1, _S1],
+        r_tpl: ResultTuple[_F1, _S1],
     ) -> ResultTuple[_F2, _S1 | _S2]:
-        match rslt_tpl:
+        match r_tpl:
             case ("failure", value):
                 return await f(value)  # pyrefly: ignore[bad-argument-type]
             case ("success", _):
-                return rslt_tpl
+                return r_tpl
             case _:  # pragma: no cover
                 raise TrcksTypeError.construct_from_offending_object(  # pyright: ignore[reportUnreachable]
-                    rslt_tpl, "ResultTuple"
+                    r_tpl, "ResultTuple"
                 )
 
     return a.map_to_awaitable(partially_mapped_f)
@@ -727,27 +727,27 @@ def map_successes_to_awaitable_result_tuple(
     """
 
     async def partially_mapped_f(
-        rslt_tpl: ResultTuple[_F1, _S1],
+        r_tpl: ResultTuple[_F1, _S1],
     ) -> ResultTuple[_F1 | _F2, _S2]:
-        match rslt_tpl:
+        match r_tpl:
             case ("failure", _):
-                return rslt_tpl
+                return r_tpl
             case ("success", s1s):
                 s2s: list[_S2] = []
                 for s1 in s1s:  # pyrefly: ignore[not-iterable]
                     match await f(s1):
-                        case ("failure", _) as inner:
-                            return inner
-                        case ("success", s2_batch):
-                            s2s.extend(s2_batch)  # pyrefly: ignore[bad-argument-type]
-                        case _ as inner:  # pragma: no cover
+                        case ("failure", _) as output_r_tpl:
+                            return output_r_tpl
+                        case ("success", additional_s2s):
+                            s2s.extend(additional_s2s)  # pyrefly: ignore[bad-argument-type]
+                        case _ as output_r_tpl:  # pragma: no cover
                             raise TrcksTypeError.construct_from_offending_object(  # pyright: ignore[reportUnreachable]
-                                inner, "ResultTuple"
+                                output_r_tpl, "ResultTuple"
                             )
                 return "success", tuple(s2s)
             case _:  # pragma: no cover
                 raise TrcksTypeError.construct_from_offending_object(  # pyright: ignore[reportUnreachable]
-                    rslt_tpl, "ResultTuple"
+                    r_tpl, "ResultTuple"
                 )
 
     return a.map_to_awaitable(partially_mapped_f)
@@ -1054,11 +1054,11 @@ def tap_failure_to_awaitable_result_tuple(
         match await f(value):
             case ("failure", _):
                 return r.construct_failure(value)
-            case ("success", _) as rslt_tpl:
-                return rslt_tpl
-            case _ as rslt_tpl:  # pragma: no cover
+            case ("success", _) as r_tpl:
+                return r_tpl
+            case _ as r_tpl:  # pragma: no cover
                 raise TrcksTypeError.construct_from_offending_object(  # pyright: ignore[reportUnreachable]
-                    rslt_tpl, "ResultTuple"
+                    r_tpl, "ResultTuple"
                 )
 
     return map_failure_to_awaitable_result_tuple(bypassed_f)
@@ -1386,13 +1386,13 @@ def tap_successes_to_awaitable_result_tuple(
 
     async def tapped_f(s1: _S1) -> ResultTuple[_F2, _S1]:
         match await f(s1):
-            case ("failure", _) as rslt_tpl:
-                return rslt_tpl
+            case ("failure", _) as r_tpl:
+                return r_tpl
             case ("success", objs):
                 return "success", tuple(s1 for _ in objs)  # pyrefly: ignore[not-iterable]
-            case _ as rslt_tpl:  # pragma: no cover
+            case _ as r_tpl:  # pragma: no cover
                 raise TrcksTypeError.construct_from_offending_object(  # pyright: ignore[reportUnreachable]
-                    rslt_tpl, "ResultTuple"
+                    r_tpl, "ResultTuple"
                 )
 
     return map_successes_to_awaitable_result_tuple(tapped_f)
