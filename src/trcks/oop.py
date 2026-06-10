@@ -372,12 +372,12 @@ class AwaitableResultTupleWrapper(
 
     @staticmethod
     def construct_from_result_tuple(
-        rslt_tpl: ResultTuple[_F_default, _S_default],
+        r_tpl: ResultTuple[_F_default, _S_default],
     ) -> AwaitableResultTupleWrapper[_F_default, _S_default]:
         """Wrap a [trcks.ResultTuple][] object.
 
         Args:
-            rslt_tpl: The [trcks.ResultTuple][] object to be wrapped.
+            r_tpl: The [trcks.ResultTuple][] object to be wrapped.
 
         Returns:
             A new [trcks.oop.AwaitableResultTupleWrapper][] instance with
@@ -395,7 +395,7 @@ class AwaitableResultTupleWrapper(
             >>> asyncio.run(wrapper.core_as_coroutine)
             ('success', (1, 2))
         """
-        return AwaitableResultTupleWrapper(art.construct_from_result_tuple(rslt_tpl))
+        return AwaitableResultTupleWrapper(art.construct_from_result_tuple(r_tpl))
 
     @staticmethod
     def construct_successes(value: _S) -> AwaitableResultTupleWrapper[Never, _S]:
