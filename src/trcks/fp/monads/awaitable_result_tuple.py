@@ -1548,7 +1548,8 @@ async def to_coroutine_result_tuple(
         >>> import asyncio
         >>> from trcks import ResultTuple
         >>> from trcks.fp.monads import awaitable_result_tuple as art
-        >>> asyncio.set_event_loop(asyncio.new_event_loop())
+        >>> loop = asyncio.new_event_loop()
+        >>> asyncio.set_event_loop(loop)
         >>> future = asyncio.Future[ResultTuple[str, int]]()
         >>> future.set_result(("success", (1, 2)))
         >>> future
@@ -1558,5 +1559,6 @@ async def to_coroutine_result_tuple(
         <coroutine object to_coroutine_result_tuple at 0x...>
         >>> asyncio.run(coro)
         ('success', (1, 2))
+        >>> loop.close()
     """
     return await a_r_tpl
