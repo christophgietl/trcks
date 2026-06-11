@@ -760,7 +760,8 @@ async def to_coroutine_result(a_rslt: AwaitableResult[_F, _S]) -> Result[_F, _S]
         >>> import asyncio
         >>> from trcks import Result
         >>> from trcks.fp.monads import awaitable_result as ar
-        >>> asyncio.set_event_loop(asyncio.new_event_loop())
+        >>> loop = asyncio.new_event_loop()
+        >>> asyncio.set_event_loop(loop)
         >>> future = asyncio.Future[Result[str, int]]()
         >>> future.set_result(("success", 42))
         >>> future
@@ -770,5 +771,6 @@ async def to_coroutine_result(a_rslt: AwaitableResult[_F, _S]) -> Result[_F, _S]
         <coroutine object to_coroutine_result at 0x...>
         >>> asyncio.run(coro)
         ('success', 42)
+        >>> loop.close()
     """
     return await a_rslt

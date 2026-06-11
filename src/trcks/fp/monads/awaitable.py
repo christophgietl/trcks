@@ -256,7 +256,8 @@ async def to_coroutine(awtbl: Awaitable[_T]) -> _T:
 
         >>> import asyncio
         >>> from trcks.fp.monads import awaitable as a
-        >>> asyncio.set_event_loop(asyncio.new_event_loop())
+        >>> loop = asyncio.new_event_loop()
+        >>> asyncio.set_event_loop(loop)
         >>> future = asyncio.Future[str]()
         >>> future.set_result("Hello, world!")
         >>> future
@@ -266,5 +267,6 @@ async def to_coroutine(awtbl: Awaitable[_T]) -> _T:
         <coroutine object to_coroutine at 0x...>
         >>> asyncio.run(coro)
         'Hello, world!'
+        >>> loop.close()
     """
     return await awtbl
