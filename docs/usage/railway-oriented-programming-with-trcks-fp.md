@@ -704,15 +704,15 @@ let us have a look at the individual steps of the chain:
     ```
 
 ???+ note
-    The higher-order function [trcks.fp.monads.tuple_.map_to_tuple][]
-    applies a function that returns a [tuple][]
+    The higher-order function [trcks.fp.monads.tuple_.map_to_iterable][]
+    applies a function that returns a [collections.abc.Iterable][]
     to each element and flattens the results (like a "flat map"):
 
     ```pycon
     >>> pipe(
     ...     (
     ...         ("ab", "cd"),
-    ...         t.map_to_tuple(tuple),
+    ...         t.map_to_iterable(tuple),
     ...     )
     ... )
     ('a', 'b', 'c', 'd')
