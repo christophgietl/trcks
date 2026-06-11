@@ -209,6 +209,10 @@ addopts = "--cov=trcks --cov-fail-under=100 --cov-report=term-missing --doctest-
 asyncio_default_fixture_loop_scope = "function"
 asyncio_mode = "auto"
 doctest_plus = "enabled"
+filterwarnings = [
+    "error",
+    "ignore::ResourceWarning",
+]
 
 [tool.ruff.lint]
 ignore = [
