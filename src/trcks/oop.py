@@ -635,7 +635,7 @@ class AwaitableResultTupleWrapper(
             ('success', (1, 2))
         """
         return AwaitableResultTupleWrapper(
-            art.map_failure_to_awaitable_result_tuple(f)(self.core)
+            art.map_failure_to_awaitable_result_iterable(f)(self.core)
         )
 
     def map_failure_to_result(
@@ -755,7 +755,7 @@ class AwaitableResultTupleWrapper(
             ('success', (1, 2))
         """
         return AwaitableResultTupleWrapper(
-            art.map_failure_to_result_tuple(f)(self.core)
+            art.map_failure_to_result_iterable(f)(self.core)
         )
 
     def map_failure_to_tuple(
@@ -818,7 +818,7 @@ class AwaitableResultTupleWrapper(
         mapped_f: Callable[
             [AwaitableResultTuple[_F_default_co, _S_default_co]],
             AwaitableResultTuple[Never, _S_default_co | _S],
-        ] = art.map_failure_to_tuple(f)
+        ] = art.map_failure_to_iterable(f)
         return AwaitableResultTupleWrapper(mapped_f(self.core))
 
     def map_successes(
@@ -1055,7 +1055,7 @@ class AwaitableResultTupleWrapper(
             ('failure', 'oops')
         """
         return AwaitableResultTupleWrapper(
-            art.map_successes_to_awaitable_result_tuple(f)(self.core)
+            art.map_successes_to_awaitable_result_iterable(f)(self.core)
         )
 
     def map_successes_to_result(
@@ -1169,7 +1169,7 @@ class AwaitableResultTupleWrapper(
             ('failure', 'oops')
         """
         return AwaitableResultTupleWrapper(
-            art.map_successes_to_result_tuple(f)(self.core)
+            art.map_successes_to_result_iterable(f)(self.core)
         )
 
     def map_successes_to_tuple(
@@ -1207,7 +1207,7 @@ class AwaitableResultTupleWrapper(
             >>> asyncio.run(wrapper_1.core_as_coroutine)
             ('success', (1, 1, 2, 2))
         """
-        return AwaitableResultTupleWrapper(art.map_successes_to_tuple(f)(self.core))
+        return AwaitableResultTupleWrapper(art.map_successes_to_iterable(f)(self.core))
 
     def tap_failure(
         self, f: Callable[[_F_default_co], object]
@@ -1405,7 +1405,7 @@ class AwaitableResultTupleWrapper(
             ('failure', 'fatal')
         """
         return AwaitableResultTupleWrapper(
-            art.tap_failure_to_awaitable_result_tuple(f)(self.core)
+            art.tap_failure_to_awaitable_result_iterable(f)(self.core)
         )
 
     def tap_failure_to_result(
@@ -1531,7 +1531,7 @@ class AwaitableResultTupleWrapper(
             ('success', (1,))
         """
         return AwaitableResultTupleWrapper(
-            art.tap_failure_to_result_tuple(f)(self.core)
+            art.tap_failure_to_result_iterable(f)(self.core)
         )
 
     def tap_failure_to_tuple(
@@ -1594,7 +1594,7 @@ class AwaitableResultTupleWrapper(
         tapped_f: Callable[
             [AwaitableResultTuple[_F_default_co, _S_default_co]],
             AwaitableResultTuple[Never, _F_default_co | _S_default_co],
-        ] = art.tap_failure_to_tuple(f)
+        ] = art.tap_failure_to_iterable(f)
         return AwaitableResultTupleWrapper(tapped_f(self.core))
 
     def tap_successes(
@@ -1815,7 +1815,7 @@ class AwaitableResultTupleWrapper(
             ('failure', 'oops')
         """
         return AwaitableResultTupleWrapper(
-            art.tap_successes_to_awaitable_result_tuple(f)(self.core)
+            art.tap_successes_to_awaitable_result_iterable(f)(self.core)
         )
 
     def tap_successes_to_result(
@@ -1940,7 +1940,7 @@ class AwaitableResultTupleWrapper(
             ('failure', 'oops')
         """
         return AwaitableResultTupleWrapper(
-            art.tap_successes_to_result_tuple(f)(self.core)
+            art.tap_successes_to_result_iterable(f)(self.core)
         )
 
     def tap_successes_to_tuple(
@@ -1985,7 +1985,7 @@ class AwaitableResultTupleWrapper(
             >>> result_1
             ('success', (7, 7))
         """
-        return AwaitableResultTupleWrapper(art.tap_successes_to_tuple(f)(self.core))
+        return AwaitableResultTupleWrapper(art.tap_successes_to_iterable(f)(self.core))
 
 
 class AwaitableResultWrapper(_AwaitableResultWrapper[_F_default_co, _S_default_co]):
@@ -3811,7 +3811,7 @@ class AwaitableTupleWrapper(_AwaitableWrapper[tuple[_T_co, ...]]):
             >>> asyncio.run(awaitable_tuple_wrapper.core_as_coroutine)
             (1, 1, 2, 2)
         """
-        return AwaitableTupleWrapper(at.map_to_awaitable_tuple(f)(self.core))
+        return AwaitableTupleWrapper(at.map_to_awaitable_iterable(f)(self.core))
 
     def map_to_tuple(
         self, f: Callable[[_T_co], tuple[_T, ...]]
@@ -3843,7 +3843,7 @@ class AwaitableTupleWrapper(_AwaitableWrapper[tuple[_T_co, ...]]):
             >>> asyncio.run(awaitable_tuple_wrapper.core_as_coroutine)
             (1, -1, 2, -2)
         """
-        return AwaitableTupleWrapper(at.map_to_tuple(f)(self.core))
+        return AwaitableTupleWrapper(at.map_to_iterable(f)(self.core))
 
     def tap(self, f: Callable[[_T_co], object]) -> AwaitableTupleWrapper[_T_co]:
         """Apply a synchronous side effect to each element in the wrapped
@@ -3942,7 +3942,7 @@ class AwaitableTupleWrapper(_AwaitableWrapper[tuple[_T_co, ...]]):
             >>> asyncio.run(awaitable_tuple_wrapper.core_as_coroutine)
             (1, 2, 2, 3, 3, 4, 4, 4)
         """
-        return AwaitableTupleWrapper(at.tap_to_awaitable_tuple(f)(self.core))
+        return AwaitableTupleWrapper(at.tap_to_awaitable_iterable(f)(self.core))
 
     def tap_to_tuple(
         self, f: Callable[[_T_co], tuple[object, ...]]
@@ -3975,7 +3975,7 @@ class AwaitableTupleWrapper(_AwaitableWrapper[tuple[_T_co, ...]]):
             >>> asyncio.run(awaitable_tuple_wrapper.core_as_coroutine)
             (1, 2, 2, 3, 3, 4, 4, 4)
         """
-        return AwaitableTupleWrapper(at.tap_to_tuple(f)(self.core))
+        return AwaitableTupleWrapper(at.tap_to_iterable(f)(self.core))
 
 
 class AwaitableWrapper(_AwaitableWrapper[_T_co]):
@@ -6372,7 +6372,7 @@ class ResultTupleWrapper(_ResultWrapper[_F_default_co, tuple[_S_default_co, ...]
         mapped_f: Callable[
             [ResultTuple[_F_default_co, _S_default_co]],
             ResultTuple[_F, _S_default_co | _S],
-        ] = rt.map_failure_to_result_tuple(f)
+        ] = rt.map_failure_to_result_iterable(f)
         return ResultTupleWrapper(mapped_f(self.core))
 
     def map_failure_to_tuple(
@@ -6419,7 +6419,7 @@ class ResultTupleWrapper(_ResultWrapper[_F_default_co, tuple[_S_default_co, ...]
         mapped_f: Callable[
             [ResultTuple[_F_default_co, _S_default_co]],
             ResultTuple[Never, _S_default_co | _S],
-        ] = rt.map_failure_to_tuple(f)
+        ] = rt.map_failure_to_iterable(f)
         return ResultTupleWrapper(mapped_f(self.core))
 
     def map_successes(
@@ -6696,7 +6696,7 @@ class ResultTupleWrapper(_ResultWrapper[_F_default_co, tuple[_S_default_co, ...]
         mapped_f: Callable[
             [ResultTuple[_F_default_co, _S_default_co]],
             ResultTuple[_F_default_co | _F, _S],
-        ] = rt.map_successes_to_result_tuple(f)
+        ] = rt.map_successes_to_result_iterable(f)
         return ResultTupleWrapper(mapped_f(self.core))
 
     def map_successes_to_tuple(
@@ -6732,7 +6732,7 @@ class ResultTupleWrapper(_ResultWrapper[_F_default_co, tuple[_S_default_co, ...]
             ... ).map_successes_to_tuple(_duplicate_integer)
             ResultTupleWrapper(core=('failure', 'not found'))
         """
-        return ResultTupleWrapper(rt.map_successes_to_tuple(f)(self.core))
+        return ResultTupleWrapper(rt.map_successes_to_iterable(f)(self.core))
 
     def tap_failure(
         self, f: Callable[[_F_default_co], object]
@@ -7019,7 +7019,7 @@ class ResultTupleWrapper(_ResultWrapper[_F_default_co, tuple[_S_default_co, ...]
         tapped_f: Callable[
             [ResultTuple[_F_default_co, _S_default_co]],
             ResultTuple[_F_default_co, _S_default_co | _S],
-        ] = rt.tap_failure_to_result_tuple(f)
+        ] = rt.tap_failure_to_result_iterable(f)
         return ResultTupleWrapper(tapped_f(self.core))
 
     def tap_failure_to_tuple(
@@ -7069,7 +7069,7 @@ class ResultTupleWrapper(_ResultWrapper[_F_default_co, tuple[_S_default_co, ...]
         tapped_f: Callable[
             [ResultTuple[_F_default_co, _S_default_co]],
             ResultTuple[Never, _F_default_co | _S_default_co],
-        ] = rt.tap_failure_to_tuple(f)
+        ] = rt.tap_failure_to_iterable(f)
         return ResultTupleWrapper(tapped_f(self.core))
 
     def tap_successes(
@@ -7344,7 +7344,7 @@ class ResultTupleWrapper(_ResultWrapper[_F_default_co, tuple[_S_default_co, ...]
             ... ).tap_successes_to_result_tuple(_validate_positive_twice)
             ResultTupleWrapper(core=('failure', 'not positive'))
         """
-        return ResultTupleWrapper(rt.tap_successes_to_result_tuple(f)(self.core))
+        return ResultTupleWrapper(rt.tap_successes_to_result_iterable(f)(self.core))
 
     def tap_successes_to_tuple(
         self, f: Callable[[_S_default_co], tuple[object, ...]]
@@ -7379,7 +7379,7 @@ class ResultTupleWrapper(_ResultWrapper[_F_default_co, tuple[_S_default_co, ...]
             Received: 7
             ResultTupleWrapper(core=('success', (7, 7)))
         """
-        return ResultTupleWrapper(rt.tap_successes_to_tuple(f)(self.core))
+        return ResultTupleWrapper(rt.tap_successes_to_iterable(f)(self.core))
 
 
 class TupleWrapper(_Wrapper[tuple[_T_co, ...]]):
@@ -7776,7 +7776,7 @@ class TupleWrapper(_Wrapper[tuple[_T_co, ...]]):
             >>> tuple_wrapper
             TupleWrapper(core=(1, 1, 2, 2, 3, 3))
         """
-        return TupleWrapper(t.map_to_tuple(f)(self.core))
+        return TupleWrapper(t.map_to_iterable(f)(self.core))
 
     def tap(self, f: Callable[[_T_co], object]) -> TupleWrapper[_T_co]:
         """Apply a synchronous side effect to each element in the wrapped
@@ -8099,7 +8099,7 @@ class TupleWrapper(_Wrapper[tuple[_T_co, ...]]):
             >>> tuple_wrapper
             TupleWrapper(core=(1, 2, 2, 3, 3, 4, 4, 4))
         """
-        return TupleWrapper(t.tap_to_tuple(f)(self.core))
+        return TupleWrapper(t.tap_to_iterable(f)(self.core))
 
 
 class Wrapper(_Wrapper[_T_co]):

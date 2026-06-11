@@ -10,7 +10,7 @@ See:
     [Railway oriented programming | F# for fun and profit](https://fsharpforfunandprofit.com/posts/recipe-part2/)
 """
 
-from collections.abc import Awaitable
+from collections.abc import Awaitable, Iterable
 from typing import Literal, TypeAlias
 
 from trcks._typing import TypeVar
@@ -68,14 +68,25 @@ Note:
     some functional programming languages and packages (e.g. Haskell and fp-ts).
 """
 
+ResultIterable: TypeAlias = Result[_F_co, Iterable[_S_co]]
+"""[trcks.Result][] where the success value is a [collections.abc.Iterable][]."""
+
 ResultTuple: TypeAlias = Result[_F_co, tuple[_S_co, ...]]
 """[trcks.Result][] where the success value is a homogeneous [tuple][]."""
+
+SuccessIterable: TypeAlias = Success[Iterable[_S_co]]
+"""[trcks.Success][] that contains a [collections.abc.Iterable][]."""
 
 SuccessTuple: TypeAlias = Success[tuple[_S_co, ...]]
 """[trcks.Success][] that contains a homogeneous [tuple][]."""
 
 AwaitableFailure: TypeAlias = Awaitable[Failure[_F_co]]
 """[collections.abc.Awaitable][] that returns a [trcks.Failure][]
+when used in an `await` expression.
+"""
+
+AwaitableIterable: TypeAlias = Awaitable[Iterable[_T_co]]
+"""[collections.abc.Awaitable][] that returns a [collections.abc.Iterable][]
 when used in an `await` expression.
 """
 
@@ -125,6 +136,11 @@ Example:
     ... ] = divide_slowly
 """
 
+AwaitableResultIterable: TypeAlias = Awaitable[ResultIterable[_F_co, _S_co]]
+"""[collections.abc.Awaitable][] that returns a [trcks.ResultIterable][]
+when used in an `await` expression.
+"""
+
 AwaitableResultTuple: TypeAlias = Awaitable[ResultTuple[_F_co, _S_co]]
 """[collections.abc.Awaitable][] that returns a [trcks.ResultTuple][]
 when used in an `await` expression.
@@ -132,6 +148,11 @@ when used in an `await` expression.
 
 AwaitableSuccess: TypeAlias = Awaitable[Success[_S_co]]
 """[collections.abc.Awaitable][] that returns a [trcks.Success][]
+when used in an `await` expression.
+"""
+
+AwaitableSuccessIterable: TypeAlias = Awaitable[SuccessIterable[_S_co]]
+"""[collections.abc.Awaitable][] that returns a [trcks.SuccessIterable][]
 when used in an `await` expression.
 """
 

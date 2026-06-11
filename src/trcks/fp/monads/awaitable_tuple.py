@@ -44,7 +44,7 @@ Example:
     ...     return await pipe(
     ...         (
     ...             at.construct_from_tuple((1, 2, 3)),
-    ...             at.map_to_awaitable_tuple(slowly_duplicate_integer),
+    ...             at.map_to_awaitable_iterable(slowly_duplicate_integer),
     ...         )
     ...     )
     ...
@@ -56,15 +56,15 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from trcks._typing import TypeVar
+from trcks._typing import TypeVar, deprecated
 from trcks.fp.composition import compose2
 from trcks.fp.monads import awaitable as a
 from trcks.fp.monads import tuple_ as t
 
 if TYPE_CHECKING:
-    from collections.abc import Awaitable, Callable
+    from collections.abc import Awaitable, Callable, Iterable
 
-    from trcks import AwaitableTuple
+    from trcks import AwaitableIterable, AwaitableTuple
 
 __docformat__ = "google"
 
@@ -213,19 +213,19 @@ def map_to_awaitable(
         >>> asyncio.run(at.to_coroutine_tuple(a_tpl))
         (2, 3)
     """
-    return map_to_awaitable_tuple(compose2((f, construct_from_awaitable)))
+    return map_to_awaitable_iterable(compose2((f, construct_from_awaitable)))
 
 
-def map_to_awaitable_tuple(
-    f: Callable[[_T1], AwaitableTuple[_T2]],
+def map_to_awaitable_iterable(
+    f: Callable[[_T1], AwaitableIterable[_T2]],
 ) -> Callable[[AwaitableTuple[_T1]], AwaitableTuple[_T2]]:
-    """Turn [trcks.AwaitableTuple][]-returning function into a function
+    """Turn [trcks.AwaitableIterable][]-returning function into a function
     expecting and returning [trcks.AwaitableTuple][]s
     of varying length.
 
     Args:
         f:
-            The [trcks.AwaitableTuple][]-returning function to be transformed
+            The [trcks.AwaitableIterable][]-returning function to be transformed
             into a function expecting and returning
             [trcks.AwaitableTuple][]s of varying length.
 
@@ -245,7 +245,7 @@ def map_to_awaitable_tuple(
         >>> a_tpl: AwaitableTuple[int] = pipe(
         ...     (
         ...         at.construct_from_tuple((1, 2)),
-        ...         at.map_to_awaitable_tuple(slowly_duplicate_integer),
+        ...         at.map_to_awaitable_iterable(slowly_duplicate_integer),
         ...     )
         ... )
         >>> asyncio.run(at.to_coroutine_tuple(a_tpl))
@@ -261,16 +261,26 @@ def map_to_awaitable_tuple(
     return mapped_f
 
 
-def map_to_tuple(
-    f: Callable[[_T1], tuple[_T2, ...]],
+@deprecated("Use map_to_awaitable_iterable instead")
+def map_to_awaitable_tuple(
+    f: Callable[[_T1], AwaitableTuple[_T2]],
 ) -> Callable[[AwaitableTuple[_T1]], AwaitableTuple[_T2]]:
-    """Turn homogeneous-[tuple][]-returning function into a function
+    """Deprecated alias for
+    [trcks.fp.monads.awaitable_tuple.map_to_awaitable_iterable][].
+    """
+    return map_to_awaitable_iterable(f)  # pragma: no cover
+
+
+def map_to_iterable(
+    f: Callable[[_T1], Iterable[_T2]],
+) -> Callable[[AwaitableTuple[_T1]], AwaitableTuple[_T2]]:
+    """Turn [collections.abc.Iterable][]-returning function into a function
     expecting and returning [trcks.AwaitableTuple][]s
     of varying length.
 
     Args:
         f:
-            The homogeneous-[tuple][]-returning function to be transformed
+            The [collections.abc.Iterable][]-returning function to be transformed
             into a function expecting and returning
             [trcks.AwaitableTuple][]s of varying length.
 
@@ -289,13 +299,21 @@ def map_to_tuple(
         >>> a_tpl: AwaitableTuple[int] = pipe(
         ...     (
         ...         at.construct_from_tuple((1, 2)),
-        ...         at.map_to_tuple(add_negative),
+        ...         at.map_to_iterable(add_negative),
         ...     )
         ... )
         >>> asyncio.run(at.to_coroutine_tuple(a_tpl))
         (1, -1, 2, -2)
     """
-    return a.map_(t.map_to_tuple(f))
+    return a.map_(t.map_to_iterable(f))
+
+
+@deprecated("Use map_to_iterable instead")
+def map_to_tuple(
+    f: Callable[[_T1], tuple[_T2, ...]],
+) -> Callable[[AwaitableTuple[_T1]], AwaitableTuple[_T2]]:
+    """Deprecated alias for [trcks.fp.monads.awaitable_tuple.map_to_iterable][]."""
+    return map_to_iterable(f)  # pragma: no cover
 
 
 def tap(
@@ -385,17 +403,17 @@ def tap_to_awaitable(
     return map_to_awaitable(bypassed_f)
 
 
-def tap_to_awaitable_tuple(
-    f: Callable[[_T1], AwaitableTuple[object]],
+def tap_to_awaitable_iterable(
+    f: Callable[[_T1], AwaitableIterable[object]],
 ) -> Callable[[AwaitableTuple[_T1]], AwaitableTuple[_T1]]:
-    """Turn a [trcks.AwaitableTuple][]-returning side effect into a function
+    """Turn a [trcks.AwaitableIterable][]-returning side effect into a function
     expecting a [trcks.AwaitableTuple][] and returning a [trcks.AwaitableTuple][]
     where each original element is repeated once per element returned by
     the side effect.
 
     Args:
         f:
-            The [trcks.AwaitableTuple][]-returning function to be transformed
+            The [trcks.AwaitableIterable][]-returning function to be transformed
             into a function expecting a [trcks.AwaitableTuple][] and
             returning a [trcks.AwaitableTuple][] where each original element is
             repeated once per element returned by the side effect.
@@ -418,7 +436,7 @@ def tap_to_awaitable_tuple(
         >>> a_tpl: AwaitableTuple[int] = pipe(
         ...     (
         ...         at.construct_from_tuple((1, 2, 3, 4)),
-        ...         at.tap_to_awaitable_tuple(slowly_get_divisors),
+        ...         at.tap_to_awaitable_iterable(slowly_get_divisors),
         ...     )
         ... )
         >>> asyncio.run(at.to_coroutine_tuple(a_tpl))
@@ -429,20 +447,30 @@ def tap_to_awaitable_tuple(
         objs = await f(t1)
         return tuple(t1 for _ in objs)
 
-    return map_to_awaitable_tuple(bypassed_f)
+    return map_to_awaitable_iterable(bypassed_f)
 
 
-def tap_to_tuple(
-    f: Callable[[_T1], tuple[object, ...]],
+@deprecated("Use tap_to_awaitable_iterable instead")
+def tap_to_awaitable_tuple(
+    f: Callable[[_T1], AwaitableTuple[object]],
 ) -> Callable[[AwaitableTuple[_T1]], AwaitableTuple[_T1]]:
-    """Turn a homogeneous-[tuple][]-returning side effect into a function
+    """Deprecated alias for
+    [trcks.fp.monads.awaitable_tuple.tap_to_awaitable_iterable][].
+    """
+    return tap_to_awaitable_iterable(f)  # pragma: no cover
+
+
+def tap_to_iterable(
+    f: Callable[[_T1], Iterable[object]],
+) -> Callable[[AwaitableTuple[_T1]], AwaitableTuple[_T1]]:
+    """Turn a [collections.abc.Iterable][]-returning side effect into a function
     expecting a [trcks.AwaitableTuple][] and returning a [trcks.AwaitableTuple][]
     where each original element is repeated once per element returned by
     the side effect.
 
     Args:
         f:
-            The homogeneous-[tuple][]-returning function to be transformed
+            The [collections.abc.Iterable][]-returning function to be transformed
             into a function expecting a [trcks.AwaitableTuple][] and
             returning a [trcks.AwaitableTuple][] where each original element is
             repeated once per element returned by the side effect.
@@ -464,13 +492,21 @@ def tap_to_tuple(
         >>> a_tpl: AwaitableTuple[int] = pipe(
         ...     (
         ...         at.construct_from_tuple((1, 2, 3, 4)),
-        ...         at.tap_to_tuple(get_divisors),
+        ...         at.tap_to_iterable(get_divisors),
         ...     )
         ... )
         >>> asyncio.run(at.to_coroutine_tuple(a_tpl))
         (1, 2, 2, 3, 3, 4, 4, 4)
     """
-    return a.map_(t.tap_to_tuple(f))
+    return a.map_(t.tap_to_iterable(f))
+
+
+@deprecated("Use tap_to_iterable instead")
+def tap_to_tuple(
+    f: Callable[[_T1], tuple[object, ...]],
+) -> Callable[[AwaitableTuple[_T1]], AwaitableTuple[_T1]]:
+    """Deprecated alias for [trcks.fp.monads.awaitable_tuple.tap_to_iterable][]."""
+    return tap_to_iterable(f)  # pragma: no cover
 
 
 async def to_coroutine_tuple(a_tpl: AwaitableTuple[_T]) -> tuple[_T, ...]:

@@ -41,7 +41,7 @@ Example:
     >>> tpl = pipe(
     ...     (
     ...         (1, 2, 3),
-    ...         t.map_to_tuple(duplicate_integer),
+    ...         t.map_to_iterable(duplicate_integer),
     ...     )
     ... )
     >>> tpl
@@ -52,12 +52,12 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from trcks._typing import TypeVar
+from trcks._typing import TypeVar, deprecated
 from trcks.fp.composition import compose2
 from trcks.fp.monads import identity as i
 
 if TYPE_CHECKING:
-    from collections.abc import Callable
+    from collections.abc import Callable, Iterable
 
 __docformat__ = "google"
 
@@ -110,11 +110,11 @@ def map_(f: Callable[[_T1], _T2]) -> Callable[[tuple[_T1, ...]], tuple[_T2, ...]
         >>> double_integers((1, 2, 3))
         (2, 4, 6)
     """
-    return map_to_tuple(compose2((f, construct)))
+    return map_to_iterable(compose2((f, construct)))
 
 
-def map_to_tuple(
-    f: Callable[[_T1], tuple[_T2, ...]],
+def map_to_iterable(
+    f: Callable[[_T1], Iterable[_T2]],
 ) -> Callable[[tuple[_T1, ...]], tuple[_T2, ...]]:
     """Create function that maps homogeneous [tuple][]s to
     homogeneous [tuple][]s of varying length.
@@ -134,7 +134,7 @@ def map_to_tuple(
         ...
         >>> duplicate_integers: Callable[
         ...     [tuple[int, ...]], tuple[int, ...]
-        ... ] = t.map_to_tuple(duplicate_integer)
+        ... ] = t.map_to_iterable(duplicate_integer)
         >>> duplicate_integers((1, 2, 3))
         (1, 1, 2, 2, 3, 3)
     """
@@ -143,6 +143,14 @@ def map_to_tuple(
         return tuple(t2 for t1 in t1s for t2 in f(t1))
 
     return mapped_f
+
+
+@deprecated("Use map_to_iterable instead")
+def map_to_tuple(
+    f: Callable[[_T1], tuple[_T2, ...]],
+) -> Callable[[tuple[_T1, ...]], tuple[_T2, ...]]:
+    """Deprecated alias for [trcks.fp.monads.tuple_.map_to_iterable][]."""
+    return map_to_iterable(f)  # pragma: no cover
 
 
 def tap(
@@ -177,10 +185,11 @@ def tap(
     return map_(i.tap(f))
 
 
-def tap_to_tuple(
-    f: Callable[[_T1], tuple[object, ...]],
+def tap_to_iterable(
+    f: Callable[[_T1], Iterable[object]],
 ) -> Callable[[tuple[_T1, ...]], tuple[_T1, ...]]:
-    """Create function that applies a side effect with return type homogeneous [tuple][]
+    """Create function that applies a side effect
+    with return type [collections.abc.Iterable][]
     to each element of a homogeneous [tuple][].
 
     Args:
@@ -199,7 +208,7 @@ def tap_to_tuple(
         ...
         >>> repeat_integers_according_to_number_of_divisors: Callable[
         ...     [tuple[int, ...]], tuple[int, ...]
-        ... ] = t.tap_to_tuple(get_divisors)
+        ... ] = t.tap_to_iterable(get_divisors)
         >>> repeat_integers_according_to_number_of_divisors((1, 2, 3, 4))
         (1, 2, 2, 3, 3, 4, 4, 4)
     """
@@ -207,4 +216,12 @@ def tap_to_tuple(
     def bypassed_f(t1: _T1) -> tuple[_T1, ...]:
         return tuple(t1 for _t2 in f(t1))
 
-    return map_to_tuple(bypassed_f)
+    return map_to_iterable(bypassed_f)
+
+
+@deprecated("Use tap_to_iterable instead")
+def tap_to_tuple(
+    f: Callable[[_T1], tuple[object, ...]],
+) -> Callable[[tuple[_T1, ...]], tuple[_T1, ...]]:
+    """Deprecated alias for [trcks.fp.monads.tuple_.tap_to_iterable][]."""
+    return tap_to_iterable(f)  # pragma: no cover
