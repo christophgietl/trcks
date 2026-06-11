@@ -14,7 +14,7 @@ repos:
           - --fix
       - id: ruff-format
   - repo: https://github.com/astral-sh/uv-pre-commit
-    rev: c665864e22f27255a10d82e14f8ccea6843fd65e  # frozen: 0.11.19
+    rev: 8cef97bc54b8c9661a4a91e05dc06b8bd1d5e991  # frozen: 0.11.20
     hooks:
       - id: uv-lock
   - repo: https://github.com/codespell-project/codespell
@@ -57,7 +57,7 @@ repos:
     hooks:
       - id: actionlint
   - repo: https://github.com/rvben/rumdl-pre-commit
-    rev: 06dadb4f18fbbf228956eefeea38f88a4b5adf5d  # frozen: v0.2.6
+    rev: 0ce082c2e2357de07d1746e5971198eba4a8132c  # frozen: v0.2.7
     hooks:
       - id: rumdl
       - id: rumdl-fmt
