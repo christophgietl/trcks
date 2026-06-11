@@ -667,14 +667,14 @@ let us have a look at the individual steps of the chain:
     in a one-element tuple:
     `TupleWrapper.construct(42)` produces `TupleWrapper(core=(42,))`.
 
-    The method [trcks.oop.TupleWrapper.map_to_tuple][]
+    The method [trcks.oop.TupleWrapper.map_to_iterable][]
     applies a function that returns a homogeneous [tuple][]
     to each element and flattens the results (like a "flat map"):
 
     ```pycon
     >>> TupleWrapper.construct_from_tuple(
     ...     ("ab", "cd")
-    ... ).map_to_tuple(tuple).core
+    ... ).map_to_iterable(tuple).core
     ('a', 'b', 'c', 'd')
 
     ```
