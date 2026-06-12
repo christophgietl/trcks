@@ -45,6 +45,8 @@
 
 ## Code style
 
+- Give every module `__docformat__ = "google"`.
+  Place such module dunders below imports but above all other statements.
 - Sort functions alphabetically within each module.
 - Sort classes alphabetically within each module.
 - Sort methods alphabetically within each class.
