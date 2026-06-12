@@ -45,8 +45,9 @@
 
 ## Code style
 
-- Give every module `__docformat__ = "google"`.
-  Place such module dunders below imports but above all other statements.
+- Give every module a `__docformat__ = "google"` dunder.
+- Place all module dunders after imports, including imports inside
+  `if TYPE_CHECKING:` blocks.
 - Sort functions alphabetically within each module.
 - Sort classes alphabetically within each module.
 - Sort methods alphabetically within each class.
