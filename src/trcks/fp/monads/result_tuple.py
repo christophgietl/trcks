@@ -19,7 +19,7 @@ Example:
     ...
     >>> result_tuple = pipe(
     ...     (
-    ...         rt.construct_successes_from_tuple((1, 2, 3)),
+    ...         rt.construct_successes_from_iterable((1, 2, 3)),
     ...         rt.map_successes(double_integer),
     ...         rt.tap_successes(log_integer),
     ...         rt.map_successes_to_iterable(duplicate_integer),
@@ -115,21 +115,30 @@ def construct_successes(value: _S) -> SuccessTuple[_S]:
     return r.construct_success(t.construct(value))
 
 
-def construct_successes_from_tuple(tpl: tuple[_S, ...]) -> SuccessTuple[_S]:
-    """Create a [trcks.SuccessTuple][] object from a homogeneous tuple.
+def construct_successes_from_iterable(it: Iterable[_S]) -> SuccessTuple[_S]:
+    """Create a [trcks.SuccessTuple][] object from an iterable.
 
     Args:
-        tpl: Homogeneous tuple to be wrapped in a [trcks.SuccessTuple][].
+        it: The iterable to create
+            the [trcks.SuccessTuple][] from.
 
     Returns:
-        A new [trcks.SuccessTuple][] instance containing the given homogeneous tuple.
+        The [trcks.SuccessTuple][] created from the iterable.
 
     Example:
         >>> from trcks.fp.monads import result_tuple as rt
-        >>> rt.construct_successes_from_tuple((1, 2))
+        >>> rt.construct_successes_from_iterable((1, 2))
         ('success', (1, 2))
     """
-    return r.construct_success(tpl)
+    return r.construct_success(tuple(it))
+
+
+@deprecated("Use construct_successes_from_iterable instead")
+def construct_successes_from_tuple(tpl: tuple[_S, ...]) -> SuccessTuple[_S]:
+    """Deprecated alias for
+    [trcks.fp.monads.result_tuple.construct_successes_from_iterable][].
+    """
+    return construct_successes_from_iterable(tpl)  # pragma: no cover
 
 
 def map_failure(

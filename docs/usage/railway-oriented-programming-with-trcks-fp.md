@@ -800,7 +800,7 @@ Processing short-circuits on the first [trcks.Failure][].
     ...         ResultTuple[FailureDescription, float],
     ...     ] = (
     ...         user_emails,
-    ...         rt.construct_successes_from_tuple,
+    ...         rt.construct_successes_from_iterable,
     ...         rt.map_successes_to_result(get_user_id),
     ...         rt.map_successes_to_result(get_subscription_id),
     ...         rt.map_successes(get_subscription_fee),
@@ -835,7 +835,7 @@ let us have a look at the individual steps of the chain:
     ...     SuccessTuple[str],
     ... ] = (
     ...     ("erika.mustermann@domain.org",),
-    ...     rt.construct_successes_from_tuple,
+    ...     rt.construct_successes_from_iterable,
     ... )
     >>> pipe(p1)
     ('success', ('erika.mustermann@domain.org',))
@@ -846,7 +846,7 @@ let us have a look at the individual steps of the chain:
     ...     ResultTuple[UserDoesNotExist, int],
     ... ] = (
     ...     ("erika.mustermann@domain.org",),
-    ...     rt.construct_successes_from_tuple,
+    ...     rt.construct_successes_from_iterable,
     ...     rt.map_successes_to_result(get_user_id),
     ... )
     >>> pipe(p2)
@@ -859,7 +859,7 @@ let us have a look at the individual steps of the chain:
     ...     ResultTuple[FailureDescription, int],
     ... ] = (
     ...     ("erika.mustermann@domain.org",),
-    ...     rt.construct_successes_from_tuple,
+    ...     rt.construct_successes_from_iterable,
     ...     rt.map_successes_to_result(get_user_id),
     ...     rt.map_successes_to_result(get_subscription_id),
     ... )
@@ -874,7 +874,7 @@ let us have a look at the individual steps of the chain:
     ...     ResultTuple[FailureDescription, float],
     ... ] = (
     ...     ("erika.mustermann@domain.org",),
-    ...     rt.construct_successes_from_tuple,
+    ...     rt.construct_successes_from_iterable,
     ...     rt.map_successes_to_result(get_user_id),
     ...     rt.map_successes_to_result(get_subscription_id),
     ...     rt.map_successes(get_subscription_fee),
@@ -885,8 +885,9 @@ let us have a look at the individual steps of the chain:
     ```
 
 ???+ note
-    The function [trcks.fp.monads.result_tuple.construct_successes_from_tuple][]
-    wraps a [tuple][] into a [trcks.SuccessTuple][],
+    The function [trcks.fp.monads.result_tuple.construct_successes_from_iterable][]
+    converts a [collections.abc.Iterable][] into a [tuple][] and wraps it into
+    a [trcks.SuccessTuple][],
     which can then be used with the higher-order functions
     from [trcks.fp.monads.result_tuple][].
 
@@ -919,7 +920,7 @@ in the success case (for each element) or in the failure case, respectively.
     ...         ResultTuple[FailureDescription, float],
     ...     ] = (
     ...         user_emails,
-    ...         rt.construct_successes_from_tuple,
+    ...         rt.construct_successes_from_iterable,
     ...         rt.map_successes_to_result(get_user_id),
     ...         rt.tap_successes(lambda n: print(f"LOG: User ID: {n}.")),
     ...         rt.map_successes_to_result(get_subscription_id),
@@ -983,7 +984,7 @@ the original success values are preserved.
     ...         ResultTuple[UserDoesNotExist | OutOfDiskSpace, int],
     ...     ] = (
     ...         user_emails,
-    ...         rt.construct_successes_from_tuple,
+    ...         rt.construct_successes_from_iterable,
     ...         rt.map_successes_to_result(get_user_id),
     ...         rt.tap_successes_to_result(write_to_disk),
     ...     )
@@ -1022,7 +1023,7 @@ When the second element fails, the third element is never evaluated:
     ...             "jane_doe@provider.com",
     ...             "john_doe@provider.com",
     ...         ),
-    ...         rt.construct_successes_from_tuple,
+    ...         rt.construct_successes_from_iterable,
     ...         rt.map_successes_to_result(get_user_id_logged),
     ...     )
     ... )
@@ -1071,7 +1072,7 @@ into functions operating on [trcks.AwaitableTuple][] values.
     ...         AwaitableTuple[str],
     ...     ] = (
     ...         input_paths,
-    ...         at.construct_from_tuple,
+    ...         at.construct_from_iterable,
     ...         at.map_to_awaitable(read_from_disk),
     ...         at.map_(transform),
     ...     )
@@ -1092,7 +1093,7 @@ let us have a look at the individual steps of the chain:
     >>>
     >>> p1: Pipeline1[tuple[str, ...], AwaitableTuple[str]] = (
     ...     ("a.txt", "b.txt"),
-    ...     at.construct_from_tuple,
+    ...     at.construct_from_iterable,
     ... )
     >>> asyncio.run(at.to_coroutine_tuple(pipe(p1)))
     ('a.txt', 'b.txt')
@@ -1103,7 +1104,7 @@ let us have a look at the individual steps of the chain:
     ...     AwaitableTuple[str],
     ... ] = (
     ...     ("a.txt", "b.txt"),
-    ...     at.construct_from_tuple,
+    ...     at.construct_from_iterable,
     ...     at.map_to_awaitable(read_from_disk),
     ... )
     >>> asyncio.run(at.to_coroutine_tuple(pipe(p2)))
@@ -1116,7 +1117,7 @@ let us have a look at the individual steps of the chain:
     ...     AwaitableTuple[str],
     ... ] = (
     ...     ("a.txt", "b.txt"),
-    ...     at.construct_from_tuple,
+    ...     at.construct_from_iterable,
     ...     at.map_to_awaitable(read_from_disk),
     ...     at.map_(transform),
     ... )
@@ -1126,8 +1127,8 @@ let us have a look at the individual steps of the chain:
     ```
 
 ???+ note
-    The function [trcks.fp.monads.awaitable_tuple.construct_from_tuple][]
-    wraps a [tuple][] into
+    The function [trcks.fp.monads.awaitable_tuple.construct_from_iterable][]
+    converts a [collections.abc.Iterable][] into a [tuple][] and wraps it into
     a [trcks.AwaitableTuple][],
     which can then be used with the higher-order functions
     from [trcks.fp.monads.awaitable_tuple][].
@@ -1167,7 +1168,7 @@ allows us to execute asynchronous side effects for each element.
     ...         AwaitableTuple[str],
     ...     ] = (
     ...         input_paths,
-    ...         at.construct_from_tuple,
+    ...         at.construct_from_iterable,
     ...         at.map_to_awaitable(read_from_disk),
     ...         at.tap(lambda s: print(f"Read '{s}' from disk.")),
     ...         at.map_(transform),
@@ -1235,7 +1236,7 @@ just as in the synchronous case above.
     ...         AwaitableResultTuple[ReadErrorLiteral | WriteErrorLiteral, str],
     ...     ] = (
     ...         input_paths,
-    ...         art.construct_successes_from_tuple,
+    ...         art.construct_successes_from_iterable,
     ...         art.map_successes_to_awaitable_result(read_from_disk),
     ...         art.map_successes(transform),
     ...         art.tap_successes_to_awaitable_result(
@@ -1264,7 +1265,7 @@ let us have a look at the individual steps of the chain:
     ...     AwaitableSuccessTuple[str],
     ... ] = (
     ...     ("a.txt", "b.txt"),
-    ...     art.construct_successes_from_tuple,
+    ...     art.construct_successes_from_iterable,
     ... )
     >>> asyncio.run(art.to_coroutine_result_tuple(pipe(p1)))
     ('success', ('a.txt', 'b.txt'))
@@ -1275,7 +1276,7 @@ let us have a look at the individual steps of the chain:
     ...     AwaitableResultTuple[ReadErrorLiteral, str],
     ... ] = (
     ...     ("a.txt", "b.txt"),
-    ...     art.construct_successes_from_tuple,
+    ...     art.construct_successes_from_iterable,
     ...     art.map_successes_to_awaitable_result(read_from_disk),
     ... )
     >>> asyncio.run(art.to_coroutine_result_tuple(pipe(p2)))
@@ -1288,7 +1289,7 @@ let us have a look at the individual steps of the chain:
     ...     AwaitableResultTuple[ReadErrorLiteral, str],
     ... ] = (
     ...     ("a.txt", "b.txt"),
-    ...     art.construct_successes_from_tuple,
+    ...     art.construct_successes_from_iterable,
     ...     art.map_successes_to_awaitable_result(read_from_disk),
     ...     art.map_successes(transform),
     ... )
@@ -1303,7 +1304,7 @@ let us have a look at the individual steps of the chain:
     ...     AwaitableResultTuple[ReadErrorLiteral | WriteErrorLiteral, str],
     ... ] = (
     ...     ("a.txt", "b.txt"),
-    ...     art.construct_successes_from_tuple,
+    ...     art.construct_successes_from_iterable,
     ...     art.map_successes_to_awaitable_result(read_from_disk),
     ...     art.map_successes(transform),
     ...     art.tap_successes_to_awaitable_result(
@@ -1319,9 +1320,9 @@ let us have a look at the individual steps of the chain:
 
 ???+ note
     The function
-    [trcks.fp.monads.awaitable_result_tuple.construct_successes_from_tuple][]
-    wraps a [tuple][]
-    into a [trcks.AwaitableSuccessTuple][],
+    [trcks.fp.monads.awaitable_result_tuple.construct_successes_from_iterable][]
+    converts a [collections.abc.Iterable][] into a [tuple][] and wraps it into
+    a [trcks.AwaitableSuccessTuple][],
     which can then be used with the higher-order functions
     from [trcks.fp.monads.awaitable_result_tuple][].
 
@@ -1372,7 +1373,7 @@ in the failure case or in the success case (for each element), respectively:
     ...         AwaitableResultTuple[ReadErrorLiteral | WriteErrorLiteral, str],
     ...     ] = (
     ...         input_paths,
-    ...         art.construct_successes_from_tuple,
+    ...         art.construct_successes_from_iterable,
     ...         art.map_successes_to_awaitable_result(read_from_disk),
     ...         art.tap_successes(lambda s: print(f"LOG: Read '{s}' from disk.")),
     ...         art.map_successes(transform),
@@ -1441,7 +1442,7 @@ the original success values are preserved:
     ...         AwaitableResultTuple[ReadErrorLiteral | OutOfDiskSpace, str],
     ...     ] = (
     ...         input_paths,
-    ...         art.construct_successes_from_tuple,
+    ...         art.construct_successes_from_iterable,
     ...         art.map_successes_to_awaitable_result(read_from_disk),
     ...         art.tap_successes(lambda s: print(f"LOG: Persisting '{s}'.")),
     ...         art.tap_successes_to_awaitable_result(write_to_disk),

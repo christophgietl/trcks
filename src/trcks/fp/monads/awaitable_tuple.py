@@ -18,7 +18,7 @@ Example:
     >>> async def main() -> tuple[int, ...]:
     ...     return await pipe(
     ...         (
-    ...             at.construct_from_tuple((4, 2, 0)),
+    ...             at.construct_from_iterable((4, 2, 0)),
     ...             at.map_(double_integer),
     ...             at.tap(log_integer),
     ...         )
@@ -43,7 +43,7 @@ Example:
     >>> async def main() -> tuple[int, ...]:
     ...     return await pipe(
     ...         (
-    ...             at.construct_from_tuple((1, 2, 3)),
+    ...             at.construct_from_iterable((1, 2, 3)),
     ...             at.map_to_awaitable_iterable(slowly_duplicate_integer),
     ...         )
     ...     )
@@ -116,25 +116,33 @@ def construct_from_awaitable(awtbl: Awaitable[_T]) -> AwaitableTuple[_T]:
     return a.map_(t.construct)(awtbl)
 
 
-def construct_from_tuple(tpl: tuple[_T, ...]) -> AwaitableTuple[_T]:
-    """Create a [trcks.AwaitableTuple][] from a homogeneous tuple.
+def construct_from_iterable(it: Iterable[_T]) -> AwaitableTuple[_T]:
+    """Create a [trcks.AwaitableTuple][] from an iterable.
 
     Args:
-        tpl: The homogeneous tuple to create
+        it: The iterable to create
             the [trcks.AwaitableTuple][] from.
 
     Returns:
-        The [trcks.AwaitableTuple][] created from the homogeneous tuple.
+        The [trcks.AwaitableTuple][] created from the iterable.
 
     Example:
         >>> import asyncio
         >>> from trcks import AwaitableTuple
         >>> from trcks.fp.monads import awaitable_tuple as at
-        >>> a_tpl: AwaitableTuple[int] = at.construct_from_tuple((1, 2))
+        >>> a_tpl: AwaitableTuple[int] = at.construct_from_iterable((1, 2))
         >>> asyncio.run(at.to_coroutine_tuple(a_tpl))
         (1, 2)
     """
-    return a.construct(tpl)
+    return a.construct(tuple(it))
+
+
+@deprecated("Use construct_from_iterable instead")
+def construct_from_tuple(tpl: tuple[_T, ...]) -> AwaitableTuple[_T]:
+    """Deprecated alias for
+    [trcks.fp.monads.awaitable_tuple.construct_from_iterable][].
+    """
+    return construct_from_iterable(tpl)  # pragma: no cover
 
 
 def map_(
@@ -168,7 +176,7 @@ def map_(
         ...     return n * 2
         >>> a_tpl: AwaitableTuple[int] = pipe(
         ...     (
-        ...         at.construct_from_tuple((1, 2, 3)),
+        ...         at.construct_from_iterable((1, 2, 3)),
         ...         at.map_(double_integer),
         ...     )
         ... )
@@ -206,7 +214,7 @@ def map_to_awaitable(
         ...     return n + 1
         >>> a_tpl: AwaitableTuple[int] = pipe(
         ...     (
-        ...         at.construct_from_tuple((1, 2)),
+        ...         at.construct_from_iterable((1, 2)),
         ...         at.map_to_awaitable(slowly_add_one),
         ...     )
         ... )
@@ -244,7 +252,7 @@ def map_to_awaitable_iterable(
         ...     return n, n
         >>> a_tpl: AwaitableTuple[int] = pipe(
         ...     (
-        ...         at.construct_from_tuple((1, 2)),
+        ...         at.construct_from_iterable((1, 2)),
         ...         at.map_to_awaitable_iterable(slowly_duplicate_integer),
         ...     )
         ... )
@@ -298,7 +306,7 @@ def map_to_iterable(
         ...     return n, -n
         >>> a_tpl: AwaitableTuple[int] = pipe(
         ...     (
-        ...         at.construct_from_tuple((1, 2)),
+        ...         at.construct_from_iterable((1, 2)),
         ...         at.map_to_iterable(add_negative),
         ...     )
         ... )
@@ -344,7 +352,7 @@ def tap(
         ...
         >>> a_tpl: AwaitableTuple[int] = pipe(
         ...     (
-        ...         at.construct_from_tuple((1, 2)),
+        ...         at.construct_from_iterable((1, 2)),
         ...         at.tap(log_integer),
         ...     )
         ... )
@@ -385,7 +393,7 @@ def tap_to_awaitable(
         ...     print(f"Received: {n}")
         >>> a_tpl: AwaitableTuple[int] = pipe(
         ...     (
-        ...         at.construct_from_tuple((1, 2)),
+        ...         at.construct_from_iterable((1, 2)),
         ...         at.tap_to_awaitable(slowly_log_integer),
         ...     )
         ... )
@@ -435,7 +443,7 @@ def tap_to_awaitable_iterable(
         ...     return tuple(c for c in candidates if n % c == 0)
         >>> a_tpl: AwaitableTuple[int] = pipe(
         ...     (
-        ...         at.construct_from_tuple((1, 2, 3, 4)),
+        ...         at.construct_from_iterable((1, 2, 3, 4)),
         ...         at.tap_to_awaitable_iterable(slowly_get_divisors),
         ...     )
         ... )
@@ -491,7 +499,7 @@ def tap_to_iterable(
         ...     return tuple(c for c in candidates if n % c == 0)
         >>> a_tpl: AwaitableTuple[int] = pipe(
         ...     (
-        ...         at.construct_from_tuple((1, 2, 3, 4)),
+        ...         at.construct_from_iterable((1, 2, 3, 4)),
         ...         at.tap_to_iterable(get_divisors),
         ...     )
         ... )
