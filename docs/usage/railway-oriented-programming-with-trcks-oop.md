@@ -624,7 +624,7 @@ through the same chain of transformations:
     >>> emails = ("  Erika.Mustermann@Domain.ORG ", "JOHN_DOE@Provider.COM  ")
     >>> (
     ...     TupleWrapper
-    ...     .construct_from_tuple(emails)
+    ...     .construct_from_iterable(emails)
     ...     .map(normalize_email)
     ...     .map(to_domain)
     ...     .core
@@ -641,7 +641,7 @@ let us have a look at the individual steps of the chain:
     <!-- rumdl-disable MD013 -->
     ```pycon
     >>> # 1. Wrap the input tuple:
-    >>> wrapped: TupleWrapper[str] = TupleWrapper.construct_from_tuple(
+    >>> wrapped: TupleWrapper[str] = TupleWrapper.construct_from_iterable(
     ...     ("  Erika.Mustermann@Domain.ORG ", "JOHN_DOE@Provider.COM  ")
     ... )
     >>> wrapped
@@ -672,7 +672,7 @@ let us have a look at the individual steps of the chain:
     to each element and flattens the results (like a "flat map"):
 
     ```pycon
-    >>> TupleWrapper.construct_from_tuple(
+    >>> TupleWrapper.construct_from_iterable(
     ...     ("ab", "cd")
     ... ).map_to_iterable(tuple).core
     ('a', 'b', 'c', 'd')
@@ -687,7 +687,7 @@ while preserving the original tuple:
     ```pycon
     >>> tuple_wrapper = (
     ...     TupleWrapper
-    ...     .construct_from_tuple(emails)
+    ...     .construct_from_iterable(emails)
     ...     .map(normalize_email)
     ...     .tap(lambda e: print(f"LOG: Processing '{e}'."))
     ...     .map(to_domain)
@@ -740,7 +740,7 @@ Processing short-circuits on the first [trcks.Failure][].
     ... ) -> ResultTuple[FailureDescription, float]:
     ...     return (
     ...         TupleWrapper
-    ...         .construct_from_tuple(user_emails)
+    ...         .construct_from_iterable(user_emails)
     ...         .map_to_result(get_user_id)
     ...         .map_successes_to_result(get_subscription_id)
     ...         .map_successes(get_subscription_fee)
@@ -767,7 +767,7 @@ let us have a look at the individual steps of the chain:
     >>> from trcks.oop import ResultTupleWrapper
     >>>
     >>> # 1. Wrap the input tuple:
-    >>> wrapped: TupleWrapper[str] = TupleWrapper.construct_from_tuple(
+    >>> wrapped: TupleWrapper[str] = TupleWrapper.construct_from_iterable(
     ...     ("erika.mustermann@domain.org",)
     ... )
     >>> wrapped
@@ -817,7 +817,7 @@ in the success case (for each element) or in the failure case, respectively:
     ... ) -> ResultTuple[FailureDescription, float]:
     ...     return (
     ...         TupleWrapper
-    ...         .construct_from_tuple(user_emails)
+    ...         .construct_from_iterable(user_emails)
     ...         .map_to_result(get_user_id)
     ...         .tap_successes(lambda n: print(f"LOG: User ID: {n}."))
     ...         .map_successes_to_result(get_subscription_id)
@@ -876,7 +876,7 @@ the original success values are preserved.
     ... ) -> ResultTuple[UserDoesNotExist | OutOfDiskSpace, int]:
     ...     return (
     ...         TupleWrapper
-    ...         .construct_from_tuple(user_emails)
+    ...         .construct_from_iterable(user_emails)
     ...         .map_to_result(get_user_id)
     ...         .tap_successes_to_result(write_to_disk)
     ...         .core
@@ -910,7 +910,7 @@ When the second element fails, the third element is never evaluated:
     ...
     >>> (
     ...     TupleWrapper
-    ...     .construct_from_tuple(
+    ...     .construct_from_iterable(
     ...         (
     ...             "erika.mustermann@domain.org",
     ...             "jane_doe@provider.com",
@@ -960,7 +960,7 @@ applied to each element in the tuple:
     ... ) -> tuple[str, ...]:
     ...     return await (
     ...         TupleWrapper
-    ...         .construct_from_tuple(input_paths)
+    ...         .construct_from_iterable(input_paths)
     ...         .map_to_awaitable(read_from_disk)
     ...         .map(transform)
     ...         .core
@@ -979,7 +979,7 @@ let us have a look at the individual steps of the chain:
     ```pycon
     >>> from trcks.oop import AwaitableTupleWrapper
     >>> # 1. Wrap the input tuple:
-    >>> wrapped: TupleWrapper[str] = TupleWrapper.construct_from_tuple(
+    >>> wrapped: TupleWrapper[str] = TupleWrapper.construct_from_iterable(
     ...     ("a.txt", "b.txt")
     ... )
     >>> wrapped
@@ -1024,7 +1024,7 @@ allows us to execute asynchronous side effects for each element.
     ... ) -> tuple[str, ...]:
     ...     return await (
     ...         TupleWrapper
-    ...         .construct_from_tuple(input_paths)
+    ...         .construct_from_iterable(input_paths)
     ...         .map_to_awaitable(read_from_disk)
     ...         .tap(lambda s: print(f"Read '{s}' from disk."))
     ...         .map(transform)
@@ -1087,7 +1087,7 @@ just as in the synchronous case above.
     ... ) -> ResultTuple[ReadErrorLiteral | WriteErrorLiteral, str]:
     ...     return await (
     ...         TupleWrapper
-    ...         .construct_from_tuple(input_paths)
+    ...         .construct_from_iterable(input_paths)
     ...         .map_to_awaitable_result(read_from_disk)
     ...         .map_successes(transform)
     ...         .tap_successes_to_awaitable_result(
@@ -1113,7 +1113,7 @@ let us have a look at the individual steps of the chain:
     ```pycon
     >>> from trcks.oop import AwaitableResultTupleWrapper
     >>> # 1. Wrap the input tuple:
-    >>> wrapped: TupleWrapper[str] = TupleWrapper.construct_from_tuple(
+    >>> wrapped: TupleWrapper[str] = TupleWrapper.construct_from_iterable(
     ...     ("a.txt", "b.txt")
     ... )
     >>> wrapped
@@ -1174,7 +1174,7 @@ in the failure case or in the success case (for each element), respectively:
     ... ) -> ResultTuple[ReadErrorLiteral | WriteErrorLiteral, str]:
     ...     return await (
     ...         TupleWrapper
-    ...         .construct_from_tuple(input_paths)
+    ...         .construct_from_iterable(input_paths)
     ...         .map_to_awaitable_result(read_from_disk)
     ...         .tap_successes(lambda s: print(f"LOG: Read '{s}' from disk."))
     ...         .map_successes(transform)
@@ -1237,7 +1237,7 @@ the original success values are preserved:
     ... ) -> ResultTuple[ReadErrorLiteral | OutOfDiskSpace, str]:
     ...     return await (
     ...         TupleWrapper
-    ...         .construct_from_tuple(input_paths)
+    ...         .construct_from_iterable(input_paths)
     ...         .map_to_awaitable_result(read_from_disk)
     ...         .tap_successes(lambda s: print(f"LOG: Persisting '{s}'."))
     ...         .tap_successes_to_awaitable_result(write_to_disk)
