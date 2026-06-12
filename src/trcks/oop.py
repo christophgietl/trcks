@@ -398,7 +398,7 @@ class AwaitableResultTupleWrapper(
             >>> asyncio.run(wrapper.core_as_coroutine)
             ('success', (1, 2))
         """
-        return AwaitableResultTupleWrapper(art.construct_from_result_tuple(r_tpl))
+        return AwaitableResultTupleWrapper(art.construct_from_result_iterable(r_tpl))
 
     @staticmethod
     def construct_successes(value: _S) -> AwaitableResultTupleWrapper[Never, _S]:
@@ -481,7 +481,7 @@ class AwaitableResultTupleWrapper(
             >>> asyncio.run(wrapper.core_as_coroutine)
             ('success', (1, 2))
         """
-        return AwaitableResultTupleWrapper(art.construct_successes_from_tuple(tpl))
+        return AwaitableResultTupleWrapper(art.construct_successes_from_iterable(tpl))
 
     def map_failure(
         self, f: Callable[[_F_default_co], _F]
@@ -3939,7 +3939,7 @@ class AwaitableTupleWrapper(_AwaitableWrapper[tuple[_T_co, ...]]):
             >>> asyncio.run(awaitable_tuple_wrapper.core_as_coroutine)
             (1, 2)
         """
-        return AwaitableTupleWrapper(at.construct_from_tuple(tpl))
+        return AwaitableTupleWrapper(at.construct_from_iterable(tpl))
 
     def map(self, f: Callable[[_T_co], _T]) -> AwaitableTupleWrapper[_T]:
         """Apply a synchronous function to each element in the wrapped
@@ -6586,7 +6586,7 @@ class ResultTupleWrapper(_ResultWrapper[_F_default_co, tuple[_S_default_co, ...]
             >>> ResultTupleWrapper.construct_successes_from_tuple((1, 2))
             ResultTupleWrapper(core=('success', (1, 2)))
         """
-        return ResultTupleWrapper(rt.construct_successes_from_tuple(tpl))
+        return ResultTupleWrapper(rt.construct_successes_from_iterable(tpl))
 
     def map_failure(
         self, f: Callable[[_F_default_co], _F]

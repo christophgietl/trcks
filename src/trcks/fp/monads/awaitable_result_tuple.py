@@ -185,31 +185,41 @@ def construct_from_result(rslt: Result[_F, _S]) -> AwaitableResultTuple[_F, _S]:
     return a.construct(rt.construct_from_result(rslt))
 
 
-def construct_from_result_tuple(
-    r_tpl: ResultTuple[_F, _S],
+def construct_from_result_iterable(
+    r_it: ResultIterable[_F, _S],
 ) -> AwaitableResultTuple[_F, _S]:
     """Create a [trcks.AwaitableResultTuple][] object
-    from a [trcks.ResultTuple][] object.
+    from a [trcks.ResultIterable][] object.
 
     Args:
-        r_tpl: [trcks.ResultTuple][] object to be wrapped
-            in a [trcks.AwaitableResultTuple][] object.
+        r_it: [trcks.ResultIterable][] object to be converted to a [trcks.ResultTuple][]
+            and wrapped in a [trcks.AwaitableResultTuple][] object.
 
     Returns:
         A new [trcks.AwaitableResultTuple][] instance containing
-            the given [trcks.ResultTuple][] object.
+            the elements of the given [trcks.ResultIterable][] object.
 
     Example:
         >>> import asyncio
         >>> from collections.abc import Awaitable
         >>> from trcks.fp.monads import awaitable_result_tuple as art
-        >>> a_r_tpl = art.construct_from_result_tuple(("success", (1, 2)))
+        >>> a_r_tpl = art.construct_from_result_iterable(("success", (1, 2)))
         >>> isinstance(a_r_tpl, Awaitable)
         True
         >>> asyncio.run(art.to_coroutine_result_tuple(a_r_tpl))
         ('success', (1, 2))
     """
-    return a.construct(r_tpl)
+    return a.construct(r.map_success(tuple)(r_it))
+
+
+@deprecated("Use construct_from_result_iterable instead")
+def construct_from_result_tuple(
+    r_tpl: ResultTuple[_F, _S],
+) -> AwaitableResultTuple[_F, _S]:
+    """Deprecated alias for
+    [trcks.fp.monads.awaitable_result_tuple.construct_from_result_iterable][].
+    """
+    return construct_from_result_iterable(r_tpl)  # pragma: no cover
 
 
 def construct_successes(value: _S) -> AwaitableSuccessTuple[_S]:
@@ -260,26 +270,36 @@ def construct_successes_from_awaitable(
     return a.map_(rt.construct_successes)(awtbl)
 
 
-def construct_successes_from_tuple(
-    tpl: tuple[_S, ...],
+def construct_successes_from_iterable(
+    it: Iterable[_S],
 ) -> AwaitableSuccessTuple[_S]:
-    """Create a [trcks.AwaitableSuccessTuple][] object from a homogeneous tuple.
+    """Create a [trcks.AwaitableSuccessTuple][] object from an iterable.
 
     Args:
-        tpl: Homogeneous tuple to be wrapped in a [trcks.AwaitableSuccessTuple][].
+        it: The iterable to create
+            the [trcks.AwaitableSuccessTuple][] from.
 
     Returns:
-        A new [trcks.AwaitableSuccessTuple][] instance containing
-            the given homogeneous tuple.
+        The [trcks.AwaitableSuccessTuple][] created from the iterable.
 
     Example:
         >>> import asyncio
         >>> from trcks.fp.monads import awaitable_result_tuple as art
-        >>> a_r_tpl = art.construct_successes_from_tuple((1, 2))
+        >>> a_r_tpl = art.construct_successes_from_iterable((1, 2))
         >>> asyncio.run(art.to_coroutine_result_tuple(a_r_tpl))
         ('success', (1, 2))
     """
-    return a.construct(rt.construct_successes_from_tuple(tpl))
+    return a.construct(rt.construct_successes_from_iterable(it))
+
+
+@deprecated("Use construct_successes_from_iterable instead")
+def construct_successes_from_tuple(
+    tpl: tuple[_S, ...],
+) -> AwaitableSuccessTuple[_S]:
+    """Deprecated alias for
+    [trcks.fp.monads.awaitable_result_tuple.construct_successes_from_iterable][].
+    """
+    return construct_successes_from_iterable(tpl)  # pragma: no cover
 
 
 def map_failure(
@@ -308,7 +328,7 @@ def map_failure(
         >>> a_r_tpl_1 = add_prefix(art.construct_failure("not found"))
         >>> asyncio.run(art.to_coroutine_result_tuple(a_r_tpl_1))
         ('failure', 'err: not found')
-        >>> a_r_tpl_2 = add_prefix(art.construct_successes_from_tuple((1, 2)))
+        >>> a_r_tpl_2 = add_prefix(art.construct_successes_from_iterable((1, 2)))
         >>> asyncio.run(art.to_coroutine_result_tuple(a_r_tpl_2))
         ('success', (1, 2))
     """
@@ -343,7 +363,7 @@ def map_failure_to_awaitable(
         >>> asyncio.run(art.to_coroutine_result_tuple(a_r_tpl_1))
         ('failure', 'err: not found')
         >>> a_r_tpl_2 = slowly_add_prefix(
-        ...     art.construct_successes_from_tuple((1, 2))
+        ...     art.construct_successes_from_iterable((1, 2))
         ... )
         >>> asyncio.run(art.to_coroutine_result_tuple(a_r_tpl_2))
         ('success', (1, 2))
@@ -397,7 +417,7 @@ def map_failure_to_awaitable_result_iterable(
         >>> asyncio.run(art.to_coroutine_result_tuple(a_r_tpl_2))
         ('failure', 'fatal')
         >>> a_r_tpl_3 = slowly_recover_from_not_found(
-        ...     art.construct_successes_from_tuple((1, 2))
+        ...     art.construct_successes_from_iterable((1, 2))
         ... )
         >>> asyncio.run(art.to_coroutine_result_tuple(a_r_tpl_3))
         ('success', (1, 2))
@@ -469,7 +489,7 @@ def map_failure_to_iterable(
         >>> asyncio.run(art.to_coroutine_result_tuple(a_r_tpl_2))
         ('success', ())
         >>> a_r_tpl_3 = recover_from_not_found(
-        ...     art.construct_successes_from_tuple((1, 2))
+        ...     art.construct_successes_from_iterable((1, 2))
         ... )
         >>> asyncio.run(art.to_coroutine_result_tuple(a_r_tpl_3))
         ('success', (1, 2))
@@ -513,7 +533,7 @@ def map_failure_to_result(
         >>> asyncio.run(art.to_coroutine_result_tuple(a_r_tpl_2))
         ('failure', 'fatal')
         >>> a_r_tpl_3 = recover_from_not_found(
-        ...     art.construct_successes_from_tuple((1, 2))
+        ...     art.construct_successes_from_iterable((1, 2))
         ... )
         >>> asyncio.run(art.to_coroutine_result_tuple(a_r_tpl_3))
         ('success', (1, 2))
@@ -560,7 +580,7 @@ def map_failure_to_result_iterable(
         >>> asyncio.run(art.to_coroutine_result_tuple(a_r_tpl_2))
         ('failure', 'fatal')
         >>> a_r_tpl_3 = recover_from_not_found(
-        ...     art.construct_successes_from_tuple((1, 2))
+        ...     art.construct_successes_from_iterable((1, 2))
         ... )
         >>> asyncio.run(art.to_coroutine_result_tuple(a_r_tpl_3))
         ('success', (1, 2))
@@ -617,7 +637,7 @@ def map_successes(
         ...
         >>> double_integers = art.map_successes(_double_integer)
         >>> a_r_tpl_1 = double_integers(
-        ...     art.construct_successes_from_tuple((1, 2, 3))
+        ...     art.construct_successes_from_iterable((1, 2, 3))
         ... )
         >>> asyncio.run(art.to_coroutine_result_tuple(a_r_tpl_1))
         ('success', (2, 4, 6))
@@ -654,7 +674,7 @@ def map_successes_to_awaitable(
         ...     _slowly_double_integer
         ... )
         >>> a_r_tpl_1 = slowly_double_integers(
-        ...     art.construct_successes_from_tuple((1, 2, 3))
+        ...     art.construct_successes_from_iterable((1, 2, 3))
         ... )
         >>> asyncio.run(art.to_coroutine_result_tuple(a_r_tpl_1))
         ('success', (2, 4, 6))
@@ -700,12 +720,12 @@ def map_successes_to_awaitable_result(
         ...     _slowly_double_integer_if_positive
         ... )
         >>> a_r_tpl_1 = slowly_double_integers_if_positive(
-        ...     art.construct_successes_from_tuple((1, 2))
+        ...     art.construct_successes_from_iterable((1, 2))
         ... )
         >>> asyncio.run(art.to_coroutine_result_tuple(a_r_tpl_1))
         ('success', (2, 4))
         >>> a_r_tpl_2 = slowly_double_integers_if_positive(
-        ...     art.construct_successes_from_tuple((1, -1, 2))
+        ...     art.construct_successes_from_iterable((1, -1, 2))
         ... )
         >>> asyncio.run(art.to_coroutine_result_tuple(a_r_tpl_2))
         ('failure', 'negative')
@@ -757,12 +777,12 @@ def map_successes_to_awaitable_result_iterable(
         ...     )
         ... )
         >>> a_r_tpl_1 = slowly_duplicate_integers_if_positive(
-        ...     art.construct_successes_from_tuple((1, 2))
+        ...     art.construct_successes_from_iterable((1, 2))
         ... )
         >>> asyncio.run(art.to_coroutine_result_tuple(a_r_tpl_1))
         ('success', (1, 1, 2, 2))
         >>> a_r_tpl_2 = slowly_duplicate_integers_if_positive(
-        ...     art.construct_successes_from_tuple((1, -1, 2))
+        ...     art.construct_successes_from_iterable((1, -1, 2))
         ... )
         >>> asyncio.run(art.to_coroutine_result_tuple(a_r_tpl_2))
         ('failure', 'negative')
@@ -834,7 +854,7 @@ def map_successes_to_iterable(
         ...     return n, n
         ...
         >>> duplicate_integers = art.map_successes_to_iterable(_duplicate_integer)
-        >>> a_r_tpl = duplicate_integers(art.construct_successes_from_tuple((1, 2)))
+        >>> a_r_tpl = duplicate_integers(art.construct_successes_from_iterable((1, 2)))
         >>> asyncio.run(art.to_coroutine_result_tuple(a_r_tpl))
         ('success', (1, 1, 2, 2))
     """
@@ -872,12 +892,12 @@ def map_successes_to_result(
         ...     _double_integer_if_positive
         ... )
         >>> a_r_tpl_1 = double_integers_if_positive(
-        ...     art.construct_successes_from_tuple((1, 2))
+        ...     art.construct_successes_from_iterable((1, 2))
         ... )
         >>> asyncio.run(art.to_coroutine_result_tuple(a_r_tpl_1))
         ('success', (2, 4))
         >>> a_r_tpl_2 = double_integers_if_positive(
-        ...     art.construct_successes_from_tuple((1, -1, 2))
+        ...     art.construct_successes_from_iterable((1, -1, 2))
         ... )
         >>> asyncio.run(art.to_coroutine_result_tuple(a_r_tpl_2))
         ('failure', 'negative')
@@ -920,7 +940,7 @@ def map_successes_to_result_iterable(
         ...     _duplicate_integer_if_positive
         ... )
         >>> a_r_tpl_1 = duplicate_integers_if_positive(
-        ...     art.construct_successes_from_tuple((1, 2))
+        ...     art.construct_successes_from_iterable((1, 2))
         ... )
         >>> asyncio.run(art.to_coroutine_result_tuple(a_r_tpl_1))
         ('success', (1, 1, 2, 2))
@@ -981,7 +1001,7 @@ def tap_failure(
         Failure: oops
         >>> r_tpl_1
         ('failure', 'oops')
-        >>> a_r_tpl_2 = log_failure(art.construct_successes_from_tuple((1,)))
+        >>> a_r_tpl_2 = log_failure(art.construct_successes_from_iterable((1,)))
         >>> r_tpl_2 = asyncio.run(art.to_coroutine_result_tuple(a_r_tpl_2))
         >>> r_tpl_2
         ('success', (1,))
@@ -1017,7 +1037,7 @@ def tap_failure_to_awaitable(
         Failure: oops
         >>> r_tpl_1
         ('failure', 'oops')
-        >>> a_r_tpl_2 = slowly_log_failure(art.construct_successes_from_tuple((1,)))
+        >>> a_r_tpl_2 = slowly_log_failure(art.construct_successes_from_iterable((1,)))
         >>> r_tpl_2 = asyncio.run(art.to_coroutine_result_tuple(a_r_tpl_2))
         >>> r_tpl_2
         ('success', (1,))
@@ -1205,7 +1225,7 @@ def tap_failure_to_iterable(
         Logged: critical
         >>> r_tpl_1
         ('success', ('critical', 'critical'))
-        >>> a_r_tpl_2 = log_and_alert(art.construct_successes_from_tuple((1,)))
+        >>> a_r_tpl_2 = log_and_alert(art.construct_successes_from_iterable((1,)))
         >>> r_tpl_2 = asyncio.run(art.to_coroutine_result_tuple(a_r_tpl_2))
         >>> r_tpl_2
         ('success', (1,))
@@ -1251,7 +1271,7 @@ def tap_failure_to_result(
         >>> asyncio.run(art.to_coroutine_result_tuple(a_r_tpl_2))
         ('failure', 'fatal')
         >>> a_r_tpl_3 = recover_from_not_found(
-        ...     art.construct_successes_from_tuple((1,))
+        ...     art.construct_successes_from_iterable((1,))
         ... )
         >>> asyncio.run(art.to_coroutine_result_tuple(a_r_tpl_3))
         ('success', (1,))
@@ -1301,7 +1321,7 @@ def tap_failure_to_result_iterable(
         >>> asyncio.run(art.to_coroutine_result_tuple(a_r_tpl_2))
         ('failure', 'fatal')
         >>> a_r_tpl_3 = recover_from_not_found(
-        ...     art.construct_successes_from_tuple((1,))
+        ...     art.construct_successes_from_iterable((1,))
         ... )
         >>> asyncio.run(art.to_coroutine_result_tuple(a_r_tpl_3))
         ('success', (1,))
@@ -1357,7 +1377,7 @@ def tap_successes(
         ...     print(f"Value: {n}")
         ...
         >>> log_values = art.tap_successes(_log_value)
-        >>> a_r_tpl_1 = log_values(art.construct_successes_from_tuple((1, 2)))
+        >>> a_r_tpl_1 = log_values(art.construct_successes_from_iterable((1, 2)))
         >>> r_tpl_1 = asyncio.run(art.to_coroutine_result_tuple(a_r_tpl_1))
         Value: 1
         Value: 2
@@ -1394,7 +1414,7 @@ def tap_successes_to_awaitable(
         ...     print(f"Value: {n}")
         ...
         >>> slowly_log_values = art.tap_successes_to_awaitable(_slowly_log_value)
-        >>> a_r_tpl_1 = slowly_log_values(art.construct_successes_from_tuple((1, 2)))
+        >>> a_r_tpl_1 = slowly_log_values(art.construct_successes_from_iterable((1, 2)))
         >>> r_tpl_1 = asyncio.run(art.to_coroutine_result_tuple(a_r_tpl_1))
         Value: 1
         Value: 2
@@ -1447,11 +1467,11 @@ def tap_successes_to_awaitable_result(
         >>> validate_positive = art.tap_successes_to_awaitable_result(
         ...     _validate_positive
         ... )
-        >>> a_r_tpl_1 = validate_positive(art.construct_successes_from_tuple((1, 2)))
+        >>> a_r_tpl_1 = validate_positive(art.construct_successes_from_iterable((1, 2)))
         >>> asyncio.run(art.to_coroutine_result_tuple(a_r_tpl_1))
         ('success', (1, 2))
         >>> a_r_tpl_2 = validate_positive(
-        ...     art.construct_successes_from_tuple((1, -1))
+        ...     art.construct_successes_from_iterable((1, -1))
         ... )
         >>> asyncio.run(art.to_coroutine_result_tuple(a_r_tpl_2))
         ('failure', 'negative')
@@ -1500,11 +1520,11 @@ def tap_successes_to_awaitable_result_iterable(
         >>> validate_positive = art.tap_successes_to_awaitable_result_iterable(
         ...     _validate_positive
         ... )
-        >>> a_r_tpl_1 = validate_positive(art.construct_successes_from_tuple((7,)))
+        >>> a_r_tpl_1 = validate_positive(art.construct_successes_from_iterable((7,)))
         >>> asyncio.run(art.to_coroutine_result_tuple(a_r_tpl_1))
         ('success', (7, 7))
         >>> a_r_tpl_2 = validate_positive(
-        ...     art.construct_successes_from_tuple((1, -1))
+        ...     art.construct_successes_from_iterable((1, -1))
         ... )
         >>> asyncio.run(art.to_coroutine_result_tuple(a_r_tpl_2))
         ('failure', 'negative')
@@ -1566,7 +1586,7 @@ def tap_successes_to_iterable(
         ...     return print(f"Received: {n}"), print(f"Received: {n}")
         ...
         >>> log_twice = art.tap_successes_to_iterable(_log_twice)
-        >>> a_r_tpl = log_twice(art.construct_successes_from_tuple((7,)))
+        >>> a_r_tpl = log_twice(art.construct_successes_from_iterable((7,)))
         >>> r_tpl = asyncio.run(art.to_coroutine_result_tuple(a_r_tpl))
         Received: 7
         Received: 7
@@ -1606,11 +1626,11 @@ def tap_successes_to_result(
         ...     return "success", None
         ...
         >>> validate_positive = art.tap_successes_to_result(_validate_positive)
-        >>> a_r_tpl_1 = validate_positive(art.construct_successes_from_tuple((1, 2)))
+        >>> a_r_tpl_1 = validate_positive(art.construct_successes_from_iterable((1, 2)))
         >>> asyncio.run(art.to_coroutine_result_tuple(a_r_tpl_1))
         ('success', (1, 2))
         >>> a_r_tpl_2 = validate_positive(
-        ...     art.construct_successes_from_tuple((1, -1))
+        ...     art.construct_successes_from_iterable((1, -1))
         ... )
         >>> asyncio.run(art.to_coroutine_result_tuple(a_r_tpl_2))
         ('failure', 'negative')
@@ -1656,12 +1676,12 @@ def tap_successes_to_result_iterable(
         ...     _validate_positive_twice
         ... )
         >>> a_r_tpl_1 = validate_positive_twice(
-        ...     art.construct_successes_from_tuple((7,))
+        ...     art.construct_successes_from_iterable((7,))
         ... )
         >>> asyncio.run(art.to_coroutine_result_tuple(a_r_tpl_1))
         ('success', (7, 7))
         >>> a_r_tpl_2 = validate_positive_twice(
-        ...     art.construct_successes_from_tuple((1, -1))
+        ...     art.construct_successes_from_iterable((1, -1))
         ... )
         >>> asyncio.run(art.to_coroutine_result_tuple(a_r_tpl_2))
         ('failure', 'negative')
