@@ -374,13 +374,14 @@ class AwaitableResultTupleWrapper(
         return AwaitableResultTupleWrapper(art.construct_from_result(rslt))
 
     @staticmethod
-    def construct_from_result_tuple(
-        r_tpl: ResultTuple[_F_default, _S_default],
+    def construct_from_result_iterable(
+        it: ResultIterable[_F_default, _S_default],
     ) -> AwaitableResultTupleWrapper[_F_default, _S_default]:
-        """Wrap a [trcks.ResultTuple][] object.
+        """Wrap a [trcks.ResultIterable][] object and convert it into an
+        [trcks.AwaitableResultTuple][].
 
         Args:
-            r_tpl: The [trcks.ResultTuple][] object to be wrapped.
+            it: The [trcks.ResultIterable][] object to be wrapped and converted.
 
         Returns:
             A new [trcks.oop.AwaitableResultTupleWrapper][] instance with
@@ -391,14 +392,23 @@ class AwaitableResultTupleWrapper(
             >>> from trcks.oop import AwaitableResultTupleWrapper
             >>> wrapper = (
             ...     AwaitableResultTupleWrapper
-            ...     .construct_from_result_tuple(("success", (1, 2)))
+            ...     .construct_from_result_iterable(("success", [1, 2]))
             ... )
             >>> wrapper
             AwaitableResultTupleWrapper(core=<coroutine object ...>)
             >>> asyncio.run(wrapper.core_as_coroutine)
             ('success', (1, 2))
         """
-        return AwaitableResultTupleWrapper(art.construct_from_result_iterable(r_tpl))
+        return AwaitableResultTupleWrapper(art.construct_from_result_iterable(it))
+
+    @classmethod
+    @deprecated("Use construct_from_result_iterable or the default constructor instead")
+    def construct_from_result_tuple(
+        cls,
+        r_tpl: ResultTuple[_F_default, _S_default],
+    ) -> AwaitableResultTupleWrapper[_F_default, _S_default]:
+        """Deprecated alias for construct_from_result_iterable."""
+        return cls.construct_from_result_iterable(r_tpl)  # pragma: no cover
 
     @staticmethod
     def construct_successes(value: _S) -> AwaitableResultTupleWrapper[Never, _S]:
@@ -457,13 +467,13 @@ class AwaitableResultTupleWrapper(
         )
 
     @staticmethod
-    def construct_successes_from_tuple(
-        tpl: tuple[_S, ...],
+    def construct_successes_from_iterable(
+        it: Iterable[_S],
     ) -> AwaitableResultTupleWrapper[Never, _S]:
-        """Construct and wrap an awaitable [trcks.SuccessTuple][] from a tuple.
+        """Construct and wrap an awaitable [trcks.SuccessTuple][] from an iterable.
 
         Args:
-            tpl: The tuple to be wrapped.
+            it: The [collections.abc.Iterable][] to be wrapped and converted.
 
         Returns:
             A new [trcks.oop.AwaitableResultTupleWrapper][] instance with
@@ -474,14 +484,25 @@ class AwaitableResultTupleWrapper(
             >>> from trcks.oop import AwaitableResultTupleWrapper
             >>> wrapper = (
             ...     AwaitableResultTupleWrapper
-            ...     .construct_successes_from_tuple((1, 2))
+            ...     .construct_successes_from_iterable([1, 2])
             ... )
             >>> wrapper
             AwaitableResultTupleWrapper(core=<coroutine object ...>)
             >>> asyncio.run(wrapper.core_as_coroutine)
             ('success', (1, 2))
         """
-        return AwaitableResultTupleWrapper(art.construct_successes_from_iterable(tpl))
+        return AwaitableResultTupleWrapper(art.construct_successes_from_iterable(it))
+
+    @classmethod
+    @deprecated(
+        "Use construct_successes_from_iterable or the default constructor instead"
+    )
+    def construct_successes_from_tuple(
+        cls,
+        tpl: tuple[_S, ...],
+    ) -> AwaitableResultTupleWrapper[Never, _S]:
+        """Deprecated alias for construct_successes_from_iterable."""
+        return cls.construct_successes_from_iterable(tpl)  # pragma: no cover
 
     def map_failure(
         self, f: Callable[[_F_default_co], _F]
@@ -515,7 +536,7 @@ class AwaitableResultTupleWrapper(
             >>>
             >>> wrapper_2 = (
             ...     AwaitableResultTupleWrapper
-            ...     .construct_successes_from_tuple((1, 2))
+            ...     .construct_successes_from_iterable((1, 2))
             ...     .map_failure(lambda e: f"err: {e}")
             ... )
             >>> wrapper_2
@@ -561,7 +582,7 @@ class AwaitableResultTupleWrapper(
             >>>
             >>> wrapper_2 = (
             ...     AwaitableResultTupleWrapper
-            ...     .construct_successes_from_tuple((1, 2))
+            ...     .construct_successes_from_iterable((1, 2))
             ...     .map_failure_to_awaitable(_slowly_add_prefix)
             ... )
             >>> wrapper_2
@@ -627,7 +648,7 @@ class AwaitableResultTupleWrapper(
             >>>
             >>> wrapper_3 = (
             ...     AwaitableResultTupleWrapper
-            ...     .construct_successes_from_tuple((1, 2))
+            ...     .construct_successes_from_iterable((1, 2))
             ...     .map_failure_to_awaitable_result_iterable(
             ...         _slowly_recover_from_not_found,
             ...     )
@@ -700,7 +721,7 @@ class AwaitableResultTupleWrapper(
             >>>
             >>> wrapper_3 = (
             ...     AwaitableResultTupleWrapper
-            ...     .construct_successes_from_tuple((1, 2))
+            ...     .construct_successes_from_iterable((1, 2))
             ...     .map_failure_to_iterable(_recover_from_not_found)
             ... )
             >>> wrapper_3
@@ -763,7 +784,7 @@ class AwaitableResultTupleWrapper(
             >>>
             >>> wrapper_3 = (
             ...     AwaitableResultTupleWrapper
-            ...     .construct_successes_from_tuple((1, 2))
+            ...     .construct_successes_from_iterable((1, 2))
             ...     .map_failure_to_result(_recover_from_not_found)
             ... )
             >>> wrapper_3
@@ -822,7 +843,7 @@ class AwaitableResultTupleWrapper(
             >>>
             >>> wrapper_3 = (
             ...     AwaitableResultTupleWrapper
-            ...     .construct_successes_from_tuple((1, 2))
+            ...     .construct_successes_from_iterable((1, 2))
             ...     .map_failure_to_result_iterable(_recover_from_not_found)
             ... )
             >>> wrapper_3
@@ -876,7 +897,7 @@ class AwaitableResultTupleWrapper(
             >>> from trcks.oop import AwaitableResultTupleWrapper
             >>> wrapper_1 = (
             ...     AwaitableResultTupleWrapper
-            ...     .construct_successes_from_tuple((1, 2, 3))
+            ...     .construct_successes_from_iterable((1, 2, 3))
             ...     .map_successes(lambda n: n * 2)
             ... )
             >>> wrapper_1
@@ -924,7 +945,7 @@ class AwaitableResultTupleWrapper(
             ...
             >>> wrapper_1 = (
             ...     AwaitableResultTupleWrapper
-            ...     .construct_successes_from_tuple((1, 2, 3))
+            ...     .construct_successes_from_iterable((1, 2, 3))
             ...     .map_successes_to_awaitable(_slowly_double_integer)
             ... )
             >>> wrapper_1
@@ -978,7 +999,7 @@ class AwaitableResultTupleWrapper(
             ...
             >>> wrapper_1 = (
             ...     AwaitableResultTupleWrapper
-            ...     .construct_successes_from_tuple((1, 2))
+            ...     .construct_successes_from_iterable((1, 2))
             ...     .map_successes_to_awaitable_result(
             ...         _slowly_double_integer_if_positive,
             ...     )
@@ -990,7 +1011,7 @@ class AwaitableResultTupleWrapper(
             >>>
             >>> wrapper_2 = (
             ...     AwaitableResultTupleWrapper
-            ...     .construct_successes_from_tuple((1, -1, 2))
+            ...     .construct_successes_from_iterable((1, -1, 2))
             ...     .map_successes_to_awaitable_result(
             ...         _slowly_double_integer_if_positive,
             ...     )
@@ -1051,7 +1072,7 @@ class AwaitableResultTupleWrapper(
             ...
             >>> wrapper_1 = (
             ...     AwaitableResultTupleWrapper
-            ...     .construct_successes_from_tuple((1, 2))
+            ...     .construct_successes_from_iterable((1, 2))
             ...     .map_successes_to_awaitable_result_iterable(
             ...         _slowly_duplicate_integer_if_positive
             ...     )
@@ -1063,7 +1084,7 @@ class AwaitableResultTupleWrapper(
             >>>
             >>> wrapper_2 = (
             ...     AwaitableResultTupleWrapper
-            ...     .construct_successes_from_tuple((1, -1, 2))
+            ...     .construct_successes_from_iterable((1, -1, 2))
             ...     .map_successes_to_awaitable_result_iterable(
             ...         _slowly_duplicate_integer_if_positive
             ...     )
@@ -1127,7 +1148,7 @@ class AwaitableResultTupleWrapper(
             ...
             >>> wrapper_1 = (
             ...     AwaitableResultTupleWrapper
-            ...     .construct_successes_from_tuple((1, 2))
+            ...     .construct_successes_from_iterable((1, 2))
             ...     .map_successes_to_iterable(_duplicate_integer)
             ... )
             >>> wrapper_1
@@ -1168,7 +1189,7 @@ class AwaitableResultTupleWrapper(
             ...
             >>> wrapper_1 = (
             ...     AwaitableResultTupleWrapper
-            ...     .construct_successes_from_tuple((1, 2))
+            ...     .construct_successes_from_iterable((1, 2))
             ...     .map_successes_to_result(_double_integer_if_positive)
             ... )
             >>> wrapper_1
@@ -1178,7 +1199,7 @@ class AwaitableResultTupleWrapper(
             >>>
             >>> wrapper_2 = (
             ...     AwaitableResultTupleWrapper
-            ...     .construct_successes_from_tuple((1, -1, 2))
+            ...     .construct_successes_from_iterable((1, -1, 2))
             ...     .map_successes_to_result(_double_integer_if_positive)
             ... )
             >>> wrapper_2
@@ -1229,7 +1250,7 @@ class AwaitableResultTupleWrapper(
             ...
             >>> wrapper_1 = (
             ...     AwaitableResultTupleWrapper
-            ...     .construct_successes_from_tuple((1, 2))
+            ...     .construct_successes_from_iterable((1, 2))
             ...     .map_successes_to_result_iterable(_duplicate_integer_if_positive)
             ... )
             >>> wrapper_1
@@ -1299,9 +1320,10 @@ class AwaitableResultTupleWrapper(
             Failure: oops
             >>> result_1
             ('failure', 'oops')
-            >>> wrapper_2 = AwaitableResultTupleWrapper.construct_successes_from_tuple(
-            ...     (1,)
-            ... ).tap_failure(_log_failure)
+            >>> wrapper_2 = (
+            ...     AwaitableResultTupleWrapper
+            ...     .construct_successes_from_iterable((1,))
+            ...     .tap_failure(_log_failure))
             >>> wrapper_2
             AwaitableResultTupleWrapper(core=<coroutine object ...>)
             >>> result_2 = asyncio.run(wrapper_2.core_as_coroutine)
@@ -1341,9 +1363,10 @@ class AwaitableResultTupleWrapper(
             Failure: oops
             >>> result_1
             ('failure', 'oops')
-            >>> wrapper_2 = AwaitableResultTupleWrapper.construct_successes_from_tuple(
-            ...     (1,)
-            ... ).tap_failure_to_awaitable(_slowly_log_failure)
+            >>> wrapper_2 = (
+            ...     AwaitableResultTupleWrapper
+            ...     .construct_successes_from_iterable((1,))
+            ...     .tap_failure_to_awaitable(_slowly_log_failure))
             >>> wrapper_2
             AwaitableResultTupleWrapper(core=<coroutine object ...>)
             >>> result_2 = asyncio.run(wrapper_2.core_as_coroutine)
@@ -1527,7 +1550,7 @@ class AwaitableResultTupleWrapper(
             >>>
             >>> wrapper_2 = (
             ...     AwaitableResultTupleWrapper
-            ...     .construct_successes_from_tuple((1,))
+            ...     .construct_successes_from_iterable((1,))
             ...     .tap_failure_to_iterable(_log_and_alert)
             ... )
             >>> wrapper_2
@@ -1593,7 +1616,7 @@ class AwaitableResultTupleWrapper(
             >>>
             >>> wrapper_3 = (
             ...     AwaitableResultTupleWrapper
-            ...     .construct_successes_from_tuple((1,))
+            ...     .construct_successes_from_iterable((1,))
             ...     .tap_failure_to_result(_recover_from_not_found)
             ... )
             >>> wrapper_3
@@ -1655,7 +1678,7 @@ class AwaitableResultTupleWrapper(
             >>>
             >>> wrapper_3 = (
             ...     AwaitableResultTupleWrapper
-            ...     .construct_successes_from_tuple((1,))
+            ...     .construct_successes_from_iterable((1,))
             ...     .tap_failure_to_result_iterable(_recover_from_not_found)
             ... )
             >>> wrapper_3
@@ -1709,7 +1732,7 @@ class AwaitableResultTupleWrapper(
             ...
             >>> wrapper_1 = (
             ...     AwaitableResultTupleWrapper
-            ...     .construct_successes_from_tuple((1, 2))
+            ...     .construct_successes_from_iterable((1, 2))
             ...     .tap_successes(_log_value)
             ... )
             >>> wrapper_1
@@ -1755,7 +1778,7 @@ class AwaitableResultTupleWrapper(
             ...
             >>> wrapper_1 = (
             ...     AwaitableResultTupleWrapper
-            ...     .construct_successes_from_tuple((1, 2))
+            ...     .construct_successes_from_iterable((1, 2))
             ...     .tap_successes_to_awaitable(_slowly_log_value)
             ... )
             >>> wrapper_1
@@ -1808,7 +1831,7 @@ class AwaitableResultTupleWrapper(
             ...
             >>> wrapper_1 = (
             ...     AwaitableResultTupleWrapper
-            ...     .construct_successes_from_tuple((1, 2))
+            ...     .construct_successes_from_iterable((1, 2))
             ...     .tap_successes_to_awaitable_result(_validate_positive)
             ... )
             >>> wrapper_1
@@ -1818,7 +1841,7 @@ class AwaitableResultTupleWrapper(
             >>>
             >>> wrapper_2 = (
             ...     AwaitableResultTupleWrapper
-            ...     .construct_successes_from_tuple((1, -1))
+            ...     .construct_successes_from_iterable((1, -1))
             ...     .tap_successes_to_awaitable_result(_validate_positive)
             ... )
             >>> wrapper_2
@@ -1874,7 +1897,7 @@ class AwaitableResultTupleWrapper(
             ...
             >>> wrapper_1 = (
             ...     AwaitableResultTupleWrapper
-            ...     .construct_successes_from_tuple((7,))
+            ...     .construct_successes_from_iterable((7,))
             ...     .tap_successes_to_awaitable_result_iterable(_validate_positive)
             ... )
             >>> wrapper_1
@@ -1884,7 +1907,7 @@ class AwaitableResultTupleWrapper(
             >>>
             >>> wrapper_2 = (
             ...     AwaitableResultTupleWrapper
-            ...     .construct_successes_from_tuple((1, -1))
+            ...     .construct_successes_from_iterable((1, -1))
             ...     .tap_successes_to_awaitable_result_iterable(_validate_positive)
             ... )
             >>> wrapper_2
@@ -1947,7 +1970,7 @@ class AwaitableResultTupleWrapper(
             ...
             >>> wrapper_1 = (
             ...     AwaitableResultTupleWrapper
-            ...     .construct_successes_from_tuple((7,))
+            ...     .construct_successes_from_iterable((7,))
             ...     .tap_successes_to_iterable(_log_twice)
             ... )
             >>> wrapper_1
@@ -1991,7 +2014,7 @@ class AwaitableResultTupleWrapper(
             ...
             >>> wrapper_1 = (
             ...     AwaitableResultTupleWrapper
-            ...     .construct_successes_from_tuple((1, 2))
+            ...     .construct_successes_from_iterable((1, 2))
             ...     .tap_successes_to_result(_validate_positive)
             ... )
             >>> wrapper_1
@@ -2001,7 +2024,7 @@ class AwaitableResultTupleWrapper(
             >>>
             >>> wrapper_2 = (
             ...     AwaitableResultTupleWrapper
-            ...     .construct_successes_from_tuple((1, -1))
+            ...     .construct_successes_from_iterable((1, -1))
             ...     .tap_successes_to_result(_validate_positive)
             ... )
             >>> wrapper_2
@@ -2053,7 +2076,7 @@ class AwaitableResultTupleWrapper(
             ...
             >>> wrapper_1 = (
             ...     AwaitableResultTupleWrapper
-            ...     .construct_successes_from_tuple((7,))
+            ...     .construct_successes_from_iterable((7,))
             ...     .tap_successes_to_result_iterable(_validate_positive_twice)
             ... )
             >>> wrapper_1
@@ -2063,7 +2086,7 @@ class AwaitableResultTupleWrapper(
             >>>
             >>> wrapper_2 = (
             ...     AwaitableResultTupleWrapper
-            ...     .construct_successes_from_tuple((1, -1))
+            ...     .construct_successes_from_iterable((1, -1))
             ...     .tap_successes_to_result_iterable(_validate_positive_twice)
             ... )
             >>> wrapper_2
@@ -3852,7 +3875,7 @@ class AwaitableTupleWrapper(_AwaitableWrapper[tuple[_T_co, ...]]):
         >>> async def main() -> tuple[int, ...]:
         ...     return await (
         ...         AwaitableTupleWrapper
-        ...         .construct_from_tuple((1, 2, 3))
+        ...         .construct_from_iterable((1, 2, 3))
         ...         .map_to_awaitable(slowly_double)
         ...         .core
         ...     )
@@ -3915,13 +3938,11 @@ class AwaitableTupleWrapper(_AwaitableWrapper[tuple[_T_co, ...]]):
         return AwaitableTupleWrapper(at.construct_from_awaitable(awtbl))
 
     @staticmethod
-    def construct_from_tuple(
-        tpl: tuple[_T, ...],
-    ) -> AwaitableTupleWrapper[_T]:
-        """Construct and wrap a [trcks.AwaitableTuple][] from a tuple.
+    def construct_from_iterable(it: Iterable[_T]) -> AwaitableTupleWrapper[_T]:
+        """Construct and wrap a [trcks.AwaitableTuple][] from an iterable.
 
         Args:
-            tpl: The tuple to be wrapped.
+            it: The [collections.abc.Iterable][] to be wrapped and converted.
 
         Returns:
             A new [trcks.oop.AwaitableTupleWrapper][] instance with
@@ -3932,14 +3953,23 @@ class AwaitableTupleWrapper(_AwaitableWrapper[tuple[_T_co, ...]]):
             >>> from trcks.oop import AwaitableTupleWrapper
             >>> awaitable_tuple_wrapper = (
             ...     AwaitableTupleWrapper
-            ...     .construct_from_tuple((1, 2))
+            ...     .construct_from_iterable([1, 2])
             ... )
             >>> awaitable_tuple_wrapper
             AwaitableTupleWrapper(core=<coroutine object ...>)
             >>> asyncio.run(awaitable_tuple_wrapper.core_as_coroutine)
             (1, 2)
         """
-        return AwaitableTupleWrapper(at.construct_from_iterable(tpl))
+        return AwaitableTupleWrapper(at.construct_from_iterable(it))
+
+    @classmethod
+    @deprecated("Use construct_from_iterable or the default constructor instead")
+    def construct_from_tuple(
+        cls,
+        tpl: tuple[_T, ...],
+    ) -> AwaitableTupleWrapper[_T]:
+        """Deprecated alias for construct_from_iterable."""
+        return cls.construct_from_iterable(tpl)  # pragma: no cover
 
     def map(self, f: Callable[[_T_co], _T]) -> AwaitableTupleWrapper[_T]:
         """Apply a synchronous function to each element in the wrapped
@@ -3961,7 +3991,7 @@ class AwaitableTupleWrapper(_AwaitableWrapper[tuple[_T_co, ...]]):
             ...
             >>> awaitable_tuple_wrapper: AwaitableTupleWrapper[int] = (
             ...     AwaitableTupleWrapper
-            ...     .construct_from_tuple((1, 2, 3))
+            ...     .construct_from_iterable((1, 2, 3))
             ...     .map(double_integer)
             ... )
             >>> awaitable_tuple_wrapper
@@ -3994,7 +4024,7 @@ class AwaitableTupleWrapper(_AwaitableWrapper[tuple[_T_co, ...]]):
             ...
             >>> awaitable_tuple_wrapper: AwaitableTupleWrapper[int] = (
             ...     AwaitableTupleWrapper
-            ...     .construct_from_tuple((1, 2))
+            ...     .construct_from_iterable((1, 2))
             ...     .map_to_awaitable(slowly_add_one)
             ... )
             >>> awaitable_tuple_wrapper
@@ -4027,7 +4057,7 @@ class AwaitableTupleWrapper(_AwaitableWrapper[tuple[_T_co, ...]]):
             ...
             >>> awaitable_tuple_wrapper: AwaitableTupleWrapper[int] = (
             ...     AwaitableTupleWrapper
-            ...     .construct_from_tuple((1, 2))
+            ...     .construct_from_iterable((1, 2))
             ...     .map_to_awaitable_iterable(slowly_duplicate)
             ... )
             >>> awaitable_tuple_wrapper
@@ -4068,7 +4098,7 @@ class AwaitableTupleWrapper(_AwaitableWrapper[tuple[_T_co, ...]]):
             ...
             >>> awaitable_tuple_wrapper: AwaitableTupleWrapper[int] = (
             ...     AwaitableTupleWrapper
-            ...     .construct_from_tuple((1, 2))
+            ...     .construct_from_iterable((1, 2))
             ...     .map_to_iterable(add_negative)
             ... )
             >>> awaitable_tuple_wrapper
@@ -4106,7 +4136,7 @@ class AwaitableTupleWrapper(_AwaitableWrapper[tuple[_T_co, ...]]):
             ...
             >>> awaitable_tuple_wrapper: AwaitableTupleWrapper[int] = (
             ...     AwaitableTupleWrapper
-            ...     .construct_from_tuple((1, 2))
+            ...     .construct_from_iterable((1, 2))
             ...     .tap(log_integer)
             ... )
             >>> awaitable_tuple_wrapper
@@ -4140,7 +4170,7 @@ class AwaitableTupleWrapper(_AwaitableWrapper[tuple[_T_co, ...]]):
             ...
             >>> awaitable_tuple_wrapper: AwaitableTupleWrapper[int] = (
             ...     AwaitableTupleWrapper
-            ...     .construct_from_tuple((1, 2))
+            ...     .construct_from_iterable((1, 2))
             ...     .tap_to_awaitable(slowly_log)
             ... )
             >>> awaitable_tuple_wrapper
@@ -4176,7 +4206,7 @@ class AwaitableTupleWrapper(_AwaitableWrapper[tuple[_T_co, ...]]):
             ...
             >>> awaitable_tuple_wrapper: AwaitableTupleWrapper[int] = (
             ...     AwaitableTupleWrapper
-            ...     .construct_from_tuple((1, 2, 3, 4))
+            ...     .construct_from_iterable((1, 2, 3, 4))
             ...     .tap_to_awaitable_iterable(slowly_get_divisors)
             ... )
             >>> awaitable_tuple_wrapper
@@ -4218,7 +4248,7 @@ class AwaitableTupleWrapper(_AwaitableWrapper[tuple[_T_co, ...]]):
             ...
             >>> awaitable_tuple_wrapper: AwaitableTupleWrapper[int] = (
             ...     AwaitableTupleWrapper
-            ...     .construct_from_tuple((1, 2, 3, 4))
+            ...     .construct_from_iterable((1, 2, 3, 4))
             ...     .tap_to_iterable(get_divisors)
             ... )
             >>> awaitable_tuple_wrapper
@@ -6500,7 +6530,7 @@ class ResultTupleWrapper(_ResultWrapper[_F_default_co, tuple[_S_default_co, ...]
         ...
         >>> result_tuple_wrapper = (
         ...     ResultTupleWrapper
-        ...     .construct_successes_from_tuple((1, 2, 3))
+        ...     .construct_successes_from_iterable((1, 2, 3))
         ...     .map_successes(double_integer)
         ...     .tap_successes(log_integer)
         ...     .map_successes_to_iterable(duplicate_integer)
@@ -6570,23 +6600,34 @@ class ResultTupleWrapper(_ResultWrapper[_F_default_co, tuple[_S_default_co, ...]
         return ResultTupleWrapper(rt.construct_successes(value))
 
     @staticmethod
-    def construct_successes_from_tuple(
-        tpl: tuple[_S, ...],
+    def construct_successes_from_iterable(
+        it: Iterable[_S],
     ) -> ResultTupleWrapper[Never, _S]:
-        """Construct and wrap a [trcks.SuccessTuple][] object from a tuple.
+        """Construct and wrap a [trcks.SuccessTuple][] object from an iterable.
 
         Args:
-            tpl: The tuple to be wrapped.
+            it: The [collections.abc.Iterable][] to be wrapped and converted.
 
         Returns:
             A new [trcks.oop.ResultTupleWrapper][] instance with
                 the wrapped [trcks.SuccessTuple][] object.
 
         Example:
-            >>> ResultTupleWrapper.construct_successes_from_tuple((1, 2))
+            >>> ResultTupleWrapper.construct_successes_from_iterable([1, 2])
             ResultTupleWrapper(core=('success', (1, 2)))
         """
-        return ResultTupleWrapper(rt.construct_successes_from_iterable(tpl))
+        return ResultTupleWrapper(rt.construct_successes_from_iterable(it))
+
+    @classmethod
+    @deprecated(
+        "Use construct_successes_from_iterable or the default constructor instead"
+    )
+    def construct_successes_from_tuple(
+        cls,
+        tpl: tuple[_S, ...],
+    ) -> ResultTupleWrapper[Never, _S]:
+        """Deprecated alias for construct_successes_from_iterable."""
+        return cls.construct_successes_from_iterable(tpl)  # pragma: no cover
 
     def map_failure(
         self, f: Callable[[_F_default_co], _F]
@@ -6615,7 +6656,7 @@ class ResultTupleWrapper(_ResultWrapper[_F_default_co, tuple[_S_default_co, ...]
             ... )
             ResultTupleWrapper(core=('failure', 'err: not found'))
             >>>
-            >>> ResultTupleWrapper.construct_successes_from_tuple(
+            >>> ResultTupleWrapper.construct_successes_from_iterable(
             ...     (1, 2)
             ... ).map_failure(_add_prefix)
             ResultTupleWrapper(core=('success', (1, 2)))
@@ -6654,7 +6695,7 @@ class ResultTupleWrapper(_ResultWrapper[_F_default_co, tuple[_S_default_co, ...]
             >>> asyncio.run(wrapper_1.core_as_coroutine)
             ('failure', 'err: not found')
             >>>
-            >>> wrapper_2 = ResultTupleWrapper.construct_successes_from_tuple(
+            >>> wrapper_2 = ResultTupleWrapper.construct_successes_from_iterable(
             ...     (1, 2)
             ... ).map_failure_to_awaitable(prefix_slowly)
             >>> wrapper_2
@@ -6662,7 +6703,7 @@ class ResultTupleWrapper(_ResultWrapper[_F_default_co, tuple[_S_default_co, ...]
             >>> asyncio.run(wrapper_2.core_as_coroutine)
             ('success', (1, 2))
         """
-        return AwaitableResultTupleWrapper.construct_from_result_tuple(
+        return AwaitableResultTupleWrapper.construct_from_result_iterable(
             self.core
         ).map_failure_to_awaitable(f)
 
@@ -6704,7 +6745,7 @@ class ResultTupleWrapper(_ResultWrapper[_F_default_co, tuple[_S_default_co, ...]
             >>> asyncio.run(wrapper_1.core_as_coroutine)
             ('success', (0, 1))
             >>>
-            >>> wrapper_2 = ResultTupleWrapper.construct_successes_from_tuple(
+            >>> wrapper_2 = ResultTupleWrapper.construct_successes_from_iterable(
             ...     (1, 2)
             ... ).map_failure_to_awaitable_result_iterable(recover)
             >>> wrapper_2
@@ -6712,7 +6753,7 @@ class ResultTupleWrapper(_ResultWrapper[_F_default_co, tuple[_S_default_co, ...]
             >>> asyncio.run(wrapper_2.core_as_coroutine)
             ('success', (1, 2))
         """
-        return AwaitableResultTupleWrapper.construct_from_result_tuple(
+        return AwaitableResultTupleWrapper.construct_from_result_iterable(
             self.core
         ).map_failure_to_awaitable_result_iterable(f)
 
@@ -6761,7 +6802,7 @@ class ResultTupleWrapper(_ResultWrapper[_F_default_co, tuple[_S_default_co, ...]
             ... ).map_failure_to_iterable(_recover_from_not_found)
             ResultTupleWrapper(core=('success', ()))
             >>>
-            >>> ResultTupleWrapper.construct_successes_from_tuple(
+            >>> ResultTupleWrapper.construct_successes_from_iterable(
             ...     (1, 2)
             ... ).map_failure_to_iterable(_recover_from_not_found)
             ResultTupleWrapper(core=('success', (1, 2)))
@@ -6808,7 +6849,7 @@ class ResultTupleWrapper(_ResultWrapper[_F_default_co, tuple[_S_default_co, ...]
             ... ).map_failure_to_result(_recover_from_not_found)
             ResultTupleWrapper(core=('failure', 'not authorized'))
             >>>
-            >>> ResultTupleWrapper.construct_successes_from_tuple(
+            >>> ResultTupleWrapper.construct_successes_from_iterable(
             ...     (1, 2)
             ... ).map_failure_to_result(_recover_from_not_found)
             ResultTupleWrapper(core=('success', (1, 2)))
@@ -6855,7 +6896,7 @@ class ResultTupleWrapper(_ResultWrapper[_F_default_co, tuple[_S_default_co, ...]
             ... ).map_failure_to_result_iterable(_recover_from_not_found)
             ResultTupleWrapper(core=('failure', 'not authorized'))
             >>>
-            >>> ResultTupleWrapper.construct_successes_from_tuple(
+            >>> ResultTupleWrapper.construct_successes_from_iterable(
             ...     (1, 2)
             ... ).map_failure_to_result_iterable(_recover_from_not_found)
             ResultTupleWrapper(core=('success', (1, 2)))
@@ -6907,7 +6948,7 @@ class ResultTupleWrapper(_ResultWrapper[_F_default_co, tuple[_S_default_co, ...]
             >>> def _double_integer(n: int) -> int:
             ...     return n * 2
             ...
-            >>> ResultTupleWrapper.construct_successes_from_tuple(
+            >>> ResultTupleWrapper.construct_successes_from_iterable(
             ...     (1, 2, 3)
             ... ).map_successes(_double_integer)
             ResultTupleWrapper(core=('success', (2, 4, 6)))
@@ -6952,7 +6993,7 @@ class ResultTupleWrapper(_ResultWrapper[_F_default_co, tuple[_S_default_co, ...]
             >>> asyncio.run(wrapper_1.core_as_coroutine)
             ('failure', 'not found')
             >>>
-            >>> wrapper_2 = ResultTupleWrapper.construct_successes_from_tuple(
+            >>> wrapper_2 = ResultTupleWrapper.construct_successes_from_iterable(
             ...     (1, 2)
             ... ).map_successes_to_awaitable(double_slowly)
             >>> wrapper_2
@@ -6960,7 +7001,7 @@ class ResultTupleWrapper(_ResultWrapper[_F_default_co, tuple[_S_default_co, ...]
             >>> asyncio.run(wrapper_2.core_as_coroutine)
             ('success', (2, 4))
         """
-        return AwaitableResultTupleWrapper.construct_from_result_tuple(
+        return AwaitableResultTupleWrapper.construct_from_result_iterable(
             self.core
         ).map_successes_to_awaitable(f)
 
@@ -7001,7 +7042,7 @@ class ResultTupleWrapper(_ResultWrapper[_F_default_co, tuple[_S_default_co, ...]
             >>> asyncio.run(wrapper_1.core_as_coroutine)
             ('failure', 'not found')
             >>>
-            >>> wrapper_2 = ResultTupleWrapper.construct_successes_from_tuple(
+            >>> wrapper_2 = ResultTupleWrapper.construct_successes_from_iterable(
             ...     (1, 2)
             ... ).map_successes_to_awaitable_result(slowly_double_if_positive)
             >>> wrapper_2
@@ -7009,7 +7050,7 @@ class ResultTupleWrapper(_ResultWrapper[_F_default_co, tuple[_S_default_co, ...]
             >>> asyncio.run(wrapper_2.core_as_coroutine)
             ('success', (2, 4))
         """
-        return AwaitableResultTupleWrapper.construct_from_result_tuple(
+        return AwaitableResultTupleWrapper.construct_from_result_iterable(
             self.core
         ).map_successes_to_awaitable_result(f)
 
@@ -7053,7 +7094,7 @@ class ResultTupleWrapper(_ResultWrapper[_F_default_co, tuple[_S_default_co, ...]
             >>> asyncio.run(wrapper_1.core_as_coroutine)
             ('failure', 'not found')
             >>>
-            >>> wrapper_2 = ResultTupleWrapper.construct_successes_from_tuple(
+            >>> wrapper_2 = ResultTupleWrapper.construct_successes_from_iterable(
             ...     (1, 2)
             ... ).map_successes_to_awaitable_result_iterable(slowly_expand)
             >>> wrapper_2
@@ -7061,7 +7102,7 @@ class ResultTupleWrapper(_ResultWrapper[_F_default_co, tuple[_S_default_co, ...]
             >>> asyncio.run(wrapper_2.core_as_coroutine)
             ('success', (1, -1, 2, -2))
         """
-        return AwaitableResultTupleWrapper.construct_from_result_tuple(
+        return AwaitableResultTupleWrapper.construct_from_result_iterable(
             self.core
         ).map_successes_to_awaitable_result_iterable(f)
 
@@ -7097,7 +7138,7 @@ class ResultTupleWrapper(_ResultWrapper[_F_default_co, tuple[_S_default_co, ...]
             >>> def _duplicate_integer(n: int) -> tuple[int, int]:
             ...     return n, n
             ...
-            >>> ResultTupleWrapper.construct_successes_from_tuple(
+            >>> ResultTupleWrapper.construct_successes_from_iterable(
             ...     (1, 2)
             ... ).map_successes_to_iterable(_duplicate_integer)
             ResultTupleWrapper(core=('success', (1, 1, 2, 2)))
@@ -7136,12 +7177,12 @@ class ResultTupleWrapper(_ResultWrapper[_F_default_co, tuple[_S_default_co, ...]
             ...         return "success", n * 2
             ...     return "failure", "not positive"
             ...
-            >>> ResultTupleWrapper.construct_successes_from_tuple(
+            >>> ResultTupleWrapper.construct_successes_from_iterable(
             ...     (1, 2)
             ... ).map_successes_to_result(double_if_positive)
             ResultTupleWrapper(core=('success', (2, 4)))
             >>>
-            >>> ResultTupleWrapper.construct_successes_from_tuple(
+            >>> ResultTupleWrapper.construct_successes_from_iterable(
             ...     (1, -1, 2)
             ... ).map_successes_to_result(double_if_positive)
             ResultTupleWrapper(core=('failure', 'not positive'))
@@ -7184,12 +7225,12 @@ class ResultTupleWrapper(_ResultWrapper[_F_default_co, tuple[_S_default_co, ...]
             ...         return "success", (n, n)
             ...     return "failure", "not positive"
             ...
-            >>> ResultTupleWrapper.construct_successes_from_tuple(
+            >>> ResultTupleWrapper.construct_successes_from_iterable(
             ...     (1, 2)
             ... ).map_successes_to_result_iterable(duplicate_if_positive)
             ResultTupleWrapper(core=('success', (1, 1, 2, 2)))
             >>>
-            >>> ResultTupleWrapper.construct_successes_from_tuple(
+            >>> ResultTupleWrapper.construct_successes_from_iterable(
             ...     (1, -1, 2)
             ... ).map_successes_to_result_iterable(duplicate_if_positive)
             ResultTupleWrapper(core=('failure', 'not positive'))
@@ -7300,7 +7341,7 @@ class ResultTupleWrapper(_ResultWrapper[_F_default_co, tuple[_S_default_co, ...]
             >>> asyncio.run(wrapper_2.core_as_coroutine)
             ('success', (1,))
         """
-        return AwaitableResultTupleWrapper.construct_from_result_tuple(
+        return AwaitableResultTupleWrapper.construct_from_result_iterable(
             self.core
         ).tap_failure_to_awaitable(f)
 
@@ -7352,7 +7393,7 @@ class ResultTupleWrapper(_ResultWrapper[_F_default_co, tuple[_S_default_co, ...]
             >>> asyncio.run(wrapper_2.core_as_coroutine)
             ('success', (1,))
         """
-        return AwaitableResultTupleWrapper.construct_from_result_tuple(
+        return AwaitableResultTupleWrapper.construct_from_result_iterable(
             self.core
         ).tap_failure_to_awaitable_result(f)
 
@@ -7407,7 +7448,7 @@ class ResultTupleWrapper(_ResultWrapper[_F_default_co, tuple[_S_default_co, ...]
             >>> asyncio.run(wrapper_2.core_as_coroutine)
             ('success', (1,))
         """
-        return AwaitableResultTupleWrapper.construct_from_result_tuple(
+        return AwaitableResultTupleWrapper.construct_from_result_iterable(
             self.core
         ).tap_failure_to_awaitable_result_iterable(f)
 
@@ -7459,7 +7500,7 @@ class ResultTupleWrapper(_ResultWrapper[_F_default_co, tuple[_S_default_co, ...]
             Alert sent: critical
             ResultTupleWrapper(core=('success', ('critical', 'critical')))
             >>>
-            >>> ResultTupleWrapper.construct_successes_from_tuple(
+            >>> ResultTupleWrapper.construct_successes_from_iterable(
             ...     (1, 2)
             ... ).tap_failure_to_iterable(_log_and_alert)
             ResultTupleWrapper(core=('success', (1, 2)))
@@ -7509,7 +7550,7 @@ class ResultTupleWrapper(_ResultWrapper[_F_default_co, tuple[_S_default_co, ...]
             ... ).tap_failure_to_result(recover)
             ResultTupleWrapper(core=('failure', 'fatal'))
             >>>
-            >>> ResultTupleWrapper.construct_successes_from_tuple(
+            >>> ResultTupleWrapper.construct_successes_from_iterable(
             ...     (1, 2)
             ... ).tap_failure_to_result(recover)
             ResultTupleWrapper(core=('success', (1, 2)))
@@ -7559,7 +7600,7 @@ class ResultTupleWrapper(_ResultWrapper[_F_default_co, tuple[_S_default_co, ...]
             ... ).tap_failure_to_result_iterable(recover)
             ResultTupleWrapper(core=('failure', 'fatal'))
             >>>
-            >>> ResultTupleWrapper.construct_successes_from_tuple(
+            >>> ResultTupleWrapper.construct_successes_from_iterable(
             ...     (1, 2)
             ... ).tap_failure_to_result_iterable(recover)
             ResultTupleWrapper(core=('success', (1, 2)))
@@ -7610,7 +7651,7 @@ class ResultTupleWrapper(_ResultWrapper[_F_default_co, tuple[_S_default_co, ...]
             ...     print(f"Received: {n}")
             ...
             >>> result_tuple_wrapper_1 = (
-            ...     ResultTupleWrapper.construct_successes_from_tuple((1, 2))
+            ...     ResultTupleWrapper.construct_successes_from_iterable((1, 2))
             ...     .tap_successes(_log_integer)
             ... )
             Received: 1
@@ -7655,7 +7696,7 @@ class ResultTupleWrapper(_ResultWrapper[_F_default_co, tuple[_S_default_co, ...]
             >>> asyncio.run(wrapper_1.core_as_coroutine)
             ('failure', 'oops')
             >>>
-            >>> wrapper_2 = ResultTupleWrapper.construct_successes_from_tuple(
+            >>> wrapper_2 = ResultTupleWrapper.construct_successes_from_iterable(
             ...     (1, 2)
             ... ).tap_successes_to_awaitable(print_slowly)
             >>> wrapper_2
@@ -7666,7 +7707,7 @@ class ResultTupleWrapper(_ResultWrapper[_F_default_co, tuple[_S_default_co, ...]
             >>> result_2
             ('success', (1, 2))
         """
-        return AwaitableResultTupleWrapper.construct_from_result_tuple(
+        return AwaitableResultTupleWrapper.construct_from_result_iterable(
             self.core
         ).tap_successes_to_awaitable(f)
 
@@ -7708,7 +7749,7 @@ class ResultTupleWrapper(_ResultWrapper[_F_default_co, tuple[_S_default_co, ...]
             >>> asyncio.run(wrapper_1.core_as_coroutine)
             ('failure', 'oops')
             >>>
-            >>> wrapper_2 = ResultTupleWrapper.construct_successes_from_tuple(
+            >>> wrapper_2 = ResultTupleWrapper.construct_successes_from_iterable(
             ...     (1, 2)
             ... ).tap_successes_to_awaitable_result(slowly_check_if_positive)
             >>> wrapper_2
@@ -7716,7 +7757,7 @@ class ResultTupleWrapper(_ResultWrapper[_F_default_co, tuple[_S_default_co, ...]
             >>> asyncio.run(wrapper_2.core_as_coroutine)
             ('success', (1, 2))
         """
-        return AwaitableResultTupleWrapper.construct_from_result_tuple(
+        return AwaitableResultTupleWrapper.construct_from_result_iterable(
             self.core
         ).tap_successes_to_awaitable_result(f)
 
@@ -7763,7 +7804,7 @@ class ResultTupleWrapper(_ResultWrapper[_F_default_co, tuple[_S_default_co, ...]
             >>> asyncio.run(wrapper_1.core_as_coroutine)
             ('failure', 'oops')
             >>>
-            >>> wrapper_2 = ResultTupleWrapper.construct_successes_from_tuple(
+            >>> wrapper_2 = ResultTupleWrapper.construct_successes_from_iterable(
             ...     (1, 2)
             ... ).tap_successes_to_awaitable_result_iterable(audit)
             >>> wrapper_2
@@ -7771,7 +7812,7 @@ class ResultTupleWrapper(_ResultWrapper[_F_default_co, tuple[_S_default_co, ...]
             >>> asyncio.run(wrapper_2.core_as_coroutine)
             ('success', (1, 1, 2, 2))
         """
-        return AwaitableResultTupleWrapper.construct_from_result_tuple(
+        return AwaitableResultTupleWrapper.construct_from_result_iterable(
             self.core
         ).tap_successes_to_awaitable_result_iterable(f)
 
@@ -7849,12 +7890,12 @@ class ResultTupleWrapper(_ResultWrapper[_F_default_co, tuple[_S_default_co, ...]
             ...         return "success", None
             ...     return "failure", "not positive"
             ...
-            >>> ResultTupleWrapper.construct_successes_from_tuple(
+            >>> ResultTupleWrapper.construct_successes_from_iterable(
             ...     (1, 2)
             ... ).tap_successes_to_result(_validate_positive)
             ResultTupleWrapper(core=('success', (1, 2)))
             >>>
-            >>> ResultTupleWrapper.construct_successes_from_tuple(
+            >>> ResultTupleWrapper.construct_successes_from_iterable(
             ...     (1, -1, 2)
             ... ).tap_successes_to_result(_validate_positive)
             ResultTupleWrapper(core=('failure', 'not positive'))
@@ -7900,7 +7941,7 @@ class ResultTupleWrapper(_ResultWrapper[_F_default_co, tuple[_S_default_co, ...]
             ... ).tap_successes_to_result_iterable(_validate_positive_twice)
             ResultTupleWrapper(core=('success', (7, 7)))
             >>>
-            >>> ResultTupleWrapper.construct_successes_from_tuple(
+            >>> ResultTupleWrapper.construct_successes_from_iterable(
             ...     (1, -1)
             ... ).tap_successes_to_result_iterable(_validate_positive_twice)
             ResultTupleWrapper(core=('failure', 'not positive'))
@@ -7947,7 +7988,7 @@ class TupleWrapper(_Wrapper[tuple[_T_co, ...]]):
         ...
         >>> tuple_wrapper: TupleWrapper[int] = (
         ...     TupleWrapper
-        ...     .construct_from_tuple((1, 2, 3))
+        ...     .construct_from_iterable((1, 2, 3))
         ...     .map(double_integer)
         ...     .tap(log_integer)
         ... )
@@ -7965,7 +8006,7 @@ class TupleWrapper(_Wrapper[tuple[_T_co, ...]]):
         ...
         >>> tuple_wrapper: TupleWrapper[int] = (
         ...     TupleWrapper
-        ...     .construct_from_tuple((1, 2, 3))
+        ...     .construct_from_iterable((1, 2, 3))
         ...     .map_to_iterable(duplicate_integer)
         ... )
         >>> tuple_wrapper
@@ -7992,25 +8033,31 @@ class TupleWrapper(_Wrapper[tuple[_T_co, ...]]):
         return TupleWrapper(t.construct(value))
 
     @staticmethod
-    def construct_from_tuple(tpl: tuple[_T, ...]) -> TupleWrapper[_T]:
-        """Wrap a homogeneous [tuple][] object.
+    def construct_from_iterable(it: Iterable[_T]) -> TupleWrapper[_T]:
+        """Wrap a [collections.abc.Iterable][] object and convert it into a [tuple][].
 
         Args:
-            tpl: The homogeneous [tuple][] to be wrapped.
+            it: The [collections.abc.Iterable][] to be wrapped and converted.
 
         Returns:
             A new [trcks.oop.TupleWrapper][] instance with
-                the wrapped homogeneous [tuple][].
+                the wrapped [collections.abc.Iterable][] converted into a [tuple][].
 
         Example:
             >>> from trcks.oop import TupleWrapper
-            >>> tuple_wrapper: TupleWrapper[int] = TupleWrapper.construct_from_tuple(
-            ...     (1, 2, 3)
+            >>> tuple_wrapper: TupleWrapper[int] = TupleWrapper.construct_from_iterable(
+            ...     [1, 2, 3]
             ... )
             >>> tuple_wrapper
             TupleWrapper(core=(1, 2, 3))
         """
-        return TupleWrapper(tpl)
+        return TupleWrapper(tuple(it))
+
+    @classmethod
+    @deprecated("Use construct_from_iterable or the default constructor instead")
+    def construct_from_tuple(cls, tpl: tuple[_T, ...]) -> TupleWrapper[_T]:
+        """Deprecated alias for construct_from_iterable."""
+        return cls.construct_from_iterable(tpl)  # pragma: no cover
 
     def map(self, f: Callable[[_T_co], _T]) -> TupleWrapper[_T]:
         """Apply a synchronous function to each element in
@@ -8030,7 +8077,7 @@ class TupleWrapper(_Wrapper[tuple[_T_co, ...]]):
             ...
             >>> tuple_wrapper: TupleWrapper[int] = (
             ...     TupleWrapper
-            ...     .construct_from_tuple((1, 2, 3))
+            ...     .construct_from_iterable((1, 2, 3))
             ...     .map(double_integer)
             ... )
             >>> tuple_wrapper
@@ -8061,7 +8108,7 @@ class TupleWrapper(_Wrapper[tuple[_T_co, ...]]):
             ...
             >>> awaitable_tuple_wrapper: AwaitableTupleWrapper[int] = (
             ...     TupleWrapper
-            ...     .construct_from_tuple((1, 2, 3))
+            ...     .construct_from_iterable((1, 2, 3))
             ...     .map_to_awaitable(slowly_add_one)
             ... )
             >>> awaitable_tuple_wrapper
@@ -8069,7 +8116,9 @@ class TupleWrapper(_Wrapper[tuple[_T_co, ...]]):
             >>> asyncio.run(awaitable_tuple_wrapper.core_as_coroutine)
             (2, 3, 4)
         """
-        return AwaitableTupleWrapper.construct_from_tuple(self.core).map_to_awaitable(f)
+        return AwaitableTupleWrapper.construct_from_iterable(
+            self.core
+        ).map_to_awaitable(f)
 
     def map_to_awaitable_iterable(
         self, f: Callable[[_T_co], AwaitableIterable[_T]]
@@ -8094,7 +8143,7 @@ class TupleWrapper(_Wrapper[tuple[_T_co, ...]]):
             ...
             >>> awaitable_tuple_wrapper: AwaitableTupleWrapper[int] = (
             ...     TupleWrapper
-            ...     .construct_from_tuple((1, 2))
+            ...     .construct_from_iterable((1, 2))
             ...     .map_to_awaitable_iterable(slowly_duplicate)
             ... )
             >>> awaitable_tuple_wrapper
@@ -8102,7 +8151,7 @@ class TupleWrapper(_Wrapper[tuple[_T_co, ...]]):
             >>> asyncio.run(awaitable_tuple_wrapper.core_as_coroutine)
             (1, 1, 2, 2)
         """
-        return AwaitableTupleWrapper.construct_from_tuple(
+        return AwaitableTupleWrapper.construct_from_iterable(
             self.core
         ).map_to_awaitable_iterable(f)
 
@@ -8138,7 +8187,7 @@ class TupleWrapper(_Wrapper[tuple[_T_co, ...]]):
             ...     str, int
             ... ] = (
             ...     TupleWrapper
-            ...     .construct_from_tuple((1, 2))
+            ...     .construct_from_iterable((1, 2))
             ...     .map_to_awaitable_result(slowly_double_if_positive)
             ... )
             >>> awaitable_result_tuple_wrapper_1
@@ -8150,7 +8199,7 @@ class TupleWrapper(_Wrapper[tuple[_T_co, ...]]):
             ...     str, int
             ... ] = (
             ...     TupleWrapper
-            ...     .construct_from_tuple((1, -1, 2))
+            ...     .construct_from_iterable((1, -1, 2))
             ...     .map_to_awaitable_result(slowly_double_if_positive)
             ... )
             >>> awaitable_result_tuple_wrapper_2
@@ -8158,7 +8207,7 @@ class TupleWrapper(_Wrapper[tuple[_T_co, ...]]):
             >>> asyncio.run(awaitable_result_tuple_wrapper_2.core_as_coroutine)
             ('failure', 'negative')
         """
-        return AwaitableResultTupleWrapper.construct_successes_from_tuple(
+        return AwaitableResultTupleWrapper.construct_successes_from_iterable(
             self.core
         ).map_successes_to_awaitable_result(f)
 
@@ -8195,7 +8244,7 @@ class TupleWrapper(_Wrapper[tuple[_T_co, ...]]):
             ...     str, int
             ... ] = (
             ...     TupleWrapper
-            ...     .construct_from_tuple((1, 2))
+            ...     .construct_from_iterable((1, 2))
             ...     .map_to_awaitable_result_iterable(slowly_expand_if_positive)
             ... )
             >>> awaitable_result_tuple_wrapper_1
@@ -8207,7 +8256,7 @@ class TupleWrapper(_Wrapper[tuple[_T_co, ...]]):
             ...     str, int
             ... ] = (
             ...     TupleWrapper
-            ...     .construct_from_tuple((1, -1, 2))
+            ...     .construct_from_iterable((1, -1, 2))
             ...     .map_to_awaitable_result_iterable(slowly_expand_if_positive)
             ... )
             >>> awaitable_result_tuple_wrapper_2
@@ -8215,7 +8264,7 @@ class TupleWrapper(_Wrapper[tuple[_T_co, ...]]):
             >>> asyncio.run(awaitable_result_tuple_wrapper_2.core_as_coroutine)
             ('failure', 'negative')
         """
-        return AwaitableResultTupleWrapper.construct_successes_from_tuple(
+        return AwaitableResultTupleWrapper.construct_successes_from_iterable(
             self.core
         ).map_successes_to_awaitable_result_iterable(f)
 
@@ -8254,7 +8303,7 @@ class TupleWrapper(_Wrapper[tuple[_T_co, ...]]):
             ...
             >>> tuple_wrapper: TupleWrapper[int] = (
             ...     TupleWrapper
-            ...     .construct_from_tuple((1, 2, 3))
+            ...     .construct_from_iterable((1, 2, 3))
             ...     .map_to_iterable(duplicate_integer)
             ... )
             >>> tuple_wrapper
@@ -8286,17 +8335,17 @@ class TupleWrapper(_Wrapper[tuple[_T_co, ...]]):
             ...         return "success", n * 2
             ...     return "failure", "negative"
             ...
-            >>> TupleWrapper.construct_from_tuple(
+            >>> TupleWrapper.construct_from_iterable(
             ...     (1, 2, 3)
             ... ).map_to_result(double_if_positive)
             ResultTupleWrapper(core=('success', (2, 4, 6)))
             >>>
-            >>> TupleWrapper.construct_from_tuple(
+            >>> TupleWrapper.construct_from_iterable(
             ...     (1, -1, 2)
             ... ).map_to_result(double_if_positive)
             ResultTupleWrapper(core=('failure', 'negative'))
         """
-        return ResultTupleWrapper.construct_successes_from_tuple(
+        return ResultTupleWrapper.construct_successes_from_iterable(
             self.core
         ).map_successes_to_result(f)
 
@@ -8324,17 +8373,17 @@ class TupleWrapper(_Wrapper[tuple[_T_co, ...]]):
             ...         return "success", (n, -n)
             ...     return "failure", "negative"
             ...
-            >>> TupleWrapper.construct_from_tuple(
+            >>> TupleWrapper.construct_from_iterable(
             ...     (1, 2)
             ... ).map_to_result_iterable(expand_if_positive)
             ResultTupleWrapper(core=('success', (1, -1, 2, -2)))
             >>>
-            >>> TupleWrapper.construct_from_tuple(
+            >>> TupleWrapper.construct_from_iterable(
             ...     (1, -1, 2)
             ... ).map_to_result_iterable(expand_if_positive)
             ResultTupleWrapper(core=('failure', 'negative'))
         """
-        return ResultTupleWrapper.construct_successes_from_tuple(
+        return ResultTupleWrapper.construct_successes_from_iterable(
             self.core
         ).map_successes_to_result_iterable(f)
 
@@ -8368,7 +8417,7 @@ class TupleWrapper(_Wrapper[tuple[_T_co, ...]]):
             ...
             >>> tuple_wrapper: TupleWrapper[int] = (
             ...     TupleWrapper
-            ...     .construct_from_tuple((1, 2, 3))
+            ...     .construct_from_iterable((1, 2, 3))
             ...     .tap(log_integer)
             ... )
             Received: 1
@@ -8401,7 +8450,7 @@ class TupleWrapper(_Wrapper[tuple[_T_co, ...]]):
             ...
             >>> awaitable_tuple_wrapper: AwaitableTupleWrapper[int] = (
             ...     TupleWrapper
-            ...     .construct_from_tuple((1, 2, 3))
+            ...     .construct_from_iterable((1, 2, 3))
             ...     .tap_to_awaitable(slowly_log_integer)
             ... )
             >>> awaitable_tuple_wrapper
@@ -8412,7 +8461,9 @@ class TupleWrapper(_Wrapper[tuple[_T_co, ...]]):
             Received: 3
             (1, 2, 3)
         """
-        return AwaitableTupleWrapper.construct_from_tuple(self.core).tap_to_awaitable(f)
+        return AwaitableTupleWrapper.construct_from_iterable(
+            self.core
+        ).tap_to_awaitable(f)
 
     def tap_to_awaitable_iterable(
         self, f: Callable[[_T_co], AwaitableIterable[object]]
@@ -8438,7 +8489,7 @@ class TupleWrapper(_Wrapper[tuple[_T_co, ...]]):
             ...
             >>> awaitable_tuple_wrapper: AwaitableTupleWrapper[int] = (
             ...     TupleWrapper
-            ...     .construct_from_tuple((1, 2, 3))
+            ...     .construct_from_iterable((1, 2, 3))
             ...     .tap_to_awaitable_iterable(write_to_disk)
             ... )
             >>> awaitable_tuple_wrapper
@@ -8449,7 +8500,7 @@ class TupleWrapper(_Wrapper[tuple[_T_co, ...]]):
             Wrote 3 to disk.
             (1, 1, 2, 2, 3, 3)
         """
-        return AwaitableTupleWrapper.construct_from_tuple(
+        return AwaitableTupleWrapper.construct_from_iterable(
             self.core
         ).tap_to_awaitable_iterable(f)
 
@@ -8484,7 +8535,7 @@ class TupleWrapper(_Wrapper[tuple[_T_co, ...]]):
             ...     str, int
             ... ] = (
             ...     TupleWrapper
-            ...     .construct_from_tuple((1, 2))
+            ...     .construct_from_iterable((1, 2))
             ...     .tap_to_awaitable_result(slowly_check_if_positive)
             ... )
             >>> awaitable_result_tuple_wrapper_1
@@ -8496,7 +8547,7 @@ class TupleWrapper(_Wrapper[tuple[_T_co, ...]]):
             ...     str, int
             ... ] = (
             ...     TupleWrapper
-            ...     .construct_from_tuple((1, -1, 2))
+            ...     .construct_from_iterable((1, -1, 2))
             ...     .tap_to_awaitable_result(slowly_check_if_positive)
             ... )
             >>> awaitable_result_tuple_wrapper_2
@@ -8504,7 +8555,7 @@ class TupleWrapper(_Wrapper[tuple[_T_co, ...]]):
             >>> asyncio.run(awaitable_result_tuple_wrapper_2.core_as_coroutine)
             ('failure', 'negative')
         """
-        return AwaitableResultTupleWrapper.construct_successes_from_tuple(
+        return AwaitableResultTupleWrapper.construct_successes_from_iterable(
             self.core
         ).tap_successes_to_awaitable_result(f)
 
@@ -8540,7 +8591,7 @@ class TupleWrapper(_Wrapper[tuple[_T_co, ...]]):
             ...     str, int
             ... ] = (
             ...     TupleWrapper
-            ...     .construct_from_tuple((1, 2))
+            ...     .construct_from_iterable((1, 2))
             ...     .tap_to_awaitable_result_iterable(audit)
             ... )
             >>> awaitable_result_tuple_wrapper_1
@@ -8552,7 +8603,7 @@ class TupleWrapper(_Wrapper[tuple[_T_co, ...]]):
             ...     str, int
             ... ] = (
             ...     TupleWrapper
-            ...     .construct_from_tuple((1, -1, 2))
+            ...     .construct_from_iterable((1, -1, 2))
             ...     .tap_to_awaitable_result_iterable(audit)
             ... )
             >>> awaitable_result_tuple_wrapper_2
@@ -8560,7 +8611,7 @@ class TupleWrapper(_Wrapper[tuple[_T_co, ...]]):
             >>> asyncio.run(awaitable_result_tuple_wrapper_2.core_as_coroutine)
             ('failure', 'negative')
         """
-        return AwaitableResultTupleWrapper.construct_successes_from_tuple(
+        return AwaitableResultTupleWrapper.construct_successes_from_iterable(
             self.core
         ).tap_successes_to_awaitable_result_iterable(f)
 
@@ -8601,7 +8652,7 @@ class TupleWrapper(_Wrapper[tuple[_T_co, ...]]):
             ...
             >>> tuple_wrapper: TupleWrapper[int] = (
             ...     TupleWrapper
-            ...     .construct_from_tuple((1, 2, 3, 4))
+            ...     .construct_from_iterable((1, 2, 3, 4))
             ...     .tap_to_iterable(get_divisors)
             ... )
             >>> tuple_wrapper
@@ -8635,17 +8686,17 @@ class TupleWrapper(_Wrapper[tuple[_T_co, ...]]):
             ...         return "success", None
             ...     return "failure", "negative"
             ...
-            >>> TupleWrapper.construct_from_tuple(
+            >>> TupleWrapper.construct_from_iterable(
             ...     (1, 2)
             ... ).tap_to_result(audit)
             ResultTupleWrapper(core=('success', (1, 2)))
             >>>
-            >>> TupleWrapper.construct_from_tuple(
+            >>> TupleWrapper.construct_from_iterable(
             ...     (1, -1, 2)
             ... ).tap_to_result(audit)
             ResultTupleWrapper(core=('failure', 'negative'))
         """
-        return ResultTupleWrapper.construct_successes_from_tuple(
+        return ResultTupleWrapper.construct_successes_from_iterable(
             self.core
         ).tap_successes_to_result(f)
 
@@ -8675,17 +8726,17 @@ class TupleWrapper(_Wrapper[tuple[_T_co, ...]]):
             ...         return "success", (None, None)
             ...     return "failure", "negative"
             ...
-            >>> TupleWrapper.construct_from_tuple(
+            >>> TupleWrapper.construct_from_iterable(
             ...     (7,)
             ... ).tap_to_result_iterable(audit)
             ResultTupleWrapper(core=('success', (7, 7)))
             >>>
-            >>> TupleWrapper.construct_from_tuple(
+            >>> TupleWrapper.construct_from_iterable(
             ...     (1, -1)
             ... ).tap_to_result_iterable(audit)
             ResultTupleWrapper(core=('failure', 'negative'))
         """
-        return ResultTupleWrapper.construct_successes_from_tuple(
+        return ResultTupleWrapper.construct_successes_from_iterable(
             self.core
         ).tap_successes_to_result_iterable(f)
 
