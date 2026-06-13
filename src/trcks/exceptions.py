@@ -28,7 +28,7 @@ class TrcksTypeError(TypeError):
         'Pipeline'
     """
 
-    __slots__ = (
+    __slots__: tuple[str, ...] = (
         "_expected_type_name",
         "_offending_object_class",
         "_offending_object_length",
