@@ -13,8 +13,7 @@ class AbstractAwaitableWrapper(AbstractWrapper[Awaitable[_T_co]]):
     the [trcks.oop][] package.
 
     Note:
-        This class is abstract and cannot be instantiated directly.
-        If you want to wrap an [collections.abc.Awaitable][],
+        If you want to wrap a [collections.abc.Awaitable][],
         please use one of the concrete subclasses instead,
         such as [trcks.oop.AwaitableWrapper][].
 
