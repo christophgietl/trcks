@@ -46,7 +46,10 @@ class AbstractWrapper(ABC, Generic[_T_co]):
 
     @abstractmethod
     def _abc_dummy(self) -> None:
-        """Make this class abstract."""
+        """This abstract method makes this class abstract.
+        It prevents direct instantiation and must be overridden
+        by all concrete subclasses.
+        """
 
     @property
     def core(self) -> _T_co:
