@@ -65,9 +65,9 @@ Moreover, it can lead to repetitive code patterns:
 
 Therefore, we need a library that helps us combine functions.
 
-## How does the module [trcks.oop][] help with function combination?
+## How does the package [trcks.oop][] help with function combination?
 
-The module [trcks.oop][] supports combining functions in an object-oriented style
+The package [trcks.oop][] supports combining functions in an object-oriented style
 using method chaining:
 
 ???+ example

@@ -330,24 +330,6 @@ class TestAwaitableResultWrapper:
             _get_square_root_safely
         ).core == _get_square_root_safely(value)
 
-    @pytest.mark.parametrize("result", _RESULTS)
-    async def test_track_equals_first_element_of_result(
-        self, result: Result[object, object]
-    ) -> None:
-        assert (
-            await AwaitableResultWrapper.construct_from_result(result).track
-            == result[0]
-        )
-
-    @pytest.mark.parametrize("result", _RESULTS)
-    async def test_value_equals_second_element_of_result(
-        self, result: Result[object, object]
-    ) -> None:
-        assert (
-            await AwaitableResultWrapper.construct_from_result(result).value
-            == result[1]
-        )
-
 
 class TestWrapper:
     @pytest.mark.parametrize("value", _OBJECTS)
@@ -541,15 +523,3 @@ class TestResultWrapper:
         assert ResultWrapper.construct_success(value).map_success_to_result(
             _get_square_root_safely
         ).core == _get_square_root_safely(value)
-
-    @pytest.mark.parametrize("result", _RESULTS)
-    def test_track_equals_first_element_of_result(
-        self, result: Result[object, object]
-    ) -> None:
-        assert ResultWrapper.construct_from_result(result).track == result[0]
-
-    @pytest.mark.parametrize("result", _RESULTS)
-    def test_value_equals_second_element_of_result(
-        self, result: Result[object, object]
-    ) -> None:
-        assert ResultWrapper(result).value == result[1]

@@ -26,7 +26,7 @@
 
 ### Wrapper classes defined in `trcks.oop`
 
-- The module `trcks.oop` provides wrapper classes for OOP-style method chaining
+- The package `trcks.oop` provides wrapper classes for OOP-style method chaining
   (e.g. `trcks.oop.Wrapper`, `trcks.oop.AwaitableWrapper`, `trcks.oop.ResultWrapper`,
   `trcks.oop.AwaitableResultWrapper`, `trcks.oop.TupleWrapper`, `trcks.oop.ResultTupleWrapper`,
   `trcks.oop.AwaitableTupleWrapper`, `trcks.oop.AwaitableResultTupleWrapper`).
@@ -48,6 +48,7 @@
 - Give every module a `__docformat__ = "google"` dunder.
 - Place all module dunders after imports, including imports inside
   `if TYPE_CHECKING:` blocks.
+- Sort module dunders alphabetically (e.g. `__all__` before `__docformat__`).
 - Sort functions alphabetically within each module.
 - Sort classes alphabetically within each module.
 - Sort methods alphabetically within each class.
