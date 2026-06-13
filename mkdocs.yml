@@ -34,6 +34,8 @@ nav:
       - reference/trcks.fp.monads.result_tuple.md
       - reference/trcks.fp.monads.tuple_.md
       - reference/trcks.oop.md
+      - reference/trcks.oop.AbstractAwaitableWrapper.md
+      - reference/trcks.oop.AbstractWrapper.md
       - reference/trcks.oop.AwaitableResultTupleWrapper.md
       - reference/trcks.oop.AwaitableResultWrapper.md
       - reference/trcks.oop.AwaitableTupleWrapper.md

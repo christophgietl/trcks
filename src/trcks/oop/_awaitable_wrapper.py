@@ -2,12 +2,12 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from trcks._typing import TypeVar, deprecated
+from trcks._typing import TypeVar, deprecated, override
 from trcks.fp.monads import awaitable as a
+from trcks.oop._abstract_awaitable_wrapper import AbstractAwaitableWrapper
 from trcks.oop._awaitable_result_tuple_wrapper import AwaitableResultTupleWrapper
 from trcks.oop._awaitable_result_wrapper import AwaitableResultWrapper
 from trcks.oop._awaitable_tuple_wrapper import AwaitableTupleWrapper
-from trcks.oop._base_awaitable_wrapper import BaseAwaitableWrapper
 
 if TYPE_CHECKING:
     from collections.abc import Awaitable, Callable, Iterable
@@ -32,7 +32,7 @@ _T = TypeVar("_T")
 _T_co = TypeVar("_T_co", covariant=True)
 
 
-class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
+class AwaitableWrapper(AbstractAwaitableWrapper[_T_co]):
     """Type-safe and immutable wrapper for [collections.abc.Awaitable][] objects.
 
     The wrapped [collections.abc.Awaitable][] can be accessed
@@ -75,6 +75,10 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
     """
 
     __slots__: tuple[str, ...] = ()
+
+    @override
+    def _abc_dummy(self) -> None:
+        """Make this class concrete."""
 
     @staticmethod
     def construct(value: _T) -> AwaitableWrapper[_T]:

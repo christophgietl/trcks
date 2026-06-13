@@ -3,10 +3,10 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from trcks import ResultTuple
-from trcks._typing import Never, TypeVar, deprecated
+from trcks._typing import Never, TypeVar, deprecated, override
 from trcks.fp.monads import result_tuple as rt
+from trcks.oop._abstract_wrapper import AbstractWrapper
 from trcks.oop._awaitable_result_tuple_wrapper import AwaitableResultTupleWrapper
-from trcks.oop._base_wrapper import BaseWrapper
 
 if TYPE_CHECKING:
     from collections.abc import Awaitable, Callable, Iterable
@@ -31,7 +31,7 @@ _F_default_co = TypeVar("_F_default_co", covariant=True, default=Never)
 _S_default_co = TypeVar("_S_default_co", covariant=True, default=Never)
 
 
-class ResultTupleWrapper(BaseWrapper[ResultTuple[_F_default_co, _S_default_co]]):
+class ResultTupleWrapper(AbstractWrapper[ResultTuple[_F_default_co, _S_default_co]]):
     """Type-safe and immutable wrapper for [trcks.ResultTuple][] objects.
 
     The wrapped object can be accessed via the attribute
@@ -67,6 +67,10 @@ class ResultTupleWrapper(BaseWrapper[ResultTuple[_F_default_co, _S_default_co]])
     """
 
     __slots__: tuple[str, ...] = ()
+
+    @override
+    def _abc_dummy(self) -> None:
+        """Make this class concrete."""
 
     @staticmethod
     def construct_failure(value: _F) -> ResultTupleWrapper[_F, Never]:

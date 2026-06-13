@@ -2,16 +2,16 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from trcks._typing import TypeVar, deprecated
+from trcks._typing import TypeVar, deprecated, override
 from trcks.fp.monads import awaitable as a
 from trcks.fp.monads import awaitable_result as ar
 from trcks.fp.monads import identity as i
 from trcks.fp.monads import result as r
+from trcks.oop._abstract_wrapper import AbstractWrapper
 from trcks.oop._awaitable_result_tuple_wrapper import AwaitableResultTupleWrapper
 from trcks.oop._awaitable_result_wrapper import AwaitableResultWrapper
 from trcks.oop._awaitable_tuple_wrapper import AwaitableTupleWrapper
 from trcks.oop._awaitable_wrapper import AwaitableWrapper
-from trcks.oop._base_wrapper import BaseWrapper
 from trcks.oop._result_tuple_wrapper import ResultTupleWrapper
 from trcks.oop._result_wrapper import ResultWrapper
 from trcks.oop._tuple_wrapper import TupleWrapper
@@ -39,7 +39,7 @@ _T = TypeVar("_T")
 _T_co = TypeVar("_T_co", covariant=True)
 
 
-class Wrapper(BaseWrapper[_T_co]):
+class Wrapper(AbstractWrapper[_T_co]):
     """Type-safe and immutable wrapper for arbitrary objects.
 
     The wrapped object can be accessed via the attribute `trcks.oop.Wrapper.core`.
@@ -65,6 +65,10 @@ class Wrapper(BaseWrapper[_T_co]):
     """
 
     __slots__: tuple[str, ...] = ()
+
+    @override
+    def _abc_dummy(self) -> None:
+        """Make this class concrete."""
 
     @staticmethod
     def construct(value: _T) -> Wrapper[_T]:
