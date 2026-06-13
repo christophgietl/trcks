@@ -3,11 +3,11 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from trcks import Result
-from trcks._typing import Never, TypeVar, deprecated
+from trcks._typing import Never, TypeVar, deprecated, override
 from trcks.fp.monads import result as r
+from trcks.oop._abstract_wrapper import AbstractWrapper
 from trcks.oop._awaitable_result_tuple_wrapper import AwaitableResultTupleWrapper
 from trcks.oop._awaitable_result_wrapper import AwaitableResultWrapper
-from trcks.oop._base_wrapper import BaseWrapper
 from trcks.oop._result_tuple_wrapper import ResultTupleWrapper
 
 if TYPE_CHECKING:
@@ -34,7 +34,7 @@ _F_default_co = TypeVar("_F_default_co", covariant=True, default=Never)
 _S_default_co = TypeVar("_S_default_co", covariant=True, default=Never)
 
 
-class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
+class ResultWrapper(AbstractWrapper[Result[_F_default_co, _S_default_co]]):
     """Type-safe and immutable wrapper for [trcks.Result][] objects.
 
     The wrapped object can be accessed via the attribute `trcks.oop.ResultWrapper.core`.
@@ -63,6 +63,10 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
     """
 
     __slots__: tuple[str, ...] = ()
+
+    @override
+    def _abc_dummy(self) -> None:
+        """Make this class concrete."""
 
     @staticmethod
     def construct_failure(value: _F) -> ResultWrapper[_F, Never]:

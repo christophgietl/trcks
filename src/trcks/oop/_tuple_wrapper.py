@@ -2,11 +2,11 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from trcks._typing import TypeVar, deprecated
+from trcks._typing import TypeVar, deprecated, override
 from trcks.fp.monads import tuple_ as t
+from trcks.oop._abstract_wrapper import AbstractWrapper
 from trcks.oop._awaitable_result_tuple_wrapper import AwaitableResultTupleWrapper
 from trcks.oop._awaitable_tuple_wrapper import AwaitableTupleWrapper
-from trcks.oop._base_wrapper import BaseWrapper
 from trcks.oop._result_tuple_wrapper import ResultTupleWrapper
 
 if TYPE_CHECKING:
@@ -32,7 +32,7 @@ _T = TypeVar("_T")
 _T_co = TypeVar("_T_co", covariant=True)
 
 
-class TupleWrapper(BaseWrapper[tuple[_T_co, ...]]):
+class TupleWrapper(AbstractWrapper[tuple[_T_co, ...]]):
     """Type-safe and immutable wrapper for homogeneous [tuple][] objects.
 
     The wrapped homogeneous [tuple][] can be accessed
@@ -79,6 +79,10 @@ class TupleWrapper(BaseWrapper[tuple[_T_co, ...]]):
     """
 
     __slots__: tuple[str, ...] = ()
+
+    @override
+    def _abc_dummy(self) -> None:
+        """Make this class concrete."""
 
     @staticmethod
     def construct(value: _T) -> TupleWrapper[_T]:
