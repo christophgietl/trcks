@@ -2,13 +2,6 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from trcks import (
-    AwaitableIterable,
-    AwaitableResult,
-    AwaitableResultIterable,
-    AwaitableResultTuple,
-    AwaitableTuple,
-)
 from trcks._typing import TypeVar, deprecated
 from trcks.fp.monads import awaitable as a
 from trcks.fp.monads import awaitable_result as ar
