@@ -3,9 +3,9 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from trcks import ResultTuple
-from trcks._typing import Never, TypeVar, deprecated, override
+from trcks._typing import Never, TypeVar, deprecated
 from trcks.fp.monads import awaitable_result_tuple as art
-from trcks.oop._abstract_awaitable_wrapper import AbstractAwaitableWrapper
+from trcks.oop._base_awaitable_wrapper import BaseAwaitableWrapper
 
 if TYPE_CHECKING:
     from collections.abc import Awaitable, Callable, Iterable
@@ -31,12 +31,12 @@ _S_default_co = TypeVar("_S_default_co", covariant=True, default=Never)
 
 
 class AwaitableResultTupleWrapper(
-    AbstractAwaitableWrapper[ResultTuple[_F_default_co, _S_default_co]]
+    BaseAwaitableWrapper[ResultTuple[_F_default_co, _S_default_co]]
 ):
     """Type-safe and immutable wrapper for [trcks.AwaitableResultTuple][] objects.
 
     The wrapped object can be accessed
-    via the attribute `trcks.oop.AwaitableResultTupleWrapper.core`.
+    via the attribute [trcks.oop.BaseWrapper.core][].
     The `trcks.oop.AwaitableResultTupleWrapper.map*` methods allow method chaining.
     The `trcks.oop.AwaitableResultTupleWrapper.tap*` methods allow for side effects
     without changing the wrapped [trcks.ResultTuple][].
@@ -65,10 +65,6 @@ class AwaitableResultTupleWrapper(
     """
 
     __slots__: tuple[str, ...] = ()
-
-    @override
-    def _abc_dummy(self) -> None:
-        """Make this class concrete."""
 
     @staticmethod
     def construct_failure(value: _F) -> AwaitableResultTupleWrapper[_F, Never]:

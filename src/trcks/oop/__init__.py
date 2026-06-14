@@ -74,24 +74,24 @@ See:
     - [Method Chaining in Python - GeeksforGeeks](https://www.geeksforgeeks.org/method-chaining-in-python/)
 """
 
-from trcks.oop._abstract_awaitable_wrapper import AbstractAwaitableWrapper
-from trcks.oop._abstract_wrapper import AbstractWrapper
 from trcks.oop._awaitable_result_tuple_wrapper import AwaitableResultTupleWrapper
 from trcks.oop._awaitable_result_wrapper import AwaitableResultWrapper
 from trcks.oop._awaitable_tuple_wrapper import AwaitableTupleWrapper
 from trcks.oop._awaitable_wrapper import AwaitableWrapper
+from trcks.oop._base_awaitable_wrapper import BaseAwaitableWrapper
+from trcks.oop._base_wrapper import BaseWrapper
 from trcks.oop._result_tuple_wrapper import ResultTupleWrapper
 from trcks.oop._result_wrapper import ResultWrapper
 from trcks.oop._tuple_wrapper import TupleWrapper
 from trcks.oop._wrapper import Wrapper
 
 __all__ = [
-    "AbstractAwaitableWrapper",
-    "AbstractWrapper",
     "AwaitableResultTupleWrapper",
     "AwaitableResultWrapper",
     "AwaitableTupleWrapper",
     "AwaitableWrapper",
+    "BaseAwaitableWrapper",
+    "BaseWrapper",
     "ResultTupleWrapper",
     "ResultWrapper",
     "TupleWrapper",
