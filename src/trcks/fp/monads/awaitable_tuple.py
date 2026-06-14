@@ -540,15 +540,14 @@ async def to_coroutine_tuple(a_tpl: AwaitableTuple[_T]) -> tuple[_T, ...]:
         >>> from trcks import AwaitableTuple
         >>> from trcks.fp.monads import awaitable_tuple as at
         >>> loop = asyncio.new_event_loop()
-        >>> asyncio.set_event_loop(loop)
-        >>> future = asyncio.Future[tuple[int, ...]]()
+        >>> future: asyncio.Future[tuple[int, ...]] = loop.create_future()
         >>> future.set_result((3, 4))
         >>> future
         <Future finished result=(3, 4)>
         >>> coro = at.to_coroutine_tuple(future)
         >>> coro
         <coroutine object to_coroutine_tuple at 0x...>
-        >>> asyncio.run(coro)
+        >>> loop.run_until_complete(coro)
         (3, 4)
         >>> loop.close()
     """
