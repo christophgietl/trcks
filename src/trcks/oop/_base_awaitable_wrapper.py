@@ -36,8 +36,7 @@ class BaseAwaitableWrapper(BaseWrapper[Awaitable[_T_co]]):
             >>> import asyncio
             >>> from trcks.oop import BaseAwaitableWrapper
             >>> loop = asyncio.new_event_loop()
-            >>> asyncio.set_event_loop(loop)
-            >>> future = asyncio.Future[str]()
+            >>> future: asyncio.Future[str] = loop.create_future()
             >>> future.set_result("Hello, world!")
             >>> wrapped_future = BaseAwaitableWrapper(future)
             >>> wrapped_future
@@ -45,7 +44,7 @@ class BaseAwaitableWrapper(BaseWrapper[Awaitable[_T_co]]):
             >>> coro = wrapped_future.core_as_coroutine
             >>> coro
             <coroutine object BaseAwaitableWrapper.core_as_coroutine at 0x...>
-            >>> asyncio.run(coro)
+            >>> loop.run_until_complete(coro)
             'Hello, world!'
             >>> loop.close()
         """
