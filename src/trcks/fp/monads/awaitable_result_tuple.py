@@ -1720,7 +1720,8 @@ async def to_coroutine_result_tuple(
 ) -> ResultTuple[_F, _S]:
     """Turn a [trcks.AwaitableResultTuple][] into a [collections.abc.Coroutine][].
 
-    This is useful for functions that expect a coroutine (e.g. [asyncio.run][]).
+    This is useful for functions that expect a coroutine
+    (e.g. [asyncio.run][] in Python 3.13 and older).
 
     Args:
         a_r_tpl: The [trcks.AwaitableResultTuple][] to be transformed

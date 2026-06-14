@@ -745,7 +745,8 @@ def tap_success_to_result(
 async def to_coroutine_result(a_rslt: AwaitableResult[_F, _S]) -> Result[_F, _S]:
     """Turn a [trcks.AwaitableResult][] into a [collections.abc.Coroutine][].
 
-    This is useful for functions that expect a coroutine (e.g. [asyncio.run][]).
+    This is useful for functions that expect a coroutine
+    (e.g. [asyncio.run][] in Python 3.13 and older).
 
     Args:
         a_rslt:

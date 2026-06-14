@@ -520,7 +520,8 @@ def tap_to_tuple(
 async def to_coroutine_tuple(a_tpl: AwaitableTuple[_T]) -> tuple[_T, ...]:
     """Turn a [trcks.AwaitableTuple][] into a coroutine.
 
-    This is useful for functions that expect a coroutine (e.g. [asyncio.run][]).
+    This is useful for functions that expect a coroutine
+    (e.g. [asyncio.run][] in Python 3.13 and older).
 
     Args:
         a_tpl: The [trcks.AwaitableTuple][] to be transformed
