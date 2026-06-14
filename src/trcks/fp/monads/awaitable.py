@@ -237,7 +237,8 @@ def tap_to_awaitable(
 async def to_coroutine(awtbl: Awaitable[_T]) -> _T:
     """Turn a [collections.abc.Awaitable][] into a [collections.abc.Coroutine][].
 
-    This is useful for functions that expect a coroutine (e.g. [asyncio.run][]).
+    This is useful for functions that expect a coroutine
+    (e.g. [asyncio.run][] in Python 3.13 and older).
 
     Args:
         awtbl: The [collections.abc.Awaitable][] to be transformed

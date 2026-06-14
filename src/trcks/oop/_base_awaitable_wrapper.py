@@ -25,7 +25,8 @@ class BaseAwaitableWrapper(BaseWrapper[Awaitable[_T_co]]):
         """The wrapped [collections.abc.Awaitable][] object
         transformed into a coroutine.
 
-        This is useful for functions that expect a coroutine (e.g. [asyncio.run][]).
+        This is useful for functions that expect a coroutine
+        (e.g. [asyncio.run][] in Python 3.13 and older).
 
         Note:
             The attribute [trcks.oop.BaseWrapper.core][]
