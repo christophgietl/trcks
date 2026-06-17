@@ -18,7 +18,7 @@ class BaseWrapper(Generic[_T_co]):
 
     Example:
         >>> from trcks.oop import BaseWrapper
-        >>> wrapped_integer: BaseWrapper[int] = BaseWrapper(core=42)
+        >>> wrapped_integer = BaseWrapper[int](core=42)
         >>> wrapped_integer
         BaseWrapper(core=42)
         >>> wrapped_integer.core
@@ -38,7 +38,7 @@ class BaseWrapper(Generic[_T_co]):
 
     @override
     def __repr__(self) -> str:
-        """Return a textual representation of the wrapper.
+        """Represent the wrapper textually.
 
         Returns:
             The textual representation of the wrapper.
