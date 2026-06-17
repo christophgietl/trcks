@@ -20,10 +20,10 @@ jobs:
         with:
           fetch-depth: 0  # needed by build-backend to derive package version from Git tags
           persist-credentials: false
-      - uses: christophgietl/uv-actions/set-up-uv@d149c21ae8654b9c19faae10433a5674e0094d3b # 2026.5.4
+      - uses: christophgietl/uv-actions/set-up-uv@e75e1e587602469dee34939418204d0648d6b667 # 2026.6.10
         with:
           install-and-cache-dependencies: true
-      - uses: christophgietl/uv-actions/set-up-pre-commit@d149c21ae8654b9c19faae10433a5674e0094d3b # 2026.5.4
+      - uses: christophgietl/uv-actions/set-up-pre-commit@e75e1e587602469dee34939418204d0648d6b667 # 2026.6.10
         with:
           cache-key-suffix: copilot-setup-steps
           install-git-hooks: true
