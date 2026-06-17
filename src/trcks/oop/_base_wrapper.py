@@ -18,7 +18,7 @@ class BaseWrapper(Generic[_T_co]):
 
     Note:
         Instances of this class (and its synchronous subclasses) are unhashable
-        because `__eq__` is defined.
+        because `__eq__` is defined and `__hash__` raises [TypeError][].
         Awaitable subclasses such as [trcks.oop.BaseAwaitableWrapper][]
         restore identity-based equality and remain hashable.
 
@@ -30,8 +30,6 @@ class BaseWrapper(Generic[_T_co]):
         >>> wrapped_integer.core
         42
     """
-
-    __hash__ = None  # type: ignore[assignment]  # pyright: ignore[reportAssignmentType]  # pyrefly: ignore[implicit-any-attribute]  # Explicitly unhashable because __eq__ is defined.
 
     __slots__: tuple[str, ...] = ("_core",)
 
@@ -63,6 +61,26 @@ class BaseWrapper(Generic[_T_co]):
         if not isinstance(other, BaseWrapper) or type(other) is not type(self):  # pyright: ignore[reportUnknownArgumentType]
             return NotImplemented
         return bool(self._core == other._core)  # pyright: ignore[reportUnknownArgumentType, reportUnknownMemberType]
+
+    @override
+    def __hash__(self) -> int:
+        """Raise [TypeError][] to indicate that this object is not hashable.
+
+        Returns:
+            Never returns; always raises [TypeError][].
+
+        Raises:
+            TypeError: Always, because instances of this class are not hashable.
+
+        Example:
+            >>> from trcks.oop import BaseWrapper
+            >>> hash(BaseWrapper(core=42))
+            Traceback (most recent call last):
+                ...
+            TypeError: unhashable type: 'BaseWrapper'
+        """
+        msg = f"unhashable type: '{type(self).__name__}'"
+        raise TypeError(msg)
 
     def __init__(self, core: _T_co) -> None:
         """Initialize the wrapper.

@@ -23,8 +23,6 @@ class BaseAwaitableWrapper(BaseWrapper[Awaitable[_T_co]]):
         meaningful.
     """
 
-    __hash__ = object.__hash__  # type: ignore[assignment]  # Restore identity-based hashing overridden by BaseWrapper.
-
     __slots__: tuple[str, ...] = ()
 
     @override
@@ -55,6 +53,30 @@ class BaseAwaitableWrapper(BaseWrapper[Awaitable[_T_co]]):
             >>> loop.close()
         """
         return self is other
+
+    @override
+    def __hash__(self) -> int:
+        """Return a hash based on object identity.
+
+        Awaitable wrappers use identity-based hashing because
+        [collections.abc.Awaitable][] values do not support meaningful
+        value equality.
+
+        Returns:
+            A hash value derived from the object's identity.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks.oop import BaseAwaitableWrapper
+            >>> loop = asyncio.new_event_loop()
+            >>> future: asyncio.Future[str] = loop.create_future()
+            >>> future.set_result("Hello, world!")
+            >>> wrapped_future = BaseAwaitableWrapper(future)
+            >>> hash(wrapped_future) == hash(wrapped_future)
+            True
+            >>> loop.close()
+        """
+        return object.__hash__(self)
 
     @property
     async def core_as_coroutine(self) -> _T_co:
