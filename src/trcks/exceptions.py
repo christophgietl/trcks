@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from collections.abc import Sized
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Final
 
 if TYPE_CHECKING:
     from trcks._typing import Self
@@ -28,6 +28,11 @@ class TrcksTypeError(TrcksError, TypeError):
 
     Contains information about the offending object.
 
+    Attributes:
+        expected_type_name: Name of the expected type.
+        offending_object_class: Class of the object that caused the error.
+        offending_object_length: Length of the object that caused the error.
+
     Example:
         >>> err = TrcksTypeError(int, None, "Pipeline")
         >>> str(err)
@@ -41,9 +46,9 @@ class TrcksTypeError(TrcksError, TypeError):
     """
 
     __slots__: tuple[str, ...] = (
-        "_expected_type_name",
-        "_offending_object_class",
-        "_offending_object_length",
+        "expected_type_name",
+        "offending_object_class",
+        "offending_object_length",
     )
 
     def __init__(
@@ -59,16 +64,16 @@ class TrcksTypeError(TrcksError, TypeError):
             offending_object_length: Length of the object that caused the error.
             expected_type_name: Name of the expected type.
         """
-        self._offending_object_class: type = offending_object_class
-        self._offending_object_length: int | None = offending_object_length
-        self._expected_type_name: str = expected_type_name
+        self.offending_object_class: Final[type] = offending_object_class
+        self.offending_object_length: Final[int | None] = offending_object_length
+        self.expected_type_name: Final[str] = expected_type_name
 
-        prefix = f"object of type '{self._offending_object_class.__name__}' "
-        if self._offending_object_length is None:
+        prefix = f"object of type {self.offending_object_class.__name__!r} "
+        if self.offending_object_length is None:
             infix = ""
         else:
-            infix = f"and length {self._offending_object_length} "
-        suffix = f"is not a valid '{self._expected_type_name}'"
+            infix = f"and length {self.offending_object_length} "
+        suffix = f"is not a valid {self.expected_type_name!r}"
 
         super().__init__(f"{prefix}{infix}{suffix}")
 
@@ -121,18 +126,3 @@ class TrcksTypeError(TrcksError, TypeError):
             ),
             expected_type_name=expected_type_name,
         )
-
-    @property
-    def expected_type_name(self) -> str:
-        """Name of the expected type."""
-        return self._expected_type_name
-
-    @property
-    def offending_object_class(self) -> type:
-        """Class of the object that caused the error."""
-        return self._offending_object_class
-
-    @property
-    def offending_object_length(self) -> int | None:
-        """Length of the object that caused the error."""
-        return self._offending_object_length
