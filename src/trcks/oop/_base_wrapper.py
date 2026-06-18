@@ -51,6 +51,15 @@ class BaseWrapper(Generic[_T_co]):
             Traceback (most recent call last):
                 ...
             TypeError: unhashable type: 'list'
+
+        Wrappers are immutable:
+
+            >>> from trcks.oop import BaseWrapper
+            >>> wrapper = BaseWrapper(core=42)
+            >>> wrapper.core = 100
+            Traceback (most recent call last):
+                ...
+            AttributeError: cannot set attribute
     """
 
     __slots__: tuple[str, ...] = ("_core",)
@@ -94,6 +103,22 @@ class BaseWrapper(Generic[_T_co]):
             The textual representation of the wrapper.
         """
         return f"{self.__class__.__name__}(core={self._core!r})"
+
+    @override
+    def __setattr__(self, name: str, value: object) -> None:
+        """Prevent attribute modification after initialization.
+
+        Args:
+            name: The name of the attribute.
+            value: The value to set.
+
+        Raises:
+            AttributeError: If the wrapper is already initialized.
+        """
+        if hasattr(self, "_core"):
+            msg = "cannot set attribute"
+            raise AttributeError(msg)
+        super().__setattr__(name, value)
 
     @property
     def core(self) -> _T_co:
