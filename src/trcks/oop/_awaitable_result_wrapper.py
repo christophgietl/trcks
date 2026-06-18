@@ -37,7 +37,7 @@ class AwaitableResultWrapper(
     """Type-safe and immutable wrapper for [trcks.AwaitableResult][] objects.
 
     The wrapped object can be accessed
-    via the attribute [trcks.oop.BaseWrapper.core][].
+    via the attribute `trcks.oop.AwaitableResultWrapper.core`.
     The `trcks.oop.AwaitableResultWrapper.map*` methods allow method chaining.
 
     Example:

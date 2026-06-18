@@ -36,7 +36,7 @@ class TupleWrapper(BaseWrapper[tuple[_T_co, ...]]):
     """Type-safe and immutable wrapper for homogeneous [tuple][] objects.
 
     The wrapped homogeneous [tuple][] can be accessed
-    via the attribute [trcks.oop.BaseWrapper.core][].
+    via the attribute `trcks.oop.TupleWrapper.core`.
     The `trcks.oop.TupleWrapper.map*` methods allow method chaining.
     The `trcks.oop.TupleWrapper.tap*` methods allow for side effects
     without changing the wrapped tuple.

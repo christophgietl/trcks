@@ -1,6 +1,7 @@
 from typing import Generic
 
-from trcks._typing import TypeVar, override
+from trcks._typing import Never, TypeVar, override
+from trcks.exceptions import TrcksFrozenInstanceError
 
 __docformat__ = "google"
 
@@ -9,6 +10,9 @@ _T_co = TypeVar("_T_co", covariant=True)
 
 class BaseWrapper(Generic[_T_co]):
     """Base class for all wrappers in the [trcks.oop][] package.
+
+    Attributes:
+        core: The wrapped value.
 
     Note:
         This class is not particularly useful by itself.
@@ -47,6 +51,7 @@ class BaseWrapper(Generic[_T_co]):
 
         Unhashable values result in unhashable wrappers:
 
+            >>> from trcks.oop import BaseWrapper
             >>> hash(BaseWrapper(core=[1, 2, 3]))
             Traceback (most recent call last):
                 ...
@@ -59,10 +64,24 @@ class BaseWrapper(Generic[_T_co]):
             >>> wrapper.core = 100
             Traceback (most recent call last):
                 ...
-            AttributeError: cannot set attribute
+            trcks.exceptions.TrcksFrozenInstanceError: cannot assign to field 'core'
+            >>> del wrapper.core
+            Traceback (most recent call last):
+                ...
+            trcks.exceptions.TrcksFrozenInstanceError: cannot delete field 'core'
     """
 
-    __slots__: tuple[str, ...] = ("_core",)
+    __slots__: tuple[str, ...] = ("core",)
+
+    @override
+    def __delattr__(self, name: str) -> Never:
+        """Prevent attribute deletion.
+
+        Raises:
+            TrcksFrozenInstanceError: Always.
+        """
+        msg = f"cannot delete field {name!r}"
+        raise TrcksFrozenInstanceError(msg, name=name, obj=self)
 
     @override
     def __eq__(self, other: object) -> bool:
@@ -75,7 +94,7 @@ class BaseWrapper(Generic[_T_co]):
             True if the classes are identical _and_ the wrapped values are equal.
                  False otherwise.
         """
-        return type(other) is type(self) and other._core == self._core
+        return type(other) is type(self) and other.core == self.core
 
     @override
     def __hash__(self) -> int:
@@ -84,7 +103,7 @@ class BaseWrapper(Generic[_T_co]):
         Returns:
             The hash of the wrapper.
         """
-        return hash((type(self), self._core))
+        return hash((type(self), self.core))
 
     def __init__(self, core: _T_co) -> None:
         """Initialize the wrapper.
@@ -93,7 +112,7 @@ class BaseWrapper(Generic[_T_co]):
             core: The value to be wrapped.
         """
         super().__init__()
-        self._core: _T_co = core
+        self.core: _T_co = core
 
     @override
     def __repr__(self) -> str:
@@ -102,39 +121,25 @@ class BaseWrapper(Generic[_T_co]):
         Returns:
             The textual representation of the wrapper.
         """
-        return f"{self.__class__.__name__}(core={self._core!r})"
+        return f"{self.__class__.__name__}(core={self.core!r})"
 
     @override
     def __setattr__(self, name: str, value: object) -> None:
-        """Prevent attribute modification after initialization.
+        """Set attribute during initialization.
 
         Args:
             name: The name of the attribute.
             value: The value to set.
 
         Raises:
-            AttributeError: If the wrapper is already initialized.
+            TrcksFrozenInstanceError: If the attribute already exists.
         """
         try:
-            object.__getattribute__(self, name)
+            self.__getattribute__(name)
         except AttributeError:
-            # Attribute doesn't exist yet; allow setting once during initialization.
-            super().__setattr__(name, value)
+            pass  # Attribute does not exist yet.
         else:
-            msg = "cannot set attribute"
-            raise AttributeError(msg)
+            msg = f"cannot assign to field {name!r}"
+            raise TrcksFrozenInstanceError(msg, name=name, obj=self)
 
-    @override
-    def __delattr__(self, name: str) -> None:
-        """Prevent attribute deletion.
-
-        Raises:
-            AttributeError: Always, because wrappers are immutable.
-        """
-        msg = "cannot delete attribute"
-        raise AttributeError(msg)
-
-    @property
-    def core(self) -> _T_co:
-        """The wrapped value."""
-        return self._core
+        super().__setattr__(name, value)
