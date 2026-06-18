@@ -23,8 +23,8 @@ class BaseWrapper(Generic[_T_co]):
             >>> wrapped_integer = BaseWrapper[int](core=42)
             >>> wrapped_integer
             BaseWrapper(core=42)
-            >>> unwrapped_integer = wrapped_integer
-            >>> unwrapped_integer.core
+            >>> unwrapped_integer = wrapped_integer.core
+            >>> unwrapped_integer
             42
 
         Equality depends on the wrapper class and on the wrapped value:
@@ -63,7 +63,7 @@ class BaseWrapper(Generic[_T_co]):
             other: The object to compare with.
 
         Returns:
-            True if the class and the wrapped value are identical. False otherwise.
+            True if the wrapper class matches exactly and the wrapped values are equal. False otherwise.
         """
         return type(other) is type(self) and other._core == self._core
 
