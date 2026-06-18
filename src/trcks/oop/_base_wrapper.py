@@ -1,4 +1,4 @@
-from typing import Generic
+from typing import Final, Generic
 
 from trcks._typing import Never, TypeVar, override
 from trcks.exceptions import TrcksFrozenInstanceError
@@ -31,7 +31,7 @@ class BaseWrapper(Generic[_T_co]):
             >>> unwrapped_integer
             42
 
-        Equality depends on the wrapper class and on the wrapped value:
+        Equality depends on the class and on the wrapped value:
 
             >>> from trcks.oop import BaseWrapper
             >>> BaseWrapper(core=42) == BaseWrapper(core=42)
@@ -42,14 +42,20 @@ class BaseWrapper(Generic[_T_co]):
             ...     pass
             >>> SubWrapper(core=42) == BaseWrapper(core=42)
             False
+            >>> BaseWrapper(core=42) == SubWrapper(core=42)
+            False
 
-        Same wrapper class and same wrapped value implies same hash:
+        Same class and same wrapped value implies same hash:
 
             >>> from trcks.oop import BaseWrapper
             >>> hash(BaseWrapper(core=42)) == hash(BaseWrapper(core=42))
             True
+            >>> class SubWrapper(BaseWrapper[int]):
+            ...     pass
+            >>> hash(SubWrapper(core=42)) == hash(SubWrapper(core=42))
+            True
 
-        Unhashable values result in unhashable wrappers:
+        Unhashable values lead to unhashable wrappers:
 
             >>> from trcks.oop import BaseWrapper
             >>> hash(BaseWrapper(core=[1, 2, 3]))
@@ -64,11 +70,11 @@ class BaseWrapper(Generic[_T_co]):
             >>> wrapper.core = 100
             Traceback (most recent call last):
                 ...
-            trcks.exceptions.TrcksFrozenInstanceError: cannot assign to field 'core'
+            trcks.exceptions.TrcksFrozenInstanceError: cannot assign to attribute 'core'
             >>> del wrapper.core
             Traceback (most recent call last):
                 ...
-            trcks.exceptions.TrcksFrozenInstanceError: cannot delete field 'core'
+            trcks.exceptions.TrcksFrozenInstanceError: cannot delete attribute 'core'
     """
 
     __slots__: tuple[str, ...] = ("core",)
@@ -80,7 +86,7 @@ class BaseWrapper(Generic[_T_co]):
         Raises:
             TrcksFrozenInstanceError: Always.
         """
-        msg = f"cannot delete field {name!r}"
+        msg = f"cannot delete attribute {name!r}"
         raise TrcksFrozenInstanceError(msg, name=name, obj=self)
 
     @override
@@ -94,7 +100,9 @@ class BaseWrapper(Generic[_T_co]):
             True if the classes are identical _and_ the wrapped values are equal.
                  False otherwise.
         """
-        return type(other) is type(self) and other.core == self.core
+        if type(other) is type(self):
+            return other.core == self.core
+        return NotImplemented
 
     @override
     def __hash__(self) -> int:
@@ -112,7 +120,7 @@ class BaseWrapper(Generic[_T_co]):
             core: The value to be wrapped.
         """
         super().__init__()
-        self.core: _T_co = core
+        self.core: Final[_T_co] = core
 
     @override
     def __repr__(self) -> str:
@@ -139,7 +147,7 @@ class BaseWrapper(Generic[_T_co]):
         except AttributeError:
             pass  # Attribute does not exist yet.
         else:
-            msg = f"cannot assign to field {name!r}"
+            msg = f"cannot assign to attribute {name!r}"
             raise TrcksFrozenInstanceError(msg, name=name, obj=self)
 
         super().__setattr__(name, value)
