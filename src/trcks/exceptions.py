@@ -11,13 +11,19 @@ if TYPE_CHECKING:
 __docformat__ = "google"
 
 
-class TrcksFrozenInstanceError(AttributeError):
+class TrcksError(Exception):
+    """Base class for all exceptions raised by [trcks][]."""
+
+    __slots__: tuple[str, ...] = ()
+
+
+class TrcksFrozenInstanceError(TrcksError, AttributeError):
     """Raised when trying to modify an instance of a frozen [trcks][] class."""
 
     __slots__: tuple[str, ...] = ()
 
 
-class TrcksTypeError(TypeError):
+class TrcksTypeError(TrcksError, TypeError):
     """Raised when [trcks][] functions are called with an argument of wrong type.
 
     Contains information about the offending object.
