@@ -63,7 +63,7 @@ class BaseWrapper(Generic[_T_co]):
             other: The object to compare with.
 
         Returns:
-            True if the wrapper class matches exactly and the wrapped values are equal. False otherwise.
+            True if the classes match exactly _and_ the wrapped values are equal. False otherwise.
         """
         return type(other) is type(self) and other._core == self._core
 
