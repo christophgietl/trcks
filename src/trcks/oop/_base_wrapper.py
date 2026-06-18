@@ -125,6 +125,16 @@ class BaseWrapper(Generic[_T_co]):
             msg = "cannot set attribute"
             raise AttributeError(msg)
 
+    @override
+    def __delattr__(self, name: str) -> None:
+        """Prevent attribute deletion.
+
+        Raises:
+            AttributeError: Always, because wrappers are immutable.
+        """
+        msg = "cannot delete attribute"
+        raise AttributeError(msg)
+
     @property
     def core(self) -> _T_co:
         """The wrapped value."""
