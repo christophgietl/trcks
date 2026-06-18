@@ -116,12 +116,11 @@ class BaseWrapper(Generic[_T_co]):
             AttributeError: If the wrapper is already initialized.
         """
         try:
-            object.__getattribute__(self, "_core")
+            object.__getattribute__(self, name)
         except AttributeError:
-            # _core doesn't exist yet, allow setting during initialization
+            # Attribute doesn't exist yet; allow setting once during initialization.
             super().__setattr__(name, value)
         else:
-            # _core exists, prevent further modifications
             msg = "cannot set attribute"
             raise AttributeError(msg)
 
