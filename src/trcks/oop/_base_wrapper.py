@@ -17,15 +17,64 @@ class BaseWrapper(Generic[_T_co]):
         such as [trcks.oop.Wrapper][].
 
     Example:
-        >>> from trcks.oop import BaseWrapper
-        >>> wrapped_integer = BaseWrapper[int](core=42)
-        >>> wrapped_integer
-        BaseWrapper(core=42)
-        >>> wrapped_integer.core
-        42
+        Wrapping and unwrapping an integer:
+
+            >>> from trcks.oop import BaseWrapper
+            >>> wrapped_integer = BaseWrapper[int](core=42)
+            >>> wrapped_integer
+            BaseWrapper(core=42)
+            >>> unwrapped_integer = wrapped_integer
+            >>> unwrapped_integer.core
+            42
+
+        Equality depends on the wrapper class and on the wrapped value:
+
+            >>> from trcks.oop import BaseWrapper
+            >>> BaseWrapper(core=42) == BaseWrapper(core=42)
+            True
+            >>> BaseWrapper(core=42) == BaseWrapper(core=0)
+            False
+            >>> class SubWrapper(BaseWrapper[int]):
+            ...     pass
+            >>> SubWrapper(core=42) == BaseWrapper(core=42)
+            False
+
+        Same wrapper class and same wrapped value implies same hash:
+
+            >>> from trcks.oop import BaseWrapper
+            >>> hash(BaseWrapper(core=42)) == hash(BaseWrapper(core=42))
+            True
+
+        Unhashable values result in unhashable wrappers:
+
+            >>> hash(BaseWrapper(core=[1, 2, 3]))
+            Traceback (most recent call last):
+                ...
+            TypeError: unhashable type: 'list'
     """
 
     __slots__: tuple[str, ...] = ("_core",)
+
+    @override
+    def __eq__(self, other: object) -> bool:
+        """Check if this wrapper is equal to another object.
+
+        Args:
+            other: The object to compare with.
+
+        Returns:
+            True if the class and the wrapped value are identical. False otherwise.
+        """
+        return type(other) is type(self) and other._core == self._core
+
+    @override
+    def __hash__(self) -> int:
+        """Hash the wrapper.
+
+        Returns:
+            The hash of the wrapper.
+        """
+        return hash((type(self), self._core))
 
     def __init__(self, core: _T_co) -> None:
         """Initialize the wrapper.
