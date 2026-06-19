@@ -101,6 +101,8 @@ uv run pre-commit run --all-files
 uv run --all-extras mypy
 uv run --all-extras pyrefly check
 uv run --all-extras pyright
+# Verify type completeness:
+uv run --all-extras pyright --verifytypes trcks
 # Run unit tests and doctests:
 uv run pytest
 # Enforce rules for the imports within and between Python packages:
