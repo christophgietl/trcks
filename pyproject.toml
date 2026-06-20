@@ -217,6 +217,7 @@ ignore = [
     "D205", # forbids multiple lines at the beginning of a docstring
 ]
 select = ["ALL"]
+typing-modules = ["trcks._typing"]
 
 [tool.ruff.lint.per-file-ignores]
 "tests/*" = ["D", "INP001", "S101"]
