@@ -186,7 +186,6 @@ source = "scm"
 [tool.pyrefly]
 enabled-ignores = ["pyrefly"]
 preset = "all"
-project-includes = ["."]
 
 [tool.pyright]
 deprecateTypingAliases = true
