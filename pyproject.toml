@@ -16,6 +16,7 @@ dev = [
     "pytest-asyncio==1.4.0",
     "pytest-cov==7.1.0",
     "pytest-doctestplus==1.7.1",
+    "ty>=0.0.51",
 ]
 
 [project]
