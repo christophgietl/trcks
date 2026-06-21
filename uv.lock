@@ -1378,6 +1378,9 @@ pyrefly = [
 pyright = [
     { name = "pyright" },
 ]
+ty = [
+    { name = "ty" },
+]
 
 [package.dev-dependencies]
 dev = [
@@ -1402,9 +1405,10 @@ requires-dist = [
     { name = "pyrefly", marker = "extra == 'pyrefly'", specifier = ">=0.64" },
     { name = "pyright", marker = "python_full_version >= '3.14' and extra == 'pyright'", specifier = ">=1.1.407" },
     { name = "pyright", marker = "extra == 'pyright'", specifier = ">=1.1.391" },
+    { name = "ty", marker = "extra == 'ty'", specifier = ">=0.0.51" },
     { name = "typing-extensions", marker = "python_full_version < '3.13'", specifier = ">=4.12" },
 ]
-provides-extras = ["mypy", "pyrefly", "pyright"]
+provides-extras = ["mypy", "pyrefly", "pyright", "ty"]
 
 [package.metadata.requires-dev]
 dev = [
@@ -1420,7 +1424,7 @@ dev = [
     { name = "pytest-asyncio", specifier = "==1.4.0" },
     { name = "pytest-cov", specifier = "==7.1.0" },
     { name = "pytest-doctestplus", specifier = "==1.7.1" },
-    { name = "ty", specifier = ">=0.0.51" },
+    { name = "ty" },
 ]
 
 [[package]]

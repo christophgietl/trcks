@@ -332,7 +332,7 @@ def map_failure(
         >>> asyncio.run(art.to_coroutine_result_tuple(a_r_tpl_2))
         ('success', (1, 2))
     """
-    return a.map_(rt.map_failure(f))
+    return a.map_(rt.map_failure(f))  # ty: ignore[invalid-argument-type]
 
 
 def map_failure_to_awaitable(
@@ -436,7 +436,7 @@ def map_failure_to_awaitable_result_iterable(
                     r_tpl, "ResultTuple"
                 )
 
-    return a.map_to_awaitable(partially_mapped_f)
+    return a.map_to_awaitable(partially_mapped_f)  # ty: ignore[invalid-argument-type]
 
 
 @deprecated("Use map_failure_to_awaitable_result_iterable instead")
@@ -538,7 +538,7 @@ def map_failure_to_result(
         >>> asyncio.run(art.to_coroutine_result_tuple(a_r_tpl_3))
         ('success', (1, 2))
     """
-    return a.map_(rt.map_failure_to_result(f))
+    return a.map_(rt.map_failure_to_result(f))  # ty: ignore[invalid-argument-type]
 
 
 def map_failure_to_result_iterable(
@@ -585,7 +585,7 @@ def map_failure_to_result_iterable(
         >>> asyncio.run(art.to_coroutine_result_tuple(a_r_tpl_3))
         ('success', (1, 2))
     """
-    return a.map_(rt.map_failure_to_result_iterable(f))
+    return a.map_(rt.map_failure_to_result_iterable(f))  # ty: ignore[invalid-argument-type]
 
 
 @deprecated("Use map_failure_to_result_iterable instead")
@@ -645,7 +645,7 @@ def map_successes(
         >>> asyncio.run(art.to_coroutine_result_tuple(a_r_tpl_2))
         ('failure', 'not found')
     """
-    return a.map_(rt.map_successes(f))
+    return a.map_(rt.map_successes(f))  # ty: ignore[invalid-argument-type]
 
 
 def map_successes_to_awaitable(
@@ -798,7 +798,7 @@ def map_successes_to_awaitable_result_iterable(
     ) -> ResultTuple[_F1 | _F2, _S2]:
         match r_tpl:
             case ("failure", _):
-                return r_tpl
+                return r_tpl  # ty: ignore[invalid-return-type]
             case ("success", s1s):
                 s2s: list[_S2] = []
                 for s1 in s1s:  # pyrefly: ignore[not-iterable]
@@ -817,7 +817,7 @@ def map_successes_to_awaitable_result_iterable(
                     r_tpl, "ResultTuple"
                 )
 
-    return a.map_to_awaitable(partially_mapped_f)
+    return a.map_to_awaitable(partially_mapped_f)  # ty: ignore[invalid-argument-type]
 
 
 @deprecated("Use map_successes_to_awaitable_result_iterable instead")
@@ -858,7 +858,7 @@ def map_successes_to_iterable(
         >>> asyncio.run(art.to_coroutine_result_tuple(a_r_tpl))
         ('success', (1, 1, 2, 2))
     """
-    return a.map_(rt.map_successes_to_iterable(f))
+    return a.map_(rt.map_successes_to_iterable(f))  # ty: ignore[invalid-argument-type]
 
 
 def map_successes_to_result(
@@ -905,7 +905,7 @@ def map_successes_to_result(
         >>> asyncio.run(art.to_coroutine_result_tuple(a_r_tpl_3))
         ('failure', 'oops')
     """
-    return a.map_(rt.map_successes_to_result(f))
+    return a.map_(rt.map_successes_to_result(f))  # ty: ignore[invalid-argument-type]
 
 
 def map_successes_to_result_iterable(
@@ -948,7 +948,7 @@ def map_successes_to_result_iterable(
         >>> asyncio.run(art.to_coroutine_result_tuple(a_r_tpl_2))
         ('failure', 'oops')
     """
-    return a.map_(rt.map_successes_to_result_iterable(f))
+    return a.map_(rt.map_successes_to_result_iterable(f))  # ty: ignore[invalid-argument-type]
 
 
 @deprecated("Use map_successes_to_result_iterable instead")
@@ -1006,7 +1006,7 @@ def tap_failure(
         >>> r_tpl_2
         ('success', (1,))
     """
-    return a.map_(rt.tap_failure(f))
+    return a.map_(rt.tap_failure(f))  # ty: ignore[invalid-argument-type]
 
 
 def tap_failure_to_awaitable(
@@ -1230,7 +1230,7 @@ def tap_failure_to_iterable(
         >>> r_tpl_2
         ('success', (1,))
     """
-    return a.map_(rt.tap_failure_to_iterable(f))
+    return a.map_(rt.tap_failure_to_iterable(f))  # ty: ignore[invalid-argument-type]
 
 
 def tap_failure_to_result(
@@ -1276,7 +1276,7 @@ def tap_failure_to_result(
         >>> asyncio.run(art.to_coroutine_result_tuple(a_r_tpl_3))
         ('success', (1,))
     """
-    return a.map_(rt.tap_failure_to_result(f))
+    return a.map_(rt.tap_failure_to_result(f))  # ty: ignore[invalid-argument-type]
 
 
 def tap_failure_to_result_iterable(
@@ -1326,7 +1326,7 @@ def tap_failure_to_result_iterable(
         >>> asyncio.run(art.to_coroutine_result_tuple(a_r_tpl_3))
         ('success', (1,))
     """
-    return a.map_(rt.tap_failure_to_result_iterable(f))
+    return a.map_(rt.tap_failure_to_result_iterable(f))  # ty: ignore[invalid-argument-type]
 
 
 @deprecated("Use tap_failure_to_result_iterable instead")
@@ -1352,7 +1352,9 @@ def tap_failure_to_tuple(
     """Deprecated alias for
     [trcks.fp.monads.awaitable_result_tuple.tap_failure_to_iterable][].
     """
-    return tap_failure_to_iterable(f)  # pragma: no cover
+    return tap_failure_to_iterable(
+        f
+    )  # pragma: no cover  # ty: ignore[invalid-argument-type]
 
 
 def tap_successes(
@@ -1388,7 +1390,7 @@ def tap_successes(
         >>> r_tpl_2
         ('failure', 'oops')
     """
-    return a.map_(rt.tap_successes(f))
+    return a.map_(rt.tap_successes(f))  # ty: ignore[invalid-argument-type]
 
 
 def tap_successes_to_awaitable(
@@ -1593,7 +1595,7 @@ def tap_successes_to_iterable(
         >>> r_tpl
         ('success', (7, 7))
     """
-    return a.map_(rt.tap_successes_to_iterable(f))
+    return a.map_(rt.tap_successes_to_iterable(f))  # ty: ignore[invalid-argument-type]
 
 
 def tap_successes_to_result(
@@ -1638,7 +1640,7 @@ def tap_successes_to_result(
         >>> asyncio.run(art.to_coroutine_result_tuple(a_r_tpl_3))
         ('failure', 'oops')
     """
-    return a.map_(rt.tap_successes_to_result(f))
+    return a.map_(rt.tap_successes_to_result(f))  # ty: ignore[invalid-argument-type]
 
 
 def tap_successes_to_result_iterable(
@@ -1689,7 +1691,7 @@ def tap_successes_to_result_iterable(
         >>> asyncio.run(art.to_coroutine_result_tuple(a_r_tpl_3))
         ('failure', 'oops')
     """
-    return a.map_(rt.tap_successes_to_result_iterable(f))
+    return a.map_(rt.tap_successes_to_result_iterable(f))  # ty: ignore[invalid-argument-type]
 
 
 @deprecated("Use tap_successes_to_result_iterable instead")

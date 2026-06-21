@@ -222,7 +222,7 @@ def map_failure(
         >>> asyncio.run(ar.to_coroutine_result(a_rslt_2))
         ('success', 25.0)
     """
-    return a.map_(r.map_failure(f))
+    return a.map_(r.map_failure(f))  # ty: ignore[invalid-argument-type]
 
 
 def map_failure_to_awaitable(
@@ -319,7 +319,7 @@ def map_failure_to_awaitable_result(
             case _:  # pragma: no cover
                 raise TrcksTypeError.construct_from_offending_object(rslt, "Result")  # pyright: ignore[reportUnreachable]
 
-    return a.map_to_awaitable(partially_mapped_f)
+    return a.map_to_awaitable(partially_mapped_f)  # ty: ignore[invalid-argument-type]
 
 
 def map_failure_to_result(
@@ -361,7 +361,7 @@ def map_failure_to_result(
         >>> asyncio.run(ar.to_coroutine_result(a_rslt_3))
         ('success', 25.0)
     """
-    return a.map_(r.map_failure_to_result(f))
+    return a.map_(r.map_failure_to_result(f))  # ty: ignore[invalid-argument-type]
 
 
 def map_success(
@@ -400,7 +400,7 @@ def map_success(
         >>> asyncio.run(ar.to_coroutine_result(a_rslt_2))
         ('success', 43)
     """
-    return a.map_(r.map_success(f))
+    return a.map_(r.map_success(f))  # ty: ignore[invalid-argument-type]
 
 
 def map_success_to_awaitable(
@@ -495,13 +495,13 @@ def map_success_to_awaitable_result(
     async def partially_mapped_f(rslt: Result[_F1, _S1]) -> Result[_F1 | _F2, _S2]:
         match rslt:
             case ("failure", _):
-                return rslt
+                return rslt  # ty: ignore[invalid-return-type]
             case ("success", value):
                 return await f(value)  # pyrefly: ignore[bad-argument-type]
             case _:  # pragma: no cover
                 raise TrcksTypeError.construct_from_offending_object(rslt, "Result")  # pyright: ignore[reportUnreachable]
 
-    return a.map_to_awaitable(partially_mapped_f)
+    return a.map_to_awaitable(partially_mapped_f)  # ty: ignore[invalid-argument-type]
 
 
 def map_success_to_result(
@@ -545,7 +545,7 @@ def map_success_to_result(
         >>> asyncio.run(ar.to_coroutine_result(a_rslt_2))
         ('success', 5.0)
     """
-    return a.map_(r.map_success_to_result(f))
+    return a.map_(r.map_success_to_result(f))  # ty: ignore[invalid-argument-type]
 
 
 def tap_failure(
@@ -564,7 +564,7 @@ def tap_failure(
             returns the original [trcks.AwaitableFailure][] value.
             Passes on [trcks.AwaitableSuccess][] values without side effects.
     """
-    return a.map_(r.tap_failure(f))
+    return a.map_(r.tap_failure(f))  # ty: ignore[invalid-argument-type]
 
 
 def tap_failure_to_awaitable(
@@ -642,7 +642,7 @@ def tap_failure_to_result(
             *this* [trcks.Success][] is returned.
             Passes on [trcks.AwaitableSuccess][] values without side effects.
     """
-    return a.map_(r.tap_failure_to_result(f))
+    return a.map_(r.tap_failure_to_result(f))  # ty: ignore[invalid-argument-type]
 
 
 def tap_success(
@@ -661,7 +661,7 @@ def tap_success(
             Applies the given side effect to [trcks.AwaitableSuccess][] values and
             returns the original [trcks.AwaitableSuccess][] value.
     """
-    return a.map_(r.tap_success(f))
+    return a.map_(r.tap_success(f))  # ty: ignore[invalid-argument-type]
 
 
 def tap_success_to_awaitable(
@@ -739,7 +739,7 @@ def tap_success_to_result(
             If the given side effect returns a [trcks.Success][],
             *the original* [trcks.AwaitableSuccess][] value is returned.
     """
-    return a.map_(r.tap_success_to_result(f))
+    return a.map_(r.tap_success_to_result(f))  # ty: ignore[invalid-argument-type]
 
 
 async def to_coroutine_result(a_rslt: AwaitableResult[_F, _S]) -> Result[_F, _S]:

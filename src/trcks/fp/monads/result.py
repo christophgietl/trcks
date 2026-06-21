@@ -262,7 +262,7 @@ def map_success_to_result(
     def mapped_f(rslt: Result[_F1, _S1]) -> Result[_F1 | _F2, _S2]:
         match rslt:
             case ("failure", _):
-                return rslt
+                return rslt  # ty: ignore[invalid-return-type]
             case ("success", value):
                 return f(value)  # pyrefly: ignore[bad-argument-type]
             case _:  # pragma: no cover

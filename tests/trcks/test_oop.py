@@ -143,7 +143,7 @@ class TestAwaitableResultWrapper:
     async def test_construct_from_result_wraps_result(
         self, result: Result[object, object]
     ) -> None:
-        assert await AwaitableResultWrapper.construct_from_result(result).core is result
+        assert await AwaitableResultWrapper.construct_from_result(result).core is result  # ty: ignore[invalid-argument-type]
 
     @pytest.mark.parametrize("value", _OBJECTS)
     async def test_construct_success_wraps_value(self, value: object) -> None:
@@ -366,7 +366,7 @@ class TestWrapper:
 class TestResultWrapper:
     @pytest.mark.parametrize("result", _RESULTS)
     def test_result_wrapper_wraps_result(self, result: Result[object, object]) -> None:
-        assert ResultWrapper(result).core is result
+        assert ResultWrapper(result).core is result  # ty: ignore[invalid-argument-type]
 
     @pytest.mark.parametrize("value", _OBJECTS)
     def test_construct_failure_wraps_value(self, value: object) -> None:
@@ -378,7 +378,7 @@ class TestResultWrapper:
     def test_construct_from_result_wraps_result(
         self, result: Result[object, object]
     ) -> None:
-        assert ResultWrapper.construct_from_result(result).core is result
+        assert ResultWrapper.construct_from_result(result).core is result  # ty: ignore[invalid-argument-type]
 
     @pytest.mark.parametrize("value", _OBJECTS)
     def test_construct_success_wraps_value(self, value: object) -> None:

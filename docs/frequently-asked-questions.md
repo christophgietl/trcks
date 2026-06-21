@@ -19,7 +19,8 @@ where raising or not catching an exception is the better choice.
 
 ## Which static type checkers does `trcks` support?
 
-`trcks` is compatible with current versions of `mypy`, `pyrefly` and `pyright`.
+`trcks` is compatible with current versions of `mypy`, `pyrefly`, `pyright`
+and `ty`.
 For setup instructions, see
 [Setting up a compatible static type checker](setup.md#setting-up-a-compatible-static-type-checker).
 
@@ -27,8 +28,9 @@ Other type checkers may also work.
 
 ???+ note
 
-    Unlike `mypy` and `pyright`, `pyrefly` (as of version 1.0.0)
-    does not reliably narrow [trcks.Result][] types in `match` statements:
+    Unlike `mypy` and `pyright`, `pyrefly` (as of version 1.0.0) and
+    `ty` (as of version 0.0.51)
+    do not reliably narrow [trcks.Result][] types in `match` statements:
 
     ```python
     from typing_extensions import reveal_type

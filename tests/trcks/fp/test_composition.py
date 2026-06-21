@@ -54,7 +54,7 @@ _PIPELINES: Final[_Tuple8[_IntPipeline]] = (
 @pytest.mark.parametrize("composable", _COMPOSABLES)
 def test_compose_correctly_composes_composable(composable: _IntComposable) -> None:
     composed = compose(composable)
-    _ = assert_type(composed, Callable[[int], int])
+    _ = assert_type(composed, Callable[[int], int])  # ty: ignore[type-assertion-failure]
     assert composed(0) == len(composable)
 
 
@@ -75,7 +75,7 @@ def test_compose_with_2_arguments_returns_composed_function(value: int) -> None:
 @pytest.mark.parametrize("p", _PIPELINES)
 def test_pipe_correctly_applies_pipeline(p: _IntPipeline) -> None:
     piped = pipe(p)
-    _ = assert_type(piped, int)
+    _ = assert_type(piped, int)  # ty: ignore[type-assertion-failure]
     assert piped == len(p) - 1
 
 
