@@ -1353,8 +1353,8 @@ def tap_failure_to_tuple(
     [trcks.fp.monads.awaitable_result_tuple.tap_failure_to_iterable][].
     """
     return tap_failure_to_iterable(
-        f
-    )  # pragma: no cover  # ty: ignore[invalid-argument-type]
+        f  # ty: ignore[invalid-argument-type]
+    )  # pragma: no cover
 
 
 def tap_successes(

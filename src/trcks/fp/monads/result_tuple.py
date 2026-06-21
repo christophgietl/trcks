@@ -691,8 +691,8 @@ def tap_failure_to_tuple(
 ) -> Callable[[ResultTuple[_F1, _S1]], SuccessTuple[_F1] | SuccessTuple[_S1]]:
     """Deprecated alias for [trcks.fp.monads.result_tuple.tap_failure_to_iterable][]."""
     return tap_failure_to_iterable(
-        f
-    )  # pragma: no cover  # ty: ignore[invalid-argument-type]
+        f  # ty: ignore[invalid-argument-type]
+    )  # pragma: no cover
 
 
 def tap_successes(
