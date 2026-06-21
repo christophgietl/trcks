@@ -242,9 +242,6 @@ ignore = ["None", "trcks", "tuple"]
 [tool.rumdl.per-file-flavor]
 "docs/**/*.md" = "mkdocs"
 
-[tool.ty.environment]
-python-version = "3.10"
-
 [tool.ty.rules]
 division-by-zero = "error"
 possibly-unresolved-reference = "error"
