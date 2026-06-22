@@ -145,7 +145,8 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
             ... )
             ResultWrapper(core=('success', 25.0))
         """
-        return ResultWrapper(r.map_failure(f)(self.core))  # ty: ignore[invalid-argument-type, invalid-return-type]
+        mapped_result: Result[_F, _S_default_co] = r.map_failure(f)(self.core)
+        return ResultWrapper(mapped_result)
 
     def map_failure_to_awaitable(
         self, f: Callable[[_F_default_co], Awaitable[_F]]
@@ -503,7 +504,8 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
             >>> ResultWrapper.construct_success(42).map_success(lambda n: n+1)
             ResultWrapper(core=('success', 43))
         """
-        return ResultWrapper(r.map_success(f)(self.core))  # ty: ignore[invalid-argument-type, invalid-return-type]
+        mapped_result: Result[_F_default_co, _S] = r.map_success(f)(self.core)
+        return ResultWrapper(mapped_result)
 
     def map_success_to_awaitable(
         self, f: Callable[[_S_default_co], Awaitable[_S]]
@@ -851,7 +853,10 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
             >>> result_wrapper_2
             ResultWrapper(core=('success', 42))
         """
-        return ResultWrapper(r.tap_failure(f)(self.core))  # ty: ignore[invalid-argument-type]
+        mapped_result: Result[_F_default_co, _S_default_co] = r.tap_failure(f)(
+            self.core
+        )
+        return ResultWrapper(mapped_result)
 
     def tap_failure_to_awaitable(
         self, f: Callable[[_F_default_co], Awaitable[object]]
@@ -1211,7 +1216,10 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
             >>> result_wrapper_2
             ResultWrapper(core=('success', 42))
         """
-        return ResultWrapper(r.tap_success(f)(self.core))  # ty: ignore[invalid-argument-type]
+        mapped_result: Result[_F_default_co, _S_default_co] = r.tap_success(f)(
+            self.core
+        )
+        return ResultWrapper(mapped_result)
 
     def tap_success_to_awaitable(
         self, f: Callable[[_S_default_co], Awaitable[object]]

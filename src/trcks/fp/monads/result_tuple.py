@@ -589,7 +589,7 @@ def tap_failure_to_iterable(
     def tapped_f(f1: _F1) -> tuple[_F1, ...]:
         return tuple(f1 for _s2 in f(f1))
 
-    return map_failure_to_iterable(tapped_f)  # ty: ignore[invalid-argument-type]
+    return map_failure_to_iterable(tapped_f)
 
 
 def tap_failure_to_result(

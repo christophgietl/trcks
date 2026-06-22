@@ -484,7 +484,8 @@ class ResultTupleWrapper(BaseWrapper[ResultTuple[_F_default_co, _S_default_co]])
             ... )
             ResultTupleWrapper(core=('failure', 'not found'))
         """
-        return ResultTupleWrapper(rt.map_successes(f)(self.core))  # ty: ignore[invalid-argument-type, invalid-return-type]
+        mapped_result: ResultTuple[_F_default_co, _S] = rt.map_successes(f)(self.core)
+        return ResultTupleWrapper(mapped_result)
 
     def map_successes_to_awaitable(
         self, f: Callable[[_S_default_co], Awaitable[_S]]
@@ -674,7 +675,10 @@ class ResultTupleWrapper(BaseWrapper[ResultTuple[_F_default_co, _S_default_co]])
             ... ).map_successes_to_iterable(_duplicate_integer)
             ResultTupleWrapper(core=('failure', 'not found'))
         """
-        return ResultTupleWrapper(rt.map_successes_to_iterable(f)(self.core))  # ty: ignore[invalid-argument-type, invalid-return-type]
+        mapped_result: ResultTuple[_F_default_co, _S] = rt.map_successes_to_iterable(f)(
+            self.core
+        )
+        return ResultTupleWrapper(mapped_result)
 
     def map_successes_to_result(
         self, f: Callable[[_S_default_co], Result[_F, _S]]
@@ -1190,7 +1194,10 @@ class ResultTupleWrapper(BaseWrapper[ResultTuple[_F_default_co, _S_default_co]])
             >>> result_tuple_wrapper_2
             ResultTupleWrapper(core=('failure', 'oops'))
         """
-        return ResultTupleWrapper(rt.tap_successes(f)(self.core))  # ty: ignore[invalid-argument-type]
+        mapped_result: ResultTuple[_F_default_co, _S_default_co] = rt.tap_successes(f)(
+            self.core
+        )
+        return ResultTupleWrapper(mapped_result)
 
     def tap_successes_to_awaitable(
         self, f: Callable[[_S_default_co], Awaitable[object]]
@@ -1385,7 +1392,10 @@ class ResultTupleWrapper(BaseWrapper[ResultTuple[_F_default_co, _S_default_co]])
             Received: 7
             ResultTupleWrapper(core=('success', (7, 7)))
         """
-        return ResultTupleWrapper(rt.tap_successes_to_iterable(f)(self.core))  # ty: ignore[invalid-argument-type]
+        mapped_result: ResultTuple[_F_default_co, _S_default_co] = (
+            rt.tap_successes_to_iterable(f)(self.core)
+        )
+        return ResultTupleWrapper(mapped_result)
 
     def tap_successes_to_result(
         self, f: Callable[[_S_default_co], Result[_F, object]]
