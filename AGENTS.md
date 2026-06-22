@@ -52,6 +52,8 @@
 - Sort functions alphabetically within each module.
 - Sort classes alphabetically within each module.
 - Sort methods alphabetically within each class.
+- When calling `super` in a data class with `slots=True`, always provide two arguments,
+  e.g. `super(MyDataClass, self)`.
 - Use the following import patterns across code and documentation:
 
   ```pycon
