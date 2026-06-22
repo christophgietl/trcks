@@ -12,7 +12,7 @@ dev = [
     "pre-commit==4.6.0",
     "pyrefly", # Check project.optional-dependencies for lower bound.
     "pyright[nodejs]", # Check project.optional-dependencies for lower bound.
-    "pytest==9.0.3",
+    "pytest==9.1.0",
     "pytest-asyncio==1.4.0",
     "pytest-cov==7.1.0",
     "pytest-doctestplus==1.7.1",
