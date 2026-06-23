@@ -12,8 +12,13 @@ if TYPE_CHECKING:
 __docformat__ = "google"
 
 
+@dataclass(eq=False, init=False, repr=False, slots=True)
+class TrcksError(Exception):
+    """Base class for all exceptions raised by [trcks][]."""
+
+
 @dataclass(eq=False, repr=False, slots=True)
-class TrcksTypeError(TypeError):
+class TrcksTypeError(TrcksError, TypeError):
     """Raised when [trcks][] functions are called with an argument of wrong type.
 
     Attributes:
@@ -23,8 +28,8 @@ class TrcksTypeError(TypeError):
 
     Example:
         >>> err = TrcksTypeError(int, None, "Pipeline")
-        >>> str(err)
-        "object of type 'int' is not a valid 'Pipeline'"
+        >>> err
+        TrcksTypeError("object of type 'int' is not a valid 'Pipeline'")
         >>> err.offending_object_class
         <class 'int'>
         >>> err.offending_object_length is None
