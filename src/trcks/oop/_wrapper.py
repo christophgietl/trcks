@@ -42,7 +42,7 @@ _T_co = TypeVar("_T_co", covariant=True)
 class Wrapper(BaseWrapper[_T_co]):
     """Type-safe and immutable wrapper for arbitrary objects.
 
-    The wrapped object can be accessed via the attribute [trcks.oop.BaseWrapper.core][].
+    The wrapped object can be accessed via the attribute `trcks.oop.Wrapper.core`.
     The `trcks.oop.Wrapper.map*` methods allow method chaining.
     The `trcks.oop.Wrapper.tap*` methods allow for side effects
     without changing the wrapped object.

@@ -29,7 +29,7 @@ class BaseAwaitableWrapper(BaseWrapper[Awaitable[_T_co]]):
         (e.g. [asyncio.run][] in Python 3.13 and older).
 
         Note:
-            The attribute [trcks.oop.BaseWrapper.core][]
+            The attribute `trcks.oop.BaseAwaitableWrapper.core`
             has type [collections.abc.Awaitable][],
             a superclass of [collections.abc.Coroutine][].
 

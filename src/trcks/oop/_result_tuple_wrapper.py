@@ -35,7 +35,7 @@ class ResultTupleWrapper(BaseWrapper[ResultTuple[_F_default_co, _S_default_co]])
     """Type-safe and immutable wrapper for [trcks.ResultTuple][] objects.
 
     The wrapped object can be accessed via the attribute
-    [trcks.oop.BaseWrapper.core][].
+    `trcks.oop.ResultTupleWrapper.core`.
     The `trcks.oop.ResultTupleWrapper.map*` methods allow method chaining.
     The `trcks.oop.ResultTupleWrapper.tap*` methods allow for side effects.
 
