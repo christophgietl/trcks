@@ -90,10 +90,13 @@ class TrcksTypeError(TypeError):
             >>> err.expected_type_name
             'Result'
         """
+        offending_object_class = type(offending_object)
+        if isinstance(offending_object, Sized):
+            offending_object_length = len(offending_object)
+        else:
+            offending_object_length = None
         return cls(
-            offending_object_class=type(offending_object),
-            offending_object_length=(
-                len(offending_object) if isinstance(offending_object, Sized) else None
-            ),
+            offending_object_class=offending_object_class,
+            offending_object_length=offending_object_length,
             expected_type_name=expected_type_name,
         )
