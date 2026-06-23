@@ -38,7 +38,7 @@ _S_default_co = TypeVar("_S_default_co", covariant=True, default=Never)
 class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
     """Type-safe and immutable wrapper for [trcks.Result][] objects.
 
-    The wrapped object can be accessed via the attribute [trcks.oop.BaseWrapper.core][].
+    The wrapped object can be accessed via the attribute `trcks.oop.ResultWrapper.core`.
     The `trcks.oop.ResultWrapper.map*` methods allow method chaining.
     The `trcks.oop.ResultWrapper.tap*` methods allow for side effects.
 

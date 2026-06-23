@@ -37,7 +37,7 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
     """Type-safe and immutable wrapper for [collections.abc.Awaitable][] objects.
 
     The wrapped [collections.abc.Awaitable][] can be accessed
-    via the attribute [trcks.oop.BaseWrapper.core][].
+    via the attribute `trcks.oop.AwaitableWrapper.core`.
     The `trcks.oop.AwaitableWrapper.map*` methods allow method chaining.
     The `trcks.oop.AwaitableWrapper.tap*` methods allow for side effects
     without changing the wrapped object.
