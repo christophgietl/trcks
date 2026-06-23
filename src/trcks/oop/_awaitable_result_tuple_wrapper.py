@@ -37,7 +37,7 @@ class AwaitableResultTupleWrapper(
     """Type-safe and immutable wrapper for [trcks.AwaitableResultTuple][] objects.
 
     The wrapped object can be accessed
-    via the attribute [trcks.oop.BaseWrapper.core][].
+    via the attribute `trcks.oop.AwaitableResultTupleWrapper.core`.
     The `trcks.oop.AwaitableResultTupleWrapper.map*` methods allow method chaining.
     The `trcks.oop.AwaitableResultTupleWrapper.tap*` methods allow for side effects
     without changing the wrapped [trcks.ResultTuple][].

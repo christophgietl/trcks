@@ -26,7 +26,7 @@ class AwaitableTupleWrapper(BaseAwaitableWrapper[tuple[_T_co, ...]]):
     """Type-safe and immutable wrapper for [trcks.AwaitableTuple][] objects.
 
     The wrapped object can be accessed
-    via the attribute [trcks.oop.BaseWrapper.core][].
+    via the attribute `trcks.oop.AwaitableTupleWrapper.core`.
     The `trcks.oop.AwaitableTupleWrapper.map*` methods allow method chaining.
     The `trcks.oop.AwaitableTupleWrapper.tap*` methods allow for side effects
     without changing the wrapped tuple.
