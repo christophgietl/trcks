@@ -1,4 +1,4 @@
-from typing import Final, Generic
+from typing import Final, Generic, final
 
 from trcks._typing import Never, TypeVar, override
 from trcks.exceptions import TrcksFrozenInstanceError
@@ -84,6 +84,7 @@ class BaseWrapper(Generic[_T_co]):
 
     __slots__: tuple[str, ...] = ("core",)
 
+    @final
     @override
     def __delattr__(self, name: str) -> Never:
         """Prevent attribute deletion.
@@ -94,6 +95,7 @@ class BaseWrapper(Generic[_T_co]):
         msg = f"cannot delete attribute {name!r}"
         raise TrcksFrozenInstanceError(msg, name=name, obj=self)
 
+    @final
     @override
     def __eq__(self, other: object) -> bool:
         """Check if this wrapper is equal to another object.
@@ -110,6 +112,7 @@ class BaseWrapper(Generic[_T_co]):
             return other.core == self.core
         return NotImplemented
 
+    @final
     @override
     def __hash__(self) -> int:
         """Hash the wrapper.
@@ -137,6 +140,7 @@ class BaseWrapper(Generic[_T_co]):
         """
         return f"{self.__class__.__name__}(core={self.core!r})"
 
+    @final
     @override
     def __setattr__(self, name: str, value: object) -> None:
         """Set attribute during initialization.
