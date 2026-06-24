@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, final
 
 from trcks import Result
 from trcks._typing import Never, TypeVar, deprecated
@@ -31,6 +31,7 @@ _F_default_co = TypeVar("_F_default_co", covariant=True, default=Never)
 _S_default_co = TypeVar("_S_default_co", covariant=True, default=Never)
 
 
+@final
 class AwaitableResultWrapper(
     BaseAwaitableWrapper[Result[_F_default_co, _S_default_co]]
 ):

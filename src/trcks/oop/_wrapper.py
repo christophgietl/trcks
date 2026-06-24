@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, final
 
 from trcks._typing import TypeVar, deprecated
 from trcks.fp.monads import awaitable as a
@@ -39,6 +39,7 @@ _T = TypeVar("_T")
 _T_co = TypeVar("_T_co", covariant=True)
 
 
+@final
 class Wrapper(BaseWrapper[_T_co]):
     """Type-safe and immutable wrapper for arbitrary objects.
 
