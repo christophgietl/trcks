@@ -299,7 +299,7 @@ def map_failure_to_result_iterable(
         >>> recover_from_not_found(("success", (1, 2)))
         ('success', (1, 2))
     """
-    return r.map_failure_to_result(compose2((f, r.map_success(tuple))))
+    return r.map_failure_to_result(compose2((f, r.map_success(tuple))))  # ty: ignore[invalid-argument-type]
 
 
 @deprecated("Use map_failure_to_result_iterable instead")
@@ -481,7 +481,7 @@ def map_successes_to_result_iterable(
     def mapped_f(r_tpl: ResultTuple[_F1, _S1]) -> ResultTuple[_F1 | _F2, _S2]:
         match r_tpl:
             case ("failure", _):
-                return r_tpl
+                return r_tpl  # ty: ignore[invalid-return-type]
             case ("success", s1s):
                 return partially_mapped_f(s1s)  # pyrefly: ignore[bad-argument-type]
             case _:  # pragma: no cover
@@ -589,7 +589,7 @@ def tap_failure_to_iterable(
     def tapped_f(f1: _F1) -> tuple[_F1, ...]:
         return tuple(f1 for _s2 in f(f1))
 
-    return map_failure_to_iterable(tapped_f)
+    return map_failure_to_iterable(tapped_f)  # ty: ignore[invalid-argument-type]
 
 
 def tap_failure_to_result(
@@ -672,7 +672,7 @@ def tap_failure_to_result_iterable(
         >>> recover_from_not_found(("success", (1, 2)))
         ('success', (1, 2))
     """
-    return r.tap_failure_to_result(compose2((f, r.map_success(tuple))))
+    return r.tap_failure_to_result(compose2((f, r.map_success(tuple))))  # ty: ignore[invalid-argument-type]
 
 
 @deprecated("Use tap_failure_to_result_iterable instead")
@@ -690,7 +690,9 @@ def tap_failure_to_tuple(
     f: Callable[[_F1], tuple[object, ...]],
 ) -> Callable[[ResultTuple[_F1, _S1]], SuccessTuple[_F1] | SuccessTuple[_S1]]:
     """Deprecated alias for [trcks.fp.monads.result_tuple.tap_failure_to_iterable][]."""
-    return tap_failure_to_iterable(f)  # pragma: no cover
+    return tap_failure_to_iterable(
+        f  # ty: ignore[invalid-argument-type]
+    )  # pragma: no cover
 
 
 def tap_successes(

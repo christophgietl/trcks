@@ -1390,7 +1390,7 @@ class AwaitableResultTupleWrapper(
             [AwaitableResultTuple[_F_default_co, _S_default_co]],
             AwaitableResultTuple[Never, _F_default_co | _S_default_co],
         ] = art.tap_failure_to_iterable(f)
-        return AwaitableResultTupleWrapper(tapped_f(self.core))
+        return AwaitableResultTupleWrapper(tapped_f(self.core))  # ty: ignore[invalid-return-type]
 
     def tap_failure_to_result(
         self, f: Callable[[_F_default_co], Result[object, _S]]

@@ -146,7 +146,8 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
             ... )
             ResultWrapper(core=('success', 25.0))
         """
-        return ResultWrapper(r.map_failure(f)(self.core))
+        mapped_result: Result[_F, _S_default_co] = r.map_failure(f)(self.core)
+        return ResultWrapper(mapped_result)
 
     def map_failure_to_awaitable(
         self, f: Callable[[_F_default_co], Awaitable[_F]]
@@ -193,7 +194,7 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
             ('success', 42)
         """
         return AwaitableResultWrapper.construct_from_result(
-            self.core
+            self.core  # ty: ignore[invalid-argument-type]
         ).map_failure_to_awaitable(f)
 
     def map_failure_to_awaitable_result(
@@ -255,7 +256,7 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
             ('success', 25.0)
         """
         return AwaitableResultWrapper.construct_from_result(
-            self.core
+            self.core  # ty: ignore[invalid-argument-type]
         ).map_failure_to_awaitable_result(f)
 
     def map_failure_to_awaitable_result_iterable(
@@ -309,7 +310,7 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
             ('success', (25.0,))
         """
         return AwaitableResultTupleWrapper.construct_from_result(
-            self.core
+            self.core  # ty: ignore[invalid-argument-type]
         ).map_failure_to_awaitable_result_iterable(f)
 
     @deprecated("Use map_failure_to_awaitable_result_iterable instead")
@@ -366,7 +367,7 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
             ResultTupleWrapper(core=('success', (42,)))
         """
         return ResultTupleWrapper.construct_from_result(
-            self.core
+            self.core  # ty: ignore[invalid-argument-type]
         ).map_failure_to_iterable(f)
 
     def map_failure_to_result(
@@ -416,7 +417,7 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
             ... )
             ResultWrapper(core=('success', 25.0))
         """
-        return ResultWrapper(r.map_failure_to_result(f)(self.core))
+        return ResultWrapper(r.map_failure_to_result(f)(self.core))  # ty: ignore[invalid-argument-type, invalid-return-type]
 
     def map_failure_to_result_iterable(
         self, f: Callable[[_F_default_co], ResultIterable[_F, _S]]
@@ -461,7 +462,7 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
             ResultTupleWrapper(core=('success', (42,)))
         """
         return ResultTupleWrapper.construct_from_result(
-            self.core
+            self.core  # ty: ignore[invalid-argument-type]
         ).map_failure_to_result_iterable(f)
 
     @deprecated("Use map_failure_to_result_iterable instead")
@@ -504,7 +505,8 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
             >>> ResultWrapper.construct_success(42).map_success(lambda n: n+1)
             ResultWrapper(core=('success', 43))
         """
-        return ResultWrapper(r.map_success(f)(self.core))
+        mapped_result: Result[_F_default_co, _S] = r.map_success(f)(self.core)
+        return ResultWrapper(mapped_result)
 
     def map_success_to_awaitable(
         self, f: Callable[[_S_default_co], Awaitable[_S]]
@@ -551,7 +553,7 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
             ('success', 43)
         """
         return AwaitableResultWrapper.construct_from_result(
-            self.core
+            self.core  # ty: ignore[invalid-argument-type]
         ).map_success_to_awaitable(f)
 
     def map_success_to_awaitable_result(
@@ -614,7 +616,7 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
             ('success', 5.0)
         """
         return AwaitableResultWrapper.construct_from_result(
-            self.core
+            self.core  # ty: ignore[invalid-argument-type]
         ).map_success_to_awaitable_result(f)
 
     def map_success_to_awaitable_result_iterable(
@@ -668,7 +670,7 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
             ('success', (5.0, 10.0))
         """
         return AwaitableResultTupleWrapper.construct_from_result(
-            self.core
+            self.core  # ty: ignore[invalid-argument-type]
         ).map_successes_to_awaitable_result_iterable(f)
 
     @deprecated("Use map_success_to_awaitable_result_iterable instead")
@@ -716,7 +718,7 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
             ResultTupleWrapper(core=('success', (5.0, 5.0)))
         """
         return ResultTupleWrapper.construct_from_result(
-            self.core
+            self.core  # ty: ignore[invalid-argument-type]
         ).map_successes_to_iterable(f)
 
     def map_success_to_result(
@@ -761,7 +763,7 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
             ... )
             ResultWrapper(core=('success', 5.0))
         """
-        return ResultWrapper(r.map_success_to_result(f)(self.core))
+        return ResultWrapper(r.map_success_to_result(f)(self.core))  # ty: ignore[invalid-argument-type, invalid-return-type]
 
     def map_success_to_result_iterable(
         self, f: Callable[[_S_default_co], ResultIterable[_F, _S]]
@@ -805,7 +807,7 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
             ResultTupleWrapper(core=('failure', 'negative'))
         """
         return ResultTupleWrapper.construct_from_result(
-            self.core
+            self.core  # ty: ignore[invalid-argument-type]
         ).map_successes_to_result_iterable(f)
 
     @deprecated("Use map_success_to_result_iterable instead")
@@ -852,7 +854,10 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
             >>> result_wrapper_2
             ResultWrapper(core=('success', 42))
         """
-        return ResultWrapper(r.tap_failure(f)(self.core))
+        mapped_result: Result[_F_default_co, _S_default_co] = r.tap_failure(f)(
+            self.core
+        )
+        return ResultWrapper(mapped_result)
 
     def tap_failure_to_awaitable(
         self, f: Callable[[_F_default_co], Awaitable[object]]
@@ -895,7 +900,7 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
             ('success', 42)
         """
         return AwaitableResultWrapper.construct_from_result(
-            self.core
+            self.core  # ty: ignore[invalid-argument-type]
         ).tap_failure_to_awaitable(f)
 
     def tap_failure_to_awaitable_result(
@@ -956,7 +961,7 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
             ('success', 42)
         """
         return AwaitableResultWrapper.construct_from_result(
-            self.core
+            self.core  # ty: ignore[invalid-argument-type]
         ).tap_failure_to_awaitable_result(f)
 
     def tap_failure_to_awaitable_result_iterable(
@@ -1013,7 +1018,7 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
             ('success', (42,))
         """
         return AwaitableResultTupleWrapper.construct_from_result(
-            self.core
+            self.core  # ty: ignore[invalid-argument-type]
         ).tap_failure_to_awaitable_result_iterable(f)
 
     @deprecated("Use tap_failure_to_awaitable_result_iterable instead")
@@ -1071,7 +1076,7 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
             ResultTupleWrapper(core=('success', (42,)))
         """
         return ResultTupleWrapper.construct_from_result(
-            self.core
+            self.core  # ty: ignore[invalid-argument-type]
         ).tap_failure_to_iterable(f)
 
     def tap_failure_to_result(
@@ -1118,7 +1123,7 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
             >>> result_wrapper_3
             ResultWrapper(core=('success', 42))
         """
-        return ResultWrapper(r.tap_failure_to_result(f)(self.core))
+        return ResultWrapper(r.tap_failure_to_result(f)(self.core))  # ty: ignore[invalid-argument-type]
 
     def tap_failure_to_result_iterable(
         self, f: Callable[[_F_default_co], ResultIterable[object, _S]]
@@ -1165,7 +1170,7 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
             ResultTupleWrapper(core=('success', (42,)))
         """
         return ResultTupleWrapper.construct_from_result(
-            self.core
+            self.core  # ty: ignore[invalid-argument-type]
         ).tap_failure_to_result_iterable(f)
 
     @deprecated("Use tap_failure_to_result_iterable instead")
@@ -1212,7 +1217,10 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
             >>> result_wrapper_2
             ResultWrapper(core=('success', 42))
         """
-        return ResultWrapper(r.tap_success(f)(self.core))
+        mapped_result: Result[_F_default_co, _S_default_co] = r.tap_success(f)(
+            self.core
+        )
+        return ResultWrapper(mapped_result)
 
     def tap_success_to_awaitable(
         self, f: Callable[[_S_default_co], Awaitable[object]]
@@ -1255,7 +1263,7 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
             ('success', 'Hello, world!')
         """
         return AwaitableResultWrapper.construct_from_result(
-            self.core
+            self.core  # ty: ignore[invalid-argument-type]
         ).tap_success_to_awaitable(f)
 
     def tap_success_to_awaitable_result(
@@ -1332,7 +1340,7 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
             ('success', 'Hello, world!')
         """
         return AwaitableResultWrapper.construct_from_result(
-            self.core
+            self.core  # ty: ignore[invalid-argument-type]
         ).tap_success_to_awaitable_result(f)
 
     def tap_success_to_awaitable_result_iterable(
@@ -1390,7 +1398,7 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
             ('success', ('Hello, world!', 'Hello, world!'))
         """
         return AwaitableResultTupleWrapper.construct_from_result(
-            self.core
+            self.core  # ty: ignore[invalid-argument-type]
         ).tap_successes_to_awaitable_result_iterable(f)
 
     @deprecated("Use tap_success_to_awaitable_result_iterable instead")
@@ -1445,7 +1453,7 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
             ResultTupleWrapper(core=('success', (7, 7)))
         """
         return ResultTupleWrapper.construct_from_result(
-            self.core
+            self.core  # ty: ignore[invalid-argument-type]
         ).tap_successes_to_iterable(f)
 
     def tap_success_to_result(
@@ -1468,7 +1476,7 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
                 - *the original* [trcks.Success][]
                     if the applied side effect returns a [trcks.Success][].
         """
-        return ResultWrapper(r.tap_success_to_result(f)(self.core))
+        return ResultWrapper(r.tap_success_to_result(f)(self.core))  # ty: ignore[invalid-argument-type]
 
     def tap_success_to_result_iterable(
         self, f: Callable[[_S_default_co], ResultIterable[_F, object]]
@@ -1515,7 +1523,7 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
             ResultTupleWrapper(core=('failure', 'negative'))
         """
         return ResultTupleWrapper.construct_from_result(
-            self.core
+            self.core  # ty: ignore[invalid-argument-type]
         ).tap_successes_to_result_iterable(f)
 
     @deprecated("Use tap_success_to_result_iterable instead")

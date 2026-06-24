@@ -16,6 +16,7 @@ dev = [
     "pytest-asyncio==1.4.0",
     "pytest-cov==7.1.0",
     "pytest-doctestplus==1.7.1",
+    "ty", # Check project.optional-dependencies for lower bound.
 ]
 
 [project]
@@ -79,6 +80,10 @@ pyright = [
     # pyright 1.1.406 and older report false positives for Python 3.14
     # (cf. https://github.com/microsoft/pyright/issues/11003):
     "pyright>=1.1.407; python_full_version>='3.14'",
+]
+ty = [
+    # ty versions older than 0.0.51 have not been tested with trcks:
+    "ty>=0.0.51",
 ]
 
 [project.urls]
@@ -234,6 +239,10 @@ ignore = ["None", "trcks", "tuple"]
 
 [tool.rumdl.per-file-flavor]
 "docs/**/*.md" = "mkdocs"
+
+[tool.ty.rules]
+division-by-zero = "error"
+possibly-unresolved-reference = "error"
 
 [tool.uv]
 cache-keys = [

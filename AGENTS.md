@@ -103,6 +103,7 @@ uv run pre-commit run --all-files
 uv run --all-extras mypy
 uv run --all-extras pyrefly check
 uv run --all-extras pyright
+uv run --all-extras ty check
 # Verify type completeness:
 uv run --all-extras pyright --verifytypes trcks
 # Run unit tests and doctests:

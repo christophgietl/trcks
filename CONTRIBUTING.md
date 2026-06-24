@@ -17,6 +17,7 @@ The following section describes how to set up and use a development environment.
 - [Pyrefly](https://pyrefly.org) for static type checking
 - [pyright](https://microsoft.github.io/pyright/) for static type checking
 - [pytest](https://pytest.org) for unit testing and doctests
+- [ty](https://docs.astral.sh/ty/) for static type checking
 - [uv](https://docs.astral.sh/uv/) for dependency management and packaging
 
 Moreover, `trcks` uses [GitHub Actions](https://github.com/features/actions) for:
