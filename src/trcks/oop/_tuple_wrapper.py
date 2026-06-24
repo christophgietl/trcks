@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, final
 
 from trcks._typing import TypeVar, deprecated
 from trcks.fp.monads import tuple_ as t
@@ -32,6 +32,7 @@ _T = TypeVar("_T")
 _T_co = TypeVar("_T_co", covariant=True)
 
 
+@final
 class TupleWrapper(BaseWrapper[tuple[_T_co, ...]]):
     """Type-safe and immutable wrapper for homogeneous [tuple][] objects.
 

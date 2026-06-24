@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, final
 
 from trcks import ResultTuple
 from trcks._typing import Never, TypeVar, deprecated
@@ -31,6 +31,7 @@ _F_default_co = TypeVar("_F_default_co", covariant=True, default=Never)
 _S_default_co = TypeVar("_S_default_co", covariant=True, default=Never)
 
 
+@final
 class ResultTupleWrapper(BaseWrapper[ResultTuple[_F_default_co, _S_default_co]]):
     """Type-safe and immutable wrapper for [trcks.ResultTuple][] objects.
 
