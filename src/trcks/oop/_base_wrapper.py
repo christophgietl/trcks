@@ -1,7 +1,6 @@
 from typing import Final, Generic, final
 
 from trcks._typing import Never, TypeVar, override
-from trcks.exceptions import TrcksFrozenInstanceError
 
 __docformat__ = "google"
 
@@ -78,11 +77,11 @@ class BaseWrapper(Generic[_T_co]):
             >>> wrapper.core = 100
             Traceback (most recent call last):
                 ...
-            trcks.exceptions.TrcksFrozenInstanceError: cannot assign to attribute 'core'
+            AttributeError: cannot assign to attribute 'core'
             >>> del wrapper.core
             Traceback (most recent call last):
                 ...
-            trcks.exceptions.TrcksFrozenInstanceError: cannot delete attribute 'core'
+            AttributeError: cannot delete attribute 'core'
     """
 
     # Data classes do not play nicely with covariant type variables in Python 3.13+
@@ -98,10 +97,10 @@ class BaseWrapper(Generic[_T_co]):
         """Prevent attribute deletion.
 
         Raises:
-            TrcksFrozenInstanceError: Always.
+            AttributeError: Always.
         """
         msg = f"cannot delete attribute {name!r}"
-        raise TrcksFrozenInstanceError(msg, name=name, obj=self)
+        raise AttributeError(msg, name=name, obj=self)
 
     @final
     @override
@@ -158,7 +157,7 @@ class BaseWrapper(Generic[_T_co]):
             value: The value to set.
 
         Raises:
-            TrcksFrozenInstanceError: If the attribute already exists.
+            AttributeError: If the attribute already exists.
         """
         try:
             self.__getattribute__(name)
@@ -166,7 +165,7 @@ class BaseWrapper(Generic[_T_co]):
             pass  # Attribute does not exist yet.
         else:
             msg = f"cannot assign to attribute {name!r}"
-            raise TrcksFrozenInstanceError(msg, name=name, obj=self)
+            raise AttributeError(msg, name=name, obj=self)
 
         # Raises AttributeError if name is not in __slots__:
         super().__setattr__(name, value)

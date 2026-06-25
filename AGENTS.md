@@ -19,10 +19,6 @@
 - Combinations with `collections.abc.Awaitable` and `tuple` for different use cases
   (e.g. `trcks.AwaitableResultTuple[FailureType, SuccessType]`).
 
-### Exception types defined in `trcks.exceptions`
-
-- The module `trcks.exceptions` provides exception classes for `trcks`.
-
 ### Wrapper classes defined in `trcks.oop`
 
 - The package `trcks.oop` provides wrapper classes for OOP-style method chaining
@@ -52,6 +48,8 @@
 - Sort classes alphabetically within each module.
 - Sort methods alphabetically within each class.
 - Quote type expressions in `typing.cast` calls (e.g. `cast("int", number)`).
+- Provide keyword arguments `name` and `obj` when creating `AttributeError` instances
+  (e.g. `raise AttributeError(msg, name=name, obj=self)`).
 - Use the following import patterns across code and documentation:
 
   ```pycon
