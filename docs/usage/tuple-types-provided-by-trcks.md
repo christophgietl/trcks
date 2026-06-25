@@ -2,7 +2,7 @@
 
 The generic type [trcks.Failure][][F] describes all [tuple][]s of length 2
 with the string "failure" as the first element and a second element of type F.
-Usually, the second element is a string, an exception or an enum value:
+Usually, the second element is a string, an exception, or an enum value:
 
 ???+ example
 

@@ -19,7 +19,7 @@ where raising or not catching an exception is the better choice.
 
 ## Which static type checkers does `trcks` support?
 
-`trcks` is compatible with current versions of `mypy`, `pyrefly` and `pyright`.
+`trcks` is compatible with current versions of `mypy`, `pyrefly`, and `pyright`.
 For setup instructions, see
 [Setting up a compatible static type checker](setup.md#setting-up-a-compatible-static-type-checker).
 
