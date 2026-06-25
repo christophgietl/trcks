@@ -4,10 +4,10 @@ from __future__ import annotations
 
 from collections.abc import Sized
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, Final
+from typing import TYPE_CHECKING, Final, cast
 
 if TYPE_CHECKING:
-    from trcks._typing import Self
+    from trcks._typing import Never, Self
 
 __docformat__ = "google"
 
@@ -73,7 +73,7 @@ class TrcksTypeError(TrcksError, TypeError):
     @classmethod
     def construct_from_offending_object(
         cls,
-        offending_object: object,
+        offending_object: Never,
         expected_type_name: str,
     ) -> Self:
         """Create error from an offending object and the expected type.
@@ -84,6 +84,10 @@ class TrcksTypeError(TrcksError, TypeError):
 
         Returns:
             Information about the offending object and the expected type.
+
+        Note:
+            The argument `offending_object` must be of type `Never` to make sure
+            that all ways of handling it as the expected type have been exhausted.
 
         Example:
             Offending object has a length:
@@ -112,9 +116,11 @@ class TrcksTypeError(TrcksError, TypeError):
             >>> err.expected_type_name
             'Result'
         """
-        offending_object_class = type(offending_object)
-        if isinstance(offending_object, Sized):
-            offending_object_length = len(offending_object)
+        # Avoid "unreachable" errors from type checkers by casting to object:
+        offending_object_as_object = cast("object", offending_object)
+        offending_object_class = type(offending_object_as_object)
+        if isinstance(offending_object_as_object, Sized):
+            offending_object_length = len(offending_object_as_object)
         else:
             offending_object_length = None
         return cls(

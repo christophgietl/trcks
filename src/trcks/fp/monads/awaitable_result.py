@@ -317,6 +317,7 @@ def map_failure_to_awaitable_result(
             case ("success", _):
                 return rslt
             case _:  # pragma: no cover
+                # pyrefly: ignore [bad-argument-type]
                 raise TrcksTypeError.construct_from_offending_object(rslt, "Result")  # pyright: ignore[reportUnreachable]
 
     return a.map_to_awaitable(partially_mapped_f)
@@ -499,6 +500,7 @@ def map_success_to_awaitable_result(
             case ("success", value):
                 return await f(value)  # pyrefly: ignore[bad-argument-type]
             case _:  # pragma: no cover
+                # pyrefly: ignore [bad-argument-type]
                 raise TrcksTypeError.construct_from_offending_object(rslt, "Result")  # pyright: ignore[reportUnreachable]
 
     return a.map_to_awaitable(partially_mapped_f)
@@ -618,6 +620,7 @@ def tap_failure_to_awaitable_result(
             case ("success", _) as rslt:
                 return rslt
             case _ as rslt:  # pragma: no cover
+                # pyrefly: ignore [bad-argument-type]
                 raise TrcksTypeError.construct_from_offending_object(rslt, "Result")  # pyright: ignore[reportUnreachable]
 
     return map_failure_to_awaitable_result(bypassed_f)
@@ -715,6 +718,7 @@ def tap_success_to_awaitable_result(
             case ("success", _):
                 return r.construct_success(value)
             case _ as rslt:  # pragma: no cover
+                # pyrefly: ignore [bad-argument-type]
                 raise TrcksTypeError.construct_from_offending_object(rslt, "Result")  # pyright: ignore[reportUnreachable]
 
     return map_success_to_awaitable_result(bypassed_f)

@@ -409,4 +409,5 @@ def pipe(p: Pipeline[_T0, _T1, _T2, _T3, _T4, _T5, _T6, _OUT]) -> _OUT:
             composable = p[1:]
             return compose(composable)(value)
         case _:  # pragma: no cover
+            # pyrefly: ignore [bad-argument-type]
             raise TrcksTypeError.construct_from_offending_object(p, "Pipeline")  # pyright: ignore[reportUnreachable]

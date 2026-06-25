@@ -220,7 +220,9 @@ def map_failure_to_iterable(
                 return r_tpl
             case _:  # pragma: no cover
                 raise TrcksTypeError.construct_from_offending_object(  # pyright: ignore[reportUnreachable]
-                    r_tpl, "ResultTuple"
+                    # pyrefly: ignore [bad-argument-type]
+                    r_tpl,
+                    "ResultTuple",
                 )
 
     return mapped_f
@@ -474,7 +476,9 @@ def map_successes_to_result_iterable(
                     s2s.extend(additional_s2s)  # pyrefly: ignore[bad-argument-type]
                 case _ as r_tpl:  # pragma: no cover
                     raise TrcksTypeError.construct_from_offending_object(  # pyright: ignore[reportUnreachable]
-                        r_tpl, "ResultIterable"
+                        # pyrefly: ignore [bad-argument-type]
+                        r_tpl,
+                        "ResultIterable",
                     )
         return "success", tuple(s2s)
 
@@ -486,7 +490,9 @@ def map_successes_to_result_iterable(
                 return partially_mapped_f(s1s)  # pyrefly: ignore[bad-argument-type]
             case _:  # pragma: no cover
                 raise TrcksTypeError.construct_from_offending_object(  # pyright: ignore[reportUnreachable]
-                    r_tpl, "ResultTuple"
+                    # pyrefly: ignore [bad-argument-type]
+                    r_tpl,
+                    "ResultTuple",
                 )
 
     return mapped_f
@@ -860,7 +866,9 @@ def tap_successes_to_result_iterable(
                 return "success", tuple(s1 for _ in s2s)  # pyrefly: ignore[not-iterable]
             case _ as r_tpl:  # pragma: no cover
                 raise TrcksTypeError.construct_from_offending_object(  # pyright: ignore[reportUnreachable]
-                    r_tpl, "ResultIterable"
+                    # pyrefly: ignore [bad-argument-type]
+                    r_tpl,
+                    "ResultIterable",
                 )
 
     return map_successes_to_result_iterable(tapped_f)

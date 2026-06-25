@@ -433,7 +433,9 @@ def map_failure_to_awaitable_result_iterable(
                 return r_tpl
             case _:  # pragma: no cover
                 raise TrcksTypeError.construct_from_offending_object(  # pyright: ignore[reportUnreachable]
-                    r_tpl, "ResultTuple"
+                    # pyrefly: ignore [bad-argument-type]
+                    r_tpl,
+                    "ResultTuple",
                 )
 
     return a.map_to_awaitable(partially_mapped_f)
@@ -809,12 +811,16 @@ def map_successes_to_awaitable_result_iterable(
                             s2s.extend(additional_s2s)  # pyrefly: ignore[bad-argument-type]
                         case _ as output_r_tpl:  # pragma: no cover
                             raise TrcksTypeError.construct_from_offending_object(  # pyright: ignore[reportUnreachable]
-                                output_r_tpl, "ResultIterable"
+                                # pyrefly: ignore [bad-argument-type]
+                                output_r_tpl,
+                                "ResultIterable",
                             )
                 return "success", tuple(s2s)
             case _:  # pragma: no cover
                 raise TrcksTypeError.construct_from_offending_object(  # pyright: ignore[reportUnreachable]
-                    r_tpl, "ResultTuple"
+                    # pyrefly: ignore [bad-argument-type]
+                    r_tpl,
+                    "ResultTuple",
                 )
 
     return a.map_to_awaitable(partially_mapped_f)
@@ -1103,7 +1109,9 @@ def tap_failure_to_awaitable_result(
                 return rt.construct_successes(s2)  # pyrefly: ignore[bad-return]
             case _ as rslt:  # pragma: no cover
                 raise TrcksTypeError.construct_from_offending_object(  # pyright: ignore[reportUnreachable]
-                    rslt, "ResultTuple"
+                    # pyrefly: ignore [bad-argument-type]
+                    rslt,
+                    "ResultTuple",
                 )
 
     return map_failure_to_awaitable_result_iterable(bypassed_f)
@@ -1165,7 +1173,9 @@ def tap_failure_to_awaitable_result_iterable(
                 return r_it
             case _ as r_it:  # pragma: no cover
                 raise TrcksTypeError.construct_from_offending_object(  # pyright: ignore[reportUnreachable]
-                    r_it, "ResultIterable"
+                    # pyrefly: ignore [bad-argument-type]
+                    r_it,
+                    "ResultIterable",
                 )
 
     return map_failure_to_awaitable_result_iterable(bypassed_f)
@@ -1541,7 +1551,9 @@ def tap_successes_to_awaitable_result_iterable(
                 return "success", tuple(s1 for _ in objs)  # pyrefly: ignore[not-iterable]
             case _ as r_tpl:  # pragma: no cover
                 raise TrcksTypeError.construct_from_offending_object(  # pyright: ignore[reportUnreachable]
-                    r_tpl, "ResultIterable"
+                    # pyrefly: ignore [bad-argument-type]
+                    r_tpl,
+                    "ResultIterable",
                 )
 
     return map_successes_to_awaitable_result_iterable(tapped_f)
