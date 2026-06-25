@@ -21,8 +21,7 @@
 
 ### Exception types defined in `trcks.exceptions`
 
-- The module `trcks.exceptions` provides exception classes for `trcks`
-  (e.g. `trcks.exceptions.TrcksTypeError`).
+- The module `trcks.exceptions` provides exception classes for `trcks`.
 
 ### Wrapper classes defined in `trcks.oop`
 
@@ -52,8 +51,7 @@
 - Sort functions alphabetically within each module.
 - Sort classes alphabetically within each module.
 - Sort methods alphabetically within each class.
-- When calling `super` in a data class with `slots=True`, always provide two arguments,
-  e.g. `super(MyDataClass, self)`.
+- Quote type expressions in `typing.cast` calls (e.g. `cast("int", number)`).
 - Use the following import patterns across code and documentation:
 
   ```pycon

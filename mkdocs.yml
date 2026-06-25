@@ -23,7 +23,6 @@ nav:
       - reference/trcks.exceptions.md
       - reference/trcks.exceptions.TrcksError.md
       - reference/trcks.exceptions.TrcksFrozenInstanceError.md
-      - reference/trcks.exceptions.TrcksTypeError.md
       - reference/trcks.fp.md
       - reference/trcks.fp.composition.md
       - reference/trcks.fp.monads.md

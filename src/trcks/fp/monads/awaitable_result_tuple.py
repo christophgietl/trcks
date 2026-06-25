@@ -43,8 +43,8 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+import trcks._pattern_matching as _pm
 from trcks._typing import TypeVar, deprecated
-from trcks.exceptions import TrcksTypeError
 from trcks.fp.composition import compose2
 from trcks.fp.monads import awaitable as a
 from trcks.fp.monads import result as r
@@ -432,8 +432,9 @@ def map_failure_to_awaitable_result_iterable(
             case ("success", _):
                 return r_tpl
             case _:  # pragma: no cover
-                raise TrcksTypeError.construct_from_offending_object(  # pyright: ignore[reportUnreachable]
-                    r_tpl, "ResultTuple"
+                raise _pm.construct_type_error(  # pyright: ignore[reportUnreachable]
+                    r_tpl,  # pyrefly: ignore[bad-argument-type]
+                    "r_tpl is not a valid ResultTuple",
                 )
 
     return a.map_to_awaitable(partially_mapped_f)
@@ -808,13 +809,15 @@ def map_successes_to_awaitable_result_iterable(
                         case ("success", additional_s2s):
                             s2s.extend(additional_s2s)  # pyrefly: ignore[bad-argument-type]
                         case _ as output_r_tpl:  # pragma: no cover
-                            raise TrcksTypeError.construct_from_offending_object(  # pyright: ignore[reportUnreachable]
-                                output_r_tpl, "ResultIterable"
+                            raise _pm.construct_type_error(  # pyright: ignore[reportUnreachable]
+                                output_r_tpl,  # pyrefly: ignore[bad-argument-type]
+                                "return value is not a valid ResultIterable",
                             )
                 return "success", tuple(s2s)
             case _:  # pragma: no cover
-                raise TrcksTypeError.construct_from_offending_object(  # pyright: ignore[reportUnreachable]
-                    r_tpl, "ResultTuple"
+                raise _pm.construct_type_error(  # pyright: ignore[reportUnreachable]
+                    r_tpl,  # pyrefly: ignore[bad-argument-type]
+                    "r_tpl is not a valid ResultTuple",
                 )
 
     return a.map_to_awaitable(partially_mapped_f)
@@ -1102,8 +1105,9 @@ def tap_failure_to_awaitable_result(
             case ("success", s2):
                 return rt.construct_successes(s2)  # pyrefly: ignore[bad-return]
             case _ as rslt:  # pragma: no cover
-                raise TrcksTypeError.construct_from_offending_object(  # pyright: ignore[reportUnreachable]
-                    rslt, "ResultTuple"
+                raise _pm.construct_type_error(  # pyright: ignore[reportUnreachable]
+                    rslt,  # pyrefly: ignore[bad-argument-type]
+                    "return value is not a valid ResultTuple",
                 )
 
     return map_failure_to_awaitable_result_iterable(bypassed_f)
@@ -1164,8 +1168,9 @@ def tap_failure_to_awaitable_result_iterable(
             case ("success", _) as r_it:
                 return r_it
             case _ as r_it:  # pragma: no cover
-                raise TrcksTypeError.construct_from_offending_object(  # pyright: ignore[reportUnreachable]
-                    r_it, "ResultIterable"
+                raise _pm.construct_type_error(  # pyright: ignore[reportUnreachable]
+                    r_it,  # pyrefly: ignore[bad-argument-type]
+                    "return value is not a valid ResultIterable",
                 )
 
     return map_failure_to_awaitable_result_iterable(bypassed_f)
@@ -1535,13 +1540,14 @@ def tap_successes_to_awaitable_result_iterable(
 
     async def tapped_f(s1: _S1) -> ResultIterable[_F2, _S1]:
         match await f(s1):
-            case ("failure", _) as r_tpl:
-                return r_tpl
+            case ("failure", _) as r_it:
+                return r_it
             case ("success", objs):
                 return "success", tuple(s1 for _ in objs)  # pyrefly: ignore[not-iterable]
-            case _ as r_tpl:  # pragma: no cover
-                raise TrcksTypeError.construct_from_offending_object(  # pyright: ignore[reportUnreachable]
-                    r_tpl, "ResultIterable"
+            case _ as r_it:  # pragma: no cover
+                raise _pm.construct_type_error(  # pyright: ignore[reportUnreachable]
+                    r_it,  # pyrefly: ignore[bad-argument-type]
+                    "return value is not a valid ResultIterable",
                 )
 
     return map_successes_to_awaitable_result_iterable(tapped_f)
