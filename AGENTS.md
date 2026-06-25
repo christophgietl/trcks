@@ -92,6 +92,18 @@
 
   ```
 
+## Language style
+
+Apply these rules in prose such as docstrings, documentation and comments,
+but not in code, paths, URLs, commands or identifiers:
+
+- Prefer "and" over slashes to express combinations
+  (e.g. "red and blue" instead of "red/blue").
+- Prefer "or" over slashes to express alternatives
+  (e.g. "success or failure" instead of "success/failure").
+- Prefer "or" over "and/or"
+  (e.g. "success or failure" instead of "success and/or failure").
+
 ## Development tools
 
 `trcks` uses `uv` for managing dependencies and tools.
