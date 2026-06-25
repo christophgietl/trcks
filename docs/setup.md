@@ -19,7 +19,7 @@ uv add trcks
 
 ## Setting up a compatible static type checker
 
-`trcks` is compatible with current versions of `mypy`, `pyrefly` and `pyright`.
+`trcks` is compatible with current versions of `mypy`, `pyrefly`, and `pyright`.
 For convenience,
 `trcks` provides optional dependencies (extras)
 for installing compatible versions of these tools.

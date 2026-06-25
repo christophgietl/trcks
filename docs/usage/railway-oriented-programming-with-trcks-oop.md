@@ -51,7 +51,7 @@ let us have a look at the individual steps of the chain:
     Instead of the default constructor `trcks.oop.Wrapper(core="Hello, world!")`,
     we can also use the static method `trcks.oop.Wrapper.construct("Hello, world!")`.
 
-By following the pattern of wrapping, mapping and unwrapping,
+By following the pattern of wrapping, mapping, and unwrapping,
 we can write code that resembles a single-track railway
 (or maybe a single-pipe pipeline).
 

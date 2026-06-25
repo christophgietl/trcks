@@ -40,7 +40,7 @@
   (e.g. `trcks.fp.composition.pipe` and `trcks.fp.composition.compose`).
 - The package `trcks.fp.monads` provides type-specific mapping functions
   for `collections.abc.Awaitable`, `trcks.Result`, `tuple`,
-  `trcks.AwaitableResult`, `trcks.AwaitableTuple`, `trcks.ResultTuple` and
+  `trcks.AwaitableResult`, `trcks.AwaitableTuple`, `trcks.ResultTuple`, and
   `trcks.AwaitableResultTuple` values.
 
 ## Code style
@@ -94,9 +94,11 @@
 
 ## Language style
 
-Apply these rules in prose such as docstrings, documentation and comments,
-but not in code, paths, URLs, commands or identifiers:
+Apply these rules in prose such as docstrings, documentation, and comments,
+but not in code, paths, URLs, commands, or identifiers:
 
+- Use the Oxford comma in lists of three or more items
+  (e.g. "red, green, and blue" instead of "red, green and blue").
 - Prefer "and" over slashes to express combinations
   (e.g. "red and blue" instead of "red/blue").
 - Prefer "or" over slashes to express alternatives
@@ -142,11 +144,12 @@ uv build
 
 - The documentation website is built with Material for MkDocs,
   configured in `mkdocs.yml` and written in `docs/**/*.md`.
-- Update `mkdocs.yml` and `docs/**/*.md` whenever features, architecture or UI change.
+- Update `mkdocs.yml` and `docs/**/*.md`
+  whenever features, architecture, or UI change.
 - API docs in `docs/reference/trcks.*.md` must mirror
   the module and class structure of `trcks`
   (e.g. `trcks.fp.monads.result` → `docs/reference/trcks.fp.monads.result.md`).
-  Create, delete or rename these files to match module or class changes.
+  Create, delete, or rename these files to match module or class changes.
 - Keep `AGENTS.md` up to date when architecture or tooling changes.
 - Keep `CONTRIBUTING.md` up to date when tooling changes.
 - Keep `README.md` up to date when features or UI changes.

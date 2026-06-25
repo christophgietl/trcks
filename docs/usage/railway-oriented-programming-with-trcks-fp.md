@@ -371,7 +371,7 @@ let us have a look at the individual steps of the chain:
     ```
 
 ???+ note
-    The values `pipe(p1)`, `pipe(p2)` and `pipe(p3)` are all of the type [collections.abc.Awaitable][].
+    The values `pipe(p1)`, `pipe(p2)`, and `pipe(p3)` are all of the type [collections.abc.Awaitable][].
     Since [asyncio.run][] expects the input type [collections.abc.Coroutine][],
     we use the function [trcks.fp.monads.awaitable.to_coroutine][] to convert
     the [collections.abc.Awaitable][]s to [collections.abc.Coroutine][]s.
@@ -531,7 +531,7 @@ let us have a look at the individual steps of the chain:
     ```
 
 ???+ note
-    The values `pipe(p1)`, `pipe(p2)` and `pipe(p3)` all are
+    The values `pipe(p1)`, `pipe(p2)`, and `pipe(p3)` all are
     of type [trcks.AwaitableResult][].
     Since [asyncio.run][] expects the input type [collections.abc.Coroutine][],
     we use the function [trcks.fp.monads.awaitable_result.to_coroutine_result][]
@@ -1133,7 +1133,7 @@ let us have a look at the individual steps of the chain:
     which can then be used with the higher-order functions
     from [trcks.fp.monads.awaitable_tuple][].
 
-    The values `pipe(p1)`, `pipe(p2)` and `pipe(p3)` are all
+    The values `pipe(p1)`, `pipe(p2)`, and `pipe(p3)` are all
     of type [trcks.AwaitableTuple][].
     Since [asyncio.run][] expects the input type [collections.abc.Coroutine][],
     we use the function
@@ -1326,7 +1326,7 @@ let us have a look at the individual steps of the chain:
     which can then be used with the higher-order functions
     from [trcks.fp.monads.awaitable_result_tuple][].
 
-    The values `pipe(p1)`, `pipe(p2)`, `pipe(p3)` and `pipe(p4)` are all
+    The values `pipe(p1)`, `pipe(p2)`, `pipe(p3)`, and `pipe(p4)` are all
     of type [trcks.AwaitableResultTuple][].
     Since [asyncio.run][] expects the input type [collections.abc.Coroutine][],
     we use the function
