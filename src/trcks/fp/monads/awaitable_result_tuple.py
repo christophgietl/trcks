@@ -432,7 +432,7 @@ def map_failure_to_awaitable_result_iterable(
                 return r_tpl
             case _:  # pragma: no cover
                 assert_type(r_tpl, Never)  # type: ignore[unreachable]  # pyright: ignore[reportUnreachable]  # pyrefly: ignore [assert-type]
-                msg = "r_tpl is not a valid ResultTuple"
+                msg = f"{type(r_tpl).__name__!r} is not a valid ResultTuple"
                 raise TypeError(msg)
 
     return a.map_to_awaitable(partially_mapped_f)
@@ -808,12 +808,15 @@ def map_successes_to_awaitable_result_iterable(
                             s2s.extend(additional_s2s)  # pyrefly: ignore[bad-argument-type]
                         case _ as output_r_tpl:  # pragma: no cover
                             assert_type(output_r_tpl, Never)  # type: ignore[unreachable]  # pyright: ignore[reportUnreachable]  # pyrefly: ignore [assert-type]
-                            msg = "return value is not a valid ResultIterable"
+                            msg = (
+                                f"{type(output_r_tpl).__name__!r} is not a valid "
+                                "ResultIterable"
+                            )
                             raise TypeError(msg)
                 return "success", tuple(s2s)
             case _:  # pragma: no cover
                 assert_type(r_tpl, Never)  # type: ignore[unreachable]  # pyright: ignore[reportUnreachable]  # pyrefly: ignore [assert-type]
-                msg = "r_tpl is not a valid ResultTuple"
+                msg = f"{type(r_tpl).__name__!r} is not a valid ResultTuple"
                 raise TypeError(msg)
 
     return a.map_to_awaitable(partially_mapped_f)
@@ -1102,7 +1105,7 @@ def tap_failure_to_awaitable_result(
                 return rt.construct_successes(s2)  # pyrefly: ignore[bad-return]
             case _ as rslt:  # pragma: no cover
                 assert_type(rslt, Never)  # type: ignore[unreachable]  # pyright: ignore[reportUnreachable]  # pyrefly: ignore [assert-type]
-                msg = "return value is not a valid ResultTuple"
+                msg = f"{type(rslt).__name__!r} is not a valid ResultTuple"
                 raise TypeError(msg)
 
     return map_failure_to_awaitable_result_iterable(bypassed_f)
@@ -1164,7 +1167,7 @@ def tap_failure_to_awaitable_result_iterable(
                 return r_it
             case _ as r_it:  # pragma: no cover
                 assert_type(r_it, Never)  # type: ignore[unreachable]  # pyright: ignore[reportUnreachable]  # pyrefly: ignore [assert-type]
-                msg = "return value is not a valid ResultIterable"
+                msg = f"{type(r_it).__name__!r} is not a valid ResultIterable"
                 raise TypeError(msg)
 
     return map_failure_to_awaitable_result_iterable(bypassed_f)
@@ -1540,7 +1543,7 @@ def tap_successes_to_awaitable_result_iterable(
                 return "success", tuple(s1 for _ in objs)  # pyrefly: ignore[not-iterable]
             case _ as r_it:  # pragma: no cover
                 assert_type(r_it, Never)  # type: ignore[unreachable]  # pyright: ignore[reportUnreachable]  # pyrefly: ignore [assert-type]
-                msg = "return value is not a valid ResultIterable"
+                msg = f"{type(r_it).__name__!r} is not a valid ResultIterable"
                 raise TypeError(msg)
 
     return map_successes_to_awaitable_result_iterable(tapped_f)

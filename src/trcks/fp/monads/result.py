@@ -191,7 +191,7 @@ def map_failure_to_result(
                 return rslt
             case _:  # pragma: no cover
                 assert_type(rslt, Never)  # type: ignore[unreachable]  # pyright: ignore[reportUnreachable]  # pyrefly: ignore [assert-type]
-                msg = "rslt is not a valid Result"
+                msg = f"{type(rslt).__name__!r} is not a valid Result"
                 raise TypeError(msg)
 
     return mapped_f
@@ -268,7 +268,7 @@ def map_success_to_result(
                 return f(value)  # pyrefly: ignore[bad-argument-type]
             case _:  # pragma: no cover
                 assert_type(rslt, Never)  # type: ignore[unreachable]  # pyright: ignore[reportUnreachable]  # pyrefly: ignore [assert-type]
-                msg = "rslt is not a valid Result"
+                msg = f"{type(rslt).__name__!r} is not a valid Result"
                 raise TypeError(msg)
 
     return mapped_f
@@ -320,7 +320,7 @@ def tap_failure_to_result(
                 return rslt
             case _ as rslt:  # pragma: no cover
                 assert_type(rslt, Never)  # type: ignore[unreachable]  # pyright: ignore[reportUnreachable]  # pyrefly: ignore [assert-type]
-                msg = "return value is not a valid Result"
+                msg = f"{type(rslt).__name__!r} is not a valid Result"
                 raise TypeError(msg)
 
     return map_failure_to_result(bypassed_f)
@@ -372,7 +372,7 @@ def tap_success_to_result(
                 return construct_success(value)
             case _ as rslt:  # pragma: no cover
                 assert_type(rslt, Never)  # type: ignore[unreachable]  # pyright: ignore[reportUnreachable]  # pyrefly: ignore [assert-type]
-                msg = "return value is not a valid Result"
+                msg = f"{type(rslt).__name__!r} is not a valid Result"
                 raise TypeError(msg)
 
     return map_success_to_result(bypassed_f)

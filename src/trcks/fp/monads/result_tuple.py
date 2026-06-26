@@ -219,7 +219,7 @@ def map_failure_to_iterable(
                 return r_tpl
             case _:  # pragma: no cover
                 assert_type(r_tpl, Never)  # type: ignore[unreachable]  # pyright: ignore[reportUnreachable]  # pyrefly: ignore [assert-type]
-                msg = "r_tpl is not a valid ResultTuple"
+                msg = f"{type(r_tpl).__name__!r} is not a valid ResultTuple"
                 raise TypeError(msg)
 
     return mapped_f
@@ -473,7 +473,7 @@ def map_successes_to_result_iterable(
                     s2s.extend(additional_s2s)  # pyrefly: ignore[bad-argument-type]
                 case _ as r_it:  # pragma: no cover
                     assert_type(r_it, Never)  # type: ignore[unreachable]  # pyright: ignore[reportUnreachable]  # pyrefly: ignore [assert-type]
-                    msg = "return value is not a valid ResultIterable"
+                    msg = f"{type(r_it).__name__!r} is not a valid ResultIterable"
                     raise TypeError(msg)
         return "success", tuple(s2s)
 
@@ -485,7 +485,7 @@ def map_successes_to_result_iterable(
                 return partially_mapped_f(s1s)  # pyrefly: ignore[bad-argument-type]
             case _:  # pragma: no cover
                 assert_type(r_tpl, Never)  # type: ignore[unreachable]  # pyright: ignore[reportUnreachable]  # pyrefly: ignore [assert-type]
-                msg = "r_tpl is not a valid ResultTuple"
+                msg = f"{type(r_tpl).__name__!r} is not a valid ResultTuple"
                 raise TypeError(msg)
 
     return mapped_f
@@ -859,7 +859,7 @@ def tap_successes_to_result_iterable(
                 return "success", tuple(s1 for _ in s2s)  # pyrefly: ignore[not-iterable]
             case _ as r_it:  # pragma: no cover
                 assert_type(r_it, Never)  # type: ignore[unreachable]  # pyright: ignore[reportUnreachable]  # pyrefly: ignore [assert-type]
-                msg = "return value is not a valid ResultIterable"
+                msg = f"{type(r_it).__name__!r} is not a valid ResultIterable"
                 raise TypeError(msg)
 
     return map_successes_to_result_iterable(tapped_f)
