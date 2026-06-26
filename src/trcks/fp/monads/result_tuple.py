@@ -36,8 +36,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-import trcks._pattern_matching as _pm
-from trcks._typing import TypeVar, deprecated
+from trcks._typing import Never, TypeVar, assert_type, deprecated
 from trcks.fp.composition import compose2
 from trcks.fp.monads import result as r
 from trcks.fp.monads import tuple_ as t
@@ -219,10 +218,9 @@ def map_failure_to_iterable(
             case ("success", _):
                 return r_tpl
             case _:  # pragma: no cover
-                raise _pm.construct_type_error(  # pyright: ignore[reportUnreachable]
-                    r_tpl,  # pyrefly: ignore[bad-argument-type]
-                    "r_tpl is not a valid ResultTuple",
-                )
+                assert_type(r_tpl, Never)  # type: ignore[unreachable]  # pyright: ignore[reportUnreachable]  # pyrefly: ignore [assert-type]
+                msg = "r_tpl is not a valid ResultTuple"
+                raise TypeError(msg)
 
     return mapped_f
 
@@ -474,10 +472,9 @@ def map_successes_to_result_iterable(
                 case ("success", additional_s2s):
                     s2s.extend(additional_s2s)  # pyrefly: ignore[bad-argument-type]
                 case _ as r_it:  # pragma: no cover
-                    raise _pm.construct_type_error(  # pyright: ignore[reportUnreachable]
-                        r_it,  # pyrefly: ignore[bad-argument-type]
-                        "return value is not a valid ResultIterable",
-                    )
+                    assert_type(r_it, Never)  # type: ignore[unreachable]  # pyright: ignore[reportUnreachable]  # pyrefly: ignore [assert-type]
+                    msg = "return value is not a valid ResultIterable"
+                    raise TypeError(msg)
         return "success", tuple(s2s)
 
     def mapped_f(r_tpl: ResultTuple[_F1, _S1]) -> ResultTuple[_F1 | _F2, _S2]:
@@ -487,10 +484,9 @@ def map_successes_to_result_iterable(
             case ("success", s1s):
                 return partially_mapped_f(s1s)  # pyrefly: ignore[bad-argument-type]
             case _:  # pragma: no cover
-                raise _pm.construct_type_error(  # pyright: ignore[reportUnreachable]
-                    r_tpl,  # pyrefly: ignore[bad-argument-type]
-                    "r_tpl is not a valid ResultTuple",
-                )
+                assert_type(r_tpl, Never)  # type: ignore[unreachable]  # pyright: ignore[reportUnreachable]  # pyrefly: ignore [assert-type]
+                msg = "r_tpl is not a valid ResultTuple"
+                raise TypeError(msg)
 
     return mapped_f
 
@@ -862,10 +858,9 @@ def tap_successes_to_result_iterable(
             case ("success", s2s):
                 return "success", tuple(s1 for _ in s2s)  # pyrefly: ignore[not-iterable]
             case _ as r_it:  # pragma: no cover
-                raise _pm.construct_type_error(  # pyright: ignore[reportUnreachable]
-                    r_it,  # pyrefly: ignore[bad-argument-type]
-                    "return value is not a valid ResultIterable",
-                )
+                assert_type(r_it, Never)  # type: ignore[unreachable]  # pyright: ignore[reportUnreachable]  # pyrefly: ignore [assert-type]
+                msg = "return value is not a valid ResultIterable"
+                raise TypeError(msg)
 
     return map_successes_to_result_iterable(tapped_f)
 

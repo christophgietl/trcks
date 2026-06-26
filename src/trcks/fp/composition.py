@@ -20,8 +20,7 @@ Example:
 from collections.abc import Callable
 from typing import TypeAlias
 
-import trcks._pattern_matching as _pm
-from trcks._typing import TypeVar
+from trcks._typing import Never, TypeVar, assert_type
 
 __docformat__ = "google"
 
@@ -381,7 +380,9 @@ def compose(  # noqa: PLR0911
         case (_, _, _, _, _, _, _):
             return compose7(c)
         case _:  # pragma: no cover
-            raise _pm.construct_type_error(c, "c is not a valid Composable")  # pyright: ignore[reportUnreachable]
+            assert_type(c, Never)  # type: ignore[unreachable]  # pyright: ignore[reportUnreachable]
+            msg = "c is not a valid Composable"
+            raise TypeError(msg)
 
 
 def pipe(p: Pipeline[_T0, _T1, _T2, _T3, _T4, _T5, _T6, _OUT]) -> _OUT:
@@ -407,4 +408,6 @@ def pipe(p: Pipeline[_T0, _T1, _T2, _T3, _T4, _T5, _T6, _OUT]) -> _OUT:
             composable = p[1:]
             return compose(composable)(value)
         case _:  # pragma: no cover
-            raise _pm.construct_type_error(p, "p is not a valid Pipeline")  # pyrefly: ignore[bad-argument-type] # pyright: ignore[reportUnreachable]
+            assert_type(p, Never)  # type: ignore[unreachable]  # pyright: ignore[reportUnreachable]  # pyrefly: ignore [assert-type]
+            msg = "p is not a valid Pipeline"
+            raise TypeError(msg)

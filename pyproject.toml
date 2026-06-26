@@ -107,7 +107,6 @@ exhaustive = true
 layers = [
     "oop",
     "fp",
-    "_pattern_matching",
     "_typing",
 ]
 

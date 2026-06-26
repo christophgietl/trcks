@@ -74,8 +74,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-import trcks._pattern_matching as _pm
-from trcks._typing import TypeVar
+from trcks._typing import Never, TypeVar, assert_type
 from trcks.fp.composition import compose2
 from trcks.fp.monads import identity as i
 
@@ -191,7 +190,9 @@ def map_failure_to_result(
             case ("success", _):
                 return rslt
             case _:  # pragma: no cover
-                raise _pm.construct_type_error(rslt, "rslt is not a valid Result")  # pyrefly: ignore[bad-argument-type] # pyright: ignore[reportUnreachable]
+                assert_type(rslt, Never)  # type: ignore[unreachable]  # pyright: ignore[reportUnreachable]  # pyrefly: ignore [assert-type]
+                msg = "rslt is not a valid Result"
+                raise TypeError(msg)
 
     return mapped_f
 
@@ -266,7 +267,9 @@ def map_success_to_result(
             case ("success", value):
                 return f(value)  # pyrefly: ignore[bad-argument-type]
             case _:  # pragma: no cover
-                raise _pm.construct_type_error(rslt, "rslt is not a valid Result")  # pyrefly: ignore[bad-argument-type]  # pyright: ignore[reportUnreachable]
+                assert_type(rslt, Never)  # type: ignore[unreachable]  # pyright: ignore[reportUnreachable]  # pyrefly: ignore [assert-type]
+                msg = "rslt is not a valid Result"
+                raise TypeError(msg)
 
     return mapped_f
 
@@ -316,10 +319,9 @@ def tap_failure_to_result(
             case ("success", _) as rslt:
                 return rslt
             case _ as rslt:  # pragma: no cover
-                raise _pm.construct_type_error(  # pyright: ignore[reportUnreachable]
-                    rslt,  # pyrefly: ignore[bad-argument-type]
-                    "return value is not a valid Result",
-                )
+                assert_type(rslt, Never)  # type: ignore[unreachable]  # pyright: ignore[reportUnreachable]  # pyrefly: ignore [assert-type]
+                msg = "return value is not a valid Result"
+                raise TypeError(msg)
 
     return map_failure_to_result(bypassed_f)
 
@@ -369,9 +371,8 @@ def tap_success_to_result(
             case ("success", _):
                 return construct_success(value)
             case _ as rslt:  # pragma: no cover
-                raise _pm.construct_type_error(  # pyright: ignore[reportUnreachable]
-                    rslt,  # pyrefly: ignore[bad-argument-type]
-                    "return value is not a valid Result",
-                )
+                assert_type(rslt, Never)  # type: ignore[unreachable]  # pyright: ignore[reportUnreachable]  # pyrefly: ignore [assert-type]
+                msg = "return value is not a valid Result"
+                raise TypeError(msg)
 
     return map_success_to_result(bypassed_f)
