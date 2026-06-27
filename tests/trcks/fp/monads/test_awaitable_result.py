@@ -12,9 +12,7 @@ if TYPE_CHECKING:
 _INVALID_RESULT: Final = cast("Result[str, int]", ("neither", 0))
 
 
-async def test_map_failure_to_awaitable_result_with_invalid_result_raises_type_error() -> (  # noqa: E501
-    None
-):
+async def test_map_failure_with_invalid_result_raises_type_error() -> None:
     async def _recover(_: str) -> Result[str, int]:
         return ("success", 0)
 
@@ -24,9 +22,7 @@ async def test_map_failure_to_awaitable_result_with_invalid_result_raises_type_e
         _ = await recover(invalid_awaitable_result)
 
 
-async def test_map_success_to_awaitable_result_with_invalid_result_raises_type_error() -> (  # noqa: E501
-    None
-):
+async def test_map_success_with_invalid_result_raises_type_error() -> None:
     async def _identity(n: int) -> Result[str, int]:
         return ("success", n)
 
@@ -36,9 +32,7 @@ async def test_map_success_to_awaitable_result_with_invalid_result_raises_type_e
         _ = await identity(invalid_awaitable_result)
 
 
-async def test_tap_failure_to_awaitable_result_with_invalid_side_effect_raises_type_error() -> (  # noqa: E501
-    None
-):
+async def test_tap_failure_with_invalid_side_effect_raises_type_error() -> None:
     async def _invalid_side_effect(_: str) -> Result[str, int]:
         return _INVALID_RESULT
 
@@ -48,9 +42,7 @@ async def test_tap_failure_to_awaitable_result_with_invalid_side_effect_raises_t
         _ = await invalid_side_effect(awtbl_failure)
 
 
-async def test_tap_success_to_awaitable_result_with_invalid_side_effect_raises_type_error() -> (  # noqa: E501
-    None
-):
+async def test_tap_success_with_invalid_side_effect_raises_type_error() -> None:
     async def _invalid_side_effect(_: int) -> Result[str, int]:
         return _INVALID_RESULT
 

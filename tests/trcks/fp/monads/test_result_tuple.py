@@ -14,7 +14,7 @@ if TYPE_CHECKING:
 _INVALID_RESULT_TUPLE: Final = cast("ResultTuple[str, int]", ("neither", ()))
 
 
-def test_map_failure_to_iterable_with_invalid_result_tuple_raises_type_error() -> None:
+def test_map_failure_with_invalid_result_tuple_raises_type_error() -> None:
     recover: Callable[[ResultTuple[str, int]], ResultTuple[str, int]] = (
         rt.map_failure_to_iterable(lambda _: [0])
     )
@@ -22,9 +22,7 @@ def test_map_failure_to_iterable_with_invalid_result_tuple_raises_type_error() -
         _ = recover(_INVALID_RESULT_TUPLE)
 
 
-def test_map_successes_to_result_iterable_with_invalid_inner_result_raises_type_error() -> (  # noqa: E501
-    None
-):
+def test_map_successes_with_invalid_inner_result_raises_type_error() -> None:
     map_successes_to_invalid_result_tuple: Callable[
         [ResultTuple[str, int]], ResultTuple[str, int]
     ] = rt.map_successes_to_result_iterable(lambda _: _INVALID_RESULT_TUPLE)
@@ -32,9 +30,7 @@ def test_map_successes_to_result_iterable_with_invalid_inner_result_raises_type_
         _ = map_successes_to_invalid_result_tuple(("success", (1,)))
 
 
-def test_map_successes_to_result_iterable_with_invalid_result_tuple_raises_type_error() -> (  # noqa: E501
-    None
-):
+def test_map_successes_with_invalid_result_tuple_raises_type_error() -> None:
     identity: Callable[[ResultTuple[str, int]], ResultTuple[str, int]] = (
         rt.map_successes_to_result_iterable(lambda x: ("success", (x,)))
     )
@@ -42,9 +38,7 @@ def test_map_successes_to_result_iterable_with_invalid_result_tuple_raises_type_
         _ = identity(_INVALID_RESULT_TUPLE)
 
 
-def test_tap_successes_to_result_iterable_with_invalid_inner_result_raises_type_error() -> (  # noqa: E501
-    None
-):
+def test_tap_successes_with_invalid_inner_result_raises_type_error() -> None:
     invalid_side_effect: Callable[[ResultTuple[str, int]], ResultTuple[str, int]] = (
         rt.tap_successes_to_result_iterable(lambda _: _INVALID_RESULT_TUPLE)
     )
