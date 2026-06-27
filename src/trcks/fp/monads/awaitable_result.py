@@ -315,7 +315,7 @@ def map_failure_to_awaitable_result(
                 return await f(value)  # pyrefly: ignore[bad-argument-type]
             case ("success", _):
                 return rslt
-            case _:  # pragma: no cover
+            case _:
                 assert_type(rslt, Never)  # type: ignore[unreachable]  # pyright: ignore[reportUnreachable]  # pyrefly: ignore [assert-type]
                 msg = f"{type(rslt).__name__!r} is not a valid Result"
                 raise TypeError(msg)
@@ -499,7 +499,7 @@ def map_success_to_awaitable_result(
                 return rslt
             case ("success", value):
                 return await f(value)  # pyrefly: ignore[bad-argument-type]
-            case _:  # pragma: no cover
+            case _:
                 assert_type(rslt, Never)  # type: ignore[unreachable]  # pyright: ignore[reportUnreachable]  # pyrefly: ignore [assert-type]
                 msg = f"{type(rslt).__name__!r} is not a valid Result"
                 raise TypeError(msg)
@@ -620,7 +620,7 @@ def tap_failure_to_awaitable_result(
                 return r.construct_failure(value)
             case ("success", _) as rslt:
                 return rslt
-            case _ as rslt:  # pragma: no cover
+            case _ as rslt:
                 assert_type(rslt, Never)  # type: ignore[unreachable]  # pyright: ignore[reportUnreachable]  # pyrefly: ignore [assert-type]
                 msg = f"{type(rslt).__name__!r} is not a valid Result"
                 raise TypeError(msg)
@@ -719,7 +719,7 @@ def tap_success_to_awaitable_result(
                 return rslt
             case ("success", _):
                 return r.construct_success(value)
-            case _ as rslt:  # pragma: no cover
+            case _ as rslt:
                 assert_type(rslt, Never)  # type: ignore[unreachable]  # pyright: ignore[reportUnreachable]  # pyrefly: ignore [assert-type]
                 msg = f"{type(rslt).__name__!r} is not a valid Result"
                 raise TypeError(msg)

@@ -217,7 +217,7 @@ def map_failure_to_iterable(
                 return "success", tuple(f(value))  # pyrefly: ignore[bad-argument-type]
             case ("success", _):
                 return r_tpl
-            case _:  # pragma: no cover
+            case _:
                 assert_type(r_tpl, Never)  # type: ignore[unreachable]  # pyright: ignore[reportUnreachable]  # pyrefly: ignore [assert-type]
                 msg = f"{type(r_tpl).__name__!r} is not a valid ResultTuple"
                 raise TypeError(msg)
@@ -471,7 +471,7 @@ def map_successes_to_result_iterable(
                     return r_it
                 case ("success", additional_s2s):
                     s2s.extend(additional_s2s)  # pyrefly: ignore[bad-argument-type]
-                case _ as r_it:  # pragma: no cover
+                case _ as r_it:
                     assert_type(r_it, Never)  # type: ignore[unreachable]  # pyright: ignore[reportUnreachable]  # pyrefly: ignore [assert-type]
                     msg = f"{type(r_it).__name__!r} is not a valid ResultIterable"
                     raise TypeError(msg)
@@ -483,7 +483,7 @@ def map_successes_to_result_iterable(
                 return r_tpl
             case ("success", s1s):
                 return partially_mapped_f(s1s)  # pyrefly: ignore[bad-argument-type]
-            case _:  # pragma: no cover
+            case _:
                 assert_type(r_tpl, Never)  # type: ignore[unreachable]  # pyright: ignore[reportUnreachable]  # pyrefly: ignore [assert-type]
                 msg = f"{type(r_tpl).__name__!r} is not a valid ResultTuple"
                 raise TypeError(msg)
@@ -857,7 +857,7 @@ def tap_successes_to_result_iterable(
                 return r_it
             case ("success", s2s):
                 return "success", tuple(s1 for _ in s2s)  # pyrefly: ignore[not-iterable]
-            case _ as r_it:  # pragma: no cover
+            case _ as r_it:
                 assert_type(r_it, Never)  # type: ignore[unreachable]  # pyright: ignore[reportUnreachable]  # pyrefly: ignore [assert-type]
                 msg = f"{type(r_it).__name__!r} is not a valid ResultIterable"
                 raise TypeError(msg)

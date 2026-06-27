@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import sys
 from collections.abc import Callable
-from typing import Final, TypeAlias, TypeVar
+from typing import Final, TypeAlias, TypeVar, cast
 
 import pytest
 
@@ -89,3 +89,13 @@ def test_pipe_with_1_argument_returns_identical_value(input_: object) -> None:
 @pytest.mark.parametrize("value", [23, 42, -100, 0, 1000, 999999])
 def test_pipe_with_2_arguments_applies_function_to_value(value: int) -> None:
     assert pipe((value, _foo)) == _foo(value)
+
+
+def test_compose_with_invalid_composable_raises_type_error() -> None:
+    with pytest.raises(TypeError, match="is not a valid Composable"):
+        _ = compose(cast("_IntComposable", ()))
+
+
+def test_pipe_with_invalid_pipeline_raises_type_error() -> None:
+    with pytest.raises(TypeError, match="is not a valid Pipeline"):
+        _ = pipe(cast("_IntPipeline", ()))
