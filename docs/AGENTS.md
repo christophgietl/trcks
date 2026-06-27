@@ -2,7 +2,7 @@
 
 ## Prefer `mkdocs-material` admonitions over regular highlighting
 
-Do not use:
+Do not write:
 
 ```markdown
 **See also:** Scott Wlaschin's blog post
@@ -10,7 +10,7 @@ Do not use:
 comes with lots of examples.
 ```
 
-Use:
+Write instead:
 
 ```markdown
 ???+ tip "See also"
