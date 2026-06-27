@@ -17,7 +17,7 @@ async def test_map_failure_to_awaitable_result_with_invalid_result_raises_type_e
         return ("success", 0)
 
     mapper = ar.map_failure_to_awaitable_result(bad_f)
-    with pytest.raises(TypeError, match="is not a valid Result"):
+    with pytest.raises(TypeError, match="not a valid Result"):
         _ = await mapper(cast("AwaitableResult[str, int]", _make_invalid()))
 
 
@@ -32,7 +32,7 @@ async def test_map_success_to_awaitable_result_with_invalid_result_raises_type_e
         return ("success", 0)
 
     mapper = ar.map_success_to_awaitable_result(bad_f)
-    with pytest.raises(TypeError, match="is not a valid Result"):
+    with pytest.raises(TypeError, match="not a valid Result"):
         _ = await mapper(cast("AwaitableResult[str, int]", _make_invalid()))
 
 
@@ -43,7 +43,7 @@ async def test_tap_failure_to_awaitable_result_with_invalid_side_effect_raises_t
         return cast("Result[str, int]", ("neither", 0))
 
     tapper = ar.tap_failure_to_awaitable_result(bad_side_effect)
-    with pytest.raises(TypeError, match="is not a valid Result"):
+    with pytest.raises(TypeError, match="not a valid Result"):
         _ = await tapper(ar.construct_failure("error"))
 
 
@@ -54,5 +54,5 @@ async def test_tap_success_to_awaitable_result_with_invalid_side_effect_raises_t
         return cast("Result[str, int]", ("neither", 0))
 
     tapper = ar.tap_success_to_awaitable_result(bad_side_effect)
-    with pytest.raises(TypeError, match="is not a valid Result"):
+    with pytest.raises(TypeError, match="not a valid Result"):
         _ = await tapper(ar.construct_success(42))

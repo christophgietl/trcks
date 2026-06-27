@@ -6,7 +6,14 @@ from typing import Final, TypeAlias, TypeVar, cast
 
 import pytest
 
-from trcks.fp.composition import Composable, Pipeline, compose, pipe
+from trcks.fp.composition import (
+    Composable,
+    Composable1,
+    Pipeline,
+    Pipeline0,
+    compose,
+    pipe,
+)
 
 if sys.version_info >= (3, 13):
     from typing import assert_type
@@ -92,10 +99,10 @@ def test_pipe_with_2_arguments_applies_function_to_value(value: int) -> None:
 
 
 def test_compose_with_invalid_composable_raises_type_error() -> None:
-    with pytest.raises(TypeError, match="is not a valid Composable"):
-        _ = compose(cast("_IntComposable", ()))
+    with pytest.raises(TypeError, match="not a valid Composable"):
+        _ = compose(cast("Composable1[int, str]", ()))
 
 
 def test_pipe_with_invalid_pipeline_raises_type_error() -> None:
-    with pytest.raises(TypeError, match="is not a valid Pipeline"):
-        _ = pipe(cast("_IntPipeline", ()))
+    with pytest.raises(TypeError, match="not a valid Pipeline"):
+        _ = pipe(cast("Pipeline0[bool]", ()))
