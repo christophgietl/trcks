@@ -31,16 +31,16 @@ def test_map_success_to_result_with_invalid_result_raises_type_error() -> None:
 
 
 def test_tap_failure_to_result_with_invalid_side_effect_raises_type_error() -> None:
-    apply_bad_side_effect_to_failure = r.tap_failure_to_result(
-        lambda _: _INVALID_RESULT
+    apply_bad_side_effect_to_failure: Callable[[Result[str, int]], Result[str, int]] = (
+        r.tap_failure_to_result(lambda _: _INVALID_RESULT)
     )
     with pytest.raises(TypeError, match="not a valid Result"):
         _ = apply_bad_side_effect_to_failure(("failure", "error"))
 
 
 def test_tap_success_to_result_with_invalid_side_effect_raises_type_error() -> None:
-    apply_bad_side_effect_to_success = r.tap_success_to_result(
-        lambda _: _INVALID_RESULT
+    apply_bad_side_effect_to_success: Callable[[Result[str, int]], Result[str, int]] = (
+        r.tap_success_to_result(lambda _: _INVALID_RESULT)
     )
     with pytest.raises(TypeError, match="not a valid Result"):
         _ = apply_bad_side_effect_to_success(("success", 42))
