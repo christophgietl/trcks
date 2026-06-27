@@ -234,6 +234,7 @@ ignore = ["None", "trcks", "tuple"]
 
 [tool.rumdl.per-file-flavor]
 "docs/**/*.md" = "mkdocs"
+"docs/AGENTS.md" = "gfm"
 
 [tool.uv]
 cache-keys = [
