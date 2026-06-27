@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, cast
+from typing import TYPE_CHECKING, Final, cast
 
 import pytest
 
@@ -9,23 +9,20 @@ from trcks.fp.monads import result_tuple as rt
 if TYPE_CHECKING:
     from trcks import ResultTuple
 
+_INVALID_RESULT_TUPLE: Final = cast("ResultTuple[str, int]", ("neither", ()))
+
 
 def test_map_failure_to_iterable_with_invalid_result_tuple_raises_type_error() -> None:
-    def _to_list(x: str) -> list[str]:
-        return [x]
-
-    invalid_result_tuple = cast("ResultTuple[str, int]", ("neither", ()))
     with pytest.raises(TypeError, match="not a valid ResultTuple"):
-        _ = rt.map_failure_to_iterable(_to_list)(invalid_result_tuple)
+        _ = rt.map_failure_to_iterable(lambda x: [x])(_INVALID_RESULT_TUPLE)
 
 
 def test_map_successes_to_result_iterable_with_invalid_inner_result_raises_type_error() -> (  # noqa: E501
     None
 ):
-    def bad_f(_: int) -> ResultTuple[str, str]:
-        return cast("ResultTuple[str, str]", ("neither", ()))
-
-    mapper = rt.map_successes_to_result_iterable(bad_f)
+    mapper = rt.map_successes_to_result_iterable(
+        lambda _: cast("ResultTuple[str, str]", ("neither", ()))
+    )
     with pytest.raises(TypeError, match="not a valid ResultIterable"):
         _ = mapper(("success", (1,)))
 
@@ -33,20 +30,17 @@ def test_map_successes_to_result_iterable_with_invalid_inner_result_raises_type_
 def test_map_successes_to_result_iterable_with_invalid_result_tuple_raises_type_error() -> (  # noqa: E501
     None
 ):
-    def _to_result_tuple(x: int) -> ResultTuple[str, int]:
-        return ("success", (x,))
-
-    invalid_result_tuple = cast("ResultTuple[str, int]", ("neither", ()))
     with pytest.raises(TypeError, match="not a valid ResultTuple"):
-        _ = rt.map_successes_to_result_iterable(_to_result_tuple)(invalid_result_tuple)
+        _ = rt.map_successes_to_result_iterable(lambda x: ("success", (x,)))(
+            _INVALID_RESULT_TUPLE
+        )
 
 
 def test_tap_successes_to_result_iterable_with_invalid_inner_result_raises_type_error() -> (  # noqa: E501
     None
 ):
-    def bad_f(_: int) -> ResultTuple[str, object]:
-        return cast("ResultTuple[str, object]", ("neither", ()))
-
-    tapper = rt.tap_successes_to_result_iterable(bad_f)
+    apply_bad_side_effect = rt.tap_successes_to_result_iterable(
+        lambda _: cast("ResultTuple[str, object]", ("neither", ()))
+    )
     with pytest.raises(TypeError, match="not a valid ResultIterable"):
-        _ = tapper(("success", (1,)))
+        _ = apply_bad_side_effect(("success", (1,)))
