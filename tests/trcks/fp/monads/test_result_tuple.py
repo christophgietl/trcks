@@ -25,11 +25,11 @@ def test_map_failure_to_iterable_with_invalid_result_tuple_raises_type_error() -
 def test_map_successes_to_result_iterable_with_invalid_inner_result_raises_type_error() -> (  # noqa: E501
     None
 ):
-    invalid_mapper: Callable[[ResultTuple[str, int]], ResultTuple[str, int]] = (
-        rt.map_successes_to_result_iterable(lambda _: _INVALID_RESULT_TUPLE)
-    )
+    map_successes_to_invalid_result_tuple: Callable[
+        [ResultTuple[str, int]], ResultTuple[str, int]
+    ] = rt.map_successes_to_result_iterable(lambda _: _INVALID_RESULT_TUPLE)
     with pytest.raises(TypeError, match="not a valid ResultIterable"):
-        _ = invalid_mapper(("success", (1,)))
+        _ = map_successes_to_invalid_result_tuple(("success", (1,)))
 
 
 def test_map_successes_to_result_iterable_with_invalid_result_tuple_raises_type_error() -> (  # noqa: E501
@@ -45,8 +45,8 @@ def test_map_successes_to_result_iterable_with_invalid_result_tuple_raises_type_
 def test_tap_successes_to_result_iterable_with_invalid_inner_result_raises_type_error() -> (  # noqa: E501
     None
 ):
-    apply_invalid_side_effect_to_successes: Callable[
-        [ResultTuple[str, int]], ResultTuple[str, int]
-    ] = rt.tap_successes_to_result_iterable(lambda _: _INVALID_RESULT_TUPLE)
+    invalid_side_effect: Callable[[ResultTuple[str, int]], ResultTuple[str, int]] = (
+        rt.tap_successes_to_result_iterable(lambda _: _INVALID_RESULT_TUPLE)
+    )
     with pytest.raises(TypeError, match="not a valid ResultIterable"):
-        _ = apply_invalid_side_effect_to_successes(("success", (1,)))
+        _ = invalid_side_effect(("success", (1,)))
