@@ -531,7 +531,7 @@ let us have a look at the individual steps of the chain:
     ```
 
 ???+ note
-    The values `pipe(p1)`, `pipe(p2)`, and `pipe(p3)` all are
+    The values `pipe(p1)`, `pipe(p2)`, and `pipe(p3)` are all
     of type [trcks.AwaitableResult][].
     Since [asyncio.run][] expects the input type [collections.abc.Coroutine][],
     we use the function [trcks.fp.monads.awaitable_result.to_coroutine_result][]
@@ -576,7 +576,7 @@ in the failure case or in the success case, respectively:
     ...         ar.tap_success(lambda s: print(f"LOG: Read '{s}' from disk.")),
     ...         ar.map_success(transform),
     ...         ar.map_success_to_awaitable_result(lambda s: write_to_disk(s, output_path)),
-    ...         ar.tap_success(lambda _: print(f"LOG: Successfully wrote to disk.")),
+    ...         ar.tap_success(lambda _: print("LOG: Successfully wrote to disk.")),
     ...         ar.tap_failure(lambda err: print(f"LOG: Failed with error: {err}")),
     ...     )
     ...     return await pipe(pipeline)

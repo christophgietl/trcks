@@ -549,7 +549,7 @@ in the failure case or in the success case, respectively:
     ...         .tap_success(lambda s: print(f"LOG: Read '{s}' from disk."))
     ...         .map_success(transform)
     ...         .map_success_to_awaitable_result(lambda s: write_to_disk(s, output_path))
-    ...         .tap_success(lambda _: print(f"LOG: Successfully wrote to disk."))
+    ...         .tap_success(lambda _: print("LOG: Successfully wrote to disk."))
     ...         .tap_failure(lambda err: print(f"LOG: Failed with error: {err}"))
     ...         .core
     ...     )
