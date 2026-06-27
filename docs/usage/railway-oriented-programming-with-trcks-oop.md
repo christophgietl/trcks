@@ -6,7 +6,7 @@ This page covers the **object-oriented style**: you wrap a value in a
 [trcks.oop.Wrapper][] subclass, chain method calls to transform it, and
 then unwrap the result — a "wrap → map → unwrap" mental model.
 Single-track and double-track code are both discussed.
-So are synchronous and asynchronous code.
+Synchronous and asynchronous code are also discussed.
 
 ???+ note "Prerequisites"
     - Read

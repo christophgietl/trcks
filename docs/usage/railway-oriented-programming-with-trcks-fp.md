@@ -7,7 +7,7 @@ tuple of a start value and a sequence of functions, then run it with
 [trcks.fp.composition.pipe][] — a "build a pipeline, then run it"
 mental model.
 Single-track and double-track code are both discussed.
-So are synchronous and asynchronous code.
+Synchronous and asynchronous code are also discussed.
 
 ???+ note "Prerequisites"
     - Read
