@@ -4,11 +4,11 @@ This page collects the key terms used across the `trcks` documentation.
 
 ## `Awaitable` and `Coroutine`
 
-`collections.abc.Awaitable[T]` is the broad type for anything
-that can be `await`-ed; `collections.abc.Coroutine` is a specific,
-narrower subtype produced by `async def` functions.
-Before Python 3.14, `asyncio.run` requires a `Coroutine`, not just any `Awaitable`,
-which is why `trcks` provides helpers such as
+[collections.abc.Awaitable][] is the broad type for anything that can be `await`-ed.
+[collections.abc.Coroutine][] is a specific, narrower subtype
+produced by `async def` functions.
+Before Python 3.14, [asyncio.run][] requires a `Coroutine`, not just any `Awaitable`.
+`trcks` provides helpers such as
 [trcks.oop.BaseAwaitableWrapper.core_as_coroutine][] and
 [trcks.fp.monads.awaitable_result.to_coroutine_result][] to convert an `Awaitable`
 result into a `Coroutine`.
@@ -28,17 +28,15 @@ The `map_*` helpers in `trcks` are higher-order functions.
 
 ## Homogeneous tuple
 
-A `tuple[T, ...]` whose every element shares the same type and
-is processed element-wise.
-`trcks` wraps homogeneous tuples so that each element is handled uniformly.
+A `tuple[T, ...]` whose elements all share the same type,
+processed individually by `trcks`.
 
 ## Mapping helper (or `map_*` function)
 
 A helper that lifts a plain function so that it operates on a
 wrapped value ([trcks.oop][]) or becomes a pipeline step ([trcks.fp][]).
-For example, `.map_success` on a
-[trcks.oop.ResultWrapper][] and `r.map_success` from
-[trcks.fp.monads.result][] both apply a function to the success
+For example, [trcks.oop.ResultWrapper.map_success][] and
+[trcks.fp.monads.result.map_success][] both apply a function to the success
 value of a [trcks.Result][], leaving failures unchanged.
 These helpers live in `trcks.oop` classes and in the modules under `trcks.fp.monads`.
 
@@ -57,7 +55,7 @@ for a full introduction.
 
 ## Short-circuiting
 
-Once a step produces a failure, all subsequent `map_success*` steps
+Once a step produces a failure, all subsequent `map_*` steps
 are skipped and the failure is carried through to the end of the
 pipeline without further processing.
 
