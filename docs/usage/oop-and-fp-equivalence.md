@@ -19,7 +19,7 @@ This page maps common operations from one style to the other.
 
 The full set of element-wise and homogeneous-tuple variants is covered
 in the
-[OOP usage page](railway-oriented-programming-with-trcks-oop.md),
+[`trcks.oop` usage page](railway-oriented-programming-with-trcks-oop.md),
 the
-[FP usage page](railway-oriented-programming-with-trcks-fp.md),
+[`trcks.fp` usage page](railway-oriented-programming-with-trcks-fp.md),
 and the [Reference](../reference/trcks.oop.md) section.

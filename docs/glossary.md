@@ -63,9 +63,9 @@ pipeline without further processing.
 
 ## Single-track
 
-A value that is either always present or always absent —
-in other words, an ordinary Python value with no success-or-failure
-wrapper.
+A plain Python value not wrapped in a success-or-failure type —
+in other words, an ordinary Python value that carries no information
+about whether an operation succeeded or failed.
 
 ## Success, Failure, and Result
 
