@@ -22,7 +22,7 @@ Usually, the second element is a string, an exception, or an enum value:
     >>> exception_failure: Failure[UserDoesNotExistException] = ("failure", UserDoesNotExistException())
     >>>
     >>> class ErrorEnum(enum.Enum):
-    ...     USER_DOES_NOT_EXIST = enum.auto
+    ...     USER_DOES_NOT_EXIST = enum.auto()
     ...
     >>> enum_failure: Failure[ErrorEnum] = ("failure", ErrorEnum.USER_DOES_NOT_EXIST)
 
