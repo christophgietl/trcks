@@ -7,7 +7,7 @@ This page collects the key terms used across the `trcks` documentation.
 [collections.abc.Awaitable][] is the broad type for anything that can be `await`-ed.
 [collections.abc.Coroutine][] is a specific, narrower subtype
 produced by `async def` functions.
-Before Python 3.14, [asyncio.run][] requires a `Coroutine`, not just any `Awaitable`.
+In Python 3.13 and older, [asyncio.run][] requires a `Coroutine`, not just any `Awaitable`.
 `trcks` provides helpers such as
 [trcks.oop.BaseAwaitableWrapper.core_as_coroutine][] and
 [trcks.fp.monads.awaitable_result.to_coroutine_result][] to convert an `Awaitable`
