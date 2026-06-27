@@ -76,12 +76,11 @@ in the following example.
 2. The class `trcks.oop.Wrapper` provides a convenient way to chain
    `trcks.Result`-returning functions and "regular" functions
    (in a type-safe way).
-
-See the
-[OOP and FP equivalence table](https://christophgietl.github.io/trcks/usage/oop-and-fp-equivalence/)
-for a side-by-side comparison with the functional style,
-and the [glossary](https://christophgietl.github.io/trcks/glossary/)
-for definitions of key terms.
+3. See the
+   [OOP and FP equivalence table](https://christophgietl.github.io/trcks/usage/oop-and-fp-equivalence/)
+   for a side-by-side comparison with the functional style,
+   and the [glossary](https://christophgietl.github.io/trcks/glossary/)
+   for definitions of key terms.
 
 ### Functional style
 
@@ -152,12 +151,11 @@ in the following example.
    provide a convenient way to chain
    `trcks.Result`-returning functions and "regular" functions
    (in a type-safe way).
-
-See the
-[OOP and FP equivalence table](https://christophgietl.github.io/trcks/usage/oop-and-fp-equivalence/)
-for a side-by-side comparison with the object-oriented style,
-and the [glossary](https://christophgietl.github.io/trcks/glossary/)
-for definitions of key terms.
+3. See the
+   [OOP and FP equivalence table](https://christophgietl.github.io/trcks/usage/oop-and-fp-equivalence/)
+   for a side-by-side comparison with the object-oriented style,
+   and the [glossary](https://christophgietl.github.io/trcks/glossary/)
+   for definitions of key terms.
 
 ## Still not convinced?
 

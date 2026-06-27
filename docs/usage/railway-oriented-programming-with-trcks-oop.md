@@ -24,10 +24,11 @@ So are synchronous and asynchronous code.
       [OOP and FP equivalence table](oop-and-fp-equivalence.md)
       for a side-by-side comparison with the functional style.
 
-**See also:** the
-[FP usage page](railway-oriented-programming-with-trcks-fp.md)
-covers the same operations using function composition instead of
-method chaining.
+???+ note "See also"
+    The
+    [FP usage page](railway-oriented-programming-with-trcks-fp.md)
+    covers the same operations using function composition instead of
+    method chaining.
 
 ## Synchronous single-track code for a single value with [trcks.oop.Wrapper][]
 

@@ -149,3 +149,4 @@ uv build
 - Keep `AGENTS.md` up to date when architecture or tooling changes.
 - Keep `CONTRIBUTING.md` up to date when tooling changes.
 - Keep `README.md` up to date when features or UI changes.
+- Keep `docs/index.md` in sync with `README.md`.
