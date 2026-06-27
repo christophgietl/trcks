@@ -7,7 +7,7 @@ and a functional (FP) style based on function composition
 ([trcks.fp][]).
 This page maps common operations from one style to the other.
 
-<!-- markdownlint-disable MD013 -->
+<!-- rumdl-disable MD013 -->
 
 | Operation | OOP (`trcks.oop`) | FP (`trcks.fp`) |
 |---|---|---|
@@ -28,4 +28,4 @@ the
 [FP usage page](railway-oriented-programming-with-trcks-fp.md),
 and the [Reference](../reference/trcks.oop.md) section.
 
-<!-- markdownlint-enable MD013 -->
+<!-- rumdl-enable MD013 -->
