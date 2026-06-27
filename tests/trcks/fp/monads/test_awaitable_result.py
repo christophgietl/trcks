@@ -19,25 +19,25 @@ async def _make_invalid() -> Result[str, int]:
 async def test_map_failure_to_awaitable_result_with_invalid_result_raises_type_error() -> (  # noqa: E501
     None
 ):
-    async def bad_f(_: str) -> Result[str, int]:
+    async def _recover(_: str) -> Result[str, int]:
         return ("success", 0)
 
     invalid_awaitable_result = _make_invalid()
-    mapper = ar.map_failure_to_awaitable_result(bad_f)
+    recover = ar.map_failure_to_awaitable_result(_recover)
     with pytest.raises(TypeError, match="not a valid Result"):
-        _ = await mapper(invalid_awaitable_result)
+        _ = await recover(invalid_awaitable_result)
 
 
 async def test_map_success_to_awaitable_result_with_invalid_result_raises_type_error() -> (  # noqa: E501
     None
 ):
-    async def bad_f(_: int) -> Result[str, int]:
+    async def _identity(_: int) -> Result[str, int]:
         return ("success", 0)
 
     invalid_awaitable_result = _make_invalid()
-    mapper = ar.map_success_to_awaitable_result(bad_f)
+    identity = ar.map_success_to_awaitable_result(_identity)
     with pytest.raises(TypeError, match="not a valid Result"):
-        _ = await mapper(invalid_awaitable_result)
+        _ = await identity(invalid_awaitable_result)
 
 
 async def test_tap_failure_to_awaitable_result_with_invalid_side_effect_raises_type_error() -> (  # noqa: E501
