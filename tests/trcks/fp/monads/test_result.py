@@ -14,16 +14,18 @@ def test_map_failure_to_result_with_invalid_result_raises_type_error() -> None:
     def _recover(_: str) -> Result[str, int]:
         return ("success", 0)
 
+    invalid_result = cast("Result[str, int]", ("neither", 0))
     with pytest.raises(TypeError, match="not a valid Result"):
-        _ = r.map_failure_to_result(_recover)(cast("Result[str, int]", ("neither", 0)))
+        _ = r.map_failure_to_result(_recover)(invalid_result)
 
 
 def test_map_success_to_result_with_invalid_result_raises_type_error() -> None:
     def _identity(x: int) -> Result[str, int]:
         return ("success", x)
 
+    invalid_result = cast("Result[str, int]", ("neither", 0))
     with pytest.raises(TypeError, match="not a valid Result"):
-        _ = r.map_success_to_result(_identity)(cast("Result[str, int]", ("neither", 0)))
+        _ = r.map_success_to_result(_identity)(invalid_result)
 
 
 def test_tap_failure_to_result_with_invalid_side_effect_raises_type_error() -> None:

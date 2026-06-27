@@ -14,10 +14,9 @@ def test_map_failure_to_iterable_with_invalid_result_tuple_raises_type_error() -
     def _to_list(x: str) -> list[str]:
         return [x]
 
+    invalid_result_tuple = cast("ResultTuple[str, int]", ("neither", ()))
     with pytest.raises(TypeError, match="not a valid ResultTuple"):
-        _ = rt.map_failure_to_iterable(_to_list)(
-            cast("ResultTuple[str, int]", ("neither", ()))
-        )
+        _ = rt.map_failure_to_iterable(_to_list)(invalid_result_tuple)
 
 
 def test_map_successes_to_result_iterable_with_invalid_inner_result_raises_type_error() -> (  # noqa: E501
@@ -34,13 +33,12 @@ def test_map_successes_to_result_iterable_with_invalid_inner_result_raises_type_
 def test_map_successes_to_result_iterable_with_invalid_result_tuple_raises_type_error() -> (  # noqa: E501
     None
 ):
-    def _to_tuple(x: int) -> ResultTuple[str, int]:
+    def _to_result_tuple(x: int) -> ResultTuple[str, int]:
         return ("success", (x,))
 
+    invalid_result_tuple = cast("ResultTuple[str, int]", ("neither", ()))
     with pytest.raises(TypeError, match="not a valid ResultTuple"):
-        _ = rt.map_successes_to_result_iterable(_to_tuple)(
-            cast("ResultTuple[str, int]", ("neither", ()))
-        )
+        _ = rt.map_successes_to_result_iterable(_to_result_tuple)(invalid_result_tuple)
 
 
 def test_tap_successes_to_result_iterable_with_invalid_inner_result_raises_type_error() -> (  # noqa: E501

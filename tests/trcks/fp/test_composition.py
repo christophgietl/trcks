@@ -99,10 +99,12 @@ def test_pipe_with_2_arguments_applies_function_to_value(value: int) -> None:
 
 
 def test_compose_with_invalid_composable_raises_type_error() -> None:
+    invalid_composable = cast("Composable1[int, str]", ())
     with pytest.raises(TypeError, match="not a valid Composable"):
-        _ = compose(cast("Composable1[int, str]", ()))
+        _ = compose(invalid_composable)
 
 
 def test_pipe_with_invalid_pipeline_raises_type_error() -> None:
+    invalid_pipeline = cast("Pipeline0[bool]", ())
     with pytest.raises(TypeError, match="not a valid Pipeline"):
-        _ = pipe(cast("Pipeline0[bool]", ()))
+        _ = pipe(invalid_pipeline)

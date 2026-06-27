@@ -16,9 +16,10 @@ async def test_map_failure_to_awaitable_result_with_invalid_result_raises_type_e
     async def bad_f(_: str) -> Result[str, int]:
         return ("success", 0)
 
+    invalid_result = cast("AwaitableResult[str, int]", _make_invalid())
     mapper = ar.map_failure_to_awaitable_result(bad_f)
     with pytest.raises(TypeError, match="not a valid Result"):
-        _ = await mapper(cast("AwaitableResult[str, int]", _make_invalid()))
+        _ = await mapper(invalid_result)
 
 
 async def _make_invalid() -> Result[str, int]:
@@ -31,9 +32,10 @@ async def test_map_success_to_awaitable_result_with_invalid_result_raises_type_e
     async def bad_f(_: int) -> Result[str, int]:
         return ("success", 0)
 
+    invalid_result = cast("AwaitableResult[str, int]", _make_invalid())
     mapper = ar.map_success_to_awaitable_result(bad_f)
     with pytest.raises(TypeError, match="not a valid Result"):
-        _ = await mapper(cast("AwaitableResult[str, int]", _make_invalid()))
+        _ = await mapper(invalid_result)
 
 
 async def test_tap_failure_to_awaitable_result_with_invalid_side_effect_raises_type_error() -> (  # noqa: E501
