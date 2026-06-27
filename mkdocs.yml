@@ -1,5 +1,8 @@
 # yaml-language-server: $schema=https://squidfunk.github.io/mkdocs-material/schema.json
 
+exclude_docs: |
+  AGENTS.md
+
 markdown_extensions:
   - admonition
   - pycon
