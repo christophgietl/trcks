@@ -7,17 +7,18 @@ This page collects the key terms used across the `trcks` documentation.
 `collections.abc.Awaitable[T]` is the broad type for anything
 that can be `await`-ed; `collections.abc.Coroutine` is a specific,
 narrower subtype produced by `async def` functions.
-`asyncio.run` requires a `Coroutine`, not just any `Awaitable`,
+Before Python 3.14, `asyncio.run` requires a `Coroutine`, not just any `Awaitable`,
 which is why `trcks` provides helpers such as
-`core_as_coroutine` ([trcks.oop][]) and `ar.to_coroutine_result`
-([trcks.fp][]) to convert an `Awaitable` result into a `Coroutine`.
+[trcks.oop.BaseAwaitableWrapper.core_as_coroutine][] and
+[trcks.fp.monads.awaitable_result.to_coroutine_result][] to convert an `Awaitable`
+result into a `Coroutine`.
 
 ## Double-track
 
 A value that is either a success or a failure, represented by
 [trcks.Result][].
 One track carries successful results forward;
-the other carries failure descriptions.
+the other carries information about failures.
 
 ## Higher-order function
 
@@ -29,8 +30,7 @@ The `map_*` helpers in `trcks` are higher-order functions.
 
 A `tuple[T, ...]` whose every element shares the same type and
 is processed element-wise.
-`trcks` wraps homogeneous tuples so that each element can be mapped
-or validated independently.
+`trcks` wraps homogeneous tuples so that each element is handled uniformly.
 
 ## Mapping helper (or `map_*` function)
 
@@ -40,7 +40,7 @@ For example, `.map_success` on a
 [trcks.oop.ResultWrapper][] and `r.map_success` from
 [trcks.fp.monads.result][] both apply a function to the success
 value of a [trcks.Result][], leaving failures unchanged.
-The modules under `trcks.fp.monads` are where these helpers live.
+These helpers live in `trcks.oop` classes and in the modules under `trcks.fp.monads`.
 
 ## Pipeline and `pipe`
 
