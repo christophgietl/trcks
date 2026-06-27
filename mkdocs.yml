@@ -17,7 +17,9 @@ nav:
     - usage/tuple-types-provided-by-trcks.md
     - usage/railway-oriented-programming-with-trcks-oop.md
     - usage/railway-oriented-programming-with-trcks-fp.md
+    - usage/oop-and-fp-equivalence.md
   - frequently-asked-questions.md
+  - glossary.md
   - Reference:
       - reference/trcks.md
       - reference/trcks.fp.md
