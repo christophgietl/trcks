@@ -18,3 +18,7 @@ Write instead:
     [Railway oriented programming](https://fsharpforfunandprofit.com/posts/recipe-part2/)
     comes with lots of examples.
 ```
+
+## Further instructions
+
+- Sort entries alphabetically by term in [the glossary](glossary.md).

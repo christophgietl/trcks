@@ -71,6 +71,10 @@ in the following example.
     2. <!-- rumdl-disable-line MD032 --> The class `trcks.oop.Wrapper` provides
        a convenient way to chain `trcks.Result`-returning functions and
        "regular" functions (in a type-safe way).
+    3. <!-- rumdl-disable-line MD032 --> See the
+       [OOP and FP equivalence table](usage/oop-and-fp-equivalence.md)
+       for a side-by-side comparison with the functional style,
+       and the [glossary](glossary.md) for definitions of key terms.
 
 ### Functional style
 
@@ -143,6 +147,10 @@ in the following example.
        `trcks.fp.monads.result` provide a convenient way to chain
        `trcks.Result`-returning functions and "regular" functions
        (in a type-safe way).
+    3. <!-- rumdl-disable-line MD032 --> See the
+       [OOP and FP equivalence table](usage/oop-and-fp-equivalence.md)
+       for a side-by-side comparison with the object-oriented style,
+       and the [glossary](glossary.md) for definitions of key terms.
 
 ## Still not convinced?
 

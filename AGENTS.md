@@ -101,6 +101,7 @@ but not in code, paths, URLs, commands, or identifiers:
   (e.g. "success or failure" instead of "success/failure").
 - Prefer "or" over "and/or"
   (e.g. "success or failure" instead of "success and/or failure").
+- Prefer short sentences over long ones.
 
 ## Development tools
 
@@ -149,3 +150,5 @@ uv build
 - Keep `AGENTS.md` up to date when architecture or tooling changes.
 - Keep `CONTRIBUTING.md` up to date when tooling changes.
 - Keep `README.md` up to date when features or UI changes.
+- Keep `docs/index.md` in sync with `README.md`.
+- Update `docs/glossary.md` when new terms are introduced.

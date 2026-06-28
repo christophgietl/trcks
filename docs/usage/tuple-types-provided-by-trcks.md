@@ -1,5 +1,9 @@
 # Tuple types provided by [trcks][]
 
+This page is the foundation for all usage of `trcks`:
+it defines the [trcks.Failure][], [trcks.Success][], and [trcks.Result][]
+types that [trcks.oop][] and [trcks.fp][] build on.
+
 The generic type [trcks.Failure][][F] describes all [tuple][]s of length 2
 with the string "failure" as the first element and a second element of type F.
 Usually, the second element is a string, an exception, or an enum value:
