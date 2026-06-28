@@ -4,7 +4,8 @@ This page collects the key terms used across the `trcks` documentation.
 
 ## `Awaitable` and `Coroutine`
 
-[collections.abc.Awaitable][] is the broad type for anything that can be awaited using `await`.
+[collections.abc.Awaitable][] is the broad type for anything
+that can be awaited using `await`.
 [collections.abc.Coroutine][] is a specific, narrower subtype
 produced by `async def` functions.
 In Python 3.13 and older, [asyncio.run][] requires a `Coroutine`, not just any `Awaitable`.
