@@ -66,7 +66,7 @@ A plain Python value not wrapped in a success-or-failure type —
 in other words, an ordinary Python value that carries no information
 about whether an operation succeeded or failed.
 
-## Success, Failure, and Result
+## `Success`, `Failure`, and `Result`
 
 The three generic types at the heart of `trcks`.
 See [Tuple types provided by trcks](usage/tuple-types-provided-by-trcks.md)
