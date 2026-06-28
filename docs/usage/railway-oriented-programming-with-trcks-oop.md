@@ -24,7 +24,7 @@ Synchronous and asynchronous code are also discussed.
       [OOP and FP equivalence table](oop-and-fp-equivalence.md)
       for a side-by-side comparison with the functional style.
 
-???+ note "See also"
+???+ tip "See also"
     The
     [FP usage page](railway-oriented-programming-with-trcks-fp.md)
     covers the same operations using function composition instead of

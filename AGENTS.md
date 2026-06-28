@@ -151,3 +151,4 @@ uv build
 - Keep `CONTRIBUTING.md` up to date when tooling changes.
 - Keep `README.md` up to date when features or UI changes.
 - Keep `docs/index.md` in sync with `README.md`.
+- Update `docs/glossary.md` when new terms are introduced.

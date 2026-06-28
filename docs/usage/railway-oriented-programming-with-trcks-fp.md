@@ -25,7 +25,7 @@ Synchronous and asynchronous code are also discussed.
       [OOP and FP equivalence table](oop-and-fp-equivalence.md)
       for a side-by-side comparison with the object-oriented style.
 
-???+ note "See also"
+???+ tip "See also"
     The
     [OOP usage page](railway-oriented-programming-with-trcks-oop.md)
     covers the same operations using method chaining instead of
