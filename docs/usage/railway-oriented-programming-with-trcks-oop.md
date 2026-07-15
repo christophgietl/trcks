@@ -445,7 +445,7 @@ allows us to execute asynchronous side effects.
 
 Whenever we define a function using the `async def ... -> Result[F, S]` syntax,
 we actually get a function with
-the return type `collections.abc.Awaitable[trcks.Result[F, S]]`.
+the return type [collections.abc.Awaitable][]`[trcks.Result[F, S]]`.
 The package [trcks][] provides the type alias [trcks.AwaitableResult][]`[F, S]`
 for this type.
 Moreover, the method [trcks.oop.Wrapper.map_to_awaitable_result][] and
