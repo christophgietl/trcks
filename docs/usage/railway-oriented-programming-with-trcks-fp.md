@@ -779,7 +779,7 @@ allows us to execute side effects for each element:
 ## Synchronous double-track code for a homogeneous tuple with [trcks.fp.composition][] and [trcks.fp.monads.result_tuple][]
 
 If one of the functions in a [trcks.fp.composition.Pipeline][]
-returns a [trcks.ResultTuple][][F, S] type,
+returns a [trcks.ResultTuple][]`[F, S]` type,
 the module [trcks.fp.monads.result_tuple][] provides
 some higher-order functions named `map_successes*` and `tap_successes*`
 that turn element-wise functions into functions
@@ -1067,8 +1067,8 @@ the remaining elements are skipped.
 ## Asynchronous single-track code for a homogeneous tuple with [trcks.fp.composition][] and [trcks.fp.monads.awaitable_tuple][]
 
 If one of the functions in a [trcks.fp.composition.Pipeline][] returns
-a [trcks.AwaitableTuple][][T] type,
-the following function must accept this [trcks.AwaitableTuple][][T] type
+a [trcks.AwaitableTuple][]`[T]` type,
+the following function must accept this [trcks.AwaitableTuple][]`[T]` type
 as its input.
 The module [trcks.fp.monads.awaitable_tuple][] provides
 some higher-order functions named `map_*`
@@ -1215,7 +1215,7 @@ allows us to execute asynchronous side effects for each element.
 ## Asynchronous double-track code for a homogeneous tuple with [trcks.fp.composition][] and [trcks.fp.monads.awaitable_result_tuple][]
 
 If one of the functions in a [trcks.fp.composition.Pipeline][] returns
-a [trcks.AwaitableResultTuple][][F, S] type,
+a [trcks.AwaitableResultTuple][]`[F, S]` type,
 the module [trcks.fp.monads.awaitable_result_tuple][] provides
 some higher-order functions named `map_successes*` and `tap_successes*`
 that turn element-wise functions into functions
