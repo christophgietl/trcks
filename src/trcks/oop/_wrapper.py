@@ -1,5 +1,8 @@
+# mypy: disable-error-code="misc"
+# see https://github.com/python/mypy/issues/21736
 from __future__ import annotations
 
+from dataclasses import dataclass
 from typing import TYPE_CHECKING, final
 
 from trcks._typing import TypeVar, deprecated
@@ -40,6 +43,7 @@ _T_co = TypeVar("_T_co", covariant=True)
 
 
 @final
+@dataclass(frozen=True, slots=True)
 class Wrapper(BaseWrapper[_T_co]):
     """Type-safe and immutable wrapper for arbitrary objects.
 
@@ -64,8 +68,6 @@ class Wrapper(BaseWrapper[_T_co]):
         >>> wrapper.core
         'Length: 5'
     """
-
-    __slots__: tuple[str, ...] = ()
 
     @staticmethod
     def construct(value: _T) -> Wrapper[_T]:

@@ -1,12 +1,14 @@
-from typing import Final, Generic, final
+from dataclasses import dataclass
+from typing import Generic
 
-from trcks._typing import Never, TypeVar, override
+from trcks._typing import TypeVar
 
 __docformat__ = "google"
 
 _T_co = TypeVar("_T_co", covariant=True)
 
 
+@dataclass(frozen=True, slots=True)
 class BaseWrapper(Generic[_T_co]):
     """Base class for all wrappers in the [trcks.oop][] package.
 
@@ -23,7 +25,7 @@ class BaseWrapper(Generic[_T_co]):
         Wrapping and unwrapping an integer:
 
             >>> from trcks.oop import BaseWrapper
-            >>> wrapped_integer = BaseWrapper[int](core=42)
+            >>> wrapped_integer = BaseWrapper(core=42)
             >>> wrapped_integer
             BaseWrapper(core=42)
             >>> unwrapped_integer = wrapped_integer.core
@@ -40,7 +42,7 @@ class BaseWrapper(Generic[_T_co]):
             >>> class SubWrapper(BaseWrapper[int]):
             ...     def __init__(self, core: int, metadata: str) -> None:
             ...         super().__init__(core)
-            ...         self.metadata = metadata
+            ...         object.__setattr__(self, "metadata", metadata)
             >>> SubWrapper(core=42, metadata="x") == BaseWrapper(core=42)
             False
             >>> BaseWrapper(core=42) == SubWrapper(core=42, metadata="x")
@@ -56,7 +58,7 @@ class BaseWrapper(Generic[_T_co]):
             >>> class SubWrapper(BaseWrapper[int]):
             ...     def __init__(self, core: int, metadata: str) -> None:
             ...         super().__init__(core)
-            ...         self.metadata = metadata
+            ...         object.__setattr__(self, "metadata", metadata)
             >>> hash(
             ...     SubWrapper(core=42, metadata="x")
             ... ) == hash(SubWrapper(core=42, metadata="y"))
@@ -77,95 +79,11 @@ class BaseWrapper(Generic[_T_co]):
             >>> wrapper.core = 100
             Traceback (most recent call last):
                 ...
-            AttributeError: cannot assign to attribute 'core'
+            dataclasses.FrozenInstanceError: cannot assign to field 'core'
             >>> del wrapper.core
             Traceback (most recent call last):
                 ...
-            AttributeError: cannot delete attribute 'core'
+            dataclasses.FrozenInstanceError: cannot delete field 'core'
     """
 
-    # Data classes do not play nicely with covariant type variables in Python 3.13+
-    # (see https://github.com/microsoft/pyright/discussions/11012 and https://github.com/python/mypy/issues/17623).
-    # Therefore, we need to implement the following dunder methods and attributes
-    # manually:
-
-    __slots__: tuple[str, ...] = ("core",)
-
-    @final
-    @override
-    def __delattr__(self, name: str) -> Never:
-        """Prevent attribute deletion.
-
-        Raises:
-            AttributeError: Always.
-        """
-        msg = f"cannot delete attribute {name!r}"
-        raise AttributeError(msg, name=name, obj=self)
-
-    @final
-    @override
-    def __eq__(self, other: object) -> bool:
-        """Check if this wrapper is equal to another object.
-
-        Args:
-            other: The object to compare with.
-
-        Returns:
-            NotImplemented if the classes differ.
-                False if the wrapped values differ.
-                True otherwise.
-        """
-        if type(other) is type(self):
-            return other.core == self.core
-        return NotImplemented
-
-    @final
-    @override
-    def __hash__(self) -> int:
-        """Hash the wrapper.
-
-        Returns:
-            The hash of the wrapper.
-        """
-        return hash((type(self), self.core))
-
-    def __init__(self, core: _T_co) -> None:
-        """Initialize the wrapper.
-
-        Args:
-            core: The value to be wrapped.
-        """
-        super().__init__()
-        self.core: Final[_T_co] = core
-
-    @override
-    def __repr__(self) -> str:
-        """Represent the wrapper textually.
-
-        Returns:
-            The textual representation of the wrapper.
-        """
-        return f"{self.__class__.__name__}(core={self.core!r})"
-
-    @final
-    @override
-    def __setattr__(self, name: str, value: object) -> None:
-        """Set attribute during initialization.
-
-        Args:
-            name: The name of the attribute.
-            value: The value to set.
-
-        Raises:
-            AttributeError: If the attribute already exists.
-        """
-        try:
-            self.__getattribute__(name)
-        except AttributeError:
-            pass  # Attribute does not exist yet.
-        else:
-            msg = f"cannot assign to attribute {name!r}"
-            raise AttributeError(msg, name=name, obj=self)
-
-        # Raises AttributeError if name is not in __slots__:
-        super().__setattr__(name, value)
+    core: _T_co  # type: ignore[misc, unused-ignore]    # see https://github.com/python/mypy/issues/21736

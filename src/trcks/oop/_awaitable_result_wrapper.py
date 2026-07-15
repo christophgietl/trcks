@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from dataclasses import dataclass
 from typing import TYPE_CHECKING, final
 
 from trcks import Result
@@ -32,6 +33,7 @@ _S_default_co = TypeVar("_S_default_co", covariant=True, default=Never)
 
 
 @final
+@dataclass(frozen=True, slots=True)
 class AwaitableResultWrapper(
     BaseAwaitableWrapper[Result[_F_default_co, _S_default_co]]
 ):
@@ -72,8 +74,6 @@ class AwaitableResultWrapper(
         >>> asyncio.run(main())
         ('failure', 'not found')
     """
-
-    __slots__: tuple[str, ...] = ()
 
     @staticmethod
     def construct_failure(value: _F) -> AwaitableResultWrapper[_F, Never]:

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from dataclasses import dataclass
 from typing import TYPE_CHECKING, final
 
 from trcks import Result
@@ -35,6 +36,7 @@ _S_default_co = TypeVar("_S_default_co", covariant=True, default=Never)
 
 
 @final
+@dataclass(frozen=True, slots=True)
 class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
     """Type-safe and immutable wrapper for [trcks.Result][] objects.
 
@@ -62,8 +64,6 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
         >>> result_wrapper.core
         ('failure', 'negative value')
     """
-
-    __slots__: tuple[str, ...] = ()
 
     @staticmethod
     def construct_failure(value: _F) -> ResultWrapper[_F, Never]:
