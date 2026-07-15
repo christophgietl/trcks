@@ -32,7 +32,7 @@ Synchronous and asynchronous code are also discussed.
 
 ## Synchronous single-track code for a single value with [trcks.oop.Wrapper][]
 
-The generic class [trcks.oop.Wrapper][][T] allows us to chain functions:
+The generic class [trcks.oop.Wrapper][]`[T]` allows us to chain functions:
 
 ???+ example
 
@@ -109,14 +109,14 @@ This method allows executing side effects while preserving the original value:
 
 ## Synchronous double-track code for a single value with [trcks.Result][] and [trcks.oop.ResultWrapper][]
 
-Whenever a function in a chain returns a [trcks.Result][][F, S] type,
-the next operation must handle the [trcks.Result][][F, S] value.
-However, methods that directly handle [trcks.Result][][F, S] values tend to violate
+Whenever a function in a chain returns a [trcks.Result][]`[F, S]` type,
+the next operation must handle the [trcks.Result][]`[F, S]` value.
+However, methods that directly handle [trcks.Result][]`[F, S]` values tend to violate
 the "do one thing and do it well" principle.
-Therefore, the class [trcks.oop.ResultWrapper][][F, S] provides
+Therefore, the class [trcks.oop.ResultWrapper][]`[F, S]` provides
 some methods named `map_failure*` and `map_success*`
 that call functions with input type `F` and functions with input type `S`
-on a wrapped [trcks.Result][][F, S] value.
+on a wrapped [trcks.Result][]`[F, S]` value.
 
 ???+ example
 
@@ -329,7 +329,7 @@ we first need to understand the return type of asynchronous functions:
     ```
 
 So, whenever we define a function using the `async def ... -> T` syntax,
-we actually get a function with the return type [collections.abc.Awaitable][][T].
+we actually get a function with the return type [collections.abc.Awaitable][]`[T]`.
 The method [trcks.oop.Wrapper.map_to_awaitable][] and the class [trcks.oop.AwaitableWrapper][]
 allow us to combine [collections.abc.Awaitable][]-returning functions
 with other [collections.abc.Awaitable][]-returning functions or
@@ -445,8 +445,8 @@ allows us to execute asynchronous side effects.
 
 Whenever we define a function using the `async def ... -> Result[F, S]` syntax,
 we actually get a function with
-the return type [collections.abc.Awaitable][][[trcks.Result][][F, S]].
-The package [trcks][] provides the type alias [trcks.AwaitableResult][][F, S]
+the return type `collections.abc.Awaitable[trcks.Result[F, S]]`.
+The package [trcks][] provides the type alias [trcks.AwaitableResult][]`[F, S]`
 for this type.
 Moreover, the method [trcks.oop.Wrapper.map_to_awaitable_result][] and
 the class [trcks.oop.AwaitableResultWrapper][]
@@ -1074,7 +1074,7 @@ the `async def ... -> Result[F, S]` syntax
 and want to apply it to each element in a tuple,
 we need the [trcks.oop.AwaitableResultTupleWrapper][] class.
 The package [trcks][] provides the type alias
-[trcks.AwaitableResultTuple][][F, S]
+[trcks.AwaitableResultTuple][]`[F, S]`
 for `Awaitable[ResultTuple[F, S]]`.
 The success track methods are named `map_successes` and `tap_successes` (plural)
 because they operate on each element individually.
