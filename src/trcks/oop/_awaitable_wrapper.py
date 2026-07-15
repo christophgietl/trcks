@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from dataclasses import dataclass
 from typing import TYPE_CHECKING, final
 
 from trcks._typing import TypeVar, deprecated
@@ -33,6 +34,7 @@ _T_co = TypeVar("_T_co", covariant=True)
 
 
 @final
+@dataclass(frozen=True, slots=True)
 class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
     """Type-safe and immutable wrapper for [collections.abc.Awaitable][] objects.
 
@@ -74,8 +76,6 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
         >>> output
         'Length: 13'
     """
-
-    __slots__: tuple[str, ...] = ()
 
     @staticmethod
     def construct(value: _T) -> AwaitableWrapper[_T]:

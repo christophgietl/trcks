@@ -1,4 +1,5 @@
 from collections.abc import Awaitable
+from dataclasses import dataclass
 
 from trcks._typing import TypeVar
 from trcks.oop._base_wrapper import BaseWrapper
@@ -8,6 +9,7 @@ __docformat__ = "google"
 _T_co = TypeVar("_T_co", covariant=True)
 
 
+@dataclass(frozen=True, slots=True)
 class BaseAwaitableWrapper(BaseWrapper[Awaitable[_T_co]]):
     """Base class for all asynchronous wrappers in the [trcks.oop][] package.
 
@@ -17,8 +19,6 @@ class BaseAwaitableWrapper(BaseWrapper[Awaitable[_T_co]]):
         please consider using one of its subclasses,
         such as [trcks.oop.AwaitableWrapper][].
     """
-
-    __slots__: tuple[str, ...] = ()
 
     @property
     async def core_as_coroutine(self) -> _T_co:

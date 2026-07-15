@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from dataclasses import dataclass
 from typing import TYPE_CHECKING, final
 
 from trcks._typing import TypeVar, deprecated
@@ -33,6 +34,7 @@ _T_co = TypeVar("_T_co", covariant=True)
 
 
 @final
+@dataclass(frozen=True, slots=True)
 class TupleWrapper(BaseWrapper[tuple[_T_co, ...]]):
     """Type-safe and immutable wrapper for homogeneous [tuple][] objects.
 
@@ -78,8 +80,6 @@ class TupleWrapper(BaseWrapper[tuple[_T_co, ...]]):
         >>> tuple_wrapper
         TupleWrapper(core=(1, 1, 2, 2, 3, 3))
     """
-
-    __slots__: tuple[str, ...] = ()
 
     @staticmethod
     def construct(value: _T) -> TupleWrapper[_T]:

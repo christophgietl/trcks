@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from dataclasses import dataclass
 from typing import TYPE_CHECKING, final
 
 from trcks import ResultTuple
@@ -31,6 +32,7 @@ _S_default_co = TypeVar("_S_default_co", covariant=True, default=Never)
 
 
 @final
+@dataclass(frozen=True, slots=True)
 class AwaitableResultTupleWrapper(
     BaseAwaitableWrapper[ResultTuple[_F_default_co, _S_default_co]]
 ):
@@ -64,8 +66,6 @@ class AwaitableResultTupleWrapper(
         Processed: 6
         ('success', (6, -6))
     """
-
-    __slots__: tuple[str, ...] = ()
 
     @staticmethod
     def construct_failure(value: _F) -> AwaitableResultTupleWrapper[_F, Never]:
