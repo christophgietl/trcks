@@ -95,6 +95,8 @@ but not in code, paths, URLs, commands, or identifiers:
 
 - Use the Oxford comma in lists of three or more items
   (e.g. "red, green, and blue" instead of "red, green and blue").
+- Prefer active voice over passive voice
+  (e.g. "No module may import X" instead of "X may not be imported").
 - Prefer "and" over slashes to express combinations
   (e.g. "red and blue" instead of "red/blue").
 - Prefer "or" over slashes to express alternatives
