@@ -35,8 +35,8 @@ and the outer-to-inner order matches the order
 in which the caller unwraps the value:
 
 1. The function is asynchronous, so the caller awaits it first (`Awaitable`).
-2. The function may raise an exception,
-   so the caller then handles success or failure (`Result`).
+2. The function may raise an exception when it is awaited,
+   so the caller handles success or failure around that await (`Result`).
 3. The function returns a homogeneous tuple,
    so the caller finally processes the tuple elements (`tuple`).
 
