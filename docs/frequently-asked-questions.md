@@ -17,6 +17,67 @@ Scott Wlaschin's blog post
 lists eight scenarios
 where raising or not catching an exception is the better choice.
 
+## Why does `trcks` arrange its types, monads, and wrappers as `Awaitable` > `Result` > `tuple`?
+
+`trcks` provides generic types based on the sequence
+`Awaitable` > `Result` > `tuple` and its subsequences
+(e.g. [trcks.AwaitableResultTuple][], [trcks.AwaitableResult][],
+[trcks.ResultTuple][], and [trcks.Result][]).
+It also provides matching monads and matching wrapper classes.
+It does not provide types, monads, or wrapper classes based on permutations
+such as `Result` > `Awaitable` > `tuple`.
+
+The reason is that the sequence `Awaitable` > `Result` > `tuple`
+mirrors the behavior of a tuple-returning and error-raising
+asynchronous function in conventional Python.
+Each layer corresponds to one trait of such a function,
+and the outer-to-inner order matches the order
+in which the caller unwraps the value:
+
+1. The function is asynchronous, so the caller awaits it first (`Awaitable`).
+2. The function may raise a domain error,
+   so the caller then handles success or failure (`Result`).
+3. The function returns a homogeneous tuple,
+   so the caller finally processes the tuple elements (`tuple`).
+
+A permutation like `Result` > `Awaitable` > `tuple`
+would describe a synchronous function
+that returns either a failure or an awaitable tuple.
+This does not match the conventional Python pattern,
+so `trcks` does not provide it.
+
+???+ example
+
+    ```pycon
+    >>> import asyncio
+    >>> from trcks import AwaitableResultTuple, ResultTuple
+    >>>
+    >>> # A conventional asynchronous function that returns a tuple
+    >>> # and raises an error looks like this:
+    >>> async def read_scores(user_id: int) -> tuple[int, ...]:
+    ...     await asyncio.sleep(0.001)
+    ...     if user_id != 1:
+    ...         raise Exception("User does not exist")
+    ...     return (90, 85, 100)
+    ...
+    >>> # The trcks equivalent returns the error instead of raising it.
+    >>> # Its non-awaited return value has type AwaitableResultTuple:
+    >>> async def read_scores_rop(user_id: int) -> ResultTuple[str, int]:
+    ...     await asyncio.sleep(0.001)
+    ...     if user_id != 1:
+    ...         return "failure", "User does not exist"
+    ...     return "success", (90, 85, 100)
+    ...
+    >>> async def main() -> None:
+    ...     a_rslt: AwaitableResultTuple[str, int] = read_scores_rop(2)
+    ...     rslt: ResultTuple[str, int] = await a_rslt
+    ...     print(rslt)
+    ...
+    >>> asyncio.run(main())
+    ('failure', 'User does not exist')
+
+    ```
+
 ## Which static type checkers does `trcks` support?
 
 `trcks` is compatible with current versions of `mypy`, `pyrefly`, and `pyright`.
