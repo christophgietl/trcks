@@ -34,11 +34,11 @@ Each layer corresponds to one trait of such a function,
 and the outer-to-inner order matches the order
 in which the caller unwraps the value:
 
-1. The function is asynchronous, so the caller awaits it first (`Awaitable`).
-2. The function may raise an exception when it is awaited,
-   so the caller handles success or failure around that await (`Result`).
-3. The function returns a homogeneous tuple,
-   so the caller finally processes the tuple elements (`tuple`).
+1. The function is asynchronous, so the caller awaits it (`Awaitable`).
+2. Awaiting either yields a value or raises an exception,
+   so `trcks` models this as success or failure (`Result`).
+3. In the success case, the function returns a homogeneous tuple,
+   so the caller processes the tuple elements (`tuple`).
 
 A permutation like `Result` > `Awaitable` > `tuple`
 would describe a synchronous function
