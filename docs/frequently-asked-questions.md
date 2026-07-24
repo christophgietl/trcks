@@ -53,14 +53,14 @@ so `trcks` does not provide it.
     >>> from trcks import AwaitableResultTuple, ResultTuple
     >>>
     >>> # A conventional asynchronous function that returns a tuple
-    >>> # and raises an error looks like this:
+    >>> # and raises a ValueError looks like this:
     >>> async def read_scores(user_id: int) -> tuple[int, ...]:
     ...     await asyncio.sleep(0.001)
     ...     if user_id != 1:
-    ...         raise Exception("User does not exist")
+    ...         raise ValueError("User does not exist")
     ...     return (90, 85, 100)
     ...
-    >>> # The trcks equivalent returns the error instead of raising it.
+    >>> # The trcks equivalent returns the failure instead of raising it.
     >>> # Calling it returns an AwaitableResultTuple, while awaiting it
     >>> # returns a ResultTuple:
     >>> async def read_scores_rop(user_id: int) -> ResultTuple[str, int]:
