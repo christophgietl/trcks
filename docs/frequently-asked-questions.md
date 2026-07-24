@@ -28,14 +28,14 @@ It does not provide types, monads, or wrapper classes based on permutations
 such as `Result` > `Awaitable` > `tuple`.
 
 The reason is that the sequence `Awaitable` > `Result` > `tuple`
-mirrors the behavior of a tuple-returning and error-raising
+mirrors the behavior of a tuple-returning and exception-raising
 asynchronous function in conventional Python.
 Each layer corresponds to one trait of such a function,
 and the outer-to-inner order matches the order
 in which the caller unwraps the value:
 
 1. The function is asynchronous, so the caller awaits it first (`Awaitable`).
-2. The function may raise a domain error,
+2. The function may raise an exception,
    so the caller then handles success or failure (`Result`).
 3. The function returns a homogeneous tuple,
    so the caller finally processes the tuple elements (`tuple`).
