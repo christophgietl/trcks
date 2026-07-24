@@ -61,7 +61,8 @@ so `trcks` does not provide it.
     ...     return (90, 85, 100)
     ...
     >>> # The trcks equivalent returns the error instead of raising it.
-    >>> # Its non-awaited return value has type AwaitableResultTuple:
+    >>> # Calling it returns an AwaitableResultTuple, while awaiting it
+    >>> # returns a ResultTuple:
     >>> async def read_scores_rop(user_id: int) -> ResultTuple[str, int]:
     ...     await asyncio.sleep(0.001)
     ...     if user_id != 1:
