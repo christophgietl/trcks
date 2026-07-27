@@ -57,7 +57,7 @@ repos:
     hooks:
       - id: actionlint
   - repo: https://github.com/rvben/rumdl-pre-commit
-    rev: 3558e35e6e081fdfaa8db2857a1f86c3a0b5b07e  # frozen: v0.2.34
+    rev: 966cefa160ed72c55d53aaeac6aa368b47b4099b  # frozen: v0.2.37
     hooks:
       - id: rumdl
       - id: rumdl-fmt
