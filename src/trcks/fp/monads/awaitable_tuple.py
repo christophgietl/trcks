@@ -116,6 +116,31 @@ def construct_from_awaitable(awtbl: Awaitable[_T]) -> AwaitableTuple[_T]:
     return a.map_(t.construct)(awtbl)
 
 
+def construct_from_awaitable_iterable(
+    a_it: AwaitableIterable[_T],
+) -> AwaitableTuple[_T]:
+    """Create a [trcks.AwaitableTuple][] from a [trcks.AwaitableIterable][].
+
+    Args:
+        a_it: The [trcks.AwaitableIterable][] to create
+            the [trcks.AwaitableTuple][] from.
+
+    Returns:
+        The [trcks.AwaitableTuple][] created from the [trcks.AwaitableIterable][].
+
+    Example:
+        >>> import asyncio
+        >>> from trcks import AwaitableIterable, AwaitableTuple
+        >>> from trcks.fp.monads import awaitable as a
+        >>> from trcks.fp.monads import awaitable_tuple as at
+        >>> a_it: AwaitableIterable[int] = a.construct((1, 2))
+        >>> a_tpl: AwaitableTuple[int] = at.construct_from_awaitable_iterable(a_it)
+        >>> asyncio.run(at.to_coroutine_tuple(a_tpl))
+        (1, 2)
+    """
+    return a.map_(tuple)(a_it)
+
+
 def construct_from_iterable(it: Iterable[_T]) -> AwaitableTuple[_T]:
     """Create a [trcks.AwaitableTuple][] from an iterable.
 
