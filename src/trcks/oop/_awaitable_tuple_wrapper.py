@@ -106,6 +106,40 @@ class AwaitableTupleWrapper(BaseAwaitableWrapper[tuple[_T_co, ...]]):
         return AwaitableTupleWrapper(at.construct_from_awaitable(awtbl))
 
     @staticmethod
+    def construct_from_awaitable_iterable(
+        a_it: AwaitableIterable[_T],
+    ) -> AwaitableTupleWrapper[_T]:
+        """Construct and wrap a [trcks.AwaitableTuple][] from an
+        [trcks.AwaitableIterable][].
+
+        Args:
+            a_it: The [trcks.AwaitableIterable][] to be wrapped and converted.
+
+        Returns:
+            A new [trcks.oop.AwaitableTupleWrapper][] instance with
+                the wrapped [trcks.AwaitableTuple][] object.
+
+        Example:
+            >>> import asyncio
+            >>> from trcks import AwaitableIterable
+            >>> from trcks.oop import AwaitableTupleWrapper
+            >>> async def slowly_get_values() -> tuple[int, ...]:
+            ...     await asyncio.sleep(0.001)
+            ...     return (1, 2)
+            ...
+            >>> a_it: AwaitableIterable[int] = slowly_get_values()
+            >>> awaitable_tuple_wrapper = (
+            ...     AwaitableTupleWrapper
+            ...     .construct_from_awaitable_iterable(a_it)
+            ... )
+            >>> awaitable_tuple_wrapper
+            AwaitableTupleWrapper(core=<coroutine object ...>)
+            >>> asyncio.run(awaitable_tuple_wrapper.core_as_coroutine)
+            (1, 2)
+        """
+        return AwaitableTupleWrapper(at.construct_from_awaitable_iterable(a_it))
+
+    @staticmethod
     def construct_from_iterable(it: Iterable[_T]) -> AwaitableTupleWrapper[_T]:
         """Construct and wrap a [trcks.AwaitableTuple][] from an iterable.
 
