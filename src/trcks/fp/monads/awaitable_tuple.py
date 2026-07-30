@@ -133,7 +133,7 @@ def construct_from_awaitable_iterable(
         >>> from trcks import AwaitableIterable, AwaitableTuple
         >>> from trcks.fp.monads import awaitable as a
         >>> from trcks.fp.monads import awaitable_tuple as at
-        >>> a_it: AwaitableIterable[int] = a.construct((1, 2))
+        >>> a_it: AwaitableIterable[int] = a.construct([1, 2])
         >>> a_tpl: AwaitableTuple[int] = at.construct_from_awaitable_iterable(a_it)
         >>> asyncio.run(at.to_coroutine_tuple(a_tpl))
         (1, 2)
