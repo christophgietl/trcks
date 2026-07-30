@@ -491,7 +491,7 @@ class AwaitableResultTupleWrapper(
         return AwaitableResultTupleWrapper(art.map_failure_to_awaitable(f)(self.core))
 
     def map_failure_to_awaitable_iterable(
-        self, f: Callable[[_F_default_co], Awaitable[Iterable[_S]]]
+        self, f: Callable[[_F_default_co], AwaitableIterable[_S]]
     ) -> AwaitableResultTupleWrapper[Never, _S_default_co | _S]:
         """Apply an asynchronous function returning an [collections.abc.Iterable][]
         to the wrapped [trcks.Failure][] object.
@@ -993,7 +993,7 @@ class AwaitableResultTupleWrapper(
         return AwaitableResultTupleWrapper(art.map_successes_to_awaitable(f)(self.core))
 
     def map_successes_to_awaitable_iterable(
-        self, f: Callable[[_S_default_co], Awaitable[Iterable[_S]]]
+        self, f: Callable[[_S_default_co], AwaitableIterable[_S]]
     ) -> AwaitableResultTupleWrapper[_F_default_co, _S]:
         """Apply an asynchronous function returning an [collections.abc.Iterable][]
         to each element in the wrapped [trcks.AwaitableSuccessTuple][] and flatten.
@@ -1454,7 +1454,7 @@ class AwaitableResultTupleWrapper(
         return AwaitableResultTupleWrapper(art.tap_failure_to_awaitable(f)(self.core))
 
     def tap_failure_to_awaitable_iterable(
-        self, f: Callable[[_F_default_co], Awaitable[Iterable[object]]]
+        self, f: Callable[[_F_default_co], AwaitableIterable[object]]
     ) -> AwaitableResultTupleWrapper[Never, _F_default_co | _S_default_co]:
         """Apply an asynchronous side effect returning an
         [collections.abc.Iterable][] to the wrapped [trcks.Failure][] object.
@@ -1945,7 +1945,7 @@ class AwaitableResultTupleWrapper(
         return AwaitableResultTupleWrapper(art.tap_successes_to_awaitable(f)(self.core))
 
     def tap_successes_to_awaitable_iterable(
-        self, f: Callable[[_S_default_co], Awaitable[Iterable[object]]]
+        self, f: Callable[[_S_default_co], AwaitableIterable[object]]
     ) -> AwaitableResultTupleWrapper[_F_default_co, _S_default_co]:
         """Apply an asynchronous side effect returning an
         [collections.abc.Iterable][] to each element in the wrapped

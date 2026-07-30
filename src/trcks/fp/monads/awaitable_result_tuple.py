@@ -431,7 +431,7 @@ def map_failure_to_awaitable(
 
 
 def map_failure_to_awaitable_iterable(
-    f: Callable[[_F1], Awaitable[Iterable[_S2]]],
+    f: Callable[[_F1], AwaitableIterable[_S2]],
 ) -> Callable[
     [AwaitableResultTuple[_F1, _S1]],
     Awaitable[SuccessTuple[_S1] | SuccessTuple[_S2]],
@@ -862,7 +862,7 @@ def map_successes_to_awaitable(
 
 
 def map_successes_to_awaitable_iterable(
-    f: Callable[[_S1], Awaitable[Iterable[_S2]]],
+    f: Callable[[_S1], AwaitableIterable[_S2]],
 ) -> Callable[[AwaitableResultTuple[_F1, _S1]], AwaitableResultTuple[_F1, _S2]]:
     """Map an awaitable-[collections.abc.Iterable][]-returning function
     over each element in a [trcks.AwaitableResultTuple][].
@@ -1267,7 +1267,7 @@ def tap_failure_to_awaitable(
 
 
 def tap_failure_to_awaitable_iterable(
-    f: Callable[[_F1], Awaitable[Iterable[object]]],
+    f: Callable[[_F1], AwaitableIterable[object]],
 ) -> Callable[
     [AwaitableResultTuple[_F1, _S1]],
     Awaitable[SuccessTuple[_F1] | SuccessTuple[_S1]],
@@ -1708,7 +1708,7 @@ def tap_successes_to_awaitable(
 
 
 def tap_successes_to_awaitable_iterable(
-    f: Callable[[_S1], Awaitable[Iterable[object]]],
+    f: Callable[[_S1], AwaitableIterable[object]],
 ) -> Callable[[AwaitableResultTuple[_F1, _S1]], AwaitableResultTuple[_F1, _S1]]:
     """Apply an asynchronous [collections.abc.Iterable][]-returning side effect
     to each element in a [trcks.AwaitableResultTuple][].
