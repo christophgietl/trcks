@@ -13,6 +13,7 @@ if TYPE_CHECKING:
     from collections.abc import Awaitable, Callable, Iterable
 
     from trcks import (
+        AwaitableIterable,
         AwaitableResult,
         AwaitableResultIterable,
         AwaitableResultTuple,
@@ -262,7 +263,7 @@ class ResultTupleWrapper(BaseWrapper[ResultTuple[_F_default_co, _S_default_co]])
         ).map_failure_to_awaitable(f)
 
     def map_failure_to_awaitable_iterable(
-        self, f: Callable[[_F_default_co], Awaitable[Iterable[_S]]]
+        self, f: Callable[[_F_default_co], AwaitableIterable[_S]]
     ) -> AwaitableResultTupleWrapper[Never, _S_default_co | _S]:
         """Apply an asynchronous function returning an [collections.abc.Iterable][]
         to the wrapped [trcks.Failure][] object.
@@ -667,7 +668,7 @@ class ResultTupleWrapper(BaseWrapper[ResultTuple[_F_default_co, _S_default_co]])
         ).map_successes_to_awaitable(f)
 
     def map_successes_to_awaitable_iterable(
-        self, f: Callable[[_S_default_co], Awaitable[Iterable[_S]]]
+        self, f: Callable[[_S_default_co], AwaitableIterable[_S]]
     ) -> AwaitableResultTupleWrapper[_F_default_co, _S]:
         """Apply an asynchronous function returning an [collections.abc.Iterable][]
         to each element in the wrapped [trcks.SuccessTuple][] and flatten.
@@ -1053,7 +1054,7 @@ class ResultTupleWrapper(BaseWrapper[ResultTuple[_F_default_co, _S_default_co]])
         ).tap_failure_to_awaitable(f)
 
     def tap_failure_to_awaitable_iterable(
-        self, f: Callable[[_F_default_co], Awaitable[Iterable[object]]]
+        self, f: Callable[[_F_default_co], AwaitableIterable[object]]
     ) -> AwaitableResultTupleWrapper[Never, _F_default_co | _S_default_co]:
         """Apply an asynchronous side effect returning an
         [collections.abc.Iterable][] to the wrapped [trcks.Failure][] object.
@@ -1480,7 +1481,7 @@ class ResultTupleWrapper(BaseWrapper[ResultTuple[_F_default_co, _S_default_co]])
         ).tap_successes_to_awaitable(f)
 
     def tap_successes_to_awaitable_iterable(
-        self, f: Callable[[_S_default_co], Awaitable[Iterable[object]]]
+        self, f: Callable[[_S_default_co], AwaitableIterable[object]]
     ) -> AwaitableResultTupleWrapper[_F_default_co, _S_default_co]:
         """Apply an asynchronous side effect returning an
         [collections.abc.Iterable][] to each element in the wrapped
