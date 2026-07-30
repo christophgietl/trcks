@@ -179,7 +179,7 @@ def construct_from_awaitable_result_iterable(
         >>> from trcks.fp.monads import awaitable_result_tuple as art
         >>> async def slowly_read_from_disk() -> ResultIterable[str, int]:
         ...     await asyncio.sleep(0.001)
-        ...     return "success", (1, 2)
+        ...     return "success", [1, 2]
         ...
         >>> a_r_tpl = art.construct_from_awaitable_result_iterable(
         ...     slowly_read_from_disk()
@@ -319,7 +319,7 @@ def construct_successes_from_awaitable_iterable(
         >>> from trcks import AwaitableIterable
         >>> from trcks.fp.monads import awaitable as a
         >>> from trcks.fp.monads import awaitable_result_tuple as art
-        >>> a_it: AwaitableIterable[int] = a.construct((1, 2))
+        >>> a_it: AwaitableIterable[int] = a.construct([1, 2])
         >>> a_r_tpl = art.construct_successes_from_awaitable_iterable(a_it)
         >>> asyncio.run(art.to_coroutine_result_tuple(a_r_tpl))
         ('success', (1, 2))
@@ -453,26 +453,26 @@ def map_failure_to_awaitable_iterable(
     Example:
         >>> import asyncio
         >>> from trcks.fp.monads import awaitable_result_tuple as art
-        >>> async def _slowly_recover_from_not_found(
+        >>> async def _slowly_recover_from_failure(
         ...     description: str,
-        ... ) -> tuple[int, ...]:
+        ... ) -> list[int]:
         ...     await asyncio.sleep(0.001)
         ...     if description == "not found":
-        ...         return (0,)
-        ...     return ()
+        ...         return [0]
+        ...     return []
         ...
-        >>> slowly_recover_from_not_found = art.map_failure_to_awaitable_iterable(
-        ...     _slowly_recover_from_not_found
+        >>> slowly_recover_from_failure = art.map_failure_to_awaitable_iterable(
+        ...     _slowly_recover_from_failure
         ... )
-        >>> a_r_tpl_1 = slowly_recover_from_not_found(
+        >>> a_r_tpl_1 = slowly_recover_from_failure(
         ...     art.construct_failure("not found")
         ... )
         >>> asyncio.run(art.to_coroutine_result_tuple(a_r_tpl_1))
         ('success', (0,))
-        >>> a_r_tpl_2 = slowly_recover_from_not_found(art.construct_failure("fatal"))
+        >>> a_r_tpl_2 = slowly_recover_from_failure(art.construct_failure("fatal"))
         >>> asyncio.run(art.to_coroutine_result_tuple(a_r_tpl_2))
         ('success', ())
-        >>> a_r_tpl_3 = slowly_recover_from_not_found(
+        >>> a_r_tpl_3 = slowly_recover_from_failure(
         ...     art.construct_successes_from_iterable((1, 2))
         ... )
         >>> asyncio.run(art.to_coroutine_result_tuple(a_r_tpl_3))
@@ -537,7 +537,7 @@ def map_failure_to_awaitable_result(
         >>> asyncio.run(art.to_coroutine_result_tuple(a_r_tpl_2))
         ('failure', 'fatal')
         >>> a_r_tpl_3 = slowly_recover_from_not_found(
-        ...     art.construct_successes_from_iterable((1, 2))
+        ...     art.construct_successes_from_iterable([1, 2])
         ... )
         >>> asyncio.run(art.to_coroutine_result_tuple(a_r_tpl_3))
         ('success', (1, 2))
@@ -624,6 +624,19 @@ def map_failure_to_awaitable_result_tuple(
     [trcks.fp.monads.awaitable_result_tuple.map_failure_to_awaitable_result_iterable][].
     """
     return map_failure_to_awaitable_result_iterable(f)  # pragma: no cover
+
+
+@deprecated("Use map_failure_to_awaitable_iterable instead")
+def map_failure_to_awaitable_tuple(
+    f: Callable[[_F1], Awaitable[tuple[_S2, ...]]],
+) -> Callable[
+    [AwaitableResultTuple[_F1, _S1]],
+    Awaitable[SuccessTuple[_S1] | SuccessTuple[_S2]],
+]:
+    """Deprecated alias for
+    [trcks.fp.monads.awaitable_result_tuple.map_failure_to_awaitable_iterable][].
+    """
+    return map_failure_to_awaitable_iterable(f)  # pragma: no cover
 
 
 def map_failure_to_iterable(
@@ -887,7 +900,7 @@ def map_successes_to_awaitable_iterable(
         ...     _slowly_duplicate_integer
         ... )
         >>> a_r_tpl_1 = slowly_duplicate_integers(
-        ...     art.construct_successes_from_iterable((1, 2))
+        ...     art.construct_successes_from_iterable([1, 2])
         ... )
         >>> asyncio.run(art.to_coroutine_result_tuple(a_r_tpl_1))
         ('success', (1, 1, 2, 2))
@@ -1047,6 +1060,16 @@ def map_successes_to_awaitable_result_tuple(
     [trcks.fp.monads.awaitable_result_tuple.map_successes_to_awaitable_result_iterable][].
     """
     return map_successes_to_awaitable_result_iterable(f)  # pragma: no cover
+
+
+@deprecated("Use map_successes_to_awaitable_iterable instead")
+def map_successes_to_awaitable_tuple(
+    f: Callable[[_S1], Awaitable[tuple[_S2, ...]]],
+) -> Callable[[AwaitableResultTuple[_F1, _S1]], AwaitableResultTuple[_F1, _S2]]:
+    """Deprecated alias for
+    [trcks.fp.monads.awaitable_result_tuple.map_successes_to_awaitable_iterable][].
+    """
+    return map_successes_to_awaitable_iterable(f)  # pragma: no cover
 
 
 def map_successes_to_iterable(
@@ -1311,15 +1334,15 @@ def tap_failure_to_awaitable_iterable(
         >>> r_tpl_1
         ('success', ('critical', 'critical'))
         >>> a_r_tpl_2 = slowly_log_and_alert(
-        ...     art.construct_successes_from_iterable((1,))
+        ...     art.construct_successes_from_iterable([1])
         ... )
         >>> r_tpl_2 = asyncio.run(art.to_coroutine_result_tuple(a_r_tpl_2))
         >>> r_tpl_2
         ('success', (1,))
     """
 
-    async def bypassed_f(value: _F1) -> tuple[_F1, ...]:
-        return tuple(value for _ in await f(value))
+    async def bypassed_f(value: _F1) -> list[_F1]:
+        return [value for _ in await f(value)]
 
     return map_failure_to_awaitable_iterable(bypassed_f)
 
@@ -1456,6 +1479,19 @@ def tap_failure_to_awaitable_result_tuple(
     [trcks.fp.monads.awaitable_result_tuple.tap_failure_to_awaitable_result_iterable][].
     """
     return tap_failure_to_awaitable_result_iterable(f)  # pragma: no cover
+
+
+@deprecated("Use tap_failure_to_awaitable_iterable instead")
+def tap_failure_to_awaitable_tuple(
+    f: Callable[[_F1], Awaitable[tuple[object, ...]]],
+) -> Callable[
+    [AwaitableResultTuple[_F1, _S1]],
+    Awaitable[SuccessTuple[_F1] | SuccessTuple[_S1]],
+]:
+    """Deprecated alias for
+    [trcks.fp.monads.awaitable_result_tuple.tap_failure_to_awaitable_iterable][].
+    """
+    return tap_failure_to_awaitable_iterable(f)  # pragma: no cover
 
 
 def tap_failure_to_iterable(
@@ -1736,7 +1772,7 @@ def tap_successes_to_awaitable_iterable(
         >>> slowly_log_twice = art.tap_successes_to_awaitable_iterable(
         ...     _slowly_log_twice
         ... )
-        >>> a_r_tpl = slowly_log_twice(art.construct_successes_from_iterable((7,)))
+        >>> a_r_tpl = slowly_log_twice(art.construct_successes_from_iterable([7]))
         >>> r_tpl = asyncio.run(art.to_coroutine_result_tuple(a_r_tpl))
         Received: 7
         Received: 7
@@ -1744,8 +1780,8 @@ def tap_successes_to_awaitable_iterable(
         ('success', (7, 7))
     """
 
-    async def bypassed_f(value: _S1) -> tuple[_S1, ...]:
-        return tuple(value for _ in await f(value))
+    async def bypassed_f(value: _S1) -> list[_S1]:
+        return [value for _ in await f(value)]
 
     return map_successes_to_awaitable_iterable(bypassed_f)
 
@@ -1875,6 +1911,16 @@ def tap_successes_to_awaitable_result_tuple(
     [trcks.fp.monads.awaitable_result_tuple.tap_successes_to_awaitable_result_iterable][].
     """
     return tap_successes_to_awaitable_result_iterable(f)  # pragma: no cover
+
+
+@deprecated("Use tap_successes_to_awaitable_iterable instead")
+def tap_successes_to_awaitable_tuple(
+    f: Callable[[_S1], Awaitable[tuple[object, ...]]],
+) -> Callable[[AwaitableResultTuple[_F1, _S1]], AwaitableResultTuple[_F1, _S1]]:
+    """Deprecated alias for
+    [trcks.fp.monads.awaitable_result_tuple.tap_successes_to_awaitable_iterable][].
+    """
+    return tap_successes_to_awaitable_iterable(f)  # pragma: no cover
 
 
 def tap_successes_to_iterable(

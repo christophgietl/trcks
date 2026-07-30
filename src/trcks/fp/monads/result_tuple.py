@@ -110,7 +110,7 @@ def construct_from_result_iterable(r_it: ResultIterable[_F, _S]) -> ResultTuple[
 
     Example:
         >>> from trcks.fp.monads import result_tuple as rt
-        >>> rt.construct_from_result_iterable(("success", (1, 2)))
+        >>> rt.construct_from_result_iterable(("success", [1, 2]))
         ('success', (1, 2))
         >>> rt.construct_from_result_iterable(("failure", "oops"))
         ('failure', 'oops')
