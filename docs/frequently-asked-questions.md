@@ -139,16 +139,16 @@ deviate from [collections.abc.Awaitable][] and [trcks.AwaitableResult][].
 Unlike `trcks`, `returns` also provides:
 
 - `returns` provides
-  [do notation](https://returns.readthedocs.io/en/0.25.0/pages/do-notation.html)
+  [do notation](https://returns.readthedocs.io/en/0.28.0/pages/do-notation.html)
   and
-  [dependency injection](https://returns.readthedocs.io/en/0.25.0/pages/context.html).
+  [dependency injection](https://returns.readthedocs.io/en/0.28.0/pages/context.html).
 - The authors of `returns`
-  [recommend using `mypy`](https://returns.readthedocs.io/en/0.25.0/pages/quickstart.html#typechecking-and-other-integrations)
+  [recommend using `mypy`](https://returns.readthedocs.io/en/0.28.0/pages/quickstart.html#typechecking-and-other-integrations)
   along with
-  [their suggested `mypy` configuration](https://returns.readthedocs.io/en/0.25.0/pages/contrib/mypy_plugins.html#configuration)
+  [their suggested `mypy` configuration](https://returns.readthedocs.io/en/0.28.0/pages/contrib/mypy_plugins.html#configuration)
   and
-  [their custom `mypy` plugin](https://returns.readthedocs.io/en/0.25.0/pages/contrib/mypy_plugins.html#mypy-plugin)
-  (as of `returns` 0.25.0).
+  [their custom `mypy` plugin](https://returns.readthedocs.io/en/0.28.0/pages/contrib/mypy_plugins.html#mypy-plugin)
+  (as of `returns` 0.28.0).
 
 [Expression](https://pypi.org/project/Expression/) supports
 object-oriented style ("fluent syntax") and
