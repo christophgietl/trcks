@@ -97,6 +97,27 @@ def construct_from_result(rslt: Result[_F, _S]) -> ResultTuple[_F, _S]:
     return r.map_success(t.construct)(rslt)
 
 
+def construct_from_result_iterable(r_it: ResultIterable[_F, _S]) -> ResultTuple[_F, _S]:
+    """Create a [trcks.ResultTuple][] object from a [trcks.ResultIterable][].
+
+    Args:
+        r_it: The [trcks.ResultIterable][] object to be converted.
+
+    Returns:
+        A new [trcks.ResultTuple][] instance
+            with the success payload converted to a tuple,
+            or the original failure.
+
+    Example:
+        >>> from trcks.fp.monads import result_tuple as rt
+        >>> rt.construct_from_result_iterable(("success", [1, 2]))
+        ('success', (1, 2))
+        >>> rt.construct_from_result_iterable(("failure", "oops"))
+        ('failure', 'oops')
+    """
+    return r.map_success(tuple)(r_it)
+
+
 def construct_successes(value: _S) -> SuccessTuple[_S]:
     """Create a [trcks.SuccessTuple][] object from a single value.
 
