@@ -188,7 +188,7 @@ def construct_from_awaitable_result_iterable(
         >>> asyncio.run(art.to_coroutine_result_tuple(a_r_tpl))
         ('success', (1, 2))
     """
-    return a.map_(r.map_success(tuple))(a_r_it)
+    return a.map_(rt.construct_from_result_iterable)(a_r_it)
 
 
 def construct_from_result(rslt: Result[_F, _S]) -> AwaitableResultTuple[_F, _S]:
