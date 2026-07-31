@@ -132,13 +132,16 @@ the [returns.result.Result][] container (and multiple other containers)
 for synchronous code and
 the [returns.future.Future][] and the [returns.future.FutureResult][] container
 for asynchronous code.
-Whereas the [returns.result.Result][] container is pretty similar to
-[trcks.Result][], the [returns.future.Future][] container and the
-[returns.future.FutureResult][] container
-deviate from [collections.abc.Awaitable][] and [trcks.AwaitableResult][].
-Unlike `trcks`, `returns` also provides:
+Whereas the [returns.result.Result][] container closely resembles
+[trcks.Result][], the [returns.future.Future][] and
+[returns.future.FutureResult][] containers are custom types that do not
+implement [collections.abc.Awaitable][]:
+they must be composed with `returns`-specific combinators,
+whereas [trcks.AwaitableResult][] is a plain `Awaitable`
+that can simply be awaited in any `async def` function.
+Further differences between `returns` and `trcks`:
 
-- `returns` provides
+- `returns` offers
   [do notation](https://returns.readthedocs.io/en/0.28.0/pages/do-notation.html)
   and
   [dependency injection](https://returns.readthedocs.io/en/0.28.0/pages/context.html).
@@ -148,7 +151,9 @@ Unlike `trcks`, `returns` also provides:
   [their suggested `mypy` configuration](https://returns.readthedocs.io/en/0.28.0/pages/contrib/mypy_plugins.html#configuration)
   and
   [their custom `mypy` plugin](https://returns.readthedocs.io/en/0.28.0/pages/contrib/mypy_plugins.html#mypy-plugin)
-  (as of `returns` 0.28.0).
+  (as of `returns` 0.28.0),
+  whereas `trcks` works with plain `mypy`, `pyrefly`, and `pyright`
+  without plugins.
 
 [Expression](https://pypi.org/project/Expression/) supports
 object-oriented style ("fluent syntax") and
@@ -156,11 +161,26 @@ functional style (like `trcks`).
 It provides the [expression.core.result.Result][] class
 (and multiple other container classes)
 for synchronous code.
-The [expression.core.result.Result][] class is pretty similar to
+The [expression.core.result.Result][] class is a close counterpart to
 [trcks.Result][] and [trcks.oop.ResultWrapper][].
 An `AsyncResult` type based on [collections.abc.AsyncGenerator][]
 [has been merged](https://github.com/dbrattli/Expression/pull/247)
-but not yet released.
+but not yet released; check the
+[Expression releases](https://github.com/dbrattli/Expression/releases)
+for the latest availability.
+`Expression` works with standard type checkers such as `pyright`
+without plugins.
+
+[result](https://pypi.org/project/result/) (rustedpy/result) provides a
+minimal, object-oriented `Result` type for synchronous code.
+It is the closest lightweight alternative to [trcks.Result][]
+without async-specific support.
+
+Choose `returns` for a full FP toolkit with do notation and dependency
+injection; choose `Expression` for F#-style fluent syntax; choose
+`result` for a minimal synchronous `Result` type; choose `trcks` for
+plain-`Awaitable`-native railway-oriented programming with no
+type-checker plugins required.
 
 ## Which libraries have inspired `trcks`?
 
