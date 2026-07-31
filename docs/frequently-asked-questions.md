@@ -15,7 +15,9 @@ No, you should not.
 Scott Wlaschin's blog post
 [Against Railway-Oriented Programming](https://fsharpforfunandprofit.com/posts/against-railway-oriented-programming/)
 lists eight scenarios
-where raising or not catching an exception is the better choice.
+where a result type is not the right tool.
+Raising an exception, not catching an exception, or
+returning an optional value are often better choices.
 
 ## Why does `trcks` arrange its types, monads, and wrappers as `Awaitable` > `Result` > `tuple`?
 
@@ -89,7 +91,7 @@ Other type checkers may also work.
 
 ???+ note
 
-    Unlike `mypy` and `pyright`, `pyrefly` (as of version 1.0.0)
+    Unlike `mypy` and `pyright`, `pyrefly` (as of version 1.1.1)
     does not reliably narrow [trcks.Result][] types in `match` statements:
 
     ```python
@@ -106,7 +108,7 @@ Other type checkers may also work.
                 reveal_type(n)  # revealed type: int | str
     ```
 
-    This can be resolved by adopting a different pattern matching style
+    You can resolve this by adopting a different pattern matching style
     (or by using `if` statements):
 
     ```python
@@ -130,7 +132,7 @@ object-oriented style and functional style (like `trcks`).
 It provides
 the [returns.result.Result][] container (and multiple other containers)
 for synchronous code and
-the [returns.future.Future][] and the [returns.future.FutureResult][] container
+the [returns.future.Future][] and [returns.future.FutureResult][] containers
 for asynchronous code.
 Whereas the [returns.result.Result][] container closely resembles
 [trcks.Result][], the [returns.future.Future][] container and the
