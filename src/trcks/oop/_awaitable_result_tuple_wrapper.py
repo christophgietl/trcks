@@ -184,7 +184,7 @@ class AwaitableResultTupleWrapper(
             >>> from trcks.oop import AwaitableResultTupleWrapper
             >>> async def slowly_read_from_disk() -> ResultIterable[str, int]:
             ...     await asyncio.sleep(0.001)
-            ...     return "success", (1, 2)
+            ...     return "success", [1, 2]
             ...
             >>> wrapper = (
             ...     AwaitableResultTupleWrapper
@@ -351,7 +351,7 @@ class AwaitableResultTupleWrapper(
             >>> from trcks import AwaitableIterable
             >>> from trcks.fp.monads import awaitable as a
             >>> from trcks.oop import AwaitableResultTupleWrapper
-            >>> a_it: AwaitableIterable[int] = a.construct((1, 2))
+            >>> a_it: AwaitableIterable[int] = a.construct([1, 2])
             >>> wrapper = (
             ...     AwaitableResultTupleWrapper
             ...     .construct_successes_from_awaitable_iterable(a_it)
@@ -514,18 +514,18 @@ class AwaitableResultTupleWrapper(
         Example:
             >>> import asyncio
             >>> from trcks.oop import AwaitableResultTupleWrapper
-            >>> async def _slowly_recover_from_not_found(
+            >>> async def _slowly_recover_from_failure(
             ...     description: str,
-            ... ) -> tuple[int, ...]:
+            ... ) -> list[int]:
             ...     await asyncio.sleep(0.001)
             ...     if description == "not found":
-            ...         return (0,)
-            ...     return ()
+            ...         return [0]
+            ...     return []
             ...
             >>> wrapper_1 = (
             ...     AwaitableResultTupleWrapper
             ...     .construct_failure("not found")
-            ...     .map_failure_to_awaitable_iterable(_slowly_recover_from_not_found)
+            ...     .map_failure_to_awaitable_iterable(_slowly_recover_from_failure)
             ... )
             >>> wrapper_1
             AwaitableResultTupleWrapper(core=<coroutine object ...>)
@@ -535,7 +535,7 @@ class AwaitableResultTupleWrapper(
             >>> wrapper_2 = (
             ...     AwaitableResultTupleWrapper
             ...     .construct_failure("fatal")
-            ...     .map_failure_to_awaitable_iterable(_slowly_recover_from_not_found)
+            ...     .map_failure_to_awaitable_iterable(_slowly_recover_from_failure)
             ... )
             >>> wrapper_2
             AwaitableResultTupleWrapper(core=<coroutine object ...>)
@@ -544,8 +544,8 @@ class AwaitableResultTupleWrapper(
             >>>
             >>> wrapper_3 = (
             ...     AwaitableResultTupleWrapper
-            ...     .construct_successes_from_iterable((1, 2))
-            ...     .map_failure_to_awaitable_iterable(_slowly_recover_from_not_found)
+            ...     .construct_successes_from_iterable([1, 2])
+            ...     .map_failure_to_awaitable_iterable(_slowly_recover_from_failure)
             ... )
             >>> wrapper_3
             AwaitableResultTupleWrapper(core=<coroutine object ...>)
@@ -608,7 +608,7 @@ class AwaitableResultTupleWrapper(
             >>>
             >>> wrapper_3 = (
             ...     AwaitableResultTupleWrapper
-            ...     .construct_successes_from_iterable((1, 2))
+            ...     .construct_successes_from_iterable([1, 2])
             ...     .map_failure_to_awaitable_result(_slowly_recover_from_not_found)
             ... )
             >>> wrapper_3
@@ -1031,7 +1031,7 @@ class AwaitableResultTupleWrapper(
             ...
             >>> wrapper_1 = (
             ...     AwaitableResultTupleWrapper
-            ...     .construct_successes_from_iterable((1, 2))
+            ...     .construct_successes_from_iterable([1, 2])
             ...     .map_successes_to_awaitable_iterable(_slowly_duplicate_integer)
             ... )
             >>> wrapper_1
@@ -2006,7 +2006,7 @@ class AwaitableResultTupleWrapper(
             ...
             >>> wrapper = (
             ...     AwaitableResultTupleWrapper
-            ...     .construct_successes_from_iterable((7,))
+            ...     .construct_successes_from_iterable([7])
             ...     .tap_successes_to_awaitable_iterable(_slowly_log_twice)
             ... )
             >>> wrapper
