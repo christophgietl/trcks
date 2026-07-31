@@ -212,6 +212,7 @@ filterwarnings = ["error"]
 [tool.ruff.lint]
 ignore = [
     "COM812", # "may cause conflicts when used with the formatter"
+    "CPY001", # requires copyright notices in Python files
     "D205", # forbids multiple lines at the beginning of a docstring
 ]
 select = ["ALL"]
