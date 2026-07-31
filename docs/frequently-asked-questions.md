@@ -17,7 +17,7 @@ Scott Wlaschin's blog post
 lists eight scenarios
 where a result type is not the right tool.
 Raising an exception, not catching an exception, or
-returning an optional value is often the better choice.
+returning an optional value are often better choices.
 
 ## Why does `trcks` arrange its types, monads, and wrappers as `Awaitable` > `Result` > `tuple`?
 
