@@ -128,7 +128,7 @@ class ResultTupleWrapper(BaseWrapper[ResultTuple[_F_default_co, _S_default_co]])
         Example:
             >>> from trcks.oop import ResultTupleWrapper
             >>> ResultTupleWrapper.construct_from_result_iterable(
-            ...     ("success", (1, 2))
+            ...     ("success", [1, 2])
             ... )
             ResultTupleWrapper(core=('success', (1, 2)))
             >>> ResultTupleWrapper.construct_from_result_iterable(
@@ -286,25 +286,25 @@ class ResultTupleWrapper(BaseWrapper[ResultTuple[_F_default_co, _S_default_co]])
         Example:
             >>> import asyncio
             >>> from trcks.oop import ResultTupleWrapper
-            >>> async def _slowly_recover_from_not_found(
+            >>> async def _slowly_recover_from_failure(
             ...     description: str,
-            ... ) -> tuple[int, ...]:
+            ... ) -> list[int]:
             ...     await asyncio.sleep(0.001)
             ...     if description == "not found":
-            ...         return (0,)
-            ...     return ()
+            ...         return [0]
+            ...     return []
             ...
             >>> wrapper_1 = ResultTupleWrapper.construct_failure(
             ...     "not found"
-            ... ).map_failure_to_awaitable_iterable(_slowly_recover_from_not_found)
+            ... ).map_failure_to_awaitable_iterable(_slowly_recover_from_failure)
             >>> wrapper_1
             AwaitableResultTupleWrapper(core=<coroutine object ...>)
             >>> asyncio.run(wrapper_1.core_as_coroutine)
             ('success', (0,))
             >>>
             >>> wrapper_2 = ResultTupleWrapper.construct_successes_from_iterable(
-            ...     (1, 2)
-            ... ).map_failure_to_awaitable_iterable(_slowly_recover_from_not_found)
+            ...     [1, 2]
+            ... ).map_failure_to_awaitable_iterable(_slowly_recover_from_failure)
             >>> wrapper_2
             AwaitableResultTupleWrapper(core=<coroutine object ...>)
             >>> asyncio.run(wrapper_2.core_as_coroutine)
@@ -359,7 +359,7 @@ class ResultTupleWrapper(BaseWrapper[ResultTuple[_F_default_co, _S_default_co]])
             ('failure', 'fatal')
             >>>
             >>> wrapper_3 = ResultTupleWrapper.construct_successes_from_iterable(
-            ...     (1, 2)
+            ...     [1, 2]
             ... ).map_failure_to_awaitable_result(_slowly_recover_from_not_found)
             >>> wrapper_3
             AwaitableResultTupleWrapper(core=<coroutine object ...>)
@@ -1540,7 +1540,7 @@ class ResultTupleWrapper(BaseWrapper[ResultTuple[_F_default_co, _S_default_co]])
             ...     return print(f"Received: {n}"), print(f"Received: {n}")
             ...
             >>> wrapper = ResultTupleWrapper.construct_successes_from_iterable(
-            ...     (7,)
+            ...     [7]
             ... ).tap_successes_to_awaitable_iterable(_slowly_log_twice)
             >>> wrapper
             AwaitableResultTupleWrapper(core=<coroutine object ...>)
