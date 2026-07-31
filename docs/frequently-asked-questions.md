@@ -136,7 +136,7 @@ Whereas the [returns.result.Result][] container is pretty similar to
 [trcks.Result][], the [returns.future.Future][] container and the
 [returns.future.FutureResult][] container
 deviate from [collections.abc.Awaitable][] and [trcks.AwaitableResult][].
-Other major differences are:
+Unlike `trcks`, `returns` also provides:
 
 - `returns` provides
   [do notation](https://returns.readthedocs.io/en/0.25.0/pages/do-notation.html)
@@ -147,7 +147,8 @@ Other major differences are:
   along with
   [their suggested `mypy` configuration](https://returns.readthedocs.io/en/0.25.0/pages/contrib/mypy_plugins.html#configuration)
   and
-  [their custom `mypy` plugin](https://returns.readthedocs.io/en/0.25.0/pages/contrib/mypy_plugins.html#mypy-plugin).
+  [their custom `mypy` plugin](https://returns.readthedocs.io/en/0.25.0/pages/contrib/mypy_plugins.html#mypy-plugin)
+  (as of `returns` 0.25.0).
 
 [Expression](https://pypi.org/project/Expression/) supports
 object-oriented style ("fluent syntax") and
@@ -158,7 +159,8 @@ for synchronous code.
 The [expression.core.result.Result][] class is pretty similar to
 [trcks.Result][] and [trcks.oop.ResultWrapper][].
 An `AsyncResult` type based on [collections.abc.AsyncGenerator][]
-[will be added in a future version](https://github.com/dbrattli/Expression/pull/247).
+[has been merged](https://github.com/dbrattli/Expression/pull/247)
+but not yet released.
 
 ## Which libraries have inspired `trcks`?
 
