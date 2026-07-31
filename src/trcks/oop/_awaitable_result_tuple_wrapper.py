@@ -16,6 +16,7 @@ if TYPE_CHECKING:
         AwaitableResult,
         AwaitableResultIterable,
         AwaitableResultTuple,
+        AwaitableTuple,
         Result,
         ResultIterable,
     )
@@ -698,6 +699,15 @@ class AwaitableResultTupleWrapper(
         """
         return self.map_failure_to_awaitable_result_iterable(f)  # pragma: no cover
 
+    @deprecated("Use map_failure_to_awaitable_iterable instead")
+    def map_failure_to_awaitable_tuple(
+        self, f: Callable[[_F_default_co], AwaitableTuple[_S]]
+    ) -> AwaitableResultTupleWrapper[Never, _S_default_co | _S]:
+        """Deprecated alias for
+        [trcks.oop.AwaitableResultTupleWrapper.map_failure_to_awaitable_iterable][].
+        """
+        return self.map_failure_to_awaitable_iterable(f)  # pragma: no cover
+
     def map_failure_to_iterable(
         self, f: Callable[[_F_default_co], Iterable[_S]]
     ) -> AwaitableResultTupleWrapper[Never, _S_default_co | _S]:
@@ -1197,6 +1207,15 @@ class AwaitableResultTupleWrapper(
         """
         return self.map_successes_to_awaitable_result_iterable(f)  # pragma: no cover
 
+    @deprecated("Use map_successes_to_awaitable_iterable instead")
+    def map_successes_to_awaitable_tuple(
+        self, f: Callable[[_S_default_co], AwaitableTuple[_S]]
+    ) -> AwaitableResultTupleWrapper[_F_default_co, _S]:
+        """Deprecated alias for
+        [trcks.oop.AwaitableResultTupleWrapper.map_successes_to_awaitable_iterable][].
+        """
+        return self.map_successes_to_awaitable_iterable(f)  # pragma: no cover
+
     def map_successes_to_iterable(
         self, f: Callable[[_S_default_co], Iterable[_S]]
     ) -> AwaitableResultTupleWrapper[_F_default_co, _S]:
@@ -1644,6 +1663,15 @@ class AwaitableResultTupleWrapper(
         [trcks.oop.AwaitableResultTupleWrapper.tap_failure_to_awaitable_result_iterable][].
         """
         return self.tap_failure_to_awaitable_result_iterable(f)  # pragma: no cover
+
+    @deprecated("Use tap_failure_to_awaitable_iterable instead")
+    def tap_failure_to_awaitable_tuple(
+        self, f: Callable[[_F_default_co], AwaitableTuple[object]]
+    ) -> AwaitableResultTupleWrapper[Never, _F_default_co | _S_default_co]:
+        """Deprecated alias for
+        [trcks.oop.AwaitableResultTupleWrapper.tap_failure_to_awaitable_iterable][].
+        """
+        return self.tap_failure_to_awaitable_iterable(f)  # pragma: no cover
 
     def tap_failure_to_iterable(
         self, f: Callable[[_F_default_co], Iterable[object]]
@@ -2131,6 +2159,15 @@ class AwaitableResultTupleWrapper(
         [trcks.oop.AwaitableResultTupleWrapper.tap_successes_to_awaitable_result_iterable][].
         """
         return self.tap_successes_to_awaitable_result_iterable(f)  # pragma: no cover
+
+    @deprecated("Use tap_successes_to_awaitable_iterable instead")
+    def tap_successes_to_awaitable_tuple(
+        self, f: Callable[[_S_default_co], AwaitableTuple[object]]
+    ) -> AwaitableResultTupleWrapper[_F_default_co, _S_default_co]:
+        """Deprecated alias for
+        [trcks.oop.AwaitableResultTupleWrapper.tap_successes_to_awaitable_iterable][].
+        """
+        return self.tap_successes_to_awaitable_iterable(f)  # pragma: no cover
 
     def tap_successes_to_iterable(
         self, f: Callable[[_S_default_co], Iterable[object]]
