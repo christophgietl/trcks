@@ -161,23 +161,9 @@ The [expression.core.result.Result][] class is a close counterpart to
 [trcks.Result][] and [trcks.oop.ResultWrapper][].
 An `AsyncResult` type based on [collections.abc.AsyncGenerator][]
 [has been merged](https://github.com/dbrattli/Expression/pull/247)
-but not yet released; check the
-[Expression releases](https://github.com/dbrattli/Expression/releases)
-to see whether it has since been released.
+but not yet released (as of July 2026).
 `Expression` works with standard type checkers such as `pyright`
 without plugins.
-
-[result](https://pypi.org/project/result/) (rustedpy/result) provides a
-minimal, object-oriented `Result` type for synchronous code.
-It is the closest lightweight alternative to [trcks.Result][]
-without async-specific support.
-
-- Choose `returns` for a full FP toolkit with do notation and dependency
-  injection.
-- Choose `Expression` for F#-style fluent syntax.
-- Choose `result` for a minimal synchronous `Result` type.
-- Choose `trcks` for plain-`Awaitable`-native railway-oriented
-  programming with no type-checker plugins required.
 
 ## Which libraries have inspired `trcks`?
 
