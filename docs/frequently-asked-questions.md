@@ -133,12 +133,9 @@ for synchronous code and
 the [returns.future.Future][] and the [returns.future.FutureResult][] container
 for asynchronous code.
 Whereas the [returns.result.Result][] container closely resembles
-[trcks.Result][], the [returns.future.Future][] and
-[returns.future.FutureResult][] containers are custom types that do not
-implement [collections.abc.Awaitable][]:
-they must be composed with `returns`-specific combinators,
-whereas [trcks.AwaitableResult][] is a plain `Awaitable`
-that can simply be awaited in any `async def` function.
+[trcks.Result][], the [returns.future.Future][] container and the
+[returns.future.FutureResult][] container
+deviate from [collections.abc.Awaitable][] and [trcks.AwaitableResult][].
 Further differences between `returns` and `trcks`:
 
 - `returns` offers
