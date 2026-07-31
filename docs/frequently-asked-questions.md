@@ -152,8 +152,7 @@ Further differences between `returns` and `trcks`:
   and
   [their custom `mypy` plugin](https://returns.readthedocs.io/en/0.28.0/pages/contrib/mypy_plugins.html#mypy-plugin)
   (as of `returns` 0.28.0),
-  whereas `trcks` works with plain `mypy`, `pyrefly`, and `pyright`
-  without plugins.
+  whereas `trcks` works with plain `mypy`, `pyrefly`, and `pyright`.
 
 [Expression](https://pypi.org/project/Expression/) supports
 object-oriented style ("fluent syntax") and
@@ -167,7 +166,7 @@ An `AsyncResult` type based on [collections.abc.AsyncGenerator][]
 [has been merged](https://github.com/dbrattli/Expression/pull/247)
 but not yet released; check the
 [Expression releases](https://github.com/dbrattli/Expression/releases)
-for the latest availability.
+to see whether it has since been released.
 `Expression` works with standard type checkers such as `pyright`
 without plugins.
 
@@ -176,11 +175,12 @@ minimal, object-oriented `Result` type for synchronous code.
 It is the closest lightweight alternative to [trcks.Result][]
 without async-specific support.
 
-Choose `returns` for a full FP toolkit with do notation and dependency
-injection; choose `Expression` for F#-style fluent syntax; choose
-`result` for a minimal synchronous `Result` type; choose `trcks` for
-plain-`Awaitable`-native railway-oriented programming with no
-type-checker plugins required.
+- Choose `returns` for a full FP toolkit with do notation and dependency
+  injection.
+- Choose `Expression` for F#-style fluent syntax.
+- Choose `result` for a minimal synchronous `Result` type.
+- Choose `trcks` for plain-`Awaitable`-native railway-oriented
+  programming with no type-checker plugins required.
 
 ## Which libraries have inspired `trcks`?
 
