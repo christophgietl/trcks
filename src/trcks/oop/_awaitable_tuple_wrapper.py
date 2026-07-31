@@ -123,14 +123,13 @@ class AwaitableTupleWrapper(BaseAwaitableWrapper[tuple[_T_co, ...]]):
             >>> import asyncio
             >>> from trcks import AwaitableIterable
             >>> from trcks.oop import AwaitableTupleWrapper
-            >>> async def slowly_get_values() -> tuple[int, ...]:
+            >>> async def slowly_get_values() -> list[int]:
             ...     await asyncio.sleep(0.001)
-            ...     return (1, 2)
+            ...     return [1, 2]
             ...
-            >>> a_it: AwaitableIterable[int] = slowly_get_values()
             >>> awaitable_tuple_wrapper = (
             ...     AwaitableTupleWrapper
-            ...     .construct_from_awaitable_iterable(a_it)
+            ...     .construct_from_awaitable_iterable(slowly_get_values())
             ... )
             >>> awaitable_tuple_wrapper
             AwaitableTupleWrapper(core=<coroutine object ...>)
