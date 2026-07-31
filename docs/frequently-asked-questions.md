@@ -166,7 +166,7 @@ An `AsyncResult` type based on [collections.abc.AsyncGenerator][]
 [has been merged](https://github.com/dbrattli/Expression/pull/247)
 but not yet released; check the
 [Expression releases](https://github.com/dbrattli/Expression/releases)
-to see whether it has shipped.
+to see whether it has since been released.
 `Expression` works with standard type checkers such as `pyright`
 without plugins.
 
