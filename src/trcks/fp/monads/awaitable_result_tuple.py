@@ -59,6 +59,7 @@ if TYPE_CHECKING:
         AwaitableResultIterable,
         AwaitableResultTuple,
         AwaitableSuccessTuple,
+        AwaitableTuple,
         Result,
         ResultIterable,
         ResultTuple,
@@ -628,7 +629,7 @@ def map_failure_to_awaitable_result_tuple(
 
 @deprecated("Use map_failure_to_awaitable_iterable instead")
 def map_failure_to_awaitable_tuple(
-    f: Callable[[_F1], Awaitable[tuple[_S2, ...]]],
+    f: Callable[[_F1], AwaitableTuple[_S2]],
 ) -> Callable[
     [AwaitableResultTuple[_F1, _S1]],
     Awaitable[SuccessTuple[_S1] | SuccessTuple[_S2]],
@@ -1064,7 +1065,7 @@ def map_successes_to_awaitable_result_tuple(
 
 @deprecated("Use map_successes_to_awaitable_iterable instead")
 def map_successes_to_awaitable_tuple(
-    f: Callable[[_S1], Awaitable[tuple[_S2, ...]]],
+    f: Callable[[_S1], AwaitableTuple[_S2]],
 ) -> Callable[[AwaitableResultTuple[_F1, _S1]], AwaitableResultTuple[_F1, _S2]]:
     """Deprecated alias for
     [trcks.fp.monads.awaitable_result_tuple.map_successes_to_awaitable_iterable][].
@@ -1483,7 +1484,7 @@ def tap_failure_to_awaitable_result_tuple(
 
 @deprecated("Use tap_failure_to_awaitable_iterable instead")
 def tap_failure_to_awaitable_tuple(
-    f: Callable[[_F1], Awaitable[tuple[object, ...]]],
+    f: Callable[[_F1], AwaitableTuple[object]],
 ) -> Callable[
     [AwaitableResultTuple[_F1, _S1]],
     Awaitable[SuccessTuple[_F1] | SuccessTuple[_S1]],
@@ -1915,7 +1916,7 @@ def tap_successes_to_awaitable_result_tuple(
 
 @deprecated("Use tap_successes_to_awaitable_iterable instead")
 def tap_successes_to_awaitable_tuple(
-    f: Callable[[_S1], Awaitable[tuple[object, ...]]],
+    f: Callable[[_S1], AwaitableTuple[object]],
 ) -> Callable[[AwaitableResultTuple[_F1, _S1]], AwaitableResultTuple[_F1, _S1]]:
     """Deprecated alias for
     [trcks.fp.monads.awaitable_result_tuple.tap_successes_to_awaitable_iterable][].
