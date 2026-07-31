@@ -22,3 +22,13 @@ Write instead:
 ## Further instructions
 
 - Sort entries alphabetically by term in [the glossary](glossary.md).
+- Keep doctest examples self-contained per file. Every Markdown file is
+  doctested independently, so each file must define all imports and helper
+  functions that it uses.
+- Use expanded admonitions (`???+ example`) for primary examples. Use collapsed
+  admonitions (`??? example "Step by step"`) for optional step-by-step
+  breakdowns and other optional deep-dives.
+- Keep usage docs split by style in `docs/usage/oop/` and `docs/usage/fp/`.
+  Within each style, keep the `index.md`, `sync.md`, `async.md`, and
+  `tuples.md` structure, keep the two styles structurally symmetric, and keep
+  the overview matrices in the `index.md` pages up to date.
