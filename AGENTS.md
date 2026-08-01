@@ -26,7 +26,7 @@
   (e.g. `trcks.oop.Wrapper`, `trcks.oop.AwaitableWrapper`, `trcks.oop.ResultWrapper`,
   `trcks.oop.AwaitableResultWrapper`, `trcks.oop.TupleWrapper`, `trcks.oop.ResultTupleWrapper`,
   `trcks.oop.AwaitableTupleWrapper`, `trcks.oop.AwaitableResultTupleWrapper`).
-- All wrapper classes are designed to be lightweight and immutable.
+- All wrapper classes are lightweight and immutable.
 - All wrapper class methods return new wrapper instances.
 
 ### Pipelines and monads defined in `trcks.fp`
@@ -167,7 +167,7 @@ uv build
   the module and class structure of `trcks`
   (e.g. `trcks.fp.monads.result` → [docs/reference/trcks.fp.monads.result.md](docs/reference/trcks.fp.monads.result.md)).
   Create, delete, or rename these files to match module or class changes.
-- Keep [AGENTS.md](AGENTS.md) up to date when architecture or tooling changes.
+- Keep [this file](AGENTS.md) up to date when architecture or tooling changes.
 - Keep [CONTRIBUTING.md](CONTRIBUTING.md) up to date when tooling changes.
 - Keep [README.md](README.md) up to date when features or UI changes.
 - Keep [docs/index.md](docs/index.md) in sync with [README.md](README.md).
