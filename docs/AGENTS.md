@@ -33,6 +33,5 @@ Write instead:
 - Use expanded admonitions (`???+ example`) for primary examples.
 - Use collapsed admonitions (`??? example "Step by step"`) for optional
   step-by-step breakdowns and other optional deep-dives.
-- Keep doctest examples self-contained per file. Every Markdown file is
-  doctested independently, so each file must define all imports and helper
-  functions that it uses.
+- Keep doctest examples self-contained per file.
+  Each file must define all imports and helper functions that it uses.
