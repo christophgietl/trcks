@@ -41,7 +41,8 @@
 
 ### Module layers and import rules
 
-These constraints are configured in `pyproject.toml` and enforced by `import-linter`:
+These constraints are configured in [pyproject.toml](pyproject.toml) and
+enforced by `import-linter`:
 
 - Layers (highest to lowest;
   higher layers may import lower layers, but not the reverse):
@@ -147,28 +148,28 @@ uv build
 
 ## Testing strategy
 
-- Every public function in `src/trcks/`
+- Every public function in [src/trcks/](src/trcks/)
   (except for property methods and dunder methods)
   must have a docstring with ≥1 example (run as doctest by `pytest`);
   reuse example functions from existing doctests.
 - `pytest` also collects "pycon" blocks in `**/*.md` and `tests/trcks/**/test_*.py`
-  (mirroring `src/trcks/`).
+  (mirroring [src/trcks/](src/trcks/)).
 - 100% coverage required; mark unreachable code with `# pragma: no cover`
   (not needed for `if TYPE_CHECKING` blocks).
 
 ## Documentation requirements
 
 - The documentation website is built with Material for MkDocs,
-  configured in `mkdocs.yml` and written in `docs/**/*.md`.
-- Update `mkdocs.yml` and `docs/**/*.md`
+  configured in [mkdocs.yml](mkdocs.yml) and written in `docs/**/*.md`.
+- Update [mkdocs.yml](mkdocs.yml) and `docs/**/*.md`
   whenever features, architecture, or UI change.
 - API docs in `docs/reference/trcks.*.md` must mirror
   the module and class structure of `trcks`
-  (e.g. `trcks.fp.monads.result` → `docs/reference/trcks.fp.monads.result.md`).
+  (e.g. `trcks.fp.monads.result` → [docs/reference/trcks.fp.monads.result.md](docs/reference/trcks.fp.monads.result.md)).
   Create, delete, or rename these files to match module or class changes.
-- Keep `AGENTS.md` up to date when architecture or tooling changes.
-- Keep `CONTRIBUTING.md` up to date when tooling changes.
-- Keep `README.md` up to date when features or UI changes.
-- Keep `docs/index.md` in sync with `README.md`.
-- Update `docs/glossary.md` when new terms are introduced.
-- Follow the instructions in `docs/AGENTS.md` when editing files in `docs/`.
+- Keep [AGENTS.md](AGENTS.md) up to date when architecture or tooling changes.
+- Keep [CONTRIBUTING.md](CONTRIBUTING.md) up to date when tooling changes.
+- Keep [README.md](README.md) up to date when features or UI changes.
+- Keep [docs/index.md](docs/index.md) in sync with [README.md](README.md).
+- Update [docs/glossary.md](docs/glossary.md) when new terms are introduced.
+- Follow the instructions in [docs/AGENTS.md](docs/AGENTS.md) when editing files in [docs/](docs/).
