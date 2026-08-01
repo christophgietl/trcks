@@ -16,8 +16,9 @@
 - `trcks.Result[FailureType, SuccessType]`:
   `tuple`-based type with literal discriminants ("success" and "failure");
   lets functions return domain errors instead of raising them.
-- Combinations with `collections.abc.Awaitable` and `tuple` for different use cases
-  (e.g. `trcks.AwaitableResultTuple[FailureType, SuccessType]`).
+- Combinations with `collections.abc.Awaitable`, `collections.abc.Iterable`,
+  and `tuple` (e.g. `trcks.AwaitableResultTuple[FailureType, SuccessType]` and
+  `trcks.ResultIterable[FailureType, SuccessType]`).
 
 ### Wrapper classes defined in `trcks.oop`
 
@@ -37,6 +38,22 @@
   for `collections.abc.Awaitable`, `trcks.Result`, `tuple`,
   `trcks.AwaitableResult`, `trcks.AwaitableTuple`, `trcks.ResultTuple`, and
   `trcks.AwaitableResultTuple` values.
+
+### Module layers and import rules
+
+These constraints are configured in `pyproject.toml` and enforced by `import-linter`:
+
+- Layers (highest to lowest;
+  higher layers may import lower layers, but not the reverse):
+  - `trcks`: `oop`, `fp`, and `_typing`.
+  - `trcks.fp`: `monads` and `composition`.
+  - `trcks.fp.monads`: `awaitable_result_tuple`, `awaitable_result`,
+    `awaitable_tuple`, `result_tuple`, `awaitable`, `result`, `tuple_`,
+    and `identity`.
+- Simple monads (i.e. `awaitable`, `result`, `tuple_`) are independent of each other.
+- Dual monads (i.e. `awaitable_result`, `awaitable_tuple`, `result_tuple`)
+  are independent of each other.
+- Only `trcks._typing` imports `typing_extensions`.
 
 ## Code style
 
@@ -154,3 +171,4 @@ uv build
 - Keep `README.md` up to date when features or UI changes.
 - Keep `docs/index.md` in sync with `README.md`.
 - Update `docs/glossary.md` when new terms are introduced.
+- Follow the instructions in `docs/AGENTS.md` when editing files in `docs/`.
