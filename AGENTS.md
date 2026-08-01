@@ -39,22 +39,34 @@
   `trcks.AwaitableResult`, `trcks.AwaitableTuple`, `trcks.ResultTuple`, and
   `trcks.AwaitableResultTuple` values.
 
-### Module layers and import rules
+### Application layers
+
+- `trcks` has three layers: `oop`, `fp`, and `_typing`.
+- `trcks.fp` has two layers: `monads` and `composition`.
+- `trcks.fp.monads` has eight layers: `awaitable_result_tuple`,
+  `awaitable_result`, `awaitable_tuple`, `result_tuple`, `awaitable`,
+  `result`, `tuple_`, and `identity`.
+  - Simple monads (i.e. `awaitable`, `result`, `tuple_`)
+    are independent of each other.
+  - Dual monads (i.e. `awaitable_result`, `awaitable_tuple`, `result_tuple`)
+    are independent of each other.
+
+### Import contracts
 
 These constraints are configured in [pyproject.toml](pyproject.toml) and
-enforced by `import-linter`:
+enforced by `import-linter`. `tool.importlinter.contracts` must contain
+at least:
 
-- Layers (highest to lowest;
-  higher layers may import lower layers, but not the reverse):
-  - `trcks`: `oop`, `fp`, and `_typing`.
-  - `trcks.fp`: `monads` and `composition`.
-  - `trcks.fp.monads`: `awaitable_result_tuple`, `awaitable_result`,
-    `awaitable_tuple`, `result_tuple`, `awaitable`, `result`, `tuple_`,
-    and `identity`.
-- Simple monads (i.e. `awaitable`, `result`, `tuple_`) are independent of each other.
-- Dual monads (i.e. `awaitable_result`, `awaitable_tuple`, `result_tuple`)
-  are independent of each other.
-- Only `trcks._typing` imports `typing_extensions`.
+- `layers` contracts that restrict each layer (see "Application layers"
+  above) to importing only the layers below it, for `trcks`, `trcks.fp`,
+  and `trcks.fp.monads`.
+- `independence` contracts that keep simple monads independent of each
+  other and dual monads independent of each other.
+- `protected` contracts that restrict which internal modules may import
+  specific external packages
+  (e.g. only `trcks._typing` imports `typing_extensions`).
+- `acyclic_siblings` contracts that forbid dependency cycles between
+  sibling modules within `trcks`.
 
 ## Code style
 
