@@ -128,8 +128,9 @@ but not in code, paths, URLs, commands, or identifiers:
 `trcks` uses `uv` for managing dependencies and tools.
 
 ```shell
-# Run linting and code formatting:
-uv run pre-commit run --all-files
+# Run linting and code formatting (incl. ruff and rumdl):
+uv run pre-commit run --all-files             # all hooks
+uv run pre-commit run --all-files ruff-check  # one hook
 # Run static type checks:
 uv run --all-extras mypy
 uv run --all-extras pyrefly check
