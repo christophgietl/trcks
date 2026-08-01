@@ -88,6 +88,7 @@ into functions with input type `trcks.Result[F, S]`.
     ```pycon
     >>> from typing import Literal
     >>> from trcks import Result
+    >>> from trcks.fp.composition import Pipeline3
     >>> from trcks.fp.monads import result as r
     >>>
     >>> UserDoesNotExist = Literal["User does not exist"]
@@ -145,9 +146,7 @@ let us have a look at the individual steps of the chain:
 ??? example "Step by step"
 
     ```pycon
-    >>> from trcks.fp.composition import (
-    ...     Pipeline0, Pipeline1, Pipeline2, Pipeline3, pipe
-    ... )
+    >>> from trcks.fp.composition import Pipeline0, Pipeline1, Pipeline2
     >>>
     >>> p0: Pipeline0[str] = ("erika.mustermann@domain.org",)
     >>> pipe(p0)
