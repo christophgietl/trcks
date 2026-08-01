@@ -103,7 +103,9 @@ let us have a look at the individual steps of the chain:
 
 ???+ note
     The values `pipe(p1)`, `pipe(p2)`, and `pipe(p3)` are all of the type [collections.abc.Awaitable][].
-    Since [asyncio.run][] expects the input type [collections.abc.Coroutine][],
+    On Python versions older than 3.14, [asyncio.run][] expects the input type
+    [collections.abc.Coroutine][].
+    Therefore, on Python versions older than 3.14,
     we use the function [trcks.fp.monads.awaitable.to_coroutine][] to convert
     the [collections.abc.Awaitable][]s to [collections.abc.Coroutine][]s.
 
@@ -265,7 +267,9 @@ let us have a look at the individual steps of the chain:
 ???+ note
     The values `pipe(p1)`, `pipe(p2)`, and `pipe(p3)` are all
     of type [trcks.AwaitableResult][].
-    Since [asyncio.run][] expects the input type [collections.abc.Coroutine][],
+    On Python versions older than 3.14, [asyncio.run][] expects the input type
+    [collections.abc.Coroutine][].
+    Therefore, on Python versions older than 3.14,
     we use the function [trcks.fp.monads.awaitable_result.to_coroutine_result][]
     to convert the [trcks.AwaitableResult][]s to [collections.abc.Coroutine][]s.
 

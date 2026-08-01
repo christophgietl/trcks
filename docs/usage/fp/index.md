@@ -27,15 +27,14 @@ Synchronous and asynchronous code are also discussed.
 
 ## Overview matrix
 
-| | Single value | Homogeneous tuple |
+| Runtime and track | Single value | Homogeneous tuple |
 |---|---|---|
-| Sync, single-track | [`pipe` and `identity`](sync.md#single-track-code-with-trcksfpcomposition) | [`tuple_`](tuples.md#synchronous-single-track-code-with-trcksfpmonadstuple_) |
-| Sync, double-track | [`result`](sync.md#double-track-code-with-trcksfpmonadsresult) | [`result_tuple`](tuples.md#synchronous-double-track-code-with-trcksfpmonadsresult_tuple) |
-| Async, single-track | [`awaitable`](async.md#single-track-code-with-trcksfpmonadsawaitable) | [`awaitable_tuple`](tuples.md#asynchronous-single-track-code-with-trcksfpmonadsawaitable_tuple) |
-| Async, double-track | [`awaitable_result`](async.md#double-track-code-with-trcksfpmonadsawaitable_result) | [`awaitable_result_tuple`](tuples.md#asynchronous-double-track-code-with-trcksfpmonadsawaitable_result_tuple) |
+| Sync and single-track | [`pipe` and `identity`](sync.md#single-track-code-with-trcksfpcomposition) | [`tuple_`](tuples.md#synchronous-single-track-code-with-trcksfpmonadstuple_) |
+| Sync and double-track | [`result`](sync.md#double-track-code-with-trcksfpmonadsresult) | [`result_tuple`](tuples.md#synchronous-double-track-code-with-trcksfpmonadsresult_tuple) |
+| Async and single-track | [`awaitable`](async.md#single-track-code-with-trcksfpmonadsawaitable) | [`awaitable_tuple`](tuples.md#asynchronous-single-track-code-with-trcksfpmonadsawaitable_tuple) |
+| Async and double-track | [`awaitable_result`](async.md#double-track-code-with-trcksfpmonadsawaitable_result) | [`awaitable_result_tuple`](tuples.md#asynchronous-double-track-code-with-trcksfpmonadsawaitable_result_tuple) |
 
 ???+ tip "See also"
-    The
-    [OOP usage page](../oop/index.md)
+    The [OOP usage page](../oop/index.md)
     covers the same operations using method chaining instead of
     function composition.

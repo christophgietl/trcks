@@ -118,7 +118,9 @@ let us have a look at the individual steps of the chain:
 ???+ note
     The property `core` of the class [trcks.oop.AwaitableWrapper][]
     has type [collections.abc.Awaitable][].
-    Since [asyncio.run][] expects a [collections.abc.Coroutine][] object,
+    On Python versions older than 3.14, [asyncio.run][] expects a
+    [collections.abc.Coroutine][] object.
+    Therefore, on Python versions older than 3.14,
     we need to use the property `core_as_coroutine` instead.
 
 The method [trcks.oop.AwaitableWrapper.tap][]
