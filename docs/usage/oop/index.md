@@ -26,11 +26,11 @@ Synchronous and asynchronous code are also discussed.
 
 ## Overview matrix
 
-| Runtime and track | Single value | Homogeneous tuple |
-|---|---|---|
-| Sync and single-track | [`Wrapper`](sync.md#single-track-code-with-trcksoopwrapper) | [`TupleWrapper`](tuples.md#synchronous-single-track-code-with-trcksooptuplewrapper) |
-| Sync and double-track | [`ResultWrapper`](sync.md#double-track-code-with-trcksoopresultwrapper) | [`ResultTupleWrapper`](tuples.md#synchronous-double-track-code-with-trcksoopresulttuplewrapper) |
-| Async and single-track | [`AwaitableWrapper`](async.md#single-track-code-with-trcksoopawaitablewrapper) | [`AwaitableTupleWrapper`](tuples.md#asynchronous-single-track-code-with-trcksoopawaitabletuplewrapper) |
+| Runtime and track      | Single value                                                                               | Homogeneous tuple                                                                                                  |
+|------------------------|--------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------|
+| Sync and single-track  | [`Wrapper`](sync.md#single-track-code-with-trcksoopwrapper)                                | [`TupleWrapper`](tuples.md#synchronous-single-track-code-with-trcksooptuplewrapper)                                |
+| Sync and double-track  | [`ResultWrapper`](sync.md#double-track-code-with-trcksoopresultwrapper)                    | [`ResultTupleWrapper`](tuples.md#synchronous-double-track-code-with-trcksoopresulttuplewrapper)                    |
+| Async and single-track | [`AwaitableWrapper`](async.md#single-track-code-with-trcksoopawaitablewrapper)             | [`AwaitableTupleWrapper`](tuples.md#asynchronous-single-track-code-with-trcksoopawaitabletuplewrapper)             |
 | Async and double-track | [`AwaitableResultWrapper`](async.md#double-track-code-with-trcksoopawaitableresultwrapper) | [`AwaitableResultTupleWrapper`](tuples.md#asynchronous-double-track-code-with-trcksoopawaitableresulttuplewrapper) |
 
 ???+ tip "See also"

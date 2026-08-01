@@ -6,8 +6,8 @@
 - Keep usage docs split by style in `docs/usage/oop/` and `docs/usage/fp/`.
 - Within each style, keep the `index.md`, `sync.md`, `async.md`, and
   `tuples.md` structure.
-- Keep the two styles structurally symmetric, and keep the overview matrices
-  in the `index.md` pages up to date.
+- Keep the two styles structurally symmetric.
+- Keep the overview matrices in the `index.md` pages up to date.
 
 ## Prefer `mkdocs-material` admonitions over regular highlighting
 
