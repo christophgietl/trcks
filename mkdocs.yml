@@ -18,8 +18,16 @@ nav:
   - setup.md
   - Usage:
     - usage/tuple-types-provided-by-trcks.md
-    - usage/railway-oriented-programming-with-trcks-oop.md
-    - usage/railway-oriented-programming-with-trcks-fp.md
+    - Object-oriented style:
+      - usage/oop/index.md
+      - usage/oop/sync.md
+      - usage/oop/async.md
+      - usage/oop/tuples.md
+    - Functional style:
+      - usage/fp/index.md
+      - usage/fp/sync.md
+      - usage/fp/async.md
+      - usage/fp/tuples.md
     - usage/oop-and-fp-equivalence.md
   - frequently-asked-questions.md
   - glossary.md

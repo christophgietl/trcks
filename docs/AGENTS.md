@@ -1,5 +1,14 @@
 # AI coding agent instructions for `docs/` and its subdirectories
 
+## Documentation structure
+
+- Sort entries alphabetically by term in [the glossary](glossary.md).
+- Keep usage docs split by style in `docs/usage/oop/` and `docs/usage/fp/`.
+- Within each style, keep the `index.md`, `sync.md`, `async.md`, and
+  `tuples.md` structure.
+- Keep the two styles structurally symmetric.
+- Keep the overview matrices in the `index.md` pages up to date.
+
 ## Prefer `mkdocs-material` admonitions over regular highlighting
 
 Do not write:
@@ -21,4 +30,8 @@ Write instead:
 
 ## Further instructions
 
-- Sort entries alphabetically by term in [the glossary](glossary.md).
+- Use expanded admonitions (`???+ example`) for primary examples.
+- Use collapsed admonitions (`??? example "Step by step"`) for optional
+  step-by-step breakdowns and other optional deep-dives.
+- Keep doctest examples self-contained per file.
+  Each file must define all imports and helper functions that it uses.
