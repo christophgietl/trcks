@@ -408,6 +408,6 @@ def pipe(p: Pipeline[_T0, _T1, _T2, _T3, _T4, _T5, _T6, _OUT]) -> _OUT:
             composable = p[1:]
             return compose(composable)(value)
         case _:  # pragma: no cover
-            assert_type(p, Never)  # type: ignore[unreachable]  # pyright: ignore[reportUnreachable]  # pyrefly: ignore [assert-type]
+            assert_type(p, Never)  # type: ignore[unreachable]  # pyright: ignore[reportUnreachable]  # pyrefly: ignore[assert-type]
             msg = f"{type(p).__name__!r} is not a valid Pipeline"
             raise TypeError(msg)
