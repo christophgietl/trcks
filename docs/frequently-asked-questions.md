@@ -89,42 +89,6 @@ For setup instructions, see
 
 Other type checkers may also work.
 
-???+ note
-
-    Unlike `mypy` and `pyright`, `pyrefly` (as of version 1.1.1)
-    does not reliably narrow [trcks.Result][] types in `match` statements:
-
-    ```python
-    from typing_extensions import reveal_type
-
-    from trcks import Result
-
-
-    def f(rslt: Result[str, int]) -> None:
-        match rslt:
-            case "failure", description:
-                reveal_type(description)  # revealed type: int | str
-            case "success", n:
-                reveal_type(n)  # revealed type: int | str
-    ```
-
-    You can resolve this by adopting a different pattern matching style
-    (or by using `if` statements):
-
-    ```python
-    from typing_extensions import reveal_type
-
-    from trcks import Result
-
-
-    def f(rslt: Result[str, int]) -> None:
-        match rslt[0]:
-            case "failure":
-                reveal_type(rslt[1])  # revealed type: str
-            case "success":
-                reveal_type(rslt[1])  # revealed type: int
-    ```
-
 ## Which alternatives to `trcks` are there?
 
 [returns](https://pypi.org/project/returns/) supports
