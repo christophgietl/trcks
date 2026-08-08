@@ -70,7 +70,8 @@ mypy = [
     "mypy>=1.20",
 ]
 pyrefly = [
-    # pyrefly versions older than 1.1 do not support the preset "all":
+    # pyrefly versions older than 1.2 seem to have issues
+    # with reachability analysis in match statements:
     "pyrefly>=1.2",
 ]
 pyright = [
