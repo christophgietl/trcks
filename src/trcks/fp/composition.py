@@ -15,18 +15,30 @@ Example:
     'Length: 13'
     >>> pipe((input_, len, to_length_string))
     'Length: 13'
+
+    The first function may accept multiple arguments or keyword arguments:
+
+    >>> def repeat(text: str, times: int = 2) -> str:
+    ...     return text * times
+    ...
+    >>> get_repeated = compose((repeat, len))
+    >>> get_repeated("Hi")
+    4
+    >>> get_repeated("Hi", 3)
+    6
 """
 
 from collections.abc import Callable
-from typing import TypeAlias
+from typing import ParamSpec, TypeAlias
 
 from trcks._typing import Never, TypeVar, assert_type
 
 __docformat__ = "google"
 
 
-_IN = TypeVar("_IN")
+_IN = ParamSpec("_IN")
 _OUT = TypeVar("_OUT")
+_P0 = ParamSpec("_P0")
 _T0 = TypeVar("_T0")
 _T1 = TypeVar("_T1")
 _T2 = TypeVar("_T2")
@@ -40,24 +52,24 @@ _T7 = TypeVar("_T7")
 # (see https://github.com/python/typing_extensions/issues/103).
 # Therefore, the following tuple type definitions contain a lot of repetitions:
 
-Composable1: TypeAlias = tuple[Callable[[_T0], _T1],]
+Composable1: TypeAlias = tuple[Callable[_P0, _T1],]
 """A single function."""
 
 Composable2: TypeAlias = tuple[
-    Callable[[_T0], _T1],
+    Callable[_P0, _T1],
     Callable[[_T1], _T2],
 ]
 """Two compatible functions that can be applied sequentially from first to last."""
 
 Composable3: TypeAlias = tuple[
-    Callable[[_T0], _T1],
+    Callable[_P0, _T1],
     Callable[[_T1], _T2],
     Callable[[_T2], _T3],
 ]
 """Three compatible functions that can be applied sequentially from first to last."""
 
 Composable4: TypeAlias = tuple[
-    Callable[[_T0], _T1],
+    Callable[_P0, _T1],
     Callable[[_T1], _T2],
     Callable[[_T2], _T3],
     Callable[[_T3], _T4],
@@ -65,7 +77,7 @@ Composable4: TypeAlias = tuple[
 """Four compatible functions that can be applied sequentially from first to last."""
 
 Composable5: TypeAlias = tuple[
-    Callable[[_T0], _T1],
+    Callable[_P0, _T1],
     Callable[[_T1], _T2],
     Callable[[_T2], _T3],
     Callable[[_T3], _T4],
@@ -74,7 +86,7 @@ Composable5: TypeAlias = tuple[
 """Five compatible functions that can be applied sequentially from first to last."""
 
 Composable6: TypeAlias = tuple[
-    Callable[[_T0], _T1],
+    Callable[_P0, _T1],
     Callable[[_T1], _T2],
     Callable[[_T2], _T3],
     Callable[[_T3], _T4],
@@ -84,7 +96,7 @@ Composable6: TypeAlias = tuple[
 """Six compatible functions that can be applied sequentially from first to last."""
 
 Composable7: TypeAlias = tuple[
-    Callable[[_T0], _T1],
+    Callable[_P0, _T1],
     Callable[[_T1], _T2],
     Callable[[_T2], _T3],
     Callable[[_T3], _T4],
@@ -192,7 +204,7 @@ Pipeline: TypeAlias = (
 that can be applied sequentially from first to last."""
 
 
-def compose1(c: Composable1[_T0, _T1]) -> Callable[[_T0], _T1]:
+def compose1(c: Composable1[_P0, _T1]) -> Callable[_P0, _T1]:
     """Compose a single function.
 
     Args:
@@ -205,11 +217,24 @@ def compose1(c: Composable1[_T0, _T1]) -> Callable[[_T0], _T1]:
         >>> get_length = compose1((len,))
         >>> get_length("Hello, world!")
         13
+
+        The function may accept multiple positional arguments:
+
+        >>> def add(a: int, b: int) -> int:
+        ...     return a + b
+        ...
+        >>> get_sum = compose1((add,))
+        >>> get_sum(2, 3)
+        5
     """
-    return lambda t0: c[0](t0)  # noqa: PLW0108 # for uniformity with other compose* functions
+
+    def composed(*args: _P0.args, **kwargs: _P0.kwargs) -> _T1:
+        return c[0](*args, **kwargs)
+
+    return composed
 
 
-def compose2(c: Composable2[_T0, _T1, _T2]) -> Callable[[_T0], _T2]:
+def compose2(c: Composable2[_P0, _T1, _T2]) -> Callable[_P0, _T2]:
     """Compose two compatible functions from first to last.
 
     Args:
@@ -222,11 +247,24 @@ def compose2(c: Composable2[_T0, _T1, _T2]) -> Callable[[_T0], _T2]:
         >>> get_length_string = compose2((len, lambda n: f"Length: {n}"))
         >>> get_length_string("Hello, world!")
         'Length: 13'
+
+        The first function may accept multiple positional arguments:
+
+        >>> def multiply(a: int, b: int) -> int:
+        ...     return a * b
+        ...
+        >>> get_product_string = compose2((multiply, lambda n: f"Product: {n}"))
+        >>> get_product_string(3, 4)
+        'Product: 12'
     """
-    return lambda t0: c[1](c[0](t0))
+
+    def composed(*args: _P0.args, **kwargs: _P0.kwargs) -> _T2:
+        return c[1](c[0](*args, **kwargs))
+
+    return composed
 
 
-def compose3(c: Composable3[_T0, _T1, _T2, _T3]) -> Callable[[_T0], _T3]:
+def compose3(c: Composable3[_P0, _T1, _T2, _T3]) -> Callable[_P0, _T3]:
     """Compose three compatible functions from first to last.
 
     Args:
@@ -244,11 +282,24 @@ def compose3(c: Composable3[_T0, _T1, _T2, _T3]) -> Callable[[_T0], _T3]:
         >>> compute = compose3((add_one, square, to_string))
         >>> compute(3)
         'Result: 16'
+
+        The first function may accept multiple positional arguments:
+
+        >>> def add(a: int, b: int) -> int:
+        ...     return a + b
+        ...
+        >>> add_and_square = compose3((add, lambda n: n * n, to_string))
+        >>> add_and_square(2, 3)
+        'Result: 25'
     """
-    return lambda t0: c[2](c[1](c[0](t0)))
+
+    def composed(*args: _P0.args, **kwargs: _P0.kwargs) -> _T3:
+        return c[2](c[1](c[0](*args, **kwargs)))
+
+    return composed
 
 
-def compose4(c: Composable4[_T0, _T1, _T2, _T3, _T4]) -> Callable[[_T0], _T4]:
+def compose4(c: Composable4[_P0, _T1, _T2, _T3, _T4]) -> Callable[_P0, _T4]:
     """Compose four compatible functions from first to last.
 
     Args:
@@ -267,11 +318,22 @@ def compose4(c: Composable4[_T0, _T1, _T2, _T3, _T4]) -> Callable[[_T0], _T4]:
         >>> compute = compose4((add_one, square, halve, to_string))
         >>> compute(3)
         'Result: 8.0'
+
+        The first function may accept multiple positional arguments:
+
+        >>> multiply = lambda a, b: a * b
+        >>> compute_multi = compose4((multiply, square, halve, to_string))
+        >>> compute_multi(4, 5)
+        'Result: 200.0'
     """
-    return lambda t0: c[3](c[2](c[1](c[0](t0))))
+
+    def composed(*args: _P0.args, **kwargs: _P0.kwargs) -> _T4:
+        return c[3](c[2](c[1](c[0](*args, **kwargs))))
+
+    return composed
 
 
-def compose5(c: Composable5[_T0, _T1, _T2, _T3, _T4, _T5]) -> Callable[[_T0], _T5]:
+def compose5(c: Composable5[_P0, _T1, _T2, _T3, _T4, _T5]) -> Callable[_P0, _T5]:
     """Compose five compatible functions from first to last.
 
     Args:
@@ -291,11 +353,22 @@ def compose5(c: Composable5[_T0, _T1, _T2, _T3, _T4, _T5]) -> Callable[[_T0], _T
         >>> compute = compose5((add_one, square, halve, to_string, exclaim))
         >>> compute(3)
         'Result: 8.0!'
+
+        The first function may accept multiple positional arguments:
+
+        >>> multiply = lambda a, b: a * b
+        >>> compute_multi = compose5((multiply, square, halve, to_string, exclaim))
+        >>> compute_multi(2, 5)
+        'Result: 50.0!'
     """
-    return lambda t0: c[4](c[3](c[2](c[1](c[0](t0)))))
+
+    def composed(*args: _P0.args, **kwargs: _P0.kwargs) -> _T5:
+        return c[4](c[3](c[2](c[1](c[0](*args, **kwargs)))))
+
+    return composed
 
 
-def compose6(c: Composable6[_T0, _T1, _T2, _T3, _T4, _T5, _T6]) -> Callable[[_T0], _T6]:
+def compose6(c: Composable6[_P0, _T1, _T2, _T3, _T4, _T5, _T6]) -> Callable[_P0, _T6]:
     """Compose six compatible functions from first to last.
 
     Args:
@@ -314,13 +387,26 @@ def compose6(c: Composable6[_T0, _T1, _T2, _T3, _T4, _T5, _T6]) -> Callable[[_T0
         >>> compute = compose6((add_one, square, halve, to_string, exclaim, to_list))
         >>> compute(3)
         ['Result: 8.0!']
+
+        The first function may accept multiple positional arguments:
+
+        >>> multiply = lambda a, b: a * b
+        >>> compute_multi = compose6(
+        ...     (multiply, square, halve, to_string, exclaim, to_list)
+        ... )
+        >>> compute_multi(2, 5)
+        ['Result: 50.0!']
     """
-    return lambda t0: c[5](c[4](c[3](c[2](c[1](c[0](t0))))))
+
+    def composed(*args: _P0.args, **kwargs: _P0.kwargs) -> _T6:
+        return c[5](c[4](c[3](c[2](c[1](c[0](*args, **kwargs))))))
+
+    return composed
 
 
 def compose7(
-    c: Composable7[_T0, _T1, _T2, _T3, _T4, _T5, _T6, _T7],
-) -> Callable[[_T0], _T7]:
+    c: Composable7[_P0, _T1, _T2, _T3, _T4, _T5, _T6, _T7],
+) -> Callable[_P0, _T7]:
     """Compose seven compatible functions from first to last.
 
     Args:
@@ -344,13 +430,26 @@ def compose7(
         ... )
         >>> compute(3)
         {'result': ['Result: 8.0!']}
+
+        The first function may accept multiple positional arguments:
+
+        >>> multiply = lambda a, b: a * b
+        >>> compute_multi = compose7(
+        ...     (multiply, square, halve, to_string, exclaim, to_list, wrap_in_dict)
+        ... )
+        >>> compute_multi(2, 5)
+        {'result': ['Result: 50.0!']}
     """
-    return lambda t0: c[6](c[5](c[4](c[3](c[2](c[1](c[0](t0)))))))
+
+    def composed(*args: _P0.args, **kwargs: _P0.kwargs) -> _T7:
+        return c[6](c[5](c[4](c[3](c[2](c[1](c[0](*args, **kwargs)))))))
+
+    return composed
 
 
 def compose(  # noqa: PLR0911
     c: Composable[_IN, _T1, _T2, _T3, _T4, _T5, _T6, _OUT],
-) -> Callable[[_IN], _OUT]:
+) -> Callable[_IN, _OUT]:
     """Compose a tuple of compatible functions from first to last.
 
     Args:
@@ -363,6 +462,15 @@ def compose(  # noqa: PLR0911
         >>> get_length_string = compose((len, lambda n: f"Length: {n}"))
         >>> get_length_string("Hello, world!")
         'Length: 13'
+
+        The first function may accept multiple positional arguments:
+
+        >>> def multiply(a: int, b: int) -> int:
+        ...     return a * b
+        ...
+        >>> get_product_string = compose((multiply, lambda n: f"Product: {n}"))
+        >>> get_product_string(3, 4)
+        'Product: 12'
     """
     match c:
         case (_,):
