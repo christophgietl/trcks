@@ -15,18 +15,30 @@ else:
 
 _T = TypeVar("_T")
 
-_IntComposable: TypeAlias = Composable[int, int, int, int, int, int, int, int]
+_IntComposable: TypeAlias = Composable[[int], int, int, int, int, int, int, int]
 _IntPipeline: TypeAlias = Pipeline[int, int, int, int, int, int, int, int]
 _Tuple7: TypeAlias = tuple[_T, _T, _T, _T, _T, _T, _T]
 _Tuple8: TypeAlias = tuple[_T, _T, _T, _T, _T, _T, _T, _T]
 
 
-def _foo(x: int) -> str:
+def _add(a: int, b: int) -> int:
+    return a + b
+
+
+def _double(n: int) -> int:
+    return n * 2
+
+
+def _foo(x: int, /) -> str:
     return f"Foo: {x + 1}"
 
 
 def _incr(x: int) -> int:
     return x + 1
+
+
+def _to_output_string(n: int) -> str:
+    return f"Output: {n}"
 
 
 _COMPOSABLES: Final[_Tuple7[_IntComposable]] = (
@@ -70,6 +82,31 @@ def test_compose_with_2_arguments_returns_composed_function(value: int) -> None:
     composed = compose((_foo, len))
     _ = assert_type(composed, Callable[[int], int])
     assert composed(value) == len(_foo(value))
+
+
+@pytest.mark.parametrize(("a", "b"), [(2, 3), (5, 7), (10, 20)])
+def test_compose_with_multi_arg_first_function(a: int, b: int) -> None:
+    composed = compose((_add, _to_output_string))
+    assert assert_type(composed(a, b), str) == f"Output: {a + b}"
+    assert assert_type(composed(a=a, b=b), str) == f"Output: {a + b}"
+
+
+@pytest.mark.parametrize(("a", "b"), [(2, 3), (5, 7), (10, 20)])
+def test_compose1_with_multi_arg_function(a: int, b: int) -> None:
+    composed = compose((_add,))
+    assert composed(a, b) == a + b
+
+
+@pytest.mark.parametrize(("a", "b"), [(2, 3), (5, 7), (10, 20)])
+def test_compose2_with_multi_arg_first_function(a: int, b: int) -> None:
+    composed = compose((_add, _double))
+    assert composed(a, b) == (a + b) * 2
+
+
+@pytest.mark.parametrize(("a", "b"), [(2, 3), (5, 7), (10, 20)])
+def test_compose3_with_multi_arg_first_function(a: int, b: int) -> None:
+    composed = compose((_add, _double, str))
+    assert composed(a, b) == str((a + b) * 2)
 
 
 @pytest.mark.parametrize("p", _PIPELINES)
