@@ -2,11 +2,21 @@ import asyncio
 import math
 from collections.abc import Callable, Coroutine
 from typing import Final, Literal
+from unittest.mock import AsyncMock, Mock
 
 import pytest
 
 from trcks import Result
-from trcks.oop import AwaitableResultWrapper, AwaitableWrapper, ResultWrapper, Wrapper
+from trcks.oop import (
+    AwaitableResultTupleWrapper,
+    AwaitableResultWrapper,
+    AwaitableTupleWrapper,
+    AwaitableWrapper,
+    ResultTupleWrapper,
+    ResultWrapper,
+    TupleWrapper,
+    Wrapper,
+)
 
 _TO_PAIR: Final[Callable[[int], tuple[int, int]]] = lambda n: (n, n)  # noqa: E731
 
@@ -54,6 +64,28 @@ async def _get_square_root_safely_and_slowly(
 async def _stringify_slowly(o: object) -> str:
     await asyncio.sleep(0.001)
     return str(o)
+
+
+class TestAwaitableResultTupleWrapper:
+    async def test_map_successes_forwards_args_and_kwargs(self) -> None:
+        probe = Mock(return_value="mapped")
+        output = (
+            await AwaitableResultTupleWrapper.construct_successes("input")
+            .map_successes(probe, "extra", extra_kw="kw")
+            .core
+        )
+        assert output == ("success", ("mapped",))
+        probe.assert_called_once_with("input", "extra", extra_kw="kw")
+
+    async def test_tap_successes_forwards_args_and_kwargs(self) -> None:
+        probe = Mock(return_value=None)
+        output = (
+            await AwaitableResultTupleWrapper.construct_successes("input")
+            .tap_successes(probe, "extra", extra_kw="kw")
+            .core
+        )
+        assert output == ("success", ("input",))
+        probe.assert_called_once_with("input", "extra", extra_kw="kw")
 
 
 class TestAwaitableResultWrapper:
@@ -212,6 +244,16 @@ class TestAwaitableResultWrapper:
             is failure
         )
 
+    async def test_map_success_forwards_args_and_kwargs(self) -> None:
+        probe = Mock(return_value="mapped")
+        output = (
+            await AwaitableResultWrapper.construct_success("input")
+            .map_success(probe, "extra", extra_kw="kw")
+            .core
+        )
+        assert output == ("success", "mapped")
+        probe.assert_called_once_with("input", "extra", extra_kw="kw")
+
     @pytest.mark.parametrize("value", _FLOATS)
     async def test_map_success_maps_success_value(self, value: float) -> None:
         assert await AwaitableResultWrapper.construct_success(value).map_success(
@@ -283,6 +325,38 @@ class TestAwaitableResultWrapper:
             _get_square_root_safely
         ).core == _get_square_root_safely(value)
 
+    async def test_tap_success_forwards_args_and_kwargs(self) -> None:
+        probe = Mock(return_value=None)
+        output = (
+            await AwaitableResultWrapper.construct_success("input")
+            .tap_success(probe, "extra", extra_kw="kw")
+            .core
+        )
+        assert output == ("success", "input")
+        probe.assert_called_once_with("input", "extra", extra_kw="kw")
+
+
+class TestAwaitableTupleWrapper:
+    async def test_map_forwards_args_and_kwargs(self) -> None:
+        probe = Mock(return_value="mapped")
+        output = (
+            await AwaitableTupleWrapper.construct("input")
+            .map(probe, "extra", extra_kw="kw")
+            .core
+        )
+        assert output == ("mapped",)
+        probe.assert_called_once_with("input", "extra", extra_kw="kw")
+
+    async def test_tap_forwards_args_and_kwargs(self) -> None:
+        probe = Mock(return_value=None)
+        output = (
+            await AwaitableTupleWrapper.construct("input")
+            .tap(probe, "extra", extra_kw="kw")
+            .core
+        )
+        assert output == ("input",)
+        probe.assert_called_once_with("input", "extra", extra_kw="kw")
+
 
 class TestAwaitableWrapper:
     @pytest.mark.parametrize("value", _OBJECTS)
@@ -312,6 +386,16 @@ class TestAwaitableWrapper:
             value
         )
 
+    async def test_map_to_awaitable_forwards_args_and_kwargs(self) -> None:
+        probe = AsyncMock(return_value="mapped")
+        output = (
+            await AwaitableWrapper.construct("input")
+            .map_to_awaitable(probe, "extra", extra_kw="kw")
+            .core
+        )
+        assert output == "mapped"
+        probe.assert_called_once_with("input", "extra", extra_kw="kw")
+
     @pytest.mark.parametrize("value", _FLOATS)
     async def test_map_to_awaitable_maps_value(self, value: float) -> None:
         assert await AwaitableWrapper.construct(value).map_to_awaitable(
@@ -329,6 +413,38 @@ class TestAwaitableWrapper:
         assert await AwaitableWrapper.construct(value).map_to_result(
             _get_square_root_safely
         ).core == _get_square_root_safely(value)
+
+    async def test_tap_to_awaitable_forwards_args_and_kwargs(self) -> None:
+        probe = AsyncMock(return_value=None)
+        output = (
+            await AwaitableWrapper.construct("input")
+            .tap_to_awaitable(probe, "extra", extra_kw="kw")
+            .core
+        )
+        assert output == "input"
+        probe.assert_called_once_with("input", "extra", extra_kw="kw")
+
+
+class TestResultTupleWrapper:
+    def test_map_successes_forwards_args_and_kwargs(self) -> None:
+        probe = Mock(return_value="mapped")
+        output = (
+            ResultTupleWrapper.construct_successes("input")
+            .map_successes(probe, "extra", extra_kw="kw")
+            .core
+        )
+        assert output == ("success", ("mapped",))
+        probe.assert_called_once_with("input", "extra", extra_kw="kw")
+
+    def test_tap_successes_forwards_args_and_kwargs(self) -> None:
+        probe = Mock(return_value=None)
+        output = (
+            ResultTupleWrapper.construct_successes("input")
+            .tap_successes(probe, "extra", extra_kw="kw")
+            .core
+        )
+        assert output == ("success", ("input",))
+        probe.assert_called_once_with("input", "extra", extra_kw="kw")
 
 
 class TestResultWrapper:
@@ -424,6 +540,16 @@ class TestResultWrapper:
         failure: Final = ("failure", value)
         assert ResultWrapper(failure).map_success(_double).core is failure
 
+    def test_map_success_forwards_args_and_kwargs(self) -> None:
+        probe = Mock(return_value="mapped")
+        output = (
+            ResultWrapper.construct_success("input")
+            .map_success(probe, "extra", extra_kw="kw")
+            .core
+        )
+        assert output == ("success", "mapped")
+        probe.assert_called_once_with("input", "extra", extra_kw="kw")
+
     @pytest.mark.parametrize("value", _FLOATS)
     def test_map_success_maps_success_value(self, value: float) -> None:
         assert ResultWrapper.construct_success(value).map_success(_double).core == (
@@ -492,11 +618,41 @@ class TestResultWrapper:
     def test_result_wrapper_wraps_result(self, result: Result[object, object]) -> None:
         assert ResultWrapper(result).core is result
 
+    def test_tap_success_forwards_args_and_kwargs(self) -> None:
+        probe = Mock(return_value=None)
+        output = (
+            ResultWrapper.construct_success("input")
+            .tap_success(probe, "extra", extra_kw="kw")
+            .core
+        )
+        assert output == ("success", "input")
+        probe.assert_called_once_with("input", "extra", extra_kw="kw")
+
+
+class TestTupleWrapper:
+    def test_map_forwards_args_and_kwargs(self) -> None:
+        probe = Mock(return_value="mapped")
+        output = TupleWrapper.construct("input").map(probe, "extra", extra_kw="kw").core
+        assert output == ("mapped",)
+        probe.assert_called_once_with("input", "extra", extra_kw="kw")
+
+    def test_tap_forwards_args_and_kwargs(self) -> None:
+        probe = Mock(return_value=None)
+        output = TupleWrapper.construct("input").tap(probe, "extra", extra_kw="kw").core
+        assert output == ("input",)
+        probe.assert_called_once_with("input", "extra", extra_kw="kw")
+
 
 class TestWrapper:
     @pytest.mark.parametrize("value", _OBJECTS)
     def test_construct_wraps_value(self, value: object) -> None:
         assert Wrapper.construct(value).core is value
+
+    def test_map_forwards_args_and_kwargs(self) -> None:
+        probe = Mock(return_value="mapped")
+        output = Wrapper.construct("input").map(probe, "extra", extra_kw="kw").core
+        assert output == "mapped"
+        probe.assert_called_once_with("input", "extra", extra_kw="kw")
 
     @pytest.mark.parametrize("value", _FLOATS)
     def test_map_maps_value(self, value: float) -> None:
@@ -519,6 +675,12 @@ class TestWrapper:
         assert Wrapper(value).map_to_result(
             _get_square_root_safely
         ).core == _get_square_root_safely(value)
+
+    def test_tap_forwards_args_and_kwargs(self) -> None:
+        probe = Mock(return_value=None)
+        output = Wrapper.construct("input").tap(probe, "extra", extra_kw="kw").core
+        assert output == "input"
+        probe.assert_called_once_with("input", "extra", extra_kw="kw")
 
     @pytest.mark.parametrize("value", _OBJECTS)
     def test_wrapper_wraps_value(self, value: object) -> None:

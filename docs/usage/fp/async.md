@@ -56,7 +56,7 @@ into functions with input type `collections.abc.Awaitable[T]`.
     ...         input_path,
     ...         read_from_disk,
     ...         a.map_(transform),
-    ...         a.map_to_awaitable(lambda s: write_to_disk(s, output_path)),
+    ...         a.map_to_awaitable(write_to_disk, output_path),
     ...     )
     ...     return await pipe(p)
     ...
@@ -65,6 +65,12 @@ into functions with input type `collections.abc.Awaitable[T]`.
     Wrote 'Length: 13' to file output.txt.
 
     ```
+
+???+ tip "Passing extra arguments"
+    `map*` and `tap*` helpers forward any extra positional and keyword
+    arguments to the given function.
+    This is why `a.map_to_awaitable(write_to_disk, output_path)` can be used
+    instead of `a.map_to_awaitable(lambda s: write_to_disk(s, output_path))`.
 
 To understand what is going on here,
 let us have a look at the individual steps of the chain:
@@ -93,7 +99,7 @@ let us have a look at the individual steps of the chain:
     ...     "input.txt",
     ...     read_from_disk,
     ...     a.map_(transform),
-    ...     a.map_to_awaitable(lambda s: write_to_disk(s, "output.txt")),
+    ...     a.map_to_awaitable(write_to_disk, "output.txt"),
     ... )
     >>> asyncio.run(a.to_coroutine(pipe(p3)))
     Read 'Hello, world!' from file input.txt.
@@ -139,7 +145,7 @@ allows us to execute asynchronous side effects.
     ...         read_from_disk,
     ...         a.tap(lambda s: print(f"Read '{s}' from disk.")),
     ...         a.map_(transform),
-    ...         a.tap_to_awaitable(lambda s: write_to_disk(s, output_path)),
+    ...         a.tap_to_awaitable(write_to_disk, output_path),
     ...         a.tap(lambda s: print(f"Wrote '{s}' to disk.")),
     ...     )
     ...     return await pipe(p)
@@ -206,7 +212,7 @@ into functions with input type `trcks.AwaitableResult[F, S]`.
     ...         input_path,
     ...         read_from_disk,
     ...         ar.map_success(transform),
-    ...         ar.map_success_to_awaitable_result(lambda s: write_to_disk(s, output_path)),
+    ...         ar.map_success_to_awaitable_result(write_to_disk, output_path),
     ...     )
     ...     return await pipe(p)
     ...
@@ -255,7 +261,7 @@ let us have a look at the individual steps of the chain:
     ...     "input.txt",
     ...     read_from_disk,
     ...     ar.map_success(transform),
-    ...     ar.map_success_to_awaitable_result(lambda s: write_to_disk(s, "output.txt")),
+    ...     ar.map_success_to_awaitable_result(write_to_disk, "output.txt"),
     ... )
     >>> asyncio.run(ar.to_coroutine_result(pipe(p3)))
     Read 'Hello, world!' from file input.txt.
@@ -311,7 +317,7 @@ in the failure case or in the success case, respectively:
     ...         read_from_disk,
     ...         ar.tap_success(lambda s: print(f"LOG: Read '{s}' from disk.")),
     ...         ar.map_success(transform),
-    ...         ar.map_success_to_awaitable_result(lambda s: write_to_disk(s, output_path)),
+    ...         ar.map_success_to_awaitable_result(write_to_disk, output_path),
     ...         ar.tap_success(lambda _: print("LOG: Successfully wrote to disk.")),
     ...         ar.tap_failure(lambda err: print(f"LOG: Failed with error: {err}")),
     ...     )

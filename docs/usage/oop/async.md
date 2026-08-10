@@ -68,7 +68,7 @@ with "regular" functions:
     ...         Wrapper(core=input_path)
     ...         .map_to_awaitable(read_from_disk)
     ...         .map(transform)
-    ...         .map_to_awaitable(lambda s: write_to_disk(s, output_path))
+    ...         .map_to_awaitable(write_to_disk, output_path)
     ...         .core
     ...     )
     ...
@@ -77,6 +77,12 @@ with "regular" functions:
     Wrote 'Length: 13' to file output.txt.
 
     ```
+
+???+ tip "Passing extra arguments"
+    `map*` and `tap*` methods forward any extra positional and keyword
+    arguments to the given function.
+    This is why `.map_to_awaitable(write_to_disk, output_path)` can be used
+    instead of `.map_to_awaitable(lambda s: write_to_disk(s, output_path))`.
 
 To understand what is going on here,
 let us have a look at the individual steps of the chain:
@@ -100,7 +106,7 @@ let us have a look at the individual steps of the chain:
     AwaitableWrapper(core=<coroutine object ...>)
     >>> # 4. Apply the asynchronous function write_to_disk:
     >>> mapped_thrice: AwaitableWrapper[None] = mapped_twice.map_to_awaitable(
-    ...     lambda s: write_to_disk(s, "output.txt")
+    ...     write_to_disk, "output.txt"
     ... )
     >>> mapped_thrice
     AwaitableWrapper(core=<coroutine object ...>)
@@ -146,7 +152,7 @@ allows us to execute asynchronous side effects.
     ...         .map_to_awaitable(read_from_disk)
     ...         .tap(lambda s: print(f"Read '{s}' from disk."))
     ...         .map(transform)
-    ...         .tap_to_awaitable(lambda s: write_to_disk(s, output_path))
+    ...         .tap_to_awaitable(write_to_disk, output_path)
     ...         .tap(lambda s: print(f"Wrote '{s}' to disk."))
     ...         .core
     ...     )
@@ -206,7 +212,7 @@ with "regular" functions:
     ...         Wrapper(core=input_path)
     ...         .map_to_awaitable_result(read_from_disk)
     ...         .map_success(transform)
-    ...         .map_success_to_awaitable_result(lambda s: write_to_disk(s, output_path))
+    ...         .map_success_to_awaitable_result(write_to_disk, output_path)
     ...         .core
     ...     )
     ...
@@ -244,7 +250,7 @@ let us have a look at the individual steps of the chain:
     >>> mapped_thrice: AwaitableResultWrapper[
     ...     ReadErrorLiteral | WriteErrorLiteral, None
     ... ] = mapped_twice.map_success_to_awaitable_result(
-    ...     lambda s: write_to_disk(s, "output.txt")
+    ...     write_to_disk, "output.txt"
     ... )
     >>> mapped_thrice
     AwaitableResultWrapper(core=<coroutine object ...>)
@@ -292,7 +298,7 @@ in the failure case or in the success case, respectively:
     ...         .map_to_awaitable_result(read_from_disk)
     ...         .tap_success(lambda s: print(f"LOG: Read '{s}' from disk."))
     ...         .map_success(transform)
-    ...         .map_success_to_awaitable_result(lambda s: write_to_disk(s, output_path))
+    ...         .map_success_to_awaitable_result(write_to_disk, output_path)
     ...         .tap_success(lambda _: print("LOG: Successfully wrote to disk."))
     ...         .tap_failure(lambda err: print(f"LOG: Failed with error: {err}"))
     ...         .core

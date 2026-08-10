@@ -76,7 +76,10 @@ in the following example.
 2. The class `trcks.oop.Wrapper` provides a convenient way to chain
    `trcks.Result`-returning functions and "regular" functions
    (in a type-safe way).
-3. See the
+3. The `map*` and `tap*` methods of `trcks.oop.Wrapper` (and the other
+   wrapper classes) accept extra positional and keyword arguments,
+   which are forwarded to the given function.
+4. See the
    [OOP and FP equivalence table](https://christophgietl.github.io/trcks/usage/oop-and-fp-equivalence/)
    for a side-by-side comparison with the functional style,
    and the [glossary](https://christophgietl.github.io/trcks/glossary/)
@@ -151,7 +154,10 @@ in the following example.
    provide a convenient way to chain
    `trcks.Result`-returning functions and "regular" functions
    (in a type-safe way).
-3. See the
+3. The `map*` and `tap*` functions in the modules under `trcks.fp.monads`
+   accept extra positional and keyword arguments,
+   which are forwarded to the given function.
+4. See the
    [OOP and FP equivalence table](https://christophgietl.github.io/trcks/usage/oop-and-fp-equivalence/)
    for a side-by-side comparison with the object-oriented style,
    and the [glossary](https://christophgietl.github.io/trcks/glossary/)
