@@ -50,7 +50,7 @@ Example:
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Concatenate, ParamSpec
 
 from trcks._typing import TypeVar, deprecated
 from trcks.fp.composition import compose2
@@ -61,6 +61,7 @@ if TYPE_CHECKING:
 
 __docformat__ = "google"
 
+_P = ParamSpec("_P")
 _T = TypeVar("_T")
 _T1 = TypeVar("_T1")
 _T2 = TypeVar("_T2")
@@ -83,12 +84,18 @@ def construct(value: _T) -> tuple[_T,]:
     return (value,)
 
 
-def map_(f: Callable[[_T1], _T2]) -> Callable[[tuple[_T1, ...]], tuple[_T2, ...]]:
+def map_(
+    f: Callable[Concatenate[_T1, _P], _T2], *args: _P.args, **kwargs: _P.kwargs
+) -> Callable[[tuple[_T1, ...]], tuple[_T2, ...]]:
     """Create function that maps homogeneous [tuple][]s to
     homogeneous [tuple][]s of the same length.
 
     Args:
         f: Function to apply to each element.
+        *args:
+            Positional arguments to be passed to `f`.
+        **kwargs:
+            Keyword arguments to be passed to `f`.
 
     Returns:
         Maps homogeneous [tuple][]s to homogeneous [tuple][]s of the same length
@@ -110,17 +117,23 @@ def map_(f: Callable[[_T1], _T2]) -> Callable[[tuple[_T1, ...]], tuple[_T2, ...]
         >>> double_integers((1, 2, 3))
         (2, 4, 6)
     """
-    return map_to_iterable(compose2((f, construct)))
+    return map_to_iterable(compose2((f, construct)), *args, **kwargs)
 
 
 def map_to_iterable(
-    f: Callable[[_T1], Iterable[_T2]],
+    f: Callable[Concatenate[_T1, _P], Iterable[_T2]],
+    *args: _P.args,
+    **kwargs: _P.kwargs,
 ) -> Callable[[tuple[_T1, ...]], tuple[_T2, ...]]:
     """Create function that maps homogeneous [tuple][]s to
     homogeneous [tuple][]s of varying length.
 
     Args:
         f: Function to apply to each element.
+        *args:
+            Positional arguments to be passed to `f`.
+        **kwargs:
+            Keyword arguments to be passed to `f`.
 
     Returns:
         Maps homogeneous [tuple][]s to homogeneous [tuple][]s of varying length
@@ -140,27 +153,33 @@ def map_to_iterable(
     """
 
     def mapped_f(t1s: tuple[_T1, ...]) -> tuple[_T2, ...]:
-        return tuple(t2 for t1 in t1s for t2 in f(t1))
+        return tuple(t2 for t1 in t1s for t2 in f(t1, *args, **kwargs))
 
     return mapped_f
 
 
 @deprecated("Use map_to_iterable instead")
 def map_to_tuple(
-    f: Callable[[_T1], tuple[_T2, ...]],
+    f: Callable[Concatenate[_T1, _P], tuple[_T2, ...]],
+    *args: _P.args,
+    **kwargs: _P.kwargs,
 ) -> Callable[[tuple[_T1, ...]], tuple[_T2, ...]]:
     """Deprecated alias for [trcks.fp.monads.tuple_.map_to_iterable][]."""
-    return map_to_iterable(f)  # pragma: no cover
+    return map_to_iterable(f, *args, **kwargs)  # pragma: no cover
 
 
 def tap(
-    f: Callable[[_T1], object],
+    f: Callable[Concatenate[_T1, _P], object], *args: _P.args, **kwargs: _P.kwargs
 ) -> Callable[[tuple[_T1, ...]], tuple[_T1, ...]]:
     """Create function that applies a side effect to each element of a homogeneous
     [tuple][].
 
     Args:
         f: Side effect to apply to each element.
+        *args:
+            Positional arguments to be passed to `f`.
+        **kwargs:
+            Keyword arguments to be passed to `f`.
 
     Returns:
         Applies the given side effect to each element of a homogeneous [tuple][] and
@@ -182,11 +201,13 @@ def tap(
         >>> tpl
         (1, 2, 3)
     """
-    return map_(i.tap(f))
+    return map_(i.tap(f, *args, **kwargs))
 
 
 def tap_to_iterable(
-    f: Callable[[_T1], Iterable[object]],
+    f: Callable[Concatenate[_T1, _P], Iterable[object]],
+    *args: _P.args,
+    **kwargs: _P.kwargs,
 ) -> Callable[[tuple[_T1, ...]], tuple[_T1, ...]]:
     """Create function that applies a side effect
     with return type [collections.abc.Iterable][]
@@ -194,6 +215,10 @@ def tap_to_iterable(
 
     Args:
         f: Side effect to apply to each element.
+        *args:
+            Positional arguments to be passed to `f`.
+        **kwargs:
+            Keyword arguments to be passed to `f`.
 
     Returns:
         Applies the given side effect to each element of a homogeneous [tuple][].
@@ -214,14 +239,16 @@ def tap_to_iterable(
     """
 
     def bypassed_f(t1: _T1) -> tuple[_T1, ...]:
-        return tuple(t1 for _t2 in f(t1))
+        return tuple(t1 for _t2 in f(t1, *args, **kwargs))
 
     return map_to_iterable(bypassed_f)
 
 
 @deprecated("Use tap_to_iterable instead")
 def tap_to_tuple(
-    f: Callable[[_T1], tuple[object, ...]],
+    f: Callable[Concatenate[_T1, _P], tuple[object, ...]],
+    *args: _P.args,
+    **kwargs: _P.kwargs,
 ) -> Callable[[tuple[_T1, ...]], tuple[_T1, ...]]:
     """Deprecated alias for [trcks.fp.monads.tuple_.tap_to_iterable][]."""
-    return tap_to_iterable(f)  # pragma: no cover
+    return tap_to_iterable(f, *args, **kwargs)  # pragma: no cover

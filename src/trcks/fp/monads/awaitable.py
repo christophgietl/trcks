@@ -37,7 +37,7 @@ Example:
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Concatenate, ParamSpec
 
 from trcks._typing import TypeVar
 from trcks.fp.composition import compose2
@@ -48,6 +48,7 @@ if TYPE_CHECKING:
 
 __docformat__ = "google"
 
+_P = ParamSpec("_P")
 _T = TypeVar("_T")
 _T1 = TypeVar("_T1")
 _T2 = TypeVar("_T2")
@@ -79,7 +80,9 @@ def construct(value: _T) -> Awaitable[_T]:
     return _construct(value)
 
 
-def map_(f: Callable[[_T1], _T2]) -> Callable[[Awaitable[_T1]], Awaitable[_T2]]:
+def map_(
+    f: Callable[Concatenate[_T1, _P], _T2], *args: _P.args, **kwargs: _P.kwargs
+) -> Callable[[Awaitable[_T1]], Awaitable[_T2]]:
     """Turn synchronous function into a function
     expecting and returning [collections.abc.Awaitable][].
 
@@ -87,6 +90,10 @@ def map_(f: Callable[[_T1], _T2]) -> Callable[[Awaitable[_T1]], Awaitable[_T2]]:
         f:
             The synchronous function to be transformed into
             a function expecting and returning a [collections.abc.Awaitable][].
+        *args:
+            Positional arguments to be passed to `f`.
+        **kwargs:
+            Keyword arguments to be passed to `f`.
 
     Returns:
         The given function transformed into
@@ -112,11 +119,13 @@ def map_(f: Callable[[_T1], _T2]) -> Callable[[Awaitable[_T1]], Awaitable[_T2]]:
         'Length: 13'
 
     """
-    return map_to_awaitable(compose2((f, construct)))
+    return map_to_awaitable(compose2((f, construct)), *args, **kwargs)
 
 
 def map_to_awaitable(
-    f: Callable[[_T1], Awaitable[_T2]],
+    f: Callable[Concatenate[_T1, _P], Awaitable[_T2]],
+    *args: _P.args,
+    **kwargs: _P.kwargs,
 ) -> Callable[[Awaitable[_T1]], Awaitable[_T2]]:
     """Turn [collections.abc.Awaitable][]-returning function into
     function expecting and returning [collections.abc.Awaitable][].
@@ -125,6 +134,10 @@ def map_to_awaitable(
         f:
             The [collections.abc.Awaitable][]-returning function to be transformed into
             a function expecting and returning a [collections.abc.Awaitable][].
+        *args:
+            Positional arguments to be passed to `f`.
+        **kwargs:
+            Keyword arguments to be passed to `f`.
 
     Returns:
         The given function transformed into
@@ -149,12 +162,14 @@ def map_to_awaitable(
     """
 
     async def mapped_f(awaitable: Awaitable[_T1]) -> _T2:
-        return await f(await awaitable)
+        return await f(await awaitable, *args, **kwargs)
 
     return mapped_f
 
 
-def tap(f: Callable[[_T1], object]) -> Callable[[Awaitable[_T1]], Awaitable[_T1]]:
+def tap(
+    f: Callable[Concatenate[_T1, _P], object], *args: _P.args, **kwargs: _P.kwargs
+) -> Callable[[Awaitable[_T1]], Awaitable[_T1]]:
     """Turn synchronous function into a function
     expecting a [collections.abc.Awaitable][] and
     returning the same [collections.abc.Awaitable][].
@@ -164,6 +179,10 @@ def tap(f: Callable[[_T1], object]) -> Callable[[Awaitable[_T1]], Awaitable[_T1]
             The synchronous function to be transformed into a function
             expecting a [collections.abc.Awaitable][] and
             returning the same [collections.abc.Awaitable][].
+        *args:
+            Positional arguments to be passed to `f`.
+        **kwargs:
+            Keyword arguments to be passed to `f`.
 
     Returns:
         The given function transformed into a function
@@ -187,11 +206,13 @@ def tap(f: Callable[[_T1], object]) -> Callable[[Awaitable[_T1]], Awaitable[_T1]
         >>> value
         'Hello, world!'
     """
-    return map_(i.tap(f))
+    return map_(i.tap(f, *args, **kwargs))
 
 
 def tap_to_awaitable(
-    f: Callable[[_T1], Awaitable[object]],
+    f: Callable[Concatenate[_T1, _P], Awaitable[object]],
+    *args: _P.args,
+    **kwargs: _P.kwargs,
 ) -> Callable[[Awaitable[_T1]], Awaitable[_T1]]:
     """Turn [collections.abc.Awaitable][]-returning function into a function
     expecting a [collections.abc.Awaitable][] and
@@ -202,6 +223,10 @@ def tap_to_awaitable(
             The asynchronous function to be transformed into a function
             expecting a [collections.abc.Awaitable][] and
             returning the same [collections.abc.Awaitable][].
+        *args:
+            Positional arguments to be passed to `f`.
+        **kwargs:
+            Keyword arguments to be passed to `f`.
 
     Returns:
         The given function transformed into a function
@@ -228,7 +253,7 @@ def tap_to_awaitable(
     """
 
     async def bypassed_f(value: _T1) -> _T1:
-        _ = await f(value)
+        _ = await f(value, *args, **kwargs)
         return value
 
     return map_to_awaitable(bypassed_f)

@@ -71,7 +71,11 @@ in the following example.
     2. <!-- rumdl-disable-line MD032 --> The class `trcks.oop.Wrapper` provides
        a convenient way to chain `trcks.Result`-returning functions and
        "regular" functions (in a type-safe way).
-    3. <!-- rumdl-disable-line MD032 --> See the
+    3. <!-- rumdl-disable-line MD032 --> The `map*` and `tap*` methods of
+       `trcks.oop.Wrapper` (and the other wrapper classes) accept extra
+       positional and keyword arguments, which are forwarded to the given
+       function.
+    4. <!-- rumdl-disable-line MD032 --> See the
        [OOP and FP equivalence table](usage/oop-and-fp-equivalence.md)
        for a side-by-side comparison with the functional style,
        and the [glossary](glossary.md) for definitions of key terms.
@@ -147,7 +151,10 @@ in the following example.
        `trcks.fp.monads.result` provide a convenient way to chain
        `trcks.Result`-returning functions and "regular" functions
        (in a type-safe way).
-    3. <!-- rumdl-disable-line MD032 --> See the
+    3. <!-- rumdl-disable-line MD032 --> The `map*` and `tap*` functions in
+       the modules under `trcks.fp.monads` accept extra positional and
+       keyword arguments, which are forwarded to the given function.
+    4. <!-- rumdl-disable-line MD032 --> See the
        [OOP and FP equivalence table](usage/oop-and-fp-equivalence.md)
        for a side-by-side comparison with the object-oriented style,
        and the [glossary](glossary.md) for definitions of key terms.
