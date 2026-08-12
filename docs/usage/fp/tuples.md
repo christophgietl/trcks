@@ -9,7 +9,7 @@
 If we want to apply a pipeline of functions to each element
 in a [tuple][],
 the module [trcks.fp.monads.tuple_][] provides
-some higher-order functions named `map_*` and `tap`
+some higher-order functions named `map*` and `tap*`
 that turn element-wise functions into functions
 operating on entire tuples.
 
@@ -427,7 +427,7 @@ a [trcks.AwaitableTuple][]`[T]` type,
 the following function must accept this [trcks.AwaitableTuple][]`[T]` type
 as its input.
 The module [trcks.fp.monads.awaitable_tuple][] provides
-some higher-order functions named `map_*`
+some higher-order functions named `map*`
 that turn element-wise functions
 into functions operating on [trcks.AwaitableTuple][] values.
 

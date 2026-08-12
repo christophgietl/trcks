@@ -25,14 +25,14 @@ the other carries information about failures.
 
 A function that accepts a function as an argument,
 returns a function, or both.
-The `map_*` helpers in `trcks` are higher-order functions.
+The `map*` helpers in `trcks` are higher-order functions.
 
 ## Homogeneous tuple
 
 A `tuple[T, ...]` whose elements all share the same type,
 processed individually by `trcks`.
 
-## Mapping helper (or `map_*` function)
+## Mapping helper (or `map*` function)
 
 A helper that lifts a plain function so that it operates on a
 wrapped value ([trcks.oop][]) or becomes a pipeline step ([trcks.fp][]).
@@ -56,7 +56,7 @@ for a full introduction.
 
 ## Short-circuiting
 
-Once a step produces a failure, all subsequent `map_*` steps
+Once a step produces a failure, all subsequent `map*` steps
 are skipped and the failure is carried through to the end of the
 pipeline without further processing.
 
@@ -76,5 +76,5 @@ for definitions and examples.
 
 A side effect is an operation (such as logging or file I/O) that does
 not change the value flowing through the pipeline.
-The `tap_*` helpers run a side effect and then return the original
+The `tap*` helpers run a side effect and then return the original
 value unchanged, keeping the pipeline intact.

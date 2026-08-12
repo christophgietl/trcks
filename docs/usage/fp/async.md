@@ -13,7 +13,7 @@ as its input.
 However, functions with input type `collections.abc.Awaitable[T]`
 tend to contain unnecessary `await` statements.
 Therefore, the module [trcks.fp.monads.awaitable][] provides
-some higher-order functions named `map_*`
+some higher-order functions named `map*`
 that turn functions with input type `T`
 into functions with input type `collections.abc.Awaitable[T]`.
 
@@ -161,7 +161,7 @@ However, functions with input type `trcks.AwaitableResult[F, S]` tend to
 contain unnecessary `await` statements and
 violate the "do one thing and do it well" principle.
 Therefore, the module [trcks.fp.monads.awaitable_result][] provides
-some higher-order functions named `map_*`
+some higher-order functions named `map*`
 that turn functions with input type `F` and functions with input type `S`
 into functions with input type `trcks.AwaitableResult[F, S]`.
 
