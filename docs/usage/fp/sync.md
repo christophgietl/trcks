@@ -79,7 +79,7 @@ the following function must accept this `trcks.Result[F, S]` type as its input.
 However, functions with input type `trcks.Result[F, S]` tend to violate
 the "do one thing and do it well" principle.
 Therefore, the module [trcks.fp.monads.result][] provides
-some higher-order functions named `map_*`
+some higher-order functions named `map*`
 that turn functions with input type `F` and functions with input type `S`
 into functions with input type `trcks.Result[F, S]`.
 
