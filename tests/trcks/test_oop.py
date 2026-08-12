@@ -56,53 +56,6 @@ async def _stringify_slowly(o: object) -> str:
     return str(o)
 
 
-class TestAwaitableWrapper:
-    @pytest.mark.parametrize("value", _OBJECTS)
-    async def test_awaitable_wrapper_wraps_awaitable(self, value: object) -> None:
-        awaitable = asyncio.create_task(asyncio.sleep(0.001, result=value))
-        assert AwaitableWrapper(awaitable).core is awaitable
-
-    @pytest.mark.parametrize("value", _OBJECTS)
-    async def test_construct_wraps_value(self, value: object) -> None:
-        assert await AwaitableWrapper.construct(value).core == value
-
-    @pytest.mark.parametrize("value", _OBJECTS)
-    async def test_construct_from_awaitable_wraps_awaitable(
-        self, value: object
-    ) -> None:
-        awaitable = asyncio.create_task(asyncio.sleep(0.001, result=value))
-        assert AwaitableWrapper.construct_from_awaitable(awaitable).core is awaitable
-
-    async def test_core_as_coroutine_is_coroutine(self) -> None:
-        core_as_coroutine = AwaitableWrapper.construct(1).core_as_coroutine
-        assert isinstance(core_as_coroutine, Coroutine)
-        assert await core_as_coroutine == 1
-
-    @pytest.mark.parametrize("value", _FLOATS)
-    async def test_map_maps_value(self, value: float) -> None:
-        assert await AwaitableWrapper.construct(value).map(_double).core == _double(
-            value
-        )
-
-    @pytest.mark.parametrize("value", _FLOATS)
-    async def test_map_to_awaitable_maps_value(self, value: float) -> None:
-        assert await AwaitableWrapper.construct(value).map_to_awaitable(
-            _double_slowly
-        ).core == await _double_slowly(value)
-
-    @pytest.mark.parametrize("value", _FLOATS)
-    async def test_map_to_awaitable_result_maps_value(self, value: float) -> None:
-        assert await AwaitableWrapper.construct(value).map_to_awaitable_result(
-            _get_square_root_safely_and_slowly
-        ).core == await _get_square_root_safely_and_slowly(value)
-
-    @pytest.mark.parametrize("value", _FLOATS)
-    async def test_map_to_result_maps_maps_value(self, value: float) -> None:
-        assert await AwaitableWrapper.construct(value).map_to_result(
-            _get_square_root_safely
-        ).core == _get_square_root_safely(value)
-
-
 class TestAwaitableResultWrapper:
     @pytest.mark.parametrize("result", _RESULTS)
     async def test_awaitable_result_wrapper_wraps_awaitable_result(
@@ -112,18 +65,18 @@ class TestAwaitableResultWrapper:
         assert AwaitableResultWrapper(awaitable_result).core is awaitable_result
 
     @pytest.mark.parametrize("value", _OBJECTS)
-    async def test_construct_failure_wraps_value(self, value: object) -> None:
-        awaited_core = await AwaitableResultWrapper.construct_failure(value).core
-        assert awaited_core[0] == "failure"
-        assert awaited_core[1] is value
-
-    @pytest.mark.parametrize("value", _OBJECTS)
     async def test_construct_failure_from_awaitable_wraps_value(
         self, value: object
     ) -> None:
         awaited_core = await AwaitableResultWrapper.construct_failure_from_awaitable(
             asyncio.create_task(asyncio.sleep(0.001, result=value))
         ).core
+        assert awaited_core[0] == "failure"
+        assert awaited_core[1] is value
+
+    @pytest.mark.parametrize("value", _OBJECTS)
+    async def test_construct_failure_wraps_value(self, value: object) -> None:
+        awaited_core = await AwaitableResultWrapper.construct_failure(value).core
         assert awaited_core[0] == "failure"
         assert awaited_core[1] is value
 
@@ -146,18 +99,18 @@ class TestAwaitableResultWrapper:
         assert await AwaitableResultWrapper.construct_from_result(result).core is result
 
     @pytest.mark.parametrize("value", _OBJECTS)
-    async def test_construct_success_wraps_value(self, value: object) -> None:
-        awaited_core = await AwaitableResultWrapper.construct_success(value).core
-        assert awaited_core[0] == "success"
-        assert awaited_core[1] is value
-
-    @pytest.mark.parametrize("value", _OBJECTS)
     async def test_construct_success_from_awaitable_wraps_value(
         self, value: object
     ) -> None:
         awaited_core = await AwaitableResultWrapper.construct_success_from_awaitable(
             asyncio.create_task(asyncio.sleep(0.001, result=value))
         ).core
+        assert awaited_core[0] == "success"
+        assert awaited_core[1] is value
+
+    @pytest.mark.parametrize("value", _OBJECTS)
+    async def test_construct_success_wraps_value(self, value: object) -> None:
+        awaited_core = await AwaitableResultWrapper.construct_success(value).core
         assert awaited_core[0] == "success"
         assert awaited_core[1] is value
 
@@ -331,43 +284,54 @@ class TestAwaitableResultWrapper:
         ).core == _get_square_root_safely(value)
 
 
-class TestWrapper:
+class TestAwaitableWrapper:
     @pytest.mark.parametrize("value", _OBJECTS)
-    def test_wrapper_wraps_value(self, value: object) -> None:
-        assert Wrapper(value).core is value
+    async def test_awaitable_wrapper_wraps_awaitable(self, value: object) -> None:
+        awaitable = asyncio.create_task(asyncio.sleep(0.001, result=value))
+        assert AwaitableWrapper(awaitable).core is awaitable
 
     @pytest.mark.parametrize("value", _OBJECTS)
-    def test_construct_wraps_value(self, value: object) -> None:
-        assert Wrapper.construct(value).core is value
+    async def test_construct_from_awaitable_wraps_awaitable(
+        self, value: object
+    ) -> None:
+        awaitable = asyncio.create_task(asyncio.sleep(0.001, result=value))
+        assert AwaitableWrapper.construct_from_awaitable(awaitable).core is awaitable
+
+    @pytest.mark.parametrize("value", _OBJECTS)
+    async def test_construct_wraps_value(self, value: object) -> None:
+        assert await AwaitableWrapper.construct(value).core == value
+
+    async def test_core_as_coroutine_is_coroutine(self) -> None:
+        core_as_coroutine = AwaitableWrapper.construct(1).core_as_coroutine
+        assert isinstance(core_as_coroutine, Coroutine)
+        assert await core_as_coroutine == 1
 
     @pytest.mark.parametrize("value", _FLOATS)
-    def test_map_maps_value(self, value: float) -> None:
-        assert Wrapper(value).map(_double).core == _double(value)
-
-    @pytest.mark.parametrize("value", _OBJECTS)
-    async def test_map_to_awaitable_maps_value(self, value: object) -> None:
-        assert await Wrapper(value).map_to_awaitable(
-            _stringify_slowly
-        ).core == await _stringify_slowly(value)
+    async def test_map_maps_value(self, value: float) -> None:
+        assert await AwaitableWrapper.construct(value).map(_double).core == _double(
+            value
+        )
 
     @pytest.mark.parametrize("value", _FLOATS)
-    def test_map_to_result_maps_value(self, value: float) -> None:
-        assert Wrapper(value).map_to_result(
-            _get_square_root_safely
-        ).core == _get_square_root_safely(value)
+    async def test_map_to_awaitable_maps_value(self, value: float) -> None:
+        assert await AwaitableWrapper.construct(value).map_to_awaitable(
+            _double_slowly
+        ).core == await _double_slowly(value)
 
     @pytest.mark.parametrize("value", _FLOATS)
     async def test_map_to_awaitable_result_maps_value(self, value: float) -> None:
-        assert await Wrapper(value).map_to_awaitable_result(
+        assert await AwaitableWrapper.construct(value).map_to_awaitable_result(
             _get_square_root_safely_and_slowly
         ).core == await _get_square_root_safely_and_slowly(value)
 
+    @pytest.mark.parametrize("value", _FLOATS)
+    async def test_map_to_result_maps_maps_value(self, value: float) -> None:
+        assert await AwaitableWrapper.construct(value).map_to_result(
+            _get_square_root_safely
+        ).core == _get_square_root_safely(value)
+
 
 class TestResultWrapper:
-    @pytest.mark.parametrize("result", _RESULTS)
-    def test_result_wrapper_wraps_result(self, result: Result[object, object]) -> None:
-        assert ResultWrapper(result).core is result
-
     @pytest.mark.parametrize("value", _OBJECTS)
     def test_construct_failure_wraps_value(self, value: object) -> None:
         result_wrapper = ResultWrapper.construct_failure(value)
@@ -523,3 +487,39 @@ class TestResultWrapper:
         assert ResultWrapper.construct_success(value).map_success_to_result(
             _get_square_root_safely
         ).core == _get_square_root_safely(value)
+
+    @pytest.mark.parametrize("result", _RESULTS)
+    def test_result_wrapper_wraps_result(self, result: Result[object, object]) -> None:
+        assert ResultWrapper(result).core is result
+
+
+class TestWrapper:
+    @pytest.mark.parametrize("value", _OBJECTS)
+    def test_construct_wraps_value(self, value: object) -> None:
+        assert Wrapper.construct(value).core is value
+
+    @pytest.mark.parametrize("value", _FLOATS)
+    def test_map_maps_value(self, value: float) -> None:
+        assert Wrapper(value).map(_double).core == _double(value)
+
+    @pytest.mark.parametrize("value", _OBJECTS)
+    async def test_map_to_awaitable_maps_value(self, value: object) -> None:
+        assert await Wrapper(value).map_to_awaitable(
+            _stringify_slowly
+        ).core == await _stringify_slowly(value)
+
+    @pytest.mark.parametrize("value", _FLOATS)
+    async def test_map_to_awaitable_result_maps_value(self, value: float) -> None:
+        assert await Wrapper(value).map_to_awaitable_result(
+            _get_square_root_safely_and_slowly
+        ).core == await _get_square_root_safely_and_slowly(value)
+
+    @pytest.mark.parametrize("value", _FLOATS)
+    def test_map_to_result_maps_value(self, value: float) -> None:
+        assert Wrapper(value).map_to_result(
+            _get_square_root_safely
+        ).core == _get_square_root_safely(value)
+
+    @pytest.mark.parametrize("value", _OBJECTS)
+    def test_wrapper_wraps_value(self, value: object) -> None:
+        assert Wrapper(value).core is value
