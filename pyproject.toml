@@ -119,14 +119,15 @@ containers = [
 exhaustive = true
 layers = [
     "monads",
+    "_monads",
     "composition",
 ]
 
 [[tool.importlinter.contracts]]
-name = "Layers within trcks.fp.monads.*"
+name = "Layers within trcks.fp._monads.*"
 type = "layers"
 containers = [
-    "trcks.fp.monads",
+    "trcks.fp._monads",
 ]
 exhaustive = true
 layers = [
@@ -144,18 +145,32 @@ layers = [
 name = "Independence of simple monads"
 type = "independence"
 modules = [
-    "trcks.fp.monads.awaitable",
-    "trcks.fp.monads.result",
-    "trcks.fp.monads.tuple_",
+    "trcks.fp._monads.awaitable",
+    "trcks.fp._monads.result",
+    "trcks.fp._monads.tuple_",
 ]
 
 [[tool.importlinter.contracts]]
 name = "Independence of dual monads"
 type = "independence"
 modules = [
+    "trcks.fp._monads.awaitable_result",
+    "trcks.fp._monads.awaitable_tuple",
+    "trcks.fp._monads.result_tuple",
+]
+
+[[tool.importlinter.contracts]]
+name = "Independence of public monad facades"
+type = "independence"
+modules = [
+    "trcks.fp.monads.awaitable",
     "trcks.fp.monads.awaitable_result",
+    "trcks.fp.monads.awaitable_result_tuple",
     "trcks.fp.monads.awaitable_tuple",
+    "trcks.fp.monads.identity",
+    "trcks.fp.monads.result",
     "trcks.fp.monads.result_tuple",
+    "trcks.fp.monads.tuple_",
 ]
 
 [[tool.importlinter.contracts]]

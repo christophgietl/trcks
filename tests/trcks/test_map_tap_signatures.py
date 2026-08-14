@@ -4,7 +4,7 @@ from typing import Final, TypeAlias
 
 import pytest
 
-from trcks.fp.monads import (
+from trcks.fp._monads import (
     awaitable,
     awaitable_result,
     awaitable_result_tuple,
