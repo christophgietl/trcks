@@ -234,6 +234,7 @@ select = ["ALL"]
 typing-modules = ["trcks._typing"]
 
 [tool.ruff.lint.per-file-ignores]
+"src/trcks/fp/monads/result.py" = ["PLC0415"]  # Local imports avoid circular dependencies
 "tests/*" = ["D", "INP001", "S101"]
 
 [tool.ruff.lint.pydocstyle]
