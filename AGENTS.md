@@ -14,18 +14,21 @@
 
 ### Application layers
 
-- `trcks` has three layers:
-  - `oop`
-  - `fp`
-  - `_typing`
-- `trcks.fp` has two sublayers:
-  - `monads`
-  - `composition`
-- `trcks.fp.monads` has four sublayers:
-  - `awaitable_result_tuple`
-  - `awaitable_result`, `awaitable_tuple`, and `result_tuple`
-  - `awaitable`, `result`, and `tuple_`
-  - `identity`
+- `trcks` has three layers: `oop`, `fp`, and `_typing`.
+- `trcks.fp` has three sublayers: `monads`, `_monads`, and `composition`.
+- `trcks.fp.monads` is the public facade;
+  each of its modules re-exports the matching `trcks.fp._monads` module
+  (e.g. `trcks.fp.monads.result` re-exports `trcks.fp._monads.result`).
+  `trcks.fp._monads` holds the private implementation.
+  This split exists so that a monad's implementation module
+  (e.g. `trcks.fp._monads.result`) can never import
+  a richer monad's public facade
+  (e.g. `trcks.fp.monads.awaitable_result`), which would create an import cycle,
+  while the public facade
+  (e.g. `trcks.fp.monads.result`) remains free to do so.
+- `trcks.fp._monads` has eight sublayers: `awaitable_result_tuple`, `awaitable_result`,
+  `awaitable_tuple`, `result_tuple`, `awaitable`, `result`, `tuple_`, and `identity`.
+  `trcks.fp.monads` mirrors these eight modules.
 
 ### Import contracts
 
@@ -33,7 +36,14 @@
 
 - `layers` contracts that restrict each layer to importing only
   the layers below it.
-- `protected` contract that restricts which internal modules may import `typing_extensions`.
+  The contract for `trcks.fp.monads` declares all eight facade modules as
+  independent single layers
+  (joined with `|` in one layer expression),
+  which keeps the facade modules independent of each other.
+- `protected` contract that restricts imports of `trcks.fp._monads`
+  to `trcks.fp` (the public facade modules).
+- `protected` contract that restricts which internal modules may import
+  `typing_extensions`.
 
 ### Return types defined in `trcks`
 

@@ -51,7 +51,7 @@ def _collect_functions() -> CollectedFunctions:
         (f"{module.__name__}.{name}", function)
         for module in modules
         for name, function in inspect.getmembers(module, inspect.isfunction)
-        if name.startswith(("map", "tap")) and function.__module__ == module.__name__
+        if name.startswith(("map", "tap"))
     ]
 
 
