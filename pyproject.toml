@@ -65,9 +65,10 @@ requires-python = ">=3.11"
 
 [project.optional-dependencies]
 mypy = [
-    # mypy versions older than 1.20 seem to have issues
-    # with type narrowing in match statements:
-    "mypy>=1.20",
+    # mypy versions older than 2.4 seem to have issues
+    # with covariant attributes for frozen data classes
+    # (cf. https://github.com/python/mypy/pull/21737):
+    "mypy>=2.4",
 ]
 pyrefly = [
     # pyrefly versions older than 1.2 seem to have issues
