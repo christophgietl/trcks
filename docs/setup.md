@@ -1,8 +1,9 @@
 # Setup
 
 This section explains
-how to add `trcks` to your project
-and how to set up a compatible static type checker.
+how to add `trcks` to your project,
+how to set up a compatible static type checker, and
+how to install the `trcks` skill for AI coding agents.
 
 ## Adding `trcks` to your project
 
@@ -63,4 +64,32 @@ dev = [
 dependencies = [
     "trcks",
 ]
+```
+
+## Installing the `trcks` skill for AI coding agents
+
+`trcks` ships an [agent skill](https://agentskills.io/home)
+that teaches AI coding agents how to use `trcks` for railway-oriented programming.
+Every release of `trcks` bundles the skill,
+so it always matches your installed version of `trcks`.
+
+You can install this skill (and skills provided by other libraries)
+using [Library Skills](https://library-skills.io/).
+Library Skills scans the dependencies of your project,
+finds the skills bundled with the installed libraries, and
+adds them to your project as symbolic links.
+When you update your dependencies, the skills stay up to date.
+
+If you use `uv`, run the following command in your terminal:
+
+```shell
+uvx library-skills install --skill trcks
+```
+
+Alternatively, you can add Library Skills to your project as a dev dependency and
+then run the install command:
+
+```shell
+uv add --dev library-skills
+uv run library-skills install --skill trcks
 ```

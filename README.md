@@ -9,7 +9,9 @@ in two different type-safe programming styles.
 `trcks` is [available on PyPI](https://pypi.org/project/trcks/).
 Use your favorite package manager (e.g. `pip`, `poetry`, or `uv`) to install it.
 Check the documentation for
-[detailed setup instructions](https://christophgietl.github.io/trcks/setup/).
+[detailed setup instructions](https://christophgietl.github.io/trcks/setup/),
+including how to install the bundled [library skill](https://library-skills.io)
+for AI coding agents.
 
 ## Usage
 
