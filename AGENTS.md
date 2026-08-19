@@ -174,4 +174,6 @@ uv build
 - Keep [README.md](README.md) up to date when features or UI changes.
 - Keep [docs/index.md](docs/index.md) in sync with [README.md](README.md).
 - Update [docs/glossary.md](docs/glossary.md) when new terms are introduced.
+- Keep [src/trcks/.agents/skills/trcks/SKILL.md](src/trcks/.agents/skills/trcks/SKILL.md)
+  up to date when features, architecture, or the public API change.
 - Follow the instructions in [docs/AGENTS.md](docs/AGENTS.md) when editing files in [docs/](docs/).
