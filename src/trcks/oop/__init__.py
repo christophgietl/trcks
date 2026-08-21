@@ -12,7 +12,7 @@ in a method-chaining style:
 - [tuple][] (homogeneous)
 
 Examples:
-    This example uses the classes [trcks.oop.Wrapper][] and [trcks.oop.ResultWrapper][]
+    Use the classes [trcks.oop.Wrapper][] and [trcks.oop.ResultWrapper][]
     to create and further process a value of type [trcks.Result][]:
 
     >>> import enum

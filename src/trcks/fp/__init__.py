@@ -16,8 +16,7 @@ Modules:
     monads: Monadic functions for generic types.
 
 Examples:
-    This example uses the modules
-    [trcks.fp.composition][] and [trcks.fp.monads.result][]
+    Use the modules [trcks.fp.composition][] and [trcks.fp.monads.result][]
     to create and further process a value of type [trcks.Result][]:
 
     >>> import math
