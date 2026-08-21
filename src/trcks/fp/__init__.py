@@ -12,7 +12,7 @@ in a functional style:
 - [tuple][] (homogeneous)
 
 Modules:
-    composition: Types and higher order functions for function composition.
+    composition: Types and higher-order functions for function composition.
     monads: Monadic functions for generic types.
 
 Examples:
