@@ -44,7 +44,7 @@ class AwaitableResultWrapper(
     via the attribute `trcks.oop.AwaitableResultWrapper.core`.
     The `trcks.oop.AwaitableResultWrapper.map*` methods allow method chaining.
 
-    Example:
+    Examples:
         >>> import asyncio
         >>> import math
         >>> from trcks import Result
@@ -87,7 +87,7 @@ class AwaitableResultWrapper(
             A new [trcks.oop.AwaitableResultWrapper][] instance with
                 the wrapped [trcks.AwaitableResult][] object.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks.oop import AwaitableResultWrapper
             >>> awaitable_result_wrapper = (
@@ -113,7 +113,7 @@ class AwaitableResultWrapper(
             A new [trcks.oop.AwaitableResultWrapper][] instance with
                 the wrapped [trcks.AwaitableResult][] object.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from http import HTTPStatus
             >>> from trcks.oop import AwaitableResultWrapper
@@ -146,7 +146,7 @@ class AwaitableResultWrapper(
             A new [trcks.oop.AwaitableResultWrapper][] instance with
                 the wrapped [trcks.AwaitableResult][] object.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks import Result
             >>> from trcks.oop import AwaitableResultWrapper
@@ -180,7 +180,7 @@ class AwaitableResultWrapper(
             A new [trcks.oop.AwaitableResultWrapper][] instance with
                 the wrapped [trcks.AwaitableResult][] object.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks.oop import AwaitableResultWrapper
             >>> awaitable_result_wrapper = (
@@ -205,7 +205,7 @@ class AwaitableResultWrapper(
             A new [trcks.oop.AwaitableResultWrapper][] instance with
                 the wrapped [trcks.AwaitableResult][] object.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks.oop import AwaitableResultWrapper
             >>> awaitable_result_wrapper = AwaitableResultWrapper.construct_success(42)
@@ -229,7 +229,7 @@ class AwaitableResultWrapper(
             A new [trcks.oop.AwaitableResultWrapper][] instance with
                 the wrapped [trcks.AwaitableResult][] object.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks.oop import AwaitableResultWrapper
             >>> async def read_from_disk() -> str:
@@ -272,7 +272,7 @@ class AwaitableResultWrapper(
                     the original [trcks.AwaitableResult][] is a failure, or
                 - the original [trcks.AwaitableResult][] object if it is a success.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks.oop import AwaitableResultWrapper
             >>> awaitable_result_wrapper_1 = (
@@ -321,7 +321,7 @@ class AwaitableResultWrapper(
                     the original [trcks.AwaitableResult][] is a failure, or
                 - the original [trcks.AwaitableResult][] object if it is a success.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks.oop import AwaitableResultWrapper
             >>> async def add_prefix_slowly(s: str) -> str:
@@ -377,7 +377,7 @@ class AwaitableResultWrapper(
                     the original [trcks.AwaitableResult][] is a failure, or
                 - the original [trcks.AwaitableResult][] object if it is a success.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks import Result
             >>> from trcks.oop import AwaitableResultWrapper
@@ -446,7 +446,7 @@ class AwaitableResultWrapper(
                     the original [trcks.AwaitableResult][] is a failure, or
                 - the original [trcks.AwaitableResult][] if it is a success.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks import AwaitableResultTuple
             >>> from trcks.oop import AwaitableResultWrapper
@@ -524,7 +524,7 @@ class AwaitableResultWrapper(
                     the original [trcks.AwaitableResult][] is a failure, or
                 - the original [trcks.AwaitableResult][] if it is a success.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks.oop import AwaitableResultWrapper
             >>> def recover(e: str) -> tuple[float, ...]:
@@ -581,7 +581,7 @@ class AwaitableResultWrapper(
                     the original [trcks.AwaitableResult][] is a failure, or
                 - the original [trcks.AwaitableResult][] object if it is a success.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks import Result
             >>> from trcks.oop import AwaitableResultWrapper
@@ -649,7 +649,7 @@ class AwaitableResultWrapper(
                     the original [trcks.AwaitableResult][] is a failure, or
                 - the original [trcks.AwaitableResult][] if it is a success.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks import ResultTuple
             >>> from trcks.oop import AwaitableResultWrapper
@@ -732,7 +732,7 @@ class AwaitableResultWrapper(
                 - the result of the function application if
                     the original [trcks.AwaitableResult][] is a success.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> import math
             >>> from trcks.oop import AwaitableResultWrapper
@@ -782,7 +782,7 @@ class AwaitableResultWrapper(
                 - the result of the function application if
                     the original [trcks.AwaitableResult][] is a success.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks.oop import AwaitableResultWrapper
             >>> async def increment_slowly(n: int) -> int:
@@ -838,7 +838,7 @@ class AwaitableResultWrapper(
                 - the result of the function application if
                     the original [trcks.AwaitableResult][] is a success.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> import math
             >>> from trcks import Result
@@ -908,7 +908,7 @@ class AwaitableResultWrapper(
                 - the result of the function application if
                     the original [trcks.AwaitableResult][] is a success.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks import AwaitableResultTuple
             >>> from trcks.oop import AwaitableResultWrapper
@@ -985,7 +985,7 @@ class AwaitableResultWrapper(
                     of the function application if
                     the original [trcks.AwaitableResult][] is a success.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks.oop import AwaitableResultWrapper
             >>> def duplicate(x: float) -> tuple[float, ...]:
@@ -1040,7 +1040,7 @@ class AwaitableResultWrapper(
                 - the result of the function application if
                     the original [trcks.AwaitableResult][] is a success.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> import math
             >>> from trcks import Result
@@ -1109,7 +1109,7 @@ class AwaitableResultWrapper(
                 - the result of the function application if
                     the original [trcks.AwaitableResult][] is a success.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks import ResultTuple
             >>> from trcks.oop import AwaitableResultWrapper
@@ -1190,7 +1190,7 @@ class AwaitableResultWrapper(
                 with the original [trcks.Result][] object,
                 allowing for further method chaining.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks.oop import AwaitableResultWrapper
             >>> awaitable_result_wrapper_1 = AwaitableResultWrapper.construct_failure(
@@ -1235,7 +1235,7 @@ class AwaitableResultWrapper(
                 with the original [trcks.Result][] object,
                 allowing for further method chaining.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks.oop import AwaitableResultWrapper
             >>> async def write_to_disk(output: str) -> None:
@@ -1325,7 +1325,7 @@ class AwaitableResultWrapper(
                     and
                 - *the original* [trcks.Success][] if no side effect was applied.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks import AwaitableResultTuple
             >>> from trcks.oop import AwaitableResultWrapper
@@ -1405,7 +1405,7 @@ class AwaitableResultWrapper(
                     if the original [trcks.AwaitableResult][] is a failure, or
                 - the original [trcks.AwaitableResult][] if it is a success.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks.oop import AwaitableResultWrapper
             >>> def log_err(e: str) -> tuple[None, ...]:
@@ -1467,7 +1467,7 @@ class AwaitableResultWrapper(
                     if the applied side effect returns a [trcks.Success][] and
                 - *the original* [trcks.Success][] if no side effect was applied.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks import Result
             >>> from trcks.oop import AwaitableResultWrapper
@@ -1538,7 +1538,7 @@ class AwaitableResultWrapper(
                     and
                 - *the original* [trcks.Success][] if no side effect was applied.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks import ResultTuple
             >>> from trcks.oop import AwaitableResultWrapper
@@ -1619,7 +1619,7 @@ class AwaitableResultWrapper(
                 with the original [trcks.Result][] object,
                 allowing for further method chaining.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks.oop import AwaitableResultWrapper
             >>> awaitable_result_wrapper_1 = AwaitableResultWrapper.construct_failure(
@@ -1664,7 +1664,7 @@ class AwaitableResultWrapper(
                 with the original [trcks.Result][] object,
                 allowing for further method chaining.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks.oop import AwaitableResultWrapper
             >>> async def write_to_disk(output: str) -> None:
@@ -1720,7 +1720,7 @@ class AwaitableResultWrapper(
                 - *the original* [trcks.Success][]
                     if the applied side effect returns a [trcks.Success][].
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks import Result
             >>> from trcks.oop import AwaitableResultWrapper
@@ -1807,7 +1807,7 @@ class AwaitableResultWrapper(
                     in the returned [trcks.SuccessIterable][]
                     if the applied side effect returns a [trcks.SuccessIterable][].
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks import AwaitableResultTuple
             >>> from trcks.oop import AwaitableResultWrapper
@@ -1888,7 +1888,7 @@ class AwaitableResultWrapper(
                     is repeated once per element in the [collections.abc.Iterable][]
                     returned by the side effect.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks.oop import AwaitableResultWrapper
             >>> def log_mult(n: int) -> tuple[None, ...]:
@@ -1982,7 +1982,7 @@ class AwaitableResultWrapper(
                     in the returned [trcks.SuccessIterable][]
                     if the applied side effect returns a [trcks.SuccessIterable][].
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks import ResultTuple
             >>> from trcks.oop import AwaitableResultWrapper

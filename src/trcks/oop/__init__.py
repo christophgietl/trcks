@@ -11,7 +11,7 @@ in a method-chaining style:
 - [trcks.ResultTuple][]
 - [tuple][]
 
-Example:
+Examples:
     This example uses the classes [trcks.oop.Wrapper][] and [trcks.oop.ResultWrapper][]
     to create and further process a value of type [trcks.Result][]:
 

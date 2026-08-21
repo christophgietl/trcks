@@ -29,7 +29,7 @@ def tap(
     Returns:
         The given function transformed into a function that returns its input.
 
-    Example:
+    Examples:
         >>> from collections.abc import Callable
         >>> from trcks.fp.monads import identity as i
         >>> log_and_pass_on: Callable[[object], object] = i.tap(

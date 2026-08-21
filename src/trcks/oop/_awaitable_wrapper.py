@@ -45,7 +45,7 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
     The `trcks.oop.AwaitableWrapper.tap*` methods allow for side effects
     without changing the wrapped object.
 
-    Example:
+    Examples:
         >>> import asyncio
         >>> from trcks.oop import AwaitableWrapper
         >>> async def read_from_disk() -> str:
@@ -89,7 +89,7 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
             A new [trcks.oop.AwaitableWrapper][] instance
                 with the wrapped [collections.abc.Awaitable][] object.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks.oop import AwaitableWrapper
             >>> awaitable_wrapper = AwaitableWrapper.construct("Hello, world!")
@@ -111,7 +111,7 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
             A new [trcks.oop.AwaitableWrapper][] instance
                 with the wrapped [collections.abc.Awaitable][] object.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks.oop import AwaitableWrapper
             >>> async def read_from_disk() -> str:
@@ -148,7 +148,7 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
             A new [trcks.oop.AwaitableWrapper][] instance with
                 the result of the function application.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks.oop import AwaitableWrapper
             >>> def transform(s: str) -> str:
@@ -186,7 +186,7 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
             A new [trcks.oop.AwaitableWrapper][] instance with
                 the result of the function application.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks.oop import AwaitableWrapper
             >>> async def write_to_disk(output: str) -> None:
@@ -226,7 +226,7 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
             A new [trcks.oop.AwaitableTupleWrapper][] instance with
                 the result of the function application.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks.oop import AwaitableWrapper
             >>> async def slowly_duplicate(n: int) -> tuple[int, ...]:
@@ -267,7 +267,7 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
             A [trcks.oop.AwaitableResultWrapper][] instance with
                 the result of the function application.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks import Result
             >>> from trcks.oop import AwaitableWrapper
@@ -314,7 +314,7 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
             A [trcks.oop.AwaitableResultTupleWrapper][] instance with
                 the result of the function application.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks import AwaitableResultTuple
             >>> from trcks.oop import AwaitableWrapper
@@ -386,7 +386,7 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
             A new [trcks.oop.AwaitableTupleWrapper][] instance with
                 the result of the function application.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks.oop import AwaitableWrapper
             >>> awaitable_tuple_wrapper = (
@@ -423,7 +423,7 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
             A [trcks.oop.AwaitableResultWrapper][] instance with
                 the result of the function application.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks.oop import AwaitableWrapper
             >>> awaitable_result_wrapper = (
@@ -464,7 +464,7 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
             A [trcks.oop.AwaitableResultTupleWrapper][] instance with
                 the result of the function application.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks import ResultTuple
             >>> from trcks.oop import AwaitableWrapper
@@ -529,7 +529,7 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
             A new [trcks.oop.AwaitableWrapper][] instance with
                 the original [collections.abc.Awaitable][] object.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks.oop import AwaitableWrapper
             >>> awaitable_wrapper = AwaitableWrapper.construct("Hello, world!").tap(
@@ -561,7 +561,7 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
         Returns:
             A [trcks.oop.AwaitableWrapper][] instance with the original wrapped object.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks.oop import AwaitableWrapper
             >>> async def write_to_disk(output: str) -> None:
@@ -600,7 +600,7 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
                 the original awaitable wrapped object repeated
                 according to the number of items returned by the side effect.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks.oop import AwaitableTupleWrapper, AwaitableWrapper
             >>> async def slowly_duplicate_with_log(n: int) -> tuple[int, ...]:
@@ -647,7 +647,7 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
                 - a [trcks.Success][] instance containing *the original* wrapped object
                     if the given side effect returns a [trcks.Success][].
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from typing import Literal
             >>> from trcks import Result
@@ -706,7 +706,7 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
                     in the side effect output if the given side effect
                     returns [trcks.SuccessIterable][].
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks import AwaitableResultTuple
             >>> from trcks.oop import AwaitableWrapper
@@ -779,7 +779,7 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
                 the original awaitable wrapped object repeated
                 according to the number of items returned by the side effect.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks.oop import AwaitableTupleWrapper, AwaitableWrapper
             >>> def duplicate_with_log(n: int) -> tuple[object, ...]:
@@ -825,7 +825,7 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
                 - a [trcks.Success][] instance containing *the original* wrapped object
                     if the given side effect returns a [trcks.Success][].
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks import Result
             >>> from trcks.oop import AwaitableWrapper
@@ -878,7 +878,7 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
                     in the side effect output if the given side effect
                     returns [trcks.SuccessIterable][].
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks import ResultTuple
             >>> from trcks.oop import AwaitableWrapper

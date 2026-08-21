@@ -45,7 +45,7 @@ class TupleWrapper(BaseWrapper[tuple[_T_co, ...]]):
     The `trcks.oop.TupleWrapper.tap*` methods allow for side effects
     without changing the wrapped tuple.
 
-    Example:
+    Examples:
         Create and process a homogeneous [tuple][]:
 
         >>> from trcks.oop import TupleWrapper
@@ -93,7 +93,7 @@ class TupleWrapper(BaseWrapper[tuple[_T_co, ...]]):
             A new [trcks.oop.TupleWrapper][] instance with
                 a [tuple][] containing the single value.
 
-        Example:
+        Examples:
             >>> from trcks.oop import TupleWrapper
             >>> tuple_wrapper: TupleWrapper[int] = TupleWrapper.construct(42)
             >>> tuple_wrapper
@@ -112,7 +112,7 @@ class TupleWrapper(BaseWrapper[tuple[_T_co, ...]]):
             A new [trcks.oop.TupleWrapper][] instance with
                 the wrapped [collections.abc.Iterable][] converted into a [tuple][].
 
-        Example:
+        Examples:
             >>> from trcks.oop import TupleWrapper
             >>> tuple_wrapper: TupleWrapper[int] = TupleWrapper.construct_from_iterable(
             ...     [1, 2, 3]
@@ -148,7 +148,7 @@ class TupleWrapper(BaseWrapper[tuple[_T_co, ...]]):
             A new [trcks.oop.TupleWrapper][] instance with a homogeneous [tuple][]
                 containing the results of applying the function to each element.
 
-        Example:
+        Examples:
             >>> from trcks.oop import TupleWrapper
             >>> def double_integer(n: int) -> int:
             ...     return n * 2
@@ -184,7 +184,7 @@ class TupleWrapper(BaseWrapper[tuple[_T_co, ...]]):
                 an awaitable homogeneous [tuple][] containing
                 the results of applying the function to each element.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks.oop import AwaitableTupleWrapper, TupleWrapper
             >>> async def slowly_add_one(n: int) -> int:
@@ -226,7 +226,7 @@ class TupleWrapper(BaseWrapper[tuple[_T_co, ...]]):
             An [trcks.oop.AwaitableTupleWrapper][] instance with
                 the flattened awaitable homogeneous [tuple][].
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks.oop import TupleWrapper
             >>> async def slowly_duplicate(n: int) -> tuple[int, int]:
@@ -272,7 +272,7 @@ class TupleWrapper(BaseWrapper[tuple[_T_co, ...]]):
                 - a [trcks.SuccessTuple][] if the function returns [trcks.Success][]
                     for all elements.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks import Result
             >>> from trcks.oop import AwaitableResultTupleWrapper, TupleWrapper
@@ -336,7 +336,7 @@ class TupleWrapper(BaseWrapper[tuple[_T_co, ...]]):
                 - a flattened awaitable [trcks.SuccessTuple][] if the
                     function returns [trcks.SuccessTuple][] for all elements.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks import ResultTuple
             >>> from trcks.oop import AwaitableResultTupleWrapper, TupleWrapper
@@ -419,7 +419,7 @@ class TupleWrapper(BaseWrapper[tuple[_T_co, ...]]):
             A new [trcks.oop.TupleWrapper][] instance with
                 the flattened homogeneous [tuple][].
 
-        Example:
+        Examples:
             >>> from trcks.oop import TupleWrapper
             >>> def duplicate_integer(n: int) -> tuple[int, int]:
             ...     return n, n
@@ -457,7 +457,7 @@ class TupleWrapper(BaseWrapper[tuple[_T_co, ...]]):
                 - a [trcks.SuccessTuple][] with all transformed elements if
                     the function returns [trcks.Success][] for all elements.
 
-        Example:
+        Examples:
             >>> from trcks import Result
             >>> from trcks.oop import TupleWrapper
             >>> def double_if_positive(n: int) -> Result[str, int]:
@@ -502,7 +502,7 @@ class TupleWrapper(BaseWrapper[tuple[_T_co, ...]]):
                 - a flattened [trcks.SuccessTuple][] if
                     the function returns [trcks.SuccessTuple][] for all elements.
 
-        Example:
+        Examples:
             >>> from trcks import ResultTuple
             >>> from trcks.oop import TupleWrapper
             >>> def expand_if_positive(n: int) -> ResultTuple[str, int]:
@@ -564,7 +564,7 @@ class TupleWrapper(BaseWrapper[tuple[_T_co, ...]]):
             A new [trcks.oop.TupleWrapper][] instance with
                 the original homogeneous [tuple][].
 
-        Example:
+        Examples:
             >>> from trcks.oop import TupleWrapper
             >>> def log_integer(n: int) -> None:
             ...     print(f"Received: {n}")
@@ -602,7 +602,7 @@ class TupleWrapper(BaseWrapper[tuple[_T_co, ...]]):
             An [trcks.oop.AwaitableTupleWrapper][] instance with
                 the original awaitable homogeneous [tuple][].
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks.oop import TupleWrapper
             >>> async def slowly_log_integer(n: int) -> None:
@@ -647,7 +647,7 @@ class TupleWrapper(BaseWrapper[tuple[_T_co, ...]]):
             An [trcks.oop.AwaitableTupleWrapper][] instance with
                 the original awaitable homogeneous [tuple][].
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks.oop import AwaitableTupleWrapper, TupleWrapper
             >>> async def write_to_disk(n: int) -> tuple[str, str]:
@@ -696,7 +696,7 @@ class TupleWrapper(BaseWrapper[tuple[_T_co, ...]]):
                 - *the original* homogeneous [tuple][] with each element
                     repeated for the first [trcks.Success][] if all succeed.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks import Result, ResultTuple
             >>> from trcks.oop import AwaitableResultTupleWrapper, TupleWrapper
@@ -759,7 +759,7 @@ class TupleWrapper(BaseWrapper[tuple[_T_co, ...]]):
                 - *the original* element repeated once per element in the side
                     effect output for each element if all succeed.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks import ResultTuple
             >>> from trcks.oop import AwaitableResultTupleWrapper, TupleWrapper
@@ -841,7 +841,7 @@ class TupleWrapper(BaseWrapper[tuple[_T_co, ...]]):
             A new [trcks.oop.TupleWrapper][] instance with
                 the original homogeneous [tuple][].
 
-        Example:
+        Examples:
             >>> from trcks.oop import TupleWrapper
             >>> def get_divisors(n: int) -> tuple[int, ...]:
             ...     candidates = range(1, n + 1)
@@ -882,7 +882,7 @@ class TupleWrapper(BaseWrapper[tuple[_T_co, ...]]):
                     if the applied side effect returns [trcks.Success][]
                     for all elements.
 
-        Example:
+        Examples:
             >>> from trcks import Result
             >>> from trcks.oop import TupleWrapper
             >>> def audit(n: int) -> Result[str, None]:
@@ -929,7 +929,7 @@ class TupleWrapper(BaseWrapper[tuple[_T_co, ...]]):
                     per element in the side effect output if the applied side effect
                     returns [trcks.SuccessTuple][] for all elements.
 
-        Example:
+        Examples:
             >>> from trcks import ResultTuple
             >>> from trcks.oop import TupleWrapper
             >>> def audit(n: int) -> ResultTuple[str, None]:

@@ -53,7 +53,7 @@ class Wrapper(BaseWrapper[_T_co]):
     The `trcks.oop.Wrapper.tap*` methods allow for side effects
     without changing the wrapped object.
 
-    Example:
+    Examples:
         The string `"Hello"` is wrapped and manipulated in the following example.
         Finally, the result is unwrapped:
 
@@ -80,7 +80,7 @@ class Wrapper(BaseWrapper[_T_co]):
         Returns:
             A new [trcks.oop.Wrapper][] instance with the wrapped object.
 
-        Example:
+        Examples:
             >>> Wrapper.construct(5)
             Wrapper(core=5)
         """
@@ -105,7 +105,7 @@ class Wrapper(BaseWrapper[_T_co]):
             A new [trcks.oop.Wrapper][] instance
                 with the result of the function application.
 
-        Example:
+        Examples:
             >>> Wrapper.construct(5).map(lambda n: f"The number is {n}.")
             Wrapper(core='The number is 5.')
         """
@@ -130,7 +130,7 @@ class Wrapper(BaseWrapper[_T_co]):
             A [trcks.oop.AwaitableWrapper][] instance with
                 the result of the function application.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks.oop import Wrapper
             >>> async def stringify_slowly(o: object) -> str:
@@ -168,7 +168,7 @@ class Wrapper(BaseWrapper[_T_co]):
             A [trcks.oop.AwaitableTupleWrapper][] instance with
                 the result of the function application.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks.oop import Wrapper
             >>> async def slowly_duplicate(n: int) -> tuple[int, int]:
@@ -208,7 +208,7 @@ class Wrapper(BaseWrapper[_T_co]):
             A [trcks.oop.AwaitableResultWrapper][] instance with
                 the result of the function application.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks import Result
             >>> from trcks.oop import Wrapper
@@ -252,7 +252,7 @@ class Wrapper(BaseWrapper[_T_co]):
             A [trcks.oop.AwaitableResultTupleWrapper][] instance with
                 the result of the function application.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks import AwaitableResultTuple
             >>> from trcks.oop import Wrapper
@@ -320,7 +320,7 @@ class Wrapper(BaseWrapper[_T_co]):
             A [trcks.oop.TupleWrapper][] instance with
                 the result of the function application.
 
-        Example:
+        Examples:
             >>> from trcks.oop import Wrapper
             >>> def duplicate(n: int) -> tuple[int, int]:
             ...     return n, n
@@ -350,7 +350,7 @@ class Wrapper(BaseWrapper[_T_co]):
             A [trcks.oop.ResultWrapper][] instance with
                 the result of the function application.
 
-        Example:
+        Examples:
             >>> Wrapper.construct(-1).map_to_result(
             ...     lambda n: ("success", n)
             ...     if n >= 0
@@ -380,7 +380,7 @@ class Wrapper(BaseWrapper[_T_co]):
             A [trcks.oop.ResultTupleWrapper][] instance with
                 the result of the function application.
 
-        Example:
+        Examples:
             >>> from trcks import ResultTuple
             >>> Wrapper.construct(-1).map_to_result_iterable(
             ...     lambda n: ("success", (n, n))
@@ -430,7 +430,7 @@ class Wrapper(BaseWrapper[_T_co]):
             A new [trcks.oop.Wrapper][] instance with the original wrapped object,
                 allowing for further method chaining.
 
-        Example:
+        Examples:
             >>> wrapper = Wrapper.construct(5).tap(lambda n: print(f"Number: {n}"))
             Number: 5
             >>> wrapper
@@ -456,7 +456,7 @@ class Wrapper(BaseWrapper[_T_co]):
         Returns:
             A [trcks.oop.AwaitableWrapper][] instance with the original wrapped object.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks.oop import Wrapper
             >>> async def write_to_disk(s: str) -> None:
@@ -499,7 +499,7 @@ class Wrapper(BaseWrapper[_T_co]):
                 the original wrapped object repeated once per item returned by the
                 side effect.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks.oop import Wrapper
             >>> async def write_to_disk(n: int) -> tuple[str, str]:
@@ -542,7 +542,7 @@ class Wrapper(BaseWrapper[_T_co]):
                 - a [trcks.Success][] instance containing *the original* wrapped object
                     if the given side effect returns a [trcks.Success][].
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks import Result
             >>> from trcks.oop import Wrapper
@@ -604,7 +604,7 @@ class Wrapper(BaseWrapper[_T_co]):
                     in the side effect output if the given side effect
                     returns [trcks.SuccessIterable][].
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks import AwaitableResultTuple
             >>> from trcks.oop import Wrapper
@@ -674,7 +674,7 @@ class Wrapper(BaseWrapper[_T_co]):
             A [trcks.oop.TupleWrapper][] instance with the original wrapped
                 object repeated once per item returned by the side effect.
 
-        Example:
+        Examples:
             >>> from trcks.oop import Wrapper
             >>> def write_to_disk(n: int) -> tuple[str, str]:
             ...     print(f"Wrote {n} to disk.")
@@ -710,7 +710,7 @@ class Wrapper(BaseWrapper[_T_co]):
                 - a [trcks.Success][] instance containing *the original* wrapped object
                     if the given side effect returns a [trcks.Success][].
 
-        Example:
+        Examples:
             >>> from trcks import Result
             >>> from trcks.oop import Wrapper
             >>> def print_positive_float(x: float) -> Result[str, None]:
@@ -759,7 +759,7 @@ class Wrapper(BaseWrapper[_T_co]):
                     per element in the side effect output if the given side effect
                     returns [trcks.SuccessIterable][].
 
-        Example:
+        Examples:
             >>> from trcks import ResultTuple
             >>> from trcks.oop import Wrapper
             >>> def print_positive_float(x: float) -> ResultTuple[str, None]:

@@ -33,7 +33,7 @@ class BaseAwaitableWrapper(BaseWrapper[Awaitable[_T_co]]):
             has type [collections.abc.Awaitable][],
             a superclass of [collections.abc.Coroutine][].
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks.oop import BaseAwaitableWrapper
             >>> loop = asyncio.new_event_loop()

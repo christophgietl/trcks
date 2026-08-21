@@ -5,7 +5,6 @@ exclude_docs: |
 
 markdown_extensions:
   - admonition
-  - pycon
   - pymdownx.details
   - pymdownx.highlight
   - pymdownx.superfences

@@ -21,7 +21,7 @@ class BaseWrapper(Generic[_T_co]):
         please consider using one of its subclasses,
         such as [trcks.oop.Wrapper][].
 
-    Example:
+    Examples:
         Wrapping and unwrapping an integer:
 
             >>> from trcks.oop import BaseWrapper

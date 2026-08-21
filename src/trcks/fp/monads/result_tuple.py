@@ -3,7 +3,7 @@
 Provides utilities for functional composition of
 functions returning [trcks.ResultTuple][] values.
 
-Example:
+Examples:
     Map and tap each element inside a success tuple:
 
     >>> from trcks.fp.composition import pipe
@@ -70,7 +70,7 @@ def construct_failure(value: _F) -> Failure[_F]:
         This function is an alias for
         [trcks.fp.monads.result.construct_failure][].
 
-    Example:
+    Examples:
         >>> from trcks.fp.monads import result_tuple as rt
         >>> rt.construct_failure("not found")
         ('failure', 'not found')
@@ -88,7 +88,7 @@ def construct_from_result(rslt: Result[_F, _S]) -> ResultTuple[_F, _S]:
         A new [trcks.ResultTuple][] instance with the success payload
             wrapped in a homogeneous tuple.
 
-    Example:
+    Examples:
         >>> from trcks.fp.monads import result_tuple as rt
         >>> rt.construct_from_result(("success", 7))
         ('success', (7,))
@@ -109,7 +109,7 @@ def construct_from_result_iterable(r_it: ResultIterable[_F, _S]) -> ResultTuple[
             with the success payload converted to a tuple,
             or the original failure.
 
-    Example:
+    Examples:
         >>> from trcks.fp.monads import result_tuple as rt
         >>> rt.construct_from_result_iterable(("success", [1, 2]))
         ('success', (1, 2))
@@ -128,7 +128,7 @@ def construct_successes(value: _S) -> SuccessTuple[_S]:
     Returns:
         A new [trcks.SuccessTuple][] instance containing the single value.
 
-    Example:
+    Examples:
         >>> from trcks.fp.monads import result_tuple as rt
         >>> rt.construct_successes(42)
         ('success', (42,))
@@ -146,7 +146,7 @@ def construct_successes_from_iterable(it: Iterable[_S]) -> SuccessTuple[_S]:
     Returns:
         The [trcks.SuccessTuple][] created from the iterable.
 
-    Example:
+    Examples:
         >>> from trcks.fp.monads import result_tuple as rt
         >>> rt.construct_successes_from_iterable((1, 2))
         ('success', (1, 2))
@@ -181,7 +181,7 @@ def map_failure(
             according to the given function and
             leaves [trcks.SuccessTuple][] values unchanged.
 
-    Example:
+    Examples:
         >>> from collections.abc import Callable
         >>> from trcks import ResultTuple
         >>> from trcks.fp.monads import result_tuple as rt
@@ -221,7 +221,7 @@ def map_failure_to_iterable(
             in a [trcks.Success][] according to the given function and
             leaves [trcks.SuccessTuple][] values unchanged.
 
-    Example:
+    Examples:
         >>> from collections.abc import Callable
         >>> from trcks import ResultTuple, SuccessTuple
         >>> from trcks.fp.monads import result_tuple as rt
@@ -279,7 +279,7 @@ def map_failure_to_result(
             values according to the given function and
             leaves [trcks.SuccessTuple][] values unchanged.
 
-    Example:
+    Examples:
         >>> from collections.abc import Callable
         >>> from trcks import ResultTuple
         >>> from trcks.fp.monads import result_tuple as rt
@@ -325,7 +325,7 @@ def map_failure_to_result_iterable(
             according to the given function and
             leaves [trcks.SuccessTuple][] values unchanged.
 
-    Example:
+    Examples:
         >>> from collections.abc import Callable
         >>> from trcks import ResultTuple
         >>> from trcks.fp.monads import result_tuple as rt
@@ -389,7 +389,7 @@ def map_successes(
             maps each element of a [trcks.SuccessTuple][] to a new element
             according to the given function.
 
-    Example:
+    Examples:
         >>> from collections.abc import Callable
         >>> from trcks import ResultTuple
         >>> from trcks.fp.monads import result_tuple as rt
@@ -429,7 +429,7 @@ def map_successes_to_iterable(
             flat-maps each element of a [trcks.SuccessTuple][] to a
             [collections.abc.Iterable][] according to the given function.
 
-    Example:
+    Examples:
         >>> from collections.abc import Callable
         >>> from trcks import ResultTuple
         >>> from trcks.fp.monads import result_tuple as rt
@@ -470,7 +470,7 @@ def map_successes_to_result(
             [trcks.Failure][] and [trcks.Success][] values according to the given
             function, returning the first [trcks.Failure][] encountered, if any.
 
-    Example:
+    Examples:
         >>> from collections.abc import Callable
         >>> from trcks import Result, ResultTuple
         >>> from trcks.fp.monads import result_tuple as rt
@@ -517,7 +517,7 @@ def map_successes_to_result_iterable(
             [trcks.ResultTuple][] values according to the given function,
             returning the first [trcks.Failure][] returned by `f`, if any.
 
-    Example:
+    Examples:
         >>> from collections.abc import Callable
         >>> from trcks import ResultTuple
         >>> from trcks.fp.monads import result_tuple as rt
@@ -608,7 +608,7 @@ def tap_failure(
             returns the original [trcks.Failure][] value.
             Passes on [trcks.SuccessTuple][] values without side effects.
 
-    Example:
+    Examples:
         >>> from collections.abc import Callable
         >>> from trcks import ResultTuple
         >>> from trcks.fp.monads import result_tuple as rt
@@ -651,7 +651,7 @@ def tap_failure_to_iterable(
             by the side effect.
             Passes on [trcks.SuccessTuple][] values without side effects.
 
-    Example:
+    Examples:
         >>> from collections.abc import Callable
         >>> from trcks import ResultTuple, SuccessTuple
         >>> from trcks.fp.monads import result_tuple as rt
@@ -704,7 +704,7 @@ def tap_failure_to_result(
             *this* [trcks.Success][] is returned (wrapped as a homogeneous tuple).
             Passes on [trcks.SuccessTuple][] values without side effects.
 
-    Example:
+    Examples:
         >>> from collections.abc import Callable
         >>> from trcks import Result, ResultTuple
         >>> from trcks.fp.monads import result_tuple as rt
@@ -753,7 +753,7 @@ def tap_failure_to_result_iterable(
             *this* [trcks.SuccessIterable][] is returned.
             Passes on [trcks.SuccessTuple][] values without side effects.
 
-    Example:
+    Examples:
         >>> from collections.abc import Callable
         >>> from trcks import Result, ResultTuple
         >>> from trcks.fp.monads import result_tuple as rt
@@ -817,7 +817,7 @@ def tap_successes(
             [trcks.SuccessTuple][] and returns the original
             [trcks.SuccessTuple][].
 
-    Example:
+    Examples:
         >>> from collections.abc import Callable
         >>> from trcks import ResultTuple
         >>> from trcks.fp.monads import result_tuple as rt
@@ -863,7 +863,7 @@ def tap_successes_to_iterable(
             and repeats each original element once per element in the
             [collections.abc.Iterable][] returned by the side effect.
 
-    Example:
+    Examples:
         >>> from collections.abc import Callable
         >>> from trcks import ResultTuple
         >>> from trcks.fp.monads import result_tuple as rt
@@ -907,7 +907,7 @@ def tap_successes_to_result(
             If the given side effect returns a [trcks.Success][],
             *the original* [trcks.SuccessTuple][] element is returned.
 
-    Example:
+    Examples:
         >>> from collections.abc import Callable
         >>> from trcks import Result, ResultTuple
         >>> from trcks.fp.monads import result_tuple as rt
@@ -959,7 +959,7 @@ def tap_successes_to_result_iterable(
             *the original* [trcks.SuccessTuple][] element is repeated once
             per element in the side effect output.
 
-    Example:
+    Examples:
         >>> from collections.abc import Callable
         >>> from trcks import ResultTuple
         >>> from trcks.fp.monads import result_tuple as rt

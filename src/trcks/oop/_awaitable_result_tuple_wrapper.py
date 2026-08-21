@@ -47,7 +47,7 @@ class AwaitableResultTupleWrapper(
     The `trcks.oop.AwaitableResultTupleWrapper.tap*` methods allow for side effects
     without changing the wrapped [trcks.ResultTuple][].
 
-    Example:
+    Examples:
         >>> from trcks.oop import AwaitableResultTupleWrapper
         >>> import asyncio
         >>> from trcks import Result
@@ -81,7 +81,7 @@ class AwaitableResultTupleWrapper(
             A new [trcks.oop.AwaitableResultTupleWrapper][] instance with
                 the wrapped [trcks.AwaitableResultTuple][] object.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks.oop import AwaitableResultTupleWrapper
             >>> wrapper = AwaitableResultTupleWrapper.construct_failure("not found")
@@ -105,7 +105,7 @@ class AwaitableResultTupleWrapper(
             A new [trcks.oop.AwaitableResultTupleWrapper][] instance with
                 the wrapped [trcks.AwaitableResultTuple][] object.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks.oop import AwaitableResultTupleWrapper
             >>> async def get_error() -> str:
@@ -140,7 +140,7 @@ class AwaitableResultTupleWrapper(
                 the success payload is wrapped in a single-element tuple,
                 or the original failure is preserved.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks.fp.monads import awaitable_result as ar
             >>> from trcks.oop import AwaitableResultTupleWrapper
@@ -179,7 +179,7 @@ class AwaitableResultTupleWrapper(
                 the success payload is converted to a tuple,
                 or the original failure is preserved.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks import ResultIterable
             >>> from trcks.oop import AwaitableResultTupleWrapper
@@ -217,7 +217,7 @@ class AwaitableResultTupleWrapper(
                 the success payload is wrapped in a single-element tuple,
                 or the original failure is preserved.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks.oop import AwaitableResultTupleWrapper
             >>> wrapper_1 = (
@@ -254,7 +254,7 @@ class AwaitableResultTupleWrapper(
             A new [trcks.oop.AwaitableResultTupleWrapper][] instance with
                 the wrapped [trcks.AwaitableResultTuple][] object.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks.oop import AwaitableResultTupleWrapper
             >>> wrapper = (
@@ -288,7 +288,7 @@ class AwaitableResultTupleWrapper(
             A new [trcks.oop.AwaitableResultTupleWrapper][] instance with
                 the wrapped [trcks.AwaitableResultTuple][] object.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks.oop import AwaitableResultTupleWrapper
             >>> wrapper = AwaitableResultTupleWrapper.construct_successes(42)
@@ -313,7 +313,7 @@ class AwaitableResultTupleWrapper(
             A new [trcks.oop.AwaitableResultTupleWrapper][] instance with
                 the wrapped [trcks.AwaitableResultTuple][] object.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks.oop import AwaitableResultTupleWrapper
             >>> async def read_value() -> int:
@@ -347,7 +347,7 @@ class AwaitableResultTupleWrapper(
             A new [trcks.oop.AwaitableResultTupleWrapper][] instance with
                 the wrapped [trcks.AwaitableResultTuple][] object.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks import AwaitableIterable
             >>> from trcks.fp.monads import awaitable as a
@@ -379,7 +379,7 @@ class AwaitableResultTupleWrapper(
             A new [trcks.oop.AwaitableResultTupleWrapper][] instance with
                 the wrapped [trcks.AwaitableResultTuple][] object.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks.oop import AwaitableResultTupleWrapper
             >>> wrapper = (
@@ -428,7 +428,7 @@ class AwaitableResultTupleWrapper(
                     the original [trcks.AwaitableResultTuple][] is a failure, or
                 - the original [trcks.AwaitableResultTuple][] if it is a success.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks.oop import AwaitableResultTupleWrapper
             >>> wrapper_1 = (
@@ -479,7 +479,7 @@ class AwaitableResultTupleWrapper(
                     the original [trcks.AwaitableResultTuple][] is a failure, or
                 - the original [trcks.AwaitableResultTuple][] if it is a success.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks.oop import AwaitableResultTupleWrapper
             >>> async def _slowly_add_prefix(s: str) -> str:
@@ -537,7 +537,7 @@ class AwaitableResultTupleWrapper(
                     the original [trcks.AwaitableResultTuple][] is a failure, or
                 - the original [trcks.AwaitableResultTuple][] if it is a success.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks.oop import AwaitableResultTupleWrapper
             >>> async def _slowly_recover_from_failure(
@@ -609,7 +609,7 @@ class AwaitableResultTupleWrapper(
                     the original [trcks.AwaitableResultTuple][] is a failure, or
                 - the original [trcks.AwaitableResultTuple][] if it is a success.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks import Result
             >>> from trcks.oop import AwaitableResultTupleWrapper
@@ -678,7 +678,7 @@ class AwaitableResultTupleWrapper(
                     the original [trcks.AwaitableResultTuple][] is a failure, or
                 - the original [trcks.AwaitableResultTuple][] if it is a success.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks import ResultTuple
             >>> from trcks.oop import AwaitableResultTupleWrapper
@@ -785,7 +785,7 @@ class AwaitableResultTupleWrapper(
                     the original [trcks.AwaitableResultTuple][] is a failure, or
                 - the original [trcks.AwaitableResultTuple][] if it is a success.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks.oop import AwaitableResultTupleWrapper
             >>> def _recover_from_not_found(description: str) -> tuple[int, ...]:
@@ -854,7 +854,7 @@ class AwaitableResultTupleWrapper(
                     the original [trcks.AwaitableResultTuple][] is a failure, or
                 - the original [trcks.AwaitableResultTuple][] if it is a success.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks import Result
             >>> from trcks.oop import AwaitableResultTupleWrapper
@@ -922,7 +922,7 @@ class AwaitableResultTupleWrapper(
                     the original [trcks.AwaitableResultTuple][] is a failure, or
                 - the original [trcks.AwaitableResultTuple][] if it is a success.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks import ResultTuple
             >>> from trcks.oop import AwaitableResultTupleWrapper
@@ -1017,7 +1017,7 @@ class AwaitableResultTupleWrapper(
                 - an [trcks.AwaitableSuccessTuple][] with transformed elements if
                     the original [trcks.AwaitableResultTuple][] is a success.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks.oop import AwaitableResultTupleWrapper
             >>> wrapper_1 = (
@@ -1070,7 +1070,7 @@ class AwaitableResultTupleWrapper(
                 - an [trcks.AwaitableSuccessTuple][] with transformed elements if
                     the original [trcks.AwaitableResultTuple][] is a success.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks.oop import AwaitableResultTupleWrapper
             >>> async def _slowly_double_integer(n: int) -> int:
@@ -1128,7 +1128,7 @@ class AwaitableResultTupleWrapper(
                 - a flattened [trcks.AwaitableSuccessTuple][] if
                     the original [trcks.AwaitableResultTuple][] is a success.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks.oop import AwaitableResultTupleWrapper
             >>> async def _slowly_duplicate_integer(n: int) -> tuple[int, int]:
@@ -1186,7 +1186,7 @@ class AwaitableResultTupleWrapper(
                 - an [trcks.AwaitableSuccessTuple][] with all transformed
                     elements if the function returns success for all elements.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks import Result
             >>> from trcks.oop import AwaitableResultTupleWrapper
@@ -1266,7 +1266,7 @@ class AwaitableResultTupleWrapper(
                 - a flattened [trcks.AwaitableSuccessTuple][] if the function
                     returns success for all elements.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks import ResultTuple
             >>> from trcks.oop import AwaitableResultTupleWrapper
@@ -1376,7 +1376,7 @@ class AwaitableResultTupleWrapper(
                 - a flattened [trcks.AwaitableSuccessTuple][] if
                     the original [trcks.AwaitableResultTuple][] is a success.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks.oop import AwaitableResultTupleWrapper
             >>> def _duplicate_integer(n: int) -> tuple[int, int]:
@@ -1423,7 +1423,7 @@ class AwaitableResultTupleWrapper(
                 - an [trcks.AwaitableSuccessTuple][] with all transformed
                     elements if the function returns success for all elements.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks import Result
             >>> from trcks.oop import AwaitableResultTupleWrapper
@@ -1493,7 +1493,7 @@ class AwaitableResultTupleWrapper(
                 - a flattened [trcks.AwaitableSuccessTuple][] if the function
                     returns success for all elements.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks import ResultTuple
             >>> from trcks.oop import AwaitableResultTupleWrapper
@@ -1574,7 +1574,7 @@ class AwaitableResultTupleWrapper(
                 with the original [trcks.AwaitableResultTuple][] object,
                 allowing for further method chaining.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks.oop import AwaitableResultTupleWrapper
             >>> def _log_failure(description: str) -> None:
@@ -1625,7 +1625,7 @@ class AwaitableResultTupleWrapper(
                 with the original [trcks.AwaitableResultTuple][] object,
                 allowing for further method chaining.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks.oop import AwaitableResultTupleWrapper
             >>> async def _slowly_log_failure(e: str) -> None:
@@ -1688,7 +1688,7 @@ class AwaitableResultTupleWrapper(
                 - the original [trcks.AwaitableSuccessTuple][]
                     if no side effect was applied.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks.oop import AwaitableResultTupleWrapper
             >>> async def _slowly_log_and_alert(
@@ -1757,7 +1757,7 @@ class AwaitableResultTupleWrapper(
                 - *the original* [trcks.SuccessTuple][]
                     if no side effect was applied.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks import Result
             >>> from trcks.oop import AwaitableResultTupleWrapper
@@ -1821,7 +1821,7 @@ class AwaitableResultTupleWrapper(
                 - *the original* [trcks.SuccessTuple][]
                     if no side effect was applied.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks import ResultTuple
             >>> from trcks.oop import AwaitableResultTupleWrapper
@@ -1922,7 +1922,7 @@ class AwaitableResultTupleWrapper(
                 - the original [trcks.AwaitableSuccessTuple][]
                     if no side effect was applied.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks.oop import AwaitableResultTupleWrapper
             >>> def _log_and_alert(description: str) -> tuple[None, None]:
@@ -1988,7 +1988,7 @@ class AwaitableResultTupleWrapper(
                 - *the original* [trcks.SuccessTuple][]
                     if no side effect was applied.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks import Result
             >>> from trcks.oop import AwaitableResultTupleWrapper
@@ -2059,7 +2059,7 @@ class AwaitableResultTupleWrapper(
                 - *the original* [trcks.SuccessTuple][]
                     if no side effect was applied.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks import ResultTuple
             >>> from trcks.oop import AwaitableResultTupleWrapper
@@ -2151,7 +2151,7 @@ class AwaitableResultTupleWrapper(
                 with the original [trcks.AwaitableResultTuple][] object,
                 allowing for further method chaining.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks.oop import AwaitableResultTupleWrapper
             >>> def _log_value(n: int) -> None:
@@ -2205,7 +2205,7 @@ class AwaitableResultTupleWrapper(
                 with the original [trcks.AwaitableResultTuple][] object,
                 allowing for further method chaining.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks.oop import AwaitableResultTupleWrapper
             >>> async def _slowly_log_value(n: int) -> None:
@@ -2269,7 +2269,7 @@ class AwaitableResultTupleWrapper(
                     element is repeated once per element returned by
                     the side effect.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks.oop import AwaitableResultTupleWrapper
             >>> async def _slowly_log_twice(n: int) -> tuple[None, None]:
@@ -2320,7 +2320,7 @@ class AwaitableResultTupleWrapper(
                 - *the original* [trcks.AwaitableSuccessTuple][]
                     if the applied side effect returns success for all elements.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks import Result
             >>> from trcks.oop import AwaitableResultTupleWrapper
@@ -2395,7 +2395,7 @@ class AwaitableResultTupleWrapper(
                     in the side effect output if the applied side effect returns
                     success for all elements.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks import ResultTuple
             >>> from trcks.oop import AwaitableResultTupleWrapper
@@ -2500,7 +2500,7 @@ class AwaitableResultTupleWrapper(
                     is repeated once per element in the tuple returned by the
                     side effect.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks.oop import AwaitableResultTupleWrapper
             >>> def _log_twice(n: int) -> tuple[None, None]:
@@ -2550,7 +2550,7 @@ class AwaitableResultTupleWrapper(
                 - *the original* [trcks.AwaitableSuccessTuple][]
                     if the applied side effect returns success for all elements.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks import Result
             >>> from trcks.oop import AwaitableResultTupleWrapper
@@ -2621,7 +2621,7 @@ class AwaitableResultTupleWrapper(
                     in the side effect output if the applied side effect returns
                     success for all elements.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks import ResultTuple
             >>> from trcks.oop import AwaitableResultTupleWrapper

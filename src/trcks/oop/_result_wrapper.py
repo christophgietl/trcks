@@ -45,7 +45,7 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
     The `trcks.oop.ResultWrapper.map*` methods allow method chaining.
     The `trcks.oop.ResultWrapper.tap*` methods allow for side effects.
 
-    Example:
+    Examples:
         >>> import math
         >>> from trcks.oop import ResultWrapper
         >>> result_wrapper = (
@@ -77,7 +77,7 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
             A new [trcks.oop.ResultWrapper][] instance
                 with the wrapped [trcks.Failure][] object.
 
-        Example:
+        Examples:
             >>> ResultWrapper.construct_failure(42)
             ResultWrapper(core=('failure', 42))
         """
@@ -96,7 +96,7 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
             A new [trcks.oop.ResultWrapper][] instance
                 with the wrapped [trcks.Result][] object.
 
-        Example:
+        Examples:
             >>> ResultWrapper.construct_from_result(("success", 0.0))
             ResultWrapper(core=('success', 0.0))
         """
@@ -113,7 +113,7 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
             A new [trcks.oop.ResultWrapper][] instance with
                 the wrapped [trcks.Success][] object.
 
-        Example:
+        Examples:
             >>> ResultWrapper.construct_success(42)
             ResultWrapper(core=('success', 42))
         """
@@ -143,7 +143,7 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
                     the original [trcks.Result][] is a failure, or
                 - the original [trcks.Result][] object if it is a success.
 
-        Example:
+        Examples:
             >>> ResultWrapper.construct_failure("negative value").map_failure(
             ...     lambda s: f"Prefix: {s}"
             ... )
@@ -180,7 +180,7 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
                     the original [trcks.Result][] is a failure, or
                 - the original [trcks.Result][] object if it is a success.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks.oop import ResultWrapper
             >>> async def add_prefix_slowly(s: str) -> str:
@@ -236,7 +236,7 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
                     the original [trcks.Result][] is a failure, or
                 - the original [trcks.Result][] object if it is a success.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks import Result
             >>> from trcks.oop import ResultWrapper
@@ -305,7 +305,7 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
                     the original [trcks.Result][] is a failure, or
                 - the original [trcks.Result][] object if it is a success.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks import AwaitableResultTuple
             >>> from trcks.oop import ResultWrapper
@@ -384,7 +384,7 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
                 - the original [trcks.Result][] object (wrapped as a tuple)
                     if it is a success.
 
-        Example:
+        Examples:
             >>> from trcks.oop import ResultWrapper
             >>> def recover(s: str) -> tuple[float, ...]:
             ...     if s == "not found":
@@ -435,7 +435,7 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
                     the original [trcks.Result][] is a failure, or
                 - the original [trcks.Result][] object if it is a success.
 
-        Example:
+        Examples:
             >>> from trcks import Result
             >>> from trcks.oop import ResultWrapper
             >>> def replace_not_found_by_default_value(s: str) -> Result[str, float]:
@@ -492,7 +492,7 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
                 - the original [trcks.Result][] object (wrapped as a tuple)
                     if it is a success.
 
-        Example:
+        Examples:
             >>> from trcks import ResultTuple
             >>> from trcks.oop import ResultWrapper
             >>> def expand_error(s: str) -> ResultTuple[str, float]:
@@ -567,7 +567,7 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
                 - the result of the function application if
                     the original [trcks.Result][] is a success.
 
-        Example:
+        Examples:
             >>> ResultWrapper.construct_failure("not found").map_success(lambda n: n+1)
             ResultWrapper(core=('failure', 'not found'))
             >>>
@@ -600,7 +600,7 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
                 - the result of the function application if
                     the original [trcks.Result][] is a success.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks.oop import ResultWrapper
             >>> async def increment_slowly(n: int) -> int:
@@ -656,7 +656,7 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
                 - the result of the function application if
                     the original [trcks.Result][] is a success.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> import math
             >>> from trcks import Result
@@ -726,7 +726,7 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
                 - the result of the function application if
                     the original [trcks.Result][] is a success.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks import AwaitableResultTuple
             >>> from trcks.oop import ResultWrapper
@@ -803,7 +803,7 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
                     of the function application if
                     the original [trcks.Result][] is a success.
 
-        Example:
+        Examples:
             >>> from trcks.oop import ResultWrapper
             >>> def duplicate(x: float) -> tuple[float, ...]:
             ...     return (x, x)
@@ -847,7 +847,7 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
                 - the result of the function application if
                     the original [trcks.Result][] is a success.
 
-        Example:
+        Examples:
             >>> import math
             >>> from trcks import Result
             >>> from trcks.oop import ResultWrapper
@@ -898,7 +898,7 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
                 - the result of the function application if
                     the original [trcks.Result][] is a success.
 
-        Example:
+        Examples:
             >>> from trcks import ResultTuple
             >>> from trcks.oop import ResultWrapper
             >>> def expand(x: float) -> ResultTuple[str, float]:
@@ -971,7 +971,7 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
                 with the original [trcks.Result][] object,
                 allowing for further method chaining.
 
-        Example:
+        Examples:
             >>> result_wrapper_1 = ResultWrapper.construct_failure(
             ...     "not found"
             ... ).tap_failure(lambda f: print(f"Failure: {f}"))
@@ -1008,7 +1008,7 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
                 with the original [trcks.Result][] object,
                 allowing for further method chaining.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks.oop import ResultWrapper
             >>> async def write_to_disk(output: str) -> None:
@@ -1064,7 +1064,7 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
                     if the applied side effect returns a [trcks.Success][] and
                 - *the original* [trcks.Success][] if no side effect was applied.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks import Result
             >>> from trcks.oop import ResultWrapper
@@ -1135,7 +1135,7 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
                     and
                 - *the original* [trcks.Success][] if no side effect was applied.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks import AwaitableResultTuple
             >>> from trcks.oop import ResultWrapper
@@ -1218,7 +1218,7 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
                 - *the original* [trcks.Success][] (wrapped as a tuple)
                     if no side effect was applied.
 
-        Example:
+        Examples:
             >>> from trcks.oop import ResultWrapper
             >>> def log_err(e: str) -> tuple[None, ...]:
             ...     print(f"Error logged: {e}")
@@ -1268,7 +1268,7 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
                     if the applied side effect returns a [trcks.Success][] and
                 - *the original* [trcks.Success][] if no side effect was applied.
 
-        Example:
+        Examples:
             >>> from trcks import Result
             >>> from trcks.oop import ResultWrapper
             >>> def replace_not_found_with_default(s: str) -> Result[object, float]:
@@ -1322,7 +1322,7 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
                 - *the original* [trcks.Success][] (wrapped as a tuple)
                     if no side effect was applied.
 
-        Example:
+        Examples:
             >>> from trcks import ResultTuple
             >>> from trcks.oop import ResultWrapper
             >>> def attempt_recover(s: str) -> ResultTuple[None, int]:
@@ -1395,7 +1395,7 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
                 with the original [trcks.Result][] object,
                 allowing for further method chaining.
 
-        Example:
+        Examples:
             >>> result_wrapper_1 = ResultWrapper.construct_failure(
             ...     "not found"
             ... ).tap_success(lambda n: print(f"Number: {n}"))
@@ -1432,7 +1432,7 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
                 with the original [trcks.Result][] object,
                 allowing for further method chaining.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks.oop import ResultWrapper
             >>> async def write_to_disk(s: str) -> None:
@@ -1488,7 +1488,7 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
                 - *the original* [trcks.Success][]
                     if the applied side effect returns a [trcks.Success][].
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks import Result
             >>> from trcks.oop import ResultWrapper
@@ -1575,7 +1575,7 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
                     in the returned [trcks.SuccessIterable][]
                     if the applied side effect returns a [trcks.SuccessIterable][].
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks import AwaitableResultTuple
             >>> from trcks.oop import ResultWrapper
@@ -1656,7 +1656,7 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
                     once per element in the [collections.abc.Iterable][]
                     returned by the side effect.
 
-        Example:
+        Examples:
             >>> from trcks.oop import ResultWrapper
             >>> def log_mult(n: int) -> tuple[None, ...]:
             ...     print(f"v={n}")
@@ -1736,7 +1736,7 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
                     per element in the side effect output) if the applied side effect
                     returns [trcks.SuccessIterable][].
 
-        Example:
+        Examples:
             >>> from trcks import ResultTuple
             >>> from trcks.oop import ResultWrapper
             >>> def audit(n: int) -> ResultTuple[str, None]:

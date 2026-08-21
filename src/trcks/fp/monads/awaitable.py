@@ -2,7 +2,7 @@
 
 Provides utilities for functional composition of asynchronous functions.
 
-Example:
+Examples:
     >>> import asyncio
     >>> from trcks.fp.composition import pipe
     >>> from trcks.fp.monads import awaitable as a
@@ -67,7 +67,7 @@ def construct(value: _T) -> Awaitable[_T]:
     Returns:
         The [collections.abc.Awaitable][] created from the value.
 
-    Example:
+    Examples:
         >>> import asyncio
         >>> from collections.abc import Awaitable
         >>> from trcks.fp.monads import awaitable as a
@@ -103,7 +103,7 @@ def map_(
         The underscore in the function name helps to avoid collisions
         with the built-in function [map][].
 
-    Example:
+    Examples:
         >>> import asyncio
         >>> from collections.abc import Awaitable
         >>> from trcks.fp.monads import awaitable as a
@@ -144,7 +144,7 @@ def map_to_awaitable(
             a function expecting and returning a [collections.abc.Awaitable][].
 
 
-    Example:
+    Examples:
         >>> import asyncio
         >>> from collections.abc import Awaitable
         >>> from trcks.fp.monads import awaitable as a
@@ -189,7 +189,7 @@ def tap(
             expecting a [collections.abc.Awaitable][] and
             returning the same [collections.abc.Awaitable][].
 
-    Example:
+    Examples:
         >>> import asyncio
         >>> from collections.abc import Awaitable
         >>> from trcks.fp.monads import awaitable as a
@@ -233,7 +233,7 @@ def tap_to_awaitable(
             expecting a [collections.abc.Awaitable][] and
             returning the same [collections.abc.Awaitable][].
 
-    Example:
+    Examples:
         >>> import asyncio
         >>> from collections.abc import Awaitable
         >>> from trcks.fp.monads import awaitable as a
@@ -277,7 +277,7 @@ async def to_coroutine(awtbl: Awaitable[_T]) -> _T:
         The type [collections.abc.Awaitable][] is
         a supertype of [collections.abc.Coroutine][].
 
-    Example:
+    Examples:
         Transform an [asyncio.Future][] into a [collections.abc.Coroutine][] and run it:
 
         >>> import asyncio

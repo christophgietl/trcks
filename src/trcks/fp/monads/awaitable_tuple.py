@@ -3,7 +3,7 @@
 Provides utilities for functional composition of
 asynchronous homogeneous-[tuple][]-returning functions.
 
-Example:
+Examples:
     Map and tap over an awaitable homogeneous tuple:
 
     >>> import asyncio
@@ -83,7 +83,7 @@ def construct(value: _T) -> AwaitableTuple[_T]:
     Returns:
         The [trcks.AwaitableTuple][] created from the value.
 
-    Example:
+    Examples:
         >>> import asyncio
         >>> from trcks import AwaitableTuple
         >>> from trcks.fp.monads import awaitable_tuple as at
@@ -103,7 +103,7 @@ def construct_from_awaitable(awtbl: Awaitable[_T]) -> AwaitableTuple[_T]:
     Returns:
         The [trcks.AwaitableTuple][] created from the awaitable value.
 
-    Example:
+    Examples:
         >>> import asyncio
         >>> from collections.abc import Awaitable
         >>> from trcks import AwaitableTuple
@@ -129,7 +129,7 @@ def construct_from_awaitable_iterable(
     Returns:
         The [trcks.AwaitableTuple][] created from the [trcks.AwaitableIterable][].
 
-    Example:
+    Examples:
         >>> import asyncio
         >>> from trcks import AwaitableIterable, AwaitableTuple
         >>> from trcks.fp.monads import awaitable as a
@@ -152,7 +152,7 @@ def construct_from_iterable(it: Iterable[_T]) -> AwaitableTuple[_T]:
     Returns:
         The [trcks.AwaitableTuple][] created from the iterable.
 
-    Example:
+    Examples:
         >>> import asyncio
         >>> from trcks import AwaitableTuple
         >>> from trcks.fp.monads import awaitable_tuple as at
@@ -197,7 +197,7 @@ def map_(
         The underscore in the function name helps to avoid collisions
         with the built-in function [map][].
 
-    Example:
+    Examples:
         >>> import asyncio
         >>> from trcks import AwaitableTuple
         >>> from trcks.fp.composition import pipe
@@ -240,7 +240,7 @@ def map_to_awaitable(
             a function expecting and returning
             [trcks.AwaitableTuple][]s of the same length.
 
-    Example:
+    Examples:
         >>> import asyncio
         >>> from trcks import AwaitableTuple
         >>> from trcks.fp.composition import pipe
@@ -286,7 +286,7 @@ def map_to_awaitable_iterable(
             a function expecting and returning
             [trcks.AwaitableTuple][]s of varying length.
 
-    Example:
+    Examples:
         >>> import asyncio
         >>> from trcks import AwaitableTuple
         >>> from trcks.fp.composition import pipe
@@ -349,7 +349,7 @@ def map_to_iterable(
             a function expecting and returning
             [trcks.AwaitableTuple][]s of varying length.
 
-    Example:
+    Examples:
         >>> import asyncio
         >>> from trcks import AwaitableTuple
         >>> from trcks.fp.composition import pipe
@@ -400,7 +400,7 @@ def tap(
             expecting a [trcks.AwaitableTuple][] and
             returning the same [trcks.AwaitableTuple][].
 
-    Example:
+    Examples:
         >>> import asyncio
         >>> from trcks import AwaitableTuple
         >>> from trcks.fp.composition import pipe
@@ -447,7 +447,7 @@ def tap_to_awaitable(
             expecting a [trcks.AwaitableTuple][] and
             returning the same [trcks.AwaitableTuple][].
 
-    Example:
+    Examples:
         >>> import asyncio
         >>> from trcks import AwaitableTuple
         >>> from trcks.fp.composition import pipe
@@ -502,7 +502,7 @@ def tap_to_awaitable_iterable(
             returning a [trcks.AwaitableTuple][] where each original element is
             repeated once per element returned by the side effect.
 
-    Example:
+    Examples:
         >>> import asyncio
         >>> from trcks import AwaitableTuple
         >>> from trcks.fp.composition import pipe
@@ -567,7 +567,7 @@ def tap_to_iterable(
             returning a [trcks.AwaitableTuple][] where each original element is
             repeated once per element returned by the side effect.
 
-    Example:
+    Examples:
         >>> import asyncio
         >>> from trcks import AwaitableTuple
         >>> from trcks.fp.composition import pipe
@@ -616,7 +616,7 @@ async def to_coroutine_tuple(a_tpl: AwaitableTuple[_T]) -> tuple[_T, ...]:
         an alias of [collections.abc.Awaitable][] over
         homogeneous [tuple][] values.
 
-    Example:
+    Examples:
         >>> import asyncio
         >>> from trcks import AwaitableTuple
         >>> from trcks.fp.monads import awaitable_tuple as at

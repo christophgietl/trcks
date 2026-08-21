@@ -34,7 +34,7 @@ class AwaitableTupleWrapper(BaseAwaitableWrapper[tuple[_T_co, ...]]):
     The `trcks.oop.AwaitableTupleWrapper.tap*` methods allow for side effects
     without changing the wrapped tuple.
 
-    Example:
+    Examples:
         >>> import asyncio
         >>> from trcks.oop import AwaitableTupleWrapper
         >>> async def slowly_double(n: int) -> int:
@@ -64,7 +64,7 @@ class AwaitableTupleWrapper(BaseAwaitableWrapper[tuple[_T_co, ...]]):
             A new [trcks.oop.AwaitableTupleWrapper][] instance with
                 the wrapped [trcks.AwaitableTuple][] object.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks.oop import AwaitableTupleWrapper
             >>> awaitable_tuple_wrapper = AwaitableTupleWrapper.construct(42)
@@ -88,7 +88,7 @@ class AwaitableTupleWrapper(BaseAwaitableWrapper[tuple[_T_co, ...]]):
             A new [trcks.oop.AwaitableTupleWrapper][] instance with
                 the wrapped [trcks.AwaitableTuple][] object.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks.oop import AwaitableTupleWrapper
             >>> async def slowly_get_value() -> int:
@@ -120,7 +120,7 @@ class AwaitableTupleWrapper(BaseAwaitableWrapper[tuple[_T_co, ...]]):
             A new [trcks.oop.AwaitableTupleWrapper][] instance with
                 the wrapped [trcks.AwaitableTuple][] object.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks import AwaitableIterable
             >>> from trcks.oop import AwaitableTupleWrapper
@@ -150,7 +150,7 @@ class AwaitableTupleWrapper(BaseAwaitableWrapper[tuple[_T_co, ...]]):
             A new [trcks.oop.AwaitableTupleWrapper][] instance with
                 the wrapped [trcks.AwaitableTuple][] object.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks.oop import AwaitableTupleWrapper
             >>> awaitable_tuple_wrapper = (
@@ -194,7 +194,7 @@ class AwaitableTupleWrapper(BaseAwaitableWrapper[tuple[_T_co, ...]]):
                 the wrapped [trcks.AwaitableTuple][] object containing
                 the results of applying the function to each element.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks.oop import AwaitableTupleWrapper
             >>> def double_integer(n: int) -> int:
@@ -233,7 +233,7 @@ class AwaitableTupleWrapper(BaseAwaitableWrapper[tuple[_T_co, ...]]):
                 the wrapped [trcks.AwaitableTuple][] object containing
                 the results of applying the function to each element.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks.oop import AwaitableTupleWrapper
             >>> async def slowly_add_one(n: int) -> int:
@@ -273,7 +273,7 @@ class AwaitableTupleWrapper(BaseAwaitableWrapper[tuple[_T_co, ...]]):
             A new [trcks.oop.AwaitableTupleWrapper][] instance with
                 the flattened [trcks.AwaitableTuple][] object.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks.oop import AwaitableTupleWrapper
             >>> async def slowly_duplicate(n: int) -> tuple[int, int]:
@@ -327,7 +327,7 @@ class AwaitableTupleWrapper(BaseAwaitableWrapper[tuple[_T_co, ...]]):
             A new [trcks.oop.AwaitableTupleWrapper][] instance with
                 the flattened [trcks.AwaitableTuple][] object.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks.oop import AwaitableTupleWrapper
             >>> def add_negative(n: int) -> tuple[int, int]:
@@ -377,7 +377,7 @@ class AwaitableTupleWrapper(BaseAwaitableWrapper[tuple[_T_co, ...]]):
             A new [trcks.oop.AwaitableTupleWrapper][] instance with
                 the original [trcks.AwaitableTuple][] object.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks.oop import AwaitableTupleWrapper
             >>> def log_integer(n: int) -> None:
@@ -417,7 +417,7 @@ class AwaitableTupleWrapper(BaseAwaitableWrapper[tuple[_T_co, ...]]):
             A new [trcks.oop.AwaitableTupleWrapper][] instance with
                 the original [trcks.AwaitableTuple][] object.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks.oop import AwaitableTupleWrapper
             >>> async def slowly_log(n: int) -> None:
@@ -459,7 +459,7 @@ class AwaitableTupleWrapper(BaseAwaitableWrapper[tuple[_T_co, ...]]):
             A new [trcks.oop.AwaitableTupleWrapper][] instance with
                 the original [trcks.AwaitableTuple][] object.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks.oop import AwaitableTupleWrapper
             >>> async def slowly_get_divisors(n: int) -> tuple[int, ...]:
@@ -514,7 +514,7 @@ class AwaitableTupleWrapper(BaseAwaitableWrapper[tuple[_T_co, ...]]):
             A new [trcks.oop.AwaitableTupleWrapper][] instance with
                 the original [trcks.AwaitableTuple][] object.
 
-        Example:
+        Examples:
             >>> import asyncio
             >>> from trcks.oop import AwaitableTupleWrapper
             >>> def get_divisors(n: int) -> tuple[int, ...]:

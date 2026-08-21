@@ -1,6 +1,6 @@
 """Types and higher order functions for function composition.
 
-Example:
+Examples:
     Sequentially apply two functions to one input value
     in three different ways:
 
@@ -213,7 +213,7 @@ def compose1(c: Composable1[_P0, _T1]) -> Callable[_P0, _T1]:
     Returns:
         Function that applies the given function.
 
-    Example:
+    Examples:
         >>> get_length = compose1((len,))
         >>> get_length("Hello, world!")
         13
@@ -243,7 +243,7 @@ def compose2(c: Composable2[_P0, _T1, _T2]) -> Callable[_P0, _T2]:
     Returns:
         Function that applies the given functions from first to last.
 
-    Example:
+    Examples:
         >>> get_length_string = compose2((len, lambda n: f"Length: {n}"))
         >>> get_length_string("Hello, world!")
         'Length: 13'
@@ -275,7 +275,7 @@ def compose3(c: Composable3[_P0, _T1, _T2, _T3]) -> Callable[_P0, _T3]:
     Returns:
         Function that applies the given functions from first to last.
 
-    Example:
+    Examples:
         >>> add_one = lambda n: n + 1
         >>> square = lambda n: n * n
         >>> to_string = lambda n: f"Result: {n}"
@@ -310,7 +310,7 @@ def compose4(c: Composable4[_P0, _T1, _T2, _T3, _T4]) -> Callable[_P0, _T4]:
     Returns:
         Function that applies the given functions from first to last.
 
-    Example:
+    Examples:
         >>> add_one = lambda n: n + 1
         >>> square = lambda n: n * n
         >>> halve = lambda n: n / 2
@@ -344,7 +344,7 @@ def compose5(c: Composable5[_P0, _T1, _T2, _T3, _T4, _T5]) -> Callable[_P0, _T5]
     Returns:
         Function that applies the given functions from first to last.
 
-    Example:
+    Examples:
         >>> add_one = lambda n: n + 1
         >>> square = lambda n: n * n
         >>> halve = lambda n: n / 2
@@ -377,7 +377,7 @@ def compose6(c: Composable6[_P0, _T1, _T2, _T3, _T4, _T5, _T6]) -> Callable[_P0,
     Returns:
         Function that applies the given functions from first to last.
 
-    Example:
+    Examples:
         >>> add_one = lambda n: n + 1
         >>> square = lambda n: n * n
         >>> halve = lambda n: n / 2
@@ -417,7 +417,7 @@ def compose7(
     Returns:
         Function that applies the given functions from first to last.
 
-    Example:
+    Examples:
         >>> add_one = lambda n: n + 1
         >>> square = lambda n: n * n
         >>> halve = lambda n: n / 2
@@ -458,7 +458,7 @@ def compose(  # noqa: PLR0911
     Returns:
         Function that applies the given functions from first to last.
 
-    Example:
+    Examples:
         >>> get_length_string = compose((len, lambda n: f"Length: {n}"))
         >>> get_length_string("Hello, world!")
         'Length: 13'
@@ -505,7 +505,7 @@ def pipe(p: Pipeline[_T0, _T1, _T2, _T3, _T4, _T5, _T6, _OUT]) -> _OUT:
         Result of sequentially applying the given functions from first to last
             to the given value.
 
-    Example:
+    Examples:
         >>> pipe(("Hello, world!", len, lambda n: f"Length: {n}"))
         'Length: 13'
     """

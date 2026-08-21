@@ -3,7 +3,7 @@
 Provides utilities for functional composition of
 asynchronous [trcks.Result][]-returning functions.
 
-Example:
+Examples:
     >>> import asyncio
     >>> import math
     >>> from trcks import Result
@@ -70,7 +70,7 @@ def construct_failure(value: _F) -> AwaitableFailure[_F]:
     Returns:
         A new [trcks.AwaitableFailure][] instance containing the given value.
 
-    Example:
+    Examples:
         >>> import asyncio
         >>> from collections.abc import Awaitable
         >>> from trcks.fp.monads import awaitable_result as ar
@@ -95,7 +95,7 @@ def construct_failure_from_awaitable(awtbl: Awaitable[_F]) -> AwaitableFailure[_
         A new [trcks.AwaitableFailure][] instance containing
             the value of the given [collections.abc.Awaitable][] object.
 
-    Example:
+    Examples:
         >>> import asyncio
         >>> from collections.abc import Awaitable
         >>> from http import HTTPStatus
@@ -125,7 +125,7 @@ def construct_from_result(rslt: Result[_F, _S]) -> AwaitableResult[_F, _S]:
         A new [trcks.AwaitableResult][] instance containing
             the value of the given [trcks.Result][] object.
 
-    Example:
+    Examples:
         >>> import asyncio
         >>> from collections.abc import Awaitable
         >>> from trcks.fp.monads import awaitable_result as ar
@@ -147,7 +147,7 @@ def construct_success(value: _S) -> AwaitableSuccess[_S]:
     Returns:
         A new [trcks.AwaitableSuccess][] instance containing the given value.
 
-    Example:
+    Examples:
         >>> import asyncio
         >>> from collections.abc import Awaitable
         >>> from trcks.fp.monads import awaitable_result as ar
@@ -172,7 +172,7 @@ def construct_success_from_awaitable(awtbl: Awaitable[_S]) -> AwaitableSuccess[_
         A new [trcks.AwaitableSuccess][] instance containing
             the value of the given [collections.abc.Awaitable][] object.
 
-    Example:
+    Examples:
         >>> import asyncio
         >>> from collections.abc import Awaitable
         >>> from trcks.fp.monads import awaitable_result as ar
@@ -210,7 +210,7 @@ def map_failure(
             according to the given function and
             leaves [trcks.AwaitableSuccess][] values unchanged.
 
-    Example:
+    Examples:
         >>> import asyncio
         >>> from trcks import AwaitableResult
         >>> from trcks.fp.monads import awaitable_result as ar
@@ -251,7 +251,7 @@ def map_failure_to_awaitable(
             according to the given asynchronous function and
             leaves [trcks.AwaitableSuccess][] values unchanged.
 
-    Example:
+    Examples:
         >>> import asyncio
         >>> from trcks import AwaitableResult
         >>> from trcks.fp.monads import awaitable_result as ar
@@ -301,7 +301,7 @@ def map_failure_to_awaitable_result(
             according to the given asynchronous function and
             leaves [trcks.AwaitableSuccess][] values unchanged.
 
-    Example:
+    Examples:
         >>> import asyncio
         >>> from trcks import Result
         >>> from trcks.fp.monads import awaitable_result as ar
@@ -362,7 +362,7 @@ def map_failure_to_result(
             according to the given function and
             leaves [trcks.AwaitableSuccess][] values unchanged.
 
-    Example:
+    Examples:
         >>> import asyncio
         >>> from trcks import AwaitableResult
         >>> from trcks.fp.monads import awaitable_result as ar
@@ -409,7 +409,7 @@ def map_success(
             to new [trcks.AwaitableSuccess][] values
             according to the given function.
 
-    Example:
+    Examples:
         >>> import asyncio
         >>> from trcks import AwaitableResult
         >>> from trcks.fp.monads import awaitable_result as ar
@@ -454,7 +454,7 @@ def map_success_to_awaitable(
             to new [trcks.AwaitableSuccess][] values
             according to the given function.
 
-    Example:
+    Examples:
         >>> import asyncio
         >>>
         >>> from trcks import AwaitableResult
@@ -506,7 +506,7 @@ def map_success_to_awaitable_result(
             to [trcks.AwaitableFailure][] and [trcks.AwaitableSuccess][] values
             according to the given asynchronous function.
 
-    Example:
+    Examples:
         >>> import asyncio
         >>> import math
         >>> from trcks import AwaitableResult, Result
@@ -569,7 +569,7 @@ def map_success_to_result(
             to [trcks.AwaitableFailure][] and [trcks.AwaitableSuccess][] values
             according to the given function.
 
-    Example:
+    Examples:
         >>> import asyncio
         >>> import math
         >>> from trcks import Result
@@ -853,7 +853,7 @@ async def to_coroutine_result(a_rslt: AwaitableResult[_F, _S]) -> Result[_F, _S]
         The given [trcks.AwaitableResult][] transformed
             into a [collections.abc.Coroutine][].
 
-    Example:
+    Examples:
         >>> import asyncio
         >>> from trcks import Result
         >>> from trcks.fp.monads import awaitable_result as ar

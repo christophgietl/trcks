@@ -7,7 +7,7 @@ Note:
     The underscore in the module name helps to avoid collisions
     with the built-in class [tuple][].
 
-Example:
+Examples:
     Create and process a homogeneous [tuple][]:
 
     >>> from trcks.fp.composition import pipe
@@ -76,7 +76,7 @@ def construct(value: _T) -> tuple[_T,]:
     Returns:
         Contains the single value.
 
-    Example:
+    Examples:
         >>> from trcks.fp.monads import tuple_ as t
         >>> t.construct(42)
         (42,)
@@ -105,7 +105,7 @@ def map_(
         The underscore in the function name helps to avoid collisions
             with the built-in function [map][].
 
-    Example:
+    Examples:
         >>> from collections.abc import Callable
         >>> from trcks.fp.monads import tuple_ as t
         >>> def double_integer(n: int) -> int:
@@ -139,7 +139,7 @@ def map_to_iterable(
         Maps homogeneous [tuple][]s to homogeneous [tuple][]s of varying length
             according to the given function.
 
-    Example:
+    Examples:
         >>> from collections.abc import Callable
         >>> from trcks.fp.monads import tuple_ as t
         >>> def duplicate_integer(n: int) -> tuple[int, int]:
@@ -185,7 +185,7 @@ def tap(
         Applies the given side effect to each element of a homogeneous [tuple][] and
             returns the original homogeneous [tuple][].
 
-    Example:
+    Examples:
         >>> from collections.abc import Callable
         >>> from trcks.fp.monads import tuple_ as t
         >>> def log_integer(n: int) -> None:
@@ -224,7 +224,7 @@ def tap_to_iterable(
         Applies the given side effect to each element of a homogeneous [tuple][].
             Returns each element as many times as the side effect returns elements.
 
-    Example:
+    Examples:
         >>> from collections.abc import Callable
         >>> from trcks.fp.monads import tuple_ as t
         >>> def get_divisors(n: int) -> tuple[int, ...]:

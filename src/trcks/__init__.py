@@ -26,7 +26,7 @@ _T_co = TypeVar("_T_co", covariant=True)
 Failure: TypeAlias = tuple[Literal["failure"], _F_co]
 """[tuple][] of length 2 containing ``"failure"`` followed by a value of type `_F_co`.
 
-Example:
+Examples:
     >>> failure: Failure[str] = ("failure", "File does not exist")
 
 Note:
@@ -37,7 +37,7 @@ Note:
 Success: TypeAlias = tuple[Literal["success"], _S_co]
 """[tuple][] of length 2 containing ``"success"`` followed by a value of type `_S_co`.
 
-Example:
+Examples:
     >>> success: Success[int] = ("success", 42)
 
 Note:
@@ -51,7 +51,7 @@ Result: TypeAlias = Failure[_F_co] | Success[_S_co]
 Can be used as a return type of a function
 instead of returning `_S_co` and raising `_F_co`.
 
-Example:
+Examples:
     >>> def divide(a: float, b: float) -> Result[ZeroDivisionError, float]:
     ...     try:
     ...         return ("success", a/b)
@@ -94,7 +94,7 @@ AwaitableResult: TypeAlias = Awaitable[Result[_F_co, _S_co]]
 """[collections.abc.Awaitable][] that returns a [trcks.Result][]
 when used in an `await` expression.
 
-Example:
+Examples:
     Can be used to annotate the non-awaited return value of an `async` function:
 
     >>> import asyncio

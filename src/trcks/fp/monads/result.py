@@ -3,7 +3,7 @@
 Provides utilities for functional composition of
 synchronous [trcks.Result][]-returning functions.
 
-Example:
+Examples:
     Create and process a value of type [trcks.Result][]:
 
     >>> import math
@@ -104,7 +104,7 @@ def construct_failure(value: _F) -> Failure[_F]:
     Returns:
         [trcks.Failure][] object containing the given value.
 
-    Example:
+    Examples:
         >>> from trcks.fp.monads import result as r
         >>> r.construct_failure(42)
         ('failure', 42)
@@ -121,7 +121,7 @@ def construct_success(value: _S) -> Success[_S]:
     Returns:
         [trcks.Success][] object containing the given value.
 
-    Example:
+    Examples:
         >>> from trcks.fp.monads import result as r
         >>> r.construct_success(42)
         ('success', 42)
@@ -148,7 +148,7 @@ def map_failure(
             according to the given function and
             leaves [trcks.Success][] values unchanged.
 
-    Example:
+    Examples:
         >>> from trcks.fp.monads import result as r
         >>> add_prefix_to_failure = r.map_failure(lambda s: f"Prefix: {s}")
         >>> add_prefix_to_failure(("failure", "negative value"))
@@ -181,7 +181,7 @@ def map_failure_to_result(
             according to the given function and
             leaves [trcks.Success][] values unchanged.
 
-    Example:
+    Examples:
         >>> from trcks.fp.monads import result as r
         >>> replace_not_found_failure_by_default_value = r.map_failure_to_result(
         ...     lambda s: ("success", 0.0) if s == "not found" else ("failure", s)
@@ -227,7 +227,7 @@ def map_success(
             maps [trcks.Success][] values to new [trcks.Success][] values
             according to the given function.
 
-    Example:
+    Examples:
         >>> from trcks.fp.monads import result as r
         >>> def increase(n: int) -> int:
         ...     return n + 1
@@ -263,7 +263,7 @@ def map_success_to_result(
             maps [trcks.Success][] values to [trcks.Failure][] and
             [trcks.Success][] values according to the given function.
 
-    Example:
+    Examples:
         >>> import math
         >>> from trcks import Result
         >>> from trcks.fp.monads import result as r
