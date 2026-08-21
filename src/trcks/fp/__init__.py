@@ -11,6 +11,10 @@ in a functional style:
 - [trcks.ResultTuple][]
 - [tuple][] (homogeneous)
 
+Modules:
+    composition: Types and higher order functions for function composition.
+    monads: Monadic functions for generic types.
+
 Examples:
     This example uses the modules
     [trcks.fp.composition][] and [trcks.fp.monads.result][]
