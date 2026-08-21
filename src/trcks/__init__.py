@@ -1,10 +1,85 @@
 """Type-safe railway-oriented programming (ROP).
 
-This package provides
+This package provides generic type aliases needed for ROP (see "Attributes" section).
+It also provides modules for doing ROP in a functional style or
+in an object-oriented style (see "Modules" section).
 
-- generic (return) types (e.g. [trcks.Result][] and [trcks.AwaitableResultTuple][]) and
-- the subpackages [trcks.fp][] and [trcks.oop][] for working with these types
-  in a functional and object-oriented way, respectively.
+Modules:
+    fp: Functions for doing ROP in a functional style.
+    oop: Classes for doing ROP in an object-oriented style.
+
+Attributes:
+    AwaitableFailure: Awaitable that yields a [trcks.Failure][].
+    AwaitableIterable: Awaitable that yields a [collections.abc.Iterable][].
+    AwaitableResult: Awaitable that yields a [trcks.Result][].
+    AwaitableResultIterable: Awaitable that yields a [trcks.ResultIterable][].
+    AwaitableResultTuple: Awaitable that yields a [trcks.ResultTuple][].
+    AwaitableSuccess: Awaitable that yields a [trcks.Success][].
+    AwaitableSuccessIterable: Awaitable that yields a [trcks.SuccessIterable][].
+    AwaitableSuccessTuple: Awaitable that yields a [trcks.SuccessTuple][].
+    AwaitableTuple: Awaitable that yields a homogeneous [tuple][].
+    Failure: [tuple][] containing ``"failure"`` and a value of type `_F_co`.
+    Result: Union of [trcks.Failure][] and [trcks.Success][].
+    ResultIterable: [trcks.Result][] with a [collections.abc.Iterable][] success.
+    ResultTuple: [trcks.Result][] with a homogeneous [tuple][] success.
+    Success: [tuple][] containing ``"success"`` and a value of type `_S_co`.
+    SuccessIterable: [trcks.Success][] containing a [collections.abc.Iterable][].
+    SuccessTuple: [trcks.Success][] containing a homogeneous [tuple][].
+
+Examples:
+    Construct a `Failure`:
+
+    >>> failure: Failure[str] = ("failure", "File does not exist")
+
+    Construct a `Success`:
+
+    >>> success: Success[int] = ("success", 42)
+
+    Use `Result` as the return type of a function:
+
+    >>> def divide(a: float, b: float) -> Result[ZeroDivisionError, float]:
+    ...     try:
+    ...         return "success", a / b
+    ...     except ZeroDivisionError as e:
+    ...         return "failure", e
+    ...
+    >>> divide(5.0, 2.0)
+    ('success', 2.5)
+    >>> divide(3.5, 0.0)
+    ('failure', ZeroDivisionError('...division by zero'))
+
+    Use `AwaitableResult` to annotate an unawaited `async` function return:
+
+    >>> import asyncio
+    >>> async def divide_slowly(a: float, b: float) -> Result[ZeroDivisionError, float]:
+    ...     await asyncio.sleep(0.001)
+    ...     try:
+    ...         return "success", a / b
+    ...     except ZeroDivisionError as e:
+    ...         return "failure", e
+    ...
+    >>> async def main() -> None:
+    ...     a_rslt: AwaitableResult[ZeroDivisionError, float] = (
+    ...         divide_slowly(3.0, 0.0)
+    ...     )
+    ...     rslt: Result[ZeroDivisionError, float] = await a_rslt
+    ...     print(rslt)
+    ...
+    >>> asyncio.run(main())
+    ('failure', ZeroDivisionError('...division by zero'))
+
+    Use `AwaitableResult` to annotate an `async` function:
+
+    >>> from collections.abc import Callable
+    >>>
+    >>> copy_of_divide_slowly: Callable[
+    ...     [float, float], AwaitableResult[ZeroDivisionError, float]
+    ... ] = divide_slowly
+
+Note:
+    [trcks.Failure][], [trcks.Success][], and [trcks.Result][] are called
+    "Left", "Right", and "Either", respectively, in some functional programming
+    languages and packages (e.g. Haskell and fp-ts).
 
 See:
     [Railway oriented programming | F# for fun and profit](https://fsharpforfunandprofit.com/posts/recipe-part2/)
@@ -24,144 +99,18 @@ _T_co = TypeVar("_T_co", covariant=True)
 
 
 Failure: TypeAlias = tuple[Literal["failure"], _F_co]
-"""[tuple][] of length 2 containing ``"failure"`` followed by a value of type `_F_co`.
-
-Examples:
-    >>> failure: Failure[str] = ("failure", "File does not exist")
-
-Note:
-    This generic type is called "Left" in
-    some functional programming languages and packages (e.g. Haskell and fp-ts).
-"""
-
 Success: TypeAlias = tuple[Literal["success"], _S_co]
-"""[tuple][] of length 2 containing ``"success"`` followed by a value of type `_S_co`.
-
-Examples:
-    >>> success: Success[int] = ("success", 42)
-
-Note:
-    This generic type is called "Right" in
-    some functional programming languages and packages (e.g. Haskell and fp-ts).
-"""
-
 Result: TypeAlias = Failure[_F_co] | Success[_S_co]
-"""Discriminated union of the generic types `_F_co` and `_S_co`.
-
-Can be used as a return type of a function
-instead of returning `_S_co` and raising `_F_co`.
-
-Examples:
-    >>> def divide(a: float, b: float) -> Result[ZeroDivisionError, float]:
-    ...     try:
-    ...         return ("success", a/b)
-    ...     except ZeroDivisionError as e:
-    ...         return ("failure", e)
-    ...
-    >>> divide(5.0, 2.0)
-    ('success', 2.5)
-    >>> divide(3.5, 0.0)
-    ('failure', ZeroDivisionError('float division by zero'))
-
-Note:
-    This generic type is called "Either" in
-    some functional programming languages and packages (e.g. Haskell and fp-ts).
-"""
-
 ResultIterable: TypeAlias = Result[_F_co, Iterable[_S_co]]
-"""[trcks.Result][] where the success value is a [collections.abc.Iterable][]."""
-
 ResultTuple: TypeAlias = Result[_F_co, tuple[_S_co, ...]]
-"""[trcks.Result][] where the success value is a homogeneous [tuple][]."""
-
 SuccessIterable: TypeAlias = Success[Iterable[_S_co]]
-"""[trcks.Success][] that contains a [collections.abc.Iterable][]."""
-
 SuccessTuple: TypeAlias = Success[tuple[_S_co, ...]]
-"""[trcks.Success][] that contains a homogeneous [tuple][]."""
-
 AwaitableFailure: TypeAlias = Awaitable[Failure[_F_co]]
-"""[collections.abc.Awaitable][] that returns a [trcks.Failure][]
-when used in an `await` expression.
-"""
-
 AwaitableIterable: TypeAlias = Awaitable[Iterable[_T_co]]
-"""[collections.abc.Awaitable][] that returns a [collections.abc.Iterable][]
-when used in an `await` expression.
-"""
-
 AwaitableResult: TypeAlias = Awaitable[Result[_F_co, _S_co]]
-"""[collections.abc.Awaitable][] that returns a [trcks.Result][]
-when used in an `await` expression.
-
-Examples:
-    Can be used to annotate the non-awaited return value of an `async` function:
-
-    >>> import asyncio
-    >>> async def divide_slowly(
-    ...     a: float, b: float
-    ... ) -> Result[ZeroDivisionError, float]:
-    ...     await asyncio.sleep(0.001)
-    ...     try:
-    ...         return ("success", a / b)
-    ...     except ZeroDivisionError as e:
-    ...         return ("failure", e)
-    ...
-    >>> async def main() -> None:
-    ...     a_rslt: AwaitableResult[ZeroDivisionError, float] = (
-    ...         divide_slowly(3.0, 0.0)
-    ...     )
-    ...     rslt: Result[ZeroDivisionError, float] = await a_rslt
-    ...     print(rslt)
-    ...
-    >>> asyncio.run(main())
-    ('failure', ZeroDivisionError('float division by zero'))
-
-    Can also be used to annotate an `async` function:
-
-    >>> import asyncio
-    >>> from collections.abc import Callable
-    >>>
-    >>> async def divide_slowly(
-    ...     a: float, b: float
-    ... ) -> Result[ZeroDivisionError, float]:
-    ...     await asyncio.sleep(0.001)
-    ...     try:
-    ...         return ("success", a / b)
-    ...     except ZeroDivisionError as e:
-    ...         return ("failure", e)
-    ...
-    >>> copy_of_divide_slowly: Callable[
-    ...     [float, float], AwaitableResult[ZeroDivisionError, float]
-    ... ] = divide_slowly
-"""
-
 AwaitableResultIterable: TypeAlias = Awaitable[ResultIterable[_F_co, _S_co]]
-"""[collections.abc.Awaitable][] that returns a [trcks.ResultIterable][]
-when used in an `await` expression.
-"""
-
 AwaitableResultTuple: TypeAlias = Awaitable[ResultTuple[_F_co, _S_co]]
-"""[collections.abc.Awaitable][] that returns a [trcks.ResultTuple][]
-when used in an `await` expression.
-"""
-
 AwaitableSuccess: TypeAlias = Awaitable[Success[_S_co]]
-"""[collections.abc.Awaitable][] that returns a [trcks.Success][]
-when used in an `await` expression.
-"""
-
 AwaitableSuccessIterable: TypeAlias = Awaitable[SuccessIterable[_S_co]]
-"""[collections.abc.Awaitable][] that returns a [trcks.SuccessIterable][]
-when used in an `await` expression.
-"""
-
 AwaitableSuccessTuple: TypeAlias = Awaitable[SuccessTuple[_S_co]]
-"""[collections.abc.Awaitable][] that returns a [trcks.SuccessTuple][]
-when used in an `await` expression.
-"""
-
 AwaitableTuple: TypeAlias = Awaitable[tuple[_T_co, ...]]
-"""[collections.abc.Awaitable][] that returns a homogeneous [tuple][]
-when used in an `await` expression.
-"""
