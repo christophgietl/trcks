@@ -68,7 +68,8 @@ Examples:
     >>> asyncio.run(main())
     ('failure', ZeroDivisionError('...division by zero'))
 
-    Use `AwaitableResult` to annotate an `async` function:
+    Use `AwaitableResult` to annotate an `async` function
+    as a [collections.abc.Callable][]:
 
     >>> from collections.abc import Callable
     >>>
