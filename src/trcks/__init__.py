@@ -100,12 +100,15 @@ _T_co = TypeVar("_T_co", covariant=True)
 
 
 Failure: TypeAlias = tuple[Literal["failure"], _F_co]
+
 Success: TypeAlias = tuple[Literal["success"], _S_co]
+SuccessIterable: TypeAlias = Success[Iterable[_S_co]]
+SuccessTuple: TypeAlias = Success[tuple[_S_co, ...]]
+
 Result: TypeAlias = Failure[_F_co] | Success[_S_co]
 ResultIterable: TypeAlias = Result[_F_co, Iterable[_S_co]]
 ResultTuple: TypeAlias = Result[_F_co, tuple[_S_co, ...]]
-SuccessIterable: TypeAlias = Success[Iterable[_S_co]]
-SuccessTuple: TypeAlias = Success[tuple[_S_co, ...]]
+
 AwaitableFailure: TypeAlias = Awaitable[Failure[_F_co]]
 AwaitableIterable: TypeAlias = Awaitable[Iterable[_T_co]]
 AwaitableResult: TypeAlias = Awaitable[Result[_F_co, _S_co]]
