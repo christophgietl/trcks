@@ -36,6 +36,7 @@ dataclass:
     ... class UserDoesNotExistError:
     ...     user_id: int
     ...
+    >>> # A frozen dataclass can carry structured failure context.
     >>> dataclass_failure: Failure[UserDoesNotExistError] = (
     ...     "failure", UserDoesNotExistError(user_id=42)
     ... )
