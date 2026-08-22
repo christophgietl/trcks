@@ -6,11 +6,13 @@ types that [trcks.oop][] and [trcks.fp][] build on.
 
 The generic type [trcks.Failure][]`[F]` describes all [tuple][]s of length 2
 with the string "failure" as the first element and a second element of type F.
-Usually, the second element is a string, an exception, or an enum value:
+Usually, the second element is a string, an exception, an enum value, or a frozen
+dataclass:
 
 ???+ example
 
     ```pycon
+    >>> import dataclasses
     >>> import enum
     >>> from typing import Literal
     >>> from trcks import Failure
@@ -29,6 +31,14 @@ Usually, the second element is a string, an exception, or an enum value:
     ...     USER_DOES_NOT_EXIST = enum.auto()
     ...
     >>> enum_failure: Failure[ErrorEnum] = ("failure", ErrorEnum.USER_DOES_NOT_EXIST)
+    >>>
+    >>> @dataclasses.dataclass(frozen=True, kw_only=True, slots=True)
+    ... class UserDoesNotExistError:
+    ...     user_id: int
+    ...
+    >>> dataclass_failure: Failure[UserDoesNotExistError] = (
+    ...     "failure", UserDoesNotExistError(user_id=42)
+    ... )
 
     ```
 
