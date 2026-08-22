@@ -6,8 +6,8 @@ types that [trcks.oop][] and [trcks.fp][] build on.
 
 The generic type [trcks.Failure][]`[F]` describes all [tuple][]s of length 2
 with the string "failure" as the first element and a second element of type F.
-Usually, the second element is a string, an exception, an enum value, or a frozen
-dataclass:
+Usually, the second element is a string, an exception, an enum value, or
+a dataclass:
 
 ???+ example
 
