@@ -40,7 +40,6 @@ let us have a look at the individual steps of the chain:
 
 ??? example "Step by step"
 
-    <!-- rumdl-disable MD013 -->
     ```pycon
     >>> # 1. Wrap the input tuple:
     >>> wrapped: TupleWrapper[str] = TupleWrapper.construct_from_iterable(
@@ -62,7 +61,6 @@ let us have a look at the individual steps of the chain:
     ('domain.org', 'provider.com')
 
     ```
-    <!-- rumdl-enable MD013 -->
 
 ???+ note
     [trcks.oop.TupleWrapper.construct][] wraps a single value

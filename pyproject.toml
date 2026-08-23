@@ -227,6 +227,7 @@ convention = "google"
 flavor = "gfm"
 
 [tool.rumdl.MD013]
+code-blocks = false
 headings = false
 
 [tool.rumdl.MD052]
