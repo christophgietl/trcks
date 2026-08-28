@@ -15,7 +15,7 @@
 
 - `trcks` has three layers: `oop`, `fp`, and `_typing`.
 - `trcks.fp` has two sublayers: `monads` and `composition`.
-- `trcks.fp.monads` has four import layers: `awaitable_result_tuple`,
+- `trcks.fp.monads` has four import layers: `awaitable_result_tuple`;
   `awaitable_result`, `awaitable_tuple`, and `result_tuple`; `awaitable`, `result`,
   and `tuple_`; and `identity`.
 
