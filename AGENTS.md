@@ -20,7 +20,7 @@
 - `trcks.fp` has two sublayers:
   - `monads`
   - `composition`
-- `trcks.fp.monads` has four import layers:
+- `trcks.fp.monads` has four sublayers:
   - `awaitable_result_tuple`
   - `awaitable_result`, `awaitable_tuple`, and `result_tuple`
   - `awaitable`, `result`, and `tuple_`
