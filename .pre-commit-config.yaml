@@ -5,7 +5,7 @@ default_stages:
   - pre-commit
 repos:
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: 65dbdb59d2f2d9c3bdc343c566821ad3319ddaa3  # frozen: v0.16.3
+    rev: aab412d509121cb5f7533134b7e67f9fab59c682  # frozen: v0.16.4
     hooks:
       - id: ruff-check
         args:
@@ -56,7 +56,7 @@ repos:
     hooks:
       - id: actionlint
   - repo: https://github.com/rvben/rumdl-pre-commit
-    rev: 4f7fb84c204d04a8b458ad18ca6cd63417d524a9  # frozen: v0.2.55
+    rev: e95b9121d4c55bf12fb7ae52d08d2d8d64789899  # frozen: v0.2.58
     hooks:
       - id: rumdl
       - id: rumdl-fmt
