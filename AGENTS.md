@@ -26,6 +26,14 @@
   - `awaitable`, `result`, and `tuple_`
   - `identity`
 
+### Import contracts
+
+`tool.importlinter.contracts` in [pyproject.toml](pyproject.toml) must contain at least:
+
+- `layers` contracts that restrict each layer to importing only
+  the layers below it.
+- `protected` contract that restricts which internal modules may import `typing_extensions`.
+
 ### Return types defined in `trcks`
 
 - `trcks.Result[FailureType, SuccessType]`:
@@ -53,14 +61,6 @@
   for `collections.abc.Awaitable`, `trcks.Result`, `tuple`,
   `trcks.AwaitableResult`, `trcks.AwaitableTuple`, `trcks.ResultTuple`, and
   `trcks.AwaitableResultTuple` values.
-
-### Import contracts
-
-`tool.importlinter.contracts` in [pyproject.toml](pyproject.toml) must contain at least:
-
-- `layers` contracts that restrict each layer to importing only
-  the layers below it.
-- `protected` contract that restricts which internal modules may import `typing_extensions`.
 
 ## Code style
 
