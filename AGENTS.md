@@ -13,11 +13,18 @@
 
 ### Application layers
 
-- `trcks` has three layers: `oop`, `fp`, and `_typing`.
-- `trcks.fp` has two sublayers: `monads` and `composition`.
-- `trcks.fp.monads` has four import layers: `awaitable_result_tuple`;
-  `awaitable_result`, `awaitable_tuple`, and `result_tuple`; `awaitable`, `result`,
-  and `tuple_`; `identity`.
+- `trcks` has three layers:
+  - `oop`
+  - `fp`
+  - `_typing`
+- `trcks.fp` has two sublayers:
+  - `monads`
+  - `composition`
+- `trcks.fp.monads` has four import layers:
+  - `awaitable_result_tuple`
+  - `awaitable_result`, `awaitable_tuple`, and `result_tuple`
+  - `awaitable`, `result`, and `tuple_`
+  - `identity`
 
 ### Return types defined in `trcks`
 
@@ -53,9 +60,6 @@
 
 - `layers` contracts that restrict each layer to importing only
   the layers below it.
-- `independence` contracts that keep
-  simple monads independent of each other and
-  dual monads independent of each other.
 - `protected` contract that restricts which internal modules may import `typing_extensions`.
 
 ## Code style
