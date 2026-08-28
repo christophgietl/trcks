@@ -17,7 +17,7 @@
 - `trcks.fp` has two sublayers: `monads` and `composition`.
 - `trcks.fp.monads` has four import layers: `awaitable_result_tuple`;
   `awaitable_result`, `awaitable_tuple`, and `result_tuple`; `awaitable`, `result`,
-  and `tuple_`; and `identity`.
+  and `tuple_`; `identity`.
 
 ### Return types defined in `trcks`
 
