@@ -130,31 +130,9 @@ containers = [
 exhaustive = true
 layers = [
     "awaitable_result_tuple",
-    "awaitable_result",
-    "awaitable_tuple",
-    "result_tuple",
-    "awaitable",
-    "result",
-    "tuple_",
+    "awaitable_result | awaitable_tuple | result_tuple",
+    "awaitable | result | tuple_",
     "identity",
-]
-
-[[tool.importlinter.contracts]]
-name = "Independence of simple monads"
-type = "independence"
-modules = [
-    "trcks.fp.monads.awaitable",
-    "trcks.fp.monads.result",
-    "trcks.fp.monads.tuple_",
-]
-
-[[tool.importlinter.contracts]]
-name = "Independence of dual monads"
-type = "independence"
-modules = [
-    "trcks.fp.monads.awaitable_result",
-    "trcks.fp.monads.awaitable_tuple",
-    "trcks.fp.monads.result_tuple",
 ]
 
 [[tool.importlinter.contracts]]
