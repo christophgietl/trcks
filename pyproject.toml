@@ -130,12 +130,8 @@ containers = [
 exhaustive = true
 layers = [
     "awaitable_result_tuple",
-    "awaitable_result",
-    "awaitable_tuple",
-    "result_tuple",
-    "awaitable",
-    "result",
-    "tuple_",
+    "awaitable_result | awaitable_tuple | result_tuple",
+    "awaitable | result | tuple_",
     "identity",
 ]
 
