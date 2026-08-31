@@ -13,9 +13,9 @@ runs:
   using: composite
   steps:
     - env:
+        EXCLUDE_NEWER: ${{ !fromJSON(inputs.locked) && '--exclude-newer=P7D' || '' }}
         LOCKED: ${{ fromJSON(inputs.locked) && '--locked' || '' }}
         RESOLUTION_STRATEGY: ${{ inputs.resolution-strategy }}
-        EXCLUDE_NEWER: ${{ fromJSON(inputs.locked) && '' || '--exclude-newer=P7D' }}
       run: uv sync --all-extras ${LOCKED} --resolution=${RESOLUTION_STRATEGY} ${EXCLUDE_NEWER}
       shell: bash
     - env:
