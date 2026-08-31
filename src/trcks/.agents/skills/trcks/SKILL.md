@@ -18,8 +18,8 @@ description: >-
 
 The Python library `trcks` lets functions return domain errors
 instead of raising them.
-Its generic type `trcks.Result` puts each domain error into the function signature,
-so a static type checker can verify that every caller handles it.
+Its generic type `trcks.Result` exposes each domain error in the function signature,
+so the failure type is visible and downstream uses can be type-checked.
 `trcks` supports two distinct but equivalent styles:
 method chaining with the wrapper classes from `trcks.oop`, and
 function composition with the pipelines and monads from `trcks.fp`.
