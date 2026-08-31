@@ -3,7 +3,9 @@ description: Executes import-linter, the test suite and static type checkers.
 inputs:
   locked:
     default: "true"
-    description: Whether to assert that uv.lock remains unchanged during `uv sync`.
+    description: >-
+      Whether to assert that uv.lock remains unchanged during `uv sync`.
+      When false, applies a 7-day cooldown to exclude packages published within the last 7 days.
     required: true
   resolution-strategy:
     default: highest
@@ -13,7 +15,7 @@ runs:
   using: composite
   steps:
     - env:
-        LOCKED: ${{ fromJSON(inputs.locked) && '--locked' || '' }}
+        LOCKED: ${{ fromJSON(inputs.locked) && '--locked' || '--exclude-newer=P7D' }}
         RESOLUTION_STRATEGY: ${{ inputs.resolution-strategy }}
       run: uv sync --all-extras ${LOCKED} --resolution=${RESOLUTION_STRATEGY}
       shell: bash
