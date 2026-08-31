@@ -35,8 +35,8 @@ jobs:
           wheel=$(ls dist/*.whl)
           tar --list --file "$sdist" > sdist-contents.txt
           unzip -Z1 "$wheel" > wheel-contents.txt
-          grep --fixed-strings --quiet \
-            "/src/trcks/.agents/skills/trcks/SKILL.md" sdist-contents.txt \
+          grep --extended-regexp --quiet \
+            '.*/src/trcks/.agents/skills/trcks/SKILL.md' sdist-contents.txt \
             || { echo "::error::SKILL.md missing from sdist $sdist"; exit 1; }
           grep --fixed-strings --line-regexp --quiet \
             "trcks/.agents/skills/trcks/SKILL.md" wheel-contents.txt \
