@@ -29,6 +29,19 @@ jobs:
           persist-credentials: false
       - uses: christophgietl/uv-actions/set-up-uv@83513e97a94eb488fb9b2500d4585f65e19eab4a # 2026.7.21.12
       - run: uv build
+      - name: Check that library skill is included in sdist and wheel
+        run: |
+          sdist=$(ls dist/*.tar.gz)
+          wheel=$(ls dist/*.whl)
+          tar --list --file "$sdist" > sdist-contents.txt
+          unzip -Z1 "$wheel" > wheel-contents.txt
+          grep --extended-regexp --quiet \
+            '.*/src/trcks/.agents/skills/trcks/SKILL.md' sdist-contents.txt \
+            || { echo "::error::SKILL.md missing from sdist $sdist"; exit 1; }
+          grep --fixed-strings --line-regexp --quiet \
+            "trcks/.agents/skills/trcks/SKILL.md" wheel-contents.txt \
+            || { echo "::error::SKILL.md missing from wheel $wheel"; exit 1; }
+          rm sdist-contents.txt wheel-contents.txt
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a  # v7.0.1
         with:
           name: package-files
