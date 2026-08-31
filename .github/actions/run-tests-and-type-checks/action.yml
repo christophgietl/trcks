@@ -15,7 +15,8 @@ runs:
     - env:
         LOCKED: ${{ fromJSON(inputs.locked) && '--locked' || '' }}
         RESOLUTION_STRATEGY: ${{ inputs.resolution-strategy }}
-      run: uv sync --all-extras ${LOCKED} --resolution=${RESOLUTION_STRATEGY}
+        EXCLUDE_NEWER: ${{ fromJSON(inputs.locked) && '' || '--exclude-newer=P7D' }}
+      run: uv sync --all-extras ${LOCKED} --resolution=${RESOLUTION_STRATEGY} ${EXCLUDE_NEWER}
       shell: bash
     - env:
         PYTHONIOENCODING: utf-8 # avoids UnicodeEncodeError in Windows (see https://github.com/Textualize/rich/issues/2411)
