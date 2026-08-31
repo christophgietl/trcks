@@ -3,7 +3,9 @@ description: Executes import-linter, the test suite and static type checkers.
 inputs:
   locked:
     default: "true"
-    description: Whether to assert that uv.lock remains unchanged during `uv sync`. When false, applies a 7-day cooldown to exclude packages published within the last 7 days.
+    description: |-
+      Whether to assert that uv.lock remains unchanged during `uv sync`.
+      When false, applies a 7-day cooldown to exclude packages published within the last 7 days.
     required: true
   resolution-strategy:
     default: highest
