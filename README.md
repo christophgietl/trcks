@@ -11,7 +11,8 @@ Use your favorite package manager (e.g. `pip`, `poetry`, or `uv`) to install it.
 Check the documentation for
 [detailed setup instructions](https://christophgietl.github.io/trcks/setup/),
 including how to install the bundled library skill for AI coding agents
-(via [Library Skills](https://library-skills.io) or the [skills CLI](https://skills.sh)).
+(via [Library Skills](https://library-skills.io), the [skills CLI](https://skills.sh),
+or the GitHub CLI).
 
 ## Usage
 

@@ -109,3 +109,18 @@ This installs the latest version of the skill from the default branch.
 It does not automatically stay in sync with your installed version of `trcks`.
 If you want the skill to match your installed version of `trcks`,
 use Library Skills instead.
+
+### Installing with the GitHub CLI
+
+If you use the GitHub CLI,
+you can install the skill directly from the GitHub repository:
+
+```shell
+gh skill install christophgietl/trcks trcks
+```
+
+This command is in preview.
+Like the skills CLI,
+it installs the latest tagged version of the skill
+(or the default branch if the repository has no tags)
+and does not automatically stay in sync with your installed version of `trcks`.

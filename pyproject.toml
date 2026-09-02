@@ -159,7 +159,7 @@ warn_unreachable = true
 
 [tool.pdm.build]
 source-includes = [
-    ".agents/skills/trcks",
+    "skills/trcks",
     "tests",
 ]
 

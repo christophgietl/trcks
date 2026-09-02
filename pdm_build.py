@@ -19,8 +19,9 @@ __docformat__ = "google"
 def pdm_build_initialize(context: Context) -> None:
     """Copy the library skill into the wheel.
 
-    The skill lives at `.agents/skills/trcks` in the project root
-    (where AI coding agents and the `skills` CLI discover it).
+    The skill lives at `skills/trcks` in the project root
+    (where AI coding agents and CLI tools such as the `skills` CLI
+    and `gh skill` discover it).
     For the wheel, it is copied to `trcks/.agents/skills/trcks`
     (where Library Skills discovers it).
 
@@ -30,7 +31,7 @@ def pdm_build_initialize(context: Context) -> None:
     if context.target != "wheel":
         return
     _ = shutil.copytree(
-        context.root / ".agents" / "skills" / "trcks",
+        context.root / "skills" / "trcks",
         context.build_dir / "trcks" / ".agents" / "skills" / "trcks",
         dirs_exist_ok=True,
     )
