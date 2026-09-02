@@ -73,6 +73,8 @@ that teaches AI coding agents how to use `trcks` for railway-oriented programmin
 Every release of `trcks` bundles the skill,
 so it always matches your installed version of `trcks`.
 
+### Installing with Library Skills
+
 You can install this skill (and skills provided by other libraries)
 using [Library Skills](https://library-skills.io/).
 Library Skills scans the dependencies of your project,
@@ -93,3 +95,17 @@ then run the install command:
 uv add --dev library-skills
 uv run library-skills install --skill trcks
 ```
+
+### Installing with the skills CLI
+
+Alternatively, you can install the skill directly from the GitHub repository
+with the [skills CLI](https://skills.sh):
+
+```shell
+npx skills add christophgietl/trcks --skill trcks
+```
+
+This installs the latest version of the skill from the default branch.
+It does not automatically stay in sync with your installed version of `trcks`.
+If you want the skill to match your installed version of `trcks`,
+use Library Skills instead.

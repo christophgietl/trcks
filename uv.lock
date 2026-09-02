@@ -1148,6 +1148,15 @@ wheels = [
 ]
 
 [[package]]
+name = "pdm-backend"
+version = "2.4.9"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/f1/b2/73898a92113f532fe9cecaae97f070a12ec4c786d66af377a6f81d38e208/pdm_backend-2.4.9.tar.gz", hash = "sha256:c41a852ccbf4b567b033db9b2ae78660d7a4ea49307719959ab88a01f0aabb2e", size = 119709, upload-time = "2026-06-05T08:07:58.08Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/55/30/c8bd9fab1f3811462451e4a41a36e2d85b361560416ec874131611cc7982/pdm_backend-2.4.9-py3-none-any.whl", hash = "sha256:8d1064751dadb0c40b1026b46826a448d85c8228a564985c62fb53d4aba538a1", size = 115770, upload-time = "2026-06-05T08:07:57.073Z" },
+]
+
+[[package]]
 name = "platformdirs"
 version = "4.11.4"
 source = { registry = "https://pypi.org/simple" }
@@ -1514,6 +1523,7 @@ dev = [
     { name = "mkdocs-material" },
     { name = "mkdocstrings", extra = ["python"] },
     { name = "mypy" },
+    { name = "pdm-backend" },
     { name = "pre-commit" },
     { name = "pyrefly" },
     { name = "pyright", extra = ["nodejs"] },
@@ -1539,6 +1549,7 @@ dev = [
     { name = "mkdocs-material", specifier = "==9.7.7" },
     { name = "mkdocstrings", extras = ["python"], specifier = "==1.0.6" },
     { name = "mypy" },
+    { name = "pdm-backend", specifier = "==2.4.9" },
     { name = "pre-commit", specifier = "==4.6.2" },
     { name = "pyrefly" },
     { name = "pyright", extras = ["nodejs"] },
