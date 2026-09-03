@@ -98,8 +98,9 @@ uv run library-skills install --skill trcks
 
 ### Installing with the skills CLI
 
-Alternatively, you can install the skill directly from the GitHub repository
-with the [skills CLI](https://skills.sh):
+If you use Node.js, you can install the skill directly from the GitHub repository
+with the [skills CLI](https://skills.sh) by running the following command
+in your terminal:
 
 ```shell
 npx skills add christophgietl/trcks --skill trcks
@@ -112,8 +113,9 @@ use Library Skills instead.
 
 ### Installing with the GitHub CLI
 
-If you use the GitHub CLI,
-you can install the skill directly from the GitHub repository:
+If you use the GitHub CLI, you can
+install the skill directly from the GitHub repository by running the following
+command in your terminal:
 
 ```shell
 gh skill install christophgietl/trcks trcks
