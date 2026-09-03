@@ -68,10 +68,7 @@
 - The library skill is defined in
   [skills/trcks/](skills/trcks/).
 - When `trcks` is built, the library skill is included in both
-  the source distribution file
-  (at the relative path `skills/trcks/SKILL.md`) and
-  the wheel file (at the relative path `trcks/.agents/skills/trcks/SKILL.md`,
-  copied there by the build hook in [pdm_build.py](pdm_build.py)).
+  the source distribution file and the wheel file.
 
 ## Code style
 
