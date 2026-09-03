@@ -8,7 +8,7 @@
 - `trcks` supports two distinct but equivalent programming styles:
   - OOP style for developers comfortable with method chaining
   - FP style for developers preferring function composition
-- `trcks` includes an [agent skill](https://agentskills.io/home) for coding agents.
+- `trcks` includes a [skill for coding agents](https://agentskills.io/home).
 
 ## Architecture decisions
 
@@ -65,10 +65,10 @@
 
 ### Agent skill
 
-- The agent skill is defined in
-  [skills/trcks/](skills/trcks/).
+- The agent skill is defined in [skills/trcks/](skills/trcks/).
 - When `trcks` is built, the agent skill is included in both
-  the source distribution file and the wheel file.
+  the source distribution file and the wheel file,
+  following the [Library Skills](https://library-skills.io) standard.
 
 ## Code style
 
