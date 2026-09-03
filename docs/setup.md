@@ -70,16 +70,21 @@ dependencies = [
 
 `trcks` ships an [agent skill](https://agentskills.io/home)
 that teaches AI coding agents how to use `trcks` for railway-oriented programming.
-Every release of `trcks` bundles the skill,
-so it always matches your installed version of `trcks`.
+The skill is distributed via two channels:
+
+1. as part of the `trcks` repository on GitHub and
+2. as part of the `trcks` package on PyPI.
 
 ### Installing with Library Skills
 
 You can install this skill (and skills provided by other libraries)
 using [Library Skills](https://library-skills.io/).
-Library Skills scans the dependencies of your project,
+Library Skills installs the skill from the `trcks` package on PyPI.
+It scans the dependencies of your project,
 finds the skills bundled with the installed libraries, and
 adds them to your project as symbolic links.
+Every release of `trcks` bundles the skill,
+so it always matches your installed version of `trcks`.
 When you update your dependencies, the skills stay up to date.
 
 If you use `uv`, run the following command in your terminal:
@@ -98,7 +103,8 @@ uv run library-skills install --skill trcks
 
 ### Installing with the skills CLI
 
-If you use Node.js, you can install the skill directly from the GitHub repository
+If you use Node.js, you can install the skill directly from the
+`trcks` repository on GitHub
 with the [skills CLI](https://skills.sh) by running the following command
 in your terminal:
 
@@ -114,7 +120,8 @@ use Library Skills instead.
 ### Installing with the GitHub CLI
 
 If you use the GitHub CLI, you can
-install the skill directly from the GitHub repository by running the following
+install the skill directly from the
+`trcks` repository on GitHub by running the following
 command in your terminal:
 
 ```shell
