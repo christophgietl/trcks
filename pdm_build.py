@@ -8,15 +8,17 @@ contain the skill.
 from __future__ import annotations
 
 import shutil
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
-    from pdm.backend.hooks.base import Context
+    from pathlib import Path
 
 __docformat__ = "google"
 
 
-def pdm_build_initialize(context: Context) -> None:
+def pdm_build_initialize(  # type: ignore[explicit-any]
+    context: Any,  # noqa: ANN401  # pyrefly: ignore[explicit-any]
+) -> None:
     """Copy the library skill into the wheel.
 
     The skill lives at `skills/trcks` in the project root
@@ -30,8 +32,10 @@ def pdm_build_initialize(context: Context) -> None:
     """
     if context.target != "wheel":
         return
+    root: Path = context.root
+    build_dir: Path = context.build_dir
     _ = shutil.copytree(
-        context.root / "skills" / "trcks",
-        context.build_dir / "trcks" / ".agents" / "skills" / "trcks",
+        root / "skills" / "trcks",
+        build_dir / "trcks" / ".agents" / "skills" / "trcks",
         dirs_exist_ok=True,
     )
