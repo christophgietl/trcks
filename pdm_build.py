@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import shutil
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Protocol
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -11,16 +11,29 @@ if TYPE_CHECKING:
 __docformat__ = "google"
 
 
-def pdm_build_initialize(  # type: ignore[explicit-any]
-    # `pdm.backend.hooks.base.Context` is not available at type-checking time.
-    # Therefore, we need to annotate `context` as `typing.Any`:
-    context: Any,  # noqa: ANN401  # pyrefly: ignore[explicit-any]
-) -> None:
+class _Context(Protocol):
+    """Replacement for `pdm.backend.hooks.base.Context`.
+
+    Note:
+        The package `pdm-backend` is not available during type-checking.
+    """
+
+    @property
+    def build_dir(self) -> Path: ...
+
+    @property
+    def root(self) -> Path: ...
+
+    @property
+    def target(self) -> str: ...
+
+
+def pdm_build_initialize(context: _Context) -> None:
     """Make the skill available as a library skill by copying it into the wheel."""
     if context.target != "wheel":
         return
 
-    src: Path = context.root / "skills" / "trcks"
-    # Library Skills expects the skill to be located in the following directory:
-    dst: Path = context.build_dir / "trcks" / ".agents" / "skills" / "trcks"
+    src = context.root / "skills" / "trcks"
+    # Library Skills expects the skill to be located in this directory:
+    dst = context.build_dir / "trcks" / ".agents" / "skills" / "trcks"
     _ = shutil.copytree(src, dst, dirs_exist_ok=True)
