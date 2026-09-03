@@ -1,4 +1,8 @@
-"""Build hook for `pdm-backend`."""
+"""Build hook for `pdm-backend`.
+
+See:
+    https://github.com/pdm-project/pdm-backend/blob/2.4.9/docs/hooks.md
+"""
 
 from __future__ import annotations
 
@@ -28,11 +32,13 @@ class _Context(Protocol):
     def target(self) -> str: ...
 
 
+def pdm_build_hook_enabled(context: _Context) -> bool:
+    """Only for wheel builds."""
+    return context.target == "wheel"
+
+
 def pdm_build_initialize(context: _Context) -> None:
     """Make the skill available as a library skill by copying it into the wheel."""
-    if context.target != "wheel":
-        return
-
     src = context.root / "skills" / "trcks"
     # Library Skills expects the skill to be located in this directory:
     dst = context.build_dir / "trcks" / ".agents" / "skills" / "trcks"
