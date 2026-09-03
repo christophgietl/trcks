@@ -75,6 +75,38 @@ The skill is distributed via two channels:
 1. as part of the `trcks` repository on GitHub and
 2. as part of the `trcks` package on PyPI.
 
+### Installing with the GitHub CLI
+
+If you use the GitHub CLI, you can
+install the skill directly from the
+`trcks` repository on GitHub by running the following
+command in your terminal:
+
+```shell
+gh skill install christophgietl/trcks trcks
+```
+
+This command is in preview.
+It installs the latest tagged version of the skill
+(or the default branch if the repository has no tags)
+and does not automatically stay in sync with your installed version of `trcks`.
+
+### Installing with the skills CLI
+
+If you use Node.js, you can install the skill directly from the
+`trcks` repository on GitHub
+with the [skills CLI](https://skills.sh) by running the following command
+in your terminal:
+
+```shell
+npx skills add christophgietl/trcks --skill trcks
+```
+
+This installs the latest version of the skill from the default branch.
+It does not automatically stay in sync with your installed version of `trcks`.
+If you want the skill to match your installed version of `trcks`,
+use Library Skills instead.
+
 ### Installing with Library Skills
 
 You can install this skill (and skills provided by other libraries)
@@ -100,36 +132,3 @@ then run the install command:
 uv add --dev library-skills
 uv run library-skills install --skill trcks
 ```
-
-### Installing with the skills CLI
-
-If you use Node.js, you can install the skill directly from the
-`trcks` repository on GitHub
-with the [skills CLI](https://skills.sh) by running the following command
-in your terminal:
-
-```shell
-npx skills add christophgietl/trcks --skill trcks
-```
-
-This installs the latest version of the skill from the default branch.
-It does not automatically stay in sync with your installed version of `trcks`.
-If you want the skill to match your installed version of `trcks`,
-use Library Skills instead.
-
-### Installing with the GitHub CLI
-
-If you use the GitHub CLI, you can
-install the skill directly from the
-`trcks` repository on GitHub by running the following
-command in your terminal:
-
-```shell
-gh skill install christophgietl/trcks trcks
-```
-
-This command is in preview.
-Like the skills CLI,
-it installs the latest tagged version of the skill
-(or the default branch if the repository has no tags)
-and does not automatically stay in sync with your installed version of `trcks`.
