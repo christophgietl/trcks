@@ -46,10 +46,15 @@
 
 ### Wrapper classes defined in `trcks.oop`
 
-- The package `trcks.oop` provides wrapper classes for OOP-style method chaining
-  (`trcks.oop.Wrapper`, `trcks.oop.AwaitableWrapper`, `trcks.oop.ResultWrapper`,
-  `trcks.oop.AwaitableResultWrapper`, `trcks.oop.TupleWrapper`, `trcks.oop.ResultTupleWrapper`,
-  `trcks.oop.AwaitableTupleWrapper`, `trcks.oop.AwaitableResultTupleWrapper`).
+- The package `trcks.oop` provides wrapper classes for OOP-style method chaining:
+  - `trcks.oop.AwaitableResultTupleWrapper`
+  - `trcks.oop.AwaitableResultWrapper`
+  - `trcks.oop.AwaitableTupleWrapper`
+  - `trcks.oop.AwaitableWrapper`
+  - `trcks.oop.ResultTupleWrapper`
+  - `trcks.oop.ResultWrapper`
+  - `trcks.oop.TupleWrapper`
+  - `trcks.oop.Wrapper`
 - All wrapper classes are lightweight and immutable.
 - All wrapper class methods return new wrapper instances.
 
