@@ -17,6 +17,8 @@ __docformat__ = "google"
 
 
 def pdm_build_initialize(  # type: ignore[explicit-any]
+    # `pdm.backend.hooks.base.Context` is not available at type-checking time.
+    # Therefore, we annotate `context` as `typing.Any` instead:
     context: Any,  # noqa: ANN401  # pyrefly: ignore[explicit-any]
 ) -> None:
     """Copy the library skill into the wheel.
