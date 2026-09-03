@@ -8,7 +8,7 @@
 - `trcks` supports two distinct but equivalent programming styles:
   - OOP style for developers comfortable with method chaining
   - FP style for developers preferring function composition
-- `trcks` includes a [library skill](https://library-skills.io) for coding agents.
+- `trcks` includes an [agent skill](https://agentskills.io/home) for coding agents.
 
 ## Architecture decisions
 
@@ -63,11 +63,11 @@
   `trcks.AwaitableResult`, `trcks.AwaitableTuple`, `trcks.ResultTuple`, and
   `trcks.AwaitableResultTuple` values.
 
-### Library skill
+### Agent skill
 
-- The library skill is defined in
+- The agent skill is defined in
   [skills/trcks/](skills/trcks/).
-- When `trcks` is built, the library skill is included in both
+- When `trcks` is built, the agent skill is included in both
   the source distribution file and the wheel file.
 
 ## Code style
@@ -188,5 +188,5 @@ uv build
 - Keep [docs/index.md](docs/index.md) in sync with [README.md](README.md).
   Note: `docs/index.md` must not have a setup section.
 - Keep [the glossary](docs/glossary.md) up to date when new terms are introduced.
-- Keep [the library skill](skills/trcks/) up to date
+- Keep [the agent skill](skills/trcks/) up to date
   when features, architecture, or the public API change.
