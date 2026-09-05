@@ -25,7 +25,7 @@ we first need to understand the return type of asynchronous functions:
     ...     s = "Hello, world!"
     ...     print(f"Read '{s}' from file {path}.")
     ...     return s
-    ...
+    >>>
     >>> # Examine the return value of read_from_disk:
     >>> return_value = read_from_disk("input.txt")
     >>> return_value
@@ -56,14 +56,12 @@ with "regular" functions:
     ```pycon
     >>> def transform(s: str) -> str:
     ...     return f"Length: {len(s)}"
-    ...
+    >>>
     >>> async def write_to_disk(s: str, path: str) -> None:
     ...     await asyncio.sleep(0.001)
     ...     print(f"Wrote '{s}' to file {path}.")
-    ...
-    >>> async def read_and_transform_and_write(
-    ...     input_path: str, output_path: str
-    ... ) -> None:
+    >>>
+    >>> async def read_and_transform_and_write(input_path: str, output_path: str) -> None:
     ...     return await (
     ...         Wrapper(core=input_path)
     ...         .map_to_awaitable(read_from_disk)
@@ -71,7 +69,7 @@ with "regular" functions:
     ...         .map_to_awaitable(write_to_disk, output_path)
     ...         .core
     ...     )
-    ...
+    >>>
     >>> asyncio.run(read_and_transform_and_write("input.txt", "output.txt"))
     Read 'Hello, world!' from file input.txt.
     Wrote 'Length: 13' to file output.txt.
@@ -140,13 +138,11 @@ allows us to execute asynchronous side effects.
     >>> async def read_from_disk(path: str) -> str:
     ...     await asyncio.sleep(0.001)
     ...     return "Hello, world!"
-    ...
+    >>>
     >>> async def write_to_disk(s: str, path: str) -> None:
     ...     await asyncio.sleep(0.001)
-    ...
-    >>> async def read_and_transform_and_write(
-    ...     input_path: str, output_path: str
-    ... ) -> str:
+    >>>
+    >>> async def read_and_transform_and_write(input_path: str, output_path: str) -> str:
     ...     return await (
     ...         Wrapper(core=input_path)
     ...         .map_to_awaitable(read_from_disk)
@@ -156,7 +152,7 @@ allows us to execute asynchronous side effects.
     ...         .tap(lambda s: print(f"Wrote '{s}' to disk."))
     ...         .core
     ...     )
-    ...
+    >>>
     >>> return_value = asyncio.run(read_and_transform_and_write("input.txt", "output.txt"))
     Read 'Hello, world!' from disk.
     Wrote 'Length: 13' to disk.
@@ -191,19 +187,17 @@ with "regular" functions:
     ...     s = "Hello, world!"
     ...     print(f"Read '{s}' from file {path}.")
     ...     return "success", s
-    ...
+    >>>
     >>> def transform(s: str) -> str:
     ...     return f"Length: {len(s)}"
-    ...
-    >>> async def write_to_disk(
-    ...     s: str, path: str
-    ... ) -> Result[WriteErrorLiteral, None]:
+    >>>
+    >>> async def write_to_disk(s: str, path: str) -> Result[WriteErrorLiteral, None]:
     ...     if path != "output.txt":
     ...         return "failure", "write error"
     ...     await asyncio.sleep(0.001)
     ...     print(f"Wrote '{s}' to file {path}.")
     ...     return "success", None
-    ...
+    >>>
     >>>
     >>> async def read_and_transform_and_write(
     ...     input_path: str, output_path: str
@@ -215,7 +209,7 @@ with "regular" functions:
     ...         .map_success_to_awaitable_result(write_to_disk, output_path)
     ...         .core
     ...     )
-    ...
+    >>>
     >>> asyncio.run(read_and_transform_and_write("input.txt", "output.txt"))
     Read 'Hello, world!' from file input.txt.
     Wrote 'Length: 13' to file output.txt.
@@ -247,17 +241,15 @@ let us have a look at the individual steps of the chain:
     >>> mapped_twice
     AwaitableResultWrapper(core=<coroutine object ...>)
     >>> # 4. Apply the AwaitableResult function write_to_disk in the success case:
-    >>> mapped_thrice: AwaitableResultWrapper[
-    ...     ReadErrorLiteral | WriteErrorLiteral, None
-    ... ] = mapped_twice.map_success_to_awaitable_result(
-    ...     write_to_disk, "output.txt"
+    >>> mapped_thrice: AwaitableResultWrapper[ReadErrorLiteral | WriteErrorLiteral, None] = (
+    ...     mapped_twice.map_success_to_awaitable_result(write_to_disk, "output.txt")
     ... )
     >>> mapped_thrice
     AwaitableResultWrapper(core=<coroutine object ...>)
     >>> # 5. Unwrap the output coroutine:
-    >>> unwrapped: Coroutine[
-    ...     Any, Any, Result[ReadErrorLiteral | WriteErrorLiteral, None]
-    ... ] = mapped_thrice.core_as_coroutine
+    >>> unwrapped: Coroutine[Any, Any, Result[ReadErrorLiteral | WriteErrorLiteral, None]] = (
+    ...     mapped_thrice.core_as_coroutine
+    ... )
     >>> unwrapped
     <coroutine object ...>
     >>> # 6. Run the output coroutine:
@@ -281,15 +273,13 @@ in the failure case or in the success case, respectively:
     ...         return "failure", "read error"
     ...     await asyncio.sleep(0.001)
     ...     return "success", "Hello, world!"
-    ...
-    >>> async def write_to_disk(
-    ...     s: str, path: str
-    ... ) -> Result[WriteErrorLiteral, None]:
+    >>>
+    >>> async def write_to_disk(s: str, path: str) -> Result[WriteErrorLiteral, None]:
     ...     if path != "output.txt":
     ...         return "failure", "write error"
     ...     await asyncio.sleep(0.001)
     ...     return "success", None
-    ...
+    >>>
     >>> async def read_and_transform_and_write(
     ...     input_path: str, output_path: str
     ... ) -> Result[ReadErrorLiteral | WriteErrorLiteral, None]:
@@ -303,7 +293,7 @@ in the failure case or in the success case, respectively:
     ...         .tap_failure(lambda err: print(f"LOG: Failed with error: {err}"))
     ...         .core
     ...     )
-    ...
+    >>>
     >>> result_1 = asyncio.run(read_and_transform_and_write("input.txt", "output.txt"))
     LOG: Read 'Hello, world!' from disk.
     LOG: Successfully wrote to disk.
@@ -333,9 +323,9 @@ the original success value is preserved:
     ...     if len(s) > 10:
     ...         return "failure", "Out of disk space"
     ...     return "success", None
-    ...
+    >>>
     >>> async def read_and_persist(
-    ...     input_path: str
+    ...     input_path: str,
     ... ) -> Result[ReadErrorLiteral | OutOfDiskSpace, str]:
     ...     return await (
     ...         Wrapper(core=input_path)
@@ -344,7 +334,7 @@ the original success value is preserved:
     ...         .tap_success_to_awaitable_result(write_to_disk)
     ...         .core
     ...     )
-    ...
+    >>>
     >>> result = asyncio.run(read_and_persist("input.txt"))
     LOG: Persisting 'Hello, world!'.
     >>> result

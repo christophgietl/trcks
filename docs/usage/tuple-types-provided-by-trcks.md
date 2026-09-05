@@ -18,27 +18,29 @@ a dataclass:
     >>> from trcks import Failure
     >>>
     >>> UserDoesNotExistLiteral = Literal["User does not exist"]
-    >>> literal_failure: Failure[UserDoesNotExistLiteral] = (
-    ...     "failure", "User does not exist"
-    ... )
+    >>> literal_failure: Failure[UserDoesNotExistLiteral] = ("failure", "User does not exist")
     >>>
     >>> class UserDoesNotExistException(Exception):
     ...     pass
-    ...
-    >>> exception_failure: Failure[UserDoesNotExistException] = ("failure", UserDoesNotExistException())
+    >>>
+    >>> exception_failure: Failure[UserDoesNotExistException] = (
+    ...     "failure",
+    ...     UserDoesNotExistException(),
+    ... )
     >>>
     >>> class ErrorEnum(enum.Enum):
     ...     USER_DOES_NOT_EXIST = enum.auto()
-    ...
+    >>>
     >>> enum_failure: Failure[ErrorEnum] = ("failure", ErrorEnum.USER_DOES_NOT_EXIST)
     >>>
     >>> @dataclasses.dataclass(frozen=True, kw_only=True, slots=True)
     ... class UserDoesNotExistError:
     ...     user_id: int
-    ...
+    >>>
     >>> # A frozen dataclass can carry structured failure context.
     >>> dataclass_failure: Failure[UserDoesNotExistError] = (
-    ...     "failure", UserDoesNotExistError(user_id=42)
+    ...     "failure",
+    ...     UserDoesNotExistError(user_id=42),
     ... )
 
     ```
@@ -74,13 +76,11 @@ It is primarily used as a return type for functions:
     >>>
     >>> UserDoesNotHaveASubscription = Literal["User does not have a subscription"]
     >>>
-    >>> def get_subscription_id(
-    ...     user_id: int
-    ... ) -> Result[UserDoesNotHaveASubscription, int]:
+    >>> def get_subscription_id(user_id: int) -> Result[UserDoesNotHaveASubscription, int]:
     ...     if user_id == 1:
     ...         return "success", 42
     ...     return "failure", "User does not have a subscription"
-    ...
+    >>>
     >>> get_subscription_id(user_id=1)
     ('success', 42)
     >>> get_subscription_id(user_id=2)

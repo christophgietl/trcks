@@ -33,20 +33,16 @@ in the following example.
     ...     if user_email == "john_doe@provider.com":
     ...         return "success", 2
     ...     return "failure", "User does not exist"
-    ...
-    >>> def get_subscription_id(
-    ...     user_id: int
-    ... ) -> Result[UserDoesNotHaveASubscription, int]:
+    >>>
+    >>> def get_subscription_id(user_id: int) -> Result[UserDoesNotHaveASubscription, int]:
     ...     if user_id == 1:
     ...         return "success", 42
     ...     return "failure", "User does not have a subscription"
-    ...
+    >>>
     >>> def get_subscription_fee(subscription_id: int) -> float:
     ...     return subscription_id * 0.1
-    ...
-    >>> def get_subscription_fee_by_email(
-    ...     user_email: str
-    ... ) -> Result[FailureDescription, float]:
+    >>>
+    >>> def get_subscription_fee_by_email(user_email: str) -> Result[FailureDescription, float]:
     ...     return (
     ...         Wrapper(core=user_email)
     ...         .map_to_result(get_user_id)
@@ -54,7 +50,7 @@ in the following example.
     ...         .map_success(get_subscription_fee)
     ...         .core
     ...     )
-    ...
+    >>>
     >>> get_subscription_fee_by_email("erika.mustermann@domain.org")
     ('success', 4.2)
     >>> get_subscription_fee_by_email("john_doe@provider.com")
@@ -104,20 +100,16 @@ in the following example.
     ...     if user_email == "john_doe@provider.com":
     ...         return "success", 2
     ...     return "failure", "User does not exist"
-    ...
-    >>> def get_subscription_id(
-    ...     user_id: int
-    ... ) -> Result[UserDoesNotHaveASubscription, int]:
+    >>>
+    >>> def get_subscription_id(user_id: int) -> Result[UserDoesNotHaveASubscription, int]:
     ...     if user_id == 1:
     ...         return "success", 42
     ...     return "failure", "User does not have a subscription"
-    ...
+    >>>
     >>> def get_subscription_fee(subscription_id: int) -> float:
     ...     return subscription_id * 0.1
-    ...
-    >>> def get_subscription_fee_by_email(
-    ...     user_email: str
-    ... ) -> Result[FailureDescription, float]:
+    >>>
+    >>> def get_subscription_fee_by_email(user_email: str) -> Result[FailureDescription, float]:
     ...     # Explicitly assigning a type to `pipeline` might
     ...     # help your static type checker understand that
     ...     # `pipeline` is a valid argument for `pipe`:
@@ -133,7 +125,7 @@ in the following example.
     ...         r.map_success(get_subscription_fee),
     ...     )
     ...     return pipe(pipeline)
-    ...
+    >>>
     >>> get_subscription_fee_by_email("erika.mustermann@domain.org")
     ('success', 4.2)
     >>> get_subscription_fee_by_email("john_doe@provider.com")

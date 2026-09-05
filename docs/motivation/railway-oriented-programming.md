@@ -21,18 +21,18 @@ to check whether functions fit together:
     ...     if user_email == "john_doe@provider.com":
     ...         return 2
     ...     raise Exception("User does not exist")
-    ...
+    >>>
     >>> def get_subscription_id(user_id: int) -> int:
     ...     if user_id == 1:
     ...         return 42
     ...     raise Exception("User does not have a subscription")
-    ...
+    >>>
     >>> def get_subscription_fee(subscription_id: int) -> float:
     ...     return subscription_id * 0.1
-    ...
+    >>>
     >>> def get_subscription_fee_by_email(user_email: str) -> float:
     ...     return get_subscription_fee(get_subscription_id(get_user_id(user_email)))
-    ...
+    >>>
     >>> get_subscription_fee_by_email("erika.mustermann@domain.org")
     4.2
 
@@ -65,7 +65,7 @@ We can document domain exceptions in the docstring of the function:
     ...     if user_id == 1:
     ...         return 42
     ...     raise Exception("User does not have a subscription")
-    ...
+    >>>
 
     ```
 
@@ -89,13 +89,11 @@ we return a result type:
     >>>
     >>> UserDoesNotHaveASubscription = Literal["User does not have a subscription"]
     >>>
-    >>> def get_subscription_id(
-    ...     user_id: int
-    ... ) -> Result[UserDoesNotHaveASubscription, int]:
+    >>> def get_subscription_id(user_id: int) -> Result[UserDoesNotHaveASubscription, int]:
     ...     if user_id == 1:
     ...         return "success", 42
     ...     return "failure", "User does not have a subscription"
-    ...
+    >>>
     >>> get_subscription_id(user_id=1)
     ('success', 42)
     >>> get_subscription_id(user_id=2)
