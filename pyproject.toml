@@ -156,6 +156,12 @@ strict = true
 warn_incomplete_stub = true
 warn_unreachable = true
 
+[tool.pdm.build]
+source-includes = [
+    "skills/trcks",
+    "tests",
+]
+
 [tool.pdm.version]
 source = "scm"
 
@@ -185,22 +191,6 @@ asyncio_default_fixture_loop_scope = "function"
 asyncio_mode = "auto"
 doctest_plus = "enabled"
 filterwarnings = ["error"]
-norecursedirs = [
-    "*.egg",
-    ".git",
-    ".github",
-    ".mypy_cache",
-    ".pdm-build",
-    ".pytest_cache",
-    ".venv",
-    "_darcs",
-    "build",
-    "CVS",
-    "dist",
-    "node_modules",
-    "venv",
-    "{arch}",
-]
 
 [tool.ruff.lint]
 ignore = [

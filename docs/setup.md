@@ -70,17 +70,46 @@ dependencies = [
 
 `trcks` ships an [agent skill](https://agentskills.io/home)
 that teaches AI coding agents how to use `trcks` for railway-oriented programming.
-Every release of `trcks` bundles the skill,
-so it always matches your installed version of `trcks`.
+The skill is distributed via two channels:
 
-You can install this skill (and skills provided by other libraries)
-using [Library Skills](https://library-skills.io/).
-Library Skills scans the dependencies of your project,
-finds the skills bundled with the installed libraries, and
-adds them to your project as symbolic links.
-When you update your dependencies, the skills stay up to date.
+1. as part of the `trcks` repository on GitHub and
+2. as part of the `trcks` package on PyPI.
 
-If you use `uv`, run the following command in your terminal:
+### Installing with the GitHub CLI
+
+If you use the GitHub CLI, you can install the skill
+directly from the `trcks` repository on GitHub
+by running the following command in your terminal:
+
+```shell
+gh skill install christophgietl/trcks trcks@0.7.2
+```
+
+Please make sure that the version (`0.7.2` in the above example) matches
+the version of the `trcks` library used in your project.
+Whenever you update the `trcks` library, please update the `trcks` skill as well.
+
+### Installing with the `skills` CLI
+
+If you use Node.js, you can install the skill
+directly from the `trcks` repository on GitHub
+with the [`skills` CLI](https://skills.sh) by running the following command
+in your terminal:
+
+```shell
+npx skills add https://github.com/christophgietl/trcks/tree/0.7.2 --skill trcks
+```
+
+Please make sure that the version (`0.7.2` in the above example) matches
+the version of the `trcks` library used in your project.
+Whenever you update the `trcks` library, please update the `trcks` skill as well.
+
+### Installing with Library Skills
+
+If you use `uv`, you can install the skill
+from the `trcks` library already installed in your environment
+with [Library Skills](https://library-skills.io/)
+by running the following command in your terminal:
 
 ```shell
 uvx library-skills install --skill trcks
@@ -93,3 +122,10 @@ then run the install command:
 uv add --dev library-skills
 uv run library-skills install --skill trcks
 ```
+
+Library Skills scans the dependencies of your project,
+finds the skills bundled with the installed libraries, and
+adds them to your project as symbolic links.
+The installed skill always matches
+the version of the `trcks` library used in your project.
+Whenever you update the `trcks` library, the skill stays up to date.

@@ -10,8 +10,7 @@ in two different type-safe programming styles.
 Use your favorite package manager (e.g. `pip`, `poetry`, or `uv`) to install it.
 Check the documentation for
 [detailed setup instructions](https://christophgietl.github.io/trcks/setup/),
-including how to install the bundled [library skill](https://library-skills.io)
-for AI coding agents.
+including how to install the `trcks` skill for AI coding agents.
 
 ## Usage
 
