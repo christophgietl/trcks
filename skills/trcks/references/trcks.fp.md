@@ -426,7 +426,8 @@ These modules share the same `construct*`, `map*`, and `tap*` naming
 conventions introduced above.
 Each `map*` and `tap*` function that also exists in the synchronous
 modules gains an `_to_awaitable`, `_to_awaitable_iterable`,
-`_to_awaitable_result`, or `_to_awaitable_result_iterable` counterpart
+`_to_awaitable_result`, `_to_awaitable_result_iterable`,
+`_to_awaitable_result_tuple`, or `_to_awaitable_tuple` counterpart
 that applies an asynchronous, instead of a synchronous, function.
 This section only covers what is specific to awaitable values.
 
