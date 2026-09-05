@@ -140,6 +140,9 @@ with "regular" functions:
 
 ```
 
+Read [the `trcks.fp` reference guide](references/trcks.fp.md) for details
+about the modules and their functions.
+
 ## Reference: Wrapper classes provided by `trcks.oop`
 
 The module `trcks.oop` defines wrapper classes
@@ -188,6 +191,9 @@ with "regular" functions:
 ('failure', 'User does not exist')
 
 ```
+
+Read [the `trcks.oop` reference guide](references/trcks.oop.md) for details
+about the wrapper classes and their methods.
 
 ## How to: Narrow `trcks.Result` values to their success or failure types
 
@@ -424,3 +430,8 @@ Or you can use data classes to include additional information in the failure val
 1. Choose either `trcks.fp` or `trcks.oop` for your project, and use it consistently.
 2. Use a static type checker (e.g., `mypy`, `pyright`, or `pyrefly`)
    to verify that your code is type-safe.
+
+## Further reading
+
+1. [`trcks.fp` reference guide](references/trcks.fp.md)
+2. [`trcks.oop` reference guide](references/trcks.oop.md)
