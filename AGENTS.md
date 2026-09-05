@@ -7,7 +7,7 @@
 - `trcks` provides generic return types for synchronous and asynchronous functions.
 - `trcks` supports two distinct but equivalent programming styles:
   - OOP style for developers comfortable with method chaining
-  - FP style for developers preferring function composition
+  - FP style for developers who prefer function composition
 - `trcks` includes a [skill for coding agents](https://agentskills.io/home).
 
 ## Architecture decisions
@@ -46,10 +46,15 @@
 
 ### Wrapper classes defined in `trcks.oop`
 
-- The package `trcks.oop` provides wrapper classes for OOP-style method chaining
-  (e.g. `trcks.oop.Wrapper`, `trcks.oop.AwaitableWrapper`, `trcks.oop.ResultWrapper`,
-  `trcks.oop.AwaitableResultWrapper`, `trcks.oop.TupleWrapper`, `trcks.oop.ResultTupleWrapper`,
-  `trcks.oop.AwaitableTupleWrapper`, `trcks.oop.AwaitableResultTupleWrapper`).
+- The package `trcks.oop` provides wrapper classes for OOP-style method chaining:
+  - `trcks.oop.AwaitableResultTupleWrapper`
+  - `trcks.oop.AwaitableResultWrapper`
+  - `trcks.oop.AwaitableTupleWrapper`
+  - `trcks.oop.AwaitableWrapper`
+  - `trcks.oop.ResultTupleWrapper`
+  - `trcks.oop.ResultWrapper`
+  - `trcks.oop.TupleWrapper`
+  - `trcks.oop.Wrapper`
 - All wrapper classes are lightweight and immutable.
 - All wrapper class methods return new wrapper instances.
 
@@ -68,7 +73,7 @@
 - The agent skill is defined in [skills/trcks/](skills/trcks/).
 - When `trcks` is built, the agent skill is included in both
   the source distribution file and the wheel file,
-  following the [Library Skills](https://library-skills.io) standard.
+  in line with the [Library Skills](https://library-skills.io) standard.
 
 ## Code style
 
@@ -165,7 +170,7 @@ uv build
 
 - Every public function in [src/trcks/](src/trcks/)
   (except for property methods and dunder methods)
-  must have a docstring with ≥1 example (run as doctest by `pytest`);
+  must have a docstring with ≥1 example (which `pytest` runs as doctests);
   reuse example functions from existing doctests.
 - `pytest` also collects "pycon" blocks in `**/*.md` and `tests/trcks/**/test_*.py`
   (mirroring [src/trcks/](src/trcks/)).
@@ -175,9 +180,9 @@ uv build
 ## Documentation requirements
 
 - The documentation website is built with Material for MkDocs,
-  configured in [mkdocs.yml](mkdocs.yml) and written in `docs/**/*.md`.
+  configured in [mkdocs.yml](mkdocs.yml), and written in `docs/**/*.md`.
 - Update [mkdocs.yml](mkdocs.yml) and `docs/**/*.md`
-  whenever features, architecture, or UI change.
+  whenever features, architecture, or UI changes.
 - API docs in `docs/reference/trcks.*.md` must mirror
   the module and class structure of `trcks`
   (e.g. `trcks.fp.monads.result` → [docs/reference/trcks.fp.monads.result.md](docs/reference/trcks.fp.monads.result.md)).
@@ -187,6 +192,6 @@ uv build
 - Keep [README.md](README.md) up to date when features or UI changes.
 - Keep [docs/index.md](docs/index.md) in sync with [README.md](README.md).
   Note: `docs/index.md` must not have a setup section.
-- Keep [the glossary](docs/glossary.md) up to date when new terms are introduced.
+- Keep [the glossary](docs/glossary.md) up to date when you introduce new terms.
 - Keep [the agent skill](skills/trcks/) up to date
-  when features, architecture, or the public API change.
+  when features, architecture, or the public API changes.
