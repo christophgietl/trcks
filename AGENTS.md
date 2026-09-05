@@ -6,7 +6,7 @@
 - `trcks` encourages returning domain errors instead of raising them.
 - `trcks` provides generic return types for synchronous and asynchronous functions.
 - `trcks` supports two distinct but equivalent programming styles:
-  - OOP style for developers comfortable with method chaining
+  - OOP style for developers who prefer method chaining
   - FP style for developers who prefer function composition
 - `trcks` includes a [skill for coding agents](https://agentskills.io/home).
 
