@@ -105,20 +105,16 @@ with "regular" functions:
 ...     if user_email == "john_doe@provider.com":
 ...         return "success", 2
 ...     return "failure", "User does not exist"
-...
->>> def get_subscription_id(
-...     user_id: int
-... ) -> Result[UserDoesNotHaveASubscription, int]:
+>>>
+>>> def get_subscription_id(user_id: int) -> Result[UserDoesNotHaveASubscription, int]:
 ...     if user_id == 1:
 ...         return "success", 42
 ...     return "failure", "User does not have a subscription"
-...
+>>>
 >>> def get_subscription_fee(subscription_id: int) -> float:
 ...     return subscription_id * 0.1
-...
->>> def get_subscription_fee_by_email(
-...     user_email: str
-... ) -> Result[FailureDescription, float]:
+>>>
+>>> def get_subscription_fee_by_email(user_email: str) -> Result[FailureDescription, float]:
 ...     # Explicitly assigning a type to `pipeline` might
 ...     # help your static type checker understand that
 ...     # `pipeline` is a valid argument for `pipe`:
@@ -134,7 +130,7 @@ with "regular" functions:
 ...         r.map_success(get_subscription_fee),
 ...     )
 ...     return pipe(pipeline)
-...
+>>>
 >>> get_subscription_fee_by_email("erika.mustermann@domain.org")
 ('success', 4.2)
 >>> get_subscription_fee_by_email("john_doe@provider.com")
@@ -166,20 +162,16 @@ with "regular" functions:
 ...     if user_email == "john_doe@provider.com":
 ...         return "success", 2
 ...     return "failure", "User does not exist"
-...
->>> def get_subscription_id(
-...     user_id: int
-... ) -> Result[UserDoesNotHaveASubscription, int]:
+>>>
+>>> def get_subscription_id(user_id: int) -> Result[UserDoesNotHaveASubscription, int]:
 ...     if user_id == 1:
 ...         return "success", 42
 ...     return "failure", "User does not have a subscription"
-...
+>>>
 >>> def get_subscription_fee(subscription_id: int) -> float:
 ...     return subscription_id * 0.1
-...
->>> def get_subscription_fee_by_email(
-...     user_email: str
-... ) -> Result[FailureDescription, float]:
+>>>
+>>> def get_subscription_fee_by_email(user_email: str) -> Result[FailureDescription, float]:
 ...     return (
 ...         Wrapper(core=user_email)
 ...         .map_to_result(get_user_id)
@@ -187,7 +179,7 @@ with "regular" functions:
 ...         .map_success(get_subscription_fee)
 ...         .core
 ...     )
-...
+>>>
 >>> get_subscription_fee_by_email("erika.mustermann@domain.org")
 ('success', 4.2)
 >>> get_subscription_fee_by_email("john_doe@provider.com")
@@ -254,7 +246,7 @@ return them:
 ...         return "success", a / b
 ...     except ZeroDivisionError:
 ...         return "failure", "Division by zero"
-...
+>>>
 >>> divide(5.0, 2.0)
 ('success', 2.5)
 >>> divide(3.5, 0.0)
@@ -276,7 +268,7 @@ check for `None`, convert it into a `trcks.Failure` value, and return it:
 ...     if match is None:
 ...         return "failure", "Invalid ticket ID"
 ...     return "success", match.group(1)
-...
+>>>
 >>> extract_ticket_number("TICKET-12345")
 ('success', '12345')
 >>> extract_ticket_number("12345")
@@ -303,7 +295,7 @@ raise them:
 ...     from typing_extensions import assert_never
 >>> class DivisionByZeroError(Exception):
 ...     """Raised when division by zero is attempted."""
-...
+>>>
 >>> def unwrap_divide_result(
 ...     result: Result[Literal["Division by zero"], float],
 ... ) -> float:
@@ -314,7 +306,7 @@ raise them:
 ...             return value
 ...         case _:
 ...             assert_never(result)
-...
+>>>
 >>> unwrap_divide_result(("success", 2.5))
 2.5
 >>> unwrap_divide_result(("failure", "Division by zero"))
@@ -363,30 +355,29 @@ Or you can use enums:
 >>> class FailureDescription(enum.Enum):
 ...     USER_DOES_NOT_EXIST = "User does not exist"
 ...     USER_DOES_NOT_HAVE_A_SUBSCRIPTION = "User does not have a subscription"
-...
+>>>
 >>> def get_user_id(
-...     user_email: str
+...     user_email: str,
 ... ) -> Result[Literal[FailureDescription.USER_DOES_NOT_EXIST], int]:
 ...     if user_email == "erika.mustermann@domain.org":
 ...         return "success", 1
 ...     if user_email == "john_doe@provider.com":
 ...         return "success", 2
 ...     return "failure", FailureDescription.USER_DOES_NOT_EXIST
-...
+>>>
 >>> def get_subscription_id(
-...     user_id: int
+...     user_id: int,
 ... ) -> Result[Literal[FailureDescription.USER_DOES_NOT_HAVE_A_SUBSCRIPTION], int]:
 ...     if user_id == 1:
 ...         return "success", 42
 ...     return "failure", FailureDescription.USER_DOES_NOT_HAVE_A_SUBSCRIPTION
-...
+>>>
 >>> def get_subscription_fee(subscription_id: int) -> float:
 ...     return subscription_id * 0.1
-...
+>>>
 >>> def get_subscription_fee_by_email(
-...     user_email: str
-... ) -> Result[FailureDescription, float]:
-...     ...
+...     user_email: str,
+... ) -> Result[FailureDescription, float]: ...
 
 ```
 
@@ -401,31 +392,30 @@ Or you can use data classes to include additional information in the failure val
 ... @dataclass(frozen=True, slots=True)
 ... class UserDoesNotExistError:
 ...     email: str
-...
+>>>
 >>> @final
 ... @dataclass(frozen=True, slots=True)
 ... class UserDoesNotHaveASubscriptionError:
 ...     id: int
-...
+>>>
 >>> def get_user_id(user_email: str) -> Result[UserDoesNotExistError, int]:
 ...     if user_email == "erika.mustermann@domain.org":
 ...         return "success", 1
 ...     if user_email == "john_doe@provider.com":
 ...         return "success", 2
 ...     return "failure", UserDoesNotExistError(email=user_email)
-...
+>>>
 >>> def get_subscription_id(user_id: int) -> Result[UserDoesNotHaveASubscriptionError, int]:
 ...     if user_id == 1:
 ...         return "success", 42
 ...     return "failure", UserDoesNotHaveASubscriptionError(id=user_id)
-...
+>>>
 >>> def get_subscription_fee(subscription_id: int) -> float:
 ...     return subscription_id * 0.1
-...
+>>>
 >>> def get_subscription_fee_by_email(
 ...     user_email: str,
-... ) -> Result[UserDoesNotExistError | UserDoesNotHaveASubscriptionError, float]:
-...     ...
+... ) -> Result[UserDoesNotExistError | UserDoesNotHaveASubscriptionError, float]: ...
 
 ```
 

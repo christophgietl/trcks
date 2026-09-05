@@ -15,7 +15,7 @@ The function [trcks.fp.composition.pipe][] allows us to chain functions:
     >>>
     >>> def to_length_string(s: str) -> str:
     ...     return pipe((s, len, lambda n: f"Length: {n}"))
-    ...
+    >>>
     >>> to_length_string("Hello, world!")
     'Length: 13'
 
@@ -62,7 +62,7 @@ that behaves like the original function but returns the input value.
     ...             i.tap(lambda o: print(f"LOG: Returning '{o}'.")),
     ...         ),
     ...     )
-    ...
+    >>>
     >>> output = to_length_string("Hello, world!")
     LOG: Received 'Hello, world!'.
     LOG: Returning 'Length: 13'.
@@ -101,20 +101,16 @@ into functions with input type `trcks.Result[F, S]`.
     ...     if user_email == "john_doe@provider.com":
     ...         return "success", 2
     ...     return "failure", "User does not exist"
-    ...
-    >>> def get_subscription_id(
-    ...     user_id: int
-    ... ) -> Result[UserDoesNotHaveASubscription, int]:
+    >>>
+    >>> def get_subscription_id(user_id: int) -> Result[UserDoesNotHaveASubscription, int]:
     ...     if user_id == 1:
     ...         return "success", 42
     ...     return "failure", "User does not have a subscription"
-    ...
+    >>>
     >>> def get_subscription_fee(subscription_id: int) -> float:
     ...     return subscription_id * 0.1
-    ...
-    >>> def get_subscription_fee_by_email(
-    ...     user_email: str
-    ... ) -> Result[FailureDescription, float]:
+    >>>
+    >>> def get_subscription_fee_by_email(user_email: str) -> Result[FailureDescription, float]:
     ...     # Explicitly assigning a type to `pipeline` might
     ...     # help your static type checker understand that
     ...     # `pipeline` is a valid argument for `pipe`:
@@ -130,7 +126,7 @@ into functions with input type `trcks.Result[F, S]`.
     ...         r.map_success(get_subscription_fee),
     ...     )
     ...     return pipe(pipeline)
-    ...
+    >>>
     >>> get_subscription_fee_by_email("erika.mustermann@domain.org")
     ('success', 4.2)
     >>> get_subscription_fee_by_email("john_doe@provider.com")
@@ -159,9 +155,7 @@ let us have a look at the individual steps of the chain:
     >>> pipe(p1)
     ('success', 1)
     >>>
-    >>> p2: Pipeline2[
-    ...     str, Result[UserDoesNotExist, int], Result[FailureDescription, int]
-    ... ] = (
+    >>> p2: Pipeline2[str, Result[UserDoesNotExist, int], Result[FailureDescription, int]] = (
     ...     "erika.mustermann@domain.org",
     ...     get_user_id,
     ...     r.map_success_to_result(get_subscription_id),
@@ -195,9 +189,7 @@ allow us to execute side effects in the failure case or in the success case, res
     ```pycon
     >>> from trcks.fp.composition import Pipeline6
     >>>
-    >>> def get_subscription_fee_by_email(
-    ...     user_email: str
-    ... ) -> Result[FailureDescription, float]:
+    >>> def get_subscription_fee_by_email(user_email: str) -> Result[FailureDescription, float]:
     ...     pipeline: Pipeline6[
     ...         str,
     ...         Result[UserDoesNotExist, int],
@@ -216,7 +208,7 @@ allow us to execute side effects in the failure case or in the success case, res
     ...         r.tap_failure(lambda fd: print(f"LOG: Failure description: {fd}.")),
     ...     )
     ...     return pipe(pipeline)
-    ...
+    >>>
     >>> fee_erika = get_subscription_fee_by_email("erika.mustermann@domain.org")
     LOG: User ID: 1.
     LOG: Subscription fee: 4.2.
@@ -252,9 +244,9 @@ If the side effect returns a [trcks.Success][], the original success value is pr
     ...     if n > 1:
     ...         return "failure", "Out of disk space"
     ...     return "success", print(f"LOG: Wrote {n} to disk.")
-    ...
+    >>>
     >>> def get_and_persist_user_id(
-    ...     user_email: str
+    ...     user_email: str,
     ... ) -> Result[UserDoesNotExist | OutOfDiskSpace, int]:
     ...     pipeline: Pipeline2[
     ...         str,
@@ -266,7 +258,7 @@ If the side effect returns a [trcks.Success][], the original success value is pr
     ...         r.tap_success_to_result(write_to_disk),
     ...     )
     ...     return pipe(pipeline)
-    ...
+    >>>
     >>> id_erika = get_and_persist_user_id("erika.mustermann@domain.org")
     LOG: Wrote 1 to disk.
     >>> id_erika

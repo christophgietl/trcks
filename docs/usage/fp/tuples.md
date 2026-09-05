@@ -33,10 +33,10 @@ operating on entire tuples.
     >>>
     >>> def normalize_email(email: str) -> str:
     ...     return email.strip().lower()
-    ...
+    >>>
     >>> def to_domain(email: str) -> str:
     ...     return email.split("@")[1]
-    ...
+    >>>
     >>> def get_domains(emails: tuple[str, ...]) -> tuple[str, ...]:
     ...     pipeline: Pipeline2[
     ...         tuple[str, ...],
@@ -48,7 +48,7 @@ operating on entire tuples.
     ...         t.map_(to_domain),
     ...     )
     ...     return pipe(pipeline)
-    ...
+    >>>
     >>> get_domains(("  Erika.Mustermann@Domain.ORG ", "JOHN_DOE@Provider.COM  "))
     ('domain.org', 'provider.com')
 
@@ -121,10 +121,8 @@ allows us to execute side effects for each element:
     ...         t.map_(to_domain),
     ...     )
     ...     return pipe(pipeline)
-    ...
-    >>> result = get_domains(
-    ...     ("  Erika.Mustermann@Domain.ORG ", "JOHN_DOE@Provider.COM  ")
-    ... )
+    >>>
+    >>> result = get_domains(("  Erika.Mustermann@Domain.ORG ", "JOHN_DOE@Provider.COM  "))
     LOG: Processing 'erika.mustermann@domain.org'.
     LOG: Processing 'john_doe@provider.com'.
     >>> result
@@ -161,17 +159,15 @@ Processing short-circuits on the first [trcks.Failure][].
     ...     if user_email == "john_doe@provider.com":
     ...         return "success", 2
     ...     return "failure", "User does not exist"
-    ...
-    >>> def get_subscription_id(
-    ...     user_id: int
-    ... ) -> Result[UserDoesNotHaveASubscription, int]:
+    >>>
+    >>> def get_subscription_id(user_id: int) -> Result[UserDoesNotHaveASubscription, int]:
     ...     if user_id == 1:
     ...         return "success", 42
     ...     return "failure", "User does not have a subscription"
-    ...
+    >>>
     >>> def get_subscription_fee(subscription_id: int) -> float:
     ...     return subscription_id * 0.1
-    ...
+    >>>
     >>> def get_subscription_fees_by_email(
     ...     user_emails: tuple[str, ...],
     ... ) -> ResultTuple[FailureDescription, float]:
@@ -189,12 +185,10 @@ Processing short-circuits on the first [trcks.Failure][].
     ...         rt.map_successes(get_subscription_fee),
     ...     )
     ...     return pipe(pipeline)
-    ...
+    >>>
     >>> get_subscription_fees_by_email(("erika.mustermann@domain.org",))
     ('success', (4.2,))
-    >>> get_subscription_fees_by_email(
-    ...     ("erika.mustermann@domain.org", "john_doe@provider.com")
-    ... )
+    >>> get_subscription_fees_by_email(("erika.mustermann@domain.org", "john_doe@provider.com"))
     ('failure', 'User does not have a subscription')
     >>> get_subscription_fees_by_email(("jane_doe@provider.com",))
     ('failure', 'User does not exist')
@@ -312,26 +306,20 @@ in the success case (for each element) or in the failure case, respectively.
     ...         rt.tap_failure(lambda fd: print(f"LOG: Failure: {fd}.")),
     ...     )
     ...     return pipe(pipeline)
-    ...
-    >>> fees_erika = get_subscription_fees_by_email(
-    ...     ("erika.mustermann@domain.org",)
-    ... )
+    >>>
+    >>> fees_erika = get_subscription_fees_by_email(("erika.mustermann@domain.org",))
     LOG: User ID: 1.
     LOG: Subscription fee: 4.2.
     >>> fees_erika
     ('success', (4.2,))
     >>>
-    >>> fees_john = get_subscription_fees_by_email(
-    ...     ("john_doe@provider.com",)
-    ... )
+    >>> fees_john = get_subscription_fees_by_email(("john_doe@provider.com",))
     LOG: User ID: 2.
     LOG: Failure: User does not have a subscription.
     >>> fees_john
     ('failure', 'User does not have a subscription')
     >>>
-    >>> fees_jane = get_subscription_fees_by_email(
-    ...     ("jane_doe@provider.com",)
-    ... )
+    >>> fees_jane = get_subscription_fees_by_email(("jane_doe@provider.com",))
     LOG: Failure: User does not exist.
     >>> fees_jane
     ('failure', 'User does not exist')
@@ -356,7 +344,7 @@ the original success values are preserved.
     ...     if n > 1:
     ...         return "failure", "Out of disk space"
     ...     return "success", print(f"LOG: Wrote {n} to disk.")
-    ...
+    >>>
     >>> def get_and_persist_user_ids(
     ...     user_emails: tuple[str, ...],
     ... ) -> ResultTuple[UserDoesNotExist | OutOfDiskSpace, int]:
@@ -372,7 +360,7 @@ the original success values are preserved.
     ...         rt.tap_successes_to_result(write_to_disk),
     ...     )
     ...     return pipe(pipeline)
-    ...
+    >>>
     >>> ids_erika = get_and_persist_user_ids(("erika.mustermann@domain.org",))
     LOG: Wrote 1 to disk.
     >>> ids_erika
@@ -398,7 +386,7 @@ When the second element fails, the third element is never evaluated:
     >>> def get_user_id_logged(user_email: str) -> Result[UserDoesNotExist, int]:
     ...     print(f"LOG: Looking up '{user_email}'.")
     ...     return get_user_id(user_email)
-    ...
+    >>>
     >>> pipe(
     ...     (
     ...         (
@@ -441,10 +429,10 @@ into functions operating on [trcks.AwaitableTuple][] values.
     ...     await asyncio.sleep(0.001)
     ...     contents = {"a.txt": "Hello", "b.txt": "World"}
     ...     return contents[path]
-    ...
+    >>>
     >>> def transform(s: str) -> str:
     ...     return f"Length: {len(s)}"
-    ...
+    >>>
     >>> async def read_and_transform(
     ...     input_paths: tuple[str, ...],
     ... ) -> tuple[str, ...]:
@@ -460,7 +448,7 @@ into functions operating on [trcks.AwaitableTuple][] values.
     ...         at.map_(transform),
     ...     )
     ...     return await pipe(p)
-    ...
+    >>>
     >>> asyncio.run(read_and_transform(("a.txt", "b.txt")))
     ('Length: 5', 'Length: 5')
 
@@ -538,7 +526,7 @@ allows us to execute asynchronous side effects for each element.
     ...     await asyncio.sleep(0.001)
     ...     contents = {"a.txt": "Hello", "b.txt": "World"}
     ...     return contents[path]
-    ...
+    >>>
     >>> async def read_and_transform(
     ...     input_paths: tuple[str, ...],
     ... ) -> tuple[str, ...]:
@@ -558,7 +546,7 @@ allows us to execute asynchronous side effects for each element.
     ...         at.tap(lambda s: print(f"Transformed to '{s}'.")),
     ...     )
     ...     return await pipe(p)
-    ...
+    >>>
     >>> asyncio.run(read_and_transform(("a.txt", "b.txt")))
     Read 'Hello' from disk.
     Read 'World' from disk.
@@ -595,19 +583,17 @@ just as in the synchronous case above.
     ...     await asyncio.sleep(0.001)
     ...     contents = {"a.txt": "Hello", "b.txt": "World"}
     ...     return "success", contents[path]
-    ...
+    >>>
     >>> def transform(s: str) -> str:
     ...     return f"Length: {len(s)}"
-    ...
-    >>> async def write_to_disk(
-    ...     s: str, path: str
-    ... ) -> Result[WriteErrorLiteral, None]:
+    >>>
+    >>> async def write_to_disk(s: str, path: str) -> Result[WriteErrorLiteral, None]:
     ...     if path != "output.txt":
     ...         return "failure", "write error"
     ...     await asyncio.sleep(0.001)
     ...     print(f"Wrote '{s}' to file {path}.")
     ...     return "success", None
-    ...
+    >>>
     >>> async def read_and_transform_and_write(
     ...     input_paths: tuple[str, ...], output_path: str
     ... ) -> ResultTuple[ReadErrorLiteral | WriteErrorLiteral, str]:
@@ -622,15 +608,11 @@ just as in the synchronous case above.
     ...         art.construct_successes_from_iterable,
     ...         art.map_successes_to_awaitable_result(read_from_disk),
     ...         art.map_successes(transform),
-    ...         art.tap_successes_to_awaitable_result(
-    ...             lambda s: write_to_disk(s, output_path)
-    ...         ),
+    ...         art.tap_successes_to_awaitable_result(lambda s: write_to_disk(s, output_path)),
     ...     )
     ...     return await pipe(p)
-    ...
-    >>> asyncio.run(
-    ...     read_and_transform_and_write(("a.txt", "b.txt"), "output.txt")
-    ... )
+    >>>
+    >>> asyncio.run(read_and_transform_and_write(("a.txt", "b.txt"), "output.txt"))
     Wrote 'Length: 5' to file output.txt.
     Wrote 'Length: 5' to file output.txt.
     ('success', ('Length: 5', 'Length: 5'))
@@ -690,9 +672,7 @@ let us have a look at the individual steps of the chain:
     ...     art.construct_successes_from_iterable,
     ...     art.map_successes_to_awaitable_result(read_from_disk),
     ...     art.map_successes(transform),
-    ...     art.tap_successes_to_awaitable_result(
-    ...         lambda s: write_to_disk(s, "output.txt")
-    ...     ),
+    ...     art.tap_successes_to_awaitable_result(lambda s: write_to_disk(s, "output.txt")),
     ... )
     >>> asyncio.run(art.to_coroutine_result_tuple(pipe(p4)))
     Wrote 'Length: 5' to file output.txt.
@@ -733,15 +713,13 @@ in the failure case or in the success case (for each element), respectively:
     ...     await asyncio.sleep(0.001)
     ...     contents = {"a.txt": "Hello", "b.txt": "World"}
     ...     return "success", contents[path]
-    ...
-    >>> async def write_to_disk(
-    ...     s: str, path: str
-    ... ) -> Result[WriteErrorLiteral, None]:
+    >>>
+    >>> async def write_to_disk(s: str, path: str) -> Result[WriteErrorLiteral, None]:
     ...     if path != "output.txt":
     ...         return "failure", "write error"
     ...     await asyncio.sleep(0.001)
     ...     return "success", None
-    ...
+    >>>
     >>> async def read_and_transform_and_write(
     ...     input_paths: tuple[str, ...], output_path: str
     ... ) -> ResultTuple[ReadErrorLiteral | WriteErrorLiteral, str]:
@@ -760,17 +738,13 @@ in the failure case or in the success case (for each element), respectively:
     ...         art.map_successes_to_awaitable_result(read_from_disk),
     ...         art.tap_successes(lambda s: print(f"LOG: Read '{s}' from disk.")),
     ...         art.map_successes(transform),
-    ...         art.tap_successes_to_awaitable_result(
-    ...             lambda s: write_to_disk(s, output_path)
-    ...         ),
+    ...         art.tap_successes_to_awaitable_result(lambda s: write_to_disk(s, output_path)),
     ...         art.tap_successes(lambda _: print("LOG: Successfully wrote to disk.")),
     ...         art.tap_failure(lambda err: print(f"LOG: Failed with error: {err}")),
     ...     )
     ...     return await pipe(pipeline)
-    ...
-    >>> result_1 = asyncio.run(
-    ...     read_and_transform_and_write(("a.txt", "b.txt"), "output.txt")
-    ... )
+    >>>
+    >>> result_1 = asyncio.run(read_and_transform_and_write(("a.txt", "b.txt"), "output.txt"))
     LOG: Read 'Hello' from disk.
     LOG: Read 'World' from disk.
     LOG: Successfully wrote to disk.
@@ -778,9 +752,7 @@ in the failure case or in the success case (for each element), respectively:
     >>> result_1
     ('success', ('Length: 5', 'Length: 5'))
     >>>
-    >>> result_2 = asyncio.run(
-    ...     read_and_transform_and_write(("missing.txt",), "output.txt")
-    ... )
+    >>> result_2 = asyncio.run(read_and_transform_and_write(("missing.txt",), "output.txt"))
     LOG: Failed with error: read error
     >>> result_2
     ('failure', 'read error')
@@ -806,14 +778,14 @@ the original success values are preserved:
     ...     if len(s) > 10:
     ...         return "failure", "Out of disk space"
     ...     return "success", None
-    ...
+    >>>
     >>> async def read_from_disk(path: str) -> Result[ReadErrorLiteral, str]:
     ...     if path != "a.txt" and path != "b.txt":
     ...         return "failure", "read error"
     ...     await asyncio.sleep(0.001)
     ...     contents = {"a.txt": "Hi", "b.txt": "Hello, world!"}
     ...     return "success", contents[path]
-    ...
+    >>>
     >>> async def read_and_persist(
     ...     input_paths: tuple[str, ...],
     ... ) -> ResultTuple[ReadErrorLiteral | OutOfDiskSpace, str]:
@@ -831,7 +803,7 @@ the original success values are preserved:
     ...         art.tap_successes_to_awaitable_result(write_to_disk),
     ...     )
     ...     return await pipe(pipeline)
-    ...
+    >>>
     >>> result = asyncio.run(read_and_persist(("a.txt", "b.txt")))
     LOG: Persisting 'Hi'.
     LOG: Persisting 'Hello, world!'.

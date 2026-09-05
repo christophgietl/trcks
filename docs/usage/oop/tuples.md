@@ -19,18 +19,12 @@ through the same chain of transformations:
     >>>
     >>> def normalize_email(email: str) -> str:
     ...     return email.strip().lower()
-    ...
+    >>>
     >>> def to_domain(email: str) -> str:
     ...     return email.split("@")[1]
-    ...
+    >>>
     >>> emails = ("  Erika.Mustermann@Domain.ORG ", "JOHN_DOE@Provider.COM  ")
-    >>> (
-    ...     TupleWrapper
-    ...     .construct_from_iterable(emails)
-    ...     .map(normalize_email)
-    ...     .map(to_domain)
-    ...     .core
-    ... )
+    >>> (TupleWrapper.construct_from_iterable(emails).map(normalize_email).map(to_domain).core)
     ('domain.org', 'provider.com')
 
     ```
@@ -72,9 +66,7 @@ let us have a look at the individual steps of the chain:
     to each element and flattens the results (like a "flat map"):
 
     ```pycon
-    >>> TupleWrapper.construct_from_iterable(
-    ...     ("ab", "cd")
-    ... ).map_to_iterable(tuple).core
+    >>> TupleWrapper.construct_from_iterable(("ab", "cd")).map_to_iterable(tuple).core
     ('a', 'b', 'c', 'd')
 
     ```
@@ -86,8 +78,7 @@ while preserving the original tuple:
 
     ```pycon
     >>> tuple_wrapper = (
-    ...     TupleWrapper
-    ...     .construct_from_iterable(emails)
+    ...     TupleWrapper.construct_from_iterable(emails)
     ...     .map(normalize_email)
     ...     .tap(lambda e: print(f"LOG: Processing '{e}'."))
     ...     .map(to_domain)
@@ -124,34 +115,29 @@ Processing short-circuits on the first [trcks.Failure][].
     ...     if user_email == "john_doe@provider.com":
     ...         return "success", 2
     ...     return "failure", "User does not exist"
-    ...
-    >>> def get_subscription_id(
-    ...     user_id: int
-    ... ) -> Result[UserDoesNotHaveASubscription, int]:
+    >>>
+    >>> def get_subscription_id(user_id: int) -> Result[UserDoesNotHaveASubscription, int]:
     ...     if user_id == 1:
     ...         return "success", 42
     ...     return "failure", "User does not have a subscription"
-    ...
+    >>>
     >>> def get_subscription_fee(subscription_id: int) -> float:
     ...     return subscription_id * 0.1
-    ...
+    >>>
     >>> def get_subscription_fees_by_email(
     ...     user_emails: tuple[str, ...],
     ... ) -> ResultTuple[FailureDescription, float]:
     ...     return (
-    ...         TupleWrapper
-    ...         .construct_from_iterable(user_emails)
+    ...         TupleWrapper.construct_from_iterable(user_emails)
     ...         .map_to_result(get_user_id)
     ...         .map_successes_to_result(get_subscription_id)
     ...         .map_successes(get_subscription_fee)
     ...         .core
     ...     )
-    ...
+    >>>
     >>> get_subscription_fees_by_email(("erika.mustermann@domain.org",))
     ('success', (4.2,))
-    >>> get_subscription_fees_by_email(
-    ...     ("erika.mustermann@domain.org", "john_doe@provider.com")
-    ... )
+    >>> get_subscription_fees_by_email(("erika.mustermann@domain.org", "john_doe@provider.com"))
     ('failure', 'User does not have a subscription')
     >>> get_subscription_fees_by_email(("jane_doe@provider.com",))
     ('failure', 'User does not exist')
@@ -173,21 +159,21 @@ let us have a look at the individual steps of the chain:
     >>> wrapped
     TupleWrapper(core=('erika.mustermann@domain.org',))
     >>> # 2. Apply the Result function get_user_id to each element:
-    >>> mapped_once: ResultTupleWrapper[
-    ...     UserDoesNotExist, int
-    ... ] = wrapped.map_to_result(get_user_id)
+    >>> mapped_once: ResultTupleWrapper[UserDoesNotExist, int] = wrapped.map_to_result(
+    ...     get_user_id
+    ... )
     >>> mapped_once
     ResultTupleWrapper(core=('success', (1,)))
     >>> # 3. Apply the Result function get_subscription_id to each element:
-    >>> mapped_twice: ResultTupleWrapper[
-    ...     FailureDescription, int
-    ... ] = mapped_once.map_successes_to_result(get_subscription_id)
+    >>> mapped_twice: ResultTupleWrapper[FailureDescription, int] = (
+    ...     mapped_once.map_successes_to_result(get_subscription_id)
+    ... )
     >>> mapped_twice
     ResultTupleWrapper(core=('success', (42,)))
     >>> # 4. Apply get_subscription_fee to each element:
-    >>> mapped_thrice: ResultTupleWrapper[
-    ...     FailureDescription, float
-    ... ] = mapped_twice.map_successes(get_subscription_fee)
+    >>> mapped_thrice: ResultTupleWrapper[FailureDescription, float] = (
+    ...     mapped_twice.map_successes(get_subscription_fee)
+    ... )
     >>> mapped_thrice
     ResultTupleWrapper(core=('success', (4.2,)))
     >>> # 5. Unwrap the output result tuple:
@@ -216,8 +202,7 @@ in the success case (for each element) or in the failure case, respectively:
     ...     user_emails: tuple[str, ...],
     ... ) -> ResultTuple[FailureDescription, float]:
     ...     return (
-    ...         TupleWrapper
-    ...         .construct_from_iterable(user_emails)
+    ...         TupleWrapper.construct_from_iterable(user_emails)
     ...         .map_to_result(get_user_id)
     ...         .tap_successes(lambda n: print(f"LOG: User ID: {n}."))
     ...         .map_successes_to_result(get_subscription_id)
@@ -226,26 +211,20 @@ in the success case (for each element) or in the failure case, respectively:
     ...         .tap_failure(lambda fd: print(f"LOG: Failure: {fd}."))
     ...         .core
     ...     )
-    ...
-    >>> fees_erika = get_subscription_fees_by_email(
-    ...     ("erika.mustermann@domain.org",)
-    ... )
+    >>>
+    >>> fees_erika = get_subscription_fees_by_email(("erika.mustermann@domain.org",))
     LOG: User ID: 1.
     LOG: Subscription fee: 4.2.
     >>> fees_erika
     ('success', (4.2,))
     >>>
-    >>> fees_john = get_subscription_fees_by_email(
-    ...     ("john_doe@provider.com",)
-    ... )
+    >>> fees_john = get_subscription_fees_by_email(("john_doe@provider.com",))
     LOG: User ID: 2.
     LOG: Failure: User does not have a subscription.
     >>> fees_john
     ('failure', 'User does not have a subscription')
     >>>
-    >>> fees_jane = get_subscription_fees_by_email(
-    ...     ("jane_doe@provider.com",)
-    ... )
+    >>> fees_jane = get_subscription_fees_by_email(("jane_doe@provider.com",))
     LOG: Failure: User does not exist.
     >>> fees_jane
     ('failure', 'User does not exist')
@@ -270,18 +249,17 @@ the original success values are preserved.
     ...     if n > 1:
     ...         return "failure", "Out of disk space"
     ...     return "success", print(f"LOG: Wrote {n} to disk.")
-    ...
+    >>>
     >>> def get_and_persist_user_ids(
     ...     user_emails: tuple[str, ...],
     ... ) -> ResultTuple[UserDoesNotExist | OutOfDiskSpace, int]:
     ...     return (
-    ...         TupleWrapper
-    ...         .construct_from_iterable(user_emails)
+    ...         TupleWrapper.construct_from_iterable(user_emails)
     ...         .map_to_result(get_user_id)
     ...         .tap_successes_to_result(write_to_disk)
     ...         .core
     ...     )
-    ...
+    >>>
     >>> ids_erika = get_and_persist_user_ids(("erika.mustermann@domain.org",))
     LOG: Wrote 1 to disk.
     >>> ids_erika
@@ -307,10 +285,9 @@ When the second element fails, the third element is never evaluated:
     >>> def get_user_id_logged(user_email: str) -> Result[UserDoesNotExist, int]:
     ...     print(f"LOG: Looking up '{user_email}'.")
     ...     return get_user_id(user_email)
-    ...
+    >>>
     >>> (
-    ...     TupleWrapper
-    ...     .construct_from_iterable(
+    ...     TupleWrapper.construct_from_iterable(
     ...         (
     ...             "erika.mustermann@domain.org",
     ...             "jane_doe@provider.com",
@@ -351,21 +328,20 @@ applied to each element in the tuple:
     ...     await asyncio.sleep(0.001)
     ...     contents = {"a.txt": "Hello", "b.txt": "World"}
     ...     return contents[path]
-    ...
+    >>>
     >>> def transform(s: str) -> str:
     ...     return f"Length: {len(s)}"
-    ...
+    >>>
     >>> async def read_and_transform(
     ...     input_paths: tuple[str, ...],
     ... ) -> tuple[str, ...]:
     ...     return await (
-    ...         TupleWrapper
-    ...         .construct_from_iterable(input_paths)
+    ...         TupleWrapper.construct_from_iterable(input_paths)
     ...         .map_to_awaitable(read_from_disk)
     ...         .map(transform)
     ...         .core
     ...     )
-    ...
+    >>>
     >>> asyncio.run(read_and_transform(("a.txt", "b.txt")))
     ('Length: 5', 'Length: 5')
 
@@ -379,15 +355,11 @@ let us have a look at the individual steps of the chain:
     ```pycon
     >>> from trcks.oop import AwaitableTupleWrapper
     >>> # 1. Wrap the input tuple:
-    >>> wrapped: TupleWrapper[str] = TupleWrapper.construct_from_iterable(
-    ...     ("a.txt", "b.txt")
-    ... )
+    >>> wrapped: TupleWrapper[str] = TupleWrapper.construct_from_iterable(("a.txt", "b.txt"))
     >>> wrapped
     TupleWrapper(core=('a.txt', 'b.txt'))
     >>> # 2. Apply the asynchronous function read_from_disk to each element:
-    >>> mapped_once: AwaitableTupleWrapper[str] = wrapped.map_to_awaitable(
-    ...     read_from_disk
-    ... )
+    >>> mapped_once: AwaitableTupleWrapper[str] = wrapped.map_to_awaitable(read_from_disk)
     >>> mapped_once
     AwaitableTupleWrapper(core=<coroutine object ...>)
     >>> # 3. Apply the function transform to each element:
@@ -418,20 +390,19 @@ allows us to execute asynchronous side effects for each element.
     ...     await asyncio.sleep(0.001)
     ...     contents = {"a.txt": "Hello", "b.txt": "World"}
     ...     return contents[path]
-    ...
+    >>>
     >>> async def read_and_transform(
     ...     input_paths: tuple[str, ...],
     ... ) -> tuple[str, ...]:
     ...     return await (
-    ...         TupleWrapper
-    ...         .construct_from_iterable(input_paths)
+    ...         TupleWrapper.construct_from_iterable(input_paths)
     ...         .map_to_awaitable(read_from_disk)
     ...         .tap(lambda s: print(f"Read '{s}' from disk."))
     ...         .map(transform)
     ...         .tap(lambda s: print(f"Transformed to '{s}'."))
     ...         .core
     ...     )
-    ...
+    >>>
     >>> result = asyncio.run(read_and_transform(("a.txt", "b.txt")))
     Read 'Hello' from disk.
     Read 'World' from disk.
@@ -469,36 +440,29 @@ just as in the synchronous case above.
     ...     await asyncio.sleep(0.001)
     ...     contents = {"a.txt": "Hello", "b.txt": "World"}
     ...     return "success", contents[path]
-    ...
+    >>>
     >>> def transform(s: str) -> str:
     ...     return f"Length: {len(s)}"
-    ...
-    >>> async def write_to_disk(
-    ...     s: str, path: str
-    ... ) -> Result[WriteErrorLiteral, None]:
+    >>>
+    >>> async def write_to_disk(s: str, path: str) -> Result[WriteErrorLiteral, None]:
     ...     if path != "output.txt":
     ...         return "failure", "write error"
     ...     await asyncio.sleep(0.001)
     ...     print(f"Wrote '{s}' to file {path}.")
     ...     return "success", None
-    ...
+    >>>
     >>> async def read_and_transform_and_write(
     ...     input_paths: tuple[str, ...], output_path: str
     ... ) -> ResultTuple[ReadErrorLiteral | WriteErrorLiteral, str]:
     ...     return await (
-    ...         TupleWrapper
-    ...         .construct_from_iterable(input_paths)
+    ...         TupleWrapper.construct_from_iterable(input_paths)
     ...         .map_to_awaitable_result(read_from_disk)
     ...         .map_successes(transform)
-    ...         .tap_successes_to_awaitable_result(
-    ...             lambda s: write_to_disk(s, output_path)
-    ...         )
+    ...         .tap_successes_to_awaitable_result(lambda s: write_to_disk(s, output_path))
     ...         .core
     ...     )
-    ...
-    >>> asyncio.run(
-    ...     read_and_transform_and_write(("a.txt", "b.txt"), "output.txt")
-    ... )
+    >>>
+    >>> asyncio.run(read_and_transform_and_write(("a.txt", "b.txt"), "output.txt"))
     Wrote 'Length: 5' to file output.txt.
     Wrote 'Length: 5' to file output.txt.
     ('success', ('Length: 5', 'Length: 5'))
@@ -513,21 +477,19 @@ let us have a look at the individual steps of the chain:
     ```pycon
     >>> from trcks.oop import AwaitableResultTupleWrapper
     >>> # 1. Wrap the input tuple:
-    >>> wrapped: TupleWrapper[str] = TupleWrapper.construct_from_iterable(
-    ...     ("a.txt", "b.txt")
-    ... )
+    >>> wrapped: TupleWrapper[str] = TupleWrapper.construct_from_iterable(("a.txt", "b.txt"))
     >>> wrapped
     TupleWrapper(core=('a.txt', 'b.txt'))
     >>> # 2. Apply the AwaitableResult function read_from_disk to each element:
-    >>> mapped_once: AwaitableResultTupleWrapper[
-    ...     ReadErrorLiteral, str
-    ... ] = wrapped.map_to_awaitable_result(read_from_disk)
+    >>> mapped_once: AwaitableResultTupleWrapper[ReadErrorLiteral, str] = (
+    ...     wrapped.map_to_awaitable_result(read_from_disk)
+    ... )
     >>> mapped_once
     AwaitableResultTupleWrapper(core=<coroutine object ...>)
     >>> # 3. Apply the function transform to each element in the success case:
-    >>> mapped_twice: AwaitableResultTupleWrapper[
-    ...     ReadErrorLiteral, str
-    ... ] = mapped_once.map_successes(transform)
+    >>> mapped_twice: AwaitableResultTupleWrapper[ReadErrorLiteral, str] = (
+    ...     mapped_once.map_successes(transform)
+    ... )
     >>> mapped_twice
     AwaitableResultTupleWrapper(core=<coroutine object ...>)
     >>> # 4. Apply the failable async side effect write_to_disk to each element:
@@ -560,35 +522,28 @@ in the failure case or in the success case (for each element), respectively:
     ...     await asyncio.sleep(0.001)
     ...     contents = {"a.txt": "Hello", "b.txt": "World"}
     ...     return "success", contents[path]
-    ...
-    >>> async def write_to_disk(
-    ...     s: str, path: str
-    ... ) -> Result[WriteErrorLiteral, None]:
+    >>>
+    >>> async def write_to_disk(s: str, path: str) -> Result[WriteErrorLiteral, None]:
     ...     if path != "output.txt":
     ...         return "failure", "write error"
     ...     await asyncio.sleep(0.001)
     ...     return "success", None
-    ...
+    >>>
     >>> async def read_and_transform_and_write(
     ...     input_paths: tuple[str, ...], output_path: str
     ... ) -> ResultTuple[ReadErrorLiteral | WriteErrorLiteral, str]:
     ...     return await (
-    ...         TupleWrapper
-    ...         .construct_from_iterable(input_paths)
+    ...         TupleWrapper.construct_from_iterable(input_paths)
     ...         .map_to_awaitable_result(read_from_disk)
     ...         .tap_successes(lambda s: print(f"LOG: Read '{s}' from disk."))
     ...         .map_successes(transform)
-    ...         .tap_successes_to_awaitable_result(
-    ...             lambda s: write_to_disk(s, output_path)
-    ...         )
+    ...         .tap_successes_to_awaitable_result(lambda s: write_to_disk(s, output_path))
     ...         .tap_successes(lambda _: print("LOG: Successfully wrote to disk."))
     ...         .tap_failure(lambda err: print(f"LOG: Failed with error: {err}"))
     ...         .core
     ...     )
-    ...
-    >>> result_1 = asyncio.run(
-    ...     read_and_transform_and_write(("a.txt", "b.txt"), "output.txt")
-    ... )
+    >>>
+    >>> result_1 = asyncio.run(read_and_transform_and_write(("a.txt", "b.txt"), "output.txt"))
     LOG: Read 'Hello' from disk.
     LOG: Read 'World' from disk.
     LOG: Successfully wrote to disk.
@@ -596,9 +551,7 @@ in the failure case or in the success case (for each element), respectively:
     >>> result_1
     ('success', ('Length: 5', 'Length: 5'))
     >>>
-    >>> result_2 = asyncio.run(
-    ...     read_and_transform_and_write(("missing.txt",), "output.txt")
-    ... )
+    >>> result_2 = asyncio.run(read_and_transform_and_write(("missing.txt",), "output.txt"))
     LOG: Failed with error: read error
     >>> result_2
     ('failure', 'read error')
@@ -624,26 +577,25 @@ the original success values are preserved:
     ...     if len(s) > 10:
     ...         return "failure", "Out of disk space"
     ...     return "success", None
-    ...
+    >>>
     >>> async def read_from_disk(path: str) -> Result[ReadErrorLiteral, str]:
     ...     if path != "a.txt" and path != "b.txt":
     ...         return "failure", "read error"
     ...     await asyncio.sleep(0.001)
     ...     contents = {"a.txt": "Hi", "b.txt": "Hello, world!"}
     ...     return "success", contents[path]
-    ...
+    >>>
     >>> async def read_and_persist(
     ...     input_paths: tuple[str, ...],
     ... ) -> ResultTuple[ReadErrorLiteral | OutOfDiskSpace, str]:
     ...     return await (
-    ...         TupleWrapper
-    ...         .construct_from_iterable(input_paths)
+    ...         TupleWrapper.construct_from_iterable(input_paths)
     ...         .map_to_awaitable_result(read_from_disk)
     ...         .tap_successes(lambda s: print(f"LOG: Persisting '{s}'."))
     ...         .tap_successes_to_awaitable_result(write_to_disk)
     ...         .core
     ...     )
-    ...
+    >>>
     >>> result = asyncio.run(read_and_persist(("a.txt", "b.txt")))
     LOG: Persisting 'Hi'.
     LOG: Persisting 'Hello, world!'.

@@ -61,7 +61,7 @@ so `trcks` does not provide it.
     ...     if user_id != 1:
     ...         raise ValueError("User does not exist")
     ...     return (90, 85, 100)
-    ...
+    >>>
     >>> # The trcks equivalent returns the failure instead of raising it.
     >>> # Calling it returns an AwaitableResultTuple.
     >>> # And awaiting that returns a ResultTuple:
@@ -70,12 +70,12 @@ so `trcks` does not provide it.
     ...     if user_id != 1:
     ...         return "failure", "User does not exist"
     ...     return "success", (90, 85, 100)
-    ...
+    >>>
     >>> async def main() -> None:
     ...     a_rslt: AwaitableResultTuple[str, int] = read_scores_rop(2)
     ...     rslt: ResultTuple[str, int] = await a_rslt
     ...     print(rslt)
-    ...
+    >>>
     >>> asyncio.run(main())
     ('failure', 'User does not exist')
 
