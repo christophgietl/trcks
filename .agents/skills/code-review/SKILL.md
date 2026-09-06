@@ -1,6 +1,8 @@
 ---
 name: code-review
-description: Guide for reviewing code in this repository. Use this when asked to review code changes.
+description: >-
+  Guide for reviewing code in this repository.
+  Use this when asked to review code changes.
 ---
 
 # Code review
