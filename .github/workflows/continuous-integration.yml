@@ -30,20 +30,38 @@ jobs:
       - uses: christophgietl/uv-actions/set-up-uv@d231379b0f63cd19bc39d7e5b4d5057a2daffc17 # 2026.8.24
       - run: uv build
       - name: Check that library skill is included in sdist and wheel
+        shell: python
         run: |
-          sdist=$(ls dist/*.tar.gz)
-          wheel=$(ls dist/*.whl)
-          tar --list --file "$sdist" > sdist-contents.txt
-          unzip -Z1 "$wheel" > wheel-contents.txt
-          grep --extended-regexp --line-regexp --quiet \
-            '^[^/]+/skills/trcks/SKILL\.md' sdist-contents.txt \
-            || { echo "::error::SKILL.md missing from sdist $sdist"; exit 1; }
-          grep --fixed-strings --quiet '/pdm_build.py' sdist-contents.txt \
-            || { echo "::error::pdm_build.py missing from sdist $sdist"; exit 1; }
-          grep --fixed-strings --line-regexp --quiet \
-            "trcks/.agents/skills/trcks/SKILL.md" wheel-contents.txt \
-            || { echo "::error::SKILL.md missing from wheel $wheel"; exit 1; }
-          rm sdist-contents.txt wheel-contents.txt
+          import tarfile
+          import zipfile
+          from pathlib import Path
+
+          def check_archive_content(pattern, expected_files):
+              archive = find_file(pattern)
+              files = get_content(archive)
+              for expected_file in expected_files:
+                  if expected_file not in files:
+                      fail(f"{expected_file} is missing from {archive}.")
+
+          def fail(message):
+              print(f"::error::{message}")
+              raise SystemExit(1)
+
+          def find_file(pattern):
+              files = list(Path.cwd().glob(pattern))
+              if len(files) != 1:
+                  fail(f"Expected exactly one {pattern}, found {len(files)}.")
+              return files[0]
+
+          def get_content(archive):
+              if tarfile.is_tarfile(archive):
+                  with tarfile.open(archive) as tf:
+                      return {name.partition("/")[2] for name in tf.getnames()}
+              with zipfile.ZipFile(archive) as zf:
+                  return set(zf.namelist())
+
+          check_archive_content("dist/*.tar.gz", ("pdm_build.py", "skills/trcks/SKILL.md"))
+          check_archive_content("dist/*.whl", ("trcks/.agents/skills/trcks/SKILL.md",))
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a  # v7.0.1
         with:
           name: package-files
