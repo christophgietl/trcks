@@ -12,6 +12,7 @@ description: >-
   when converting exception-raising or `None`-returning code
   into `trcks.Result` values, or
   when unwrapping `trcks.Result` values to raise exceptions again.
+license: MIT
 ---
 
 # Railway-oriented programming with `trcks`
