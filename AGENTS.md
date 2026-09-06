@@ -70,9 +70,8 @@
 
 ### Agent skill
 
-- The agent skill is defined in [skills/trcks/](skills/trcks/).
-- When `trcks` is built, the agent skill is included in both
-  the source distribution file and the wheel file,
+- The agent skill is located in [skills/trcks/](skills/trcks/) for discoverability.
+- The agent skill is included in the source distribution file and in the wheel file,
   in line with the [Library Skills](https://library-skills.io) standard.
 
 ## Code style
