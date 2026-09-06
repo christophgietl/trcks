@@ -3,6 +3,8 @@ name: code-review
 description: >-
   Guide for reviewing code in this repository.
   Use this when asked to review code changes.
+metadata:
+  internal: true
 ---
 
 # Code review
