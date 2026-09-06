@@ -190,6 +190,15 @@ with "regular" functions:
 
 ```
 
+## How to: Install `trcks`
+
+`trcks` is [available on PyPI](https://pypi.org/project/trcks/).
+Add it to your project as a production dependency.
+
+The extras `trcks[mypy]`, `trcks[pyrefly]`, and `trcks[pyright]`
+install recent versions of `mypy`, `pyrefly`, and `pyright`.
+Add the extra for your type checker as a development dependency.
+
 ## How to: Narrow `trcks.Result` values to their success or failure types
 
 Since `trcks.Result` is a discriminated union of two types,
