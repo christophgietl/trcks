@@ -1,5 +1,3 @@
-# mypy: disable-error-code="misc"
-# see https://github.com/python/mypy/issues/21736
 from __future__ import annotations
 
 from dataclasses import dataclass
