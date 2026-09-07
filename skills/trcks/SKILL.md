@@ -15,14 +15,11 @@ license: MIT
 
 # Railway-oriented programming with `trcks`
 
-The Python library `trcks` lets functions return domain errors
-instead of raising them.
-Its generic type `trcks.Result` exposes the failure type in the function signature,
-so type checkers can verify downstream uses.
-`trcks` supports two equivalent styles:
-method chaining with `trcks.oop`, and function composition with `trcks.fp`.
-
-The sections below provide an API reference, how-tos, and best practices.
+The Python library `trcks` provides the generic return type `trcks.Result`,
+which lets functions return domain errors instead of raising them.
+This way, type checkers can verify downstream error handling from the function signature.
+The library supports two equivalent programming styles:
+method chaining with `trcks.oop` and function composition with `trcks.fp`.
 
 ## Reference: Generic types provided by `trcks`
 
