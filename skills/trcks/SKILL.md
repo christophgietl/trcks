@@ -3,15 +3,13 @@ name: trcks
 description: >-
   Type-safe railway-oriented programming (ROP) with the Python library `trcks`.
   Use when writing, reviewing, or debugging Python code
-  that returns domain errors instead of raising them.
-  This includes code using
-  the generic types `trcks.Failure`, `trcks.Success`, and `trcks.Result`;
-  the OOP-style wrapper classes with `map*` methods from `trcks.oop`; or
-  the FP-style pipelines (`pipe`) and monads with `map*` functions from `trcks.fp`.
+  that returns domain errors instead of raising them,
+  including code using `trcks.Failure`, `trcks.Success`, and `trcks.Result`,
+  wrapper classes with `map*` methods from `trcks.oop`, or
+  pipelines and monads with `map*` functions from `trcks.fp`.
   Also use when narrowing or pattern-matching `trcks.Result` values,
-  when converting exception-raising or `None`-returning code
-  into `trcks.Result` values, or
-  when unwrapping `trcks.Result` values to raise exceptions again.
+  converting exception-raising or `None`-returning code into `trcks.Result`,
+  or unwrapping `trcks.Result` values to raise exceptions again.
 license: MIT
 ---
 
