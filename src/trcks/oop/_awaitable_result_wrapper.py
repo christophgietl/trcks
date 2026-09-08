@@ -1290,6 +1290,43 @@ class AwaitableResultWrapper(
                 - *the returned* [trcks.Success][]
                     if the applied side effect returns a [trcks.Success][] and
                 - *the original* [trcks.Success][] if no side effect was applied.
+
+        Examples:
+            >>> import asyncio
+            >>> from trcks import Result
+            >>> from trcks.oop import AwaitableResultWrapper
+            >>> async def replace_not_found_with_default(
+            ...     s: str
+            ... ) -> Result[object, float]:
+            ...     await asyncio.sleep(0.001)
+            ...     if s == "not found":
+            ...         return "success", 0.0
+            ...     return "failure", s
+            ...
+            >>> awaitable_result_wrapper_1 = (
+            ...     AwaitableResultWrapper
+            ...     .construct_failure("not found")
+            ...     .tap_failure_to_awaitable_result(replace_not_found_with_default)
+            ... )
+            >>> result_1 = asyncio.run(awaitable_result_wrapper_1.core_as_coroutine)
+            >>> result_1
+            ('success', 0.0)
+            >>> awaitable_result_wrapper_2 = (
+            ...     AwaitableResultWrapper
+            ...     .construct_failure("other error")
+            ...     .tap_failure_to_awaitable_result(replace_not_found_with_default)
+            ... )
+            >>> result_2 = asyncio.run(awaitable_result_wrapper_2.core_as_coroutine)
+            >>> result_2
+            ('failure', 'other error')
+            >>> awaitable_result_wrapper_3 = (
+            ...     AwaitableResultWrapper
+            ...     .construct_success(42)
+            ...     .tap_failure_to_awaitable_result(replace_not_found_with_default)
+            ... )
+            >>> result_3 = asyncio.run(awaitable_result_wrapper_3.core_as_coroutine)
+            >>> result_3
+            ('success', 42)
         """
         return AwaitableResultWrapper(
             ar.tap_failure_to_awaitable_result(f, *args, **kwargs)(self.core)
