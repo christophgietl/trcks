@@ -95,12 +95,15 @@ value unchanged, keeping the pipeline intact.
 
 A transition from a simpler monad to a richer one,
 for example from [trcks.Result][] to [trcks.AwaitableResult][],
-[trcks.ResultTuple][], or [trcks.AwaitableResultTuple][].
+[trcks.ResultTuple][], or [trcks.AwaitableResultTuple][]
+or from a homogeneous [tuple][] to [trcks.AwaitableTuple][].
 Unlike mapping and `tap` helpers, which stay within the same monad,
 widening functions return a value of a different, richer type.
 [trcks.oop.ResultWrapper][] and [trcks.fp.monads.result][] provide
 matching widening methods and functions under the same names
-(e.g. `map_success_to_awaitable_result`),
+(e.g. `map_success_to_awaitable_result`), and
+[trcks.oop.TupleWrapper][] and [trcks.fp.monads.tuple_][] do the same
+(e.g. `map_to_awaitable_result`),
 so the two styles remain call-compatible.
 See [oop-and-fp-equivalence.md](usage/oop-and-fp-equivalence.md)
 for the full mapping.
