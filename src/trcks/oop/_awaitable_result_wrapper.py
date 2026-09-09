@@ -478,9 +478,9 @@ class AwaitableResultWrapper(
             >>> asyncio.run(wrapper_2.core_as_coroutine)
             ('success', (25.0,))
         """
-        return AwaitableResultTupleWrapper.construct_from_awaitable_result(
-            self.core
-        ).map_failure_to_awaitable_result_iterable(f, *args, **kwargs)
+        return AwaitableResultTupleWrapper(
+            ar.map_failure_to_awaitable_result_iterable(f, *args, **kwargs)(self.core)
+        )
 
     @deprecated("Use map_failure_to_awaitable_result_iterable instead")
     def map_failure_to_awaitable_result_tuple(
@@ -552,9 +552,10 @@ class AwaitableResultWrapper(
             >>> asyncio.run(wrapper_2.core_as_coroutine)
             ('success', (25.0,))
         """
-        return AwaitableResultTupleWrapper.construct_from_awaitable_result(
-            self.core
-        ).map_failure_to_iterable(f, *args, **kwargs)
+        mapped_core: AwaitableResultTuple[Never, _S_default_co | _S] = (
+            ar.map_failure_to_iterable(f, *args, **kwargs)(self.core)
+        )
+        return AwaitableResultTupleWrapper(mapped_core)
 
     def map_failure_to_result(
         self,
@@ -678,9 +679,9 @@ class AwaitableResultWrapper(
             >>> asyncio.run(wrapper_2.core_as_coroutine)
             ('success', (25.0,))
         """
-        return AwaitableResultTupleWrapper.construct_from_awaitable_result(
-            self.core
-        ).map_failure_to_result_iterable(f, *args, **kwargs)
+        return AwaitableResultTupleWrapper(
+            ar.map_failure_to_result_iterable(f, *args, **kwargs)(self.core)
+        )
 
     @deprecated("Use map_failure_to_result_iterable instead")
     def map_failure_to_result_tuple(
@@ -940,9 +941,9 @@ class AwaitableResultWrapper(
             >>> asyncio.run(wrapper_2.core_as_coroutine)
             ('success', (5.0, 10.0))
         """
-        return AwaitableResultTupleWrapper.construct_from_awaitable_result(
-            self.core
-        ).map_successes_to_awaitable_result_iterable(f, *args, **kwargs)
+        return AwaitableResultTupleWrapper(
+            ar.map_success_to_awaitable_result_iterable(f, *args, **kwargs)(self.core)
+        )
 
     @deprecated("Use map_success_to_awaitable_result_iterable instead")
     def map_success_to_awaitable_result_tuple(
@@ -1011,9 +1012,9 @@ class AwaitableResultWrapper(
             >>> asyncio.run(wrapper_2.core_as_coroutine)
             ('success', (5.0, 5.0))
         """
-        return AwaitableResultTupleWrapper.construct_from_awaitable_result(
-            self.core
-        ).map_successes_to_iterable(f, *args, **kwargs)
+        return AwaitableResultTupleWrapper(
+            ar.map_success_to_iterable(f, *args, **kwargs)(self.core)
+        )
 
     def map_success_to_result(
         self,
@@ -1138,9 +1139,9 @@ class AwaitableResultWrapper(
             >>> asyncio.run(wrapper_2.core_as_coroutine)
             ('success', (5.0, 10.0))
         """
-        return AwaitableResultTupleWrapper.construct_from_awaitable_result(
-            self.core
-        ).map_successes_to_result_iterable(f, *args, **kwargs)
+        return AwaitableResultTupleWrapper(
+            ar.map_success_to_result_iterable(f, *args, **kwargs)(self.core)
+        )
 
     @deprecated("Use map_success_to_result_iterable instead")
     def map_success_to_result_tuple(
@@ -1394,9 +1395,9 @@ class AwaitableResultWrapper(
             >>> asyncio.run(wrapper_2.core_as_coroutine)
             ('success', (42,))
         """
-        return AwaitableResultTupleWrapper.construct_from_awaitable_result(
-            self.core
-        ).tap_failure_to_awaitable_result_iterable(f, *args, **kwargs)
+        return AwaitableResultTupleWrapper(
+            ar.tap_failure_to_awaitable_result_iterable(f, *args, **kwargs)(self.core)
+        )
 
     @deprecated("Use tap_failure_to_awaitable_result_iterable instead")
     def tap_failure_to_awaitable_result_tuple(
@@ -1473,9 +1474,10 @@ class AwaitableResultWrapper(
             >>> asyncio.run(wrapper_2.core_as_coroutine)
             ('success', (42,))
         """
-        return AwaitableResultTupleWrapper.construct_from_awaitable_result(
-            self.core
-        ).tap_failure_to_iterable(f, *args, **kwargs)
+        tapped_core: AwaitableResultTuple[Never, _F_default_co | _S_default_co] = (
+            ar.tap_failure_to_iterable(f, *args, **kwargs)(self.core)
+        )
+        return AwaitableResultTupleWrapper(tapped_core)
 
     def tap_failure_to_result(
         self,
@@ -1604,9 +1606,9 @@ class AwaitableResultWrapper(
             >>> asyncio.run(wrapper_2.core_as_coroutine)
             ('success', (42,))
         """
-        return AwaitableResultTupleWrapper.construct_from_awaitable_result(
-            self.core
-        ).tap_failure_to_result_iterable(f, *args, **kwargs)
+        return AwaitableResultTupleWrapper(
+            ar.tap_failure_to_result_iterable(f, *args, **kwargs)(self.core)
+        )
 
     @deprecated("Use tap_failure_to_result_iterable instead")
     def tap_failure_to_result_tuple(
@@ -1877,9 +1879,9 @@ class AwaitableResultWrapper(
             >>> result_2
             ('success', ('Hello, world!', 'Hello, world!'))
         """
-        return AwaitableResultTupleWrapper.construct_from_awaitable_result(
-            self.core
-        ).tap_successes_to_awaitable_result_iterable(f, *args, **kwargs)
+        return AwaitableResultTupleWrapper(
+            ar.tap_success_to_awaitable_result_iterable(f, *args, **kwargs)(self.core)
+        )
 
     @deprecated("Use tap_success_to_awaitable_result_iterable instead")
     def tap_success_to_awaitable_result_tuple(
@@ -1956,9 +1958,9 @@ class AwaitableResultWrapper(
             >>> result_2
             ('success', (7, 7))
         """
-        return AwaitableResultTupleWrapper.construct_from_awaitable_result(
-            self.core
-        ).tap_successes_to_iterable(f, *args, **kwargs)
+        return AwaitableResultTupleWrapper(
+            ar.tap_success_to_iterable(f, *args, **kwargs)(self.core)
+        )
 
     def tap_success_to_result(
         self,
@@ -2082,9 +2084,9 @@ class AwaitableResultWrapper(
             >>> asyncio.run(wrapper_2.core_as_coroutine)
             ('success', ('Hello, world!', 'Hello, world!'))
         """
-        return AwaitableResultTupleWrapper.construct_from_awaitable_result(
-            self.core
-        ).tap_successes_to_result_iterable(f, *args, **kwargs)
+        return AwaitableResultTupleWrapper(
+            ar.tap_success_to_result_iterable(f, *args, **kwargs)(self.core)
+        )
 
     @deprecated("Use tap_success_to_result_iterable instead")
     def tap_success_to_result_tuple(

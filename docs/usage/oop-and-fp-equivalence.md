@@ -126,11 +126,36 @@ call-compatible for widening operations too.
 | [`.tap_to_result(f)`][trcks.oop.Wrapper.tap_to_result] | [`i.tap_to_result(f)`][trcks.fp.monads.identity.tap_to_result] |
 | [`.tap_to_result_iterable(f)`][trcks.oop.Wrapper.tap_to_result_iterable] | [`i.tap_to_result_iterable(f)`][trcks.fp.monads.identity.tap_to_result_iterable] |
 
-`trcks.fp.monads.awaitable`, `trcks.fp.monads.identity`,
-`trcks.fp.monads.result`, and
+## Widening `AwaitableResult` into richer monads
+
+`AwaitableResultWrapper` also has methods that transition into a richer wrapper
+(e.g. `AwaitableResultTupleWrapper`).
+[`trcks.fp.monads.awaitable_result`][] mirrors every one of these methods
+under the same name,
+so the [`trcks.oop`](oop/index.md) and [`trcks.fp`](fp/index.md) styles stay
+call-compatible for widening operations too.
+
+| `trcks.oop` (`AwaitableResultWrapper` method) | `trcks.fp` (`trcks.fp.monads.awaitable_result` function) |
+|---|---|
+| [`.map_failure_to_awaitable_result_iterable(f)`][trcks.oop.AwaitableResultWrapper.map_failure_to_awaitable_result_iterable] | [`ar.map_failure_to_awaitable_result_iterable(f)`][trcks.fp.monads.awaitable_result.map_failure_to_awaitable_result_iterable] |
+| [`.map_failure_to_iterable(f)`][trcks.oop.AwaitableResultWrapper.map_failure_to_iterable] | [`ar.map_failure_to_iterable(f)`][trcks.fp.monads.awaitable_result.map_failure_to_iterable] |
+| [`.map_failure_to_result_iterable(f)`][trcks.oop.AwaitableResultWrapper.map_failure_to_result_iterable] | [`ar.map_failure_to_result_iterable(f)`][trcks.fp.monads.awaitable_result.map_failure_to_result_iterable] |
+| [`.map_success_to_awaitable_result_iterable(f)`][trcks.oop.AwaitableResultWrapper.map_success_to_awaitable_result_iterable] | [`ar.map_success_to_awaitable_result_iterable(f)`][trcks.fp.monads.awaitable_result.map_success_to_awaitable_result_iterable] |
+| [`.map_success_to_iterable(f)`][trcks.oop.AwaitableResultWrapper.map_success_to_iterable] | [`ar.map_success_to_iterable(f)`][trcks.fp.monads.awaitable_result.map_success_to_iterable] |
+| [`.map_success_to_result_iterable(f)`][trcks.oop.AwaitableResultWrapper.map_success_to_result_iterable] | [`ar.map_success_to_result_iterable(f)`][trcks.fp.monads.awaitable_result.map_success_to_result_iterable] |
+| [`.tap_failure_to_awaitable_result_iterable(f)`][trcks.oop.AwaitableResultWrapper.tap_failure_to_awaitable_result_iterable] | [`ar.tap_failure_to_awaitable_result_iterable(f)`][trcks.fp.monads.awaitable_result.tap_failure_to_awaitable_result_iterable] |
+| [`.tap_failure_to_iterable(f)`][trcks.oop.AwaitableResultWrapper.tap_failure_to_iterable] | [`ar.tap_failure_to_iterable(f)`][trcks.fp.monads.awaitable_result.tap_failure_to_iterable] |
+| [`.tap_failure_to_result_iterable(f)`][trcks.oop.AwaitableResultWrapper.tap_failure_to_result_iterable] | [`ar.tap_failure_to_result_iterable(f)`][trcks.fp.monads.awaitable_result.tap_failure_to_result_iterable] |
+| [`.tap_success_to_awaitable_result_iterable(f)`][trcks.oop.AwaitableResultWrapper.tap_success_to_awaitable_result_iterable] | [`ar.tap_success_to_awaitable_result_iterable(f)`][trcks.fp.monads.awaitable_result.tap_success_to_awaitable_result_iterable] |
+| [`.tap_success_to_iterable(f)`][trcks.oop.AwaitableResultWrapper.tap_success_to_iterable] | [`ar.tap_success_to_iterable(f)`][trcks.fp.monads.awaitable_result.tap_success_to_iterable] |
+| [`.tap_success_to_result_iterable(f)`][trcks.oop.AwaitableResultWrapper.tap_success_to_result_iterable] | [`ar.tap_success_to_result_iterable(f)`][trcks.fp.monads.awaitable_result.tap_success_to_result_iterable] |
+
+`trcks.fp.monads.awaitable`, `trcks.fp.monads.awaitable_result`,
+`trcks.fp.monads.identity`, `trcks.fp.monads.result`, and
 `trcks.fp.monads.tuple_` implement these by
 lifting the value into the richer monad
-(e.g. via [`trcks.fp.monads.awaitable_result.construct_success_from_awaitable`][],
+(e.g. via [`trcks.fp.monads.awaitable_result_tuple.construct_from_awaitable_result`][],
+[`trcks.fp.monads.awaitable_result.construct_success_from_awaitable`][],
 [`trcks.fp.monads.result.construct_success`][],
 [`trcks.fp.monads.awaitable_result.construct_from_result`][], and
 [`trcks.fp.monads.awaitable_tuple.construct_from_iterable`][])
@@ -138,6 +163,7 @@ and then applying that monad's own function.
 This lift-then-apply composition is available as a general pattern via
 [`trcks.fp.composition.pipe`][],
 but only widening operations for the `Awaitable` monad,
+for the `AwaitableResult` monad,
 for the `Result` monad,
 for homogeneous tuples, and
 for plain values have a dedicated function so far.

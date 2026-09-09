@@ -99,9 +99,10 @@ or [collections.abc.Awaitable][],
 from [trcks.Result][] to [trcks.AwaitableResult][],
 [trcks.ResultTuple][], or [trcks.AwaitableResultTuple][],
 from a homogeneous [tuple][] to [trcks.AwaitableTuple][] or
-[trcks.ResultTuple][], or
+[trcks.ResultTuple][],
 from an awaitable to [trcks.AwaitableTuple][],
-[trcks.AwaitableResult][], or [trcks.AwaitableResultTuple][].
+[trcks.AwaitableResult][], or [trcks.AwaitableResultTuple][], or
+from an awaitable result to [trcks.AwaitableResultTuple][].
 Unlike mapping and `tap` helpers, which stay within the same monad,
 widening functions return a value of a different, richer type.
 [trcks.oop.Wrapper][] and [trcks.fp.monads.identity][] provide
@@ -110,9 +111,12 @@ matching widening methods and functions under the same names
 [trcks.oop.ResultWrapper][] and [trcks.fp.monads.result][] do the same
 (e.g. `map_success_to_awaitable_result`),
 [trcks.oop.TupleWrapper][] and [trcks.fp.monads.tuple_][] follow suit
-(e.g. `map_to_awaitable_result`), and
-[trcks.oop.AwaitableWrapper][] and [trcks.fp.monads.awaitable][] complete the set
-(e.g. `map_to_awaitable_result_iterable`),
+(e.g. `map_to_awaitable_result`),
+[trcks.oop.AwaitableWrapper][] and [trcks.fp.monads.awaitable][] do too
+(e.g. `map_to_awaitable_result_iterable`), and
+[trcks.oop.AwaitableResultWrapper][] and
+[trcks.fp.monads.awaitable_result][] join them
+(e.g. `map_success_to_awaitable_result_iterable`),
 so the two styles remain call-compatible.
 See [oop-and-fp-equivalence.md](usage/oop-and-fp-equivalence.md)
 for the full mapping.
