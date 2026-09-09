@@ -52,7 +52,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Concatenate, ParamSpec
 
-from trcks._typing import Never, TypeVar
+from trcks._typing import Never, TypeVar, deprecated
 from trcks.fp._monads import awaitable_result_tuple as art
 from trcks.fp._monads import awaitable_tuple as at
 from trcks.fp._monads import result_tuple as rt
@@ -60,10 +60,8 @@ from trcks.fp._monads.tuple_ import (
     construct,
     map_,
     map_to_iterable,
-    map_to_tuple,  # pyright: ignore[reportDeprecated]  # pyrefly: ignore[deprecated]
     tap,
     tap_to_iterable,
-    tap_to_tuple,  # pyright: ignore[reportDeprecated]  # pyrefly: ignore[deprecated]
 )
 from trcks.fp.composition import compose2
 
@@ -385,6 +383,16 @@ def map_to_result_iterable(
     return compose2(c)
 
 
+@deprecated("Use map_to_iterable instead")
+def map_to_tuple(
+    f: Callable[Concatenate[_T1, _P], tuple[_T2, ...]],
+    *args: _P.args,
+    **kwargs: _P.kwargs,
+) -> Callable[[tuple[_T1, ...]], tuple[_T2, ...]]:
+    """Deprecated alias for [trcks.fp.monads.tuple_.map_to_iterable][]."""
+    return map_to_iterable(f, *args, **kwargs)  # pragma: no cover
+
+
 def tap_to_awaitable(
     f: Callable[Concatenate[_T1, _P], Awaitable[object]],
     *args: _P.args,
@@ -674,3 +682,13 @@ def tap_to_result_iterable(
         rt.tap_successes_to_result_iterable(f, *args, **kwargs),
     )
     return compose2(c)
+
+
+@deprecated("Use tap_to_iterable instead")
+def tap_to_tuple(
+    f: Callable[Concatenate[_T1, _P], tuple[object, ...]],
+    *args: _P.args,
+    **kwargs: _P.kwargs,
+) -> Callable[[tuple[_T1, ...]], tuple[_T1, ...]]:
+    """Deprecated alias for [trcks.fp.monads.tuple_.tap_to_iterable][]."""
+    return tap_to_iterable(f, *args, **kwargs)  # pragma: no cover

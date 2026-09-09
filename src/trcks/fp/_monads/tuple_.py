@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Concatenate, ParamSpec
 
-from trcks._typing import TypeVar, deprecated
+from trcks._typing import TypeVar
 from trcks.fp._monads import identity as i
 from trcks.fp.composition import compose2
 
@@ -108,16 +108,6 @@ def map_to_iterable(
     return mapped_f
 
 
-@deprecated("Use map_to_iterable instead")
-def map_to_tuple(
-    f: Callable[Concatenate[_T1, _P], tuple[_T2, ...]],
-    *args: _P.args,
-    **kwargs: _P.kwargs,
-) -> Callable[[tuple[_T1, ...]], tuple[_T2, ...]]:
-    """Deprecated alias for [trcks.fp.monads.tuple_.map_to_iterable][]."""
-    return map_to_iterable(f, *args, **kwargs)  # pragma: no cover
-
-
 def tap(
     f: Callable[Concatenate[_T1, _P], object], *args: _P.args, **kwargs: _P.kwargs
 ) -> Callable[[tuple[_T1, ...]], tuple[_T1, ...]]:
@@ -192,13 +182,3 @@ def tap_to_iterable(
         return tuple(t1 for _t2 in f(t1, *args, **kwargs))
 
     return map_to_iterable(bypassed_f)
-
-
-@deprecated("Use tap_to_iterable instead")
-def tap_to_tuple(
-    f: Callable[Concatenate[_T1, _P], tuple[object, ...]],
-    *args: _P.args,
-    **kwargs: _P.kwargs,
-) -> Callable[[tuple[_T1, ...]], tuple[_T1, ...]]:
-    """Deprecated alias for [trcks.fp.monads.tuple_.tap_to_iterable][]."""
-    return tap_to_iterable(f, *args, **kwargs)  # pragma: no cover

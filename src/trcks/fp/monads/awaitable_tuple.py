@@ -52,26 +52,31 @@ Examples:
     (1, 1, 2, 2, 3, 3)
 """
 
+from __future__ import annotations
+
+from typing import TYPE_CHECKING, Concatenate, ParamSpec
+
+from trcks._typing import TypeVar, deprecated
 from trcks.fp._monads.awaitable_tuple import (
     construct,
     construct_from_awaitable,
     construct_from_awaitable_iterable,
     construct_from_iterable,
-    construct_from_tuple,  # pyright: ignore[reportDeprecated]  # pyrefly: ignore[deprecated]
     map_,
     map_to_awaitable,
     map_to_awaitable_iterable,
-    map_to_awaitable_tuple,  # pyright: ignore[reportDeprecated]  # pyrefly: ignore[deprecated]
     map_to_iterable,
-    map_to_tuple,  # pyright: ignore[reportDeprecated]  # pyrefly: ignore[deprecated]
     tap,
     tap_to_awaitable,
     tap_to_awaitable_iterable,
-    tap_to_awaitable_tuple,  # pyright: ignore[reportDeprecated]  # pyrefly: ignore[deprecated]
     tap_to_iterable,
-    tap_to_tuple,  # pyright: ignore[reportDeprecated]  # pyrefly: ignore[deprecated]
     to_coroutine_tuple,
 )
+
+if TYPE_CHECKING:
+    from collections.abc import Callable
+
+    from trcks import AwaitableTuple
 
 __all__ = [
     "construct",
@@ -94,3 +99,60 @@ __all__ = [
     "to_coroutine_tuple",
 ]
 __docformat__ = "google"
+
+_P = ParamSpec("_P")
+_T = TypeVar("_T")
+_T1 = TypeVar("_T1")
+_T2 = TypeVar("_T2")
+
+
+@deprecated("Use construct_from_iterable instead")
+def construct_from_tuple(tpl: tuple[_T, ...]) -> AwaitableTuple[_T]:
+    """Deprecated alias for
+    [trcks.fp.monads.awaitable_tuple.construct_from_iterable][].
+    """
+    return construct_from_iterable(tpl)  # pragma: no cover
+
+
+@deprecated("Use map_to_awaitable_iterable instead")
+def map_to_awaitable_tuple(
+    f: Callable[Concatenate[_T1, _P], AwaitableTuple[_T2]],
+    *args: _P.args,
+    **kwargs: _P.kwargs,
+) -> Callable[[AwaitableTuple[_T1]], AwaitableTuple[_T2]]:
+    """Deprecated alias for
+    [trcks.fp.monads.awaitable_tuple.map_to_awaitable_iterable][].
+    """
+    return map_to_awaitable_iterable(f, *args, **kwargs)  # pragma: no cover
+
+
+@deprecated("Use map_to_iterable instead")
+def map_to_tuple(
+    f: Callable[Concatenate[_T1, _P], tuple[_T2, ...]],
+    *args: _P.args,
+    **kwargs: _P.kwargs,
+) -> Callable[[AwaitableTuple[_T1]], AwaitableTuple[_T2]]:
+    """Deprecated alias for [trcks.fp.monads.awaitable_tuple.map_to_iterable][]."""
+    return map_to_iterable(f, *args, **kwargs)  # pragma: no cover
+
+
+@deprecated("Use tap_to_awaitable_iterable instead")
+def tap_to_awaitable_tuple(
+    f: Callable[Concatenate[_T1, _P], AwaitableTuple[object]],
+    *args: _P.args,
+    **kwargs: _P.kwargs,
+) -> Callable[[AwaitableTuple[_T1]], AwaitableTuple[_T1]]:
+    """Deprecated alias for
+    [trcks.fp.monads.awaitable_tuple.tap_to_awaitable_iterable][].
+    """
+    return tap_to_awaitable_iterable(f, *args, **kwargs)  # pragma: no cover
+
+
+@deprecated("Use tap_to_iterable instead")
+def tap_to_tuple(
+    f: Callable[Concatenate[_T1, _P], tuple[object, ...]],
+    *args: _P.args,
+    **kwargs: _P.kwargs,
+) -> Callable[[AwaitableTuple[_T1]], AwaitableTuple[_T1]]:
+    """Deprecated alias for [trcks.fp.monads.awaitable_tuple.tap_to_iterable][]."""
+    return tap_to_iterable(f, *args, **kwargs)  # pragma: no cover

@@ -19,6 +19,9 @@
 - `trcks.fp.monads` is the public facade;
   each of its modules re-exports the matching `trcks.fp._monads` module
   (e.g. `trcks.fp.monads.result` re-exports `trcks.fp._monads.result`).
+  A facade module may additionally define deprecated aliases locally
+  (instead of re-exporting them from `trcks.fp._monads`)
+  to avoid referencing deprecated symbols in its own import statements.
   `trcks.fp._monads` holds the private implementation.
   This split exists so that a monad's implementation module
   (e.g. `trcks.fp._monads.result`) can never import
