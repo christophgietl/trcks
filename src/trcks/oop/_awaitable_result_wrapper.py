@@ -1986,6 +1986,40 @@ class AwaitableResultWrapper(
                     if the applied side effect returns a [trcks.Failure][] and
                 - *the original* [trcks.Success][]
                     if the applied side effect returns a [trcks.Success][].
+
+        Examples:
+            >>> import asyncio
+            >>> from trcks import Result
+            >>> from trcks.oop import AwaitableResultWrapper
+            >>> def print_positive_float(x: float) -> Result[str, None]:
+            ...     if x <= 0:
+            ...         return "failure", "not positive"
+            ...     return "success", print(f"Positive float: {x}")
+            ...
+            >>> wrapper_1 = (
+            ...     AwaitableResultWrapper
+            ...     .construct_failure("not found")
+            ...     .tap_success_to_result(print_positive_float)
+            ... )
+            >>> asyncio.run(wrapper_1.core_as_coroutine)
+            ('failure', 'not found')
+            >>>
+            >>> wrapper_2 = (
+            ...     AwaitableResultWrapper
+            ...     .construct_success(-2.3)
+            ...     .tap_success_to_result(print_positive_float)
+            ... )
+            >>> asyncio.run(wrapper_2.core_as_coroutine)
+            ('failure', 'not positive')
+            >>>
+            >>> wrapper_3 = (
+            ...     AwaitableResultWrapper
+            ...     .construct_success(3.5)
+            ...     .tap_success_to_result(print_positive_float)
+            ... )
+            >>> asyncio.run(wrapper_3.core_as_coroutine)
+            Positive float: 3.5
+            ('success', 3.5)
         """
         return AwaitableResultWrapper(
             ar.tap_success_to_result(f, *args, **kwargs)(self.core)
