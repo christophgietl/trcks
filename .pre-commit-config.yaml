@@ -5,7 +5,7 @@ default_stages:
   - pre-commit
 repos:
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: 1f1e8bf348ff38fc88619a38d3ca4d9c56abea49  # frozen: v0.16.5
+    rev: 321478e58f4938179c6b86e4ddfa923d1547a49b  # frozen: v0.16.6
     hooks:
       - id: ruff-check
         args:
@@ -13,7 +13,7 @@ repos:
           - --fix
       - id: ruff-format
   - repo: https://github.com/astral-sh/uv-pre-commit
-    rev: 0f34924c4110aca2294a4e4204aac7b3e31803fb  # frozen: 0.12.7
+    rev: d153933366256874470b9d8395de436c50714f41  # frozen: 0.12.9
     hooks:
       - id: uv-lock
   - repo: https://github.com/codespell-project/codespell
@@ -56,12 +56,12 @@ repos:
     hooks:
       - id: actionlint
   - repo: https://github.com/rvben/rumdl-pre-commit
-    rev: 358bd98f7d9d33fefe5a148875d1d61e7e558f2d  # frozen: v0.2.62
+    rev: 3624c2a51b58917a148513d482f615414110647d  # frozen: v0.2.65
     hooks:
       - id: rumdl
       - id: rumdl-fmt
   - repo: https://github.com/zizmorcore/zizmor-pre-commit
-    rev: 451b56af716f9f0d0c2b816503a3fd0cf8b036fa  # frozen: v1.29.0
+    rev: cef8b8350da46d8114c7e6b7272aebdccdf193ce  # frozen: v1.30.0
     hooks:
       - id: zizmor
         args:
