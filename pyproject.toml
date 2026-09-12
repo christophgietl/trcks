@@ -118,7 +118,22 @@ containers = [
 exhaustive = true
 layers = [
     "monads",
+    "_monads",
     "composition",
+]
+
+[[tool.importlinter.contracts]]
+name = "Layers within trcks.fp._monads.*"
+type = "layers"
+containers = [
+    "trcks.fp._monads",
+]
+exhaustive = true
+layers = [
+    "awaitable_result_tuple",
+    "awaitable_result | awaitable_tuple | result_tuple",
+    "awaitable | result | tuple_",
+    "identity",
 ]
 
 [[tool.importlinter.contracts]]
@@ -129,10 +144,17 @@ containers = [
 ]
 exhaustive = true
 layers = [
-    "awaitable_result_tuple",
-    "awaitable_result | awaitable_tuple | result_tuple",
-    "awaitable | result | tuple_",
-    "identity",
+    "awaitable | awaitable_result | awaitable_result_tuple | awaitable_tuple | identity | result | result_tuple | tuple_",
+]
+
+[[tool.importlinter.contracts]]
+name = "Import trcks.fp._monads via trcks.fp only"
+type = "protected"
+allowed_importers = [
+    "trcks.fp",
+]
+protected_modules = [
+    "trcks.fp._monads",
 ]
 
 [[tool.importlinter.contracts]]

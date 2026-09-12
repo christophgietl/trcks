@@ -14,8 +14,34 @@ This page maps common operations from one style to the other.
 | Map on failure | [`.map_failure(f)`][trcks.oop.ResultWrapper.map_failure] | [`r.map_failure(f)`][trcks.fp.monads.result.map_failure] |
 | Side effect on success | [`.tap_success(f)`][trcks.oop.ResultWrapper.tap_success] | [`r.tap_success(f)`][trcks.fp.monads.result.tap_success] |
 | Failable side effect on success | [`.tap_success_to_result(f)`][trcks.oop.ResultWrapper.tap_success_to_result] | [`r.tap_success_to_result(f)`][trcks.fp.monads.result.tap_success_to_result] |
-| Async success step | [`.map_success_to_awaitable_result(f)`][trcks.oop.ResultWrapper.map_success_to_awaitable_result] | [`ar.map_success_to_awaitable_result(f)`][trcks.fp.monads.awaitable_result.map_success_to_awaitable_result] |
+| Async success step | [`.map_success_to_awaitable_result(f)`][trcks.oop.ResultWrapper.map_success_to_awaitable_result] | [`r.map_success_to_awaitable_result(f)`][trcks.fp.monads.result.map_success_to_awaitable_result] |
 | Unwrap the result | `.core` | result of `pipe(...)` |
+
+## Widening operations
+
+Six of the eight wrapper classes also have methods that [widen](../glossary.md#widening) the value
+into a richer wrapper
+(e.g. `ResultWrapper` → `AwaitableResultWrapper`).
+The corresponding `trcks.fp.monads` module mirrors every one of these
+methods under the same function name,
+so the [`trcks.oop`](oop/index.md) and [`trcks.fp`](fp/index.md) styles stay
+call-compatible for widening operations too.
+
+| Wrapper class | `trcks.fp.monads` module |
+|---|---|
+| [`AwaitableResultWrapper`][trcks.oop.AwaitableResultWrapper] | [`awaitable_result`][trcks.fp.monads.awaitable_result] |
+| [`AwaitableWrapper`][trcks.oop.AwaitableWrapper] | [`awaitable`][trcks.fp.monads.awaitable] |
+| [`ResultTupleWrapper`][trcks.oop.ResultTupleWrapper] | [`result_tuple`][trcks.fp.monads.result_tuple] |
+| [`ResultWrapper`][trcks.oop.ResultWrapper] | [`result`][trcks.fp.monads.result] |
+| [`TupleWrapper`][trcks.oop.TupleWrapper] | [`tuple_`][trcks.fp.monads.tuple_] |
+| [`Wrapper`][trcks.oop.Wrapper] | [`identity`][trcks.fp.monads.identity] |
+
+Only the `AwaitableTuple` monad and the `AwaitableResultTuple` monad
+have no widening operations.
+The monad modules implement these functions by lifting the value into
+the richer monad and then applying that monad's own function,
+and [`trcks.fp.composition.pipe`][] offers this lift-then-apply
+composition as a general pattern.
 
 The full set of element-wise and homogeneous-tuple variants is covered
 in the

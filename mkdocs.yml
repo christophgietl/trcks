@@ -65,8 +65,6 @@ plugins:
             - https://expression.readthedocs.io/en/latest/objects.inv
           options:
             docstring_section_style: list
-            filters:
-              - "!^_"
             members_order: alphabetical
           paths:
             - src

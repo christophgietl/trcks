@@ -90,3 +90,22 @@ A side effect is an operation (such as logging or file I/O) that does
 not change the value flowing through the pipeline.
 The `tap*` helpers run a side effect and then return the original
 value unchanged, keeping the pipeline intact.
+
+## Widening
+
+A transition from a simpler monad to a richer one.
+For example, `trcks` can widen:
+
+| From                          | To                                                                                     |
+|-------------------------------|----------------------------------------------------------------------------------------|
+| a plain value                 | [trcks.Result][], a homogeneous [tuple][], or [collections.abc.Awaitable][]            |
+| [trcks.Result][]              | [trcks.AwaitableResult][], [trcks.ResultTuple][], or [trcks.AwaitableResultTuple][]    |
+| a homogeneous [tuple][]       | [trcks.AwaitableTuple][] or [trcks.ResultTuple][]                                      |
+| [collections.abc.Awaitable][] | [trcks.AwaitableTuple][], [trcks.AwaitableResult][], or [trcks.AwaitableResultTuple][] |
+| [trcks.AwaitableResult][]     | [trcks.AwaitableResultTuple][]                                                         |
+| [trcks.ResultTuple][]         | [trcks.AwaitableResultTuple][]                                                         |
+
+Like mapping helpers, widening helpers are named `map*` or `tap*`.
+Unlike helpers that stay within the same monad
+(e.g. `map_success` and `tap_failure`),
+they return a value wrapped in a different, richer type.

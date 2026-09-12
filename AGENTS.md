@@ -18,14 +18,18 @@
   - `oop`
   - `fp`
   - `_typing`
-- `trcks.fp` has two sublayers:
+- `trcks.fp` has three sublayers:
   - `monads`
+  - `_monads`
   - `composition`
 - `trcks.fp.monads` has four sublayers:
   - `awaitable_result_tuple`
   - `awaitable_result`, `awaitable_tuple`, and `result_tuple`
   - `awaitable`, `result`, and `tuple_`
   - `identity`
+- `trcks.fp._monads` has one sublayer:
+  - `awaitable`, `awaitable_result`, `awaitable_result_tuple`, `awaitable_tuple`,
+    `identity`, `result`, `result_tuple`, and `tuple_`
 
 ### Import contracts
 
@@ -33,7 +37,8 @@
 
 - `layers` contracts that restrict each layer to importing only
   the layers below it.
-- `protected` contract that restricts which internal modules may import `typing_extensions`.
+- `protected` contract that restricts imports of `trcks.fp._monads` to `trcks.fp`.
+- `protected` contract that restricts imports of `typing_extensions` to `trcks._typing`.
 
 ### Return types defined in `trcks`
 
