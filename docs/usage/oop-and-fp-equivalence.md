@@ -17,184 +17,31 @@ This page maps common operations from one style to the other.
 | Async success step | [`.map_success_to_awaitable_result(f)`][trcks.oop.ResultWrapper.map_success_to_awaitable_result] | [`r.map_success_to_awaitable_result(f)`][trcks.fp.monads.result.map_success_to_awaitable_result] |
 | Unwrap the result | `.core` | result of `pipe(...)` |
 
-## Widening `Result` into richer monads
+## Widening operations
 
-`ResultWrapper` also has methods that transition into a richer wrapper
-(e.g. `AwaitableResultWrapper`, `ResultTupleWrapper`,
-`AwaitableResultTupleWrapper`).
-[`trcks.fp.monads.result`][] mirrors every one of these methods
-under the same name,
+Every wrapper class also has methods that widen the value
+into a richer wrapper
+(e.g. `ResultWrapper` → `AwaitableResultWrapper`).
+The corresponding `trcks.fp.monads` module mirrors every one of these
+methods under the same function name,
 so the [`trcks.oop`](oop/index.md) and [`trcks.fp`](fp/index.md) styles stay
 call-compatible for widening operations too.
 
-| `trcks.oop` (`ResultWrapper` method) | `trcks.fp` (`trcks.fp.monads.result` function) |
+| Wrapper class | `trcks.fp.monads` module |
 |---|---|
-| [`.map_failure_to_awaitable(f)`][trcks.oop.ResultWrapper.map_failure_to_awaitable] | [`r.map_failure_to_awaitable(f)`][trcks.fp.monads.result.map_failure_to_awaitable] |
-| [`.map_failure_to_awaitable_result(f)`][trcks.oop.ResultWrapper.map_failure_to_awaitable_result] | [`r.map_failure_to_awaitable_result(f)`][trcks.fp.monads.result.map_failure_to_awaitable_result] |
-| [`.map_failure_to_awaitable_result_iterable(f)`][trcks.oop.ResultWrapper.map_failure_to_awaitable_result_iterable] | [`r.map_failure_to_awaitable_result_iterable(f)`][trcks.fp.monads.result.map_failure_to_awaitable_result_iterable] |
-| [`.map_failure_to_iterable(f)`][trcks.oop.ResultWrapper.map_failure_to_iterable] | [`r.map_failure_to_iterable(f)`][trcks.fp.monads.result.map_failure_to_iterable] |
-| [`.map_failure_to_result_iterable(f)`][trcks.oop.ResultWrapper.map_failure_to_result_iterable] | [`r.map_failure_to_result_iterable(f)`][trcks.fp.monads.result.map_failure_to_result_iterable] |
-| [`.map_success_to_awaitable(f)`][trcks.oop.ResultWrapper.map_success_to_awaitable] | [`r.map_success_to_awaitable(f)`][trcks.fp.monads.result.map_success_to_awaitable] |
-| [`.map_success_to_awaitable_result(f)`][trcks.oop.ResultWrapper.map_success_to_awaitable_result] | [`r.map_success_to_awaitable_result(f)`][trcks.fp.monads.result.map_success_to_awaitable_result] |
-| [`.map_success_to_awaitable_result_iterable(f)`][trcks.oop.ResultWrapper.map_success_to_awaitable_result_iterable] | [`r.map_success_to_awaitable_result_iterable(f)`][trcks.fp.monads.result.map_success_to_awaitable_result_iterable] |
-| [`.map_success_to_iterable(f)`][trcks.oop.ResultWrapper.map_success_to_iterable] | [`r.map_success_to_iterable(f)`][trcks.fp.monads.result.map_success_to_iterable] |
-| [`.map_success_to_result_iterable(f)`][trcks.oop.ResultWrapper.map_success_to_result_iterable] | [`r.map_success_to_result_iterable(f)`][trcks.fp.monads.result.map_success_to_result_iterable] |
-| [`.tap_failure_to_awaitable(f)`][trcks.oop.ResultWrapper.tap_failure_to_awaitable] | [`r.tap_failure_to_awaitable(f)`][trcks.fp.monads.result.tap_failure_to_awaitable] |
-| [`.tap_failure_to_awaitable_result(f)`][trcks.oop.ResultWrapper.tap_failure_to_awaitable_result] | [`r.tap_failure_to_awaitable_result(f)`][trcks.fp.monads.result.tap_failure_to_awaitable_result] |
-| [`.tap_failure_to_awaitable_result_iterable(f)`][trcks.oop.ResultWrapper.tap_failure_to_awaitable_result_iterable] | [`r.tap_failure_to_awaitable_result_iterable(f)`][trcks.fp.monads.result.tap_failure_to_awaitable_result_iterable] |
-| [`.tap_failure_to_iterable(f)`][trcks.oop.ResultWrapper.tap_failure_to_iterable] | [`r.tap_failure_to_iterable(f)`][trcks.fp.monads.result.tap_failure_to_iterable] |
-| [`.tap_failure_to_result_iterable(f)`][trcks.oop.ResultWrapper.tap_failure_to_result_iterable] | [`r.tap_failure_to_result_iterable(f)`][trcks.fp.monads.result.tap_failure_to_result_iterable] |
-| [`.tap_success_to_awaitable(f)`][trcks.oop.ResultWrapper.tap_success_to_awaitable] | [`r.tap_success_to_awaitable(f)`][trcks.fp.monads.result.tap_success_to_awaitable] |
-| [`.tap_success_to_awaitable_result(f)`][trcks.oop.ResultWrapper.tap_success_to_awaitable_result] | [`r.tap_success_to_awaitable_result(f)`][trcks.fp.monads.result.tap_success_to_awaitable_result] |
-| [`.tap_success_to_awaitable_result_iterable(f)`][trcks.oop.ResultWrapper.tap_success_to_awaitable_result_iterable] | [`r.tap_success_to_awaitable_result_iterable(f)`][trcks.fp.monads.result.tap_success_to_awaitable_result_iterable] |
-| [`.tap_success_to_iterable(f)`][trcks.oop.ResultWrapper.tap_success_to_iterable] | [`r.tap_success_to_iterable(f)`][trcks.fp.monads.result.tap_success_to_iterable] |
-| [`.tap_success_to_result_iterable(f)`][trcks.oop.ResultWrapper.tap_success_to_result_iterable] | [`r.tap_success_to_result_iterable(f)`][trcks.fp.monads.result.tap_success_to_result_iterable] |
+| [`AwaitableResultWrapper`][trcks.oop.AwaitableResultWrapper] | [`awaitable_result`][trcks.fp.monads.awaitable_result] |
+| [`AwaitableWrapper`][trcks.oop.AwaitableWrapper] | [`awaitable`][trcks.fp.monads.awaitable] |
+| [`ResultTupleWrapper`][trcks.oop.ResultTupleWrapper] | [`result_tuple`][trcks.fp.monads.result_tuple] |
+| [`ResultWrapper`][trcks.oop.ResultWrapper] | [`result`][trcks.fp.monads.result] |
+| [`TupleWrapper`][trcks.oop.TupleWrapper] | [`tuple_`][trcks.fp.monads.tuple_] |
+| [`Wrapper`][trcks.oop.Wrapper] | [`identity`][trcks.fp.monads.identity] |
 
-## Widening homogeneous tuples into richer monads
-
-`TupleWrapper` also has methods that transition into a richer wrapper
-(e.g. `AwaitableTupleWrapper`, `ResultTupleWrapper`,
-`AwaitableResultTupleWrapper`).
-[`trcks.fp.monads.tuple_`][] mirrors every one of these methods
-under the same name,
-so the [`trcks.oop`](oop/index.md) and [`trcks.fp`](fp/index.md) styles stay
-call-compatible for widening operations too.
-
-| `trcks.oop` (`TupleWrapper` method) | `trcks.fp` (`trcks.fp.monads.tuple_` function) |
-|---|---|
-| [`.map_to_awaitable(f)`][trcks.oop.TupleWrapper.map_to_awaitable] | [`t.map_to_awaitable(f)`][trcks.fp.monads.tuple_.map_to_awaitable] |
-| [`.map_to_awaitable_iterable(f)`][trcks.oop.TupleWrapper.map_to_awaitable_iterable] | [`t.map_to_awaitable_iterable(f)`][trcks.fp.monads.tuple_.map_to_awaitable_iterable] |
-| [`.map_to_awaitable_result(f)`][trcks.oop.TupleWrapper.map_to_awaitable_result] | [`t.map_to_awaitable_result(f)`][trcks.fp.monads.tuple_.map_to_awaitable_result] |
-| [`.map_to_awaitable_result_iterable(f)`][trcks.oop.TupleWrapper.map_to_awaitable_result_iterable] | [`t.map_to_awaitable_result_iterable(f)`][trcks.fp.monads.tuple_.map_to_awaitable_result_iterable] |
-| [`.map_to_result(f)`][trcks.oop.TupleWrapper.map_to_result] | [`t.map_to_result(f)`][trcks.fp.monads.tuple_.map_to_result] |
-| [`.map_to_result_iterable(f)`][trcks.oop.TupleWrapper.map_to_result_iterable] | [`t.map_to_result_iterable(f)`][trcks.fp.monads.tuple_.map_to_result_iterable] |
-| [`.tap_to_awaitable(f)`][trcks.oop.TupleWrapper.tap_to_awaitable] | [`t.tap_to_awaitable(f)`][trcks.fp.monads.tuple_.tap_to_awaitable] |
-| [`.tap_to_awaitable_iterable(f)`][trcks.oop.TupleWrapper.tap_to_awaitable_iterable] | [`t.tap_to_awaitable_iterable(f)`][trcks.fp.monads.tuple_.tap_to_awaitable_iterable] |
-| [`.tap_to_awaitable_result(f)`][trcks.oop.TupleWrapper.tap_to_awaitable_result] | [`t.tap_to_awaitable_result(f)`][trcks.fp.monads.tuple_.tap_to_awaitable_result] |
-| [`.tap_to_awaitable_result_iterable(f)`][trcks.oop.TupleWrapper.tap_to_awaitable_result_iterable] | [`t.tap_to_awaitable_result_iterable(f)`][trcks.fp.monads.tuple_.tap_to_awaitable_result_iterable] |
-| [`.tap_to_result(f)`][trcks.oop.TupleWrapper.tap_to_result] | [`t.tap_to_result(f)`][trcks.fp.monads.tuple_.tap_to_result] |
-| [`.tap_to_result_iterable(f)`][trcks.oop.TupleWrapper.tap_to_result_iterable] | [`t.tap_to_result_iterable(f)`][trcks.fp.monads.tuple_.tap_to_result_iterable] |
-
-## Widening awaitables into richer monads
-
-`AwaitableWrapper` also has methods that transition into a richer wrapper
-(e.g. `AwaitableTupleWrapper`, `AwaitableResultWrapper`,
-`AwaitableResultTupleWrapper`).
-[`trcks.fp.monads.awaitable`][] mirrors every one of these methods
-under the same name,
-so the [`trcks.oop`](oop/index.md) and [`trcks.fp`](fp/index.md) styles stay
-call-compatible for widening operations too.
-
-| `trcks.oop` (`AwaitableWrapper` method) | `trcks.fp` (`trcks.fp.monads.awaitable` function) |
-|---|---|
-| [`.map_to_awaitable_iterable(f)`][trcks.oop.AwaitableWrapper.map_to_awaitable_iterable] | [`a.map_to_awaitable_iterable(f)`][trcks.fp.monads.awaitable.map_to_awaitable_iterable] |
-| [`.map_to_awaitable_result(f)`][trcks.oop.AwaitableWrapper.map_to_awaitable_result] | [`a.map_to_awaitable_result(f)`][trcks.fp.monads.awaitable.map_to_awaitable_result] |
-| [`.map_to_awaitable_result_iterable(f)`][trcks.oop.AwaitableWrapper.map_to_awaitable_result_iterable] | [`a.map_to_awaitable_result_iterable(f)`][trcks.fp.monads.awaitable.map_to_awaitable_result_iterable] |
-| [`.map_to_iterable(f)`][trcks.oop.AwaitableWrapper.map_to_iterable] | [`a.map_to_iterable(f)`][trcks.fp.monads.awaitable.map_to_iterable] |
-| [`.map_to_result(f)`][trcks.oop.AwaitableWrapper.map_to_result] | [`a.map_to_result(f)`][trcks.fp.monads.awaitable.map_to_result] |
-| [`.map_to_result_iterable(f)`][trcks.oop.AwaitableWrapper.map_to_result_iterable] | [`a.map_to_result_iterable(f)`][trcks.fp.monads.awaitable.map_to_result_iterable] |
-| [`.tap_to_awaitable_iterable(f)`][trcks.oop.AwaitableWrapper.tap_to_awaitable_iterable] | [`a.tap_to_awaitable_iterable(f)`][trcks.fp.monads.awaitable.tap_to_awaitable_iterable] |
-| [`.tap_to_awaitable_result(f)`][trcks.oop.AwaitableWrapper.tap_to_awaitable_result] | [`a.tap_to_awaitable_result(f)`][trcks.fp.monads.awaitable.tap_to_awaitable_result] |
-| [`.tap_to_awaitable_result_iterable(f)`][trcks.oop.AwaitableWrapper.tap_to_awaitable_result_iterable] | [`a.tap_to_awaitable_result_iterable(f)`][trcks.fp.monads.awaitable.tap_to_awaitable_result_iterable] |
-| [`.tap_to_iterable(f)`][trcks.oop.AwaitableWrapper.tap_to_iterable] | [`a.tap_to_iterable(f)`][trcks.fp.monads.awaitable.tap_to_iterable] |
-| [`.tap_to_result(f)`][trcks.oop.AwaitableWrapper.tap_to_result] | [`a.tap_to_result(f)`][trcks.fp.monads.awaitable.tap_to_result] |
-| [`.tap_to_result_iterable(f)`][trcks.oop.AwaitableWrapper.tap_to_result_iterable] | [`a.tap_to_result_iterable(f)`][trcks.fp.monads.awaitable.tap_to_result_iterable] |
-
-## Widening plain values into richer monads
-
-`Wrapper` also has methods that transition into a richer wrapper
-(e.g. `AwaitableWrapper`, `ResultWrapper`, `TupleWrapper`).
-[`trcks.fp.monads.identity`][] mirrors every one of these methods
-under the same name,
-so the [`trcks.oop`](oop/index.md) and [`trcks.fp`](fp/index.md) styles stay
-call-compatible for widening operations too.
-
-| `trcks.oop` (`Wrapper` method) | `trcks.fp` (`trcks.fp.monads.identity` function) |
-|---|---|
-| [`.map_to_awaitable(f)`][trcks.oop.Wrapper.map_to_awaitable] | [`i.map_to_awaitable(f)`][trcks.fp.monads.identity.map_to_awaitable] |
-| [`.map_to_awaitable_iterable(f)`][trcks.oop.Wrapper.map_to_awaitable_iterable] | [`i.map_to_awaitable_iterable(f)`][trcks.fp.monads.identity.map_to_awaitable_iterable] |
-| [`.map_to_awaitable_result(f)`][trcks.oop.Wrapper.map_to_awaitable_result] | [`i.map_to_awaitable_result(f)`][trcks.fp.monads.identity.map_to_awaitable_result] |
-| [`.map_to_awaitable_result_iterable(f)`][trcks.oop.Wrapper.map_to_awaitable_result_iterable] | [`i.map_to_awaitable_result_iterable(f)`][trcks.fp.monads.identity.map_to_awaitable_result_iterable] |
-| [`.map_to_iterable(f)`][trcks.oop.Wrapper.map_to_iterable] | [`i.map_to_iterable(f)`][trcks.fp.monads.identity.map_to_iterable] |
-| [`.map_to_result(f)`][trcks.oop.Wrapper.map_to_result] | [`i.map_to_result(f)`][trcks.fp.monads.identity.map_to_result] |
-| [`.map_to_result_iterable(f)`][trcks.oop.Wrapper.map_to_result_iterable] | [`i.map_to_result_iterable(f)`][trcks.fp.monads.identity.map_to_result_iterable] |
-| [`.tap_to_awaitable(f)`][trcks.oop.Wrapper.tap_to_awaitable] | [`i.tap_to_awaitable(f)`][trcks.fp.monads.identity.tap_to_awaitable] |
-| [`.tap_to_awaitable_iterable(f)`][trcks.oop.Wrapper.tap_to_awaitable_iterable] | [`i.tap_to_awaitable_iterable(f)`][trcks.fp.monads.identity.tap_to_awaitable_iterable] |
-| [`.tap_to_awaitable_result(f)`][trcks.oop.Wrapper.tap_to_awaitable_result] | [`i.tap_to_awaitable_result(f)`][trcks.fp.monads.identity.tap_to_awaitable_result] |
-| [`.tap_to_awaitable_result_iterable(f)`][trcks.oop.Wrapper.tap_to_awaitable_result_iterable] | [`i.tap_to_awaitable_result_iterable(f)`][trcks.fp.monads.identity.tap_to_awaitable_result_iterable] |
-| [`.tap_to_iterable(f)`][trcks.oop.Wrapper.tap_to_iterable] | [`i.tap_to_iterable(f)`][trcks.fp.monads.identity.tap_to_iterable] |
-| [`.tap_to_result(f)`][trcks.oop.Wrapper.tap_to_result] | [`i.tap_to_result(f)`][trcks.fp.monads.identity.tap_to_result] |
-| [`.tap_to_result_iterable(f)`][trcks.oop.Wrapper.tap_to_result_iterable] | [`i.tap_to_result_iterable(f)`][trcks.fp.monads.identity.tap_to_result_iterable] |
-
-## Widening `AwaitableResult` into richer monads
-
-`AwaitableResultWrapper` also has methods that transition into a richer wrapper
-(e.g. `AwaitableResultTupleWrapper`).
-[`trcks.fp.monads.awaitable_result`][] mirrors every one of these methods
-under the same name,
-so the [`trcks.oop`](oop/index.md) and [`trcks.fp`](fp/index.md) styles stay
-call-compatible for widening operations too.
-
-| `trcks.oop` (`AwaitableResultWrapper` method) | `trcks.fp` (`trcks.fp.monads.awaitable_result` function) |
-|---|---|
-| [`.map_failure_to_awaitable_result_iterable(f)`][trcks.oop.AwaitableResultWrapper.map_failure_to_awaitable_result_iterable] | [`ar.map_failure_to_awaitable_result_iterable(f)`][trcks.fp.monads.awaitable_result.map_failure_to_awaitable_result_iterable] |
-| [`.map_failure_to_iterable(f)`][trcks.oop.AwaitableResultWrapper.map_failure_to_iterable] | [`ar.map_failure_to_iterable(f)`][trcks.fp.monads.awaitable_result.map_failure_to_iterable] |
-| [`.map_failure_to_result_iterable(f)`][trcks.oop.AwaitableResultWrapper.map_failure_to_result_iterable] | [`ar.map_failure_to_result_iterable(f)`][trcks.fp.monads.awaitable_result.map_failure_to_result_iterable] |
-| [`.map_success_to_awaitable_result_iterable(f)`][trcks.oop.AwaitableResultWrapper.map_success_to_awaitable_result_iterable] | [`ar.map_success_to_awaitable_result_iterable(f)`][trcks.fp.monads.awaitable_result.map_success_to_awaitable_result_iterable] |
-| [`.map_success_to_iterable(f)`][trcks.oop.AwaitableResultWrapper.map_success_to_iterable] | [`ar.map_success_to_iterable(f)`][trcks.fp.monads.awaitable_result.map_success_to_iterable] |
-| [`.map_success_to_result_iterable(f)`][trcks.oop.AwaitableResultWrapper.map_success_to_result_iterable] | [`ar.map_success_to_result_iterable(f)`][trcks.fp.monads.awaitable_result.map_success_to_result_iterable] |
-| [`.tap_failure_to_awaitable_result_iterable(f)`][trcks.oop.AwaitableResultWrapper.tap_failure_to_awaitable_result_iterable] | [`ar.tap_failure_to_awaitable_result_iterable(f)`][trcks.fp.monads.awaitable_result.tap_failure_to_awaitable_result_iterable] |
-| [`.tap_failure_to_iterable(f)`][trcks.oop.AwaitableResultWrapper.tap_failure_to_iterable] | [`ar.tap_failure_to_iterable(f)`][trcks.fp.monads.awaitable_result.tap_failure_to_iterable] |
-| [`.tap_failure_to_result_iterable(f)`][trcks.oop.AwaitableResultWrapper.tap_failure_to_result_iterable] | [`ar.tap_failure_to_result_iterable(f)`][trcks.fp.monads.awaitable_result.tap_failure_to_result_iterable] |
-| [`.tap_success_to_awaitable_result_iterable(f)`][trcks.oop.AwaitableResultWrapper.tap_success_to_awaitable_result_iterable] | [`ar.tap_success_to_awaitable_result_iterable(f)`][trcks.fp.monads.awaitable_result.tap_success_to_awaitable_result_iterable] |
-| [`.tap_success_to_iterable(f)`][trcks.oop.AwaitableResultWrapper.tap_success_to_iterable] | [`ar.tap_success_to_iterable(f)`][trcks.fp.monads.awaitable_result.tap_success_to_iterable] |
-| [`.tap_success_to_result_iterable(f)`][trcks.oop.AwaitableResultWrapper.tap_success_to_result_iterable] | [`ar.tap_success_to_result_iterable(f)`][trcks.fp.monads.awaitable_result.tap_success_to_result_iterable] |
-
-## Widening `ResultTuple` into richer monads
-
-`ResultTupleWrapper` also has methods that transition into a richer wrapper
-(e.g. `AwaitableResultTupleWrapper`).
-[`trcks.fp.monads.result_tuple`][] mirrors every one of these methods
-under the same name,
-so the [`trcks.oop`](oop/index.md) and [`trcks.fp`](fp/index.md) styles stay
-call-compatible for widening operations too.
-
-| `trcks.oop` (`ResultTupleWrapper` method) | `trcks.fp` (`trcks.fp.monads.result_tuple` function) |
-|---|---|
-| [`.map_failure_to_awaitable(f)`][trcks.oop.ResultTupleWrapper.map_failure_to_awaitable] | [`rt.map_failure_to_awaitable(f)`][trcks.fp.monads.result_tuple.map_failure_to_awaitable] |
-| [`.map_failure_to_awaitable_iterable(f)`][trcks.oop.ResultTupleWrapper.map_failure_to_awaitable_iterable] | [`rt.map_failure_to_awaitable_iterable(f)`][trcks.fp.monads.result_tuple.map_failure_to_awaitable_iterable] |
-| [`.map_failure_to_awaitable_result(f)`][trcks.oop.ResultTupleWrapper.map_failure_to_awaitable_result] | [`rt.map_failure_to_awaitable_result(f)`][trcks.fp.monads.result_tuple.map_failure_to_awaitable_result] |
-| [`.map_failure_to_awaitable_result_iterable(f)`][trcks.oop.ResultTupleWrapper.map_failure_to_awaitable_result_iterable] | [`rt.map_failure_to_awaitable_result_iterable(f)`][trcks.fp.monads.result_tuple.map_failure_to_awaitable_result_iterable] |
-| [`.map_successes_to_awaitable(f)`][trcks.oop.ResultTupleWrapper.map_successes_to_awaitable] | [`rt.map_successes_to_awaitable(f)`][trcks.fp.monads.result_tuple.map_successes_to_awaitable] |
-| [`.map_successes_to_awaitable_iterable(f)`][trcks.oop.ResultTupleWrapper.map_successes_to_awaitable_iterable] | [`rt.map_successes_to_awaitable_iterable(f)`][trcks.fp.monads.result_tuple.map_successes_to_awaitable_iterable] |
-| [`.map_successes_to_awaitable_result(f)`][trcks.oop.ResultTupleWrapper.map_successes_to_awaitable_result] | [`rt.map_successes_to_awaitable_result(f)`][trcks.fp.monads.result_tuple.map_successes_to_awaitable_result] |
-| [`.map_successes_to_awaitable_result_iterable(f)`][trcks.oop.ResultTupleWrapper.map_successes_to_awaitable_result_iterable] | [`rt.map_successes_to_awaitable_result_iterable(f)`][trcks.fp.monads.result_tuple.map_successes_to_awaitable_result_iterable] |
-| [`.tap_failure_to_awaitable(f)`][trcks.oop.ResultTupleWrapper.tap_failure_to_awaitable] | [`rt.tap_failure_to_awaitable(f)`][trcks.fp.monads.result_tuple.tap_failure_to_awaitable] |
-| [`.tap_failure_to_awaitable_iterable(f)`][trcks.oop.ResultTupleWrapper.tap_failure_to_awaitable_iterable] | [`rt.tap_failure_to_awaitable_iterable(f)`][trcks.fp.monads.result_tuple.tap_failure_to_awaitable_iterable] |
-| [`.tap_failure_to_awaitable_result(f)`][trcks.oop.ResultTupleWrapper.tap_failure_to_awaitable_result] | [`rt.tap_failure_to_awaitable_result(f)`][trcks.fp.monads.result_tuple.tap_failure_to_awaitable_result] |
-| [`.tap_failure_to_awaitable_result_iterable(f)`][trcks.oop.ResultTupleWrapper.tap_failure_to_awaitable_result_iterable] | [`rt.tap_failure_to_awaitable_result_iterable(f)`][trcks.fp.monads.result_tuple.tap_failure_to_awaitable_result_iterable] |
-| [`.tap_successes_to_awaitable(f)`][trcks.oop.ResultTupleWrapper.tap_successes_to_awaitable] | [`rt.tap_successes_to_awaitable(f)`][trcks.fp.monads.result_tuple.tap_successes_to_awaitable] |
-| [`.tap_successes_to_awaitable_iterable(f)`][trcks.oop.ResultTupleWrapper.tap_successes_to_awaitable_iterable] | [`rt.tap_successes_to_awaitable_iterable(f)`][trcks.fp.monads.result_tuple.tap_successes_to_awaitable_iterable] |
-| [`.tap_successes_to_awaitable_result(f)`][trcks.oop.ResultTupleWrapper.tap_successes_to_awaitable_result] | [`rt.tap_successes_to_awaitable_result(f)`][trcks.fp.monads.result_tuple.tap_successes_to_awaitable_result] |
-| [`.tap_successes_to_awaitable_result_iterable(f)`][trcks.oop.ResultTupleWrapper.tap_successes_to_awaitable_result_iterable] | [`rt.tap_successes_to_awaitable_result_iterable(f)`][trcks.fp.monads.result_tuple.tap_successes_to_awaitable_result_iterable] |
-
-`trcks.fp.monads.awaitable`, `trcks.fp.monads.awaitable_result`,
-`trcks.fp.monads.identity`, `trcks.fp.monads.result`,
-`trcks.fp.monads.result_tuple`, and
-`trcks.fp.monads.tuple_` implement these by
-lifting the value into the richer monad
-(e.g. via [`trcks.fp.monads.awaitable_result_tuple.construct_from_awaitable_result`][],
-[`trcks.fp.monads.awaitable_result.construct_success_from_awaitable`][],
-[`trcks.fp.monads.result.construct_success`][],
-[`trcks.fp.monads.awaitable_result.construct_from_result`][],
-[`trcks.fp.monads.awaitable_result_tuple.construct_from_result_iterable`][], and
-[`trcks.fp.monads.awaitable_tuple.construct_from_iterable`][])
-and then applying that monad's own function.
-This lift-then-apply composition is available as a general pattern via
-[`trcks.fp.composition.pipe`][].
-Every monad with widening operations now has a dedicated function:
-only the `AwaitableTuple` monad and the `AwaitableResultTuple` monad
+Only the `AwaitableTuple` monad and the `AwaitableResultTuple` monad
 have no widening operations.
+The monad modules implement these functions by lifting the value into
+the richer monad and then applying that monad's own function,
+and [`trcks.fp.composition.pipe`][] offers this lift-then-apply
+composition as a general pattern.
 
 The full set of element-wise and homogeneous-tuple variants is covered
 in the
