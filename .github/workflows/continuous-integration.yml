@@ -96,9 +96,9 @@ jobs:
           cache-key-suffix: ${{ matrix.os }}-${{ matrix.python-version }}
       - run: uv run --no-sync pre-commit run --all-files --show-diff-on-failure
       - name: Run tests and type checks with dependencies specified in uv.lock file
-        uses: ./.github/actions/run-tests-and-type-checks
+        uses: $/.github/actions/run-tests-and-type-checks
       - name: Run tests and type checks with lowest direct dependencies
-        uses: ./.github/actions/run-tests-and-type-checks
+        uses: $/.github/actions/run-tests-and-type-checks
         with:
           locked: false
           resolution-strategy: lowest-direct
