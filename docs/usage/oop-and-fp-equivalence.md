@@ -19,7 +19,7 @@ This page maps common operations from one style to the other.
 
 ## Widening operations
 
-Every wrapper class also has methods that widen the value
+Six of the eight wrapper classes also have methods that [widen](../glossary.md#widening) the value
 into a richer wrapper
 (e.g. `ResultWrapper` → `AwaitableResultWrapper`).
 The corresponding `trcks.fp.monads` module mirrors every one of these
