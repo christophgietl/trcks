@@ -104,6 +104,7 @@ For example, `trcks` can widen:
 | [collections.abc.Awaitable][] | [trcks.AwaitableTuple][], [trcks.AwaitableResult][], or [trcks.AwaitableResultTuple][] |
 | [trcks.AwaitableResult][]     | [trcks.AwaitableResultTuple][]                                                         |
 | [trcks.ResultTuple][]         | [trcks.AwaitableResultTuple][]                                                         |
+| [trcks.AwaitableTuple][]      | [trcks.AwaitableResultTuple][]                                                         |
 
 Like mapping helpers, widening helpers are named `map*` or `tap*`.
 Unlike helpers that stay within the same monad
