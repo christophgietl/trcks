@@ -19,7 +19,7 @@ This page maps common operations from one style to the other.
 
 ## Widening operations
 
-Six of the eight wrapper classes also have methods that [widen](../glossary.md#widening) the value
+Seven of the eight wrapper classes also have methods that [widen](../glossary.md#widening) the value
 into a richer wrapper
 (e.g. `ResultWrapper` → `AwaitableResultWrapper`).
 The corresponding `trcks.fp.monads` module mirrors every one of these
@@ -30,14 +30,15 @@ call-compatible for widening operations too.
 | Wrapper class | `trcks.fp.monads` module |
 |---|---|
 | [`AwaitableResultWrapper`][trcks.oop.AwaitableResultWrapper] | [`awaitable_result`][trcks.fp.monads.awaitable_result] |
+| [`AwaitableTupleWrapper`][trcks.oop.AwaitableTupleWrapper] | [`awaitable_tuple`][trcks.fp.monads.awaitable_tuple] |
 | [`AwaitableWrapper`][trcks.oop.AwaitableWrapper] | [`awaitable`][trcks.fp.monads.awaitable] |
 | [`ResultTupleWrapper`][trcks.oop.ResultTupleWrapper] | [`result_tuple`][trcks.fp.monads.result_tuple] |
 | [`ResultWrapper`][trcks.oop.ResultWrapper] | [`result`][trcks.fp.monads.result] |
 | [`TupleWrapper`][trcks.oop.TupleWrapper] | [`tuple_`][trcks.fp.monads.tuple_] |
 | [`Wrapper`][trcks.oop.Wrapper] | [`identity`][trcks.fp.monads.identity] |
 
-Only the `AwaitableTuple` monad and the `AwaitableResultTuple` monad
-have no widening operations.
+Only the `AwaitableResultTuple` monad
+has no widening operations.
 The monad modules implement these functions by lifting the value into
 the richer monad and then applying that monad's own function,
 and [`trcks.fp.composition.pipe`][] offers this lift-then-apply

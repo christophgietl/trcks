@@ -556,6 +556,55 @@ allows us to execute asynchronous side effects for each element.
 
     ```
 
+The widening functions
+[trcks.fp.monads.awaitable_tuple.map_to_result][],
+[trcks.fp.monads.awaitable_tuple.map_to_result_iterable][],
+[trcks.fp.monads.awaitable_tuple.map_to_awaitable_result][], and
+[trcks.fp.monads.awaitable_tuple.map_to_awaitable_result_iterable][]
+of the module [trcks.fp.monads.awaitable_tuple][]
+apply failable functions to each element individually
+and turn the [trcks.AwaitableTuple][] into
+a [trcks.AwaitableResultTuple][]
+(see the [glossary](../../glossary.md#widening)).
+Similarly, the functions `tap_to_result`, `tap_to_result_iterable`,
+`tap_to_awaitable_result`, and `tap_to_awaitable_result_iterable`
+widen the pipeline based on the outcome of failable side effects.
+Processing short-circuits on the first [trcks.Failure][]:
+
+???+ example
+
+    ```pycon
+    >>> from trcks import ResultTuple
+    >>> from trcks.fp.composition import Pipeline4
+    >>> from trcks.fp.monads import awaitable_result_tuple as art
+    >>>
+    >>> async def get_subscription_fees_slowly(
+    ...     user_emails: tuple[str, ...],
+    ... ) -> ResultTuple[FailureDescription, float]:
+    ...     p: Pipeline4[
+    ...         tuple[str, ...],
+    ...         AwaitableTuple[str],
+    ...         AwaitableResultTuple[UserDoesNotExist, int],
+    ...         AwaitableResultTuple[FailureDescription, int],
+    ...         AwaitableResultTuple[FailureDescription, float],
+    ...     ] = (
+    ...         user_emails,
+    ...         at.construct_from_iterable,
+    ...         at.map_to_result(get_user_id),
+    ...         art.map_successes_to_result(get_subscription_id),
+    ...         art.map_successes(get_subscription_fee),
+    ...     )
+    ...     return await pipe(p)
+    >>>
+    >>> asyncio.run(get_subscription_fees_slowly(("erika.mustermann@domain.org",)))
+    ('success', (4.2,))
+    >>> asyncio.run(get_subscription_fees_slowly(("john_doe@provider.com",)))
+    ('failure', 'User does not have a subscription')
+    >>> asyncio.run(get_subscription_fees_slowly(("jane_doe@provider.com",)))
+    ('failure', 'User does not exist')
+
+    ```
+
 ## Asynchronous double-track code with [trcks.fp.monads.awaitable_result_tuple][]
 
 If one of the functions in a [trcks.fp.composition.Pipeline][] returns

@@ -413,6 +413,44 @@ allows us to execute asynchronous side effects for each element.
 
     ```
 
+The widening methods
+[trcks.oop.AwaitableTupleWrapper.map_to_result][],
+[trcks.oop.AwaitableTupleWrapper.map_to_result_iterable][],
+[trcks.oop.AwaitableTupleWrapper.map_to_awaitable_result][], and
+[trcks.oop.AwaitableTupleWrapper.map_to_awaitable_result_iterable][]
+of the class [trcks.oop.AwaitableTupleWrapper][]
+apply failable functions to each element individually
+and widen the wrapped [trcks.AwaitableTuple][] into
+a [trcks.AwaitableResultTuple][]
+(see the [glossary](../../glossary.md#widening)).
+Similarly, the methods `tap_to_result`, `tap_to_result_iterable`,
+`tap_to_awaitable_result`, and `tap_to_awaitable_result_iterable`
+widen the wrapper based on the outcome of failable side effects.
+Processing short-circuits on the first [trcks.Failure][]:
+
+???+ example
+
+    ```pycon
+    >>> async def get_subscription_fees_slowly(
+    ...     user_emails: tuple[str, ...],
+    ... ) -> ResultTuple[FailureDescription, float]:
+    ...     return await (
+    ...         AwaitableTupleWrapper.construct_from_iterable(user_emails)
+    ...         .map_to_result(get_user_id)
+    ...         .map_successes_to_result(get_subscription_id)
+    ...         .map_successes(get_subscription_fee)
+    ...         .core
+    ...     )
+    >>>
+    >>> asyncio.run(get_subscription_fees_slowly(("erika.mustermann@domain.org",)))
+    ('success', (4.2,))
+    >>> asyncio.run(get_subscription_fees_slowly(("john_doe@provider.com",)))
+    ('failure', 'User does not have a subscription')
+    >>> asyncio.run(get_subscription_fees_slowly(("jane_doe@provider.com",)))
+    ('failure', 'User does not exist')
+
+    ```
+
 ## Asynchronous double-track code with [trcks.oop.AwaitableResultTupleWrapper][]
 
 Whenever we define a function using
