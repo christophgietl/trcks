@@ -224,7 +224,7 @@ def tap_to_awaitable(
     return map_to_awaitable(bypassed_f)
 
 
-async def to_coroutine(awtbl: Awaitable[_T]) -> _T:
+async def to_coroutine(awtbl: Awaitable[_T], /) -> _T:
     """Turn a [collections.abc.Awaitable][] into a [collections.abc.Coroutine][].
 
     This is useful for functions that expect a coroutine
