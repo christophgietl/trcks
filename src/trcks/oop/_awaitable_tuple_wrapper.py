@@ -15,9 +15,11 @@ if TYPE_CHECKING:
         AwaitableIterable,
         AwaitableResult,
         AwaitableResultIterable,
+        AwaitableResultTuple,
         AwaitableTuple,
         Result,
         ResultIterable,
+        ResultTuple,
     )
 
 __docformat__ = "google"
@@ -145,6 +147,19 @@ class AwaitableTupleWrapper(BaseAwaitableWrapper[tuple[_T_co, ...]]):
             (1, 2)
         """
         return AwaitableTupleWrapper(at.construct_from_awaitable_iterable(a_it))
+
+    @classmethod
+    @deprecated(
+        "Use construct_from_awaitable_iterable or the default constructor instead"
+    )
+    def construct_from_awaitable_tuple(
+        cls,
+        a_tpl: AwaitableTuple[_T],
+    ) -> AwaitableTupleWrapper[_T]:
+        """Deprecated alias for
+        [trcks.oop.AwaitableTupleWrapper.construct_from_awaitable_iterable][].
+        """
+        return cls.construct_from_awaitable_iterable(a_tpl)  # pragma: no cover
 
     @staticmethod
     def construct_from_iterable(it: Iterable[_T]) -> AwaitableTupleWrapper[_T]:
@@ -430,6 +445,20 @@ class AwaitableTupleWrapper(BaseAwaitableWrapper[tuple[_T_co, ...]]):
             at.map_to_awaitable_result_iterable(f, *args, **kwargs)(self.core)
         )
 
+    @deprecated("Use map_to_awaitable_result_iterable instead")
+    def map_to_awaitable_result_tuple(
+        self,
+        f: Callable[Concatenate[_T_co, _P], AwaitableResultTuple[_F, _S]],
+        *args: _P.args,
+        **kwargs: _P.kwargs,
+    ) -> AwaitableResultTupleWrapper[_F, _S]:
+        """Deprecated alias for
+        [trcks.oop.AwaitableTupleWrapper.map_to_awaitable_result_iterable][].
+        """
+        return self.map_to_awaitable_result_iterable(
+            f, *args, **kwargs
+        )  # pragma: no cover
+
     @deprecated("Use map_to_awaitable_iterable instead")
     def map_to_awaitable_tuple(
         self,
@@ -606,6 +635,18 @@ class AwaitableTupleWrapper(BaseAwaitableWrapper[tuple[_T_co, ...]]):
         return AwaitableResultTupleWrapper(
             at.map_to_result_iterable(f, *args, **kwargs)(self.core)
         )
+
+    @deprecated("Use map_to_result_iterable instead")
+    def map_to_result_tuple(
+        self,
+        f: Callable[Concatenate[_T_co, _P], ResultTuple[_F, _S]],
+        *args: _P.args,
+        **kwargs: _P.kwargs,
+    ) -> AwaitableResultTupleWrapper[_F, _S]:
+        """Deprecated alias for
+        [trcks.oop.AwaitableTupleWrapper.map_to_result_iterable][].
+        """
+        return self.map_to_result_iterable(f, *args, **kwargs)  # pragma: no cover
 
     @deprecated("Use map_to_iterable instead")
     def map_to_tuple(
@@ -877,6 +918,20 @@ class AwaitableTupleWrapper(BaseAwaitableWrapper[tuple[_T_co, ...]]):
             at.tap_to_awaitable_result_iterable(f, *args, **kwargs)(self.core)
         )
 
+    @deprecated("Use tap_to_awaitable_result_iterable instead")
+    def tap_to_awaitable_result_tuple(
+        self,
+        f: Callable[Concatenate[_T_co, _P], AwaitableResultTuple[_F, object]],
+        *args: _P.args,
+        **kwargs: _P.kwargs,
+    ) -> AwaitableResultTupleWrapper[_F, _T_co]:
+        """Deprecated alias for
+        [trcks.oop.AwaitableTupleWrapper.tap_to_awaitable_result_iterable][].
+        """
+        return self.tap_to_awaitable_result_iterable(
+            f, *args, **kwargs
+        )  # pragma: no cover
+
     @deprecated("Use tap_to_awaitable_iterable instead")
     def tap_to_awaitable_tuple(
         self,
@@ -1060,6 +1115,18 @@ class AwaitableTupleWrapper(BaseAwaitableWrapper[tuple[_T_co, ...]]):
         return AwaitableResultTupleWrapper(
             at.tap_to_result_iterable(f, *args, **kwargs)(self.core)
         )
+
+    @deprecated("Use tap_to_result_iterable instead")
+    def tap_to_result_tuple(
+        self,
+        f: Callable[Concatenate[_T_co, _P], ResultTuple[_F, object]],
+        *args: _P.args,
+        **kwargs: _P.kwargs,
+    ) -> AwaitableResultTupleWrapper[_F, _T_co]:
+        """Deprecated alias for
+        [trcks.oop.AwaitableTupleWrapper.tap_to_result_iterable][].
+        """
+        return self.tap_to_result_iterable(f, *args, **kwargs)  # pragma: no cover
 
     @deprecated("Use tap_to_iterable instead")
     def tap_to_tuple(

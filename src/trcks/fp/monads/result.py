@@ -74,7 +74,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Concatenate, ParamSpec
 
-from trcks._typing import TypeVar
+from trcks._typing import TypeVar, deprecated
 from trcks.fp._monads import awaitable_result as ar
 from trcks.fp._monads import awaitable_result_tuple as art
 from trcks.fp._monads import result_tuple as rt
@@ -112,30 +112,42 @@ __all__ = [
     "map_failure_to_awaitable",
     "map_failure_to_awaitable_result",
     "map_failure_to_awaitable_result_iterable",
+    "map_failure_to_awaitable_result_tuple",
     "map_failure_to_iterable",
     "map_failure_to_result",
     "map_failure_to_result_iterable",
+    "map_failure_to_result_tuple",
+    "map_failure_to_tuple",
     "map_success",
     "map_success_to_awaitable",
     "map_success_to_awaitable_result",
     "map_success_to_awaitable_result_iterable",
+    "map_success_to_awaitable_result_tuple",
     "map_success_to_iterable",
     "map_success_to_result",
     "map_success_to_result_iterable",
+    "map_success_to_result_tuple",
+    "map_success_to_tuple",
     "tap_failure",
     "tap_failure_to_awaitable",
     "tap_failure_to_awaitable_result",
     "tap_failure_to_awaitable_result_iterable",
+    "tap_failure_to_awaitable_result_tuple",
     "tap_failure_to_iterable",
     "tap_failure_to_result",
     "tap_failure_to_result_iterable",
+    "tap_failure_to_result_tuple",
+    "tap_failure_to_tuple",
     "tap_success",
     "tap_success_to_awaitable",
     "tap_success_to_awaitable_result",
     "tap_success_to_awaitable_result_iterable",
+    "tap_success_to_awaitable_result_tuple",
     "tap_success_to_iterable",
     "tap_success_to_result",
     "tap_success_to_result_iterable",
+    "tap_success_to_result_tuple",
+    "tap_success_to_tuple",
 ]
 __docformat__ = "google"
 
@@ -293,6 +305,20 @@ def map_failure_to_awaitable_result_iterable(
     )
 
 
+@deprecated("Use map_failure_to_awaitable_result_iterable instead")
+def map_failure_to_awaitable_result_tuple(
+    f: Callable[Concatenate[_F1, _P], AwaitableResultTuple[_F2, _S2]],
+    *args: _P.args,
+    **kwargs: _P.kwargs,
+) -> Callable[[Result[_F1, _S1]], AwaitableResultTuple[_F2, _S1 | _S2]]:
+    """Deprecated alias for
+    [trcks.fp.monads.result.map_failure_to_awaitable_result_iterable][].
+    """
+    return map_failure_to_awaitable_result_iterable(
+        f, *args, **kwargs
+    )  # pragma: no cover
+
+
 def map_failure_to_iterable(
     f: Callable[Concatenate[_F1, _P], Iterable[_S2]],
     *args: _P.args,
@@ -383,6 +409,28 @@ def map_failure_to_result_iterable(
         rt.map_failure_to_result_iterable(f, *args, **kwargs),
     )
     return compose2(c)
+
+
+@deprecated("Use map_failure_to_result_iterable instead")
+def map_failure_to_result_tuple(
+    f: Callable[Concatenate[_F1, _P], ResultTuple[_F2, _S2]],
+    *args: _P.args,
+    **kwargs: _P.kwargs,
+) -> Callable[[Result[_F1, _S1]], ResultTuple[_F2, _S1 | _S2]]:
+    """Deprecated alias for
+    [trcks.fp.monads.result.map_failure_to_result_iterable][].
+    """
+    return map_failure_to_result_iterable(f, *args, **kwargs)  # pragma: no cover
+
+
+@deprecated("Use map_failure_to_iterable instead")
+def map_failure_to_tuple(
+    f: Callable[Concatenate[_F1, _P], tuple[_S2, ...]],
+    *args: _P.args,
+    **kwargs: _P.kwargs,
+) -> Callable[[Result[_F1, _S1]], SuccessTuple[_S1] | SuccessTuple[_S2]]:
+    """Deprecated alias for [trcks.fp.monads.result.map_failure_to_iterable][]."""
+    return map_failure_to_iterable(f, *args, **kwargs)  # pragma: no cover
 
 
 def map_success_to_awaitable(
@@ -531,6 +579,20 @@ def map_success_to_awaitable_result_iterable(
     )
 
 
+@deprecated("Use map_success_to_awaitable_result_iterable instead")
+def map_success_to_awaitable_result_tuple(
+    f: Callable[Concatenate[_S1, _P], AwaitableResultTuple[_F2, _S2]],
+    *args: _P.args,
+    **kwargs: _P.kwargs,
+) -> Callable[[Result[_F1, _S1]], AwaitableResultTuple[_F1 | _F2, _S2]]:
+    """Deprecated alias for
+    [trcks.fp.monads.result.map_success_to_awaitable_result_iterable][].
+    """
+    return map_success_to_awaitable_result_iterable(
+        f, *args, **kwargs
+    )  # pragma: no cover
+
+
 def map_success_to_iterable(
     f: Callable[Concatenate[_S1, _P], Iterable[_S2]],
     *args: _P.args,
@@ -617,6 +679,28 @@ def map_success_to_result_iterable(
         rt.map_successes_to_result_iterable(f, *args, **kwargs),
     )
     return compose2(c)
+
+
+@deprecated("Use map_success_to_result_iterable instead")
+def map_success_to_result_tuple(
+    f: Callable[Concatenate[_S1, _P], ResultTuple[_F2, _S2]],
+    *args: _P.args,
+    **kwargs: _P.kwargs,
+) -> Callable[[Result[_F1, _S1]], ResultTuple[_F1 | _F2, _S2]]:
+    """Deprecated alias for
+    [trcks.fp.monads.result.map_success_to_result_iterable][].
+    """
+    return map_success_to_result_iterable(f, *args, **kwargs)  # pragma: no cover
+
+
+@deprecated("Use map_success_to_iterable instead")
+def map_success_to_tuple(
+    f: Callable[Concatenate[_S1, _P], tuple[_S2, ...]],
+    *args: _P.args,
+    **kwargs: _P.kwargs,
+) -> Callable[[Result[_F1, _S1]], ResultTuple[_F1, _S2]]:
+    """Deprecated alias for [trcks.fp.monads.result.map_success_to_iterable][]."""
+    return map_success_to_iterable(f, *args, **kwargs)  # pragma: no cover
 
 
 def tap_failure_to_awaitable(
@@ -775,6 +859,20 @@ def tap_failure_to_awaitable_result_iterable(
     )
 
 
+@deprecated("Use tap_failure_to_awaitable_result_iterable instead")
+def tap_failure_to_awaitable_result_tuple(
+    f: Callable[Concatenate[_F1, _P], AwaitableResultTuple[object, _S2]],
+    *args: _P.args,
+    **kwargs: _P.kwargs,
+) -> Callable[[Result[_F1, _S1]], AwaitableResultTuple[_F1, _S1 | _S2]]:
+    """Deprecated alias for
+    [trcks.fp.monads.result.tap_failure_to_awaitable_result_iterable][].
+    """
+    return tap_failure_to_awaitable_result_iterable(
+        f, *args, **kwargs
+    )  # pragma: no cover
+
+
 def tap_failure_to_iterable(
     f: Callable[Concatenate[_F1, _P], Iterable[object]],
     *args: _P.args,
@@ -873,6 +971,28 @@ def tap_failure_to_result_iterable(
         rt.tap_failure_to_result_iterable(f, *args, **kwargs),
     )
     return compose2(c)
+
+
+@deprecated("Use tap_failure_to_result_iterable instead")
+def tap_failure_to_result_tuple(
+    f: Callable[Concatenate[_F1, _P], ResultTuple[object, _S2]],
+    *args: _P.args,
+    **kwargs: _P.kwargs,
+) -> Callable[[Result[_F1, _S1]], ResultTuple[_F1, _S1 | _S2]]:
+    """Deprecated alias for
+    [trcks.fp.monads.result.tap_failure_to_result_iterable][].
+    """
+    return tap_failure_to_result_iterable(f, *args, **kwargs)  # pragma: no cover
+
+
+@deprecated("Use tap_failure_to_iterable instead")
+def tap_failure_to_tuple(
+    f: Callable[Concatenate[_F1, _P], tuple[object, ...]],
+    *args: _P.args,
+    **kwargs: _P.kwargs,
+) -> Callable[[Result[_F1, _S1]], SuccessTuple[_F1] | SuccessTuple[_S1]]:
+    """Deprecated alias for [trcks.fp.monads.result.tap_failure_to_iterable][]."""
+    return tap_failure_to_iterable(f, *args, **kwargs)  # pragma: no cover
 
 
 def tap_success_to_awaitable(
@@ -1041,6 +1161,20 @@ def tap_success_to_awaitable_result_iterable(
     )
 
 
+@deprecated("Use tap_success_to_awaitable_result_iterable instead")
+def tap_success_to_awaitable_result_tuple(
+    f: Callable[Concatenate[_S1, _P], AwaitableResultTuple[_F2, object]],
+    *args: _P.args,
+    **kwargs: _P.kwargs,
+) -> Callable[[Result[_F1, _S1]], AwaitableResultTuple[_F1 | _F2, _S1]]:
+    """Deprecated alias for
+    [trcks.fp.monads.result.tap_success_to_awaitable_result_iterable][].
+    """
+    return tap_success_to_awaitable_result_iterable(
+        f, *args, **kwargs
+    )  # pragma: no cover
+
+
 def tap_success_to_iterable(
     f: Callable[Concatenate[_S1, _P], Iterable[object]],
     *args: _P.args,
@@ -1137,3 +1271,25 @@ def tap_success_to_result_iterable(
         rt.tap_successes_to_result_iterable(f, *args, **kwargs),
     )
     return compose2(c)
+
+
+@deprecated("Use tap_success_to_result_iterable instead")
+def tap_success_to_result_tuple(
+    f: Callable[Concatenate[_S1, _P], ResultTuple[_F2, object]],
+    *args: _P.args,
+    **kwargs: _P.kwargs,
+) -> Callable[[Result[_F1, _S1]], ResultTuple[_F1 | _F2, _S1]]:
+    """Deprecated alias for
+    [trcks.fp.monads.result.tap_success_to_result_iterable][].
+    """
+    return tap_success_to_result_iterable(f, *args, **kwargs)  # pragma: no cover
+
+
+@deprecated("Use tap_success_to_iterable instead")
+def tap_success_to_tuple(
+    f: Callable[Concatenate[_S1, _P], tuple[object, ...]],
+    *args: _P.args,
+    **kwargs: _P.kwargs,
+) -> Callable[[Result[_F1, _S1]], ResultTuple[_F1, _S1]]:
+    """Deprecated alias for [trcks.fp.monads.result.tap_success_to_iterable][]."""
+    return tap_success_to_iterable(f, *args, **kwargs)  # pragma: no cover

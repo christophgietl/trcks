@@ -85,12 +85,14 @@ if TYPE_CHECKING:
         AwaitableTuple,
         Result,
         ResultIterable,
+        ResultTuple,
     )
 
 __all__ = [
     "construct",
     "construct_from_awaitable",
     "construct_from_awaitable_iterable",
+    "construct_from_awaitable_tuple",
     "construct_from_iterable",
     "construct_from_tuple",
     "map_",
@@ -98,20 +100,24 @@ __all__ = [
     "map_to_awaitable_iterable",
     "map_to_awaitable_result",
     "map_to_awaitable_result_iterable",
+    "map_to_awaitable_result_tuple",
     "map_to_awaitable_tuple",
     "map_to_iterable",
     "map_to_result",
     "map_to_result_iterable",
+    "map_to_result_tuple",
     "map_to_tuple",
     "tap",
     "tap_to_awaitable",
     "tap_to_awaitable_iterable",
     "tap_to_awaitable_result",
     "tap_to_awaitable_result_iterable",
+    "tap_to_awaitable_result_tuple",
     "tap_to_awaitable_tuple",
     "tap_to_iterable",
     "tap_to_result",
     "tap_to_result_iterable",
+    "tap_to_result_tuple",
     "tap_to_tuple",
     "to_coroutine_tuple",
 ]
@@ -123,6 +129,16 @@ _S = TypeVar("_S")
 _T = TypeVar("_T")
 _T1 = TypeVar("_T1")
 _T2 = TypeVar("_T2")
+
+
+@deprecated("Use construct_from_awaitable_iterable instead")
+def construct_from_awaitable_tuple(
+    a_tpl: AwaitableTuple[_T],
+) -> AwaitableTuple[_T]:
+    """Deprecated alias for
+    [trcks.fp.monads.awaitable_tuple.construct_from_awaitable_iterable][].
+    """
+    return construct_from_awaitable_iterable(a_tpl)  # pragma: no cover
 
 
 @deprecated("Use construct_from_iterable instead")
@@ -241,6 +257,18 @@ def map_to_awaitable_result_iterable(
     return compose2(c)
 
 
+@deprecated("Use map_to_awaitable_result_iterable instead")
+def map_to_awaitable_result_tuple(
+    f: Callable[Concatenate[_T1, _P], AwaitableResultTuple[_F, _S]],
+    *args: _P.args,
+    **kwargs: _P.kwargs,
+) -> Callable[[AwaitableTuple[_T1]], AwaitableResultTuple[_F, _S]]:
+    """Deprecated alias for
+    [trcks.fp.monads.awaitable_tuple.map_to_awaitable_result_iterable][].
+    """
+    return map_to_awaitable_result_iterable(f, *args, **kwargs)  # pragma: no cover
+
+
 @deprecated("Use map_to_awaitable_iterable instead")
 def map_to_awaitable_tuple(
     f: Callable[Concatenate[_T1, _P], AwaitableTuple[_T2]],
@@ -353,6 +381,18 @@ def map_to_result_iterable(
         art.map_successes_to_result_iterable(f, *args, **kwargs),
     )
     return compose2(c)
+
+
+@deprecated("Use map_to_result_iterable instead")
+def map_to_result_tuple(
+    f: Callable[Concatenate[_T1, _P], ResultTuple[_F, _S]],
+    *args: _P.args,
+    **kwargs: _P.kwargs,
+) -> Callable[[AwaitableTuple[_T1]], AwaitableResultTuple[_F, _S]]:
+    """Deprecated alias for
+    [trcks.fp.monads.awaitable_tuple.map_to_result_iterable][].
+    """
+    return map_to_result_iterable(f, *args, **kwargs)  # pragma: no cover
 
 
 @deprecated("Use map_to_iterable instead")
@@ -474,6 +514,18 @@ def tap_to_awaitable_result_iterable(
     return compose2(c)
 
 
+@deprecated("Use tap_to_awaitable_result_iterable instead")
+def tap_to_awaitable_result_tuple(
+    f: Callable[Concatenate[_T1, _P], AwaitableResultTuple[_F, object]],
+    *args: _P.args,
+    **kwargs: _P.kwargs,
+) -> Callable[[AwaitableTuple[_T1]], AwaitableResultTuple[_F, _T1]]:
+    """Deprecated alias for
+    [trcks.fp.monads.awaitable_tuple.tap_to_awaitable_result_iterable][].
+    """
+    return tap_to_awaitable_result_iterable(f, *args, **kwargs)  # pragma: no cover
+
+
 @deprecated("Use tap_to_awaitable_iterable instead")
 def tap_to_awaitable_tuple(
     f: Callable[Concatenate[_T1, _P], AwaitableTuple[object]],
@@ -591,6 +643,18 @@ def tap_to_result_iterable(
         art.tap_successes_to_result_iterable(f, *args, **kwargs),
     )
     return compose2(c)
+
+
+@deprecated("Use tap_to_result_iterable instead")
+def tap_to_result_tuple(
+    f: Callable[Concatenate[_T1, _P], ResultTuple[_F, object]],
+    *args: _P.args,
+    **kwargs: _P.kwargs,
+) -> Callable[[AwaitableTuple[_T1]], AwaitableResultTuple[_F, _T1]]:
+    """Deprecated alias for
+    [trcks.fp.monads.awaitable_tuple.tap_to_result_iterable][].
+    """
+    return tap_to_result_iterable(f, *args, **kwargs)  # pragma: no cover
 
 
 @deprecated("Use tap_to_iterable instead")
