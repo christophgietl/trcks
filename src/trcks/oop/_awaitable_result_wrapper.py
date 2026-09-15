@@ -77,7 +77,7 @@ class AwaitableResultWrapper(
     """
 
     @staticmethod
-    def construct_failure(value: _F) -> AwaitableResultWrapper[_F, Never]:
+    def construct_failure(value: _F, /) -> AwaitableResultWrapper[_F, Never]:
         """Construct and wrap an awaitable [trcks.Failure][] object from a value.
 
         Args:
@@ -103,6 +103,7 @@ class AwaitableResultWrapper(
     @staticmethod
     def construct_failure_from_awaitable(
         awtbl: Awaitable[_F],
+        /,
     ) -> AwaitableResultWrapper[_F, Never]:
         """Construct and wrap an awaitable [trcks.Failure][] from an awaitable value.
 
@@ -136,6 +137,7 @@ class AwaitableResultWrapper(
     @staticmethod
     def construct_from_awaitable_result(
         a_rslt: AwaitableResult[_F, _S],
+        /,
     ) -> AwaitableResultWrapper[_F, _S]:
         """Wrap an awaitable [trcks.Result][] object.
 
@@ -169,6 +171,7 @@ class AwaitableResultWrapper(
     @staticmethod
     def construct_from_result(
         rslt: Result[_F_default, _S_default],
+        /,
     ) -> AwaitableResultWrapper[_F_default, _S_default]:
         """Construct and wrap an awaitable [trcks.Result][] object
         from a [trcks.Result][] object.
@@ -195,7 +198,7 @@ class AwaitableResultWrapper(
         return AwaitableResultWrapper(ar.construct_from_result(rslt))
 
     @staticmethod
-    def construct_success(value: _S) -> AwaitableResultWrapper[Never, _S]:
+    def construct_success(value: _S, /) -> AwaitableResultWrapper[Never, _S]:
         """Construct and wrap an awaitable [trcks.Success][] object from a value.
 
         Args:
@@ -219,6 +222,7 @@ class AwaitableResultWrapper(
     @staticmethod
     def construct_success_from_awaitable(
         awtbl: Awaitable[_S],
+        /,
     ) -> AwaitableResultWrapper[Never, _S]:
         """Construct and wrap an awaitable [trcks.Success][] from an awaitable value.
 

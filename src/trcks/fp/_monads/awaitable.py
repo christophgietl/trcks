@@ -17,11 +17,11 @@ _T1 = TypeVar("_T1")
 _T2 = TypeVar("_T2")
 
 
-async def _construct(value: _T) -> _T:
+async def _construct(value: _T, /) -> _T:
     return value
 
 
-def construct(value: _T) -> Awaitable[_T]:
+def construct(value: _T, /) -> Awaitable[_T]:
     """Create a [collections.abc.Awaitable][] from a value.
 
     Args:
