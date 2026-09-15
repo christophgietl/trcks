@@ -35,7 +35,7 @@ def construct(value: _T) -> tuple[_T,]:
 
 
 def map_(
-    f: Callable[Concatenate[_T1, _P], _T2], *args: _P.args, **kwargs: _P.kwargs
+    f: Callable[Concatenate[_T1, _P], _T2], /, *args: _P.args, **kwargs: _P.kwargs
 ) -> Callable[[tuple[_T1, ...]], tuple[_T2, ...]]:
     """Create function that maps homogeneous [tuple][]s to
     homogeneous [tuple][]s of the same length.
@@ -72,6 +72,7 @@ def map_(
 
 def map_to_iterable(
     f: Callable[Concatenate[_T1, _P], Iterable[_T2]],
+    /,
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[tuple[_T1, ...]], tuple[_T2, ...]]:
@@ -109,7 +110,7 @@ def map_to_iterable(
 
 
 def tap(
-    f: Callable[Concatenate[_T1, _P], object], *args: _P.args, **kwargs: _P.kwargs
+    f: Callable[Concatenate[_T1, _P], object], /, *args: _P.args, **kwargs: _P.kwargs
 ) -> Callable[[tuple[_T1, ...]], tuple[_T1, ...]]:
     """Create function that applies a side effect to each element of a homogeneous
     [tuple][].
@@ -146,6 +147,7 @@ def tap(
 
 def tap_to_iterable(
     f: Callable[Concatenate[_T1, _P], Iterable[object]],
+    /,
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[tuple[_T1, ...]], tuple[_T1, ...]]:

@@ -147,6 +147,7 @@ def construct_from_tuple(tpl: tuple[_T, ...]) -> AwaitableTuple[_T]:
 
 def map_to_awaitable_result(
     f: Callable[Concatenate[_T1, _P], AwaitableResult[_F, _S]],
+    /,
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[AwaitableTuple[_T1]], AwaitableResultTuple[_F, _S]]:
@@ -201,6 +202,7 @@ def map_to_awaitable_result(
 
 def map_to_awaitable_result_iterable(
     f: Callable[Concatenate[_T1, _P], AwaitableResultIterable[_F, _S]],
+    /,
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[AwaitableTuple[_T1]], AwaitableResultTuple[_F, _S]]:
@@ -268,6 +270,7 @@ def map_to_awaitable_result_tuple(
 @deprecated("Use map_to_awaitable_iterable instead")
 def map_to_awaitable_tuple(
     f: Callable[Concatenate[_T1, _P], AwaitableTuple[_T2]],
+    /,
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[AwaitableTuple[_T1]], AwaitableTuple[_T2]]:
@@ -279,6 +282,7 @@ def map_to_awaitable_tuple(
 
 def map_to_result(
     f: Callable[Concatenate[_T1, _P], Result[_F, _S]],
+    /,
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[AwaitableTuple[_T1]], AwaitableResultTuple[_F, _S]]:
@@ -330,6 +334,7 @@ def map_to_result(
 
 def map_to_result_iterable(
     f: Callable[Concatenate[_T1, _P], ResultIterable[_F, _S]],
+    /,
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[AwaitableTuple[_T1]], AwaitableResultTuple[_F, _S]]:
@@ -394,6 +399,7 @@ def map_to_result_tuple(
 @deprecated("Use map_to_iterable instead")
 def map_to_tuple(
     f: Callable[Concatenate[_T1, _P], tuple[_T2, ...]],
+    /,
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[AwaitableTuple[_T1]], AwaitableTuple[_T2]]:
@@ -403,6 +409,7 @@ def map_to_tuple(
 
 def tap_to_awaitable_result(
     f: Callable[Concatenate[_T1, _P], AwaitableResult[_F, object]],
+    /,
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[AwaitableTuple[_T1]], AwaitableResultTuple[_F, _T1]]:
@@ -457,6 +464,7 @@ def tap_to_awaitable_result(
 
 def tap_to_awaitable_result_iterable(
     f: Callable[Concatenate[_T1, _P], AwaitableResultIterable[_F, object]],
+    /,
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[AwaitableTuple[_T1]], AwaitableResultTuple[_F, _T1]]:
@@ -525,6 +533,7 @@ def tap_to_awaitable_result_tuple(
 @deprecated("Use tap_to_awaitable_iterable instead")
 def tap_to_awaitable_tuple(
     f: Callable[Concatenate[_T1, _P], AwaitableTuple[object]],
+    /,
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[AwaitableTuple[_T1]], AwaitableTuple[_T1]]:
@@ -536,6 +545,7 @@ def tap_to_awaitable_tuple(
 
 def tap_to_result(
     f: Callable[Concatenate[_T1, _P], Result[_F, object]],
+    /,
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[AwaitableTuple[_T1]], AwaitableResultTuple[_F, _T1]]:
@@ -589,6 +599,7 @@ def tap_to_result(
 
 def tap_to_result_iterable(
     f: Callable[Concatenate[_T1, _P], ResultIterable[_F, object]],
+    /,
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[AwaitableTuple[_T1]], AwaitableResultTuple[_F, _T1]]:
@@ -656,6 +667,7 @@ def tap_to_result_tuple(
 @deprecated("Use tap_to_iterable instead")
 def tap_to_tuple(
     f: Callable[Concatenate[_T1, _P], tuple[object, ...]],
+    /,
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[AwaitableTuple[_T1]], AwaitableTuple[_T1]]:

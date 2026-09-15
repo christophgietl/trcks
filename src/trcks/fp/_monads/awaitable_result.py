@@ -153,7 +153,7 @@ def construct_success_from_awaitable(awtbl: Awaitable[_S]) -> AwaitableSuccess[_
 
 
 def map_failure(
-    f: Callable[Concatenate[_F1, _P], _F2], *args: _P.args, **kwargs: _P.kwargs
+    f: Callable[Concatenate[_F1, _P], _F2], /, *args: _P.args, **kwargs: _P.kwargs
 ) -> Callable[[AwaitableResult[_F1, _S1]], AwaitableResult[_F2, _S1]]:
     """Create function that maps [trcks.AwaitableFailure][]
     to [trcks.AwaitableFailure][] values.
@@ -193,6 +193,7 @@ def map_failure(
 
 def map_failure_to_awaitable(
     f: Callable[Concatenate[_F1, _P], Awaitable[_F2]],
+    /,
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[AwaitableResult[_F1, _S1]], AwaitableResult[_F2, _S1]]:
@@ -242,6 +243,7 @@ def map_failure_to_awaitable(
 
 def map_failure_to_awaitable_result(
     f: Callable[Concatenate[_F1, _P], AwaitableResult[_F2, _S2]],
+    /,
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[AwaitableResult[_F1, _S1]], AwaitableResult[_F2, _S1 | _S2]]:
@@ -304,6 +306,7 @@ def map_failure_to_awaitable_result(
 
 def map_failure_to_result(
     f: Callable[Concatenate[_F1, _P], Result[_F2, _S2]],
+    /,
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[AwaitableResult[_F1, _S1]], AwaitableResult[_F2, _S1 | _S2]]:
@@ -351,7 +354,7 @@ def map_failure_to_result(
 
 
 def map_success(
-    f: Callable[Concatenate[_S1, _P], _S2], *args: _P.args, **kwargs: _P.kwargs
+    f: Callable[Concatenate[_S1, _P], _S2], /, *args: _P.args, **kwargs: _P.kwargs
 ) -> Callable[[AwaitableResult[_F1, _S1]], AwaitableResult[_F1, _S2]]:
     """Create function that maps [trcks.AwaitableSuccess][]
     to [trcks.AwaitableSuccess][] values.
@@ -395,6 +398,7 @@ def map_success(
 
 def map_success_to_awaitable(
     f: Callable[Concatenate[_S1, _P], Awaitable[_S2]],
+    /,
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[AwaitableResult[_F1, _S1]], AwaitableResult[_F1, _S2]]:
@@ -447,6 +451,7 @@ def map_success_to_awaitable(
 
 def map_success_to_awaitable_result(
     f: Callable[Concatenate[_S1, _P], AwaitableResult[_F2, _S2]],
+    /,
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[AwaitableResult[_F1, _S1]], AwaitableResult[_F1 | _F2, _S2]]:
@@ -510,6 +515,7 @@ def map_success_to_awaitable_result(
 
 def map_success_to_result(
     f: Callable[Concatenate[_S1, _P], Result[_F2, _S2]],
+    /,
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[AwaitableResult[_F1, _S1]], AwaitableResult[_F1 | _F2, _S2]]:
@@ -559,7 +565,7 @@ def map_success_to_result(
 
 
 def tap_failure(
-    f: Callable[Concatenate[_F1, _P], object], *args: _P.args, **kwargs: _P.kwargs
+    f: Callable[Concatenate[_F1, _P], object], /, *args: _P.args, **kwargs: _P.kwargs
 ) -> Callable[[AwaitableResult[_F1, _S1]], AwaitableResult[_F1, _S1]]:
     """Create function that applies a synchronous side effect
     to [trcks.AwaitableFailure][] values.
@@ -583,6 +589,7 @@ def tap_failure(
 
 def tap_failure_to_awaitable(
     f: Callable[Concatenate[_F1, _P], Awaitable[object]],
+    /,
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[AwaitableResult[_F1, _S1]], AwaitableResult[_F1, _S1]]:
@@ -613,6 +620,7 @@ def tap_failure_to_awaitable(
 
 def tap_failure_to_awaitable_result(
     f: Callable[Concatenate[_F1, _P], AwaitableResult[object, _S2]],
+    /,
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[AwaitableResult[_F1, _S1]], AwaitableResult[_F1, _S1 | _S2]]:
@@ -653,6 +661,7 @@ def tap_failure_to_awaitable_result(
 
 def tap_failure_to_result(
     f: Callable[Concatenate[_F1, _P], Result[object, _S2]],
+    /,
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[AwaitableResult[_F1, _S1]], AwaitableResult[_F1, _S1 | _S2]]:
@@ -680,7 +689,7 @@ def tap_failure_to_result(
 
 
 def tap_success(
-    f: Callable[Concatenate[_S1, _P], object], *args: _P.args, **kwargs: _P.kwargs
+    f: Callable[Concatenate[_S1, _P], object], /, *args: _P.args, **kwargs: _P.kwargs
 ) -> Callable[[AwaitableResult[_F1, _S1]], AwaitableResult[_F1, _S1]]:
     """Create function that applies a synchronous side effect
     to [trcks.AwaitableSuccess][] values.
@@ -704,6 +713,7 @@ def tap_success(
 
 def tap_success_to_awaitable(
     f: Callable[Concatenate[_S1, _P], Awaitable[object]],
+    /,
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[AwaitableResult[_F1, _S1]], AwaitableResult[_F1, _S1]]:
@@ -734,6 +744,7 @@ def tap_success_to_awaitable(
 
 def tap_success_to_awaitable_result(
     f: Callable[Concatenate[_S1, _P], AwaitableResult[_F2, object]],
+    /,
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[AwaitableResult[_F1, _S1]], AwaitableResult[_F1 | _F2, _S1]]:
@@ -774,6 +785,7 @@ def tap_success_to_awaitable_result(
 
 def tap_success_to_result(
     f: Callable[Concatenate[_S1, _P], Result[_F2, object]],
+    /,
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[AwaitableResult[_F1, _S1]], AwaitableResult[_F1 | _F2, _S1]]:

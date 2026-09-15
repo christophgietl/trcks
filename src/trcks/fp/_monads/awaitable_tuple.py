@@ -110,7 +110,7 @@ def construct_from_iterable(it: Iterable[_T]) -> AwaitableTuple[_T]:
 
 
 def map_(
-    f: Callable[Concatenate[_T1, _P], _T2], *args: _P.args, **kwargs: _P.kwargs
+    f: Callable[Concatenate[_T1, _P], _T2], /, *args: _P.args, **kwargs: _P.kwargs
 ) -> Callable[[AwaitableTuple[_T1]], AwaitableTuple[_T2]]:
     """Turn synchronous function into a function
     expecting and returning [trcks.AwaitableTuple][]s
@@ -154,6 +154,7 @@ def map_(
 
 def map_to_awaitable(
     f: Callable[Concatenate[_T1, _P], Awaitable[_T2]],
+    /,
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[AwaitableTuple[_T1]], AwaitableTuple[_T2]]:
@@ -198,6 +199,7 @@ def map_to_awaitable(
 
 def map_to_awaitable_iterable(
     f: Callable[Concatenate[_T1, _P], AwaitableIterable[_T2]],
+    /,
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[AwaitableTuple[_T1]], AwaitableTuple[_T2]]:
@@ -247,6 +249,7 @@ def map_to_awaitable_iterable(
 
 def map_to_iterable(
     f: Callable[Concatenate[_T1, _P], Iterable[_T2]],
+    /,
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[AwaitableTuple[_T1]], AwaitableTuple[_T2]]:
@@ -287,7 +290,7 @@ def map_to_iterable(
 
 
 def tap(
-    f: Callable[Concatenate[_T1, _P], object], *args: _P.args, **kwargs: _P.kwargs
+    f: Callable[Concatenate[_T1, _P], object], /, *args: _P.args, **kwargs: _P.kwargs
 ) -> Callable[[AwaitableTuple[_T1]], AwaitableTuple[_T1]]:
     """Turn synchronous function into a function
     expecting a [trcks.AwaitableTuple][] and
@@ -331,6 +334,7 @@ def tap(
 
 def tap_to_awaitable(
     f: Callable[Concatenate[_T1, _P], Awaitable[object]],
+    /,
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[AwaitableTuple[_T1]], AwaitableTuple[_T1]]:
@@ -381,6 +385,7 @@ def tap_to_awaitable(
 
 def tap_to_awaitable_iterable(
     f: Callable[Concatenate[_T1, _P], AwaitableIterable[object]],
+    /,
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[AwaitableTuple[_T1]], AwaitableTuple[_T1]]:
@@ -432,6 +437,7 @@ def tap_to_awaitable_iterable(
 
 def tap_to_iterable(
     f: Callable[Concatenate[_T1, _P], Iterable[object]],
+    /,
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[AwaitableTuple[_T1]], AwaitableTuple[_T1]]:

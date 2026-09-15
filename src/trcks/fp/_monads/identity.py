@@ -8,7 +8,7 @@ _T = TypeVar("_T")
 
 
 def tap(
-    f: Callable[Concatenate[_T, _P], object], *args: _P.args, **kwargs: _P.kwargs
+    f: Callable[Concatenate[_T, _P], object], /, *args: _P.args, **kwargs: _P.kwargs
 ) -> Callable[[_T], _T]:
     """Turn synchronous function into a function that returns its input.
 
