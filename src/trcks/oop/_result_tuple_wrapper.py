@@ -139,6 +139,17 @@ class ResultTupleWrapper(BaseWrapper[ResultTuple[_F_default_co, _S_default_co]])
         """
         return ResultTupleWrapper(rt.construct_from_result_iterable(r_it))
 
+    @classmethod
+    @deprecated("Use construct_from_result_iterable or the default constructor instead")
+    def construct_from_result_tuple(
+        cls,
+        r_tpl: ResultTuple[_F_default, _S_default],
+    ) -> ResultTupleWrapper[_F_default, _S_default]:
+        """Deprecated alias for
+        [trcks.oop.ResultTupleWrapper.construct_from_result_iterable][].
+        """
+        return cls.construct_from_result_iterable(r_tpl)  # pragma: no cover
+
     @staticmethod
     def construct_successes(value: _S) -> ResultTupleWrapper[Never, _S]:
         """Construct and wrap a [trcks.SuccessTuple][] object from a value.

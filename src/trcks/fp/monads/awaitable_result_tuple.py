@@ -106,12 +106,14 @@ __all__ = [
     "construct_failure_from_awaitable",
     "construct_from_awaitable_result",
     "construct_from_awaitable_result_iterable",
+    "construct_from_awaitable_result_tuple",
     "construct_from_result",
     "construct_from_result_iterable",
     "construct_from_result_tuple",
     "construct_successes",
     "construct_successes_from_awaitable",
     "construct_successes_from_awaitable_iterable",
+    "construct_successes_from_awaitable_tuple",
     "construct_successes_from_iterable",
     "construct_successes_from_tuple",
     "map_failure",
@@ -175,6 +177,16 @@ _S1 = TypeVar("_S1")
 _S2 = TypeVar("_S2")
 
 
+@deprecated("Use construct_from_awaitable_result_iterable instead")
+def construct_from_awaitable_result_tuple(
+    a_r_tpl: AwaitableResultTuple[_F1, _S1],
+) -> AwaitableResultTuple[_F1, _S1]:
+    """Deprecated alias for
+    [trcks.fp.monads.awaitable_result_tuple.construct_from_awaitable_result_iterable][].
+    """
+    return construct_from_awaitable_result_iterable(a_r_tpl)  # pragma: no cover
+
+
 @deprecated("Use construct_from_result_iterable instead")
 def construct_from_result_tuple(
     r_tpl: ResultTuple[_F, _S],
@@ -193,6 +205,16 @@ def construct_successes_from_tuple(
     [trcks.fp.monads.awaitable_result_tuple.construct_successes_from_iterable][].
     """
     return construct_successes_from_iterable(tpl)  # pragma: no cover
+
+
+@deprecated("Use construct_successes_from_awaitable_iterable instead")
+def construct_successes_from_awaitable_tuple(
+    a_tpl: AwaitableTuple[_S2],
+) -> AwaitableSuccessTuple[_S2]:
+    """Deprecated alias for
+    [trcks.fp.monads.awaitable_result_tuple.construct_successes_from_awaitable_iterable][].
+    """
+    return construct_successes_from_awaitable_iterable(a_tpl)  # pragma: no cover
 
 
 @deprecated("Use map_failure_to_awaitable_result_iterable instead")

@@ -200,6 +200,17 @@ class AwaitableResultTupleWrapper(
             art.construct_from_awaitable_result_iterable(a_r_it)
         )
 
+    @classmethod
+    @deprecated("Use construct_from_awaitable_result_iterable instead")
+    def construct_from_awaitable_result_tuple(
+        cls,
+        a_r_tpl: AwaitableResultTuple[_F, _S],
+    ) -> AwaitableResultTupleWrapper[_F, _S]:
+        """Deprecated alias for
+        [trcks.oop.AwaitableResultTupleWrapper.construct_from_awaitable_result_iterable][].
+        """
+        return cls.construct_from_awaitable_result_iterable(a_r_tpl)  # pragma: no cover
+
     @staticmethod
     def construct_from_result(
         rslt: Result[_F_default, _S_default],
@@ -365,6 +376,19 @@ class AwaitableResultTupleWrapper(
         return AwaitableResultTupleWrapper(
             art.construct_successes_from_awaitable_iterable(a_it)
         )
+
+    @classmethod
+    @deprecated("Use construct_successes_from_awaitable_iterable instead")
+    def construct_successes_from_awaitable_tuple(
+        cls,
+        a_tpl: AwaitableTuple[_S],
+    ) -> AwaitableResultTupleWrapper[Never, _S]:
+        """Deprecated alias for
+        [trcks.oop.AwaitableResultTupleWrapper.construct_successes_from_awaitable_iterable][].
+        """
+        return cls.construct_successes_from_awaitable_iterable(
+            a_tpl
+        )  # pragma: no cover
 
     @staticmethod
     def construct_successes_from_iterable(
