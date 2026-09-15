@@ -131,6 +131,7 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
     def map(
         self,
         f: Callable[Concatenate[_T_co, _P], _T],
+        /,
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableWrapper[_T]:
@@ -169,6 +170,7 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
     def map_to_awaitable(
         self,
         f: Callable[Concatenate[_T_co, _P], Awaitable[_T]],
+        /,
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableWrapper[_T]:
@@ -208,6 +210,7 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
     def map_to_awaitable_iterable(
         self,
         f: Callable[Concatenate[_T_co, _P], AwaitableIterable[_T]],
+        /,
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableTupleWrapper[_T]:
@@ -250,6 +253,7 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
     def map_to_awaitable_result(
         self,
         f: Callable[Concatenate[_T_co, _P], AwaitableResult[_F, _S]],
+        /,
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableResultWrapper[_F, _S]:
@@ -296,6 +300,7 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
     def map_to_awaitable_result_iterable(
         self,
         f: Callable[Concatenate[_T_co, _P], AwaitableResultIterable[_F, _S]],
+        /,
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[_F, _S]:
@@ -344,6 +349,7 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
     def map_to_awaitable_result_tuple(
         self,
         f: Callable[Concatenate[_T_co, _P], AwaitableResultTuple[_F, _S]],
+        /,
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[_F, _S]:
@@ -358,6 +364,7 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
     def map_to_awaitable_tuple(
         self,
         f: Callable[Concatenate[_T_co, _P], AwaitableTuple[_T]],
+        /,
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableTupleWrapper[_T]:
@@ -369,6 +376,7 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
     def map_to_iterable(
         self,
         f: Callable[Concatenate[_T_co, _P], Iterable[_T]],
+        /,
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableTupleWrapper[_T]:
@@ -404,6 +412,7 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
     def map_to_result(
         self,
         f: Callable[Concatenate[_T_co, _P], Result[_F, _S]],
+        /,
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableResultWrapper[_F, _S]:
@@ -443,6 +452,7 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
     def map_to_result_iterable(
         self,
         f: Callable[Concatenate[_T_co, _P], ResultIterable[_F, _S]],
+        /,
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[_F, _S]:
@@ -485,6 +495,7 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
     def map_to_result_tuple(
         self,
         f: Callable[Concatenate[_T_co, _P], ResultTuple[_F, _S]],
+        /,
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[_F, _S]:
@@ -497,6 +508,7 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
     def map_to_tuple(
         self,
         f: Callable[Concatenate[_T_co, _P], tuple[_T, ...]],
+        /,
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableTupleWrapper[_T]:
@@ -508,6 +520,7 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
     def tap(
         self,
         f: Callable[Concatenate[_T_co, _P], object],
+        /,
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableWrapper[_T_co]:
@@ -541,6 +554,7 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
     def tap_to_awaitable(
         self,
         f: Callable[Concatenate[_T_co, _P], Awaitable[object]],
+        /,
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableWrapper[_T_co]:
@@ -577,6 +591,7 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
     def tap_to_awaitable_iterable(
         self,
         f: Callable[Concatenate[_T_co, _P], AwaitableIterable[object]],
+        /,
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableTupleWrapper[_T_co]:
@@ -622,6 +637,7 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
     def tap_to_awaitable_result(
         self,
         f: Callable[Concatenate[_T_co, _P], AwaitableResult[_F, object]],
+        /,
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableResultWrapper[_F, _T_co]:
@@ -679,6 +695,7 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
     def tap_to_awaitable_result_iterable(
         self,
         f: Callable[Concatenate[_T_co, _P], AwaitableResultIterable[_F, object]],
+        /,
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[_F, _T_co]:
@@ -731,6 +748,7 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
     def tap_to_awaitable_result_tuple(
         self,
         f: Callable[Concatenate[_T_co, _P], AwaitableResultTuple[_F, object]],
+        /,
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[_F, _T_co]:
@@ -745,6 +763,7 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
     def tap_to_awaitable_tuple(
         self,
         f: Callable[Concatenate[_T_co, _P], AwaitableTuple[object]],
+        /,
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableTupleWrapper[_T_co]:
@@ -756,6 +775,7 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
     def tap_to_iterable(
         self,
         f: Callable[Concatenate[_T_co, _P], Iterable[object]],
+        /,
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableTupleWrapper[_T_co]:
@@ -798,6 +818,7 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
     def tap_to_result(
         self,
         f: Callable[Concatenate[_T_co, _P], Result[_F, object]],
+        /,
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableResultWrapper[_F, _T_co]:
@@ -848,6 +869,7 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
     def tap_to_result_iterable(
         self,
         f: Callable[Concatenate[_T_co, _P], ResultIterable[_F, object]],
+        /,
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[_F, _T_co]:
@@ -896,6 +918,7 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
     def tap_to_result_tuple(
         self,
         f: Callable[Concatenate[_T_co, _P], ResultTuple[_F, object]],
+        /,
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[_F, _T_co]:
@@ -908,6 +931,7 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
     def tap_to_tuple(
         self,
         f: Callable[Concatenate[_T_co, _P], tuple[object, ...]],
+        /,
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableTupleWrapper[_T_co]:

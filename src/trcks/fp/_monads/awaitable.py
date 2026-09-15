@@ -44,7 +44,7 @@ def construct(value: _T) -> Awaitable[_T]:
 
 
 def map_(
-    f: Callable[Concatenate[_T1, _P], _T2], *args: _P.args, **kwargs: _P.kwargs
+    f: Callable[Concatenate[_T1, _P], _T2], /, *args: _P.args, **kwargs: _P.kwargs
 ) -> Callable[[Awaitable[_T1]], Awaitable[_T2]]:
     """Turn synchronous function into a function
     expecting and returning [collections.abc.Awaitable][].
@@ -87,6 +87,7 @@ def map_(
 
 def map_to_awaitable(
     f: Callable[Concatenate[_T1, _P], Awaitable[_T2]],
+    /,
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[Awaitable[_T1]], Awaitable[_T2]]:
@@ -131,7 +132,7 @@ def map_to_awaitable(
 
 
 def tap(
-    f: Callable[Concatenate[_T1, _P], object], *args: _P.args, **kwargs: _P.kwargs
+    f: Callable[Concatenate[_T1, _P], object], /, *args: _P.args, **kwargs: _P.kwargs
 ) -> Callable[[Awaitable[_T1]], Awaitable[_T1]]:
     """Turn synchronous function into a function
     expecting a [collections.abc.Awaitable][] and
@@ -174,6 +175,7 @@ def tap(
 
 def tap_to_awaitable(
     f: Callable[Concatenate[_T1, _P], Awaitable[object]],
+    /,
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[Awaitable[_T1]], Awaitable[_T1]]:
