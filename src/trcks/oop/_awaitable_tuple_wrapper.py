@@ -63,7 +63,7 @@ class AwaitableTupleWrapper(BaseAwaitableWrapper[tuple[_T_co, ...]]):
     """
 
     @staticmethod
-    def construct(value: _T) -> AwaitableTupleWrapper[_T]:
+    def construct(value: _T, /) -> AwaitableTupleWrapper[_T]:
         """Construct and wrap a [trcks.AwaitableTuple][] object from a value.
 
         Args:
@@ -87,6 +87,7 @@ class AwaitableTupleWrapper(BaseAwaitableWrapper[tuple[_T_co, ...]]):
     @staticmethod
     def construct_from_awaitable(
         awtbl: Awaitable[_T],
+        /,
     ) -> AwaitableTupleWrapper[_T]:
         """Construct and wrap a [trcks.AwaitableTuple][] from an awaitable value.
 
@@ -118,6 +119,7 @@ class AwaitableTupleWrapper(BaseAwaitableWrapper[tuple[_T_co, ...]]):
     @staticmethod
     def construct_from_awaitable_iterable(
         a_it: AwaitableIterable[_T],
+        /,
     ) -> AwaitableTupleWrapper[_T]:
         """Construct and wrap a [trcks.AwaitableTuple][] from an
         [trcks.AwaitableIterable][].
@@ -162,7 +164,7 @@ class AwaitableTupleWrapper(BaseAwaitableWrapper[tuple[_T_co, ...]]):
         return cls.construct_from_awaitable_iterable(a_tpl)  # pragma: no cover
 
     @staticmethod
-    def construct_from_iterable(it: Iterable[_T]) -> AwaitableTupleWrapper[_T]:
+    def construct_from_iterable(it: Iterable[_T], /) -> AwaitableTupleWrapper[_T]:
         """Construct and wrap a [trcks.AwaitableTuple][] from an iterable.
 
         Args:
@@ -191,6 +193,7 @@ class AwaitableTupleWrapper(BaseAwaitableWrapper[tuple[_T_co, ...]]):
     def construct_from_tuple(
         cls,
         tpl: tuple[_T, ...],
+        /,
     ) -> AwaitableTupleWrapper[_T]:
         """Deprecated alias for construct_from_iterable."""
         return cls.construct_from_iterable(tpl)  # pragma: no cover

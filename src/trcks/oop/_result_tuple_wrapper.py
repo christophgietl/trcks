@@ -73,7 +73,7 @@ class ResultTupleWrapper(BaseWrapper[ResultTuple[_F_default_co, _S_default_co]])
     """
 
     @staticmethod
-    def construct_failure(value: _F) -> ResultTupleWrapper[_F, Never]:
+    def construct_failure(value: _F, /) -> ResultTupleWrapper[_F, Never]:
         """Construct and wrap a [trcks.Failure][] object from a value.
 
         Args:
@@ -92,6 +92,7 @@ class ResultTupleWrapper(BaseWrapper[ResultTuple[_F_default_co, _S_default_co]])
     @staticmethod
     def construct_from_result(
         rslt: Result[_F_default, _S_default],
+        /,
     ) -> ResultTupleWrapper[_F_default, _S_default]:
         """Construct and wrap a [trcks.ResultTuple][] object from a
         [trcks.Result][] object.
@@ -115,6 +116,7 @@ class ResultTupleWrapper(BaseWrapper[ResultTuple[_F_default_co, _S_default_co]])
     @staticmethod
     def construct_from_result_iterable(
         r_it: ResultIterable[_F_default, _S_default],
+        /,
     ) -> ResultTupleWrapper[_F_default, _S_default]:
         """Construct and wrap a [trcks.ResultTuple][] object from a
         [trcks.ResultIterable][] object.
@@ -151,7 +153,7 @@ class ResultTupleWrapper(BaseWrapper[ResultTuple[_F_default_co, _S_default_co]])
         return cls.construct_from_result_iterable(r_tpl)  # pragma: no cover
 
     @staticmethod
-    def construct_successes(value: _S) -> ResultTupleWrapper[Never, _S]:
+    def construct_successes(value: _S, /) -> ResultTupleWrapper[Never, _S]:
         """Construct and wrap a [trcks.SuccessTuple][] object from a value.
 
         Args:
@@ -170,6 +172,7 @@ class ResultTupleWrapper(BaseWrapper[ResultTuple[_F_default_co, _S_default_co]])
     @staticmethod
     def construct_successes_from_iterable(
         it: Iterable[_S],
+        /,
     ) -> ResultTupleWrapper[Never, _S]:
         """Construct and wrap a [trcks.SuccessTuple][] object from an iterable.
 
@@ -191,6 +194,7 @@ class ResultTupleWrapper(BaseWrapper[ResultTuple[_F_default_co, _S_default_co]])
     def construct_successes_from_tuple(
         cls,
         tpl: tuple[_S, ...],
+        /,
     ) -> ResultTupleWrapper[Never, _S]:
         """Deprecated alias for construct_successes_from_iterable."""
         return cls.construct_successes_from_iterable(tpl)  # pragma: no cover

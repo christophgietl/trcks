@@ -17,7 +17,7 @@ _T1 = TypeVar("_T1")
 _T2 = TypeVar("_T2")
 
 
-def construct(value: _T) -> tuple[_T,]:
+def construct(value: _T, /) -> tuple[_T,]:
     """Create a [tuple][] from a single value.
 
     Args:

@@ -68,7 +68,7 @@ class Wrapper(BaseWrapper[_T_co]):
     """
 
     @staticmethod
-    def construct(value: _T) -> Wrapper[_T]:
+    def construct(value: _T, /) -> Wrapper[_T]:
         """Alias for the default constructor.
 
         Args:

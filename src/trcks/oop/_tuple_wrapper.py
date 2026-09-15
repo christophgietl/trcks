@@ -83,7 +83,7 @@ class TupleWrapper(BaseWrapper[tuple[_T_co, ...]]):
     """
 
     @staticmethod
-    def construct(value: _T) -> TupleWrapper[_T]:
+    def construct(value: _T, /) -> TupleWrapper[_T]:
         """Construct and wrap a [tuple][] from a single value.
 
         Args:
@@ -102,7 +102,7 @@ class TupleWrapper(BaseWrapper[tuple[_T_co, ...]]):
         return TupleWrapper(t.construct(value))
 
     @staticmethod
-    def construct_from_iterable(it: Iterable[_T]) -> TupleWrapper[_T]:
+    def construct_from_iterable(it: Iterable[_T], /) -> TupleWrapper[_T]:
         """Wrap a [collections.abc.Iterable][] object and convert it into a [tuple][].
 
         Args:
@@ -124,7 +124,7 @@ class TupleWrapper(BaseWrapper[tuple[_T_co, ...]]):
 
     @classmethod
     @deprecated("Use construct_from_iterable or the default constructor instead")
-    def construct_from_tuple(cls, tpl: tuple[_T, ...]) -> TupleWrapper[_T]:
+    def construct_from_tuple(cls, tpl: tuple[_T, ...], /) -> TupleWrapper[_T]:
         """Deprecated alias for construct_from_iterable."""
         return cls.construct_from_iterable(tpl)  # pragma: no cover
 

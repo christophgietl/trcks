@@ -188,6 +188,7 @@ def construct_from_awaitable_result_tuple(
 @deprecated("Use construct_from_result_iterable instead")
 def construct_from_result_tuple(
     r_tpl: ResultTuple[_F, _S],
+    /,
 ) -> AwaitableResultTuple[_F, _S]:
     """Deprecated alias for
     [trcks.fp.monads.awaitable_result_tuple.construct_from_result_iterable][].
@@ -198,6 +199,7 @@ def construct_from_result_tuple(
 @deprecated("Use construct_successes_from_iterable instead")
 def construct_successes_from_tuple(
     tpl: tuple[_S, ...],
+    /,
 ) -> AwaitableSuccessTuple[_S]:
     """Deprecated alias for
     [trcks.fp.monads.awaitable_result_tuple.construct_successes_from_iterable][].

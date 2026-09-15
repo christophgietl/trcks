@@ -138,7 +138,7 @@ def construct_from_awaitable_tuple(
 
 
 @deprecated("Use construct_from_iterable instead")
-def construct_from_tuple(tpl: tuple[_T, ...]) -> AwaitableTuple[_T]:
+def construct_from_tuple(tpl: tuple[_T, ...], /) -> AwaitableTuple[_T]:
     """Deprecated alias for
     [trcks.fp.monads.awaitable_tuple.construct_from_iterable][].
     """

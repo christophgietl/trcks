@@ -35,7 +35,7 @@ _S1 = TypeVar("_S1")
 _S2 = TypeVar("_S2")
 
 
-def construct_failure(value: _F) -> AwaitableFailure[_F]:
+def construct_failure(value: _F, /) -> AwaitableFailure[_F]:
     """Create a [trcks.AwaitableFailure][] object from a value.
 
     Args:
@@ -61,7 +61,7 @@ def construct_failure(value: _F) -> AwaitableFailure[_F]:
     return a.construct(rt.construct_failure(value))
 
 
-def construct_failure_from_awaitable(awtbl: Awaitable[_F]) -> AwaitableFailure[_F]:
+def construct_failure_from_awaitable(awtbl: Awaitable[_F], /) -> AwaitableFailure[_F]:
     """Create a [trcks.AwaitableFailure][] object
     from a [collections.abc.Awaitable][] object.
 
@@ -88,6 +88,7 @@ def construct_failure_from_awaitable(awtbl: Awaitable[_F]) -> AwaitableFailure[_
 
 def construct_from_awaitable_result(
     a_rslt: AwaitableResult[_F, _S],
+    /,
 ) -> AwaitableResultTuple[_F, _S]:
     """Create a [trcks.AwaitableResultTuple][] object
     from a [trcks.AwaitableResult][] object.
@@ -121,6 +122,7 @@ def construct_from_awaitable_result(
 
 def construct_from_awaitable_result_iterable(
     a_r_it: AwaitableResultIterable[_F, _S],
+    /,
 ) -> AwaitableResultTuple[_F, _S]:
     """Create a [trcks.AwaitableResultTuple][] object
     from a [trcks.AwaitableResultIterable][] object.
@@ -150,7 +152,7 @@ def construct_from_awaitable_result_iterable(
     return a.map_(rt.construct_from_result_iterable)(a_r_it)
 
 
-def construct_from_result(rslt: Result[_F, _S]) -> AwaitableResultTuple[_F, _S]:
+def construct_from_result(rslt: Result[_F, _S], /) -> AwaitableResultTuple[_F, _S]:
     """Create a [trcks.AwaitableResultTuple][] object from a [trcks.Result][].
 
     The success payload is wrapped in a single-element tuple.
@@ -178,6 +180,7 @@ def construct_from_result(rslt: Result[_F, _S]) -> AwaitableResultTuple[_F, _S]:
 
 def construct_from_result_iterable(
     r_it: ResultIterable[_F, _S],
+    /,
 ) -> AwaitableResultTuple[_F, _S]:
     """Create a [trcks.AwaitableResultTuple][] object
     from a [trcks.ResultIterable][] object.
@@ -203,7 +206,7 @@ def construct_from_result_iterable(
     return a.construct(rt.construct_from_result_iterable(r_it))
 
 
-def construct_successes(value: _S) -> AwaitableSuccessTuple[_S]:
+def construct_successes(value: _S, /) -> AwaitableSuccessTuple[_S]:
     """Create a [trcks.AwaitableSuccessTuple][] object from a single value.
 
     Args:
@@ -225,6 +228,7 @@ def construct_successes(value: _S) -> AwaitableSuccessTuple[_S]:
 
 def construct_successes_from_awaitable(
     awtbl: Awaitable[_S],
+    /,
 ) -> AwaitableSuccessTuple[_S]:
     """Create a [trcks.AwaitableSuccessTuple][] object
     from a [collections.abc.Awaitable][] object.
@@ -253,6 +257,7 @@ def construct_successes_from_awaitable(
 
 def construct_successes_from_awaitable_iterable(
     a_it: AwaitableIterable[_S],
+    /,
 ) -> AwaitableSuccessTuple[_S]:
     """Create a [trcks.AwaitableSuccessTuple][] object
     from a [trcks.AwaitableIterable][] object.
@@ -279,6 +284,7 @@ def construct_successes_from_awaitable_iterable(
 
 def construct_successes_from_iterable(
     it: Iterable[_S],
+    /,
 ) -> AwaitableSuccessTuple[_S]:
     """Create a [trcks.AwaitableSuccessTuple][] object from an iterable.
 
