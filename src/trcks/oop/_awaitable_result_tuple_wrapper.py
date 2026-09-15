@@ -429,6 +429,7 @@ class AwaitableResultTupleWrapper(
     def map_failure(
         self,
         f: Callable[Concatenate[_F_default_co, _P], _F],
+        /,
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[_F, _S_default_co]:
@@ -480,6 +481,7 @@ class AwaitableResultTupleWrapper(
     def map_failure_to_awaitable(
         self,
         f: Callable[Concatenate[_F_default_co, _P], Awaitable[_F]],
+        /,
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[_F, _S_default_co]:
@@ -535,6 +537,7 @@ class AwaitableResultTupleWrapper(
     def map_failure_to_awaitable_iterable(
         self,
         f: Callable[Concatenate[_F_default_co, _P], AwaitableIterable[_S]],
+        /,
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[Never, _S_default_co | _S]:
@@ -609,6 +612,7 @@ class AwaitableResultTupleWrapper(
     def map_failure_to_awaitable_result(
         self,
         f: Callable[Concatenate[_F_default_co, _P], AwaitableResult[_F, _S]],
+        /,
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[_F, _S_default_co | _S]:
@@ -678,6 +682,7 @@ class AwaitableResultTupleWrapper(
     def map_failure_to_awaitable_result_iterable(
         self,
         f: Callable[Concatenate[_F_default_co, _P], AwaitableResultIterable[_F, _S]],
+        /,
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[_F, _S_default_co | _S]:
@@ -756,6 +761,7 @@ class AwaitableResultTupleWrapper(
     def map_failure_to_awaitable_result_tuple(
         self,
         f: Callable[Concatenate[_F_default_co, _P], AwaitableResultTuple[_F, _S]],
+        /,
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[_F, _S_default_co | _S]:
@@ -770,6 +776,7 @@ class AwaitableResultTupleWrapper(
     def map_failure_to_awaitable_tuple(
         self,
         f: Callable[Concatenate[_F_default_co, _P], AwaitableTuple[_S]],
+        /,
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[Never, _S_default_co | _S]:
@@ -783,6 +790,7 @@ class AwaitableResultTupleWrapper(
     def map_failure_to_iterable(
         self,
         f: Callable[Concatenate[_F_default_co, _P], Iterable[_S]],
+        /,
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[Never, _S_default_co | _S]:
@@ -854,6 +862,7 @@ class AwaitableResultTupleWrapper(
     def map_failure_to_result(
         self,
         f: Callable[Concatenate[_F_default_co, _P], Result[_F, _S]],
+        /,
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[_F, _S_default_co | _S]:
@@ -922,6 +931,7 @@ class AwaitableResultTupleWrapper(
     def map_failure_to_result_iterable(
         self,
         f: Callable[Concatenate[_F_default_co, _P], ResultIterable[_F, _S]],
+        /,
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[_F, _S_default_co | _S]:
@@ -991,6 +1001,7 @@ class AwaitableResultTupleWrapper(
     def map_failure_to_result_tuple(
         self,
         f: Callable[Concatenate[_F_default_co, _P], ResultTuple[_F, _S]],
+        /,
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[_F, _S_default_co | _S]:
@@ -1005,6 +1016,7 @@ class AwaitableResultTupleWrapper(
     def map_failure_to_tuple(
         self,
         f: Callable[Concatenate[_F_default_co, _P], tuple[_S, ...]],
+        /,
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[Never, _S_default_co | _S]:
@@ -1016,6 +1028,7 @@ class AwaitableResultTupleWrapper(
     def map_successes(
         self,
         f: Callable[Concatenate[_S_default_co, _P], _S],
+        /,
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[_F_default_co, _S]:
@@ -1069,6 +1082,7 @@ class AwaitableResultTupleWrapper(
     def map_successes_to_awaitable(
         self,
         f: Callable[Concatenate[_S_default_co, _P], Awaitable[_S]],
+        /,
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[_F_default_co, _S]:
@@ -1126,6 +1140,7 @@ class AwaitableResultTupleWrapper(
     def map_successes_to_awaitable_iterable(
         self,
         f: Callable[Concatenate[_S_default_co, _P], AwaitableIterable[_S]],
+        /,
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[_F_default_co, _S]:
@@ -1184,6 +1199,7 @@ class AwaitableResultTupleWrapper(
     def map_successes_to_awaitable_result(
         self,
         f: Callable[Concatenate[_S_default_co, _P], AwaitableResult[_F, _S]],
+        /,
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[_F_default_co | _F, _S]:
@@ -1263,6 +1279,7 @@ class AwaitableResultTupleWrapper(
     def map_successes_to_awaitable_result_iterable(
         self,
         f: Callable[Concatenate[_S_default_co, _P], AwaitableResultIterable[_F, _S]],
+        /,
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[_F_default_co | _F, _S]:
@@ -1346,6 +1363,7 @@ class AwaitableResultTupleWrapper(
     def map_successes_to_awaitable_result_tuple(
         self,
         f: Callable[Concatenate[_S_default_co, _P], AwaitableResultTuple[_F, _S]],
+        /,
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[_F_default_co | _F, _S]:
@@ -1360,6 +1378,7 @@ class AwaitableResultTupleWrapper(
     def map_successes_to_awaitable_tuple(
         self,
         f: Callable[Concatenate[_S_default_co, _P], AwaitableTuple[_S]],
+        /,
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[_F_default_co, _S]:
@@ -1373,6 +1392,7 @@ class AwaitableResultTupleWrapper(
     def map_successes_to_iterable(
         self,
         f: Callable[Concatenate[_S_default_co, _P], Iterable[_S]],
+        /,
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[_F_default_co, _S]:
@@ -1421,6 +1441,7 @@ class AwaitableResultTupleWrapper(
     def map_successes_to_result(
         self,
         f: Callable[Concatenate[_S_default_co, _P], Result[_F, _S]],
+        /,
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[_F_default_co | _F, _S]:
@@ -1491,6 +1512,7 @@ class AwaitableResultTupleWrapper(
     def map_successes_to_result_iterable(
         self,
         f: Callable[Concatenate[_S_default_co, _P], ResultIterable[_F, _S]],
+        /,
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[_F_default_co | _F, _S]:
@@ -1552,6 +1574,7 @@ class AwaitableResultTupleWrapper(
     def map_successes_to_result_tuple(
         self,
         f: Callable[Concatenate[_S_default_co, _P], ResultTuple[_F, _S]],
+        /,
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[_F_default_co | _F, _S]:
@@ -1566,6 +1589,7 @@ class AwaitableResultTupleWrapper(
     def map_successes_to_tuple(
         self,
         f: Callable[Concatenate[_S_default_co, _P], tuple[_S, ...]],
+        /,
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[_F_default_co, _S]:
@@ -1577,6 +1601,7 @@ class AwaitableResultTupleWrapper(
     def tap_failure(
         self,
         f: Callable[Concatenate[_F_default_co, _P], object],
+        /,
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[_F_default_co, _S_default_co]:
@@ -1628,6 +1653,7 @@ class AwaitableResultTupleWrapper(
     def tap_failure_to_awaitable(
         self,
         f: Callable[Concatenate[_F_default_co, _P], Awaitable[object]],
+        /,
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[_F_default_co, _S_default_co]:
@@ -1680,6 +1706,7 @@ class AwaitableResultTupleWrapper(
     def tap_failure_to_awaitable_iterable(
         self,
         f: Callable[Concatenate[_F_default_co, _P], AwaitableIterable[object]],
+        /,
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[Never, _F_default_co | _S_default_co]:
@@ -1754,6 +1781,7 @@ class AwaitableResultTupleWrapper(
     def tap_failure_to_awaitable_result(
         self,
         f: Callable[Concatenate[_F_default_co, _P], AwaitableResult[object, _S]],
+        /,
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[_F_default_co, _S_default_co | _S]:
@@ -1818,6 +1846,7 @@ class AwaitableResultTupleWrapper(
         f: Callable[
             Concatenate[_F_default_co, _P], AwaitableResultIterable[object, _S]
         ],
+        /,
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[_F_default_co, _S_default_co | _S]:
@@ -1887,6 +1916,7 @@ class AwaitableResultTupleWrapper(
     def tap_failure_to_awaitable_result_tuple(
         self,
         f: Callable[Concatenate[_F_default_co, _P], AwaitableResultTuple[object, _S]],
+        /,
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[_F_default_co, _S_default_co | _S]:
@@ -1901,6 +1931,7 @@ class AwaitableResultTupleWrapper(
     def tap_failure_to_awaitable_tuple(
         self,
         f: Callable[Concatenate[_F_default_co, _P], AwaitableTuple[object]],
+        /,
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[Never, _F_default_co | _S_default_co]:
@@ -1914,6 +1945,7 @@ class AwaitableResultTupleWrapper(
     def tap_failure_to_iterable(
         self,
         f: Callable[Concatenate[_F_default_co, _P], Iterable[object]],
+        /,
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[Never, _F_default_co | _S_default_co]:
@@ -1985,6 +2017,7 @@ class AwaitableResultTupleWrapper(
     def tap_failure_to_result(
         self,
         f: Callable[Concatenate[_F_default_co, _P], Result[object, _S]],
+        /,
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[_F_default_co, _S_default_co | _S]:
@@ -2056,6 +2089,7 @@ class AwaitableResultTupleWrapper(
     def tap_failure_to_result_iterable(
         self,
         f: Callable[Concatenate[_F_default_co, _P], ResultIterable[object, _S]],
+        /,
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[_F_default_co, _S_default_co | _S]:
@@ -2128,6 +2162,7 @@ class AwaitableResultTupleWrapper(
     def tap_failure_to_result_tuple(
         self,
         f: Callable[Concatenate[_F_default_co, _P], ResultTuple[object, _S]],
+        /,
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[_F_default_co, _S_default_co | _S]:
@@ -2142,6 +2177,7 @@ class AwaitableResultTupleWrapper(
     def tap_failure_to_tuple(
         self,
         f: Callable[Concatenate[_F_default_co, _P], tuple[object, ...]],
+        /,
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[Never, _F_default_co | _S_default_co]:
@@ -2153,6 +2189,7 @@ class AwaitableResultTupleWrapper(
     def tap_successes(
         self,
         f: Callable[Concatenate[_S_default_co, _P], object],
+        /,
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[_F_default_co, _S_default_co]:
@@ -2207,6 +2244,7 @@ class AwaitableResultTupleWrapper(
     def tap_successes_to_awaitable(
         self,
         f: Callable[Concatenate[_S_default_co, _P], Awaitable[object]],
+        /,
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[_F_default_co, _S_default_co]:
@@ -2262,6 +2300,7 @@ class AwaitableResultTupleWrapper(
     def tap_successes_to_awaitable_iterable(
         self,
         f: Callable[Concatenate[_S_default_co, _P], AwaitableIterable[object]],
+        /,
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[_F_default_co, _S_default_co]:
@@ -2318,6 +2357,7 @@ class AwaitableResultTupleWrapper(
     def tap_successes_to_awaitable_result(
         self,
         f: Callable[Concatenate[_S_default_co, _P], AwaitableResult[_F, object]],
+        /,
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[_F_default_co | _F, _S_default_co]:
@@ -2391,6 +2431,7 @@ class AwaitableResultTupleWrapper(
         f: Callable[
             Concatenate[_S_default_co, _P], AwaitableResultIterable[_F, object]
         ],
+        /,
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[_F_default_co | _F, _S_default_co]:
@@ -2467,6 +2508,7 @@ class AwaitableResultTupleWrapper(
     def tap_successes_to_awaitable_result_tuple(
         self,
         f: Callable[Concatenate[_S_default_co, _P], AwaitableResultTuple[_F, object]],
+        /,
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[_F_default_co | _F, _S_default_co]:
@@ -2481,6 +2523,7 @@ class AwaitableResultTupleWrapper(
     def tap_successes_to_awaitable_tuple(
         self,
         f: Callable[Concatenate[_S_default_co, _P], AwaitableTuple[object]],
+        /,
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[_F_default_co, _S_default_co]:
@@ -2494,6 +2537,7 @@ class AwaitableResultTupleWrapper(
     def tap_successes_to_iterable(
         self,
         f: Callable[Concatenate[_S_default_co, _P], Iterable[object]],
+        /,
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[_F_default_co, _S_default_co]:
@@ -2548,6 +2592,7 @@ class AwaitableResultTupleWrapper(
     def tap_successes_to_result(
         self,
         f: Callable[Concatenate[_S_default_co, _P], Result[_F, object]],
+        /,
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[_F_default_co | _F, _S_default_co]:
@@ -2618,6 +2663,7 @@ class AwaitableResultTupleWrapper(
     def tap_successes_to_result_iterable(
         self,
         f: Callable[Concatenate[_S_default_co, _P], ResultIterable[_F, object]],
+        /,
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[_F_default_co | _F, _S_default_co]:
@@ -2690,6 +2736,7 @@ class AwaitableResultTupleWrapper(
     def tap_successes_to_result_tuple(
         self,
         f: Callable[Concatenate[_S_default_co, _P], ResultTuple[_F, object]],
+        /,
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[_F_default_co | _F, _S_default_co]:
@@ -2704,6 +2751,7 @@ class AwaitableResultTupleWrapper(
     def tap_successes_to_tuple(
         self,
         f: Callable[Concatenate[_S_default_co, _P], tuple[object, ...]],
+        /,
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[_F_default_co, _S_default_co]:

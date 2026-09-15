@@ -300,7 +300,7 @@ def construct_successes_from_iterable(
 
 
 def map_failure(
-    f: Callable[Concatenate[_F1, _P], _F2], *args: _P.args, **kwargs: _P.kwargs
+    f: Callable[Concatenate[_F1, _P], _F2], /, *args: _P.args, **kwargs: _P.kwargs
 ) -> Callable[[AwaitableResultTuple[_F1, _S1]], AwaitableResultTuple[_F2, _S1]]:
     """Create function that maps [trcks.AwaitableFailure][]
     to [trcks.AwaitableFailure][] values.
@@ -338,6 +338,7 @@ def map_failure(
 
 def map_failure_to_awaitable(
     f: Callable[Concatenate[_F1, _P], Awaitable[_F2]],
+    /,
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[AwaitableResultTuple[_F1, _S1]], AwaitableResultTuple[_F2, _S1]]:
@@ -382,6 +383,7 @@ def map_failure_to_awaitable(
 
 def map_failure_to_awaitable_iterable(
     f: Callable[Concatenate[_F1, _P], AwaitableIterable[_S2]],
+    /,
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[
@@ -453,6 +455,7 @@ def map_failure_to_awaitable_iterable(
 
 def map_failure_to_awaitable_result(
     f: Callable[Concatenate[_F1, _P], AwaitableResult[_F2, _S2]],
+    /,
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[
@@ -511,6 +514,7 @@ def map_failure_to_awaitable_result(
 
 def map_failure_to_awaitable_result_iterable(
     f: Callable[Concatenate[_F1, _P], AwaitableResultIterable[_F2, _S2]],
+    /,
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[
@@ -585,6 +589,7 @@ def map_failure_to_awaitable_result_iterable(
 
 def map_failure_to_iterable(
     f: Callable[Concatenate[_F1, _P], Iterable[_S2]],
+    /,
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[
@@ -636,6 +641,7 @@ def map_failure_to_iterable(
 
 def map_failure_to_result(
     f: Callable[Concatenate[_F1, _P], Result[_F2, _S2]],
+    /,
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[
@@ -686,6 +692,7 @@ def map_failure_to_result(
 
 def map_failure_to_result_iterable(
     f: Callable[Concatenate[_F1, _P], ResultIterable[_F2, _S2]],
+    /,
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[
@@ -738,7 +745,7 @@ def map_failure_to_result_iterable(
 
 
 def map_successes(
-    f: Callable[Concatenate[_S1, _P], _S2], *args: _P.args, **kwargs: _P.kwargs
+    f: Callable[Concatenate[_S1, _P], _S2], /, *args: _P.args, **kwargs: _P.kwargs
 ) -> Callable[[AwaitableResultTuple[_F1, _S1]], AwaitableResultTuple[_F1, _S2]]:
     """Map a synchronous function over each element
     in a [trcks.AwaitableResultTuple][].
@@ -777,6 +784,7 @@ def map_successes(
 
 def map_successes_to_awaitable(
     f: Callable[Concatenate[_S1, _P], Awaitable[_S2]],
+    /,
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[AwaitableResultTuple[_F1, _S1]], AwaitableResultTuple[_F1, _S2]]:
@@ -822,6 +830,7 @@ def map_successes_to_awaitable(
 
 def map_successes_to_awaitable_iterable(
     f: Callable[Concatenate[_S1, _P], AwaitableIterable[_S2]],
+    /,
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[AwaitableResultTuple[_F1, _S1]], AwaitableResultTuple[_F1, _S2]]:
@@ -867,6 +876,7 @@ def map_successes_to_awaitable_iterable(
 
 def map_successes_to_awaitable_result(
     f: Callable[Concatenate[_S1, _P], AwaitableResult[_F2, _S2]],
+    /,
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[
@@ -926,6 +936,7 @@ def map_successes_to_awaitable_result(
 
 def map_successes_to_awaitable_result_iterable(
     f: Callable[Concatenate[_S1, _P], AwaitableResultIterable[_F2, _S2]],
+    /,
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[
@@ -1015,6 +1026,7 @@ def map_successes_to_awaitable_result_iterable(
 
 def map_successes_to_iterable(
     f: Callable[Concatenate[_S1, _P], Iterable[_S2]],
+    /,
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[AwaitableResultTuple[_F1, _S1]], AwaitableResultTuple[_F1, _S2]]:
@@ -1049,6 +1061,7 @@ def map_successes_to_iterable(
 
 def map_successes_to_result(
     f: Callable[Concatenate[_S1, _P], Result[_F2, _S2]],
+    /,
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[
@@ -1102,6 +1115,7 @@ def map_successes_to_result(
 
 def map_successes_to_result_iterable(
     f: Callable[Concatenate[_S1, _P], ResultIterable[_F2, _S2]],
+    /,
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[
@@ -1150,7 +1164,7 @@ def map_successes_to_result_iterable(
 
 
 def tap_failure(
-    f: Callable[Concatenate[_F1, _P], object], *args: _P.args, **kwargs: _P.kwargs
+    f: Callable[Concatenate[_F1, _P], object], /, *args: _P.args, **kwargs: _P.kwargs
 ) -> Callable[[AwaitableResultTuple[_F1, _S1]], AwaitableResultTuple[_F1, _S1]]:
     """Apply a synchronous side effect to [trcks.AwaitableFailure][] values.
 
@@ -1190,6 +1204,7 @@ def tap_failure(
 
 def tap_failure_to_awaitable(
     f: Callable[Concatenate[_F1, _P], Awaitable[object]],
+    /,
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[AwaitableResultTuple[_F1, _S1]], AwaitableResultTuple[_F1, _S1]]:
@@ -1237,6 +1252,7 @@ def tap_failure_to_awaitable(
 
 def tap_failure_to_awaitable_iterable(
     f: Callable[Concatenate[_F1, _P], AwaitableIterable[object]],
+    /,
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[
@@ -1301,6 +1317,7 @@ def tap_failure_to_awaitable_iterable(
 
 def tap_failure_to_awaitable_result(
     f: Callable[Concatenate[_F1, _P], AwaitableResult[object, _S2]],
+    /,
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[
@@ -1366,6 +1383,7 @@ def tap_failure_to_awaitable_result(
 
 def tap_failure_to_awaitable_result_iterable(
     f: Callable[Concatenate[_F1, _P], AwaitableResultIterable[object, _S2]],
+    /,
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[
@@ -1434,6 +1452,7 @@ def tap_failure_to_awaitable_result_iterable(
 
 def tap_failure_to_iterable(
     f: Callable[Concatenate[_F1, _P], Iterable[object]],
+    /,
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[
@@ -1489,6 +1508,7 @@ def tap_failure_to_iterable(
 
 def tap_failure_to_result(
     f: Callable[Concatenate[_F1, _P], Result[object, _S2]],
+    /,
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[
@@ -1541,6 +1561,7 @@ def tap_failure_to_result(
 
 def tap_failure_to_result_iterable(
     f: Callable[Concatenate[_F1, _P], ResultIterable[object, _S2]],
+    /,
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[
@@ -1596,7 +1617,7 @@ def tap_failure_to_result_iterable(
 
 
 def tap_successes(
-    f: Callable[Concatenate[_S1, _P], object], *args: _P.args, **kwargs: _P.kwargs
+    f: Callable[Concatenate[_S1, _P], object], /, *args: _P.args, **kwargs: _P.kwargs
 ) -> Callable[[AwaitableResultTuple[_F1, _S1]], AwaitableResultTuple[_F1, _S1]]:
     """Apply a synchronous side effect to each element
     in a [trcks.AwaitableResultTuple][].
@@ -1637,6 +1658,7 @@ def tap_successes(
 
 def tap_successes_to_awaitable(
     f: Callable[Concatenate[_S1, _P], Awaitable[object]],
+    /,
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[AwaitableResultTuple[_F1, _S1]], AwaitableResultTuple[_F1, _S1]]:
@@ -1685,6 +1707,7 @@ def tap_successes_to_awaitable(
 
 def tap_successes_to_awaitable_iterable(
     f: Callable[Concatenate[_S1, _P], AwaitableIterable[object]],
+    /,
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[AwaitableResultTuple[_F1, _S1]], AwaitableResultTuple[_F1, _S1]]:
@@ -1734,6 +1757,7 @@ def tap_successes_to_awaitable_iterable(
 
 def tap_successes_to_awaitable_result(
     f: Callable[Concatenate[_S1, _P], AwaitableResult[_F2, object]],
+    /,
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[
@@ -1791,6 +1815,7 @@ def tap_successes_to_awaitable_result(
 
 def tap_successes_to_awaitable_result_iterable(
     f: Callable[Concatenate[_S1, _P], AwaitableResultIterable[_F2, object]],
+    /,
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[
@@ -1860,6 +1885,7 @@ def tap_successes_to_awaitable_result_iterable(
 
 def tap_successes_to_iterable(
     f: Callable[Concatenate[_S1, _P], Iterable[object]],
+    /,
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[AwaitableResultTuple[_F1, _S1]], AwaitableResultTuple[_F1, _S1]]:
@@ -1902,6 +1928,7 @@ def tap_successes_to_iterable(
 
 def tap_successes_to_result(
     f: Callable[Concatenate[_S1, _P], Result[_F2, object]],
+    /,
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[
@@ -1953,6 +1980,7 @@ def tap_successes_to_result(
 
 def tap_successes_to_result_iterable(
     f: Callable[Concatenate[_S1, _P], ResultIterable[_F2, object]],
+    /,
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[
