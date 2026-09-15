@@ -812,7 +812,7 @@ def tap_success_to_result(
     return a.map_(r.tap_success_to_result(f, *args, **kwargs))
 
 
-async def to_coroutine_result(a_rslt: AwaitableResult[_F, _S]) -> Result[_F, _S]:
+async def to_coroutine_result(a_rslt: AwaitableResult[_F, _S], /) -> Result[_F, _S]:
     """Turn a [trcks.AwaitableResult][] into a [collections.abc.Coroutine][].
 
     This is useful for functions that expect a coroutine

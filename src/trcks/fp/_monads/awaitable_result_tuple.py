@@ -2044,6 +2044,7 @@ def tap_successes_to_result_iterable(
 
 async def to_coroutine_result_tuple(
     a_r_tpl: AwaitableResultTuple[_F, _S],
+    /,
 ) -> ResultTuple[_F, _S]:
     """Turn a [trcks.AwaitableResultTuple][] into a [collections.abc.Coroutine][].
 

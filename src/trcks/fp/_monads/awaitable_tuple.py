@@ -482,7 +482,7 @@ def tap_to_iterable(
     return a.map_(t.tap_to_iterable(f, *args, **kwargs))
 
 
-async def to_coroutine_tuple(a_tpl: AwaitableTuple[_T]) -> tuple[_T, ...]:
+async def to_coroutine_tuple(a_tpl: AwaitableTuple[_T], /) -> tuple[_T, ...]:
     """Turn a [trcks.AwaitableTuple][] into a coroutine.
 
     This is useful for functions that expect a coroutine
