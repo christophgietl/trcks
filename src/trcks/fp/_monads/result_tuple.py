@@ -23,7 +23,7 @@ _S1 = TypeVar("_S1")
 _S2 = TypeVar("_S2")
 
 
-def construct_failure(value: _F) -> Failure[_F]:
+def construct_failure(value: _F, /) -> Failure[_F]:
     """Create a [trcks.Failure][] object from a value.
 
     Args:
@@ -44,7 +44,7 @@ def construct_failure(value: _F) -> Failure[_F]:
     return r.construct_failure(value)
 
 
-def construct_from_result(rslt: Result[_F, _S]) -> ResultTuple[_F, _S]:
+def construct_from_result(rslt: Result[_F, _S], /) -> ResultTuple[_F, _S]:
     """Create a [trcks.ResultTuple][] object from a [trcks.Result][].
 
     Args:
@@ -64,7 +64,9 @@ def construct_from_result(rslt: Result[_F, _S]) -> ResultTuple[_F, _S]:
     return r.map_success(t.construct)(rslt)
 
 
-def construct_from_result_iterable(r_it: ResultIterable[_F, _S]) -> ResultTuple[_F, _S]:
+def construct_from_result_iterable(
+    r_it: ResultIterable[_F, _S], /
+) -> ResultTuple[_F, _S]:
     """Create a [trcks.ResultTuple][] object from a [trcks.ResultIterable][].
 
     Args:
@@ -85,7 +87,7 @@ def construct_from_result_iterable(r_it: ResultIterable[_F, _S]) -> ResultTuple[
     return r.map_success(tuple)(r_it)
 
 
-def construct_successes(value: _S) -> SuccessTuple[_S]:
+def construct_successes(value: _S, /) -> SuccessTuple[_S]:
     """Create a [trcks.SuccessTuple][] object from a single value.
 
     Args:
@@ -102,7 +104,7 @@ def construct_successes(value: _S) -> SuccessTuple[_S]:
     return r.construct_success(t.construct(value))
 
 
-def construct_successes_from_iterable(it: Iterable[_S]) -> SuccessTuple[_S]:
+def construct_successes_from_iterable(it: Iterable[_S], /) -> SuccessTuple[_S]:
     """Create a [trcks.SuccessTuple][] object from an iterable.
 
     Args:

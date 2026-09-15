@@ -71,7 +71,7 @@ class AwaitableResultTupleWrapper(
     """
 
     @staticmethod
-    def construct_failure(value: _F) -> AwaitableResultTupleWrapper[_F, Never]:
+    def construct_failure(value: _F, /) -> AwaitableResultTupleWrapper[_F, Never]:
         """Construct and wrap an awaitable [trcks.Failure][] object from a value.
 
         Args:
@@ -95,6 +95,7 @@ class AwaitableResultTupleWrapper(
     @staticmethod
     def construct_failure_from_awaitable(
         awtbl: Awaitable[_F],
+        /,
     ) -> AwaitableResultTupleWrapper[_F, Never]:
         """Construct and wrap an awaitable [trcks.Failure][] from an awaitable value.
 
@@ -126,6 +127,7 @@ class AwaitableResultTupleWrapper(
     @staticmethod
     def construct_from_awaitable_result(
         a_rslt: AwaitableResult[_F, _S],
+        /,
     ) -> AwaitableResultTupleWrapper[_F, _S]:
         """Construct and wrap an [trcks.AwaitableResultTuple][] from an
         [trcks.AwaitableResult][].
@@ -167,6 +169,7 @@ class AwaitableResultTupleWrapper(
     @staticmethod
     def construct_from_awaitable_result_iterable(
         a_r_it: AwaitableResultIterable[_F, _S],
+        /,
     ) -> AwaitableResultTupleWrapper[_F, _S]:
         """Construct and wrap an [trcks.AwaitableResultTuple][] from an
         [trcks.AwaitableResultIterable][].
@@ -214,6 +217,7 @@ class AwaitableResultTupleWrapper(
     @staticmethod
     def construct_from_result(
         rslt: Result[_F_default, _S_default],
+        /,
     ) -> AwaitableResultTupleWrapper[_F_default, _S_default]:
         """Construct and wrap an [trcks.AwaitableResultTuple][] from a
         [trcks.Result][].
@@ -254,6 +258,7 @@ class AwaitableResultTupleWrapper(
     @staticmethod
     def construct_from_result_iterable(
         it: ResultIterable[_F_default, _S_default],
+        /,
     ) -> AwaitableResultTupleWrapper[_F_default, _S_default]:
         """Wrap a [trcks.ResultIterable][] object and convert it into an
         [trcks.AwaitableResultTuple][].
@@ -284,12 +289,13 @@ class AwaitableResultTupleWrapper(
     def construct_from_result_tuple(
         cls,
         r_tpl: ResultTuple[_F_default, _S_default],
+        /,
     ) -> AwaitableResultTupleWrapper[_F_default, _S_default]:
         """Deprecated alias for construct_from_result_iterable."""
         return cls.construct_from_result_iterable(r_tpl)  # pragma: no cover
 
     @staticmethod
-    def construct_successes(value: _S) -> AwaitableResultTupleWrapper[Never, _S]:
+    def construct_successes(value: _S, /) -> AwaitableResultTupleWrapper[Never, _S]:
         """Construct and wrap an awaitable [trcks.SuccessTuple][] from a value.
 
         Args:
@@ -313,6 +319,7 @@ class AwaitableResultTupleWrapper(
     @staticmethod
     def construct_successes_from_awaitable(
         awtbl: Awaitable[_S],
+        /,
     ) -> AwaitableResultTupleWrapper[Never, _S]:
         """Construct and wrap an awaitable [trcks.SuccessTuple][] from an
         awaitable value.
@@ -347,6 +354,7 @@ class AwaitableResultTupleWrapper(
     @staticmethod
     def construct_successes_from_awaitable_iterable(
         a_it: AwaitableIterable[_S],
+        /,
     ) -> AwaitableResultTupleWrapper[Never, _S]:
         """Construct and wrap an awaitable [trcks.SuccessTuple][] from an
         [trcks.AwaitableIterable][].
@@ -393,6 +401,7 @@ class AwaitableResultTupleWrapper(
     @staticmethod
     def construct_successes_from_iterable(
         it: Iterable[_S],
+        /,
     ) -> AwaitableResultTupleWrapper[Never, _S]:
         """Construct and wrap an awaitable [trcks.SuccessTuple][] from an iterable.
 
@@ -422,6 +431,7 @@ class AwaitableResultTupleWrapper(
     def construct_successes_from_tuple(
         cls,
         tpl: tuple[_S, ...],
+        /,
     ) -> AwaitableResultTupleWrapper[Never, _S]:
         """Deprecated alias for construct_successes_from_iterable."""
         return cls.construct_successes_from_iterable(tpl)  # pragma: no cover

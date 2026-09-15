@@ -68,7 +68,7 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
     """
 
     @staticmethod
-    def construct_failure(value: _F) -> ResultWrapper[_F, Never]:
+    def construct_failure(value: _F, /) -> ResultWrapper[_F, Never]:
         """Construct and wrap a [trcks.Failure][] object from a value.
 
         Args:
@@ -87,6 +87,7 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
     @staticmethod
     def construct_from_result(
         rslt: Result[_F_default, _S_default],
+        /,
     ) -> ResultWrapper[_F_default, _S_default]:
         """Wrap a [trcks.Result][] object.
 
@@ -104,7 +105,7 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
         return ResultWrapper(rslt)
 
     @staticmethod
-    def construct_success(value: _S) -> ResultWrapper[Never, _S]:
+    def construct_success(value: _S, /) -> ResultWrapper[Never, _S]:
         """Construct and wrap a [trcks.Success][] object from a value.
 
         Args:

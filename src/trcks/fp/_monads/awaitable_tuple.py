@@ -20,7 +20,7 @@ _T1 = TypeVar("_T1")
 _T2 = TypeVar("_T2")
 
 
-def construct(value: _T) -> AwaitableTuple[_T]:
+def construct(value: _T, /) -> AwaitableTuple[_T]:
     """Create a [trcks.AwaitableTuple][] from a value.
 
     Args:
@@ -40,7 +40,7 @@ def construct(value: _T) -> AwaitableTuple[_T]:
     return a.construct(t.construct(value))
 
 
-def construct_from_awaitable(awtbl: Awaitable[_T]) -> AwaitableTuple[_T]:
+def construct_from_awaitable(awtbl: Awaitable[_T], /) -> AwaitableTuple[_T]:
     """Create a [trcks.AwaitableTuple][] from an awaitable value.
 
     Args:
@@ -65,6 +65,7 @@ def construct_from_awaitable(awtbl: Awaitable[_T]) -> AwaitableTuple[_T]:
 
 def construct_from_awaitable_iterable(
     a_it: AwaitableIterable[_T],
+    /,
 ) -> AwaitableTuple[_T]:
     """Create a [trcks.AwaitableTuple][] from a [trcks.AwaitableIterable][].
 
@@ -88,7 +89,7 @@ def construct_from_awaitable_iterable(
     return a.map_(tuple)(a_it)
 
 
-def construct_from_iterable(it: Iterable[_T]) -> AwaitableTuple[_T]:
+def construct_from_iterable(it: Iterable[_T], /) -> AwaitableTuple[_T]:
     """Create a [trcks.AwaitableTuple][] from an iterable.
 
     Args:

@@ -155,7 +155,7 @@ def construct_from_result_tuple(
 
 
 @deprecated("Use construct_successes_from_iterable instead")
-def construct_successes_from_tuple(tpl: tuple[_S, ...]) -> SuccessTuple[_S]:
+def construct_successes_from_tuple(tpl: tuple[_S, ...], /) -> SuccessTuple[_S]:
     """Deprecated alias for
     [trcks.fp.monads.result_tuple.construct_successes_from_iterable][].
     """

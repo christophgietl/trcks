@@ -23,7 +23,7 @@ _S1 = TypeVar("_S1")
 _S2 = TypeVar("_S2")
 
 
-def construct_failure(value: _F) -> Failure[_F]:
+def construct_failure(value: _F, /) -> Failure[_F]:
     """Create a [trcks.Failure][] object from a value.
 
     Args:
@@ -40,7 +40,7 @@ def construct_failure(value: _F) -> Failure[_F]:
     return "failure", value
 
 
-def construct_success(value: _S) -> Success[_S]:
+def construct_success(value: _S, /) -> Success[_S]:
     """Create a [trcks.Success][] object from a value.
 
     Args:

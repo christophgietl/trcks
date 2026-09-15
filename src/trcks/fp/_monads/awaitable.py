@@ -21,7 +21,7 @@ async def _construct(value: _T) -> _T:
     return value
 
 
-def construct(value: _T) -> Awaitable[_T]:
+def construct(value: _T, /) -> Awaitable[_T]:
     """Create a [collections.abc.Awaitable][] from a value.
 
     Args:

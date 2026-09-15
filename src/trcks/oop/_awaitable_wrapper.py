@@ -79,7 +79,7 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
     """
 
     @staticmethod
-    def construct(value: _T) -> AwaitableWrapper[_T]:
+    def construct(value: _T, /) -> AwaitableWrapper[_T]:
         """Construct and wrap an [collections.abc.Awaitable][] object from a value.
 
         Args:
@@ -101,7 +101,7 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
         return AwaitableWrapper(a.construct(value))
 
     @staticmethod
-    def construct_from_awaitable(awtbl: Awaitable[_T]) -> AwaitableWrapper[_T]:
+    def construct_from_awaitable(awtbl: Awaitable[_T], /) -> AwaitableWrapper[_T]:
         """Alias for the default constructor.
 
         Args:

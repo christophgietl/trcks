@@ -23,7 +23,7 @@ _S1 = TypeVar("_S1")
 _S2 = TypeVar("_S2")
 
 
-def construct_failure(value: _F) -> AwaitableFailure[_F]:
+def construct_failure(value: _F, /) -> AwaitableFailure[_F]:
     """Create a [trcks.AwaitableFailure][] object from a value.
 
     Args:
@@ -45,7 +45,7 @@ def construct_failure(value: _F) -> AwaitableFailure[_F]:
     return a.construct(r.construct_failure(value))
 
 
-def construct_failure_from_awaitable(awtbl: Awaitable[_F]) -> AwaitableFailure[_F]:
+def construct_failure_from_awaitable(awtbl: Awaitable[_F], /) -> AwaitableFailure[_F]:
     """Create a [trcks.AwaitableFailure][] object
     from a [collections.abc.Awaitable][] object.
 
@@ -76,7 +76,7 @@ def construct_failure_from_awaitable(awtbl: Awaitable[_F]) -> AwaitableFailure[_
     return a.map_(r.construct_failure)(awtbl)
 
 
-def construct_from_result(rslt: Result[_F, _S]) -> AwaitableResult[_F, _S]:
+def construct_from_result(rslt: Result[_F, _S], /) -> AwaitableResult[_F, _S]:
     """Create a [trcks.AwaitableResult][] object from a [trcks.Result][] object.
 
     Args:
@@ -100,7 +100,7 @@ def construct_from_result(rslt: Result[_F, _S]) -> AwaitableResult[_F, _S]:
     return a.construct(rslt)
 
 
-def construct_success(value: _S) -> AwaitableSuccess[_S]:
+def construct_success(value: _S, /) -> AwaitableSuccess[_S]:
     """Create a [trcks.AwaitableSuccess][] object from a value.
 
     Args:
@@ -122,7 +122,7 @@ def construct_success(value: _S) -> AwaitableSuccess[_S]:
     return a.construct(r.construct_success(value))
 
 
-def construct_success_from_awaitable(awtbl: Awaitable[_S]) -> AwaitableSuccess[_S]:
+def construct_success_from_awaitable(awtbl: Awaitable[_S], /) -> AwaitableSuccess[_S]:
     """Create a [trcks.AwaitableSuccess][] object
     from a [collections.abc.Awaitable][] object.
 
