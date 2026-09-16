@@ -147,6 +147,7 @@ _S2 = TypeVar("_S2")
 @deprecated("Use construct_from_result_iterable instead")
 def construct_from_result_tuple(
     r_tpl: ResultTuple[_F1, _S1],
+    /,
 ) -> ResultTuple[_F1, _S1]:
     """Deprecated alias for
     [trcks.fp.monads.result_tuple.construct_from_result_iterable][].
@@ -272,6 +273,7 @@ def map_failure_to_awaitable_iterable(
 @deprecated("Use map_failure_to_awaitable_iterable instead")
 def map_failure_to_awaitable_tuple(
     f: Callable[Concatenate[_F1, _P], AwaitableTuple[_S2]],
+    /,
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[
@@ -395,6 +397,7 @@ def map_failure_to_awaitable_result_iterable(
 @deprecated("Use map_failure_to_awaitable_result_iterable instead")
 def map_failure_to_awaitable_result_tuple(
     f: Callable[Concatenate[_F1, _P], AwaitableResultTuple[_F2, _S2]],
+    /,
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[ResultTuple[_F1, _S1]], AwaitableResultTuple[_F2, _S1 | _S2]]:
@@ -531,6 +534,7 @@ def map_successes_to_awaitable_iterable(
 @deprecated("Use map_successes_to_awaitable_iterable instead")
 def map_successes_to_awaitable_tuple(
     f: Callable[Concatenate[_S1, _P], AwaitableTuple[_S2]],
+    /,
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[ResultTuple[_F1, _S1]], AwaitableResultTuple[_F1, _S2]]:
@@ -648,6 +652,7 @@ def map_successes_to_awaitable_result_iterable(
 @deprecated("Use map_successes_to_awaitable_result_iterable instead")
 def map_successes_to_awaitable_result_tuple(
     f: Callable[Concatenate[_S1, _P], AwaitableResultTuple[_F2, _S2]],
+    /,
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[ResultTuple[_F1, _S1]], AwaitableResultTuple[_F1 | _F2, _S2]]:
@@ -803,6 +808,7 @@ def tap_failure_to_awaitable_iterable(
 @deprecated("Use tap_failure_to_awaitable_iterable instead")
 def tap_failure_to_awaitable_tuple(
     f: Callable[Concatenate[_F1, _P], AwaitableTuple[object]],
+    /,
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[
@@ -926,6 +932,7 @@ def tap_failure_to_awaitable_result_iterable(
 @deprecated("Use tap_failure_to_awaitable_result_iterable instead")
 def tap_failure_to_awaitable_result_tuple(
     f: Callable[Concatenate[_F1, _P], AwaitableResultTuple[object, _S2]],
+    /,
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[ResultTuple[_F1, _S1]], AwaitableResultTuple[_F1, _S1 | _S2]]:
@@ -1063,6 +1070,7 @@ def tap_successes_to_awaitable_iterable(
 @deprecated("Use tap_successes_to_awaitable_iterable instead")
 def tap_successes_to_awaitable_tuple(
     f: Callable[Concatenate[_S1, _P], AwaitableTuple[object]],
+    /,
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[ResultTuple[_F1, _S1]], AwaitableResultTuple[_F1, _S1]]:
@@ -1184,6 +1192,7 @@ def tap_successes_to_awaitable_result_iterable(
 @deprecated("Use tap_successes_to_awaitable_result_iterable instead")
 def tap_successes_to_awaitable_result_tuple(
     f: Callable[Concatenate[_S1, _P], AwaitableResultTuple[_F2, object]],
+    /,
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[ResultTuple[_F1, _S1]], AwaitableResultTuple[_F1 | _F2, _S1]]:

@@ -157,6 +157,7 @@ class AwaitableTupleWrapper(BaseAwaitableWrapper[tuple[_T_co, ...]]):
     def construct_from_awaitable_tuple(
         cls,
         a_tpl: AwaitableTuple[_T],
+        /,
     ) -> AwaitableTupleWrapper[_T]:
         """Deprecated alias for
         [trcks.oop.AwaitableTupleWrapper.construct_from_awaitable_iterable][].
@@ -457,6 +458,7 @@ class AwaitableTupleWrapper(BaseAwaitableWrapper[tuple[_T_co, ...]]):
     def map_to_awaitable_result_tuple(
         self,
         f: Callable[Concatenate[_T_co, _P], AwaitableResultTuple[_F, _S]],
+        /,
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[_F, _S]:
@@ -652,6 +654,7 @@ class AwaitableTupleWrapper(BaseAwaitableWrapper[tuple[_T_co, ...]]):
     def map_to_result_tuple(
         self,
         f: Callable[Concatenate[_T_co, _P], ResultTuple[_F, _S]],
+        /,
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[_F, _S]:
@@ -940,6 +943,7 @@ class AwaitableTupleWrapper(BaseAwaitableWrapper[tuple[_T_co, ...]]):
     def tap_to_awaitable_result_tuple(
         self,
         f: Callable[Concatenate[_T_co, _P], AwaitableResultTuple[_F, object]],
+        /,
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[_F, _T_co]:
@@ -1142,6 +1146,7 @@ class AwaitableTupleWrapper(BaseAwaitableWrapper[tuple[_T_co, ...]]):
     def tap_to_result_tuple(
         self,
         f: Callable[Concatenate[_T_co, _P], ResultTuple[_F, object]],
+        /,
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[_F, _T_co]:
