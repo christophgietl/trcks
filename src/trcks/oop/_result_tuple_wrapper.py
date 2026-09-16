@@ -187,9 +187,7 @@ class ResultTupleWrapper(BaseWrapper[ResultTuple[_F_default_co, _S_default_co]])
         return ResultTupleWrapper(rt.construct_successes_from_iterable(it))
 
     @classmethod
-    @deprecated(
-        "Use construct_successes_from_iterable or the default constructor instead"
-    )
+    @deprecated("Use construct_successes_from_iterable instead")
     def construct_successes_from_tuple(
         cls,
         tpl: tuple[_S, ...],
