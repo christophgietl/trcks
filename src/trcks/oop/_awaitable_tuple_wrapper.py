@@ -187,7 +187,7 @@ class AwaitableTupleWrapper(BaseAwaitableWrapper[tuple[_T_co, ...]]):
         return AwaitableTupleWrapper(at.construct_from_iterable(it))
 
     @classmethod
-    @deprecated("Use construct_from_iterable or the default constructor instead")
+    @deprecated("Use construct_from_iterable instead")
     def construct_from_tuple(
         cls,
         tpl: tuple[_T, ...],

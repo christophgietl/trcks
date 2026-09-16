@@ -280,7 +280,7 @@ class AwaitableResultTupleWrapper(
         return AwaitableResultTupleWrapper(art.construct_from_result_iterable(it))
 
     @classmethod
-    @deprecated("Use construct_from_result_iterable or the default constructor instead")
+    @deprecated("Use construct_from_result_iterable instead")
     def construct_from_result_tuple(
         cls,
         r_tpl: ResultTuple[_F_default, _S_default],
@@ -418,9 +418,7 @@ class AwaitableResultTupleWrapper(
         return AwaitableResultTupleWrapper(art.construct_successes_from_iterable(it))
 
     @classmethod
-    @deprecated(
-        "Use construct_successes_from_iterable or the default constructor instead"
-    )
+    @deprecated("Use construct_successes_from_iterable instead")
     def construct_successes_from_tuple(
         cls,
         tpl: tuple[_S, ...],
