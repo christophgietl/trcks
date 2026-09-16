@@ -146,6 +146,7 @@ class ResultTupleWrapper(BaseWrapper[ResultTuple[_F_default_co, _S_default_co]])
     def construct_from_result_tuple(
         cls,
         r_tpl: ResultTuple[_F_default, _S_default],
+        /,
     ) -> ResultTupleWrapper[_F_default, _S_default]:
         """Deprecated alias for
         [trcks.oop.ResultTupleWrapper.construct_from_result_iterable][].

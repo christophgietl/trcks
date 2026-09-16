@@ -130,6 +130,7 @@ _T2 = TypeVar("_T2")
 @deprecated("Use construct_from_awaitable_iterable instead")
 def construct_from_awaitable_tuple(
     a_tpl: AwaitableTuple[_T],
+    /,
 ) -> AwaitableTuple[_T]:
     """Deprecated alias for
     [trcks.fp.monads.awaitable_tuple.construct_from_awaitable_iterable][].
@@ -258,6 +259,7 @@ def map_to_awaitable_result_iterable(
 @deprecated("Use map_to_awaitable_result_iterable instead")
 def map_to_awaitable_result_tuple(
     f: Callable[Concatenate[_T1, _P], AwaitableResultTuple[_F, _S]],
+    /,
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[AwaitableTuple[_T1]], AwaitableResultTuple[_F, _S]]:
@@ -387,6 +389,7 @@ def map_to_result_iterable(
 @deprecated("Use map_to_result_iterable instead")
 def map_to_result_tuple(
     f: Callable[Concatenate[_T1, _P], ResultTuple[_F, _S]],
+    /,
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[AwaitableTuple[_T1]], AwaitableResultTuple[_F, _S]]:
@@ -521,6 +524,7 @@ def tap_to_awaitable_result_iterable(
 @deprecated("Use tap_to_awaitable_result_iterable instead")
 def tap_to_awaitable_result_tuple(
     f: Callable[Concatenate[_T1, _P], AwaitableResultTuple[_F, object]],
+    /,
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[AwaitableTuple[_T1]], AwaitableResultTuple[_F, _T1]]:
@@ -655,6 +659,7 @@ def tap_to_result_iterable(
 @deprecated("Use tap_to_result_iterable instead")
 def tap_to_result_tuple(
     f: Callable[Concatenate[_T1, _P], ResultTuple[_F, object]],
+    /,
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[AwaitableTuple[_T1]], AwaitableResultTuple[_F, _T1]]:

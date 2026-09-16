@@ -208,6 +208,7 @@ class AwaitableResultTupleWrapper(
     def construct_from_awaitable_result_tuple(
         cls,
         a_r_tpl: AwaitableResultTuple[_F, _S],
+        /,
     ) -> AwaitableResultTupleWrapper[_F, _S]:
         """Deprecated alias for
         [trcks.oop.AwaitableResultTupleWrapper.construct_from_awaitable_result_iterable][].
@@ -390,6 +391,7 @@ class AwaitableResultTupleWrapper(
     def construct_successes_from_awaitable_tuple(
         cls,
         a_tpl: AwaitableTuple[_S],
+        /,
     ) -> AwaitableResultTupleWrapper[Never, _S]:
         """Deprecated alias for
         [trcks.oop.AwaitableResultTupleWrapper.construct_successes_from_awaitable_iterable][].
