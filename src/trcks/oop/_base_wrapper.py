@@ -86,4 +86,4 @@ class BaseWrapper(Generic[_T_co]):
             dataclasses.FrozenInstanceError: cannot delete field 'core'
     """
 
-    core: _T_co  # type: ignore[misc, unused-ignore]    # see https://github.com/python/mypy/issues/21736
+    core: _T_co
