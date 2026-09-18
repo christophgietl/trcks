@@ -210,17 +210,17 @@ Pipeline: TypeAlias = (
 )
 
 
-def compose1(c: Composable1[_P0, _T1]) -> Callable[_P0, _T1]:
+def compose1(*functions: Unpack[Composable1[_P0, _T1]]) -> Callable[_P0, _T1]:
     """Compose a single function.
 
     Args:
-        c: A single function.
+        functions: A single function.
 
     Returns:
         Function that applies the given function.
 
     Examples:
-        >>> get_length = compose1((len,))
+        >>> get_length = compose1(len)
         >>> get_length("Hello, world!")
         13
 
@@ -229,28 +229,30 @@ def compose1(c: Composable1[_P0, _T1]) -> Callable[_P0, _T1]:
         >>> def add(a: int, b: int) -> int:
         ...     return a + b
         ...
-        >>> get_sum = compose1((add,))
+        >>> get_sum = compose1(add)
         >>> get_sum(2, 3)
         5
     """
 
     def composed(*args: _P0.args, **kwargs: _P0.kwargs) -> _T1:
-        return c[0](*args, **kwargs)
+        return functions[0](*args, **kwargs)
 
     return composed
 
 
-def compose2(c: Composable2[_P0, _T1, _T2]) -> Callable[_P0, _T2]:
+def compose2(*functions: Unpack[Composable2[_P0, _T1, _T2]]) -> Callable[_P0, _T2]:
     """Compose two compatible functions from first to last.
 
     Args:
-        c: Two compatible functions that can be applied sequentially from first to last.
+        functions:
+            Two compatible functions that can be applied sequentially
+            from first to last.
 
     Returns:
         Function that applies the given functions from first to last.
 
     Examples:
-        >>> get_length_string = compose2((len, lambda n: f"Length: {n}"))
+        >>> get_length_string = compose2(len, lambda n: f"Length: {n}")
         >>> get_length_string("Hello, world!")
         'Length: 13'
 
@@ -259,22 +261,24 @@ def compose2(c: Composable2[_P0, _T1, _T2]) -> Callable[_P0, _T2]:
         >>> def multiply(a: int, b: int) -> int:
         ...     return a * b
         ...
-        >>> get_product_string = compose2((multiply, lambda n: f"Product: {n}"))
+        >>> get_product_string = compose2(multiply, lambda n: f"Product: {n}")
         >>> get_product_string(3, 4)
         'Product: 12'
     """
 
     def composed(*args: _P0.args, **kwargs: _P0.kwargs) -> _T2:
-        return c[1](c[0](*args, **kwargs))
+        return functions[1](functions[0](*args, **kwargs))
 
     return composed
 
 
-def compose3(c: Composable3[_P0, _T1, _T2, _T3]) -> Callable[_P0, _T3]:
+def compose3(
+    *functions: Unpack[Composable3[_P0, _T1, _T2, _T3]],
+) -> Callable[_P0, _T3]:
     """Compose three compatible functions from first to last.
 
     Args:
-        c:
+        functions:
             Three compatible functions that can be applied sequentially
             from first to last.
 
@@ -285,7 +289,7 @@ def compose3(c: Composable3[_P0, _T1, _T2, _T3]) -> Callable[_P0, _T3]:
         >>> add_one = lambda n: n + 1
         >>> square = lambda n: n * n
         >>> to_string = lambda n: f"Result: {n}"
-        >>> compute = compose3((add_one, square, to_string))
+        >>> compute = compose3(add_one, square, to_string)
         >>> compute(3)
         'Result: 16'
 
@@ -294,22 +298,24 @@ def compose3(c: Composable3[_P0, _T1, _T2, _T3]) -> Callable[_P0, _T3]:
         >>> def add(a: int, b: int) -> int:
         ...     return a + b
         ...
-        >>> add_and_square = compose3((add, lambda n: n * n, to_string))
+        >>> add_and_square = compose3(add, lambda n: n * n, to_string)
         >>> add_and_square(2, 3)
         'Result: 25'
     """
 
     def composed(*args: _P0.args, **kwargs: _P0.kwargs) -> _T3:
-        return c[2](c[1](c[0](*args, **kwargs)))
+        return functions[2](functions[1](functions[0](*args, **kwargs)))
 
     return composed
 
 
-def compose4(c: Composable4[_P0, _T1, _T2, _T3, _T4]) -> Callable[_P0, _T4]:
+def compose4(
+    *functions: Unpack[Composable4[_P0, _T1, _T2, _T3, _T4]],
+) -> Callable[_P0, _T4]:
     """Compose four compatible functions from first to last.
 
     Args:
-        c:
+        functions:
             Four compatible functions that can be applied sequentially
             from first to last.
 
@@ -321,29 +327,31 @@ def compose4(c: Composable4[_P0, _T1, _T2, _T3, _T4]) -> Callable[_P0, _T4]:
         >>> square = lambda n: n * n
         >>> halve = lambda n: n / 2
         >>> to_string = lambda n: f"Result: {n}"
-        >>> compute = compose4((add_one, square, halve, to_string))
+        >>> compute = compose4(add_one, square, halve, to_string)
         >>> compute(3)
         'Result: 8.0'
 
         The first function may accept multiple positional arguments:
 
         >>> multiply = lambda a, b: a * b
-        >>> compute_multi = compose4((multiply, square, halve, to_string))
+        >>> compute_multi = compose4(multiply, square, halve, to_string)
         >>> compute_multi(4, 5)
         'Result: 200.0'
     """
 
     def composed(*args: _P0.args, **kwargs: _P0.kwargs) -> _T4:
-        return c[3](c[2](c[1](c[0](*args, **kwargs))))
+        return functions[3](functions[2](functions[1](functions[0](*args, **kwargs))))
 
     return composed
 
 
-def compose5(c: Composable5[_P0, _T1, _T2, _T3, _T4, _T5]) -> Callable[_P0, _T5]:
+def compose5(
+    *functions: Unpack[Composable5[_P0, _T1, _T2, _T3, _T4, _T5]],
+) -> Callable[_P0, _T5]:
     """Compose five compatible functions from first to last.
 
     Args:
-        c:
+        functions:
             Five compatible functions that can be applied sequentially
             from first to last.
 
@@ -356,29 +364,35 @@ def compose5(c: Composable5[_P0, _T1, _T2, _T3, _T4, _T5]) -> Callable[_P0, _T5]
         >>> halve = lambda n: n / 2
         >>> to_string = lambda n: f"Result: {n}"
         >>> exclaim = lambda s: s + "!"
-        >>> compute = compose5((add_one, square, halve, to_string, exclaim))
+        >>> compute = compose5(add_one, square, halve, to_string, exclaim)
         >>> compute(3)
         'Result: 8.0!'
 
         The first function may accept multiple positional arguments:
 
         >>> multiply = lambda a, b: a * b
-        >>> compute_multi = compose5((multiply, square, halve, to_string, exclaim))
+        >>> compute_multi = compose5(multiply, square, halve, to_string, exclaim)
         >>> compute_multi(2, 5)
         'Result: 50.0!'
     """
 
     def composed(*args: _P0.args, **kwargs: _P0.kwargs) -> _T5:
-        return c[4](c[3](c[2](c[1](c[0](*args, **kwargs)))))
+        return functions[4](
+            functions[3](functions[2](functions[1](functions[0](*args, **kwargs))))
+        )
 
     return composed
 
 
-def compose6(c: Composable6[_P0, _T1, _T2, _T3, _T4, _T5, _T6]) -> Callable[_P0, _T6]:
+def compose6(
+    *functions: Unpack[Composable6[_P0, _T1, _T2, _T3, _T4, _T5, _T6]],
+) -> Callable[_P0, _T6]:
     """Compose six compatible functions from first to last.
 
     Args:
-        c: Six compatible functions that can be applied sequentially from first to last.
+        functions:
+            Six compatible functions that can be applied sequentially
+            from first to last.
 
     Returns:
         Function that applies the given functions from first to last.
@@ -390,7 +404,7 @@ def compose6(c: Composable6[_P0, _T1, _T2, _T3, _T4, _T5, _T6]) -> Callable[_P0,
         >>> to_string = lambda n: f"Result: {n}"
         >>> exclaim = lambda s: s + "!"
         >>> to_list = lambda s: [s]
-        >>> compute = compose6((add_one, square, halve, to_string, exclaim, to_list))
+        >>> compute = compose6(add_one, square, halve, to_string, exclaim, to_list)
         >>> compute(3)
         ['Result: 8.0!']
 
@@ -398,25 +412,29 @@ def compose6(c: Composable6[_P0, _T1, _T2, _T3, _T4, _T5, _T6]) -> Callable[_P0,
 
         >>> multiply = lambda a, b: a * b
         >>> compute_multi = compose6(
-        ...     (multiply, square, halve, to_string, exclaim, to_list)
+        ...     multiply, square, halve, to_string, exclaim, to_list
         ... )
         >>> compute_multi(2, 5)
         ['Result: 50.0!']
     """
 
     def composed(*args: _P0.args, **kwargs: _P0.kwargs) -> _T6:
-        return c[5](c[4](c[3](c[2](c[1](c[0](*args, **kwargs))))))
+        return functions[5](
+            functions[4](
+                functions[3](functions[2](functions[1](functions[0](*args, **kwargs))))
+            )
+        )
 
     return composed
 
 
 def compose7(
-    c: Composable7[_P0, _T1, _T2, _T3, _T4, _T5, _T6, _T7],
+    *functions: Unpack[Composable7[_P0, _T1, _T2, _T3, _T4, _T5, _T6, _T7]],
 ) -> Callable[_P0, _T7]:
     """Compose seven compatible functions from first to last.
 
     Args:
-        c:
+        functions:
             Seven compatible functions that can be applied sequentially
             from first to last.
 
@@ -432,7 +450,7 @@ def compose7(
         >>> to_list = lambda s: [s]
         >>> wrap_in_dict = lambda lst: {"result": lst}
         >>> compute = compose7(
-        ...     (add_one, square, halve, to_string, exclaim, to_list, wrap_in_dict)
+        ...     add_one, square, halve, to_string, exclaim, to_list, wrap_in_dict
         ... )
         >>> compute(3)
         {'result': ['Result: 8.0!']}
@@ -441,14 +459,22 @@ def compose7(
 
         >>> multiply = lambda a, b: a * b
         >>> compute_multi = compose7(
-        ...     (multiply, square, halve, to_string, exclaim, to_list, wrap_in_dict)
+        ...     multiply, square, halve, to_string, exclaim, to_list, wrap_in_dict
         ... )
         >>> compute_multi(2, 5)
         {'result': ['Result: 50.0!']}
     """
 
     def composed(*args: _P0.args, **kwargs: _P0.kwargs) -> _T7:
-        return c[6](c[5](c[4](c[3](c[2](c[1](c[0](*args, **kwargs)))))))
+        return functions[6](
+            functions[5](
+                functions[4](
+                    functions[3](
+                        functions[2](functions[1](functions[0](*args, **kwargs)))
+                    )
+                )
+            )
+        )
 
     return composed
 
@@ -528,19 +554,19 @@ def compose(*functions: Any) -> object:  # type: ignore [explicit-any]  # noqa: 
     ] = functions
     match composable:
         case (_,):
-            return compose1(composable)
+            return compose1(*composable)
         case (_, _):
-            return compose2(composable)
+            return compose2(*composable)
         case (_, _, _):
-            return compose3(composable)
+            return compose3(*composable)
         case (_, _, _, _):
-            return compose4(composable)
+            return compose4(*composable)
         case (_, _, _, _, _):
-            return compose5(composable)
+            return compose5(*composable)
         case (_, _, _, _, _, _):
-            return compose6(composable)
+            return compose6(*composable)
         case (_, _, _, _, _, _, _):
-            return compose7(composable)
+            return compose7(*composable)
         case _:  # pragma: no cover
             assert_type(composable, Never)  # type: ignore[unreachable]  # pyright: ignore[reportUnreachable]
             msg = f"{type(composable).__name__!r} is not a valid Composable"

@@ -201,10 +201,8 @@ def map_failure_to_awaitable(
         ('success', (1, 2))
     """
     return compose2(
-        (
-            art.construct_from_result_iterable,
-            art.map_failure_to_awaitable(f, *args, **kwargs),
-        )
+        art.construct_from_result_iterable,
+        art.map_failure_to_awaitable(f, *args, **kwargs),
     )
 
 
@@ -265,7 +263,7 @@ def map_failure_to_awaitable_iterable(
         art.construct_from_result_iterable,
         art.map_failure_to_awaitable_iterable(f, *args, **kwargs),
     )
-    return compose2(c)
+    return compose2(*c)
 
 
 @deprecated("Use map_failure_to_awaitable_iterable instead")
@@ -333,10 +331,8 @@ def map_failure_to_awaitable_result(
         ('success', (1, 2))
     """
     return compose2(
-        (
-            art.construct_from_result_iterable,
-            art.map_failure_to_awaitable_result(f, *args, **kwargs),
-        )
+        art.construct_from_result_iterable,
+        art.map_failure_to_awaitable_result(f, *args, **kwargs),
     )
 
 
@@ -385,10 +381,8 @@ def map_failure_to_awaitable_result_iterable(
         ('success', (1, 2))
     """
     return compose2(
-        (
-            art.construct_from_result_iterable,
-            art.map_failure_to_awaitable_result_iterable(f, *args, **kwargs),
-        )
+        art.construct_from_result_iterable,
+        art.map_failure_to_awaitable_result_iterable(f, *args, **kwargs),
     )
 
 
@@ -471,10 +465,8 @@ def map_successes_to_awaitable(
         ('success', (2, 4))
     """
     return compose2(
-        (
-            art.construct_from_result_iterable,
-            art.map_successes_to_awaitable(f, *args, **kwargs),
-        )
+        art.construct_from_result_iterable,
+        art.map_successes_to_awaitable(f, *args, **kwargs),
     )
 
 
@@ -522,10 +514,8 @@ def map_successes_to_awaitable_iterable(
         ('failure', 'oops')
     """
     return compose2(
-        (
-            art.construct_from_result_iterable,
-            art.map_successes_to_awaitable_iterable(f, *args, **kwargs),
-        )
+        art.construct_from_result_iterable,
+        art.map_successes_to_awaitable_iterable(f, *args, **kwargs),
     )
 
 
@@ -588,10 +578,8 @@ def map_successes_to_awaitable_result(
         ('success', (2, 4))
     """
     return compose2(
-        (
-            art.construct_from_result_iterable,
-            art.map_successes_to_awaitable_result(f, *args, **kwargs),
-        )
+        art.construct_from_result_iterable,
+        art.map_successes_to_awaitable_result(f, *args, **kwargs),
     )
 
 
@@ -640,10 +628,8 @@ def map_successes_to_awaitable_result_iterable(
         ('success', (1, -1, 2, -2))
     """
     return compose2(
-        (
-            art.construct_from_result_iterable,
-            art.map_successes_to_awaitable_result_iterable(f, *args, **kwargs),
-        )
+        art.construct_from_result_iterable,
+        art.map_successes_to_awaitable_result_iterable(f, *args, **kwargs),
     )
 
 
@@ -730,10 +716,8 @@ def tap_failure_to_awaitable(
         ('success', (1,))
     """
     return compose2(
-        (
-            art.construct_from_result_iterable,
-            art.tap_failure_to_awaitable(f, *args, **kwargs),
-        )
+        art.construct_from_result_iterable,
+        art.tap_failure_to_awaitable(f, *args, **kwargs),
     )
 
 
@@ -800,7 +784,7 @@ def tap_failure_to_awaitable_iterable(
         art.construct_from_result_iterable,
         art.tap_failure_to_awaitable_iterable(f, *args, **kwargs),
     )
-    return compose2(c)
+    return compose2(*c)
 
 
 @deprecated("Use tap_failure_to_awaitable_iterable instead")
@@ -865,10 +849,8 @@ def tap_failure_to_awaitable_result(
         ('success', (1,))
     """
     return compose2(
-        (
-            art.construct_from_result_iterable,
-            art.tap_failure_to_awaitable_result(f, *args, **kwargs),
-        )
+        art.construct_from_result_iterable,
+        art.tap_failure_to_awaitable_result(f, *args, **kwargs),
     )
 
 
@@ -920,10 +902,8 @@ def tap_failure_to_awaitable_result_iterable(
         ('success', (1,))
     """
     return compose2(
-        (
-            art.construct_from_result_iterable,
-            art.tap_failure_to_awaitable_result_iterable(f, *args, **kwargs),
-        )
+        art.construct_from_result_iterable,
+        art.tap_failure_to_awaitable_result_iterable(f, *args, **kwargs),
     )
 
 
@@ -1009,10 +989,8 @@ def tap_successes_to_awaitable(
         ('success', (1, 2))
     """
     return compose2(
-        (
-            art.construct_from_result_iterable,
-            art.tap_successes_to_awaitable(f, *args, **kwargs),
-        )
+        art.construct_from_result_iterable,
+        art.tap_successes_to_awaitable(f, *args, **kwargs),
     )
 
 
@@ -1058,10 +1036,8 @@ def tap_successes_to_awaitable_iterable(
         ('success', (7, 7))
     """
     return compose2(
-        (
-            art.construct_from_result_iterable,
-            art.tap_successes_to_awaitable_iterable(f, *args, **kwargs),
-        )
+        art.construct_from_result_iterable,
+        art.tap_successes_to_awaitable_iterable(f, *args, **kwargs),
     )
 
 
@@ -1126,10 +1102,8 @@ def tap_successes_to_awaitable_result(
         ('success', (1, 2))
     """
     return compose2(
-        (
-            art.construct_from_result_iterable,
-            art.tap_successes_to_awaitable_result(f, *args, **kwargs),
-        )
+        art.construct_from_result_iterable,
+        art.tap_successes_to_awaitable_result(f, *args, **kwargs),
     )
 
 
@@ -1180,10 +1154,8 @@ def tap_successes_to_awaitable_result_iterable(
         ('success', (1, 1, 2, 2))
     """
     return compose2(
-        (
-            art.construct_from_result_iterable,
-            art.tap_successes_to_awaitable_result_iterable(f, *args, **kwargs),
-        )
+        art.construct_from_result_iterable,
+        art.tap_successes_to_awaitable_result_iterable(f, *args, **kwargs),
     )
 
 

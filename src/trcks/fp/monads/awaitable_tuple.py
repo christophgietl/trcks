@@ -198,7 +198,7 @@ def map_to_awaitable_result(
         art.construct_successes_from_awaitable_iterable,
         art.map_successes_to_awaitable_result(f, *args, **kwargs),
     )
-    return compose2(c)
+    return compose2(*c)
 
 
 def map_to_awaitable_result_iterable(
@@ -253,7 +253,7 @@ def map_to_awaitable_result_iterable(
         art.construct_successes_from_awaitable_iterable,
         art.map_successes_to_awaitable_result_iterable(f, *args, **kwargs),
     )
-    return compose2(c)
+    return compose2(*c)
 
 
 @deprecated("Use map_to_awaitable_result_iterable instead")
@@ -331,7 +331,7 @@ def map_to_result(
         art.construct_successes_from_awaitable_iterable,
         art.map_successes_to_result(f, *args, **kwargs),
     )
-    return compose2(c)
+    return compose2(*c)
 
 
 def map_to_result_iterable(
@@ -383,7 +383,7 @@ def map_to_result_iterable(
         art.construct_successes_from_awaitable_iterable,
         art.map_successes_to_result_iterable(f, *args, **kwargs),
     )
-    return compose2(c)
+    return compose2(*c)
 
 
 @deprecated("Use map_to_result_iterable instead")
@@ -462,7 +462,7 @@ def tap_to_awaitable_result(
         art.construct_successes_from_awaitable_iterable,
         art.tap_successes_to_awaitable_result(f, *args, **kwargs),
     )
-    return compose2(c)
+    return compose2(*c)
 
 
 def tap_to_awaitable_result_iterable(
@@ -518,7 +518,7 @@ def tap_to_awaitable_result_iterable(
         art.construct_successes_from_awaitable_iterable,
         art.tap_successes_to_awaitable_result_iterable(f, *args, **kwargs),
     )
-    return compose2(c)
+    return compose2(*c)
 
 
 @deprecated("Use tap_to_awaitable_result_iterable instead")
@@ -598,7 +598,7 @@ def tap_to_result(
         art.construct_successes_from_awaitable_iterable,
         art.tap_successes_to_result(f, *args, **kwargs),
     )
-    return compose2(c)
+    return compose2(*c)
 
 
 def tap_to_result_iterable(
@@ -653,7 +653,7 @@ def tap_to_result_iterable(
         art.construct_successes_from_awaitable_iterable,
         art.tap_successes_to_result_iterable(f, *args, **kwargs),
     )
-    return compose2(c)
+    return compose2(*c)
 
 
 @deprecated("Use tap_to_result_iterable instead")

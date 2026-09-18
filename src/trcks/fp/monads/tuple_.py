@@ -144,9 +144,7 @@ def map_to_awaitable(
         >>> asyncio.run(at.to_coroutine_tuple(a_tpl))
         (2, 3, 4)
     """
-    return compose2(
-        (at.construct_from_iterable, at.map_to_awaitable(f, *args, **kwargs))
-    )
+    return compose2(at.construct_from_iterable, at.map_to_awaitable(f, *args, **kwargs))
 
 
 def map_to_awaitable_iterable(
@@ -184,7 +182,7 @@ def map_to_awaitable_iterable(
         (1, 1, 2, 2)
     """
     return compose2(
-        (at.construct_from_iterable, at.map_to_awaitable_iterable(f, *args, **kwargs))
+        at.construct_from_iterable, at.map_to_awaitable_iterable(f, *args, **kwargs)
     )
 
 
@@ -238,7 +236,7 @@ def map_to_awaitable_result(
         art.construct_successes_from_iterable,
         art.map_successes_to_awaitable_result(f, *args, **kwargs),
     )
-    return compose2(c)
+    return compose2(*c)
 
 
 def map_to_awaitable_result_iterable(
@@ -293,7 +291,7 @@ def map_to_awaitable_result_iterable(
         art.construct_successes_from_iterable,
         art.map_successes_to_awaitable_result_iterable(f, *args, **kwargs),
     )
-    return compose2(c)
+    return compose2(*c)
 
 
 @deprecated("Use map_to_awaitable_result_iterable instead")
@@ -364,7 +362,7 @@ def map_to_result(
         rt.construct_successes_from_iterable,
         rt.map_successes_to_result(f, *args, **kwargs),
     )
-    return compose2(c)
+    return compose2(*c)
 
 
 def map_to_result_iterable(
@@ -412,7 +410,7 @@ def map_to_result_iterable(
         rt.construct_successes_from_iterable,
         rt.map_successes_to_result_iterable(f, *args, **kwargs),
     )
-    return compose2(c)
+    return compose2(*c)
 
 
 @deprecated("Use map_to_result_iterable instead")
@@ -473,9 +471,7 @@ def tap_to_awaitable(
         Received: 3
         (1, 2, 3)
     """
-    return compose2(
-        (at.construct_from_iterable, at.tap_to_awaitable(f, *args, **kwargs))
-    )
+    return compose2(at.construct_from_iterable, at.tap_to_awaitable(f, *args, **kwargs))
 
 
 def tap_to_awaitable_iterable(
@@ -519,7 +515,7 @@ def tap_to_awaitable_iterable(
         (1, 1, 2, 2, 3, 3)
     """
     return compose2(
-        (at.construct_from_iterable, at.tap_to_awaitable_iterable(f, *args, **kwargs))
+        at.construct_from_iterable, at.tap_to_awaitable_iterable(f, *args, **kwargs)
     )
 
 
@@ -575,7 +571,7 @@ def tap_to_awaitable_result(
         art.construct_successes_from_iterable,
         art.tap_successes_to_awaitable_result(f, *args, **kwargs),
     )
-    return compose2(c)
+    return compose2(*c)
 
 
 def tap_to_awaitable_result_iterable(
@@ -631,7 +627,7 @@ def tap_to_awaitable_result_iterable(
         art.construct_successes_from_iterable,
         art.tap_successes_to_awaitable_result_iterable(f, *args, **kwargs),
     )
-    return compose2(c)
+    return compose2(*c)
 
 
 @deprecated("Use tap_to_awaitable_result_iterable instead")
@@ -704,7 +700,7 @@ def tap_to_result(
         rt.construct_successes_from_iterable,
         rt.tap_successes_to_result(f, *args, **kwargs),
     )
-    return compose2(c)
+    return compose2(*c)
 
 
 def tap_to_result_iterable(
@@ -755,7 +751,7 @@ def tap_to_result_iterable(
         rt.construct_successes_from_iterable,
         rt.tap_successes_to_result_iterable(f, *args, **kwargs),
     )
-    return compose2(c)
+    return compose2(*c)
 
 
 @deprecated("Use tap_to_result_iterable instead")
