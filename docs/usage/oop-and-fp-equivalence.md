@@ -8,7 +8,7 @@ This page maps common operations from one style to the other.
 | Operation | `trcks.oop` | `trcks.fp` |
 |---|---|---|
 | Wrap a value | [`Wrapper(core=x)`][trcks.oop.Wrapper] | start value of a `pipe(...)` call |
-| Map a plain value | [`.map(f)`][trcks.oop.Wrapper.map] | [`pipe((x, f))`][trcks.fp.composition.pipe] |
+| Map a plain value | [`.map(f)`][trcks.oop.Wrapper.map] | [`pipe(x, f)`][trcks.fp.composition.pipe] |
 | Map success to `Result` | [`.map_success_to_result(f)`][trcks.oop.ResultWrapper.map_success_to_result] | [`r.map_success_to_result(f)`][trcks.fp.monads.result.map_success_to_result] |
 | Map on success | [`.map_success(f)`][trcks.oop.ResultWrapper.map_success] | [`r.map_success(f)`][trcks.fp.monads.result.map_success] |
 | Map on failure | [`.map_failure(f)`][trcks.oop.ResultWrapper.map_failure] | [`r.map_failure(f)`][trcks.fp.monads.result.map_failure] |

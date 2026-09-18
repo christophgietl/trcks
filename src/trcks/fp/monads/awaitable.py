@@ -19,13 +19,11 @@ Examples:
     >>> async def main() -> str:
     ...     awaitable_str = read_from_disk()
     ...     return await pipe(
-    ...         (
-    ...             awaitable_str,
-    ...             a.tap(lambda s: print(f"Read '{s}' from disk.")),
-    ...             a.map_(transform),
-    ...             a.tap_to_awaitable(write_to_disk),
-    ...             a.tap(lambda s: print(f"Wrote '{s}' to disk.")),
-    ...         ),
+    ...         awaitable_str,
+    ...         a.tap(lambda s: print(f"Read '{s}' from disk.")),
+    ...         a.map_(transform),
+    ...         a.tap_to_awaitable(write_to_disk),
+    ...         a.tap(lambda s: print(f"Wrote '{s}' to disk.")),
     ...     )
     ...
     >>> output = asyncio.run(main())

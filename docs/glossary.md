@@ -55,9 +55,11 @@ needed just to bind an extra argument.
 
 ## Pipeline and `pipe`
 
-A pipeline is a tuple consisting of a start value followed by a
-sequence of compatible functions.
-[trcks.fp.composition.pipe][] runs the pipeline by passing the
+A pipeline is a start value followed by a sequence of compatible functions.
+The `Pipeline*` type aliases in [trcks.fp.composition][] model pipelines
+as tuples, and help static type checkers validate the compatibility of
+the start value and the functions.
+[trcks.fp.composition.pipe][] runs a pipeline by passing the
 start value through each function in turn.
 
 ## Railway-oriented programming (ROP)

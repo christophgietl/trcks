@@ -143,10 +143,8 @@ def map_(
         >>> def double_integer(n: int) -> int:
         ...     return n * 2
         >>> a_tpl: AwaitableTuple[int] = pipe(
-        ...     (
-        ...         at.construct_from_iterable((1, 2, 3)),
-        ...         at.map_(double_integer),
-        ...     )
+        ...     at.construct_from_iterable((1, 2, 3)),
+        ...     at.map_(double_integer),
         ... )
         >>> asyncio.run(at.to_coroutine_tuple(a_tpl))
         (2, 4, 6)
@@ -187,10 +185,8 @@ def map_to_awaitable(
         ...     await asyncio.sleep(0.001)
         ...     return n + 1
         >>> a_tpl: AwaitableTuple[int] = pipe(
-        ...     (
-        ...         at.construct_from_iterable((1, 2)),
-        ...         at.map_to_awaitable(slowly_add_one),
-        ...     )
+        ...     at.construct_from_iterable((1, 2)),
+        ...     at.map_to_awaitable(slowly_add_one),
         ... )
         >>> asyncio.run(at.to_coroutine_tuple(a_tpl))
         (2, 3)
@@ -233,10 +229,8 @@ def map_to_awaitable_iterable(
         ...     await asyncio.sleep(0.001)
         ...     return n, n
         >>> a_tpl: AwaitableTuple[int] = pipe(
-        ...     (
-        ...         at.construct_from_iterable((1, 2)),
-        ...         at.map_to_awaitable_iterable(slowly_duplicate_integer),
-        ...     )
+        ...     at.construct_from_iterable((1, 2)),
+        ...     at.map_to_awaitable_iterable(slowly_duplicate_integer),
         ... )
         >>> asyncio.run(at.to_coroutine_tuple(a_tpl))
         (1, 1, 2, 2)
@@ -283,10 +277,8 @@ def map_to_iterable(
         >>> def add_negative(n: int) -> tuple[int, int]:
         ...     return n, -n
         >>> a_tpl: AwaitableTuple[int] = pipe(
-        ...     (
-        ...         at.construct_from_iterable((1, 2)),
-        ...         at.map_to_iterable(add_negative),
-        ...     )
+        ...     at.construct_from_iterable((1, 2)),
+        ...     at.map_to_iterable(add_negative),
         ... )
         >>> asyncio.run(at.to_coroutine_tuple(a_tpl))
         (1, -1, 2, -2)
@@ -325,10 +317,8 @@ def tap(
         ...     print(f"Received: {n}")
         ...
         >>> a_tpl: AwaitableTuple[int] = pipe(
-        ...     (
-        ...         at.construct_from_iterable((1, 2)),
-        ...         at.tap(log_integer),
-        ...     )
+        ...     at.construct_from_iterable((1, 2)),
+        ...     at.tap(log_integer),
         ... )
         >>> tpl = asyncio.run(at.to_coroutine_tuple(a_tpl))
         Received: 1
@@ -372,10 +362,8 @@ def tap_to_awaitable(
         ...     await asyncio.sleep(0.001)
         ...     print(f"Received: {n}")
         >>> a_tpl: AwaitableTuple[int] = pipe(
-        ...     (
-        ...         at.construct_from_iterable((1, 2)),
-        ...         at.tap_to_awaitable(slowly_log_integer),
-        ...     )
+        ...     at.construct_from_iterable((1, 2)),
+        ...     at.tap_to_awaitable(slowly_log_integer),
         ... )
         >>> tpl = asyncio.run(at.to_coroutine_tuple(a_tpl))
         Received: 1
@@ -428,10 +416,8 @@ def tap_to_awaitable_iterable(
         ...     candidates = range(1, n + 1)
         ...     return tuple(c for c in candidates if n % c == 0)
         >>> a_tpl: AwaitableTuple[int] = pipe(
-        ...     (
-        ...         at.construct_from_iterable((1, 2, 3, 4)),
-        ...         at.tap_to_awaitable_iterable(slowly_get_divisors),
-        ...     )
+        ...     at.construct_from_iterable((1, 2, 3, 4)),
+        ...     at.tap_to_awaitable_iterable(slowly_get_divisors),
         ... )
         >>> asyncio.run(at.to_coroutine_tuple(a_tpl))
         (1, 2, 2, 3, 3, 4, 4, 4)
@@ -480,10 +466,8 @@ def tap_to_iterable(
         ...     candidates = range(1, n + 1)
         ...     return tuple(c for c in candidates if n % c == 0)
         >>> a_tpl: AwaitableTuple[int] = pipe(
-        ...     (
-        ...         at.construct_from_iterable((1, 2, 3, 4)),
-        ...         at.tap_to_iterable(get_divisors),
-        ...     )
+        ...     at.construct_from_iterable((1, 2, 3, 4)),
+        ...     at.tap_to_iterable(get_divisors),
         ... )
         >>> asyncio.run(at.to_coroutine_tuple(a_tpl))
         (1, 2, 2, 3, 3, 4, 4, 4)

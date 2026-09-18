@@ -54,7 +54,7 @@ into functions with input type `collections.abc.Awaitable[T]`.
     ...         a.map_(transform),
     ...         a.map_to_awaitable(write_to_disk, output_path),
     ...     )
-    ...     return await pipe(p)
+    ...     return await pipe(*p)
     >>>
     >>> asyncio.run(read_and_transform_and_write("input.txt", "output.txt"))
     Read 'Hello, world!' from file input.txt.
@@ -78,7 +78,7 @@ let us have a look at the individual steps of the chain:
     ...     "input.txt",
     ...     read_from_disk,
     ... )
-    >>> asyncio.run(a.to_coroutine(pipe(p1)))
+    >>> asyncio.run(a.to_coroutine(pipe(*p1)))
     Read 'Hello, world!' from file input.txt.
     'Hello, world!'
     >>>
@@ -87,7 +87,7 @@ let us have a look at the individual steps of the chain:
     ...     read_from_disk,
     ...     a.map_(transform),
     ... )
-    >>> asyncio.run(a.to_coroutine(pipe(p2)))
+    >>> asyncio.run(a.to_coroutine(pipe(*p2)))
     Read 'Hello, world!' from file input.txt.
     'Length: 13'
     >>>
@@ -97,14 +97,14 @@ let us have a look at the individual steps of the chain:
     ...     a.map_(transform),
     ...     a.map_to_awaitable(write_to_disk, "output.txt"),
     ... )
-    >>> asyncio.run(a.to_coroutine(pipe(p3)))
+    >>> asyncio.run(a.to_coroutine(pipe(*p3)))
     Read 'Hello, world!' from file input.txt.
     Wrote 'Length: 13' to file output.txt.
 
     ```
 
 ???+ note
-    The values `pipe(p1)`, `pipe(p2)`, and `pipe(p3)` are all of the type [collections.abc.Awaitable][].
+    The values `pipe(*p1)`, `pipe(*p2)`, and `pipe(*p3)` are all of the type [collections.abc.Awaitable][].
     On Python versions older than 3.14, [asyncio.run][] expects the input type
     [collections.abc.Coroutine][].
     Therefore,
@@ -142,7 +142,7 @@ allows us to execute asynchronous side effects.
     ...         a.tap_to_awaitable(write_to_disk, output_path),
     ...         a.tap(lambda s: print(f"Wrote '{s}' to disk.")),
     ...     )
-    ...     return await pipe(p)
+    ...     return await pipe(*p)
     >>>
     >>> asyncio.run(read_and_transform_and_write("input.txt", "output.txt"))
     Read 'Hello, world!' from disk.
@@ -206,7 +206,7 @@ into functions with input type `trcks.AwaitableResult[F, S]`.
     ...         ar.map_success(transform),
     ...         ar.map_success_to_awaitable_result(write_to_disk, output_path),
     ...     )
-    ...     return await pipe(p)
+    ...     return await pipe(*p)
     >>>
     >>> asyncio.run(read_and_transform_and_write("input.txt", "output.txt"))
     Read 'Hello, world!' from file input.txt.
@@ -227,7 +227,7 @@ let us have a look at the individual steps of the chain:
     ...     "input.txt",
     ...     read_from_disk,
     ... )
-    >>> asyncio.run(ar.to_coroutine_result(pipe(p1)))
+    >>> asyncio.run(ar.to_coroutine_result(pipe(*p1)))
     Read 'Hello, world!' from file input.txt.
     ('success', 'Hello, world!')
     >>>
@@ -240,7 +240,7 @@ let us have a look at the individual steps of the chain:
     ...     read_from_disk,
     ...     ar.map_success(transform),
     ... )
-    >>> asyncio.run(ar.to_coroutine_result(pipe(p2)))
+    >>> asyncio.run(ar.to_coroutine_result(pipe(*p2)))
     Read 'Hello, world!' from file input.txt.
     ('success', 'Length: 13')
     >>>
@@ -255,7 +255,7 @@ let us have a look at the individual steps of the chain:
     ...     ar.map_success(transform),
     ...     ar.map_success_to_awaitable_result(write_to_disk, "output.txt"),
     ... )
-    >>> asyncio.run(ar.to_coroutine_result(pipe(p3)))
+    >>> asyncio.run(ar.to_coroutine_result(pipe(*p3)))
     Read 'Hello, world!' from file input.txt.
     Wrote 'Length: 13' to file output.txt.
     ('success', None)
@@ -263,7 +263,7 @@ let us have a look at the individual steps of the chain:
     ```
 
 ???+ note
-    The values `pipe(p1)`, `pipe(p2)`, and `pipe(p3)` are all
+    The values `pipe(*p1)`, `pipe(*p2)`, and `pipe(*p3)` are all
     of type [trcks.AwaitableResult][].
     On Python versions older than 3.14, [asyncio.run][] expects the input type
     [collections.abc.Coroutine][].
@@ -311,7 +311,7 @@ in the failure case or in the success case, respectively:
     ...         ar.tap_success(lambda _: print("LOG: Successfully wrote to disk.")),
     ...         ar.tap_failure(lambda err: print(f"LOG: Failed with error: {err}")),
     ...     )
-    ...     return await pipe(pipeline)
+    ...     return await pipe(*pipeline)
     >>>
     >>> result_1 = asyncio.run(read_and_transform_and_write("input.txt", "output.txt"))
     LOG: Read 'Hello, world!' from disk.
@@ -357,7 +357,7 @@ the original success value is preserved:
     ...         ar.tap_success(lambda s: print(f"LOG: Persisting '{s}'.")),
     ...         ar.tap_success_to_awaitable_result(write_to_disk),
     ...     )
-    ...     return await pipe(pipeline)
+    ...     return await pipe(*pipeline)
     >>>
     >>> result = asyncio.run(read_and_persist("input.txt"))
     LOG: Persisting 'Hello, world!'.

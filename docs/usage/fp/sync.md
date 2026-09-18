@@ -14,7 +14,7 @@ The function [trcks.fp.composition.pipe][] allows us to chain functions:
     >>> from trcks.fp.composition import pipe
     >>>
     >>> def to_length_string(s: str) -> str:
-    ...     return pipe((s, len, lambda n: f"Length: {n}"))
+    ...     return pipe(s, len, lambda n: f"Length: {n}")
     >>>
     >>> to_length_string("Hello, world!")
     'Length: 13'
@@ -27,19 +27,18 @@ let us have a look at the individual steps of the chain:
 ??? example "Step by step"
 
     ```pycon
-    >>> pipe(("Hello, world!",))
+    >>> pipe("Hello, world!")
     'Hello, world!'
-    >>> pipe(("Hello, world!", len))
+    >>> pipe("Hello, world!", len)
     13
-    >>> pipe(("Hello, world!", len, lambda n: f"Length: {n}"))
+    >>> pipe("Hello, world!", len, lambda n: f"Length: {n}")
     'Length: 13'
 
     ```
 
 ???+ note
-    The function [trcks.fp.composition.pipe][] expects a [trcks.fp.composition.Pipeline][],
-    i.e. a tuple consisting of a start value followed by up to seven
-    compatible functions.
+    The function [trcks.fp.composition.pipe][] takes a start value followed by
+    up to seven compatible functions as separate arguments.
 
 Side effects like logging or writing to a file tend to
 "consume" their input and return [None][] instead.
@@ -54,13 +53,11 @@ that behaves like the original function but returns the input value.
     >>>
     >>> def to_length_string(s: str) -> str:
     ...     return pipe(
-    ...         (
-    ...             s,
-    ...             i.tap(lambda o: print(f"LOG: Received '{o}'.")),
-    ...             len,
-    ...             lambda n: f"Length: {n}",
-    ...             i.tap(lambda o: print(f"LOG: Returning '{o}'.")),
-    ...         ),
+    ...         s,
+    ...         i.tap(lambda o: print(f"LOG: Received '{o}'.")),
+    ...         len,
+    ...         lambda n: f"Length: {n}",
+    ...         i.tap(lambda o: print(f"LOG: Returning '{o}'.")),
     ...     )
     >>>
     >>> output = to_length_string("Hello, world!")
@@ -113,7 +110,7 @@ into functions with input type `trcks.Result[F, S]`.
     >>> def get_subscription_fee_by_email(user_email: str) -> Result[FailureDescription, float]:
     ...     # Explicitly assigning a type to `pipeline` might
     ...     # help your static type checker understand that
-    ...     # `pipeline` is a valid argument for `pipe`:
+    ...     # `pipeline` is a valid variadic argument for `pipe`:
     ...     pipeline: Pipeline3[
     ...         str,
     ...         Result[UserDoesNotExist, int],
@@ -125,7 +122,7 @@ into functions with input type `trcks.Result[F, S]`.
     ...         r.map_success_to_result(get_subscription_id),
     ...         r.map_success(get_subscription_fee),
     ...     )
-    ...     return pipe(pipeline)
+    ...     return pipe(*pipeline)
     >>>
     >>> get_subscription_fee_by_email("erika.mustermann@domain.org")
     ('success', 4.2)
@@ -145,14 +142,14 @@ let us have a look at the individual steps of the chain:
     >>> from trcks.fp.composition import Pipeline0, Pipeline1, Pipeline2
     >>>
     >>> p0: Pipeline0[str] = ("erika.mustermann@domain.org",)
-    >>> pipe(p0)
+    >>> pipe(*p0)
     'erika.mustermann@domain.org'
     >>>
     >>> p1: Pipeline1[str, Result[UserDoesNotExist, int]] = (
     ...     "erika.mustermann@domain.org",
     ...     get_user_id,
     ... )
-    >>> pipe(p1)
+    >>> pipe(*p1)
     ('success', 1)
     >>>
     >>> p2: Pipeline2[str, Result[UserDoesNotExist, int], Result[FailureDescription, int]] = (
@@ -160,7 +157,7 @@ let us have a look at the individual steps of the chain:
     ...     get_user_id,
     ...     r.map_success_to_result(get_subscription_id),
     ... )
-    >>> pipe(p2)
+    >>> pipe(*p2)
     ('success', 42)
     >>>
     >>> p3: Pipeline3[
@@ -174,7 +171,7 @@ let us have a look at the individual steps of the chain:
     ...     r.map_success_to_result(get_subscription_id),
     ...     r.map_success(get_subscription_fee),
     ... )
-    >>> pipe(p3)
+    >>> pipe(*p3)
     ('success', 4.2)
 
     ```
@@ -207,7 +204,7 @@ allow us to execute side effects in the failure case or in the success case, res
     ...         r.tap_success(lambda x: print(f"LOG: Subscription fee: {x}.")),
     ...         r.tap_failure(lambda fd: print(f"LOG: Failure description: {fd}.")),
     ...     )
-    ...     return pipe(pipeline)
+    ...     return pipe(*pipeline)
     >>>
     >>> fee_erika = get_subscription_fee_by_email("erika.mustermann@domain.org")
     LOG: User ID: 1.
@@ -257,7 +254,7 @@ If the side effect returns a [trcks.Success][], the original success value is pr
     ...         get_user_id,
     ...         r.tap_success_to_result(write_to_disk),
     ...     )
-    ...     return pipe(pipeline)
+    ...     return pipe(*pipeline)
     >>>
     >>> id_erika = get_and_persist_user_id("erika.mustermann@domain.org")
     LOG: Wrote 1 to disk.

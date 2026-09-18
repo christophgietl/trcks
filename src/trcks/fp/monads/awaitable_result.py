@@ -25,11 +25,9 @@ Examples:
     >>> async def main() -> Result[str, float]:
     ...     a_rslt = read_from_disk()
     ...     return await pipe(
-    ...         (
-    ...             a_rslt,
-    ...             ar.map_success_to_result(get_square_root),
-    ...             ar.tap_success_to_awaitable(write_to_disk),
-    ...         )
+    ...         a_rslt,
+    ...         ar.map_success_to_result(get_square_root),
+    ...         ar.tap_success_to_awaitable(write_to_disk),
     ...     )
     ...
     >>> asyncio.run(main())
