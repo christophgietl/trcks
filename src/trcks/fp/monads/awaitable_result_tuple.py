@@ -25,12 +25,10 @@ Examples:
     ...
     >>> async def main() -> Result[str, tuple[int, ...]]:
     ...     return await pipe(
-    ...         (
-    ...             art.construct_from_awaitable_result(slowly_read_from_disk()),
-    ...             art.map_successes(double_integer),
-    ...             art.tap_successes(log_integer),
-    ...             art.map_successes_to_iterable(duplicate_integer),
-    ...         )
+    ...         art.construct_from_awaitable_result(slowly_read_from_disk()),
+    ...         art.map_successes(double_integer),
+    ...         art.tap_successes(log_integer),
+    ...         art.map_successes_to_iterable(duplicate_integer),
     ...     )
     ...
     >>> r_tpl = asyncio.run(main())

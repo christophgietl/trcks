@@ -2,8 +2,8 @@
 
 Railway-oriented programming (ROP) is a pattern for composing functions
 that may fail, keeping error handling clean and explicit.
-This page covers the **functional style**: you build a pipeline as a
-tuple of a start value and a sequence of functions, then run it with
+This page covers the **functional style**: you build a pipeline
+from a start value and a sequence of functions, then run it with
 [trcks.fp.composition.pipe][] — a "build a pipeline, then run it"
 mental model.
 Single-track and double-track code are both discussed.
