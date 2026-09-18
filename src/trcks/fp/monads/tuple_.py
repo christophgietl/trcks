@@ -19,11 +19,9 @@ Examples:
     ...     print(f"Received: {n}")
     ...
     >>> tpl = pipe(
-    ...     (
-    ...         (1, 2, 3),
-    ...         t.map_(double_integer),
-    ...         t.tap(log_integer),
-    ...     )
+    ...     (1, 2, 3),
+    ...     t.map_(double_integer),
+    ...     t.tap(log_integer),
     ... )
     Received: 2
     Received: 4
@@ -39,10 +37,8 @@ Examples:
     ...     return n, n
     ...
     >>> tpl = pipe(
-    ...     (
-    ...         (1, 2, 3),
-    ...         t.map_to_iterable(duplicate_integer),
-    ...     )
+    ...     (1, 2, 3),
+    ...     t.map_to_iterable(duplicate_integer),
     ... )
     >>> tpl
     (1, 1, 2, 2, 3, 3)

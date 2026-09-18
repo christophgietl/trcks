@@ -18,12 +18,10 @@ Examples:
     ...     print(f"Received: {n}")
     ...
     >>> result_tuple = pipe(
-    ...     (
-    ...         rt.construct_successes_from_iterable((1, 2, 3)),
-    ...         rt.map_successes(double_integer),
-    ...         rt.tap_successes(log_integer),
-    ...         rt.map_successes_to_iterable(duplicate_integer),
-    ...     )
+    ...     rt.construct_successes_from_iterable((1, 2, 3)),
+    ...     rt.map_successes(double_integer),
+    ...     rt.tap_successes(log_integer),
+    ...     rt.map_successes_to_iterable(duplicate_integer),
     ... )
     Received: 2
     Received: 4

@@ -111,7 +111,7 @@ with "regular" functions:
 >>> def get_subscription_fee_by_email(user_email: str) -> Result[FailureDescription, float]:
 ...     # Explicitly assigning a type to `pipeline` might
 ...     # help your static type checker understand that
-...     # `pipeline` is a valid argument for `pipe`:
+...     # `pipeline` is a valid pipeline for `pipe`:
 ...     pipeline: Pipeline3[
 ...         str,
 ...         Result[UserDoesNotExist, int],
@@ -123,7 +123,7 @@ with "regular" functions:
 ...         r.map_success_to_result(get_subscription_id),
 ...         r.map_success(get_subscription_fee),
 ...     )
-...     return pipe(pipeline)
+...     return pipe(*pipeline)
 >>>
 >>> get_subscription_fee_by_email("erika.mustermann@domain.org")
 ('success', 4.2)

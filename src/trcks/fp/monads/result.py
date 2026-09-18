@@ -10,31 +10,29 @@ Examples:
     >>> from trcks.fp.composition import pipe
     >>> from trcks.fp.monads import result as r
     >>> rslt = pipe(
-    ...     (
-    ...         r.construct_success(1_000_000.0),
-    ...         r.tap_success(lambda x: print(f"Processing value {x} ...")),
-    ...         r.map_success_to_result(
-    ...             lambda x: (
-    ...                 ("success", math.sqrt(x))
-    ...                 if x >= 0
-    ...                 else ("failure", "negative value")
-    ...             )
-    ...         ),
-    ...         r.tap_success_to_result(
-    ...             lambda x: (
-    ...                 ("success", print(f"Wrote result {x} to disk."))
-    ...                 if x < 100
-    ...                 else ("failure", "out of disk space")
-    ...             )
-    ...         ),
-    ...     )
+    ...     r.construct_success(1_000_000.0),
+    ...     r.tap_success(lambda x: print(f"Processing value {x} ...")),
+    ...     r.map_success_to_result(
+    ...         lambda x: (
+    ...             ("success", math.sqrt(x))
+    ...             if x >= 0
+    ...             else ("failure", "negative value")
+    ...         )
+    ...     ),
+    ...     r.tap_success_to_result(
+    ...         lambda x: (
+    ...             ("success", print(f"Wrote result {x} to disk."))
+    ...             if x < 100
+    ...             else ("failure", "out of disk space")
+    ...         )
+    ...     ),
     ... )
     Processing value 1000000.0 ...
     >>> rslt
     ('failure', 'out of disk space')
 
     If your static type checker cannot infer the type of
-    the argument passed to [trcks.fp.composition.pipe][],
+    the arguments passed to [trcks.fp.composition.pipe][],
     you can explicitly assign a type:
 
     >>> import math
@@ -64,7 +62,7 @@ Examples:
     ...         )
     ...     ),
     ... )
-    >>> rslt = pipe(p)
+    >>> rslt = pipe(*p)
     Processing value 1000000.0 ...
     >>> rslt
     ('failure', 'out of disk space')

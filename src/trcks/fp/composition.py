@@ -57,7 +57,7 @@ Examples:
     >>> get_length_string = compose((len, to_length_string))
     >>> get_length_string(input_)
     'Length: 13'
-    >>> pipe((input_, len, to_length_string))
+    >>> pipe(input_, len, to_length_string)
     'Length: 13'
 
     The first function may accept multiple arguments or keyword arguments:
@@ -73,9 +73,9 @@ Examples:
 """
 
 from collections.abc import Callable
-from typing import ParamSpec, TypeAlias
+from typing import Any, ParamSpec, TypeAlias, overload
 
-from trcks._typing import Never, TypeVar, assert_type
+from trcks._typing import Never, TypeVar, Unpack, assert_type
 
 __docformat__ = "google"
 
@@ -499,11 +499,46 @@ def compose(  # noqa: PLR0911
             raise TypeError(msg)
 
 
-def pipe(p: Pipeline[_T0, _T1, _T2, _T3, _T4, _T5, _T6, _OUT]) -> _OUT:
+@overload
+def pipe(*pipeline: Unpack[Pipeline0[_OUT]]) -> _OUT: ...
+
+
+@overload
+def pipe(*pipeline: Unpack[Pipeline1[_T0, _OUT]]) -> _OUT: ...
+
+
+@overload
+def pipe(*pipeline: Unpack[Pipeline2[_T0, _T1, _OUT]]) -> _OUT: ...
+
+
+@overload
+def pipe(*pipeline: Unpack[Pipeline3[_T0, _T1, _T2, _OUT]]) -> _OUT: ...
+
+
+@overload
+def pipe(*pipeline: Unpack[Pipeline4[_T0, _T1, _T2, _T3, _OUT]]) -> _OUT: ...
+
+
+@overload
+def pipe(*pipeline: Unpack[Pipeline5[_T0, _T1, _T2, _T3, _T4, _OUT]]) -> _OUT: ...
+
+
+@overload
+def pipe(*pipeline: Unpack[Pipeline6[_T0, _T1, _T2, _T3, _T4, _T5, _OUT]]) -> _OUT: ...
+
+
+@overload
+def pipe(
+    *pipeline: Unpack[Pipeline7[_T0, _T1, _T2, _T3, _T4, _T5, _T6, _OUT]],
+) -> _OUT: ...
+
+
+# pyrefly: ignore [explicit-any]
+def pipe(*pipeline: Any) -> object:  # type: ignore [explicit-any]
     """Evaluate a `Pipeline`.
 
     Args:
-        p:
+        pipeline:
             Single value followed by up to seven compatible functions
             that can be applied sequentially from first to last.
 
@@ -512,9 +547,12 @@ def pipe(p: Pipeline[_T0, _T1, _T2, _T3, _T4, _T5, _T6, _OUT]) -> _OUT:
             to the given value.
 
     Examples:
-        >>> pipe(("Hello, world!", len, lambda n: f"Length: {n}"))
+        >>> pipe("Hello, world!", len, lambda n: f"Length: {n}")
         'Length: 13'
     """
+    p: Pipeline[object, object, object, object, object, object, object, object] = (
+        pipeline
+    )
     match p:
         case (value,):
             return value

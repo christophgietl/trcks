@@ -6,7 +6,20 @@ from typing import Final, TypeAlias, TypeVar
 
 import pytest
 
-from trcks.fp.composition import Composable, Pipeline, compose, pipe
+from trcks.fp.composition import (
+    Composable,
+    Pipeline,
+    Pipeline0,
+    Pipeline1,
+    Pipeline2,
+    Pipeline3,
+    Pipeline4,
+    Pipeline5,
+    Pipeline6,
+    Pipeline7,
+    compose,
+    pipe,
+)
 
 if sys.version_info >= (3, 13):
     from typing import assert_type
@@ -111,18 +124,60 @@ def test_compose3_with_multi_arg_first_function(a: int, b: int) -> None:
 
 @pytest.mark.parametrize("p", _PIPELINES)
 def test_pipe_correctly_applies_pipeline(p: _IntPipeline) -> None:
-    piped = pipe(p)
-    _ = assert_type(piped, int)
+    piped = pipe(*p)
     assert piped == len(p) - 1
+
+
+def test_pipe_correctly_applies_typed_pipelines() -> None:
+    p0: Pipeline0[int] = (0,)
+    assert assert_type(pipe(*p0), int) == len(p0) - 1
+    p1: Pipeline1[int, int] = (0, _incr)
+    assert assert_type(pipe(*p1), int) == len(p1) - 1
+    p2: Pipeline2[int, int, int] = (0, _incr, _incr)
+    assert assert_type(pipe(*p2), int) == len(p2) - 1
+    p3: Pipeline3[int, int, int, int] = (0, _incr, _incr, _incr)
+    assert assert_type(pipe(*p3), int) == len(p3) - 1
+    p4: Pipeline4[int, int, int, int, int] = (0, _incr, _incr, _incr, _incr)
+    assert assert_type(pipe(*p4), int) == len(p4) - 1
+    p5: Pipeline5[int, int, int, int, int, int] = (
+        0,
+        _incr,
+        _incr,
+        _incr,
+        _incr,
+        _incr,
+    )
+    assert assert_type(pipe(*p5), int) == len(p5) - 1
+    p6: Pipeline6[int, int, int, int, int, int, int] = (
+        0,
+        _incr,
+        _incr,
+        _incr,
+        _incr,
+        _incr,
+        _incr,
+    )
+    assert assert_type(pipe(*p6), int) == len(p6) - 1
+    p7: Pipeline7[int, int, int, int, int, int, int, int] = (
+        0,
+        _incr,
+        _incr,
+        _incr,
+        _incr,
+        _incr,
+        _incr,
+        _incr,
+    )
+    assert assert_type(pipe(*p7), int) == len(p7) - 1
 
 
 @pytest.mark.parametrize(
     "input_", [42, "test", [4, 5, 6], {"key": "value"}, None, True]
 )
 def test_pipe_with_1_argument_returns_identical_value(input_: object) -> None:
-    assert pipe((input_,)) is input_
+    assert pipe(input_) is input_
 
 
 @pytest.mark.parametrize("value", [23, 42, -100, 0, 1000, 999999])
 def test_pipe_with_2_arguments_applies_function_to_value(value: int) -> None:
-    assert pipe((value, _foo)) == _foo(value)
+    assert pipe(value, _foo) == _foo(value)

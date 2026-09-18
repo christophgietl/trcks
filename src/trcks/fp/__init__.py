@@ -27,14 +27,12 @@ Examples:
     >>> GetSquareRootResult = Result[Literal["negative value"], float]
     >>> def get_square_root(x: float) -> GetSquareRootResult:
     ...     return pipe(
-    ...         (
-    ...             x,
-    ...             lambda xx:
-    ...                 ("success", xx)
-    ...                 if xx >= 0
-    ...                 else ("failure", "negative value"),
-    ...             r.map_success(math.sqrt),
-    ...         )
+    ...         x,
+    ...         lambda xx:
+    ...             ("success", xx)
+    ...             if xx >= 0
+    ...             else ("failure", "negative value"),
+    ...         r.map_success(math.sqrt),
     ...     )
     ...
     >>> get_square_root(25.0)
@@ -61,7 +59,7 @@ Examples:
     ...             else ("failure", "negative value"),
     ...         r.map_success(math.sqrt),
     ...     )
-    ...     return pipe(p)
+    ...     return pipe(*p)
     ...
     >>> get_square_root(25.0)
     ('success', 5.0)

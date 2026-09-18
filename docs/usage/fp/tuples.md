@@ -47,7 +47,7 @@ operating on entire tuples.
     ...         t.map_(normalize_email),
     ...         t.map_(to_domain),
     ...     )
-    ...     return pipe(pipeline)
+    ...     return pipe(*pipeline)
     >>>
     >>> get_domains(("  Erika.Mustermann@Domain.ORG ", "JOHN_DOE@Provider.COM  "))
     ('domain.org', 'provider.com')
@@ -66,14 +66,14 @@ let us have a look at the individual steps of the chain:
     ... )
     >>>
     >>> p0: Pipeline0[tuple[str, ...]] = (emails,)
-    >>> pipe(p0)
+    >>> pipe(*p0)
     ('  Erika.Mustermann@Domain.ORG ', 'JOHN_DOE@Provider.COM  ')
     >>>
     >>> p1: Pipeline1[tuple[str, ...], tuple[str, ...]] = (
     ...     emails,
     ...     t.map_(normalize_email),
     ... )
-    >>> pipe(p1)
+    >>> pipe(*p1)
     ('erika.mustermann@domain.org', 'john_doe@provider.com')
     >>>
     >>> p2: Pipeline2[tuple[str, ...], tuple[str, ...], tuple[str, ...]] = (
@@ -81,7 +81,7 @@ let us have a look at the individual steps of the chain:
     ...     t.map_(normalize_email),
     ...     t.map_(to_domain),
     ... )
-    >>> pipe(p2)
+    >>> pipe(*p2)
     ('domain.org', 'provider.com')
 
     ```
@@ -93,10 +93,8 @@ let us have a look at the individual steps of the chain:
 
     ```pycon
     >>> pipe(
-    ...     (
-    ...         ("ab", "cd"),
-    ...         t.map_to_iterable(tuple),
-    ...     )
+    ...     ("ab", "cd"),
+    ...     t.map_to_iterable(tuple),
     ... )
     ('a', 'b', 'c', 'd')
 
@@ -120,7 +118,7 @@ allows us to execute side effects for each element:
     ...         t.tap(lambda e: print(f"LOG: Processing '{e}'.")),
     ...         t.map_(to_domain),
     ...     )
-    ...     return pipe(pipeline)
+    ...     return pipe(*pipeline)
     >>>
     >>> result = get_domains(("  Erika.Mustermann@Domain.ORG ", "JOHN_DOE@Provider.COM  "))
     LOG: Processing 'erika.mustermann@domain.org'.
@@ -184,7 +182,7 @@ Processing short-circuits on the first [trcks.Failure][].
     ...         rt.map_successes_to_result(get_subscription_id),
     ...         rt.map_successes(get_subscription_fee),
     ...     )
-    ...     return pipe(pipeline)
+    ...     return pipe(*pipeline)
     >>>
     >>> get_subscription_fees_by_email(("erika.mustermann@domain.org",))
     ('success', (4.2,))
@@ -204,7 +202,7 @@ let us have a look at the individual steps of the chain:
     >>> from trcks.fp.composition import Pipeline4
     >>>
     >>> p0: Pipeline0[tuple[str, ...]] = (("erika.mustermann@domain.org",),)
-    >>> pipe(p0)
+    >>> pipe(*p0)
     ('erika.mustermann@domain.org',)
     >>>
     >>> p1: Pipeline1[
@@ -214,7 +212,7 @@ let us have a look at the individual steps of the chain:
     ...     ("erika.mustermann@domain.org",),
     ...     rt.construct_successes_from_iterable,
     ... )
-    >>> pipe(p1)
+    >>> pipe(*p1)
     ('success', ('erika.mustermann@domain.org',))
     >>>
     >>> p2: Pipeline2[
@@ -226,7 +224,7 @@ let us have a look at the individual steps of the chain:
     ...     rt.construct_successes_from_iterable,
     ...     rt.map_successes_to_result(get_user_id),
     ... )
-    >>> pipe(p2)
+    >>> pipe(*p2)
     ('success', (1,))
     >>>
     >>> p3: Pipeline3[
@@ -240,7 +238,7 @@ let us have a look at the individual steps of the chain:
     ...     rt.map_successes_to_result(get_user_id),
     ...     rt.map_successes_to_result(get_subscription_id),
     ... )
-    >>> pipe(p3)
+    >>> pipe(*p3)
     ('success', (42,))
     >>>
     >>> p4: Pipeline4[
@@ -256,7 +254,7 @@ let us have a look at the individual steps of the chain:
     ...     rt.map_successes_to_result(get_subscription_id),
     ...     rt.map_successes(get_subscription_fee),
     ... )
-    >>> pipe(p4)
+    >>> pipe(*p4)
     ('success', (4.2,))
 
     ```
@@ -305,7 +303,7 @@ in the success case (for each element) or in the failure case, respectively.
     ...         rt.tap_successes(lambda x: print(f"LOG: Subscription fee: {x}.")),
     ...         rt.tap_failure(lambda fd: print(f"LOG: Failure: {fd}.")),
     ...     )
-    ...     return pipe(pipeline)
+    ...     return pipe(*pipeline)
     >>>
     >>> fees_erika = get_subscription_fees_by_email(("erika.mustermann@domain.org",))
     LOG: User ID: 1.
@@ -359,7 +357,7 @@ the original success values are preserved.
     ...         rt.map_successes_to_result(get_user_id),
     ...         rt.tap_successes_to_result(write_to_disk),
     ...     )
-    ...     return pipe(pipeline)
+    ...     return pipe(*pipeline)
     >>>
     >>> ids_erika = get_and_persist_user_ids(("erika.mustermann@domain.org",))
     LOG: Wrote 1 to disk.
@@ -389,14 +387,12 @@ When the second element fails, the third element is never evaluated:
     >>>
     >>> pipe(
     ...     (
-    ...         (
-    ...             "erika.mustermann@domain.org",
-    ...             "jane_doe@provider.com",
-    ...             "john_doe@provider.com",
-    ...         ),
-    ...         rt.construct_successes_from_iterable,
-    ...         rt.map_successes_to_result(get_user_id_logged),
-    ...     )
+    ...         "erika.mustermann@domain.org",
+    ...         "jane_doe@provider.com",
+    ...         "john_doe@provider.com",
+    ...     ),
+    ...     rt.construct_successes_from_iterable,
+    ...     rt.map_successes_to_result(get_user_id_logged),
     ... )
     LOG: Looking up 'erika.mustermann@domain.org'.
     LOG: Looking up 'jane_doe@provider.com'.
@@ -447,7 +443,7 @@ into functions operating on [trcks.AwaitableTuple][] values.
     ...         at.map_to_awaitable(read_from_disk),
     ...         at.map_(transform),
     ...     )
-    ...     return await pipe(p)
+    ...     return await pipe(*p)
     >>>
     >>> asyncio.run(read_and_transform(("a.txt", "b.txt")))
     ('Length: 5', 'Length: 5')
@@ -466,7 +462,7 @@ let us have a look at the individual steps of the chain:
     ...     ("a.txt", "b.txt"),
     ...     at.construct_from_iterable,
     ... )
-    >>> asyncio.run(at.to_coroutine_tuple(pipe(p1)))
+    >>> asyncio.run(at.to_coroutine_tuple(pipe(*p1)))
     ('a.txt', 'b.txt')
     >>>
     >>> p2: Pipeline2[
@@ -478,7 +474,7 @@ let us have a look at the individual steps of the chain:
     ...     at.construct_from_iterable,
     ...     at.map_to_awaitable(read_from_disk),
     ... )
-    >>> asyncio.run(at.to_coroutine_tuple(pipe(p2)))
+    >>> asyncio.run(at.to_coroutine_tuple(pipe(*p2)))
     ('Hello', 'World')
     >>>
     >>> p3: Pipeline3[
@@ -492,7 +488,7 @@ let us have a look at the individual steps of the chain:
     ...     at.map_to_awaitable(read_from_disk),
     ...     at.map_(transform),
     ... )
-    >>> asyncio.run(at.to_coroutine_tuple(pipe(p3)))
+    >>> asyncio.run(at.to_coroutine_tuple(pipe(*p3)))
     ('Length: 5', 'Length: 5')
 
     ```
@@ -504,7 +500,7 @@ let us have a look at the individual steps of the chain:
     which can then be used with the higher-order functions
     from [trcks.fp.monads.awaitable_tuple][].
 
-    The values `pipe(p1)`, `pipe(p2)`, and `pipe(p3)` are all
+    The values `pipe(*p1)`, `pipe(*p2)`, and `pipe(*p3)` are all
     of type [trcks.AwaitableTuple][].
     Since [asyncio.run][] expects the input type [collections.abc.Coroutine][],
     we use the function
@@ -545,7 +541,7 @@ allows us to execute asynchronous side effects for each element.
     ...         at.map_(transform),
     ...         at.tap(lambda s: print(f"Transformed to '{s}'.")),
     ...     )
-    ...     return await pipe(p)
+    ...     return await pipe(*p)
     >>>
     >>> asyncio.run(read_and_transform(("a.txt", "b.txt")))
     Read 'Hello' from disk.
@@ -594,7 +590,7 @@ Processing short-circuits on the first [trcks.Failure][]:
     ...         art.map_successes_to_result(get_subscription_id),
     ...         art.map_successes(get_subscription_fee),
     ...     )
-    ...     return await pipe(p)
+    ...     return await pipe(*p)
     >>>
     >>> asyncio.run(get_subscription_fees_slowly(("erika.mustermann@domain.org",)))
     ('success', (4.2,))
@@ -659,7 +655,7 @@ just as in the synchronous case above.
     ...         art.map_successes(transform),
     ...         art.tap_successes_to_awaitable_result(lambda s: write_to_disk(s, output_path)),
     ...     )
-    ...     return await pipe(p)
+    ...     return await pipe(*p)
     >>>
     >>> asyncio.run(read_and_transform_and_write(("a.txt", "b.txt"), "output.txt"))
     Wrote 'Length: 5' to file output.txt.
@@ -681,7 +677,7 @@ let us have a look at the individual steps of the chain:
     ...     ("a.txt", "b.txt"),
     ...     art.construct_successes_from_iterable,
     ... )
-    >>> asyncio.run(art.to_coroutine_result_tuple(pipe(p1)))
+    >>> asyncio.run(art.to_coroutine_result_tuple(pipe(*p1)))
     ('success', ('a.txt', 'b.txt'))
     >>>
     >>> p2: Pipeline2[
@@ -693,7 +689,7 @@ let us have a look at the individual steps of the chain:
     ...     art.construct_successes_from_iterable,
     ...     art.map_successes_to_awaitable_result(read_from_disk),
     ... )
-    >>> asyncio.run(art.to_coroutine_result_tuple(pipe(p2)))
+    >>> asyncio.run(art.to_coroutine_result_tuple(pipe(*p2)))
     ('success', ('Hello', 'World'))
     >>>
     >>> p3: Pipeline3[
@@ -707,7 +703,7 @@ let us have a look at the individual steps of the chain:
     ...     art.map_successes_to_awaitable_result(read_from_disk),
     ...     art.map_successes(transform),
     ... )
-    >>> asyncio.run(art.to_coroutine_result_tuple(pipe(p3)))
+    >>> asyncio.run(art.to_coroutine_result_tuple(pipe(*p3)))
     ('success', ('Length: 5', 'Length: 5'))
     >>>
     >>> p4: Pipeline4[
@@ -723,7 +719,7 @@ let us have a look at the individual steps of the chain:
     ...     art.map_successes(transform),
     ...     art.tap_successes_to_awaitable_result(lambda s: write_to_disk(s, "output.txt")),
     ... )
-    >>> asyncio.run(art.to_coroutine_result_tuple(pipe(p4)))
+    >>> asyncio.run(art.to_coroutine_result_tuple(pipe(*p4)))
     Wrote 'Length: 5' to file output.txt.
     Wrote 'Length: 5' to file output.txt.
     ('success', ('Length: 5', 'Length: 5'))
@@ -738,7 +734,7 @@ let us have a look at the individual steps of the chain:
     which can then be used with the higher-order functions
     from [trcks.fp.monads.awaitable_result_tuple][].
 
-    The values `pipe(p1)`, `pipe(p2)`, `pipe(p3)`, and `pipe(p4)` are all
+    The values `pipe(*p1)`, `pipe(*p2)`, `pipe(*p3)`, and `pipe(*p4)` are all
     of type [trcks.AwaitableResultTuple][].
     Since [asyncio.run][] expects the input type [collections.abc.Coroutine][],
     we use the function
@@ -791,7 +787,7 @@ in the failure case or in the success case (for each element), respectively:
     ...         art.tap_successes(lambda _: print("LOG: Successfully wrote to disk.")),
     ...         art.tap_failure(lambda err: print(f"LOG: Failed with error: {err}")),
     ...     )
-    ...     return await pipe(pipeline)
+    ...     return await pipe(*pipeline)
     >>>
     >>> result_1 = asyncio.run(read_and_transform_and_write(("a.txt", "b.txt"), "output.txt"))
     LOG: Read 'Hello' from disk.
@@ -851,7 +847,7 @@ the original success values are preserved:
     ...         art.tap_successes(lambda s: print(f"LOG: Persisting '{s}'.")),
     ...         art.tap_successes_to_awaitable_result(write_to_disk),
     ...     )
-    ...     return await pipe(pipeline)
+    ...     return await pipe(*pipeline)
     >>>
     >>> result = asyncio.run(read_and_persist(("a.txt", "b.txt")))
     LOG: Persisting 'Hi'.

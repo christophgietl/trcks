@@ -17,11 +17,9 @@ Examples:
     ...
     >>> async def main() -> tuple[int, ...]:
     ...     return await pipe(
-    ...         (
-    ...             at.construct_from_iterable((4, 2, 0)),
-    ...             at.map_(double_integer),
-    ...             at.tap(log_integer),
-    ...         )
+    ...         at.construct_from_iterable((4, 2, 0)),
+    ...         at.map_(double_integer),
+    ...         at.tap(log_integer),
     ...     )
     ...
     >>> tpl = asyncio.run(main())
@@ -42,10 +40,8 @@ Examples:
     ...
     >>> async def main() -> tuple[int, ...]:
     ...     return await pipe(
-    ...         (
-    ...             at.construct_from_iterable((1, 2, 3)),
-    ...             at.map_to_awaitable_iterable(slowly_duplicate_integer),
-    ...         )
+    ...         at.construct_from_iterable((1, 2, 3)),
+    ...         at.map_to_awaitable_iterable(slowly_duplicate_integer),
     ...     )
     ...
     >>> asyncio.run(main())
