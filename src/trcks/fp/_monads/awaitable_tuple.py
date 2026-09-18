@@ -192,7 +192,7 @@ def map_to_awaitable(
         (2, 3)
     """
     return map_to_awaitable_iterable(
-        compose2((f, construct_from_awaitable)), *args, **kwargs
+        compose2(f, construct_from_awaitable), *args, **kwargs
     )
 
 

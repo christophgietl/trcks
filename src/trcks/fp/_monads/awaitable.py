@@ -82,7 +82,7 @@ def map_(
         'Length: 13'
 
     """
-    return map_to_awaitable(compose2((f, construct)), *args, **kwargs)
+    return map_to_awaitable(compose2(f, construct), *args, **kwargs)
 
 
 def map_to_awaitable(
