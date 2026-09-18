@@ -236,7 +236,7 @@ def map_failure_to_awaitable(
         ('success', 25.0)
     """
     return map_failure_to_awaitable_result(
-        compose2((f, construct_failure_from_awaitable)), *args, **kwargs
+        compose2(f, construct_failure_from_awaitable), *args, **kwargs
     )
 
 
@@ -441,7 +441,7 @@ def map_success_to_awaitable(
         ('success', 43)
     """
     return map_success_to_awaitable_result(
-        compose2((f, construct_success_from_awaitable)), *args, **kwargs
+        compose2(f, construct_success_from_awaitable), *args, **kwargs
     )
 
 

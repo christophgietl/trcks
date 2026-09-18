@@ -67,7 +67,7 @@ def map_(
         >>> double_integers((1, 2, 3))
         (2, 4, 6)
     """
-    return map_to_iterable(compose2((f, construct)), *args, **kwargs)
+    return map_to_iterable(compose2(f, construct), *args, **kwargs)
 
 
 def map_to_iterable(

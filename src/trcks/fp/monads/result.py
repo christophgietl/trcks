@@ -195,7 +195,7 @@ def map_failure_to_awaitable(
         ('success', 42)
     """
     return compose2(
-        (ar.construct_from_result, ar.map_failure_to_awaitable(f, *args, **kwargs))
+        ar.construct_from_result, ar.map_failure_to_awaitable(f, *args, **kwargs)
     )
 
 
@@ -247,10 +247,7 @@ def map_failure_to_awaitable_result(
         ('success', 25.0)
     """
     return compose2(
-        (
-            ar.construct_from_result,
-            ar.map_failure_to_awaitable_result(f, *args, **kwargs),
-        )
+        ar.construct_from_result, ar.map_failure_to_awaitable_result(f, *args, **kwargs)
     )
 
 
@@ -296,10 +293,8 @@ def map_failure_to_awaitable_result_iterable(
         ('success', (25.0,))
     """
     return compose2(
-        (
-            art.construct_from_result,
-            art.map_failure_to_awaitable_result_iterable(f, *args, **kwargs),
-        )
+        art.construct_from_result,
+        art.map_failure_to_awaitable_result_iterable(f, *args, **kwargs),
     )
 
 
@@ -358,7 +353,7 @@ def map_failure_to_iterable(
         Callable[[Result[_F1, _S1]], ResultTuple[_F1, _S1]],
         Callable[[ResultTuple[_F1, _S1]], SuccessTuple[_S1] | SuccessTuple[_S2]],
     ] = (rt.construct_from_result, rt.map_failure_to_iterable(f, *args, **kwargs))
-    return compose2(c)
+    return compose2(*c)
 
 
 def map_failure_to_result_iterable(
@@ -406,7 +401,7 @@ def map_failure_to_result_iterable(
         rt.construct_from_result,
         rt.map_failure_to_result_iterable(f, *args, **kwargs),
     )
-    return compose2(c)
+    return compose2(*c)
 
 
 @deprecated("Use map_failure_to_result_iterable instead")
@@ -470,7 +465,7 @@ def map_success_to_awaitable(
         ('success', 43)
     """
     return compose2(
-        (ar.construct_from_result, ar.map_success_to_awaitable(f, *args, **kwargs))
+        ar.construct_from_result, ar.map_success_to_awaitable(f, *args, **kwargs)
     )
 
 
@@ -521,10 +516,7 @@ def map_success_to_awaitable_result(
         ('success', 5.0)
     """
     return compose2(
-        (
-            ar.construct_from_result,
-            ar.map_success_to_awaitable_result(f, *args, **kwargs),
-        )
+        ar.construct_from_result, ar.map_success_to_awaitable_result(f, *args, **kwargs)
     )
 
 
@@ -570,10 +562,8 @@ def map_success_to_awaitable_result_iterable(
         ('success', (5.0, 10.0))
     """
     return compose2(
-        (
-            art.construct_from_result,
-            art.map_successes_to_awaitable_result_iterable(f, *args, **kwargs),
-        )
+        art.construct_from_result,
+        art.map_successes_to_awaitable_result_iterable(f, *args, **kwargs),
     )
 
 
@@ -628,7 +618,7 @@ def map_success_to_iterable(
         Callable[[Result[_F1, _S1]], ResultTuple[_F1, _S1]],
         Callable[[ResultTuple[_F1, _S1]], ResultTuple[_F1, _S2]],
     ] = (rt.construct_from_result, rt.map_successes_to_iterable(f, *args, **kwargs))
-    return compose2(c)
+    return compose2(*c)
 
 
 def map_success_to_result_iterable(
@@ -676,7 +666,7 @@ def map_success_to_result_iterable(
         rt.construct_from_result,
         rt.map_successes_to_result_iterable(f, *args, **kwargs),
     )
-    return compose2(c)
+    return compose2(*c)
 
 
 @deprecated("Use map_success_to_result_iterable instead")
@@ -741,7 +731,7 @@ def tap_failure_to_awaitable(
         ('success', 42)
     """
     return compose2(
-        (ar.construct_from_result, ar.tap_failure_to_awaitable(f, *args, **kwargs))
+        ar.construct_from_result, ar.tap_failure_to_awaitable(f, *args, **kwargs)
     )
 
 
@@ -797,10 +787,7 @@ def tap_failure_to_awaitable_result(
         ('success', 42)
     """
     return compose2(
-        (
-            ar.construct_from_result,
-            ar.tap_failure_to_awaitable_result(f, *args, **kwargs),
-        )
+        ar.construct_from_result, ar.tap_failure_to_awaitable_result(f, *args, **kwargs)
     )
 
 
@@ -850,10 +837,8 @@ def tap_failure_to_awaitable_result_iterable(
         ('success', (42,))
     """
     return compose2(
-        (
-            art.construct_from_result,
-            art.tap_failure_to_awaitable_result_iterable(f, *args, **kwargs),
-        )
+        art.construct_from_result,
+        art.tap_failure_to_awaitable_result_iterable(f, *args, **kwargs),
     )
 
 
@@ -916,7 +901,7 @@ def tap_failure_to_iterable(
         Callable[[Result[_F1, _S1]], ResultTuple[_F1, _S1]],
         Callable[[ResultTuple[_F1, _S1]], SuccessTuple[_F1] | SuccessTuple[_S1]],
     ] = (rt.construct_from_result, rt.tap_failure_to_iterable(f, *args, **kwargs))
-    return compose2(c)
+    return compose2(*c)
 
 
 def tap_failure_to_result_iterable(
@@ -968,7 +953,7 @@ def tap_failure_to_result_iterable(
         rt.construct_from_result,
         rt.tap_failure_to_result_iterable(f, *args, **kwargs),
     )
-    return compose2(c)
+    return compose2(*c)
 
 
 @deprecated("Use tap_failure_to_result_iterable instead")
@@ -1033,7 +1018,7 @@ def tap_success_to_awaitable(
         ('success', 'Hello, world!')
     """
     return compose2(
-        (ar.construct_from_result, ar.tap_success_to_awaitable(f, *args, **kwargs))
+        ar.construct_from_result, ar.tap_success_to_awaitable(f, *args, **kwargs)
     )
 
 
@@ -1097,10 +1082,7 @@ def tap_success_to_awaitable_result(
         ('success', 'Hello, world!')
     """
     return compose2(
-        (
-            ar.construct_from_result,
-            ar.tap_success_to_awaitable_result(f, *args, **kwargs),
-        )
+        ar.construct_from_result, ar.tap_success_to_awaitable_result(f, *args, **kwargs)
     )
 
 
@@ -1152,10 +1134,8 @@ def tap_success_to_awaitable_result_iterable(
         ('success', ('Hello, world!', 'Hello, world!'))
     """
     return compose2(
-        (
-            art.construct_from_result,
-            art.tap_successes_to_awaitable_result_iterable(f, *args, **kwargs),
-        )
+        art.construct_from_result,
+        art.tap_successes_to_awaitable_result_iterable(f, *args, **kwargs),
     )
 
 
@@ -1216,7 +1196,7 @@ def tap_success_to_iterable(
         Callable[[Result[_F1, _S1]], ResultTuple[_F1, _S1]],
         Callable[[ResultTuple[_F1, _S1]], ResultTuple[_F1, _S1]],
     ] = (rt.construct_from_result, rt.tap_successes_to_iterable(f, *args, **kwargs))
-    return compose2(c)
+    return compose2(*c)
 
 
 def tap_success_to_result_iterable(
@@ -1268,7 +1248,7 @@ def tap_success_to_result_iterable(
         rt.construct_from_result,
         rt.tap_successes_to_result_iterable(f, *args, **kwargs),
     )
-    return compose2(c)
+    return compose2(*c)
 
 
 @deprecated("Use tap_success_to_result_iterable instead")

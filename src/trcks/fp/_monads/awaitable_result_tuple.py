@@ -376,7 +376,7 @@ def map_failure_to_awaitable(
         ('success', (1, 2))
     """
     return map_failure_to_awaitable_result_iterable(
-        compose2((f, construct_failure_from_awaitable)), *args, **kwargs
+        compose2(f, construct_failure_from_awaitable), *args, **kwargs
     )
 
 
@@ -505,7 +505,7 @@ def map_failure_to_awaitable_result(
         ('success', (1, 2))
     """
     return map_failure_to_awaitable_result_iterable(
-        compose2((f, construct_from_awaitable_result)), *args, **kwargs
+        compose2(f, construct_from_awaitable_result), *args, **kwargs
     )
 
 
@@ -816,7 +816,7 @@ def map_successes_to_awaitable(
         ('failure', 'not found')
     """
     return map_successes_to_awaitable_result_iterable(
-        compose2((f, construct_successes_from_awaitable)), *args, **kwargs
+        compose2(f, construct_successes_from_awaitable), *args, **kwargs
     )
 
 
@@ -861,7 +861,7 @@ def map_successes_to_awaitable_iterable(
         ('failure', 'oops')
     """
     return map_successes_to_awaitable_result_iterable(
-        compose2((f, construct_successes_from_awaitable_iterable)), *args, **kwargs
+        compose2(f, construct_successes_from_awaitable_iterable), *args, **kwargs
     )
 
 
@@ -920,7 +920,7 @@ def map_successes_to_awaitable_result(
         ('failure', 'oops')
     """
     return map_successes_to_awaitable_result_iterable(
-        compose2((f, construct_from_awaitable_result)), *args, **kwargs
+        compose2(f, construct_from_awaitable_result), *args, **kwargs
     )
 
 
@@ -1785,7 +1785,7 @@ def tap_successes_to_awaitable_result(
         ('failure', 'oops')
     """
     return tap_successes_to_awaitable_result_iterable(
-        compose2((f, construct_from_awaitable_result)), *args, **kwargs
+        compose2(f, construct_from_awaitable_result), *args, **kwargs
     )
 
 
