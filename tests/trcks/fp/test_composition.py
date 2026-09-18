@@ -1,13 +1,19 @@
 from __future__ import annotations
 
 import sys
-from collections.abc import Callable
 from typing import Final, TypeAlias, TypeVar
 
 import pytest
 
 from trcks.fp.composition import (
     Composable,
+    Composable1,
+    Composable2,
+    Composable3,
+    Composable4,
+    Composable5,
+    Composable6,
+    Composable7,
     Pipeline,
     Pipeline0,
     Pipeline1,
@@ -78,47 +84,89 @@ _PIPELINES: Final[_Tuple8[_IntPipeline]] = (
 
 @pytest.mark.parametrize("composable", _COMPOSABLES)
 def test_compose_correctly_composes_composable(composable: _IntComposable) -> None:
-    composed = compose(composable)
-    _ = assert_type(composed, Callable[[int], int])
+    composed = compose(*composable)
     assert composed(0) == len(composable)
+
+
+def test_compose_correctly_composes_typed_composables() -> None:
+    c1: Composable1[[int], int] = (_incr,)
+    composed = compose(*c1)
+    assert assert_type(composed(0), int) == len(c1)
+    c2: Composable2[[int], int, int] = (_incr, _incr)
+    composed = compose(*c2)
+    assert assert_type(composed(0), int) == len(c2)
+    c3: Composable3[[int], int, int, int] = (_incr, _incr, _incr)
+    composed = compose(*c3)
+    assert assert_type(composed(0), int) == len(c3)
+    c4: Composable4[[int], int, int, int, int] = (_incr, _incr, _incr, _incr)
+    composed = compose(*c4)
+    assert assert_type(composed(0), int) == len(c4)
+    c5: Composable5[[int], int, int, int, int, int] = (
+        _incr,
+        _incr,
+        _incr,
+        _incr,
+        _incr,
+    )
+    composed = compose(*c5)
+    assert assert_type(composed(0), int) == len(c5)
+    c6: Composable6[[int], int, int, int, int, int, int] = (
+        _incr,
+        _incr,
+        _incr,
+        _incr,
+        _incr,
+        _incr,
+    )
+    composed = compose(*c6)
+    assert assert_type(composed(0), int) == len(c6)
+    c7: Composable7[[int], int, int, int, int, int, int, int] = (
+        _incr,
+        _incr,
+        _incr,
+        _incr,
+        _incr,
+        _incr,
+        _incr,
+    )
+    composed = compose(*c7)
+    assert assert_type(composed(0), int) == len(c7)
 
 
 @pytest.mark.parametrize("value", [23, 42, 100, -1, 0, 1])
 def test_compose_with_1_argument_returns_equivalent_function(value: int) -> None:
-    composed = compose((_foo,))
-    _ = assert_type(composed, Callable[[int], str])
-    assert composed(value) == _foo(value)
+    composed = compose(_foo)
+    assert assert_type(composed(value), str) == _foo(value)
 
 
 @pytest.mark.parametrize("value", [0, 1, -1, 10, 100, 1000])
 def test_compose_with_2_arguments_returns_composed_function(value: int) -> None:
-    composed = compose((_foo, len))
-    _ = assert_type(composed, Callable[[int], int])
-    assert composed(value) == len(_foo(value))
+    composed = compose(_foo, len)
+    assert assert_type(composed(value), int) == len(_foo(value))
 
 
 @pytest.mark.parametrize(("a", "b"), [(2, 3), (5, 7), (10, 20)])
 def test_compose_with_multi_arg_first_function(a: int, b: int) -> None:
-    composed = compose((_add, _to_output_string))
+    composed = compose(_add, _to_output_string)
     assert assert_type(composed(a, b), str) == f"Output: {a + b}"
     assert assert_type(composed(a=a, b=b), str) == f"Output: {a + b}"
 
 
 @pytest.mark.parametrize(("a", "b"), [(2, 3), (5, 7), (10, 20)])
 def test_compose1_with_multi_arg_function(a: int, b: int) -> None:
-    composed = compose((_add,))
+    composed = compose(_add)
     assert composed(a, b) == a + b
 
 
 @pytest.mark.parametrize(("a", "b"), [(2, 3), (5, 7), (10, 20)])
 def test_compose2_with_multi_arg_first_function(a: int, b: int) -> None:
-    composed = compose((_add, _double))
+    composed = compose(_add, _double)
     assert composed(a, b) == (a + b) * 2
 
 
 @pytest.mark.parametrize(("a", "b"), [(2, 3), (5, 7), (10, 20)])
 def test_compose3_with_multi_arg_first_function(a: int, b: int) -> None:
-    composed = compose((_add, _double, str))
+    composed = compose(_add, _double, str)
     assert composed(a, b) == str((a + b) * 2)
 
 

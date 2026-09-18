@@ -54,7 +54,7 @@ Examples:
     >>> input_ = "Hello, world!"
     >>> to_length_string(len(input_))
     'Length: 13'
-    >>> get_length_string = compose((len, to_length_string))
+    >>> get_length_string = compose(len, to_length_string)
     >>> get_length_string(input_)
     'Length: 13'
     >>> pipe(input_, len, to_length_string)
@@ -65,7 +65,7 @@ Examples:
     >>> def repeat(text: str, times: int = 2) -> str:
     ...     return text * times
     ...
-    >>> get_repeated = compose((repeat, len))
+    >>> get_repeated = compose(repeat, len)
     >>> get_repeated("Hi")
     4
     >>> get_repeated("Hi", 3)
@@ -453,19 +453,57 @@ def compose7(
     return composed
 
 
-def compose(  # noqa: PLR0911
-    c: Composable[_IN, _T1, _T2, _T3, _T4, _T5, _T6, _OUT],
-) -> Callable[_IN, _OUT]:
-    """Compose a tuple of compatible functions from first to last.
+@overload
+def compose(*functions: Unpack[Composable1[_IN, _OUT]]) -> Callable[_IN, _OUT]: ...
+
+
+@overload
+def compose(*functions: Unpack[Composable2[_IN, _T1, _OUT]]) -> Callable[_IN, _OUT]: ...
+
+
+@overload
+def compose(
+    *functions: Unpack[Composable3[_IN, _T1, _T2, _OUT]],
+) -> Callable[_IN, _OUT]: ...
+
+
+@overload
+def compose(
+    *functions: Unpack[Composable4[_IN, _T1, _T2, _T3, _OUT]],
+) -> Callable[_IN, _OUT]: ...
+
+
+@overload
+def compose(
+    *functions: Unpack[Composable5[_IN, _T1, _T2, _T3, _T4, _OUT]],
+) -> Callable[_IN, _OUT]: ...
+
+
+@overload
+def compose(
+    *functions: Unpack[Composable6[_IN, _T1, _T2, _T3, _T4, _T5, _OUT]],
+) -> Callable[_IN, _OUT]: ...
+
+
+@overload
+def compose(
+    *functions: Unpack[Composable7[_IN, _T1, _T2, _T3, _T4, _T5, _T6, _OUT]],
+) -> Callable[_IN, _OUT]: ...
+
+
+# pyrefly: ignore [explicit-any]
+def compose(*functions: Any) -> object:  # type: ignore [explicit-any]  # noqa: PLR0911
+    """Compose compatible functions from first to last.
 
     Args:
-        c: Compatible functions that can be applied sequentially from first to last.
+        functions: Compatible functions that can be applied sequentially
+            from first to last.
 
     Returns:
         Function that applies the given functions from first to last.
 
     Examples:
-        >>> get_length_string = compose((len, lambda n: f"Length: {n}"))
+        >>> get_length_string = compose(len, lambda n: f"Length: {n}")
         >>> get_length_string("Hello, world!")
         'Length: 13'
 
@@ -474,28 +512,38 @@ def compose(  # noqa: PLR0911
         >>> def multiply(a: int, b: int) -> int:
         ...     return a * b
         ...
-        >>> get_product_string = compose((multiply, lambda n: f"Product: {n}"))
+        >>> get_product_string = compose(multiply, lambda n: f"Product: {n}")
         >>> get_product_string(3, 4)
         'Product: 12'
     """
-    match c:
+    composable: Composable[
+        [object],
+        object,
+        object,
+        object,
+        object,
+        object,
+        object,
+        object,
+    ] = functions
+    match composable:
         case (_,):
-            return compose1(c)
+            return compose1(composable)
         case (_, _):
-            return compose2(c)
+            return compose2(composable)
         case (_, _, _):
-            return compose3(c)
+            return compose3(composable)
         case (_, _, _, _):
-            return compose4(c)
+            return compose4(composable)
         case (_, _, _, _, _):
-            return compose5(c)
+            return compose5(composable)
         case (_, _, _, _, _, _):
-            return compose6(c)
+            return compose6(composable)
         case (_, _, _, _, _, _, _):
-            return compose7(c)
+            return compose7(composable)
         case _:  # pragma: no cover
-            assert_type(c, Never)  # type: ignore[unreachable]  # pyright: ignore[reportUnreachable]
-            msg = f"{type(c).__name__!r} is not a valid Composable"
+            assert_type(composable, Never)  # type: ignore[unreachable]  # pyright: ignore[reportUnreachable]
+            msg = f"{type(composable).__name__!r} is not a valid Composable"
             raise TypeError(msg)
 
 
@@ -558,7 +606,7 @@ def pipe(*pipeline: Any) -> object:  # type: ignore [explicit-any]
             return value
         case (value, _, *_):
             composable = p[1:]
-            return compose(composable)(value)
+            return compose(*composable)(value)
         case _:  # pragma: no cover
             assert_type(p, Never)  # type: ignore[unreachable]  # pyright: ignore[reportUnreachable]  # pyrefly: ignore[assert-type]
             msg = f"{type(p).__name__!r} is not a valid Pipeline"
