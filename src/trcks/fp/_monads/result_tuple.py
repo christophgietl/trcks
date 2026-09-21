@@ -82,7 +82,10 @@ def construct_from_result_iterable(r_it: ResultIterable[_F, _S]) -> ResultTuple[
         >>> rt.construct_from_result_iterable(("failure", "oops"))
         ('failure', 'oops')
     """
-    return r.map_success(tuple)(r_it)
+    mapped: Callable[[ResultIterable[_F, _S]], ResultTuple[_F, _S]] = (
+        r.map_success_to_result(construct_successes_from_iterable)
+    )
+    return mapped(r_it)
 
 
 def construct_successes(value: _S) -> SuccessTuple[_S]:
@@ -302,7 +305,9 @@ def map_failure_to_result_iterable(
         >>> recover_from_not_found(("success", (1, 2)))
         ('success', (1, 2))
     """
-    return r.map_failure_to_result(compose2((f, r.map_success(tuple))), *args, **kwargs)
+    return r.map_failure_to_result(
+        compose2((f, construct_from_result_iterable)), *args, **kwargs
+    )
 
 
 def map_successes(
@@ -683,7 +688,9 @@ def tap_failure_to_result_iterable(
         >>> recover_from_not_found(("success", (1, 2)))
         ('success', (1, 2))
     """
-    return r.tap_failure_to_result(compose2((f, r.map_success(tuple))), *args, **kwargs)
+    return r.tap_failure_to_result(
+        compose2((f, construct_from_result_iterable)), *args, **kwargs
+    )
 
 
 def tap_successes(
