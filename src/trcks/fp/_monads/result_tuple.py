@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING, Concatenate, ParamSpec
 from trcks._typing import Never, TypeVar, assert_type
 from trcks.fp._monads import result as r
 from trcks.fp._monads import tuple_ as t
-from trcks.fp.composition import compose2
+from trcks.fp.composition import compose
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Iterable
@@ -260,7 +260,7 @@ def map_failure_to_result(
         ('success', (1, 2))
     """
     return map_failure_to_result_iterable(
-        compose2(f, construct_from_result), *args, **kwargs
+        compose(f, construct_from_result), *args, **kwargs
     )
 
 
@@ -306,7 +306,7 @@ def map_failure_to_result_iterable(
         ('success', (1, 2))
     """
     return r.map_failure_to_result(
-        compose2(f, construct_from_result_iterable), *args, **kwargs
+        compose(f, construct_from_result_iterable), *args, **kwargs
     )
 
 
@@ -431,7 +431,7 @@ def map_successes_to_result(
         ('failure', 'oops')
     """
     return map_successes_to_result_iterable(
-        compose2(f, construct_from_result), *args, **kwargs
+        compose(f, construct_from_result), *args, **kwargs
     )
 
 
@@ -639,7 +639,7 @@ def tap_failure_to_result(
         >>> recover_from_not_found(("success", (1, 2)))
         ('success', (1, 2))
     """
-    composed_f: Callable[Concatenate[_F1, _P], ResultTuple[object, _S2]] = compose2(
+    composed_f: Callable[Concatenate[_F1, _P], ResultTuple[object, _S2]] = compose(
         f, construct_from_result
     )
     return tap_failure_to_result_iterable(composed_f, *args, **kwargs)
@@ -689,7 +689,7 @@ def tap_failure_to_result_iterable(
         ('success', (1, 2))
     """
     return r.tap_failure_to_result(
-        compose2(f, construct_from_result_iterable), *args, **kwargs
+        compose(f, construct_from_result_iterable), *args, **kwargs
     )
 
 
@@ -823,7 +823,7 @@ def tap_successes_to_result(
         >>> validate_positive(("failure", "oops"))
         ('failure', 'oops')
     """
-    composed_f: Callable[Concatenate[_S1, _P], ResultTuple[_F2, object]] = compose2(
+    composed_f: Callable[Concatenate[_S1, _P], ResultTuple[_F2, object]] = compose(
         f, construct_from_result
     )
     return tap_successes_to_result_iterable(composed_f, *args, **kwargs)

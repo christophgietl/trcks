@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING, Concatenate, ParamSpec
 from trcks._typing import TypeVar
 from trcks.fp._monads import awaitable as a
 from trcks.fp._monads import tuple_ as t
-from trcks.fp.composition import compose2
+from trcks.fp.composition import compose
 
 if TYPE_CHECKING:
     from collections.abc import Awaitable, Callable, Iterable
@@ -192,7 +192,7 @@ def map_to_awaitable(
         (2, 3)
     """
     return map_to_awaitable_iterable(
-        compose2(f, construct_from_awaitable), *args, **kwargs
+        compose(f, construct_from_awaitable), *args, **kwargs
     )
 
 

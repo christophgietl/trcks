@@ -130,8 +130,8 @@ allows us to execute side effects for each element:
 
 ## Synchronous double-track code with [trcks.fp.monads.result_tuple][]
 
-If one of the functions in a [trcks.fp.composition.Pipeline][]
-returns a [trcks.ResultTuple][]`[F, S]` type,
+If one of the functions in a [trcks.fp.composition][]
+pipeline returns a [trcks.ResultTuple][]`[F, S]` type,
 the module [trcks.fp.monads.result_tuple][] provides
 some higher-order functions named `map_successes*` and `tap_successes*`
 that turn element-wise functions into functions
@@ -406,7 +406,8 @@ the remaining elements are skipped.
 
 ## Asynchronous single-track code with [trcks.fp.monads.awaitable_tuple][]
 
-If one of the functions in a [trcks.fp.composition.Pipeline][] returns
+If one of the functions in a [trcks.fp.composition][]
+pipeline returns
 a [trcks.AwaitableTuple][]`[T]` type,
 the following function must accept this [trcks.AwaitableTuple][]`[T]` type
 as its input.
@@ -603,7 +604,8 @@ Processing short-circuits on the first [trcks.Failure][]:
 
 ## Asynchronous double-track code with [trcks.fp.monads.awaitable_result_tuple][]
 
-If one of the functions in a [trcks.fp.composition.Pipeline][] returns
+If one of the functions in a [trcks.fp.composition][]
+pipeline returns
 a [trcks.AwaitableResultTuple][]`[F, S]` type,
 the module [trcks.fp.monads.awaitable_result_tuple][] provides
 some higher-order functions named `map_successes*` and `tap_successes*`

@@ -88,7 +88,7 @@ from trcks.fp._monads.result import (
     tap_success,
     tap_success_to_result,
 )
-from trcks.fp.composition import compose2
+from trcks.fp.composition import compose
 
 if TYPE_CHECKING:
     from collections.abc import Awaitable, Callable, Iterable
@@ -194,7 +194,7 @@ def map_failure_to_awaitable(
         >>> asyncio.run(ar.to_coroutine_result(a_rslt_2))
         ('success', 42)
     """
-    return compose2(
+    return compose(
         ar.construct_from_result, ar.map_failure_to_awaitable(f, *args, **kwargs)
     )
 
@@ -246,7 +246,7 @@ def map_failure_to_awaitable_result(
         >>> asyncio.run(ar.to_coroutine_result(a_rslt_3))
         ('success', 25.0)
     """
-    return compose2(
+    return compose(
         ar.construct_from_result, ar.map_failure_to_awaitable_result(f, *args, **kwargs)
     )
 
@@ -292,7 +292,7 @@ def map_failure_to_awaitable_result_iterable(
         >>> asyncio.run(art.to_coroutine_result_tuple(a_r_tpl_2))
         ('success', (25.0,))
     """
-    return compose2(
+    return compose(
         art.construct_from_result,
         art.map_failure_to_awaitable_result_iterable(f, *args, **kwargs),
     )
@@ -353,7 +353,7 @@ def map_failure_to_iterable(
         Callable[[Result[_F1, _S1]], ResultTuple[_F1, _S1]],
         Callable[[ResultTuple[_F1, _S1]], SuccessTuple[_S1] | SuccessTuple[_S2]],
     ] = (rt.construct_from_result, rt.map_failure_to_iterable(f, *args, **kwargs))
-    return compose2(*c)
+    return compose(*c)
 
 
 def map_failure_to_result_iterable(
@@ -401,7 +401,7 @@ def map_failure_to_result_iterable(
         rt.construct_from_result,
         rt.map_failure_to_result_iterable(f, *args, **kwargs),
     )
-    return compose2(*c)
+    return compose(*c)
 
 
 @deprecated("Use map_failure_to_result_iterable instead")
@@ -464,7 +464,7 @@ def map_success_to_awaitable(
         >>> asyncio.run(ar.to_coroutine_result(a_rslt_2))
         ('success', 43)
     """
-    return compose2(
+    return compose(
         ar.construct_from_result, ar.map_success_to_awaitable(f, *args, **kwargs)
     )
 
@@ -515,7 +515,7 @@ def map_success_to_awaitable_result(
         >>> asyncio.run(ar.to_coroutine_result(a_rslt_3))
         ('success', 5.0)
     """
-    return compose2(
+    return compose(
         ar.construct_from_result, ar.map_success_to_awaitable_result(f, *args, **kwargs)
     )
 
@@ -561,7 +561,7 @@ def map_success_to_awaitable_result_iterable(
         >>> asyncio.run(art.to_coroutine_result_tuple(a_r_tpl_2))
         ('success', (5.0, 10.0))
     """
-    return compose2(
+    return compose(
         art.construct_from_result,
         art.map_successes_to_awaitable_result_iterable(f, *args, **kwargs),
     )
@@ -618,7 +618,7 @@ def map_success_to_iterable(
         Callable[[Result[_F1, _S1]], ResultTuple[_F1, _S1]],
         Callable[[ResultTuple[_F1, _S1]], ResultTuple[_F1, _S2]],
     ] = (rt.construct_from_result, rt.map_successes_to_iterable(f, *args, **kwargs))
-    return compose2(*c)
+    return compose(*c)
 
 
 def map_success_to_result_iterable(
@@ -666,7 +666,7 @@ def map_success_to_result_iterable(
         rt.construct_from_result,
         rt.map_successes_to_result_iterable(f, *args, **kwargs),
     )
-    return compose2(*c)
+    return compose(*c)
 
 
 @deprecated("Use map_success_to_result_iterable instead")
@@ -730,7 +730,7 @@ def tap_failure_to_awaitable(
         >>> asyncio.run(ar.to_coroutine_result(a_rslt_2))
         ('success', 42)
     """
-    return compose2(
+    return compose(
         ar.construct_from_result, ar.tap_failure_to_awaitable(f, *args, **kwargs)
     )
 
@@ -786,7 +786,7 @@ def tap_failure_to_awaitable_result(
         >>> asyncio.run(ar.to_coroutine_result(a_rslt_3))
         ('success', 42)
     """
-    return compose2(
+    return compose(
         ar.construct_from_result, ar.tap_failure_to_awaitable_result(f, *args, **kwargs)
     )
 
@@ -836,7 +836,7 @@ def tap_failure_to_awaitable_result_iterable(
         >>> asyncio.run(art.to_coroutine_result_tuple(a_r_tpl_2))
         ('success', (42,))
     """
-    return compose2(
+    return compose(
         art.construct_from_result,
         art.tap_failure_to_awaitable_result_iterable(f, *args, **kwargs),
     )
@@ -901,7 +901,7 @@ def tap_failure_to_iterable(
         Callable[[Result[_F1, _S1]], ResultTuple[_F1, _S1]],
         Callable[[ResultTuple[_F1, _S1]], SuccessTuple[_F1] | SuccessTuple[_S1]],
     ] = (rt.construct_from_result, rt.tap_failure_to_iterable(f, *args, **kwargs))
-    return compose2(*c)
+    return compose(*c)
 
 
 def tap_failure_to_result_iterable(
@@ -953,7 +953,7 @@ def tap_failure_to_result_iterable(
         rt.construct_from_result,
         rt.tap_failure_to_result_iterable(f, *args, **kwargs),
     )
-    return compose2(*c)
+    return compose(*c)
 
 
 @deprecated("Use tap_failure_to_result_iterable instead")
@@ -1017,7 +1017,7 @@ def tap_success_to_awaitable(
         Wrote 'Hello, world!' to disk.
         ('success', 'Hello, world!')
     """
-    return compose2(
+    return compose(
         ar.construct_from_result, ar.tap_success_to_awaitable(f, *args, **kwargs)
     )
 
@@ -1081,7 +1081,7 @@ def tap_success_to_awaitable_result(
         Wrote 'Hello, world!' to file output.txt.
         ('success', 'Hello, world!')
     """
-    return compose2(
+    return compose(
         ar.construct_from_result, ar.tap_success_to_awaitable_result(f, *args, **kwargs)
     )
 
@@ -1133,7 +1133,7 @@ def tap_success_to_awaitable_result_iterable(
         Wrote 'Hello, world!' twice.
         ('success', ('Hello, world!', 'Hello, world!'))
     """
-    return compose2(
+    return compose(
         art.construct_from_result,
         art.tap_successes_to_awaitable_result_iterable(f, *args, **kwargs),
     )
@@ -1196,7 +1196,7 @@ def tap_success_to_iterable(
         Callable[[Result[_F1, _S1]], ResultTuple[_F1, _S1]],
         Callable[[ResultTuple[_F1, _S1]], ResultTuple[_F1, _S1]],
     ] = (rt.construct_from_result, rt.tap_successes_to_iterable(f, *args, **kwargs))
-    return compose2(*c)
+    return compose(*c)
 
 
 def tap_success_to_result_iterable(
@@ -1248,7 +1248,7 @@ def tap_success_to_result_iterable(
         rt.construct_from_result,
         rt.tap_successes_to_result_iterable(f, *args, **kwargs),
     )
-    return compose2(*c)
+    return compose(*c)
 
 
 @deprecated("Use tap_success_to_result_iterable instead")

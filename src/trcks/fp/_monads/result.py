@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING, Concatenate, ParamSpec
 
 from trcks._typing import Never, TypeVar, assert_type
 from trcks.fp._monads import identity as i
-from trcks.fp.composition import compose2
+from trcks.fp.composition import compose
 
 if TYPE_CHECKING:
     from collections.abc import Callable
@@ -84,7 +84,7 @@ def map_failure(
         >>> add_prefix_to_failure(("success", 25.0))
         ('success', 25.0)
     """
-    return map_failure_to_result(compose2(f, construct_failure), *args, **kwargs)
+    return map_failure_to_result(compose(f, construct_failure), *args, **kwargs)
 
 
 def map_failure_to_result(
@@ -166,7 +166,7 @@ def map_success(
         >>> increase_success(("success", 42))
         ('success', 43)
     """
-    return map_success_to_result(compose2(f, construct_success), *args, **kwargs)
+    return map_success_to_result(compose(f, construct_success), *args, **kwargs)
 
 
 def map_success_to_result(

@@ -13,14 +13,13 @@ else:  # pragma: no cover
     from typing_extensions import TypeVar, deprecated
 
 if sys.version_info >= (3, 11):  # pragma: no cover
-    from typing import Never, Unpack, assert_type
+    from typing import Never, assert_type
 else:  # pragma: no cover
-    from typing_extensions import Never, Unpack, assert_type
+    from typing_extensions import Never, assert_type
 
 __all__ = [
     "Never",
     "TypeVar",
-    "Unpack",
     "assert_type",
     "deprecated",
 ]
