@@ -570,7 +570,9 @@ def map_failure_to_awaitable_result_iterable(
     ) -> ResultTuple[_F2, _S1 | _S2]:
         match r_tpl:
             case ("failure", value):
-                return r.map_success(tuple)(await f(value, *args, **kwargs))
+                return rt.construct_from_result_iterable(
+                    await f(value, *args, **kwargs)
+                )
             case ("success", _):
                 return r_tpl
             case _:  # pragma: no cover
