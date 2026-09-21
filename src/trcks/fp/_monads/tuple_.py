@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING, Concatenate, ParamSpec
 
 from trcks._typing import TypeVar
 from trcks.fp._monads import identity as i
-from trcks.fp.composition import compose2
+from trcks.fp.composition import compose
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Iterable
@@ -67,7 +67,7 @@ def map_(
         >>> double_integers((1, 2, 3))
         (2, 4, 6)
     """
-    return map_to_iterable(compose2(f, construct), *args, **kwargs)
+    return map_to_iterable(compose(f, construct), *args, **kwargs)
 
 
 def map_to_iterable(

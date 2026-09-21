@@ -70,8 +70,8 @@ that behaves like the original function but returns the input value.
 
 ## Double-track code with [trcks.fp.monads.result][]
 
-If one of the functions in a [trcks.fp.composition.Pipeline][]
-returns a `trcks.Result[F, S]` type,
+If one of the functions in a [trcks.fp.composition][]
+pipeline returns a `trcks.Result[F, S]` type,
 the following function must accept this `trcks.Result[F, S]` type as its input.
 However, functions with input type `trcks.Result[F, S]` tend to violate
 the "do one thing and do it well" principle.

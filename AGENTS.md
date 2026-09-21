@@ -114,7 +114,7 @@
   ...     Wrapper,
   ... )
   >>> # FP composition helpers:
-  >>> from trcks.fp.composition import Composable, Pipeline3, compose, pipe
+  >>> from trcks.fp.composition import Pipeline3, compose, pipe
   >>> # FP monads (with single-letter aliases for conciseness):
   >>> from trcks.fp.monads import (
   ...     awaitable as a,

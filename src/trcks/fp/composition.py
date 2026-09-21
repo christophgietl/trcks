@@ -15,9 +15,6 @@ Attributes:
         Six compatible functions that can be applied sequentially from first to last.
     Composable7:
         Seven compatible functions that can be applied sequentially from first to last.
-    Composable:
-        Up to seven compatible functions that can be applied sequentially
-        from first to last.
     Pipeline0:
         A single value.
     Pipeline1:
@@ -40,14 +37,12 @@ Attributes:
     Pipeline7:
         A single value followed by seven compatible functions
         that can be applied sequentially from first to last.
-    Pipeline:
-        A single value followed by up to seven compatible functions
-        that can be applied sequentially from first to last.
 
 Examples:
-    Sequentially apply two functions to one input value
+    Sequentially apply two compatible functions to one input value
     in three different ways:
 
+    >>> from trcks.fp.composition import compose, pipe
     >>> def to_length_string(n: int) -> str:
     ...     return f"Length: {n}"
     ...
@@ -60,28 +55,27 @@ Examples:
     >>> pipe(input_, len, to_length_string)
     'Length: 13'
 
-    The first function may accept multiple arguments or keyword arguments:
+    The first function passed to [trcks.fp.composition.compose][]
+    may accept multiple arguments:
 
+    >>> from trcks.fp.composition import compose
     >>> def repeat(text: str, times: int = 2) -> str:
     ...     return text * times
     ...
-    >>> get_repeated = compose(repeat, len)
-    >>> get_repeated("Hi")
+    >>> get_repeated_length = compose(repeat, len)
+    >>> get_repeated_length("Hi")
     4
-    >>> get_repeated("Hi", 3)
+    >>> get_repeated_length("Hi", 3)
     6
 """
 
 from collections.abc import Callable
 from typing import Any, ParamSpec, TypeAlias, overload
 
-from trcks._typing import Never, TypeVar, Unpack, assert_type
+from trcks._typing import TypeVar
 
 __docformat__ = "google"
 
-
-_IN = ParamSpec("_IN")
-_OUT = TypeVar("_OUT")
 _P0 = ParamSpec("_P0")
 _T0 = TypeVar("_T0")
 _T1 = TypeVar("_T1")
@@ -95,7 +89,6 @@ _T7 = TypeVar("_T7")
 # Tuple type unpacking does not work correctly in Python 3.10
 # (see https://github.com/python/typing_extensions/issues/103).
 # Therefore, the following tuple type definitions contain a lot of repetitions:
-
 Composable1: TypeAlias = tuple[Callable[_P0, _T1],]
 Composable2: TypeAlias = tuple[
     Callable[_P0, _T1],
@@ -136,16 +129,6 @@ Composable7: TypeAlias = tuple[
     Callable[[_T5], _T6],
     Callable[[_T6], _T7],
 ]
-
-Composable: TypeAlias = (
-    Composable7[_IN, _T1, _T2, _T3, _T4, _T5, _T6, _OUT]
-    | Composable6[_IN, _T1, _T2, _T3, _T4, _T5, _OUT]
-    | Composable5[_IN, _T1, _T2, _T3, _T4, _OUT]
-    | Composable4[_IN, _T1, _T2, _T3, _OUT]
-    | Composable3[_IN, _T1, _T2, _OUT]
-    | Composable2[_IN, _T1, _OUT]
-    | Composable1[_IN, _OUT]
-)
 
 Pipeline0: TypeAlias = tuple[_T0,]
 Pipeline1: TypeAlias = tuple[
@@ -198,433 +181,216 @@ Pipeline7: TypeAlias = tuple[
     Callable[[_T6], _T7],
 ]
 
-Pipeline: TypeAlias = (
-    Pipeline7[_T0, _T1, _T2, _T3, _T4, _T5, _T6, _OUT]
-    | Pipeline6[_T0, _T1, _T2, _T3, _T4, _T5, _OUT]
-    | Pipeline5[_T0, _T1, _T2, _T3, _T4, _OUT]
-    | Pipeline4[_T0, _T1, _T2, _T3, _OUT]
-    | Pipeline3[_T0, _T1, _T2, _OUT]
-    | Pipeline2[_T0, _T1, _OUT]
-    | Pipeline1[_T0, _OUT]
-    | Pipeline0[_OUT]
-)
+
+@overload
+def compose(callable1: Callable[_P0, _T1], /) -> Callable[_P0, _T1]: ...
 
 
-def compose1(*functions: Unpack[Composable1[_P0, _T1]]) -> Callable[_P0, _T1]:
-    """Compose a single function.
+@overload
+def compose(
+    callable1: Callable[_P0, _T1], callable2: Callable[[_T1], _T2], /
+) -> Callable[_P0, _T2]: ...
+
+
+@overload
+def compose(
+    callable1: Callable[_P0, _T1],
+    callable2: Callable[[_T1], _T2],
+    callable3: Callable[[_T2], _T3],
+    /,
+) -> Callable[_P0, _T3]: ...
+
+
+@overload
+def compose(
+    callable1: Callable[_P0, _T1],
+    callable2: Callable[[_T1], _T2],
+    callable3: Callable[[_T2], _T3],
+    callable4: Callable[[_T3], _T4],
+    /,
+) -> Callable[_P0, _T4]: ...
+
+
+@overload
+def compose(
+    callable1: Callable[_P0, _T1],
+    callable2: Callable[[_T1], _T2],
+    callable3: Callable[[_T2], _T3],
+    callable4: Callable[[_T3], _T4],
+    callable5: Callable[[_T4], _T5],
+    /,
+) -> Callable[_P0, _T5]: ...
+
+
+@overload
+def compose(
+    callable1: Callable[_P0, _T1],
+    callable2: Callable[[_T1], _T2],
+    callable3: Callable[[_T2], _T3],
+    callable4: Callable[[_T3], _T4],
+    callable5: Callable[[_T4], _T5],
+    callable6: Callable[[_T5], _T6],
+    /,
+) -> Callable[_P0, _T6]: ...
+
+
+@overload
+def compose(
+    callable1: Callable[_P0, _T1],
+    callable2: Callable[[_T1], _T2],
+    callable3: Callable[[_T2], _T3],
+    callable4: Callable[[_T3], _T4],
+    callable5: Callable[[_T4], _T5],
+    callable6: Callable[[_T5], _T6],
+    callable7: Callable[[_T6], _T7],
+    /,
+) -> Callable[_P0, _T7]: ...
+
+
+def compose(  # type: ignore[explicit-any]
+    callable1: Callable[_P0, Any],  # pyrefly: ignore[explicit-any]
+    /,
+    *callables: Callable[[Any], Any],  # pyrefly: ignore[explicit-any]
+) -> Callable[_P0, Any]:  # pyrefly: ignore[explicit-any]
+    """Concatenate compatible functions from first to last.
 
     Args:
-        functions: A single function.
-
-    Returns:
-        Function that applies the given function.
-
-    Examples:
-        >>> get_length = compose1(len)
-        >>> get_length("Hello, world!")
-        13
-
-        The function may accept multiple positional arguments:
-
-        >>> def add(a: int, b: int) -> int:
-        ...     return a + b
-        ...
-        >>> get_sum = compose1(add)
-        >>> get_sum(2, 3)
-        5
-    """
-
-    def composed(*args: _P0.args, **kwargs: _P0.kwargs) -> _T1:
-        return functions[0](*args, **kwargs)
-
-    return composed
-
-
-def compose2(*functions: Unpack[Composable2[_P0, _T1, _T2]]) -> Callable[_P0, _T2]:
-    """Compose two compatible functions from first to last.
-
-    Args:
-        functions:
-            Two compatible functions that can be applied sequentially
-            from first to last.
+        callable1: First function.
+        callables: Zero to six additional compatible functions.
 
     Returns:
         Function that applies the given functions from first to last.
 
     Examples:
-        >>> get_length_string = compose2(len, lambda n: f"Length: {n}")
+        Sequentially apply two compatible functions to one input value:
+
+        >>> from trcks.fp.composition import compose
+        >>> def to_length_string(n: int) -> str:
+        ...     return f"Length: {n}"
+        ...
+        >>> get_length_string = compose(len, to_length_string)
         >>> get_length_string("Hello, world!")
         'Length: 13'
 
-        The first function may accept multiple positional arguments:
+        The first function may accept multiple arguments:
 
-        >>> def multiply(a: int, b: int) -> int:
-        ...     return a * b
+        >>> from trcks.fp.composition import compose
+        >>> def repeat(text: str, times: int = 2) -> str:
+        ...     return text * times
         ...
-        >>> get_product_string = compose2(multiply, lambda n: f"Product: {n}")
-        >>> get_product_string(3, 4)
-        'Product: 12'
+        >>> get_repeated_length = compose(repeat, len)
+        >>> get_repeated_length("Hi")
+        4
+        >>> get_repeated_length("Hi", 3)
+        6
     """
 
-    def composed(*args: _P0.args, **kwargs: _P0.kwargs) -> _T2:
-        return functions[1](functions[0](*args, **kwargs))
-
-    return composed
-
-
-def compose3(
-    *functions: Unpack[Composable3[_P0, _T1, _T2, _T3]],
-) -> Callable[_P0, _T3]:
-    """Compose three compatible functions from first to last.
-
-    Args:
-        functions:
-            Three compatible functions that can be applied sequentially
-            from first to last.
-
-    Returns:
-        Function that applies the given functions from first to last.
-
-    Examples:
-        >>> add_one = lambda n: n + 1
-        >>> square = lambda n: n * n
-        >>> to_string = lambda n: f"Result: {n}"
-        >>> compute = compose3(add_one, square, to_string)
-        >>> compute(3)
-        'Result: 16'
-
-        The first function may accept multiple positional arguments:
-
-        >>> def add(a: int, b: int) -> int:
-        ...     return a + b
-        ...
-        >>> add_and_square = compose3(add, lambda n: n * n, to_string)
-        >>> add_and_square(2, 3)
-        'Result: 25'
-    """
-
-    def composed(*args: _P0.args, **kwargs: _P0.kwargs) -> _T3:
-        return functions[2](functions[1](functions[0](*args, **kwargs)))
-
-    return composed
-
-
-def compose4(
-    *functions: Unpack[Composable4[_P0, _T1, _T2, _T3, _T4]],
-) -> Callable[_P0, _T4]:
-    """Compose four compatible functions from first to last.
-
-    Args:
-        functions:
-            Four compatible functions that can be applied sequentially
-            from first to last.
-
-    Returns:
-        Function that applies the given functions from first to last.
-
-    Examples:
-        >>> add_one = lambda n: n + 1
-        >>> square = lambda n: n * n
-        >>> halve = lambda n: n / 2
-        >>> to_string = lambda n: f"Result: {n}"
-        >>> compute = compose4(add_one, square, halve, to_string)
-        >>> compute(3)
-        'Result: 8.0'
-
-        The first function may accept multiple positional arguments:
-
-        >>> multiply = lambda a, b: a * b
-        >>> compute_multi = compose4(multiply, square, halve, to_string)
-        >>> compute_multi(4, 5)
-        'Result: 200.0'
-    """
-
-    def composed(*args: _P0.args, **kwargs: _P0.kwargs) -> _T4:
-        return functions[3](functions[2](functions[1](functions[0](*args, **kwargs))))
-
-    return composed
-
-
-def compose5(
-    *functions: Unpack[Composable5[_P0, _T1, _T2, _T3, _T4, _T5]],
-) -> Callable[_P0, _T5]:
-    """Compose five compatible functions from first to last.
-
-    Args:
-        functions:
-            Five compatible functions that can be applied sequentially
-            from first to last.
-
-    Returns:
-        Function that applies the given functions from first to last.
-
-    Examples:
-        >>> add_one = lambda n: n + 1
-        >>> square = lambda n: n * n
-        >>> halve = lambda n: n / 2
-        >>> to_string = lambda n: f"Result: {n}"
-        >>> exclaim = lambda s: s + "!"
-        >>> compute = compose5(add_one, square, halve, to_string, exclaim)
-        >>> compute(3)
-        'Result: 8.0!'
-
-        The first function may accept multiple positional arguments:
-
-        >>> multiply = lambda a, b: a * b
-        >>> compute_multi = compose5(multiply, square, halve, to_string, exclaim)
-        >>> compute_multi(2, 5)
-        'Result: 50.0!'
-    """
-
-    def composed(*args: _P0.args, **kwargs: _P0.kwargs) -> _T5:
-        return functions[4](
-            functions[3](functions[2](functions[1](functions[0](*args, **kwargs))))
-        )
-
-    return composed
-
-
-def compose6(
-    *functions: Unpack[Composable6[_P0, _T1, _T2, _T3, _T4, _T5, _T6]],
-) -> Callable[_P0, _T6]:
-    """Compose six compatible functions from first to last.
-
-    Args:
-        functions:
-            Six compatible functions that can be applied sequentially
-            from first to last.
-
-    Returns:
-        Function that applies the given functions from first to last.
-
-    Examples:
-        >>> add_one = lambda n: n + 1
-        >>> square = lambda n: n * n
-        >>> halve = lambda n: n / 2
-        >>> to_string = lambda n: f"Result: {n}"
-        >>> exclaim = lambda s: s + "!"
-        >>> to_list = lambda s: [s]
-        >>> compute = compose6(add_one, square, halve, to_string, exclaim, to_list)
-        >>> compute(3)
-        ['Result: 8.0!']
-
-        The first function may accept multiple positional arguments:
-
-        >>> multiply = lambda a, b: a * b
-        >>> compute_multi = compose6(
-        ...     multiply, square, halve, to_string, exclaim, to_list
-        ... )
-        >>> compute_multi(2, 5)
-        ['Result: 50.0!']
-    """
-
-    def composed(*args: _P0.args, **kwargs: _P0.kwargs) -> _T6:
-        return functions[5](
-            functions[4](
-                functions[3](functions[2](functions[1](functions[0](*args, **kwargs))))
-            )
-        )
-
-    return composed
-
-
-def compose7(
-    *functions: Unpack[Composable7[_P0, _T1, _T2, _T3, _T4, _T5, _T6, _T7]],
-) -> Callable[_P0, _T7]:
-    """Compose seven compatible functions from first to last.
-
-    Args:
-        functions:
-            Seven compatible functions that can be applied sequentially
-            from first to last.
-
-    Returns:
-        Function that applies the given functions from first to last.
-
-    Examples:
-        >>> add_one = lambda n: n + 1
-        >>> square = lambda n: n * n
-        >>> halve = lambda n: n / 2
-        >>> to_string = lambda n: f"Result: {n}"
-        >>> exclaim = lambda s: s + "!"
-        >>> to_list = lambda s: [s]
-        >>> wrap_in_dict = lambda lst: {"result": lst}
-        >>> compute = compose7(
-        ...     add_one, square, halve, to_string, exclaim, to_list, wrap_in_dict
-        ... )
-        >>> compute(3)
-        {'result': ['Result: 8.0!']}
-
-        The first function may accept multiple positional arguments:
-
-        >>> multiply = lambda a, b: a * b
-        >>> compute_multi = compose7(
-        ...     multiply, square, halve, to_string, exclaim, to_list, wrap_in_dict
-        ... )
-        >>> compute_multi(2, 5)
-        {'result': ['Result: 50.0!']}
-    """
-
-    def composed(*args: _P0.args, **kwargs: _P0.kwargs) -> _T7:
-        return functions[6](
-            functions[5](
-                functions[4](
-                    functions[3](
-                        functions[2](functions[1](functions[0](*args, **kwargs)))
-                    )
-                )
-            )
-        )
+    def composed(*args: _P0.args, **kwargs: _P0.kwargs) -> Any:  # type: ignore[explicit-any]  # pyrefly: ignore[explicit-any]  # noqa: ANN401
+        output = callable1(*args, **kwargs)
+        for c in callables:
+            output = c(output)
+        return output
 
     return composed
 
 
 @overload
-def compose(*functions: Unpack[Composable1[_IN, _OUT]]) -> Callable[_IN, _OUT]: ...
+def pipe(input_: _T0, /) -> _T0: ...
 
 
 @overload
-def compose(*functions: Unpack[Composable2[_IN, _T1, _OUT]]) -> Callable[_IN, _OUT]: ...
-
-
-@overload
-def compose(
-    *functions: Unpack[Composable3[_IN, _T1, _T2, _OUT]],
-) -> Callable[_IN, _OUT]: ...
-
-
-@overload
-def compose(
-    *functions: Unpack[Composable4[_IN, _T1, _T2, _T3, _OUT]],
-) -> Callable[_IN, _OUT]: ...
-
-
-@overload
-def compose(
-    *functions: Unpack[Composable5[_IN, _T1, _T2, _T3, _T4, _OUT]],
-) -> Callable[_IN, _OUT]: ...
-
-
-@overload
-def compose(
-    *functions: Unpack[Composable6[_IN, _T1, _T2, _T3, _T4, _T5, _OUT]],
-) -> Callable[_IN, _OUT]: ...
-
-
-@overload
-def compose(
-    *functions: Unpack[Composable7[_IN, _T1, _T2, _T3, _T4, _T5, _T6, _OUT]],
-) -> Callable[_IN, _OUT]: ...
-
-
-def compose(  # type: ignore[explicit-any]  # noqa: PLR0911
-    # Type checkers do not allow `*functions: Unpack[Composable[...]]`.
-    # Therefore, we use `Any` here and assign `Composable` in the implementation:
-    *functions: Any,  # pyrefly: ignore[explicit-any]
-) -> Callable[..., object]:
-    """Compose compatible functions from first to last.
-
-    Args:
-        functions: Compatible functions that can be applied sequentially
-            from first to last.
-
-    Returns:
-        Function that applies the given functions from first to last.
-
-    Examples:
-        >>> get_length_string = compose(len, lambda n: f"Length: {n}")
-        >>> get_length_string("Hello, world!")
-        'Length: 13'
-
-        The first function may accept multiple positional arguments:
-
-        >>> def multiply(a: int, b: int) -> int:
-        ...     return a * b
-        ...
-        >>> get_product_string = compose(multiply, lambda n: f"Product: {n}")
-        >>> get_product_string(3, 4)
-        'Product: 12'
-    """
-    composable: Composable[..., Any, Any, Any, Any, Any, Any, Any] = functions  # type: ignore[explicit-any]  # pyrefly: ignore[explicit-any]
-    match composable:
-        case (_,):
-            return compose1(*composable)
-        case (_, _):
-            return compose2(*composable)
-        case (_, _, _):
-            return compose3(*composable)
-        case (_, _, _, _):
-            return compose4(*composable)
-        case (_, _, _, _, _):
-            return compose5(*composable)
-        case (_, _, _, _, _, _):
-            return compose6(*composable)
-        case (_, _, _, _, _, _, _):
-            return compose7(*composable)
-        case _:  # pragma: no cover
-            assert_type(composable, Never)  # type: ignore[unreachable]  # pyright: ignore[reportUnreachable]
-            msg = f"{type(composable).__name__!r} is not a valid Composable"
-            raise TypeError(msg)
-
-
-@overload
-def pipe(*pipeline: Unpack[Pipeline0[_OUT]]) -> _OUT: ...
-
-
-@overload
-def pipe(*pipeline: Unpack[Pipeline1[_T0, _OUT]]) -> _OUT: ...
-
-
-@overload
-def pipe(*pipeline: Unpack[Pipeline2[_T0, _T1, _OUT]]) -> _OUT: ...
-
-
-@overload
-def pipe(*pipeline: Unpack[Pipeline3[_T0, _T1, _T2, _OUT]]) -> _OUT: ...
-
-
-@overload
-def pipe(*pipeline: Unpack[Pipeline4[_T0, _T1, _T2, _T3, _OUT]]) -> _OUT: ...
-
-
-@overload
-def pipe(*pipeline: Unpack[Pipeline5[_T0, _T1, _T2, _T3, _T4, _OUT]]) -> _OUT: ...
-
-
-@overload
-def pipe(*pipeline: Unpack[Pipeline6[_T0, _T1, _T2, _T3, _T4, _T5, _OUT]]) -> _OUT: ...
+def pipe(input_: _T0, callable1: Callable[[_T0], _T1], /) -> _T1: ...
 
 
 @overload
 def pipe(
-    *pipeline: Unpack[Pipeline7[_T0, _T1, _T2, _T3, _T4, _T5, _T6, _OUT]],
-) -> _OUT: ...
+    input_: _T0, callable1: Callable[[_T0], _T1], callable2: Callable[[_T1], _T2], /
+) -> _T2: ...
 
 
-def pipe(*pipeline: Any) -> Any:  # type: ignore[explicit-any]  # pyrefly: ignore[explicit-any]
-    """Evaluate a `Pipeline`.
+@overload
+def pipe(
+    input_: _T0,
+    callable1: Callable[[_T0], _T1],
+    callable2: Callable[[_T1], _T2],
+    callable3: Callable[[_T2], _T3],
+    /,
+) -> _T3: ...
+
+
+@overload
+def pipe(
+    input_: _T0,
+    callable1: Callable[[_T0], _T1],
+    callable2: Callable[[_T1], _T2],
+    callable3: Callable[[_T2], _T3],
+    callable4: Callable[[_T3], _T4],
+    /,
+) -> _T4: ...
+
+
+@overload
+def pipe(
+    input_: _T0,
+    callable1: Callable[[_T0], _T1],
+    callable2: Callable[[_T1], _T2],
+    callable3: Callable[[_T2], _T3],
+    callable4: Callable[[_T3], _T4],
+    callable5: Callable[[_T4], _T5],
+    /,
+) -> _T5: ...
+
+
+@overload
+def pipe(
+    input_: _T0,
+    callable1: Callable[[_T0], _T1],
+    callable2: Callable[[_T1], _T2],
+    callable3: Callable[[_T2], _T3],
+    callable4: Callable[[_T3], _T4],
+    callable5: Callable[[_T4], _T5],
+    callable6: Callable[[_T5], _T6],
+    /,
+) -> _T6: ...
+
+
+@overload
+def pipe(
+    input_: _T0,
+    callable1: Callable[[_T0], _T1],
+    callable2: Callable[[_T1], _T2],
+    callable3: Callable[[_T2], _T3],
+    callable4: Callable[[_T3], _T4],
+    callable5: Callable[[_T4], _T5],
+    callable6: Callable[[_T5], _T6],
+    callable7: Callable[[_T6], _T7],
+    /,
+) -> _T7: ...
+
+
+def pipe(input_: Any, /, *callables: Callable[[Any], Any]) -> Any:  # type: ignore[explicit-any]  # pyrefly: ignore[explicit-any]
+    """Evaluate a pipeline consisting of a starting value and compatible functions.
 
     Args:
-        pipeline:
-            Single value followed by up to seven compatible functions
-            that can be applied sequentially from first to last.
+        input_: Starting value of the pipeline.
+        callables:
+            Zero to seven compatible functions
+            that can be applied to `input_` sequentially from first to last.
 
     Returns:
-        Result of sequentially applying the given functions from first to last
-            to the given value.
+        Result of sequentially applying the given functions to the starting value.
 
     Examples:
-        >>> pipe("Hello, world!", len, lambda n: f"Length: {n}")
+        Sequentially apply two compatible functions to one input value:
+
+        >>> from trcks.fp.composition import pipe
+        >>> def to_length_string(n: int) -> str:
+        ...     return f"Length: {n}"
+        ...
+        >>> pipe("Hello, world!", len, to_length_string)
         'Length: 13'
     """
-    p: Pipeline[Any, Any, Any, Any, Any, Any, Any, Any] = pipeline  # type: ignore[explicit-any]    # pyrefly: ignore[explicit-any]
-    match p:
-        case (value,):
-            return value
-        case (value, _, *_):
-            composable = p[1:]
-            return compose(*composable)(value)
-        case _:  # pragma: no cover
-            assert_type(p, Never)  # type: ignore[unreachable]  # pyright: ignore[reportUnreachable]  # pyrefly: ignore[assert-type]
-            msg = f"{type(p).__name__!r} is not a valid Pipeline"
-            raise TypeError(msg)
+    output = input_
+    for callable_ in callables:
+        output = callable_(output)
+    return output

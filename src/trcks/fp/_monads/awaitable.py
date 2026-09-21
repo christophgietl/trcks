@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING, Concatenate, ParamSpec
 
 from trcks._typing import TypeVar
 from trcks.fp._monads import identity as i
-from trcks.fp.composition import compose2
+from trcks.fp.composition import compose
 
 if TYPE_CHECKING:
     from collections.abc import Awaitable, Callable
@@ -82,7 +82,7 @@ def map_(
         'Length: 13'
 
     """
-    return map_to_awaitable(compose2(f, construct), *args, **kwargs)
+    return map_to_awaitable(compose(f, construct), *args, **kwargs)
 
 
 def map_to_awaitable(

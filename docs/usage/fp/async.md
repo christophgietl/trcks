@@ -6,7 +6,8 @@
 
 ## Single-track code with [trcks.fp.monads.awaitable][]
 
-If one of the functions in a [trcks.fp.composition.Pipeline][] returns
+If one of the functions in a [trcks.fp.composition][]
+pipeline returns
 a `collections.abc.Awaitable[T]` type,
 the following function must accept this `collections.abc.Awaitable[T]` type
 as its input.
@@ -153,7 +154,8 @@ allows us to execute asynchronous side effects.
 
 ## Double-track code with [trcks.fp.monads.awaitable_result][]
 
-If one of the functions in a [trcks.fp.composition.Pipeline][] returns
+If one of the functions in a [trcks.fp.composition][]
+pipeline returns
 a `trcks.AwaitableResult[F, S]` type,
 the following function must accept this `trcks.AwaitableResult[F, S]` type
 as its input.

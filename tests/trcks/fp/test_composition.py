@@ -1,12 +1,10 @@
 from __future__ import annotations
 
-import sys
-from typing import Final, TypeAlias, TypeVar
+from typing import TYPE_CHECKING, Final, Protocol, TypeVar
 
 import pytest
 
 from trcks.fp.composition import (
-    Composable,
     Composable1,
     Composable2,
     Composable3,
@@ -14,7 +12,6 @@ from trcks.fp.composition import (
     Composable5,
     Composable6,
     Composable7,
-    Pipeline,
     Pipeline0,
     Pipeline1,
     Pipeline2,
@@ -27,17 +24,17 @@ from trcks.fp.composition import (
     pipe,
 )
 
-if sys.version_info >= (3, 13):
-    from typing import assert_type
-else:
-    from typing_extensions import assert_type
+if TYPE_CHECKING:
+    from collections.abc import Callable
 
-_T = TypeVar("_T")
+_T_co = TypeVar("_T_co", covariant=True)
 
-_IntComposable: TypeAlias = Composable[[int], int, int, int, int, int, int, int]
-_IntPipeline: TypeAlias = Pipeline[int, int, int, int, int, int, int, int]
-_Tuple7: TypeAlias = tuple[_T, _T, _T, _T, _T, _T, _T]
-_Tuple8: TypeAlias = tuple[_T, _T, _T, _T, _T, _T, _T, _T]
+
+_INTEGERS: Final[tuple[int, ...]] = (23, 42, -100, 0, 1000, 999999)
+
+
+class _MapAddInput(Protocol[_T_co]):
+    def __call__(self, a: int, b: int) -> _T_co: ...
 
 
 def _add(a: int, b: int) -> int:
@@ -52,180 +49,451 @@ def _foo(x: int, /) -> str:
     return f"Foo: {x + 1}"
 
 
-def _incr(x: int) -> int:
-    return x + 1
-
-
 def _to_output_string(n: int) -> str:
     return f"Output: {n}"
 
 
-_COMPOSABLES: Final[_Tuple7[_IntComposable]] = (
-    (_incr,),
-    (_incr, _incr),
-    (_incr, _incr, _incr),
-    (_incr, _incr, _incr, _incr),
-    (_incr, _incr, _incr, _incr, _incr),
-    (_incr, _incr, _incr, _incr, _incr, _incr),
-    (_incr, _incr, _incr, _incr, _incr, _incr, _incr),
-)
-
-_PIPELINES: Final[_Tuple8[_IntPipeline]] = (
-    (0,),
-    (0, _incr),
-    (0, _incr, _incr),
-    (0, _incr, _incr, _incr),
-    (0, _incr, _incr, _incr, _incr),
-    (0, _incr, _incr, _incr, _incr, _incr),
-    (0, _incr, _incr, _incr, _incr, _incr, _incr),
-    (0, _incr, _incr, _incr, _incr, _incr, _incr, _incr),
-)
+@pytest.mark.parametrize(("a", "b"), [(2, 3), (5, 7), (10, 20)])
+def test_compose_with_1_complex_argument_correctly_composes_function(
+    a: int, b: int
+) -> None:
+    composed: _MapAddInput[int] = compose(_add)
+    assert composed(a, b) == _add(a, b)
+    assert composed(a=a, b=b) == _add(a=a, b=b)
 
 
-@pytest.mark.parametrize("composable", _COMPOSABLES)
-def test_compose_correctly_composes_composable(composable: _IntComposable) -> None:
-    composed = compose(*composable)
-    assert composed(0) == len(composable)
-
-
-def test_compose_correctly_composes_typed_composables() -> None:
-    c1: Composable1[[int], int] = (_incr,)
-    composed = compose(*c1)
-    assert assert_type(composed(0), int) == len(c1)
-    c2: Composable2[[int], int, int] = (_incr, _incr)
-    composed = compose(*c2)
-    assert assert_type(composed(0), int) == len(c2)
-    c3: Composable3[[int], int, int, int] = (_incr, _incr, _incr)
-    composed = compose(*c3)
-    assert assert_type(composed(0), int) == len(c3)
-    c4: Composable4[[int], int, int, int, int] = (_incr, _incr, _incr, _incr)
-    composed = compose(*c4)
-    assert assert_type(composed(0), int) == len(c4)
-    c5: Composable5[[int], int, int, int, int, int] = (
-        _incr,
-        _incr,
-        _incr,
-        _incr,
-        _incr,
-    )
-    composed = compose(*c5)
-    assert assert_type(composed(0), int) == len(c5)
-    c6: Composable6[[int], int, int, int, int, int, int] = (
-        _incr,
-        _incr,
-        _incr,
-        _incr,
-        _incr,
-        _incr,
-    )
-    composed = compose(*c6)
-    assert assert_type(composed(0), int) == len(c6)
-    c7: Composable7[[int], int, int, int, int, int, int, int] = (
-        _incr,
-        _incr,
-        _incr,
-        _incr,
-        _incr,
-        _incr,
-        _incr,
-    )
-    composed = compose(*c7)
-    assert assert_type(composed(0), int) == len(c7)
-
-
-@pytest.mark.parametrize("value", [23, 42, 100, -1, 0, 1])
-def test_compose_with_1_argument_returns_equivalent_function(value: int) -> None:
-    composed = compose(_foo)
-    assert assert_type(composed(value), str) == _foo(value)
-
-
-@pytest.mark.parametrize("value", [0, 1, -1, 10, 100, 1000])
-def test_compose_with_2_arguments_returns_composed_function(value: int) -> None:
-    composed = compose(_foo, len)
-    assert assert_type(composed(value), int) == len(_foo(value))
+@pytest.mark.parametrize("input_", _INTEGERS)
+def test_compose_with_1_simple_argument_correctly_composes_function(
+    input_: int,
+) -> None:
+    composed: Callable[[int], str] = compose(_foo)
+    assert composed(input_) == _foo(input_)
 
 
 @pytest.mark.parametrize(("a", "b"), [(2, 3), (5, 7), (10, 20)])
-def test_compose_with_multi_arg_first_function(a: int, b: int) -> None:
-    composed = compose(_add, _to_output_string)
-    assert assert_type(composed(a, b), str) == f"Output: {a + b}"
-    assert assert_type(composed(a=a, b=b), str) == f"Output: {a + b}"
+def test_compose_with_2_complex_arguments_correctly_composes_functions(
+    a: int, b: int
+) -> None:
+    composed: _MapAddInput[int] = compose(_add, _double)
+    assert composed(a, b) == _double(_add(a, b))
+    assert composed(a=a, b=b) == _double(_add(a=a, b=b))
+
+
+@pytest.mark.parametrize("input_", _INTEGERS)
+def test_compose_with_2_simple_arguments_correctly_composes_functions(
+    input_: int,
+) -> None:
+    composed: Callable[[int], int] = compose(_foo, len)
+    assert composed(input_) == len(_foo(input_))
 
 
 @pytest.mark.parametrize(("a", "b"), [(2, 3), (5, 7), (10, 20)])
-def test_compose1_with_multi_arg_function(a: int, b: int) -> None:
-    composed = compose(_add)
-    assert composed(a, b) == a + b
+def test_compose_with_3_complex_arguments_correctly_composes_functions(
+    a: int, b: int
+) -> None:
+    composed: _MapAddInput[str] = compose(_add, _double, str)
+    assert composed(a, b) == str(_double(_add(a, b)))
+    assert composed(a=a, b=b) == str(_double(_add(a=a, b=b)))
+
+
+@pytest.mark.parametrize("input_", _INTEGERS)
+def test_compose_with_3_simple_arguments_correctly_composes_functions(
+    input_: int,
+) -> None:
+    composed: Callable[[int], str] = compose(_foo, len, _to_output_string)
+    assert composed(input_) == _to_output_string(len(_foo(input_)))
 
 
 @pytest.mark.parametrize(("a", "b"), [(2, 3), (5, 7), (10, 20)])
-def test_compose2_with_multi_arg_first_function(a: int, b: int) -> None:
-    composed = compose(_add, _double)
-    assert composed(a, b) == (a + b) * 2
+def test_compose_with_4_complex_arguments_correctly_composes_functions(
+    a: int, b: int
+) -> None:
+    composed: _MapAddInput[int] = compose(_add, _double, str, len)
+    assert composed(a, b) == len(str(_double(_add(a, b))))
+    assert composed(a=a, b=b) == len(str(_double(_add(a=a, b=b))))
+
+
+@pytest.mark.parametrize("input_", _INTEGERS)
+def test_compose_with_4_simple_arguments_correctly_composes_functions(
+    input_: int,
+) -> None:
+    composed: Callable[[int], int] = compose(_foo, len, _to_output_string, len)
+    assert composed(input_) == len(_to_output_string(len(_foo(input_))))
 
 
 @pytest.mark.parametrize(("a", "b"), [(2, 3), (5, 7), (10, 20)])
-def test_compose3_with_multi_arg_first_function(a: int, b: int) -> None:
-    composed = compose(_add, _double, str)
-    assert composed(a, b) == str((a + b) * 2)
+def test_compose_with_5_complex_arguments_correctly_composes_functions(
+    a: int, b: int
+) -> None:
+    composed: _MapAddInput[str] = compose(_add, _double, str, len, _to_output_string)
+    assert composed(a, b) == _to_output_string(len(str(_double(_add(a, b)))))
+    assert composed(a=a, b=b) == _to_output_string(len(str(_double(_add(a=a, b=b)))))
 
 
-@pytest.mark.parametrize("p", _PIPELINES)
-def test_pipe_correctly_applies_pipeline(p: _IntPipeline) -> None:
-    piped = pipe(*p)
-    assert piped == len(p) - 1
-
-
-def test_pipe_correctly_applies_typed_pipelines() -> None:
-    p0: Pipeline0[int] = (0,)
-    assert assert_type(pipe(*p0), int) == len(p0) - 1
-    p1: Pipeline1[int, int] = (0, _incr)
-    assert assert_type(pipe(*p1), int) == len(p1) - 1
-    p2: Pipeline2[int, int, int] = (0, _incr, _incr)
-    assert assert_type(pipe(*p2), int) == len(p2) - 1
-    p3: Pipeline3[int, int, int, int] = (0, _incr, _incr, _incr)
-    assert assert_type(pipe(*p3), int) == len(p3) - 1
-    p4: Pipeline4[int, int, int, int, int] = (0, _incr, _incr, _incr, _incr)
-    assert assert_type(pipe(*p4), int) == len(p4) - 1
-    p5: Pipeline5[int, int, int, int, int, int] = (
-        0,
-        _incr,
-        _incr,
-        _incr,
-        _incr,
-        _incr,
+@pytest.mark.parametrize("input_", _INTEGERS)
+def test_compose_with_5_simple_arguments_correctly_composes_functions(
+    input_: int,
+) -> None:
+    composed: Callable[[int], str] = compose(
+        _foo, len, _to_output_string, len, _to_output_string
     )
-    assert assert_type(pipe(*p5), int) == len(p5) - 1
-    p6: Pipeline6[int, int, int, int, int, int, int] = (
-        0,
-        _incr,
-        _incr,
-        _incr,
-        _incr,
-        _incr,
-        _incr,
+    assert composed(input_) == _to_output_string(
+        len(_to_output_string(len(_foo(input_))))
     )
-    assert assert_type(pipe(*p6), int) == len(p6) - 1
-    p7: Pipeline7[int, int, int, int, int, int, int, int] = (
-        0,
-        _incr,
-        _incr,
-        _incr,
-        _incr,
-        _incr,
-        _incr,
-        _incr,
+
+
+@pytest.mark.parametrize(("a", "b"), [(2, 3), (5, 7), (10, 20)])
+def test_compose_with_6_complex_arguments_correctly_composes_functions(
+    a: int, b: int
+) -> None:
+    composed: _MapAddInput[int] = compose(
+        _add, _double, str, len, _to_output_string, len
     )
-    assert assert_type(pipe(*p7), int) == len(p7) - 1
+    assert composed(a, b) == len(_to_output_string(len(str(_double(_add(a, b))))))
+    assert composed(a=a, b=b) == len(
+        _to_output_string(len(str(_double(_add(a=a, b=b)))))
+    )
 
 
-@pytest.mark.parametrize(
-    "input_", [42, "test", [4, 5, 6], {"key": "value"}, None, True]
-)
-def test_pipe_with_1_argument_returns_identical_value(input_: object) -> None:
-    assert pipe(input_) is input_
+@pytest.mark.parametrize("input_", _INTEGERS)
+def test_compose_with_6_simple_arguments_correctly_composes_functions(
+    input_: int,
+) -> None:
+    composed: Callable[[int], int] = compose(
+        _foo, len, _to_output_string, len, _to_output_string, len
+    )
+    assert composed(input_) == len(
+        _to_output_string(len(_to_output_string(len(_foo(input_)))))
+    )
 
 
-@pytest.mark.parametrize("value", [23, 42, -100, 0, 1000, 999999])
-def test_pipe_with_2_arguments_applies_function_to_value(value: int) -> None:
-    assert pipe(value, _foo) == _foo(value)
+@pytest.mark.parametrize(("a", "b"), [(2, 3), (5, 7), (10, 20)])
+def test_compose_with_7_complex_arguments_correctly_composes_functions(
+    a: int, b: int
+) -> None:
+    composed: _MapAddInput[str] = compose(
+        _add, _double, str, len, _to_output_string, len, _to_output_string
+    )
+    assert composed(a, b) == _to_output_string(
+        len(_to_output_string(len(str(_double(_add(a, b))))))
+    )
+    assert composed(a=a, b=b) == _to_output_string(
+        len(_to_output_string(len(str(_double(_add(a=a, b=b))))))
+    )
+
+
+@pytest.mark.parametrize("input_", _INTEGERS)
+def test_compose_with_7_simple_arguments_correctly_composes_functions(
+    input_: int,
+) -> None:
+    composed: Callable[[int], str] = compose(
+        _foo,
+        len,
+        _to_output_string,
+        len,
+        _to_output_string,
+        len,
+        _to_output_string,
+    )
+    assert composed(input_) == _to_output_string(
+        len(_to_output_string(len(_to_output_string(len(_foo(input_))))))
+    )
+
+
+def test_compose_with_variadic_composable1_argument_correctly_composes_function() -> (
+    None
+):
+    input_: dict[str, str] = {"key": "value"}
+    composable: Composable1[[dict[str, str]], int] = (len,)
+    composed: Callable[[dict[str, str]], int] = compose(*composable)
+    assert composed(input_) == len(input_)
+
+
+def test_compose_with_variadic_composable2_argument_correctly_composes_functions() -> (
+    None
+):
+    input_: dict[str, str] = {"key": "value"}
+    composable: Composable2[[dict[str, str]], int, str] = (len, _to_output_string)
+    composed: Callable[[dict[str, str]], str] = compose(*composable)
+    assert composed(input_) == _to_output_string(len(input_))
+
+
+def test_compose_with_variadic_composable3_argument_correctly_composes_functions() -> (
+    None
+):
+    input_: dict[str, str] = {"key": "value"}
+    composable: Composable3[[dict[str, str]], int, str, int] = (
+        len,
+        _to_output_string,
+        len,
+    )
+    composed: Callable[[dict[str, str]], int] = compose(*composable)
+    assert composed(input_) == len(_to_output_string(len(input_)))
+
+
+def test_compose_with_variadic_composable4_argument_correctly_composes_functions() -> (
+    None
+):
+    input_: dict[str, str] = {"key": "value"}
+    composable: Composable4[[dict[str, str]], int, str, int, str] = (
+        len,
+        _to_output_string,
+        len,
+        _to_output_string,
+    )
+    composed: Callable[[dict[str, str]], str] = compose(*composable)
+    assert composed(input_) == _to_output_string(len(_to_output_string(len(input_))))
+
+
+def test_compose_with_variadic_composable5_argument_correctly_composes_functions() -> (
+    None
+):
+    input_: dict[str, str] = {"key": "value"}
+    composable: Composable5[[dict[str, str]], int, str, int, str, int] = (
+        len,
+        _to_output_string,
+        len,
+        _to_output_string,
+        len,
+    )
+    composed: Callable[[dict[str, str]], int] = compose(*composable)
+    assert composed(input_) == len(
+        _to_output_string(len(_to_output_string(len(input_))))
+    )
+
+
+def test_compose_with_variadic_composable6_argument_correctly_composes_functions() -> (
+    None
+):
+    input_: dict[str, str] = {"key": "value"}
+    composable: Composable6[[dict[str, str]], int, str, int, str, int, str] = (
+        len,
+        _to_output_string,
+        len,
+        _to_output_string,
+        len,
+        _to_output_string,
+    )
+    composed: Callable[[dict[str, str]], str] = compose(*composable)
+    assert composed(input_) == _to_output_string(
+        len(_to_output_string(len(_to_output_string(len(input_)))))
+    )
+
+
+def test_compose_with_variadic_composable7_argument_correctly_composes_functions() -> (
+    None
+):
+    input_: dict[str, str] = {"key": "value"}
+    composable: Composable7[[dict[str, str]], int, str, int, str, int, str, int] = (
+        len,
+        _to_output_string,
+        len,
+        _to_output_string,
+        len,
+        _to_output_string,
+        len,
+    )
+    composed: Callable[[dict[str, str]], int] = compose(*composable)
+    assert composed(input_) == len(
+        _to_output_string(len(_to_output_string(len(_to_output_string(len(input_))))))
+    )
+
+
+def test_pipe_with_1_positional_argument_returns_identical_bool() -> None:
+    input_: bool = True
+    output: bool = pipe(input_)
+    assert output is input_
+
+
+def test_pipe_with_1_positional_argument_returns_identical_dict() -> None:
+    input_: dict[str, str] = {"key": "value"}
+    output: dict[str, str] = pipe(input_)
+    assert output is input_
+
+
+def test_pipe_with_1_positional_argument_returns_identical_int() -> None:
+    input_: int = 42
+    output: int = pipe(input_)
+    assert output is input_
+
+
+def test_pipe_with_1_positional_argument_returns_identical_list() -> None:
+    input_: list[int] = [4, 5, 6]
+    output: list[int] = pipe(input_)
+    assert output is input_
+
+
+def test_pipe_with_1_positional_argument_returns_identical_none() -> None:
+    input_: None = None
+    output: None = pipe(input_)
+    assert output is input_
+
+
+def test_pipe_with_1_positional_argument_returns_identical_str() -> None:
+    input_: str = "test"
+    output: str = pipe(input_)
+    assert output is input_
+
+
+@pytest.mark.parametrize("input_", _INTEGERS)
+def test_pipe_with_2_positional_arguments_correctly_applies_function(
+    input_: int,
+) -> None:
+    output: str = pipe(input_, _foo)
+    assert output == _foo(input_)
+
+
+@pytest.mark.parametrize("input_", _INTEGERS)
+def test_pipe_with_3_positional_arguments_correctly_applies_functions(
+    input_: int,
+) -> None:
+    output: int = pipe(input_, _foo, len)
+    assert output == len(_foo(input_))
+
+
+@pytest.mark.parametrize("input_", _INTEGERS)
+def test_pipe_with_4_positional_arguments_correctly_applies_functions(
+    input_: int,
+) -> None:
+    output: str = pipe(input_, _foo, len, _to_output_string)
+    assert output == _to_output_string(len(_foo(input_)))
+
+
+@pytest.mark.parametrize("input_", _INTEGERS)
+def test_pipe_with_5_positional_arguments_correctly_applies_functions(
+    input_: int,
+) -> None:
+    output: int = pipe(input_, _foo, len, _to_output_string, len)
+    assert output == len(_to_output_string(len(_foo(input_))))
+
+
+@pytest.mark.parametrize("input_", _INTEGERS)
+def test_pipe_with_6_positional_arguments_correctly_applies_functions(
+    input_: int,
+) -> None:
+    output: str = pipe(input_, _foo, len, _to_output_string, len, _to_output_string)
+    assert output == _to_output_string(len(_to_output_string(len(_foo(input_)))))
+
+
+@pytest.mark.parametrize("input_", _INTEGERS)
+def test_pipe_with_7_positional_arguments_correctly_applies_functions(
+    input_: int,
+) -> None:
+    output: int = pipe(
+        input_, _foo, len, _to_output_string, len, _to_output_string, len
+    )
+    assert output == len(_to_output_string(len(_to_output_string(len(_foo(input_))))))
+
+
+@pytest.mark.parametrize("input_", _INTEGERS)
+def test_pipe_with_8_positional_arguments_correctly_applies_functions(
+    input_: int,
+) -> None:
+    output: str = pipe(
+        input_,
+        _foo,
+        len,
+        _to_output_string,
+        len,
+        _to_output_string,
+        len,
+        _to_output_string,
+    )
+    assert output == _to_output_string(
+        len(_to_output_string(len(_to_output_string(len(_foo(input_))))))
+    )
+
+
+def test_pipe_with_variadic_pipeline0_argument_returns_identical_dict() -> None:
+    input_: dict[str, str] = {"key": "value"}
+    pipeline: Pipeline0[dict[str, str]] = (input_,)
+    output: dict[str, str] = pipe(*pipeline)
+    assert output is input_
+
+
+def test_pipe_with_variadic_pipeline1_argument_correctly_applies_function() -> None:
+    input_: dict[str, str] = {"key": "value"}
+    pipeline: Pipeline1[dict[str, str], int] = (input_, len)
+    output: int = pipe(*pipeline)
+    assert output == len(input_)
+
+
+def test_pipe_with_variadic_pipeline2_argument_correctly_applies_functions() -> None:
+    input_: dict[str, str] = {"key": "value"}
+    pipeline: Pipeline2[dict[str, str], int, str] = (input_, len, _to_output_string)
+    output: str = pipe(*pipeline)
+    assert output == _to_output_string(len(input_))
+
+
+def test_pipe_with_variadic_pipeline3_argument_correctly_applies_functions() -> None:
+    input_: dict[str, str] = {"key": "value"}
+    pipeline: Pipeline3[dict[str, str], int, str, int] = (
+        input_,
+        len,
+        _to_output_string,
+        len,
+    )
+    output: int = pipe(*pipeline)
+    assert output == len(_to_output_string(len(input_)))
+
+
+def test_pipe_with_variadic_pipeline4_argument_correctly_applies_functions() -> None:
+    input_: dict[str, str] = {"key": "value"}
+    pipeline: Pipeline4[dict[str, str], int, str, int, str] = (
+        input_,
+        len,
+        _to_output_string,
+        len,
+        _to_output_string,
+    )
+    output: str = pipe(*pipeline)
+    assert output == _to_output_string(len(_to_output_string(len(input_))))
+
+
+def test_pipe_with_variadic_pipeline5_argument_correctly_applies_functions() -> None:
+    input_: dict[str, str] = {"key": "value"}
+    pipeline: Pipeline5[dict[str, str], int, str, int, str, int] = (
+        input_,
+        len,
+        _to_output_string,
+        len,
+        _to_output_string,
+        len,
+    )
+    output: int = pipe(*pipeline)
+    assert output == len(_to_output_string(len(_to_output_string(len(input_)))))
+
+
+def test_pipe_with_variadic_pipeline6_argument_correctly_applies_functions() -> None:
+    input_: dict[str, str] = {"key": "value"}
+    pipeline: Pipeline6[dict[str, str], int, str, int, str, int, str] = (
+        input_,
+        len,
+        _to_output_string,
+        len,
+        _to_output_string,
+        len,
+        _to_output_string,
+    )
+    output: str = pipe(*pipeline)
+    assert output == _to_output_string(
+        len(_to_output_string(len(_to_output_string(len(input_)))))
+    )
+
+
+def test_pipe_with_variadic_pipeline7_argument_correctly_applies_functions() -> None:
+    input_: dict[str, str] = {"key": "value"}
+    pipeline: Pipeline7[dict[str, str], int, str, int, str, int, str, int] = (
+        input_,
+        len,
+        _to_output_string,
+        len,
+        _to_output_string,
+        len,
+        _to_output_string,
+        len,
+    )
+    output: int = pipe(*pipeline)
+    assert output == len(
+        _to_output_string(len(_to_output_string(len(_to_output_string(len(input_))))))
+    )
