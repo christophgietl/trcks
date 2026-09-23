@@ -128,10 +128,10 @@ def map_to_awaitable(
         Wrote 'Hello, world!' to disk.
     """
 
-    async def mapped_f(awaitable: Awaitable[_T1]) -> _T2:
+    async def mapped_callable(awaitable: Awaitable[_T1]) -> _T2:
         return await callable_(await awaitable, *args, **kwargs)
 
-    return mapped_f
+    return mapped_callable
 
 
 def tap(

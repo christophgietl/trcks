@@ -615,11 +615,11 @@ class AwaitableResultTupleWrapper(
             >>> asyncio.run(wrapper_3.core_as_coroutine)
             ('success', (1, 2))
         """
-        mapped_f: Callable[
+        mapped_callable: Callable[
             [AwaitableResultTuple[_F_default_co, _S_default_co]],
             AwaitableResultTuple[Never, _S_default_co | _S],
         ] = art.map_failure_to_awaitable_iterable(callable_, *args, **kwargs)
-        return AwaitableResultTupleWrapper(mapped_f(self.core))
+        return AwaitableResultTupleWrapper(mapped_callable(self.core))
 
     def map_failure_to_awaitable_result(
         self,
@@ -871,11 +871,11 @@ class AwaitableResultTupleWrapper(
             >>> asyncio.run(wrapper_3.core_as_coroutine)
             ('success', (1, 2))
         """
-        mapped_f: Callable[
+        mapped_callable: Callable[
             [AwaitableResultTuple[_F_default_co, _S_default_co]],
             AwaitableResultTuple[Never, _S_default_co | _S],
         ] = art.map_failure_to_iterable(callable_, *args, **kwargs)
-        return AwaitableResultTupleWrapper(mapped_f(self.core))
+        return AwaitableResultTupleWrapper(mapped_callable(self.core))
 
     def map_failure_to_result(
         self,
@@ -1800,11 +1800,11 @@ class AwaitableResultTupleWrapper(
             >>> asyncio.run(wrapper_2.core_as_coroutine)
             ('success', (1,))
         """
-        tapped_f: Callable[
+        tapped_callable: Callable[
             [AwaitableResultTuple[_F_default_co, _S_default_co]],
             AwaitableResultTuple[Never, _F_default_co | _S_default_co],
         ] = art.tap_failure_to_awaitable_iterable(callable_, *args, **kwargs)
-        return AwaitableResultTupleWrapper(tapped_f(self.core))
+        return AwaitableResultTupleWrapper(tapped_callable(self.core))
 
     def tap_failure_to_awaitable_result(
         self,
@@ -2042,11 +2042,11 @@ class AwaitableResultTupleWrapper(
             >>> asyncio.run(wrapper_2.core_as_coroutine)
             ('success', (1,))
         """
-        tapped_f: Callable[
+        tapped_callable: Callable[
             [AwaitableResultTuple[_F_default_co, _S_default_co]],
             AwaitableResultTuple[Never, _F_default_co | _S_default_co],
         ] = art.tap_failure_to_iterable(callable_, *args, **kwargs)
-        return AwaitableResultTupleWrapper(tapped_f(self.core))
+        return AwaitableResultTupleWrapper(tapped_callable(self.core))
 
     def tap_failure_to_result(
         self,

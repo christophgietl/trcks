@@ -208,7 +208,7 @@ def map_failure_to_iterable(
         ('success', (1, 2))
     """
 
-    def mapped_f(
+    def mapped_callable(
         r_tpl: ResultTuple[_F1, _S1],
     ) -> SuccessTuple[_S1] | SuccessTuple[_S2]:
         match r_tpl:
@@ -221,7 +221,7 @@ def map_failure_to_iterable(
                 msg = f"{type(r_tpl).__name__!r} is not a valid ResultTuple"
                 raise TypeError(msg)
 
-    return mapped_f
+    return mapped_callable
 
 
 def map_failure_to_result(
@@ -492,7 +492,7 @@ def map_successes_to_result_iterable(
         ('failure', 'oops')
     """
 
-    def partially_mapped_f(s1s: tuple[_S1, ...]) -> ResultTuple[_F2, _S2]:
+    def partially_mapped_callable(s1s: tuple[_S1, ...]) -> ResultTuple[_F2, _S2]:
         s2s: list[_S2] = []
         for s1 in s1s:
             match callable_(s1, *args, **kwargs):
@@ -506,18 +506,18 @@ def map_successes_to_result_iterable(
                     raise TypeError(msg)
         return "success", tuple(s2s)
 
-    def mapped_f(r_tpl: ResultTuple[_F1, _S1]) -> ResultTuple[_F1 | _F2, _S2]:
+    def mapped_callable(r_tpl: ResultTuple[_F1, _S1]) -> ResultTuple[_F1 | _F2, _S2]:
         match r_tpl:
             case ("failure", _):
                 return r_tpl
             case ("success", s1s):
-                return partially_mapped_f(s1s)
+                return partially_mapped_callable(s1s)
             case _:  # pragma: no cover
                 assert_type(r_tpl, Never)  # type: ignore[unreachable]  # pyright: ignore[reportUnreachable]
                 msg = f"{type(r_tpl).__name__!r} is not a valid ResultTuple"
                 raise TypeError(msg)
 
-    return mapped_f
+    return mapped_callable
 
 
 def tap_failure(
@@ -608,10 +608,10 @@ def tap_failure_to_iterable(
         ('success', (1, 2))
     """
 
-    def tapped_f(f1: _F1) -> tuple[_F1, ...]:
+    def tapped_callable(f1: _F1) -> tuple[_F1, ...]:
         return tuple(f1 for _s2 in callable_(f1, *args, **kwargs))
 
-    return map_failure_to_iterable(tapped_f)
+    return map_failure_to_iterable(tapped_callable)
 
 
 def tap_failure_to_result(
@@ -658,10 +658,10 @@ def tap_failure_to_result(
         >>> recover_from_not_found(("success", (1, 2)))
         ('success', (1, 2))
     """
-    composed_f: Callable[Concatenate[_F1, _P], ResultTuple[object, _S2]] = compose(
-        callable_, construct_from_result
+    composed_callable: Callable[Concatenate[_F1, _P], ResultTuple[object, _S2]] = (
+        compose(callable_, construct_from_result)
     )
-    return tap_failure_to_result_iterable(composed_f, *args, **kwargs)
+    return tap_failure_to_result_iterable(composed_callable, *args, **kwargs)
 
 
 def tap_failure_to_result_iterable(
@@ -848,10 +848,10 @@ def tap_successes_to_result(
         >>> validate_positive(("failure", "oops"))
         ('failure', 'oops')
     """
-    composed_f: Callable[Concatenate[_S1, _P], ResultTuple[_F2, object]] = compose(
-        callable_, construct_from_result
+    composed_callable: Callable[Concatenate[_S1, _P], ResultTuple[_F2, object]] = (
+        compose(callable_, construct_from_result)
     )
-    return tap_successes_to_result_iterable(composed_f, *args, **kwargs)
+    return tap_successes_to_result_iterable(composed_callable, *args, **kwargs)
 
 
 def tap_successes_to_result_iterable(
@@ -900,7 +900,7 @@ def tap_successes_to_result_iterable(
         ('failure', 'not positive')
     """
 
-    def tapped_f(s1: _S1) -> ResultTuple[_F2, _S1]:
+    def tapped_callable(s1: _S1) -> ResultTuple[_F2, _S1]:
         match callable_(s1, *args, **kwargs):
             case ("failure", _) as r_it:
                 return r_it
@@ -911,4 +911,4 @@ def tap_successes_to_result_iterable(
                 msg = f"{type(r_it).__name__!r} is not a valid ResultIterable"
                 raise TypeError(msg)
 
-    return map_successes_to_result_iterable(tapped_f)
+    return map_successes_to_result_iterable(tapped_callable)

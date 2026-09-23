@@ -106,10 +106,10 @@ def map_to_iterable(
         (1, 1, 2, 2, 3, 3)
     """
 
-    def mapped_f(t1s: tuple[_T1, ...]) -> tuple[_T2, ...]:
+    def mapped_callable(t1s: tuple[_T1, ...]) -> tuple[_T2, ...]:
         return tuple(t2 for t1 in t1s for t2 in callable_(t1, *args, **kwargs))
 
-    return mapped_f
+    return mapped_callable
 
 
 def tap(

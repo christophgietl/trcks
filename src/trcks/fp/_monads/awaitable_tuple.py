@@ -242,13 +242,13 @@ def map_to_awaitable_iterable(
         (1, 1, 2, 2)
     """
 
-    async def mapped_f(a_t1s: AwaitableTuple[_T1]) -> tuple[_T2, ...]:
+    async def mapped_callable(a_t1s: AwaitableTuple[_T1]) -> tuple[_T2, ...]:
         # `tuple` does not support asynchronous generators.
         # Therefore, we need to use a list comprehension and then convert it to a tuple:
         t2s = [t2 for t1 in await a_t1s for t2 in await callable_(t1, *args, **kwargs)]
         return tuple(t2s)
 
-    return mapped_f
+    return mapped_callable
 
 
 def map_to_iterable(

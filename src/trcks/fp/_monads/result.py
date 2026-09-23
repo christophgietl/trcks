@@ -126,7 +126,7 @@ def map_failure_to_result(
         ('success', 25.0)
     """
 
-    def mapped_f(rslt: Result[_F1, _S1]) -> Result[_F2, _S1 | _S2]:
+    def mapped_callable(rslt: Result[_F1, _S1]) -> Result[_F2, _S1 | _S2]:
         match rslt:
             case ("failure", value):
                 return callable_(value, *args, **kwargs)
@@ -137,7 +137,7 @@ def map_failure_to_result(
                 msg = f"{type(rslt).__name__!r} is not a valid Result"
                 raise TypeError(msg)
 
-    return mapped_f
+    return mapped_callable
 
 
 def map_success(
@@ -217,7 +217,7 @@ def map_success_to_result(
         ('success', 5.0)
     """
 
-    def mapped_f(rslt: Result[_F1, _S1]) -> Result[_F1 | _F2, _S2]:
+    def mapped_callable(rslt: Result[_F1, _S1]) -> Result[_F1 | _F2, _S2]:
         match rslt:
             case ("failure", _):
                 return rslt
@@ -228,7 +228,7 @@ def map_success_to_result(
                 msg = f"{type(rslt).__name__!r} is not a valid Result"
                 raise TypeError(msg)
 
-    return mapped_f
+    return mapped_callable
 
 
 def tap_failure(

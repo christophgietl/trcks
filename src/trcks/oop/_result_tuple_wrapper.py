@@ -561,11 +561,11 @@ class ResultTupleWrapper(BaseWrapper[ResultTuple[_F_default_co, _S_default_co]])
             ... ).map_failure_to_iterable(_recover_from_not_found)
             ResultTupleWrapper(core=('success', (1, 2)))
         """
-        mapped_f: Callable[
+        mapped_callable: Callable[
             [ResultTuple[_F_default_co, _S_default_co]],
             ResultTuple[Never, _S_default_co | _S],
         ] = rt.map_failure_to_iterable(callable_, *args, **kwargs)
-        return ResultTupleWrapper(mapped_f(self.core))
+        return ResultTupleWrapper(mapped_callable(self.core))
 
     def map_failure_to_result(
         self,
@@ -616,11 +616,11 @@ class ResultTupleWrapper(BaseWrapper[ResultTuple[_F_default_co, _S_default_co]])
             ... ).map_failure_to_result(_recover_from_not_found)
             ResultTupleWrapper(core=('success', (1, 2)))
         """
-        mapped_f: Callable[
+        mapped_callable: Callable[
             [ResultTuple[_F_default_co, _S_default_co]],
             ResultTuple[_F, _S_default_co | _S],
         ] = rt.map_failure_to_result(callable_, *args, **kwargs)
-        return ResultTupleWrapper(mapped_f(self.core))
+        return ResultTupleWrapper(mapped_callable(self.core))
 
     def map_failure_to_result_iterable(
         self,
@@ -671,11 +671,11 @@ class ResultTupleWrapper(BaseWrapper[ResultTuple[_F_default_co, _S_default_co]])
             ... ).map_failure_to_result_iterable(_recover_from_not_found)
             ResultTupleWrapper(core=('success', (1, 2)))
         """
-        mapped_f: Callable[
+        mapped_callable: Callable[
             [ResultTuple[_F_default_co, _S_default_co]],
             ResultTuple[_F, _S_default_co | _S],
         ] = rt.map_failure_to_result_iterable(callable_, *args, **kwargs)
-        return ResultTupleWrapper(mapped_f(self.core))
+        return ResultTupleWrapper(mapped_callable(self.core))
 
     @deprecated("Use map_failure_to_result_iterable instead")
     def map_failure_to_result_tuple(
@@ -1109,11 +1109,11 @@ class ResultTupleWrapper(BaseWrapper[ResultTuple[_F_default_co, _S_default_co]])
             ... ).map_successes_to_result(double_if_positive)
             ResultTupleWrapper(core=('failure', 'oops'))
         """
-        mapped_f: Callable[
+        mapped_callable: Callable[
             [ResultTuple[_F_default_co, _S_default_co]],
             ResultTuple[_F_default_co | _F, _S],
         ] = rt.map_successes_to_result(callable_, *args, **kwargs)
-        return ResultTupleWrapper(mapped_f(self.core))
+        return ResultTupleWrapper(mapped_callable(self.core))
 
     def map_successes_to_result_iterable(
         self,
@@ -1165,11 +1165,11 @@ class ResultTupleWrapper(BaseWrapper[ResultTuple[_F_default_co, _S_default_co]])
             ... ).map_successes_to_result_iterable(duplicate_if_positive)
             ResultTupleWrapper(core=('failure', 'oops'))
         """
-        mapped_f: Callable[
+        mapped_callable: Callable[
             [ResultTuple[_F_default_co, _S_default_co]],
             ResultTuple[_F_default_co | _F, _S],
         ] = rt.map_successes_to_result_iterable(callable_, *args, **kwargs)
-        return ResultTupleWrapper(mapped_f(self.core))
+        return ResultTupleWrapper(mapped_callable(self.core))
 
     @deprecated("Use map_successes_to_result_iterable instead")
     def map_successes_to_result_tuple(
@@ -1581,11 +1581,11 @@ class ResultTupleWrapper(BaseWrapper[ResultTuple[_F_default_co, _S_default_co]])
             ... ).tap_failure_to_iterable(_log_and_alert)
             ResultTupleWrapper(core=('success', (1, 2)))
         """
-        tapped_f: Callable[
+        tapped_callable: Callable[
             [ResultTuple[_F_default_co, _S_default_co]],
             ResultTuple[Never, _F_default_co | _S_default_co],
         ] = rt.tap_failure_to_iterable(callable_, *args, **kwargs)
-        return ResultTupleWrapper(tapped_f(self.core))
+        return ResultTupleWrapper(tapped_callable(self.core))
 
     def tap_failure_to_result(
         self,
@@ -1639,11 +1639,11 @@ class ResultTupleWrapper(BaseWrapper[ResultTuple[_F_default_co, _S_default_co]])
             ... ).tap_failure_to_result(recover)
             ResultTupleWrapper(core=('success', (1, 2)))
         """
-        tapped_f: Callable[
+        tapped_callable: Callable[
             [ResultTuple[_F_default_co, _S_default_co]],
             ResultTuple[_F_default_co, _S_default_co | _S],
         ] = rt.tap_failure_to_result(callable_, *args, **kwargs)
-        return ResultTupleWrapper(tapped_f(self.core))
+        return ResultTupleWrapper(tapped_callable(self.core))
 
     def tap_failure_to_result_iterable(
         self,
@@ -1697,11 +1697,11 @@ class ResultTupleWrapper(BaseWrapper[ResultTuple[_F_default_co, _S_default_co]])
             ... ).tap_failure_to_result_iterable(recover)
             ResultTupleWrapper(core=('success', (1, 2)))
         """
-        tapped_f: Callable[
+        tapped_callable: Callable[
             [ResultTuple[_F_default_co, _S_default_co]],
             ResultTuple[_F_default_co, _S_default_co | _S],
         ] = rt.tap_failure_to_result_iterable(callable_, *args, **kwargs)
-        return ResultTupleWrapper(tapped_f(self.core))
+        return ResultTupleWrapper(tapped_callable(self.core))
 
     @deprecated("Use tap_failure_to_result_iterable instead")
     def tap_failure_to_result_tuple(

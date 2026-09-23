@@ -449,7 +449,7 @@ def map_failure_to_awaitable_iterable(
         ('success', (1, 2))
     """
 
-    async def mapped_f(
+    async def mapped_callable(
         r_tpl: ResultTuple[_F1, _S1],
     ) -> SuccessTuple[_S1] | SuccessTuple[_S2]:
         match r_tpl:
@@ -462,7 +462,7 @@ def map_failure_to_awaitable_iterable(
                 msg = f"{type(r_tpl).__name__!r} is not a valid ResultTuple"
                 raise TypeError(msg)
 
-    return a.map_to_awaitable(mapped_f)
+    return a.map_to_awaitable(mapped_callable)
 
 
 def map_failure_to_awaitable_result(
@@ -583,7 +583,7 @@ def map_failure_to_awaitable_result_iterable(
         ('success', (1, 2))
     """
 
-    async def partially_mapped_f(
+    async def partially_mapped_callable(
         r_tpl: ResultTuple[_F1, _S1],
     ) -> ResultTuple[_F2, _S1 | _S2]:
         match r_tpl:
@@ -598,7 +598,7 @@ def map_failure_to_awaitable_result_iterable(
                 msg = f"{type(r_tpl).__name__!r} is not a valid ResultTuple"
                 raise TypeError(msg)
 
-    return a.map_to_awaitable(partially_mapped_f)
+    return a.map_to_awaitable(partially_mapped_callable)
 
 
 def map_failure_to_iterable(
@@ -1015,7 +1015,7 @@ def map_successes_to_awaitable_result_iterable(
         ('failure', 'oops')
     """
 
-    async def partially_mapped_f(
+    async def partially_mapped_callable(
         r_tpl: ResultTuple[_F1, _S1],
     ) -> ResultTuple[_F1 | _F2, _S2]:
         match r_tpl:
@@ -1042,7 +1042,7 @@ def map_successes_to_awaitable_result_iterable(
                 msg = f"{type(r_tpl).__name__!r} is not a valid ResultTuple"
                 raise TypeError(msg)
 
-    return a.map_to_awaitable(partially_mapped_f)
+    return a.map_to_awaitable(partially_mapped_callable)
 
 
 def map_successes_to_iterable(
@@ -1905,7 +1905,7 @@ def tap_successes_to_awaitable_result_iterable(
         ('failure', 'oops')
     """
 
-    async def tapped_f(s1: _S1) -> ResultIterable[_F2, _S1]:
+    async def tapped_callable(s1: _S1) -> ResultIterable[_F2, _S1]:
         match await callable_(s1, *args, **kwargs):
             case ("failure", _) as r_it:
                 return r_it
@@ -1916,7 +1916,7 @@ def tap_successes_to_awaitable_result_iterable(
                 msg = f"{type(r_it).__name__!r} is not a valid ResultIterable"
                 raise TypeError(msg)
 
-    return map_successes_to_awaitable_result_iterable(tapped_f)
+    return map_successes_to_awaitable_result_iterable(tapped_callable)
 
 
 def tap_successes_to_iterable(
