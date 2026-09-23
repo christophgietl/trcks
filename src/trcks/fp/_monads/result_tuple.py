@@ -126,18 +126,21 @@ def construct_successes_from_iterable(it: Iterable[_S], /) -> SuccessTuple[_S]:
 
 
 def map_failure(
-    f: Callable[Concatenate[_F1, _P], _F2], /, *args: _P.args, **kwargs: _P.kwargs
+    callable_: Callable[Concatenate[_F1, _P], _F2],
+    /,
+    *args: _P.args,
+    **kwargs: _P.kwargs,
 ) -> Callable[[ResultTuple[_F1, _S1]], ResultTuple[_F2, _S1]]:
     """Create function that maps [trcks.Failure][] values to [trcks.Failure][] values.
 
     [trcks.SuccessTuple][] values are left unchanged.
 
     Args:
-        f: Function to apply to the [trcks.Failure][] values.
+        callable_: Function to apply to the [trcks.Failure][] values.
         *args:
-            Positional arguments to be passed to `f`.
+            Positional arguments to be passed to `callable_`.
         **kwargs:
-            Keyword arguments to be passed to `f`.
+            Keyword arguments to be passed to `callable_`.
 
     Returns:
         Maps [trcks.Failure][] values to new [trcks.Failure][] values
@@ -159,11 +162,11 @@ def map_failure(
         >>> add_prefix(("success", (1, 2)))
         ('success', (1, 2))
     """
-    return r.map_failure(f, *args, **kwargs)
+    return r.map_failure(callable_, *args, **kwargs)
 
 
 def map_failure_to_iterable(
-    f: Callable[Concatenate[_F1, _P], Iterable[_S2]],
+    callable_: Callable[Concatenate[_F1, _P], Iterable[_S2]],
     /,
     *args: _P.args,
     **kwargs: _P.kwargs,
@@ -174,11 +177,11 @@ def map_failure_to_iterable(
     [trcks.SuccessTuple][] values are left unchanged.
 
     Args:
-        f: Function to apply to the [trcks.Failure][] values.
+        callable_: Function to apply to the [trcks.Failure][] values.
         *args:
-            Positional arguments to be passed to `f`.
+            Positional arguments to be passed to `callable_`.
         **kwargs:
-            Keyword arguments to be passed to `f`.
+            Keyword arguments to be passed to `callable_`.
 
     Returns:
         Maps [trcks.Failure][] values to homogeneous [tuple][]s wrapped
@@ -205,12 +208,12 @@ def map_failure_to_iterable(
         ('success', (1, 2))
     """
 
-    def mapped_f(
+    def mapped_callable(
         r_tpl: ResultTuple[_F1, _S1],
     ) -> SuccessTuple[_S1] | SuccessTuple[_S2]:
         match r_tpl:
             case ("failure", value):
-                return "success", tuple(f(value, *args, **kwargs))
+                return "success", tuple(callable_(value, *args, **kwargs))
             case ("success", _):
                 return r_tpl
             case _:  # pragma: no cover
@@ -218,11 +221,11 @@ def map_failure_to_iterable(
                 msg = f"{type(r_tpl).__name__!r} is not a valid ResultTuple"
                 raise TypeError(msg)
 
-    return mapped_f
+    return mapped_callable
 
 
 def map_failure_to_result(
-    f: Callable[Concatenate[_F1, _P], Result[_F2, _S2]],
+    callable_: Callable[Concatenate[_F1, _P], Result[_F2, _S2]],
     /,
     *args: _P.args,
     **kwargs: _P.kwargs,
@@ -233,11 +236,11 @@ def map_failure_to_result(
     [trcks.SuccessTuple][] values are left unchanged.
 
     Args:
-        f: Function to apply to the [trcks.Failure][] values.
+        callable_: Function to apply to the [trcks.Failure][] values.
         *args:
-            Positional arguments to be passed to `f`.
+            Positional arguments to be passed to `callable_`.
         **kwargs:
-            Keyword arguments to be passed to `f`.
+            Keyword arguments to be passed to `callable_`.
 
     Returns:
         Maps [trcks.Failure][] values to new [trcks.Failure][] and [trcks.Success][]
@@ -264,12 +267,12 @@ def map_failure_to_result(
         ('success', (1, 2))
     """
     return map_failure_to_result_iterable(
-        compose(f, construct_from_result), *args, **kwargs
+        compose(callable_, construct_from_result), *args, **kwargs
     )
 
 
 def map_failure_to_result_iterable(
-    f: Callable[Concatenate[_F1, _P], ResultIterable[_F2, _S2]],
+    callable_: Callable[Concatenate[_F1, _P], ResultIterable[_F2, _S2]],
     /,
     *args: _P.args,
     **kwargs: _P.kwargs,
@@ -280,11 +283,11 @@ def map_failure_to_result_iterable(
     [trcks.SuccessTuple][] values are left unchanged.
 
     Args:
-        f: Function to apply to the [trcks.Failure][] values.
+        callable_: Function to apply to the [trcks.Failure][] values.
         *args:
-            Positional arguments to be passed to `f`.
+            Positional arguments to be passed to `callable_`.
         **kwargs:
-            Keyword arguments to be passed to `f`.
+            Keyword arguments to be passed to `callable_`.
 
     Returns:
         Maps [trcks.Failure][] values to new [trcks.ResultTuple][] values
@@ -311,12 +314,15 @@ def map_failure_to_result_iterable(
         ('success', (1, 2))
     """
     return r.map_failure_to_result(
-        compose(f, construct_from_result_iterable), *args, **kwargs
+        compose(callable_, construct_from_result_iterable), *args, **kwargs
     )
 
 
 def map_successes(
-    f: Callable[Concatenate[_S1, _P], _S2], /, *args: _P.args, **kwargs: _P.kwargs
+    callable_: Callable[Concatenate[_S1, _P], _S2],
+    /,
+    *args: _P.args,
+    **kwargs: _P.kwargs,
 ) -> Callable[[ResultTuple[_F1, _S1]], ResultTuple[_F1, _S2]]:
     """Create function that maps each element of a [trcks.SuccessTuple][]
     to a new element.
@@ -324,11 +330,11 @@ def map_successes(
     [trcks.Failure][] values are left unchanged.
 
     Args:
-        f: Function to apply to each element of the [trcks.SuccessTuple][].
+        callable_: Function to apply to each element of the [trcks.SuccessTuple][].
         *args:
-            Positional arguments to be passed to `f`.
+            Positional arguments to be passed to `callable_`.
         **kwargs:
-            Keyword arguments to be passed to `f`.
+            Keyword arguments to be passed to `callable_`.
 
     Returns:
         Leaves [trcks.Failure][] values unchanged and
@@ -350,11 +356,11 @@ def map_successes(
         >>> double_integers(("failure", "not found"))
         ('failure', 'not found')
     """
-    return r.map_success(t.map_(f, *args, **kwargs))
+    return r.map_success(t.map_(callable_, *args, **kwargs))
 
 
 def map_successes_to_iterable(
-    f: Callable[Concatenate[_S1, _P], Iterable[_S2]],
+    callable_: Callable[Concatenate[_S1, _P], Iterable[_S2]],
     /,
     *args: _P.args,
     **kwargs: _P.kwargs,
@@ -365,11 +371,11 @@ def map_successes_to_iterable(
     [trcks.Failure][] values are left unchanged.
 
     Args:
-        f: Function to apply to each element of the [trcks.SuccessTuple][].
+        callable_: Function to apply to each element of the [trcks.SuccessTuple][].
         *args:
-            Positional arguments to be passed to `f`.
+            Positional arguments to be passed to `callable_`.
         **kwargs:
-            Keyword arguments to be passed to `f`.
+            Keyword arguments to be passed to `callable_`.
 
     Returns:
         Leaves [trcks.Failure][] values unchanged and
@@ -391,11 +397,11 @@ def map_successes_to_iterable(
         >>> duplicate_integers(("failure", "not found"))
         ('failure', 'not found')
     """
-    return r.map_success(t.map_to_iterable(f, *args, **kwargs))
+    return r.map_success(t.map_to_iterable(callable_, *args, **kwargs))
 
 
 def map_successes_to_result(
-    f: Callable[Concatenate[_S1, _P], Result[_F2, _S2]],
+    callable_: Callable[Concatenate[_S1, _P], Result[_F2, _S2]],
     /,
     *args: _P.args,
     **kwargs: _P.kwargs,
@@ -406,11 +412,11 @@ def map_successes_to_result(
     [trcks.Failure][] values are left unchanged.
 
     Args:
-        f: Function to apply to each element of the [trcks.SuccessTuple][].
+        callable_: Function to apply to each element of the [trcks.SuccessTuple][].
         *args:
-            Positional arguments to be passed to `f`.
+            Positional arguments to be passed to `callable_`.
         **kwargs:
-            Keyword arguments to be passed to `f`.
+            Keyword arguments to be passed to `callable_`.
 
     Returns:
         Leaves [trcks.Failure][] values unchanged and
@@ -438,12 +444,12 @@ def map_successes_to_result(
         ('failure', 'oops')
     """
     return map_successes_to_result_iterable(
-        compose(f, construct_from_result), *args, **kwargs
+        compose(callable_, construct_from_result), *args, **kwargs
     )
 
 
 def map_successes_to_result_iterable(
-    f: Callable[Concatenate[_S1, _P], ResultIterable[_F2, _S2]],
+    callable_: Callable[Concatenate[_S1, _P], ResultIterable[_F2, _S2]],
     /,
     *args: _P.args,
     **kwargs: _P.kwargs,
@@ -454,17 +460,17 @@ def map_successes_to_result_iterable(
     [trcks.Failure][] values are left unchanged.
 
     Args:
-        f: Function to apply to each element of the [trcks.SuccessTuple][].
+        callable_: Function to apply to each element of the [trcks.SuccessTuple][].
         *args:
-            Positional arguments to be passed to `f`.
+            Positional arguments to be passed to `callable_`.
         **kwargs:
-            Keyword arguments to be passed to `f`.
+            Keyword arguments to be passed to `callable_`.
 
     Returns:
         Leaves [trcks.Failure][] values unchanged and
             maps each element of a [trcks.SuccessTuple][] to new
             [trcks.ResultTuple][] values according to the given function,
-            returning the first [trcks.Failure][] returned by `f`, if any.
+            returning the first [trcks.Failure][] returned by `callable_`, if any.
 
     Examples:
         >>> from collections.abc import Callable
@@ -486,10 +492,10 @@ def map_successes_to_result_iterable(
         ('failure', 'oops')
     """
 
-    def partially_mapped_f(s1s: tuple[_S1, ...]) -> ResultTuple[_F2, _S2]:
+    def partially_mapped_callable(s1s: tuple[_S1, ...]) -> ResultTuple[_F2, _S2]:
         s2s: list[_S2] = []
         for s1 in s1s:
-            match f(s1, *args, **kwargs):
+            match callable_(s1, *args, **kwargs):
                 case ("failure", _) as r_it:
                     return r_it
                 case ("success", additional_s2s):
@@ -500,33 +506,36 @@ def map_successes_to_result_iterable(
                     raise TypeError(msg)
         return "success", tuple(s2s)
 
-    def mapped_f(r_tpl: ResultTuple[_F1, _S1]) -> ResultTuple[_F1 | _F2, _S2]:
+    def mapped_callable(r_tpl: ResultTuple[_F1, _S1]) -> ResultTuple[_F1 | _F2, _S2]:
         match r_tpl:
             case ("failure", _):
                 return r_tpl
             case ("success", s1s):
-                return partially_mapped_f(s1s)
+                return partially_mapped_callable(s1s)
             case _:  # pragma: no cover
                 assert_type(r_tpl, Never)  # type: ignore[unreachable]  # pyright: ignore[reportUnreachable]
                 msg = f"{type(r_tpl).__name__!r} is not a valid ResultTuple"
                 raise TypeError(msg)
 
-    return mapped_f
+    return mapped_callable
 
 
 def tap_failure(
-    f: Callable[Concatenate[_F1, _P], object], /, *args: _P.args, **kwargs: _P.kwargs
+    callable_: Callable[Concatenate[_F1, _P], object],
+    /,
+    *args: _P.args,
+    **kwargs: _P.kwargs,
 ) -> Callable[[ResultTuple[_F1, _S1]], ResultTuple[_F1, _S1]]:
     """Create function that applies a side effect to [trcks.Failure][] values.
 
     [trcks.SuccessTuple][] values are passed on without side effects.
 
     Args:
-        f: Side effect to apply to the [trcks.Failure][] value.
+        callable_: Side effect to apply to the [trcks.Failure][] value.
         *args:
-            Positional arguments to be passed to `f`.
+            Positional arguments to be passed to `callable_`.
         **kwargs:
-            Keyword arguments to be passed to `f`.
+            Keyword arguments to be passed to `callable_`.
 
     Returns:
         Applies the given side effect to [trcks.Failure][] values and
@@ -549,11 +558,11 @@ def tap_failure(
         >>> log_error(("success", (1,)))
         ('success', (1,))
     """
-    return r.tap_failure(f, *args, **kwargs)
+    return r.tap_failure(callable_, *args, **kwargs)
 
 
 def tap_failure_to_iterable(
-    f: Callable[Concatenate[_F1, _P], Iterable[object]],
+    callable_: Callable[Concatenate[_F1, _P], Iterable[object]],
     /,
     *args: _P.args,
     **kwargs: _P.kwargs,
@@ -564,11 +573,11 @@ def tap_failure_to_iterable(
     [trcks.SuccessTuple][] values are passed on without side effects.
 
     Args:
-        f: Side effect to apply to the [trcks.Failure][] value.
+        callable_: Side effect to apply to the [trcks.Failure][] value.
         *args:
-            Positional arguments to be passed to `f`.
+            Positional arguments to be passed to `callable_`.
         **kwargs:
-            Keyword arguments to be passed to `f`.
+            Keyword arguments to be passed to `callable_`.
 
     Returns:
         Applies the given side effect to [trcks.Failure][] values and converts them
@@ -599,14 +608,14 @@ def tap_failure_to_iterable(
         ('success', (1, 2))
     """
 
-    def tapped_f(f1: _F1) -> tuple[_F1, ...]:
-        return tuple(f1 for _s2 in f(f1, *args, **kwargs))
+    def tapped_callable(f1: _F1) -> tuple[_F1, ...]:
+        return tuple(f1 for _s2 in callable_(f1, *args, **kwargs))
 
-    return map_failure_to_iterable(tapped_f)
+    return map_failure_to_iterable(tapped_callable)
 
 
 def tap_failure_to_result(
-    f: Callable[Concatenate[_F1, _P], Result[object, _S2]],
+    callable_: Callable[Concatenate[_F1, _P], Result[object, _S2]],
     /,
     *args: _P.args,
     **kwargs: _P.kwargs,
@@ -617,11 +626,11 @@ def tap_failure_to_result(
     [trcks.SuccessTuple][] values are passed on without side effects.
 
     Args:
-        f: Side effect to apply to the [trcks.Failure][] value.
+        callable_: Side effect to apply to the [trcks.Failure][] value.
         *args:
-            Positional arguments to be passed to `f`.
+            Positional arguments to be passed to `callable_`.
         **kwargs:
-            Keyword arguments to be passed to `f`.
+            Keyword arguments to be passed to `callable_`.
 
     Returns:
         Applies the given side effect to [trcks.Failure][] values.
@@ -649,14 +658,14 @@ def tap_failure_to_result(
         >>> recover_from_not_found(("success", (1, 2)))
         ('success', (1, 2))
     """
-    composed_f: Callable[Concatenate[_F1, _P], ResultTuple[object, _S2]] = compose(
-        f, construct_from_result
+    composed_callable: Callable[Concatenate[_F1, _P], ResultTuple[object, _S2]] = (
+        compose(callable_, construct_from_result)
     )
-    return tap_failure_to_result_iterable(composed_f, *args, **kwargs)
+    return tap_failure_to_result_iterable(composed_callable, *args, **kwargs)
 
 
 def tap_failure_to_result_iterable(
-    f: Callable[Concatenate[_F1, _P], ResultIterable[object, _S2]],
+    callable_: Callable[Concatenate[_F1, _P], ResultIterable[object, _S2]],
     /,
     *args: _P.args,
     **kwargs: _P.kwargs,
@@ -667,11 +676,11 @@ def tap_failure_to_result_iterable(
     [trcks.SuccessTuple][] values are passed on without side effects.
 
     Args:
-        f: Side effect to apply to the [trcks.Failure][] value.
+        callable_: Side effect to apply to the [trcks.Failure][] value.
         *args:
-            Positional arguments to be passed to `f`.
+            Positional arguments to be passed to `callable_`.
         **kwargs:
-            Keyword arguments to be passed to `f`.
+            Keyword arguments to be passed to `callable_`.
 
     Returns:
         Applies the given side effect to [trcks.Failure][] values.
@@ -700,12 +709,15 @@ def tap_failure_to_result_iterable(
         ('success', (1, 2))
     """
     return r.tap_failure_to_result(
-        compose(f, construct_from_result_iterable), *args, **kwargs
+        compose(callable_, construct_from_result_iterable), *args, **kwargs
     )
 
 
 def tap_successes(
-    f: Callable[Concatenate[_S1, _P], object], /, *args: _P.args, **kwargs: _P.kwargs
+    callable_: Callable[Concatenate[_S1, _P], object],
+    /,
+    *args: _P.args,
+    **kwargs: _P.kwargs,
 ) -> Callable[[ResultTuple[_F1, _S1]], ResultTuple[_F1, _S1]]:
     """Create function that applies a side effect to each element
     of a [trcks.SuccessTuple][].
@@ -713,11 +725,11 @@ def tap_successes(
     [trcks.Failure][] values are passed on without side effects.
 
     Args:
-        f: Side effect to apply to each element of the [trcks.SuccessTuple][].
+        callable_: Side effect to apply to each element of the [trcks.SuccessTuple][].
         *args:
-            Positional arguments to be passed to `f`.
+            Positional arguments to be passed to `callable_`.
         **kwargs:
-            Keyword arguments to be passed to `f`.
+            Keyword arguments to be passed to `callable_`.
 
     Returns:
         Passes on [trcks.Failure][] values without side effects.
@@ -744,11 +756,11 @@ def tap_successes(
         >>> r_tpl_2
         ('failure', 'oops')
     """
-    return r.map_success(t.tap(f, *args, **kwargs))
+    return r.map_success(t.tap(callable_, *args, **kwargs))
 
 
 def tap_successes_to_iterable(
-    f: Callable[Concatenate[_S1, _P], Iterable[object]],
+    callable_: Callable[Concatenate[_S1, _P], Iterable[object]],
     /,
     *args: _P.args,
     **kwargs: _P.kwargs,
@@ -759,11 +771,11 @@ def tap_successes_to_iterable(
     [trcks.Failure][] values are passed on without side effects.
 
     Args:
-        f: Side effect to apply to each element of the [trcks.SuccessTuple][].
+        callable_: Side effect to apply to each element of the [trcks.SuccessTuple][].
         *args:
-            Positional arguments to be passed to `f`.
+            Positional arguments to be passed to `callable_`.
         **kwargs:
-            Keyword arguments to be passed to `f`.
+            Keyword arguments to be passed to `callable_`.
 
     Returns:
         Passes on [trcks.Failure][] values without side effects.
@@ -787,11 +799,11 @@ def tap_successes_to_iterable(
         Received: 7
         ('success', (7, 7))
     """
-    return r.map_success(t.tap_to_iterable(f, *args, **kwargs))
+    return r.map_success(t.tap_to_iterable(callable_, *args, **kwargs))
 
 
 def tap_successes_to_result(
-    f: Callable[Concatenate[_S1, _P], Result[_F2, object]],
+    callable_: Callable[Concatenate[_S1, _P], Result[_F2, object]],
     /,
     *args: _P.args,
     **kwargs: _P.kwargs,
@@ -802,11 +814,11 @@ def tap_successes_to_result(
     [trcks.Failure][] values are passed on without side effects.
 
     Args:
-        f: Side effect to apply to each element of the [trcks.SuccessTuple][].
+        callable_: Side effect to apply to each element of the [trcks.SuccessTuple][].
         *args:
-            Positional arguments to be passed to `f`.
+            Positional arguments to be passed to `callable_`.
         **kwargs:
-            Keyword arguments to be passed to `f`.
+            Keyword arguments to be passed to `callable_`.
 
     Returns:
         Passes on [trcks.Failure][] values without side effects.
@@ -836,14 +848,14 @@ def tap_successes_to_result(
         >>> validate_positive(("failure", "oops"))
         ('failure', 'oops')
     """
-    composed_f: Callable[Concatenate[_S1, _P], ResultTuple[_F2, object]] = compose(
-        f, construct_from_result
+    composed_callable: Callable[Concatenate[_S1, _P], ResultTuple[_F2, object]] = (
+        compose(callable_, construct_from_result)
     )
-    return tap_successes_to_result_iterable(composed_f, *args, **kwargs)
+    return tap_successes_to_result_iterable(composed_callable, *args, **kwargs)
 
 
 def tap_successes_to_result_iterable(
-    f: Callable[Concatenate[_S1, _P], ResultIterable[_F2, object]],
+    callable_: Callable[Concatenate[_S1, _P], ResultIterable[_F2, object]],
     /,
     *args: _P.args,
     **kwargs: _P.kwargs,
@@ -854,11 +866,11 @@ def tap_successes_to_result_iterable(
     [trcks.Failure][] values are passed on without side effects.
 
     Args:
-        f: Side effect to apply to each element of the [trcks.SuccessTuple][].
+        callable_: Side effect to apply to each element of the [trcks.SuccessTuple][].
         *args:
-            Positional arguments to be passed to `f`.
+            Positional arguments to be passed to `callable_`.
         **kwargs:
-            Keyword arguments to be passed to `f`.
+            Keyword arguments to be passed to `callable_`.
 
     Returns:
         Passes on [trcks.Failure][] values without side effects.
@@ -888,8 +900,8 @@ def tap_successes_to_result_iterable(
         ('failure', 'not positive')
     """
 
-    def tapped_f(s1: _S1) -> ResultTuple[_F2, _S1]:
-        match f(s1, *args, **kwargs):
+    def tapped_callable(s1: _S1) -> ResultTuple[_F2, _S1]:
+        match callable_(s1, *args, **kwargs):
             case ("failure", _) as r_it:
                 return r_it
             case ("success", s2s):
@@ -899,4 +911,4 @@ def tap_successes_to_result_iterable(
                 msg = f"{type(r_it).__name__!r} is not a valid ResultIterable"
                 raise TypeError(msg)
 
-    return map_successes_to_result_iterable(tapped_f)
+    return map_successes_to_result_iterable(tapped_callable)

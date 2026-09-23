@@ -103,7 +103,7 @@ _T2 = TypeVar("_T2")
 
 
 def map_to_awaitable_iterable(
-    f: Callable[Concatenate[_T1, _P], AwaitableIterable[_T2]],
+    callable_: Callable[Concatenate[_T1, _P], AwaitableIterable[_T2]],
     /,
     *args: _P.args,
     **kwargs: _P.kwargs,
@@ -112,12 +112,12 @@ def map_to_awaitable_iterable(
     to a [trcks.AwaitableIterable][] and flattens the result.
 
     Args:
-        f: Asynchronous function to apply to the awaited value,
+        callable_: Asynchronous function to apply to the awaited value,
             returning a [trcks.AwaitableIterable][].
         *args:
-            Positional arguments to be passed to `f`.
+            Positional arguments to be passed to `callable_`.
         **kwargs:
-            Keyword arguments to be passed to `f`.
+            Keyword arguments to be passed to `callable_`.
 
     Returns:
         Maps [collections.abc.Awaitable][]s to [trcks.AwaitableTuple][]s
@@ -137,12 +137,13 @@ def map_to_awaitable_iterable(
         (21, 21)
     """
     return compose(
-        at.construct_from_awaitable, at.map_to_awaitable_iterable(f, *args, **kwargs)
+        at.construct_from_awaitable,
+        at.map_to_awaitable_iterable(callable_, *args, **kwargs),
     )
 
 
 def map_to_awaitable_result(
-    f: Callable[Concatenate[_T1, _P], AwaitableResult[_F, _S]],
+    callable_: Callable[Concatenate[_T1, _P], AwaitableResult[_F, _S]],
     /,
     *args: _P.args,
     **kwargs: _P.kwargs,
@@ -151,12 +152,12 @@ def map_to_awaitable_result(
     to a [trcks.AwaitableResult][] value.
 
     Args:
-        f: Asynchronous function to apply to the awaited value,
+        callable_: Asynchronous function to apply to the awaited value,
             returning a [trcks.AwaitableResult][].
         *args:
-            Positional arguments to be passed to `f`.
+            Positional arguments to be passed to `callable_`.
         **kwargs:
-            Keyword arguments to be passed to `f`.
+            Keyword arguments to be passed to `callable_`.
 
     Returns:
         Maps [collections.abc.Awaitable][]s to [trcks.AwaitableResult][]s
@@ -187,13 +188,13 @@ def map_to_awaitable_result(
         Callable[[AwaitableResult[Never, _T1]], AwaitableResult[_F, _S]],
     ] = (
         ar.construct_success_from_awaitable,
-        ar.map_success_to_awaitable_result(f, *args, **kwargs),
+        ar.map_success_to_awaitable_result(callable_, *args, **kwargs),
     )
     return compose(*c)
 
 
 def map_to_awaitable_result_iterable(
-    f: Callable[Concatenate[_T1, _P], AwaitableResultIterable[_F, _S]],
+    callable_: Callable[Concatenate[_T1, _P], AwaitableResultIterable[_F, _S]],
     /,
     *args: _P.args,
     **kwargs: _P.kwargs,
@@ -202,12 +203,12 @@ def map_to_awaitable_result_iterable(
     to a [trcks.AwaitableResultIterable][] and flattens the result.
 
     Args:
-        f: Asynchronous function to apply to the awaited value,
+        callable_: Asynchronous function to apply to the awaited value,
             returning a [trcks.AwaitableResultIterable][].
         *args:
-            Positional arguments to be passed to `f`.
+            Positional arguments to be passed to `callable_`.
         **kwargs:
-            Keyword arguments to be passed to `f`.
+            Keyword arguments to be passed to `callable_`.
 
     Returns:
         Maps [collections.abc.Awaitable][]s to [trcks.AwaitableResultTuple][]s with
@@ -237,14 +238,14 @@ def map_to_awaitable_result_iterable(
         Callable[[AwaitableResultTuple[Never, _T1]], AwaitableResultTuple[_F, _S]],
     ] = (
         art.construct_successes_from_awaitable,
-        art.map_successes_to_awaitable_result_iterable(f, *args, **kwargs),
+        art.map_successes_to_awaitable_result_iterable(callable_, *args, **kwargs),
     )
     return compose(*c)
 
 
 @deprecated("Use map_to_awaitable_result_iterable instead")
 def map_to_awaitable_result_tuple(
-    f: Callable[Concatenate[_T1, _P], AwaitableResultTuple[_F, _S]],
+    callable_: Callable[Concatenate[_T1, _P], AwaitableResultTuple[_F, _S]],
     /,
     *args: _P.args,
     **kwargs: _P.kwargs,
@@ -252,22 +253,24 @@ def map_to_awaitable_result_tuple(
     """Deprecated alias for
     [trcks.fp.monads.awaitable.map_to_awaitable_result_iterable][].
     """
-    return map_to_awaitable_result_iterable(f, *args, **kwargs)  # pragma: no cover
+    return map_to_awaitable_result_iterable(
+        callable_, *args, **kwargs
+    )  # pragma: no cover
 
 
 @deprecated("Use map_to_awaitable_iterable instead")
 def map_to_awaitable_tuple(
-    f: Callable[Concatenate[_T1, _P], AwaitableTuple[_T2]],
+    callable_: Callable[Concatenate[_T1, _P], AwaitableTuple[_T2]],
     /,
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[Awaitable[_T1]], AwaitableTuple[_T2]]:
     """Deprecated alias for [trcks.fp.monads.awaitable.map_to_awaitable_iterable][]."""
-    return map_to_awaitable_iterable(f, *args, **kwargs)  # pragma: no cover
+    return map_to_awaitable_iterable(callable_, *args, **kwargs)  # pragma: no cover
 
 
 def map_to_iterable(
-    f: Callable[Concatenate[_T1, _P], Iterable[_T2]],
+    callable_: Callable[Concatenate[_T1, _P], Iterable[_T2]],
     /,
     *args: _P.args,
     **kwargs: _P.kwargs,
@@ -276,12 +279,12 @@ def map_to_iterable(
     to a [collections.abc.Iterable][] and flattens the result.
 
     Args:
-        f: Synchronous function to apply to the awaited value,
+        callable_: Synchronous function to apply to the awaited value,
             returning a [collections.abc.Iterable][].
         *args:
-            Positional arguments to be passed to `f`.
+            Positional arguments to be passed to `callable_`.
         **kwargs:
-            Keyword arguments to be passed to `f`.
+            Keyword arguments to be passed to `callable_`.
 
     Returns:
         Maps [collections.abc.Awaitable][]s to [trcks.AwaitableTuple][]s
@@ -296,11 +299,13 @@ def map_to_iterable(
         >>> asyncio.run(at.to_coroutine_tuple(a_tpl))
         (3, -3)
     """
-    return compose(at.construct_from_awaitable, at.map_to_iterable(f, *args, **kwargs))
+    return compose(
+        at.construct_from_awaitable, at.map_to_iterable(callable_, *args, **kwargs)
+    )
 
 
 def map_to_result(
-    f: Callable[Concatenate[_T1, _P], Result[_F, _S]],
+    callable_: Callable[Concatenate[_T1, _P], Result[_F, _S]],
     /,
     *args: _P.args,
     **kwargs: _P.kwargs,
@@ -309,12 +314,12 @@ def map_to_result(
     to a [trcks.Result][] value.
 
     Args:
-        f: Synchronous function to apply to the awaited value,
+        callable_: Synchronous function to apply to the awaited value,
             returning a [trcks.Result][].
         *args:
-            Positional arguments to be passed to `f`.
+            Positional arguments to be passed to `callable_`.
         **kwargs:
-            Keyword arguments to be passed to `f`.
+            Keyword arguments to be passed to `callable_`.
 
     Returns:
         Maps [collections.abc.Awaitable][]s to [trcks.AwaitableResult][]s
@@ -338,13 +343,13 @@ def map_to_result(
         Callable[[AwaitableResult[Never, _T1]], AwaitableResult[_F, _S]],
     ] = (
         ar.construct_success_from_awaitable,
-        ar.map_success_to_result(f, *args, **kwargs),
+        ar.map_success_to_result(callable_, *args, **kwargs),
     )
     return compose(*c)
 
 
 def map_to_result_iterable(
-    f: Callable[Concatenate[_T1, _P], ResultIterable[_F, _S]],
+    callable_: Callable[Concatenate[_T1, _P], ResultIterable[_F, _S]],
     /,
     *args: _P.args,
     **kwargs: _P.kwargs,
@@ -353,12 +358,12 @@ def map_to_result_iterable(
     to a [trcks.ResultIterable][] and flattens the result.
 
     Args:
-        f: Synchronous function to apply to the awaited value,
+        callable_: Synchronous function to apply to the awaited value,
             returning a [trcks.ResultIterable][].
         *args:
-            Positional arguments to be passed to `f`.
+            Positional arguments to be passed to `callable_`.
         **kwargs:
-            Keyword arguments to be passed to `f`.
+            Keyword arguments to be passed to `callable_`.
 
     Returns:
         Maps [collections.abc.Awaitable][]s to [trcks.AwaitableResultTuple][]s with
@@ -387,35 +392,35 @@ def map_to_result_iterable(
         Callable[[AwaitableResultTuple[Never, _T1]], AwaitableResultTuple[_F, _S]],
     ] = (
         art.construct_successes_from_awaitable,
-        art.map_successes_to_result_iterable(f, *args, **kwargs),
+        art.map_successes_to_result_iterable(callable_, *args, **kwargs),
     )
     return compose(*c)
 
 
 @deprecated("Use map_to_result_iterable instead")
 def map_to_result_tuple(
-    f: Callable[Concatenate[_T1, _P], ResultTuple[_F, _S]],
+    callable_: Callable[Concatenate[_T1, _P], ResultTuple[_F, _S]],
     /,
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[Awaitable[_T1]], AwaitableResultTuple[_F, _S]]:
     """Deprecated alias for [trcks.fp.monads.awaitable.map_to_result_iterable][]."""
-    return map_to_result_iterable(f, *args, **kwargs)  # pragma: no cover
+    return map_to_result_iterable(callable_, *args, **kwargs)  # pragma: no cover
 
 
 @deprecated("Use map_to_iterable instead")
 def map_to_tuple(
-    f: Callable[Concatenate[_T1, _P], tuple[_T2, ...]],
+    callable_: Callable[Concatenate[_T1, _P], tuple[_T2, ...]],
     /,
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[Awaitable[_T1]], AwaitableTuple[_T2]]:
     """Deprecated alias for [trcks.fp.monads.awaitable.map_to_iterable][]."""
-    return map_to_iterable(f, *args, **kwargs)  # pragma: no cover
+    return map_to_iterable(callable_, *args, **kwargs)  # pragma: no cover
 
 
 def tap_to_awaitable_iterable(
-    f: Callable[Concatenate[_T1, _P], AwaitableIterable[object]],
+    callable_: Callable[Concatenate[_T1, _P], AwaitableIterable[object]],
     /,
     *args: _P.args,
     **kwargs: _P.kwargs,
@@ -425,12 +430,12 @@ def tap_to_awaitable_iterable(
     to the value of an [collections.abc.Awaitable][].
 
     Args:
-        f: Asynchronous side effect to apply to the awaited value,
+        callable_: Asynchronous side effect to apply to the awaited value,
             returning a [trcks.AwaitableIterable][].
         *args:
-            Positional arguments to be passed to `f`.
+            Positional arguments to be passed to `callable_`.
         **kwargs:
-            Keyword arguments to be passed to `f`.
+            Keyword arguments to be passed to `callable_`.
 
     Returns:
         Maps [collections.abc.Awaitable][]s to [trcks.AwaitableTuple][]s with
@@ -455,12 +460,13 @@ def tap_to_awaitable_iterable(
         (21, 21)
     """
     return compose(
-        at.construct_from_awaitable, at.tap_to_awaitable_iterable(f, *args, **kwargs)
+        at.construct_from_awaitable,
+        at.tap_to_awaitable_iterable(callable_, *args, **kwargs),
     )
 
 
 def tap_to_awaitable_result(
-    f: Callable[Concatenate[_T1, _P], AwaitableResult[_F, object]],
+    callable_: Callable[Concatenate[_T1, _P], AwaitableResult[_F, object]],
     /,
     *args: _P.args,
     **kwargs: _P.kwargs,
@@ -470,12 +476,12 @@ def tap_to_awaitable_result(
     to the value of an [collections.abc.Awaitable][].
 
     Args:
-        f: Asynchronous side effect to apply to the awaited value,
+        callable_: Asynchronous side effect to apply to the awaited value,
             returning a [trcks.AwaitableResult][].
         *args:
-            Positional arguments to be passed to `f`.
+            Positional arguments to be passed to `callable_`.
         **kwargs:
-            Keyword arguments to be passed to `f`.
+            Keyword arguments to be passed to `callable_`.
 
     Returns:
         Maps [collections.abc.Awaitable][]s to [trcks.AwaitableResult][]s with
@@ -522,13 +528,13 @@ def tap_to_awaitable_result(
         Callable[[AwaitableResult[Never, _T1]], AwaitableResult[_F, _T1]],
     ] = (
         ar.construct_success_from_awaitable,
-        ar.tap_success_to_awaitable_result(f, *args, **kwargs),
+        ar.tap_success_to_awaitable_result(callable_, *args, **kwargs),
     )
     return compose(*c)
 
 
 def tap_to_awaitable_result_iterable(
-    f: Callable[Concatenate[_T1, _P], AwaitableResultIterable[_F, object]],
+    callable_: Callable[Concatenate[_T1, _P], AwaitableResultIterable[_F, object]],
     /,
     *args: _P.args,
     **kwargs: _P.kwargs,
@@ -538,12 +544,12 @@ def tap_to_awaitable_result_iterable(
     to the value of an [collections.abc.Awaitable][].
 
     Args:
-        f: Asynchronous side effect to apply to the awaited value,
+        callable_: Asynchronous side effect to apply to the awaited value,
             returning a [trcks.AwaitableResultIterable][].
         *args:
-            Positional arguments to be passed to `f`.
+            Positional arguments to be passed to `callable_`.
         **kwargs:
-            Keyword arguments to be passed to `f`.
+            Keyword arguments to be passed to `callable_`.
 
     Returns:
         Maps [collections.abc.Awaitable][]s to [trcks.AwaitableResultTuple][]s with
@@ -575,14 +581,14 @@ def tap_to_awaitable_result_iterable(
         Callable[[AwaitableResultTuple[Never, _T1]], AwaitableResultTuple[_F, _T1]],
     ] = (
         art.construct_successes_from_awaitable,
-        art.tap_successes_to_awaitable_result_iterable(f, *args, **kwargs),
+        art.tap_successes_to_awaitable_result_iterable(callable_, *args, **kwargs),
     )
     return compose(*c)
 
 
 @deprecated("Use tap_to_awaitable_result_iterable instead")
 def tap_to_awaitable_result_tuple(
-    f: Callable[Concatenate[_T1, _P], AwaitableResultTuple[_F, object]],
+    callable_: Callable[Concatenate[_T1, _P], AwaitableResultTuple[_F, object]],
     /,
     *args: _P.args,
     **kwargs: _P.kwargs,
@@ -590,22 +596,24 @@ def tap_to_awaitable_result_tuple(
     """Deprecated alias for
     [trcks.fp.monads.awaitable.tap_to_awaitable_result_iterable][].
     """
-    return tap_to_awaitable_result_iterable(f, *args, **kwargs)  # pragma: no cover
+    return tap_to_awaitable_result_iterable(
+        callable_, *args, **kwargs
+    )  # pragma: no cover
 
 
 @deprecated("Use tap_to_awaitable_iterable instead")
 def tap_to_awaitable_tuple(
-    f: Callable[Concatenate[_T1, _P], AwaitableTuple[object]],
+    callable_: Callable[Concatenate[_T1, _P], AwaitableTuple[object]],
     /,
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[Awaitable[_T1]], AwaitableTuple[_T1]]:
     """Deprecated alias for [trcks.fp.monads.awaitable.tap_to_awaitable_iterable][]."""
-    return tap_to_awaitable_iterable(f, *args, **kwargs)  # pragma: no cover
+    return tap_to_awaitable_iterable(callable_, *args, **kwargs)  # pragma: no cover
 
 
 def tap_to_iterable(
-    f: Callable[Concatenate[_T1, _P], Iterable[object]],
+    callable_: Callable[Concatenate[_T1, _P], Iterable[object]],
     /,
     *args: _P.args,
     **kwargs: _P.kwargs,
@@ -615,12 +623,12 @@ def tap_to_iterable(
     to the value of an [collections.abc.Awaitable][].
 
     Args:
-        f: Synchronous side effect to apply to the awaited value,
+        callable_: Synchronous side effect to apply to the awaited value,
             returning a [collections.abc.Iterable][].
         *args:
-            Positional arguments to be passed to `f`.
+            Positional arguments to be passed to `callable_`.
         **kwargs:
-            Keyword arguments to be passed to `f`.
+            Keyword arguments to be passed to `callable_`.
 
     Returns:
         Maps [collections.abc.Awaitable][]s to [trcks.AwaitableTuple][]s with
@@ -641,11 +649,13 @@ def tap_to_iterable(
         Processing: 42
         (42, 42)
     """
-    return compose(at.construct_from_awaitable, at.tap_to_iterable(f, *args, **kwargs))
+    return compose(
+        at.construct_from_awaitable, at.tap_to_iterable(callable_, *args, **kwargs)
+    )
 
 
 def tap_to_result(
-    f: Callable[Concatenate[_T1, _P], Result[_F, object]],
+    callable_: Callable[Concatenate[_T1, _P], Result[_F, object]],
     /,
     *args: _P.args,
     **kwargs: _P.kwargs,
@@ -655,12 +665,12 @@ def tap_to_result(
     to the value of an [collections.abc.Awaitable][].
 
     Args:
-        f: Synchronous side effect to apply to the awaited value,
+        callable_: Synchronous side effect to apply to the awaited value,
             returning a [trcks.Result][].
         *args:
-            Positional arguments to be passed to `f`.
+            Positional arguments to be passed to `callable_`.
         **kwargs:
-            Keyword arguments to be passed to `f`.
+            Keyword arguments to be passed to `callable_`.
 
     Returns:
         Maps [collections.abc.Awaitable][]s to [trcks.AwaitableResult][]s with
@@ -694,13 +704,13 @@ def tap_to_result(
         Callable[[AwaitableResult[Never, _T1]], AwaitableResult[_F, _T1]],
     ] = (
         ar.construct_success_from_awaitable,
-        ar.tap_success_to_result(f, *args, **kwargs),
+        ar.tap_success_to_result(callable_, *args, **kwargs),
     )
     return compose(*c)
 
 
 def tap_to_result_iterable(
-    f: Callable[Concatenate[_T1, _P], ResultIterable[_F, object]],
+    callable_: Callable[Concatenate[_T1, _P], ResultIterable[_F, object]],
     /,
     *args: _P.args,
     **kwargs: _P.kwargs,
@@ -710,12 +720,12 @@ def tap_to_result_iterable(
     to the value of an [collections.abc.Awaitable][].
 
     Args:
-        f: Synchronous side effect to apply to the awaited value,
+        callable_: Synchronous side effect to apply to the awaited value,
             returning a [trcks.ResultIterable][].
         *args:
-            Positional arguments to be passed to `f`.
+            Positional arguments to be passed to `callable_`.
         **kwargs:
-            Keyword arguments to be passed to `f`.
+            Keyword arguments to be passed to `callable_`.
 
     Returns:
         Maps [collections.abc.Awaitable][]s to [trcks.AwaitableResultTuple][]s with
@@ -746,28 +756,28 @@ def tap_to_result_iterable(
         Callable[[AwaitableResultTuple[Never, _T1]], AwaitableResultTuple[_F, _T1]],
     ] = (
         art.construct_successes_from_awaitable,
-        art.tap_successes_to_result_iterable(f, *args, **kwargs),
+        art.tap_successes_to_result_iterable(callable_, *args, **kwargs),
     )
     return compose(*c)
 
 
 @deprecated("Use tap_to_result_iterable instead")
 def tap_to_result_tuple(
-    f: Callable[Concatenate[_T1, _P], ResultTuple[_F, object]],
+    callable_: Callable[Concatenate[_T1, _P], ResultTuple[_F, object]],
     /,
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[Awaitable[_T1]], AwaitableResultTuple[_F, _T1]]:
     """Deprecated alias for [trcks.fp.monads.awaitable.tap_to_result_iterable][]."""
-    return tap_to_result_iterable(f, *args, **kwargs)  # pragma: no cover
+    return tap_to_result_iterable(callable_, *args, **kwargs)  # pragma: no cover
 
 
 @deprecated("Use tap_to_iterable instead")
 def tap_to_tuple(
-    f: Callable[Concatenate[_T1, _P], tuple[object, ...]],
+    callable_: Callable[Concatenate[_T1, _P], tuple[object, ...]],
     /,
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[Awaitable[_T1]], AwaitableTuple[_T1]]:
     """Deprecated alias for [trcks.fp.monads.awaitable.tap_to_iterable][]."""
-    return tap_to_iterable(f, *args, **kwargs)  # pragma: no cover
+    return tap_to_iterable(callable_, *args, **kwargs)  # pragma: no cover

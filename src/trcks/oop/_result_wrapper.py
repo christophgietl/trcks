@@ -123,7 +123,7 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
 
     def map_failure(
         self,
-        f: Callable[Concatenate[_F_default_co, _P], _F],
+        callable_: Callable[Concatenate[_F_default_co, _P], _F],
         /,
         *args: _P.args,
         **kwargs: _P.kwargs,
@@ -133,11 +133,11 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
         Wrapped [trcks.Success][] objects are passed on unchanged.
 
         Args:
-            f: The synchronous function to be applied.
+            callable_: The synchronous function to be applied.
             *args:
-                Positional arguments to be passed to `f`.
+                Positional arguments to be passed to `callable_`.
             **kwargs:
-                Keyword arguments to be passed to `f`.
+                Keyword arguments to be passed to `callable_`.
 
         Returns:
             A new [trcks.oop.ResultWrapper][] instance with
@@ -157,11 +157,11 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
             ... )
             ResultWrapper(core=('success', 25.0))
         """
-        return ResultWrapper(r.map_failure(f, *args, **kwargs)(self.core))
+        return ResultWrapper(r.map_failure(callable_, *args, **kwargs)(self.core))
 
     def map_failure_to_awaitable(
         self,
-        f: Callable[Concatenate[_F_default_co, _P], Awaitable[_F]],
+        callable_: Callable[Concatenate[_F_default_co, _P], Awaitable[_F]],
         /,
         *args: _P.args,
         **kwargs: _P.kwargs,
@@ -171,11 +171,11 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
         Wrapped [trcks.Success][] objects are passed on unchanged.
 
         Args:
-            f: The asynchronous function to be applied.
+            callable_: The asynchronous function to be applied.
             *args:
-                Positional arguments to be passed to `f`.
+                Positional arguments to be passed to `callable_`.
             **kwargs:
-                Keyword arguments to be passed to `f`.
+                Keyword arguments to be passed to `callable_`.
 
         Returns:
             A [trcks.oop.AwaitableResultWrapper][] instance with
@@ -212,12 +212,12 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
             ('success', 42)
         """
         return AwaitableResultWrapper(
-            r.map_failure_to_awaitable(f, *args, **kwargs)(self.core)
+            r.map_failure_to_awaitable(callable_, *args, **kwargs)(self.core)
         )
 
     def map_failure_to_awaitable_result(
         self,
-        f: Callable[Concatenate[_F_default_co, _P], AwaitableResult[_F, _S]],
+        callable_: Callable[Concatenate[_F_default_co, _P], AwaitableResult[_F, _S]],
         /,
         *args: _P.args,
         **kwargs: _P.kwargs,
@@ -228,11 +228,11 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
         Wrapped [trcks.Success][] objects are passed on unchanged.
 
         Args:
-            f: The asynchronous function to be applied.
+            callable_: The asynchronous function to be applied.
             *args:
-                Positional arguments to be passed to `f`.
+                Positional arguments to be passed to `callable_`.
             **kwargs:
-                Keyword arguments to be passed to `f`.
+                Keyword arguments to be passed to `callable_`.
 
         Returns:
             A [trcks.oop.AwaitableResultWrapper][] instance with
@@ -282,12 +282,14 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
             ('success', 25.0)
         """
         return AwaitableResultWrapper(
-            r.map_failure_to_awaitable_result(f, *args, **kwargs)(self.core)
+            r.map_failure_to_awaitable_result(callable_, *args, **kwargs)(self.core)
         )
 
     def map_failure_to_awaitable_result_iterable(
         self,
-        f: Callable[Concatenate[_F_default_co, _P], AwaitableResultIterable[_F, _S]],
+        callable_: Callable[
+            Concatenate[_F_default_co, _P], AwaitableResultIterable[_F, _S]
+        ],
         /,
         *args: _P.args,
         **kwargs: _P.kwargs,
@@ -298,11 +300,11 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
         Wrapped [trcks.Success][] objects are passed on unchanged.
 
         Args:
-            f: The asynchronous function to be applied.
+            callable_: The asynchronous function to be applied.
             *args:
-                Positional arguments to be passed to `f`.
+                Positional arguments to be passed to `callable_`.
             **kwargs:
-                Keyword arguments to be passed to `f`.
+                Keyword arguments to be passed to `callable_`.
 
         Returns:
             A [trcks.oop.AwaitableResultTupleWrapper][] instance with
@@ -344,13 +346,17 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
             ('success', (25.0,))
         """
         return AwaitableResultTupleWrapper(
-            r.map_failure_to_awaitable_result_iterable(f, *args, **kwargs)(self.core)
+            r.map_failure_to_awaitable_result_iterable(callable_, *args, **kwargs)(
+                self.core
+            )
         )
 
     @deprecated("Use map_failure_to_awaitable_result_iterable instead")
     def map_failure_to_awaitable_result_tuple(
         self,
-        f: Callable[Concatenate[_F_default_co, _P], AwaitableResultTuple[_F, _S]],
+        callable_: Callable[
+            Concatenate[_F_default_co, _P], AwaitableResultTuple[_F, _S]
+        ],
         /,
         *args: _P.args,
         **kwargs: _P.kwargs,
@@ -359,12 +365,12 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
         [trcks.oop.ResultWrapper.map_failure_to_awaitable_result_iterable][].
         """
         return self.map_failure_to_awaitable_result_iterable(
-            f, *args, **kwargs
+            callable_, *args, **kwargs
         )  # pragma: no cover
 
     def map_failure_to_iterable(
         self,
-        f: Callable[Concatenate[_F_default_co, _P], Iterable[_S]],
+        callable_: Callable[Concatenate[_F_default_co, _P], Iterable[_S]],
         /,
         *args: _P.args,
         **kwargs: _P.kwargs,
@@ -376,12 +382,12 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
         Wrapped [trcks.Success][] objects are passed on unchanged.
 
         Args:
-            f: The synchronous function to be applied,
+            callable_: The synchronous function to be applied,
                 returning an [collections.abc.Iterable][].
             *args:
-                Positional arguments to be passed to `f`.
+                Positional arguments to be passed to `callable_`.
             **kwargs:
-                Keyword arguments to be passed to `f`.
+                Keyword arguments to be passed to `callable_`.
 
         Returns:
             A [trcks.oop.ResultTupleWrapper][] instance with
@@ -415,13 +421,13 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
             ResultTupleWrapper(core=('success', (42,)))
         """
         mapped_core: SuccessTuple[_S_default_co | _S] = r.map_failure_to_iterable(
-            f, *args, **kwargs
+            callable_, *args, **kwargs
         )(self.core)
         return ResultTupleWrapper(mapped_core)
 
     def map_failure_to_result(
         self,
-        f: Callable[Concatenate[_F_default_co, _P], Result[_F, _S]],
+        callable_: Callable[Concatenate[_F_default_co, _P], Result[_F, _S]],
         /,
         *args: _P.args,
         **kwargs: _P.kwargs,
@@ -432,11 +438,11 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
         Wrapped [trcks.Success][] objects are passed on unchanged.
 
         Args:
-            f: The synchronous function to be applied.
+            callable_: The synchronous function to be applied.
             *args:
-                Positional arguments to be passed to `f`.
+                Positional arguments to be passed to `callable_`.
             **kwargs:
-                Keyword arguments to be passed to `f`.
+                Keyword arguments to be passed to `callable_`.
 
         Returns:
             A new [trcks.oop.ResultWrapper][] instance with
@@ -474,11 +480,13 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
             ... )
             ResultWrapper(core=('success', 25.0))
         """
-        return ResultWrapper(r.map_failure_to_result(f, *args, **kwargs)(self.core))
+        return ResultWrapper(
+            r.map_failure_to_result(callable_, *args, **kwargs)(self.core)
+        )
 
     def map_failure_to_result_iterable(
         self,
-        f: Callable[Concatenate[_F_default_co, _P], ResultIterable[_F, _S]],
+        callable_: Callable[Concatenate[_F_default_co, _P], ResultIterable[_F, _S]],
         /,
         *args: _P.args,
         **kwargs: _P.kwargs,
@@ -489,11 +497,11 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
         Wrapped [trcks.Success][] objects are passed on unchanged.
 
         Args:
-            f: The synchronous function to be applied.
+            callable_: The synchronous function to be applied.
             *args:
-                Positional arguments to be passed to `f`.
+                Positional arguments to be passed to `callable_`.
             **kwargs:
-                Keyword arguments to be passed to `f`.
+                Keyword arguments to be passed to `callable_`.
 
         Returns:
             A [trcks.oop.ResultTupleWrapper][] instance with
@@ -527,13 +535,13 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
             ResultTupleWrapper(core=('success', (42,)))
         """
         return ResultTupleWrapper(
-            r.map_failure_to_result_iterable(f, *args, **kwargs)(self.core)
+            r.map_failure_to_result_iterable(callable_, *args, **kwargs)(self.core)
         )
 
     @deprecated("Use map_failure_to_result_iterable instead")
     def map_failure_to_result_tuple(
         self,
-        f: Callable[Concatenate[_F_default_co, _P], ResultTuple[_F, _S]],
+        callable_: Callable[Concatenate[_F_default_co, _P], ResultTuple[_F, _S]],
         /,
         *args: _P.args,
         **kwargs: _P.kwargs,
@@ -542,23 +550,25 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
         [trcks.oop.ResultWrapper.map_failure_to_result_iterable][].
         """
         return self.map_failure_to_result_iterable(
-            f, *args, **kwargs
+            callable_, *args, **kwargs
         )  # pragma: no cover
 
     @deprecated("Use map_failure_to_iterable instead")
     def map_failure_to_tuple(
         self,
-        f: Callable[Concatenate[_F_default_co, _P], tuple[_S, ...]],
+        callable_: Callable[Concatenate[_F_default_co, _P], tuple[_S, ...]],
         /,
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> ResultTupleWrapper[Never, _S_default_co | _S]:
         """Deprecated alias for [trcks.oop.ResultWrapper.map_failure_to_iterable][]."""
-        return self.map_failure_to_iterable(f, *args, **kwargs)  # pragma: no cover
+        return self.map_failure_to_iterable(
+            callable_, *args, **kwargs
+        )  # pragma: no cover
 
     def map_success(
         self,
-        f: Callable[Concatenate[_S_default_co, _P], _S],
+        callable_: Callable[Concatenate[_S_default_co, _P], _S],
         /,
         *args: _P.args,
         **kwargs: _P.kwargs,
@@ -568,11 +578,11 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
         Wrapped [trcks.Failure][] objects are passed on unchanged.
 
         Args:
-            f: The synchronous function to be applied.
+            callable_: The synchronous function to be applied.
             *args:
-                Positional arguments to be passed to `f`.
+                Positional arguments to be passed to `callable_`.
             **kwargs:
-                Keyword arguments to be passed to `f`.
+                Keyword arguments to be passed to `callable_`.
 
         Returns:
             A new [trcks.oop.ResultWrapper][] instance with
@@ -588,11 +598,11 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
             >>> ResultWrapper.construct_success(42).map_success(lambda n: n+1)
             ResultWrapper(core=('success', 43))
         """
-        return ResultWrapper(r.map_success(f, *args, **kwargs)(self.core))
+        return ResultWrapper(r.map_success(callable_, *args, **kwargs)(self.core))
 
     def map_success_to_awaitable(
         self,
-        f: Callable[Concatenate[_S_default_co, _P], Awaitable[_S]],
+        callable_: Callable[Concatenate[_S_default_co, _P], Awaitable[_S]],
         /,
         *args: _P.args,
         **kwargs: _P.kwargs,
@@ -602,11 +612,11 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
         Wrapped [trcks.Failure][] objects are passed on unchanged.
 
         Args:
-            f: The asynchronous function to be applied.
+            callable_: The asynchronous function to be applied.
             *args:
-                Positional arguments to be passed to `f`.
+                Positional arguments to be passed to `callable_`.
             **kwargs:
-                Keyword arguments to be passed to `f`.
+                Keyword arguments to be passed to `callable_`.
 
         Returns:
             A [trcks.oop.AwaitableResultWrapper][] instance with
@@ -643,12 +653,12 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
             ('success', 43)
         """
         return AwaitableResultWrapper(
-            r.map_success_to_awaitable(f, *args, **kwargs)(self.core)
+            r.map_success_to_awaitable(callable_, *args, **kwargs)(self.core)
         )
 
     def map_success_to_awaitable_result(
         self,
-        f: Callable[Concatenate[_S_default_co, _P], AwaitableResult[_F, _S]],
+        callable_: Callable[Concatenate[_S_default_co, _P], AwaitableResult[_F, _S]],
         /,
         *args: _P.args,
         **kwargs: _P.kwargs,
@@ -659,11 +669,11 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
         Wrapped [trcks.Failure][] objects are passed on unchanged.
 
         Args:
-            f: The asynchronous function to be applied.
+            callable_: The asynchronous function to be applied.
             *args:
-                Positional arguments to be passed to `f`.
+                Positional arguments to be passed to `callable_`.
             **kwargs:
-                Keyword arguments to be passed to `f`.
+                Keyword arguments to be passed to `callable_`.
 
         Returns:
             A [trcks.oop.AwaitableResultWrapper][] instance with
@@ -714,12 +724,14 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
             ('success', 5.0)
         """
         return AwaitableResultWrapper(
-            r.map_success_to_awaitable_result(f, *args, **kwargs)(self.core)
+            r.map_success_to_awaitable_result(callable_, *args, **kwargs)(self.core)
         )
 
     def map_success_to_awaitable_result_iterable(
         self,
-        f: Callable[Concatenate[_S_default_co, _P], AwaitableResultIterable[_F, _S]],
+        callable_: Callable[
+            Concatenate[_S_default_co, _P], AwaitableResultIterable[_F, _S]
+        ],
         /,
         *args: _P.args,
         **kwargs: _P.kwargs,
@@ -730,11 +742,11 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
         Wrapped [trcks.Failure][] objects are passed on unchanged.
 
         Args:
-            f: The asynchronous function to be applied.
+            callable_: The asynchronous function to be applied.
             *args:
-                Positional arguments to be passed to `f`.
+                Positional arguments to be passed to `callable_`.
             **kwargs:
-                Keyword arguments to be passed to `f`.
+                Keyword arguments to be passed to `callable_`.
 
         Returns:
             A [trcks.oop.AwaitableResultTupleWrapper][] instance with
@@ -776,13 +788,17 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
             ('success', (5.0, 10.0))
         """
         return AwaitableResultTupleWrapper(
-            r.map_success_to_awaitable_result_iterable(f, *args, **kwargs)(self.core)
+            r.map_success_to_awaitable_result_iterable(callable_, *args, **kwargs)(
+                self.core
+            )
         )
 
     @deprecated("Use map_success_to_awaitable_result_iterable instead")
     def map_success_to_awaitable_result_tuple(
         self,
-        f: Callable[Concatenate[_S_default_co, _P], AwaitableResultTuple[_F, _S]],
+        callable_: Callable[
+            Concatenate[_S_default_co, _P], AwaitableResultTuple[_F, _S]
+        ],
         /,
         *args: _P.args,
         **kwargs: _P.kwargs,
@@ -791,12 +807,12 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
         [trcks.oop.ResultWrapper.map_success_to_awaitable_result_iterable][].
         """
         return self.map_success_to_awaitable_result_iterable(
-            f, *args, **kwargs
+            callable_, *args, **kwargs
         )  # pragma: no cover
 
     def map_success_to_iterable(
         self,
-        f: Callable[Concatenate[_S_default_co, _P], Iterable[_S]],
+        callable_: Callable[Concatenate[_S_default_co, _P], Iterable[_S]],
         /,
         *args: _P.args,
         **kwargs: _P.kwargs,
@@ -807,12 +823,12 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
         Wrapped [trcks.Failure][] objects are passed on unchanged.
 
         Args:
-            f: The synchronous function to be applied,
+            callable_: The synchronous function to be applied,
                 returning an [collections.abc.Iterable][].
             *args:
-                Positional arguments to be passed to `f`.
+                Positional arguments to be passed to `callable_`.
             **kwargs:
-                Keyword arguments to be passed to `f`.
+                Keyword arguments to be passed to `callable_`.
 
         Returns:
             A [trcks.oop.ResultTupleWrapper][] instance with
@@ -838,12 +854,12 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
             ResultTupleWrapper(core=('success', (5.0, 5.0)))
         """
         return ResultTupleWrapper(
-            r.map_success_to_iterable(f, *args, **kwargs)(self.core)
+            r.map_success_to_iterable(callable_, *args, **kwargs)(self.core)
         )
 
     def map_success_to_result(
         self,
-        f: Callable[Concatenate[_S_default_co, _P], Result[_F, _S]],
+        callable_: Callable[Concatenate[_S_default_co, _P], Result[_F, _S]],
         /,
         *args: _P.args,
         **kwargs: _P.kwargs,
@@ -854,11 +870,11 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
         Wrapped [trcks.Failure][] objects are passed on unchanged.
 
         Args:
-            f: The synchronous function to be applied.
+            callable_: The synchronous function to be applied.
             *args:
-                Positional arguments to be passed to `f`.
+                Positional arguments to be passed to `callable_`.
             **kwargs:
-                Keyword arguments to be passed to `f`.
+                Keyword arguments to be passed to `callable_`.
 
         Returns:
             A new [trcks.oop.ResultWrapper][] instance with
@@ -891,11 +907,13 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
             ... )
             ResultWrapper(core=('success', 5.0))
         """
-        return ResultWrapper(r.map_success_to_result(f, *args, **kwargs)(self.core))
+        return ResultWrapper(
+            r.map_success_to_result(callable_, *args, **kwargs)(self.core)
+        )
 
     def map_success_to_result_iterable(
         self,
-        f: Callable[Concatenate[_S_default_co, _P], ResultIterable[_F, _S]],
+        callable_: Callable[Concatenate[_S_default_co, _P], ResultIterable[_F, _S]],
         /,
         *args: _P.args,
         **kwargs: _P.kwargs,
@@ -906,11 +924,11 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
         Wrapped [trcks.Failure][] objects are passed on unchanged.
 
         Args:
-            f: The synchronous function to be applied.
+            callable_: The synchronous function to be applied.
             *args:
-                Positional arguments to be passed to `f`.
+                Positional arguments to be passed to `callable_`.
             **kwargs:
-                Keyword arguments to be passed to `f`.
+                Keyword arguments to be passed to `callable_`.
 
         Returns:
             A [trcks.oop.ResultTupleWrapper][] instance with
@@ -943,13 +961,13 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
             ResultTupleWrapper(core=('failure', 'negative'))
         """
         return ResultTupleWrapper(
-            r.map_success_to_result_iterable(f, *args, **kwargs)(self.core)
+            r.map_success_to_result_iterable(callable_, *args, **kwargs)(self.core)
         )
 
     @deprecated("Use map_success_to_result_iterable instead")
     def map_success_to_result_tuple(
         self,
-        f: Callable[Concatenate[_S_default_co, _P], ResultTuple[_F, _S]],
+        callable_: Callable[Concatenate[_S_default_co, _P], ResultTuple[_F, _S]],
         /,
         *args: _P.args,
         **kwargs: _P.kwargs,
@@ -958,23 +976,25 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
         [trcks.oop.ResultWrapper.map_success_to_result_iterable][].
         """
         return self.map_success_to_result_iterable(
-            f, *args, **kwargs
+            callable_, *args, **kwargs
         )  # pragma: no cover
 
     @deprecated("Use map_success_to_iterable instead")
     def map_success_to_tuple(
         self,
-        f: Callable[Concatenate[_S_default_co, _P], tuple[_S, ...]],
+        callable_: Callable[Concatenate[_S_default_co, _P], tuple[_S, ...]],
         /,
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> ResultTupleWrapper[_F_default_co, _S]:
         """Deprecated alias for [trcks.oop.ResultWrapper.map_success_to_iterable][]."""
-        return self.map_success_to_iterable(f, *args, **kwargs)  # pragma: no cover
+        return self.map_success_to_iterable(
+            callable_, *args, **kwargs
+        )  # pragma: no cover
 
     def tap_failure(
         self,
-        f: Callable[Concatenate[_F_default_co, _P], object],
+        callable_: Callable[Concatenate[_F_default_co, _P], object],
         /,
         *args: _P.args,
         **kwargs: _P.kwargs,
@@ -984,11 +1004,11 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
         Wrapped [trcks.Success][] objects are passed on without side effects.
 
         Args:
-            f: The synchronous side effect to be applied.
+            callable_: The synchronous side effect to be applied.
             *args:
-                Positional arguments to be passed to `f`.
+                Positional arguments to be passed to `callable_`.
             **kwargs:
-                Keyword arguments to be passed to `f`.
+                Keyword arguments to be passed to `callable_`.
 
         Returns:
             A new [trcks.oop.ResultWrapper][] instance
@@ -1008,11 +1028,11 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
             >>> result_wrapper_2
             ResultWrapper(core=('success', 42))
         """
-        return ResultWrapper(r.tap_failure(f, *args, **kwargs)(self.core))
+        return ResultWrapper(r.tap_failure(callable_, *args, **kwargs)(self.core))
 
     def tap_failure_to_awaitable(
         self,
-        f: Callable[Concatenate[_F_default_co, _P], Awaitable[object]],
+        callable_: Callable[Concatenate[_F_default_co, _P], Awaitable[object]],
         /,
         *args: _P.args,
         **kwargs: _P.kwargs,
@@ -1022,11 +1042,11 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
         Wrapped [trcks.Success][] objects are passed on without side effects.
 
         Args:
-            f: The asynchronous side effect to be applied.
+            callable_: The asynchronous side effect to be applied.
             *args:
-                Positional arguments to be passed to `f`.
+                Positional arguments to be passed to `callable_`.
             **kwargs:
-                Keyword arguments to be passed to `f`.
+                Keyword arguments to be passed to `callable_`.
 
         Returns:
             A [trcks.oop.AwaitableResultWrapper][] instance
@@ -1059,12 +1079,14 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
             ('success', 42)
         """
         return AwaitableResultWrapper(
-            r.tap_failure_to_awaitable(f, *args, **kwargs)(self.core)
+            r.tap_failure_to_awaitable(callable_, *args, **kwargs)(self.core)
         )
 
     def tap_failure_to_awaitable_result(
         self,
-        f: Callable[Concatenate[_F_default_co, _P], AwaitableResult[object, _S]],
+        callable_: Callable[
+            Concatenate[_F_default_co, _P], AwaitableResult[object, _S]
+        ],
         /,
         *args: _P.args,
         **kwargs: _P.kwargs,
@@ -1075,11 +1097,11 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
         Wrapped [trcks.Success][] objects are passed on without side effects.
 
         Args:
-            f: The asynchronous side effect to be applied.
+            callable_: The asynchronous side effect to be applied.
             *args:
-                Positional arguments to be passed to `f`.
+                Positional arguments to be passed to `callable_`.
             **kwargs:
-                Keyword arguments to be passed to `f`.
+                Keyword arguments to be passed to `callable_`.
 
         Returns:
             A [trcks.oop.AwaitableResultWrapper][] instance with
@@ -1128,12 +1150,12 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
             ('success', 42)
         """
         return AwaitableResultWrapper(
-            r.tap_failure_to_awaitable_result(f, *args, **kwargs)(self.core)
+            r.tap_failure_to_awaitable_result(callable_, *args, **kwargs)(self.core)
         )
 
     def tap_failure_to_awaitable_result_iterable(
         self,
-        f: Callable[
+        callable_: Callable[
             Concatenate[_F_default_co, _P], AwaitableResultIterable[object, _S]
         ],
         /,
@@ -1146,11 +1168,11 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
         Wrapped [trcks.Success][] objects are passed on without side effects.
 
         Args:
-            f: The asynchronous side effect to be applied.
+            callable_: The asynchronous side effect to be applied.
             *args:
-                Positional arguments to be passed to `f`.
+                Positional arguments to be passed to `callable_`.
             **kwargs:
-                Keyword arguments to be passed to `f`.
+                Keyword arguments to be passed to `callable_`.
 
         Returns:
             A [trcks.oop.AwaitableResultTupleWrapper][] instance with
@@ -1195,13 +1217,17 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
             ('success', (42,))
         """
         return AwaitableResultTupleWrapper(
-            r.tap_failure_to_awaitable_result_iterable(f, *args, **kwargs)(self.core)
+            r.tap_failure_to_awaitable_result_iterable(callable_, *args, **kwargs)(
+                self.core
+            )
         )
 
     @deprecated("Use tap_failure_to_awaitable_result_iterable instead")
     def tap_failure_to_awaitable_result_tuple(
         self,
-        f: Callable[Concatenate[_F_default_co, _P], AwaitableResultTuple[object, _S]],
+        callable_: Callable[
+            Concatenate[_F_default_co, _P], AwaitableResultTuple[object, _S]
+        ],
         /,
         *args: _P.args,
         **kwargs: _P.kwargs,
@@ -1210,12 +1236,12 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
         [trcks.oop.ResultWrapper.tap_failure_to_awaitable_result_iterable][].
         """
         return self.tap_failure_to_awaitable_result_iterable(
-            f, *args, **kwargs
+            callable_, *args, **kwargs
         )  # pragma: no cover
 
     def tap_failure_to_iterable(
         self,
-        f: Callable[Concatenate[_F_default_co, _P], Iterable[object]],
+        callable_: Callable[Concatenate[_F_default_co, _P], Iterable[object]],
         /,
         *args: _P.args,
         **kwargs: _P.kwargs,
@@ -1230,12 +1256,12 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
         Wrapped [trcks.Success][] objects are passed on without side effects.
 
         Args:
-            f: The synchronous side effect to be applied,
+            callable_: The synchronous side effect to be applied,
                 returning an [collections.abc.Iterable][].
             *args:
-                Positional arguments to be passed to `f`.
+                Positional arguments to be passed to `callable_`.
             **kwargs:
-                Keyword arguments to be passed to `f`.
+                Keyword arguments to be passed to `callable_`.
 
         Returns:
             A [trcks.oop.ResultTupleWrapper][] instance with
@@ -1267,13 +1293,13 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
             ResultTupleWrapper(core=('success', (42,)))
         """
         tapped_core: SuccessTuple[_F_default_co | _S_default_co] = (
-            r.tap_failure_to_iterable(f, *args, **kwargs)(self.core)
+            r.tap_failure_to_iterable(callable_, *args, **kwargs)(self.core)
         )
         return ResultTupleWrapper(tapped_core)
 
     def tap_failure_to_result(
         self,
-        f: Callable[Concatenate[_F_default_co, _P], Result[object, _S]],
+        callable_: Callable[Concatenate[_F_default_co, _P], Result[object, _S]],
         /,
         *args: _P.args,
         **kwargs: _P.kwargs,
@@ -1284,11 +1310,11 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
         Wrapped [trcks.Success][] objects are passed on without side effects.
 
         Args:
-            f: The synchronous side effect to be applied.
+            callable_: The synchronous side effect to be applied.
             *args:
-                Positional arguments to be passed to `f`.
+                Positional arguments to be passed to `callable_`.
             **kwargs:
-                Keyword arguments to be passed to `f`.
+                Keyword arguments to be passed to `callable_`.
 
         Returns:
             A new [trcks.oop.ResultWrapper][] instance with
@@ -1323,11 +1349,13 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
             >>> result_wrapper_3
             ResultWrapper(core=('success', 42))
         """
-        return ResultWrapper(r.tap_failure_to_result(f, *args, **kwargs)(self.core))
+        return ResultWrapper(
+            r.tap_failure_to_result(callable_, *args, **kwargs)(self.core)
+        )
 
     def tap_failure_to_result_iterable(
         self,
-        f: Callable[Concatenate[_F_default_co, _P], ResultIterable[object, _S]],
+        callable_: Callable[Concatenate[_F_default_co, _P], ResultIterable[object, _S]],
         /,
         *args: _P.args,
         **kwargs: _P.kwargs,
@@ -1338,11 +1366,11 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
         Wrapped [trcks.Success][] objects are passed on without side effects.
 
         Args:
-            f: The synchronous side effect to be applied.
+            callable_: The synchronous side effect to be applied.
             *args:
-                Positional arguments to be passed to `f`.
+                Positional arguments to be passed to `callable_`.
             **kwargs:
-                Keyword arguments to be passed to `f`.
+                Keyword arguments to be passed to `callable_`.
 
         Returns:
             A [trcks.oop.ResultTupleWrapper][] instance with
@@ -1378,13 +1406,13 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
             ResultTupleWrapper(core=('success', (42,)))
         """
         return ResultTupleWrapper(
-            r.tap_failure_to_result_iterable(f, *args, **kwargs)(self.core)
+            r.tap_failure_to_result_iterable(callable_, *args, **kwargs)(self.core)
         )
 
     @deprecated("Use tap_failure_to_result_iterable instead")
     def tap_failure_to_result_tuple(
         self,
-        f: Callable[Concatenate[_F_default_co, _P], ResultTuple[object, _S]],
+        callable_: Callable[Concatenate[_F_default_co, _P], ResultTuple[object, _S]],
         /,
         *args: _P.args,
         **kwargs: _P.kwargs,
@@ -1393,23 +1421,25 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
         [trcks.oop.ResultWrapper.tap_failure_to_result_iterable][].
         """
         return self.tap_failure_to_result_iterable(
-            f, *args, **kwargs
+            callable_, *args, **kwargs
         )  # pragma: no cover
 
     @deprecated("Use tap_failure_to_iterable instead")
     def tap_failure_to_tuple(
         self,
-        f: Callable[Concatenate[_F_default_co, _P], tuple[object, ...]],
+        callable_: Callable[Concatenate[_F_default_co, _P], tuple[object, ...]],
         /,
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> ResultTupleWrapper[Never, _F_default_co | _S_default_co]:
         """Deprecated alias for [trcks.oop.ResultWrapper.tap_failure_to_iterable][]."""
-        return self.tap_failure_to_iterable(f, *args, **kwargs)  # pragma: no cover
+        return self.tap_failure_to_iterable(
+            callable_, *args, **kwargs
+        )  # pragma: no cover
 
     def tap_success(
         self,
-        f: Callable[Concatenate[_S_default_co, _P], object],
+        callable_: Callable[Concatenate[_S_default_co, _P], object],
         /,
         *args: _P.args,
         **kwargs: _P.kwargs,
@@ -1419,11 +1449,11 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
         Wrapped [trcks.Failure][] objects are passed on without side effects.
 
         Args:
-            f: The synchronous side effect to be applied.
+            callable_: The synchronous side effect to be applied.
             *args:
-                Positional arguments to be passed to `f`.
+                Positional arguments to be passed to `callable_`.
             **kwargs:
-                Keyword arguments to be passed to `f`.
+                Keyword arguments to be passed to `callable_`.
 
         Returns:
             A new [trcks.oop.ResultWrapper][] instance
@@ -1443,11 +1473,11 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
             >>> result_wrapper_2
             ResultWrapper(core=('success', 42))
         """
-        return ResultWrapper(r.tap_success(f, *args, **kwargs)(self.core))
+        return ResultWrapper(r.tap_success(callable_, *args, **kwargs)(self.core))
 
     def tap_success_to_awaitable(
         self,
-        f: Callable[Concatenate[_S_default_co, _P], Awaitable[object]],
+        callable_: Callable[Concatenate[_S_default_co, _P], Awaitable[object]],
         /,
         *args: _P.args,
         **kwargs: _P.kwargs,
@@ -1457,11 +1487,11 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
         Wrapped [trcks.Failure][] objects are passed on without side effects.
 
         Args:
-            f: The asynchronous side effect to be applied.
+            callable_: The asynchronous side effect to be applied.
             *args:
-                Positional arguments to be passed to `f`.
+                Positional arguments to be passed to `callable_`.
             **kwargs:
-                Keyword arguments to be passed to `f`.
+                Keyword arguments to be passed to `callable_`.
 
         Returns:
             A [trcks.oop.AwaitableResultWrapper][] instance
@@ -1494,12 +1524,14 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
             ('success', 'Hello, world!')
         """
         return AwaitableResultWrapper(
-            r.tap_success_to_awaitable(f, *args, **kwargs)(self.core)
+            r.tap_success_to_awaitable(callable_, *args, **kwargs)(self.core)
         )
 
     def tap_success_to_awaitable_result(
         self,
-        f: Callable[Concatenate[_S_default_co, _P], AwaitableResult[_F, object]],
+        callable_: Callable[
+            Concatenate[_S_default_co, _P], AwaitableResult[_F, object]
+        ],
         /,
         *args: _P.args,
         **kwargs: _P.kwargs,
@@ -1510,11 +1542,11 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
         Wrapped [trcks.Failure][] objects are passed on without side effects.
 
         Args:
-            f: The asynchronous side effect to be applied.
+            callable_: The asynchronous side effect to be applied.
             *args:
-                Positional arguments to be passed to `f`.
+                Positional arguments to be passed to `callable_`.
             **kwargs:
-                Keyword arguments to be passed to `f`.
+                Keyword arguments to be passed to `callable_`.
 
         Returns:
             A [trcks.oop.AwaitableResultWrapper][] instance with
@@ -1579,12 +1611,12 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
             ('success', 'Hello, world!')
         """
         return AwaitableResultWrapper(
-            r.tap_success_to_awaitable_result(f, *args, **kwargs)(self.core)
+            r.tap_success_to_awaitable_result(callable_, *args, **kwargs)(self.core)
         )
 
     def tap_success_to_awaitable_result_iterable(
         self,
-        f: Callable[
+        callable_: Callable[
             Concatenate[_S_default_co, _P], AwaitableResultIterable[_F, object]
         ],
         /,
@@ -1597,11 +1629,11 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
         Wrapped [trcks.Failure][] objects are passed on without side effects.
 
         Args:
-            f: The asynchronous side effect to be applied.
+            callable_: The asynchronous side effect to be applied.
             *args:
-                Positional arguments to be passed to `f`.
+                Positional arguments to be passed to `callable_`.
             **kwargs:
-                Keyword arguments to be passed to `f`.
+                Keyword arguments to be passed to `callable_`.
 
         Returns:
             A [trcks.oop.AwaitableResultTupleWrapper][] instance with
@@ -1647,13 +1679,17 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
             ('success', ('Hello, world!', 'Hello, world!'))
         """
         return AwaitableResultTupleWrapper(
-            r.tap_success_to_awaitable_result_iterable(f, *args, **kwargs)(self.core)
+            r.tap_success_to_awaitable_result_iterable(callable_, *args, **kwargs)(
+                self.core
+            )
         )
 
     @deprecated("Use tap_success_to_awaitable_result_iterable instead")
     def tap_success_to_awaitable_result_tuple(
         self,
-        f: Callable[Concatenate[_S_default_co, _P], AwaitableResultTuple[_F, object]],
+        callable_: Callable[
+            Concatenate[_S_default_co, _P], AwaitableResultTuple[_F, object]
+        ],
         /,
         *args: _P.args,
         **kwargs: _P.kwargs,
@@ -1662,12 +1698,12 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
         [trcks.oop.ResultWrapper.tap_success_to_awaitable_result_iterable][].
         """
         return self.tap_success_to_awaitable_result_iterable(
-            f, *args, **kwargs
+            callable_, *args, **kwargs
         )  # pragma: no cover
 
     def tap_success_to_iterable(
         self,
-        f: Callable[Concatenate[_S_default_co, _P], Iterable[object]],
+        callable_: Callable[Concatenate[_S_default_co, _P], Iterable[object]],
         /,
         *args: _P.args,
         **kwargs: _P.kwargs,
@@ -1681,12 +1717,12 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
         Wrapped [trcks.Failure][] objects are passed on without side effects.
 
         Args:
-            f: The synchronous side effect to be applied,
+            callable_: The synchronous side effect to be applied,
                 returning an [collections.abc.Iterable][].
             *args:
-                Positional arguments to be passed to `f`.
+                Positional arguments to be passed to `callable_`.
             **kwargs:
-                Keyword arguments to be passed to `f`.
+                Keyword arguments to be passed to `callable_`.
 
         Returns:
             A [trcks.oop.ResultTupleWrapper][] instance with
@@ -1716,12 +1752,12 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
             ResultTupleWrapper(core=('success', (7, 7)))
         """
         return ResultTupleWrapper(
-            r.tap_success_to_iterable(f, *args, **kwargs)(self.core)
+            r.tap_success_to_iterable(callable_, *args, **kwargs)(self.core)
         )
 
     def tap_success_to_result(
         self,
-        f: Callable[Concatenate[_S_default_co, _P], Result[_F, object]],
+        callable_: Callable[Concatenate[_S_default_co, _P], Result[_F, object]],
         /,
         *args: _P.args,
         **kwargs: _P.kwargs,
@@ -1732,11 +1768,11 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
         Wrapped [trcks.Failure][] objects are passed on without side effects.
 
         Args:
-            f: The synchronous side effect to be applied.
+            callable_: The synchronous side effect to be applied.
             *args:
-                Positional arguments to be passed to `f`.
+                Positional arguments to be passed to `callable_`.
             **kwargs:
-                Keyword arguments to be passed to `f`.
+                Keyword arguments to be passed to `callable_`.
 
         Returns:
             A new [trcks.oop.ResultWrapper][] instance with
@@ -1747,11 +1783,13 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
                 - *the original* [trcks.Success][]
                     if the applied side effect returns a [trcks.Success][].
         """
-        return ResultWrapper(r.tap_success_to_result(f, *args, **kwargs)(self.core))
+        return ResultWrapper(
+            r.tap_success_to_result(callable_, *args, **kwargs)(self.core)
+        )
 
     def tap_success_to_result_iterable(
         self,
-        f: Callable[Concatenate[_S_default_co, _P], ResultIterable[_F, object]],
+        callable_: Callable[Concatenate[_S_default_co, _P], ResultIterable[_F, object]],
         /,
         *args: _P.args,
         **kwargs: _P.kwargs,
@@ -1762,11 +1800,11 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
         Wrapped [trcks.Failure][] objects are passed on without side effects.
 
         Args:
-            f: The synchronous side effect to be applied.
+            callable_: The synchronous side effect to be applied.
             *args:
-                Positional arguments to be passed to `f`.
+                Positional arguments to be passed to `callable_`.
             **kwargs:
-                Keyword arguments to be passed to `f`.
+                Keyword arguments to be passed to `callable_`.
 
         Returns:
             A [trcks.oop.ResultTupleWrapper][] instance with
@@ -1802,13 +1840,13 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
             ResultTupleWrapper(core=('failure', 'negative'))
         """
         return ResultTupleWrapper(
-            r.tap_success_to_result_iterable(f, *args, **kwargs)(self.core)
+            r.tap_success_to_result_iterable(callable_, *args, **kwargs)(self.core)
         )
 
     @deprecated("Use tap_success_to_result_iterable instead")
     def tap_success_to_result_tuple(
         self,
-        f: Callable[Concatenate[_S_default_co, _P], ResultTuple[_F, object]],
+        callable_: Callable[Concatenate[_S_default_co, _P], ResultTuple[_F, object]],
         /,
         *args: _P.args,
         **kwargs: _P.kwargs,
@@ -1817,16 +1855,18 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
         [trcks.oop.ResultWrapper.tap_success_to_result_iterable][].
         """
         return self.tap_success_to_result_iterable(
-            f, *args, **kwargs
+            callable_, *args, **kwargs
         )  # pragma: no cover
 
     @deprecated("Use tap_success_to_iterable instead")
     def tap_success_to_tuple(
         self,
-        f: Callable[Concatenate[_S_default_co, _P], tuple[object, ...]],
+        callable_: Callable[Concatenate[_S_default_co, _P], tuple[object, ...]],
         /,
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> ResultTupleWrapper[_F_default_co, _S_default_co]:
         """Deprecated alias for [trcks.oop.ResultWrapper.tap_success_to_iterable][]."""
-        return self.tap_success_to_iterable(f, *args, **kwargs)  # pragma: no cover
+        return self.tap_success_to_iterable(
+            callable_, *args, **kwargs
+        )  # pragma: no cover

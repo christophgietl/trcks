@@ -136,7 +136,7 @@ _S2 = TypeVar("_S2")
 
 
 def map_failure_to_awaitable_result_iterable(
-    f: Callable[Concatenate[_F1, _P], AwaitableResultIterable[_F2, _S2]],
+    callable_: Callable[Concatenate[_F1, _P], AwaitableResultIterable[_F2, _S2]],
     /,
     *args: _P.args,
     **kwargs: _P.kwargs,
@@ -147,11 +147,11 @@ def map_failure_to_awaitable_result_iterable(
     [trcks.Success][] values are left unchanged.
 
     Args:
-        f: Asynchronous function to apply to the [trcks.Failure][] values.
+        callable_: Asynchronous function to apply to the [trcks.Failure][] values.
         *args:
-            Positional arguments to be passed to `f`.
+            Positional arguments to be passed to `callable_`.
         **kwargs:
-            Keyword arguments to be passed to `f`.
+            Keyword arguments to be passed to `callable_`.
 
     Returns:
         Maps [trcks.Failure][] values to new [trcks.AwaitableResultTuple][] values
@@ -181,13 +181,13 @@ def map_failure_to_awaitable_result_iterable(
     """
     return compose(
         art.construct_from_awaitable_result,
-        art.map_failure_to_awaitable_result_iterable(f, *args, **kwargs),
+        art.map_failure_to_awaitable_result_iterable(callable_, *args, **kwargs),
     )
 
 
 @deprecated("Use map_failure_to_awaitable_result_iterable instead")
 def map_failure_to_awaitable_result_tuple(
-    f: Callable[Concatenate[_F1, _P], AwaitableResultTuple[_F2, _S2]],
+    callable_: Callable[Concatenate[_F1, _P], AwaitableResultTuple[_F2, _S2]],
     /,
     *args: _P.args,
     **kwargs: _P.kwargs,
@@ -196,12 +196,12 @@ def map_failure_to_awaitable_result_tuple(
     [trcks.fp.monads.awaitable_result.map_failure_to_awaitable_result_iterable][].
     """
     return map_failure_to_awaitable_result_iterable(
-        f, *args, **kwargs
+        callable_, *args, **kwargs
     )  # pragma: no cover
 
 
 def map_failure_to_iterable(
-    f: Callable[Concatenate[_F1, _P], Iterable[_S2]],
+    callable_: Callable[Concatenate[_F1, _P], Iterable[_S2]],
     /,
     *args: _P.args,
     **kwargs: _P.kwargs,
@@ -214,12 +214,12 @@ def map_failure_to_iterable(
     [trcks.Success][] values are left unchanged.
 
     Args:
-        f: Synchronous function to apply to the [trcks.Failure][] values,
+        callable_: Synchronous function to apply to the [trcks.Failure][] values,
             returning an [collections.abc.Iterable][].
         *args:
-            Positional arguments to be passed to `f`.
+            Positional arguments to be passed to `callable_`.
         **kwargs:
-            Keyword arguments to be passed to `f`.
+            Keyword arguments to be passed to `callable_`.
 
     Returns:
         Maps [trcks.Failure][] values to homogeneous [tuple][]s wrapped
@@ -252,13 +252,13 @@ def map_failure_to_iterable(
         ],
     ] = (
         art.construct_from_awaitable_result,
-        art.map_failure_to_iterable(f, *args, **kwargs),
+        art.map_failure_to_iterable(callable_, *args, **kwargs),
     )
     return compose(*c)
 
 
 def map_failure_to_result_iterable(
-    f: Callable[Concatenate[_F1, _P], ResultIterable[_F2, _S2]],
+    callable_: Callable[Concatenate[_F1, _P], ResultIterable[_F2, _S2]],
     /,
     *args: _P.args,
     **kwargs: _P.kwargs,
@@ -269,11 +269,11 @@ def map_failure_to_result_iterable(
     [trcks.Success][] values are left unchanged.
 
     Args:
-        f: Synchronous function to apply to the [trcks.Failure][] values.
+        callable_: Synchronous function to apply to the [trcks.Failure][] values.
         *args:
-            Positional arguments to be passed to `f`.
+            Positional arguments to be passed to `callable_`.
         **kwargs:
-            Keyword arguments to be passed to `f`.
+            Keyword arguments to be passed to `callable_`.
 
     Returns:
         Maps [trcks.Failure][] values to new [trcks.ResultTuple][] values
@@ -300,13 +300,13 @@ def map_failure_to_result_iterable(
     """
     return compose(
         art.construct_from_awaitable_result,
-        art.map_failure_to_result_iterable(f, *args, **kwargs),
+        art.map_failure_to_result_iterable(callable_, *args, **kwargs),
     )
 
 
 @deprecated("Use map_failure_to_result_iterable instead")
 def map_failure_to_result_tuple(
-    f: Callable[Concatenate[_F1, _P], ResultTuple[_F2, _S2]],
+    callable_: Callable[Concatenate[_F1, _P], ResultTuple[_F2, _S2]],
     /,
     *args: _P.args,
     **kwargs: _P.kwargs,
@@ -314,12 +314,14 @@ def map_failure_to_result_tuple(
     """Deprecated alias for
     [trcks.fp.monads.awaitable_result.map_failure_to_result_iterable][].
     """
-    return map_failure_to_result_iterable(f, *args, **kwargs)  # pragma: no cover
+    return map_failure_to_result_iterable(
+        callable_, *args, **kwargs
+    )  # pragma: no cover
 
 
 @deprecated("Use map_failure_to_iterable instead")
 def map_failure_to_tuple(
-    f: Callable[Concatenate[_F1, _P], tuple[_S2, ...]],
+    callable_: Callable[Concatenate[_F1, _P], tuple[_S2, ...]],
     /,
     *args: _P.args,
     **kwargs: _P.kwargs,
@@ -330,11 +332,11 @@ def map_failure_to_tuple(
     """Deprecated alias for
     [trcks.fp.monads.awaitable_result.map_failure_to_iterable][].
     """
-    return map_failure_to_iterable(f, *args, **kwargs)  # pragma: no cover
+    return map_failure_to_iterable(callable_, *args, **kwargs)  # pragma: no cover
 
 
 def map_success_to_awaitable_result_iterable(
-    f: Callable[Concatenate[_S1, _P], AwaitableResultIterable[_F2, _S2]],
+    callable_: Callable[Concatenate[_S1, _P], AwaitableResultIterable[_F2, _S2]],
     /,
     *args: _P.args,
     **kwargs: _P.kwargs,
@@ -345,11 +347,11 @@ def map_success_to_awaitable_result_iterable(
     [trcks.Failure][] values are left unchanged.
 
     Args:
-        f: Asynchronous function to apply to the [trcks.Success][] values.
+        callable_: Asynchronous function to apply to the [trcks.Success][] values.
         *args:
-            Positional arguments to be passed to `f`.
+            Positional arguments to be passed to `callable_`.
         **kwargs:
-            Keyword arguments to be passed to `f`.
+            Keyword arguments to be passed to `callable_`.
 
     Returns:
         Leaves [trcks.Failure][] values unchanged and
@@ -379,13 +381,13 @@ def map_success_to_awaitable_result_iterable(
     """
     return compose(
         art.construct_from_awaitable_result,
-        art.map_successes_to_awaitable_result_iterable(f, *args, **kwargs),
+        art.map_successes_to_awaitable_result_iterable(callable_, *args, **kwargs),
     )
 
 
 @deprecated("Use map_success_to_awaitable_result_iterable instead")
 def map_success_to_awaitable_result_tuple(
-    f: Callable[Concatenate[_S1, _P], AwaitableResultTuple[_F2, _S2]],
+    callable_: Callable[Concatenate[_S1, _P], AwaitableResultTuple[_F2, _S2]],
     /,
     *args: _P.args,
     **kwargs: _P.kwargs,
@@ -394,12 +396,12 @@ def map_success_to_awaitable_result_tuple(
     [trcks.fp.monads.awaitable_result.map_success_to_awaitable_result_iterable][].
     """
     return map_success_to_awaitable_result_iterable(
-        f, *args, **kwargs
+        callable_, *args, **kwargs
     )  # pragma: no cover
 
 
 def map_success_to_iterable(
-    f: Callable[Concatenate[_S1, _P], Iterable[_S2]],
+    callable_: Callable[Concatenate[_S1, _P], Iterable[_S2]],
     /,
     *args: _P.args,
     **kwargs: _P.kwargs,
@@ -409,12 +411,12 @@ def map_success_to_iterable(
     [trcks.Failure][] values are left unchanged.
 
     Args:
-        f: Synchronous function to apply to the [trcks.Success][] values,
+        callable_: Synchronous function to apply to the [trcks.Success][] values,
             returning an [collections.abc.Iterable][].
         *args:
-            Positional arguments to be passed to `f`.
+            Positional arguments to be passed to `callable_`.
         **kwargs:
-            Keyword arguments to be passed to `f`.
+            Keyword arguments to be passed to `callable_`.
 
     Returns:
         Leaves [trcks.Failure][] values unchanged and
@@ -438,12 +440,12 @@ def map_success_to_iterable(
     """
     return compose(
         art.construct_from_awaitable_result,
-        art.map_successes_to_iterable(f, *args, **kwargs),
+        art.map_successes_to_iterable(callable_, *args, **kwargs),
     )
 
 
 def map_success_to_result_iterable(
-    f: Callable[Concatenate[_S1, _P], ResultIterable[_F2, _S2]],
+    callable_: Callable[Concatenate[_S1, _P], ResultIterable[_F2, _S2]],
     /,
     *args: _P.args,
     **kwargs: _P.kwargs,
@@ -454,11 +456,11 @@ def map_success_to_result_iterable(
     [trcks.Failure][] values are left unchanged.
 
     Args:
-        f: Synchronous function to apply to the [trcks.Success][] values.
+        callable_: Synchronous function to apply to the [trcks.Success][] values.
         *args:
-            Positional arguments to be passed to `f`.
+            Positional arguments to be passed to `callable_`.
         **kwargs:
-            Keyword arguments to be passed to `f`.
+            Keyword arguments to be passed to `callable_`.
 
     Returns:
         Leaves [trcks.Failure][] values unchanged and
@@ -485,13 +487,13 @@ def map_success_to_result_iterable(
     """
     return compose(
         art.construct_from_awaitable_result,
-        art.map_successes_to_result_iterable(f, *args, **kwargs),
+        art.map_successes_to_result_iterable(callable_, *args, **kwargs),
     )
 
 
 @deprecated("Use map_success_to_result_iterable instead")
 def map_success_to_result_tuple(
-    f: Callable[Concatenate[_S1, _P], ResultTuple[_F2, _S2]],
+    callable_: Callable[Concatenate[_S1, _P], ResultTuple[_F2, _S2]],
     /,
     *args: _P.args,
     **kwargs: _P.kwargs,
@@ -499,12 +501,14 @@ def map_success_to_result_tuple(
     """Deprecated alias for
     [trcks.fp.monads.awaitable_result.map_success_to_result_iterable][].
     """
-    return map_success_to_result_iterable(f, *args, **kwargs)  # pragma: no cover
+    return map_success_to_result_iterable(
+        callable_, *args, **kwargs
+    )  # pragma: no cover
 
 
 @deprecated("Use map_success_to_iterable instead")
 def map_success_to_tuple(
-    f: Callable[Concatenate[_S1, _P], tuple[_S2, ...]],
+    callable_: Callable[Concatenate[_S1, _P], tuple[_S2, ...]],
     /,
     *args: _P.args,
     **kwargs: _P.kwargs,
@@ -512,11 +516,11 @@ def map_success_to_tuple(
     """Deprecated alias for
     [trcks.fp.monads.awaitable_result.map_success_to_iterable][].
     """
-    return map_success_to_iterable(f, *args, **kwargs)  # pragma: no cover
+    return map_success_to_iterable(callable_, *args, **kwargs)  # pragma: no cover
 
 
 def tap_failure_to_awaitable_result_iterable(
-    f: Callable[Concatenate[_F1, _P], AwaitableResultIterable[object, _S2]],
+    callable_: Callable[Concatenate[_F1, _P], AwaitableResultIterable[object, _S2]],
     /,
     *args: _P.args,
     **kwargs: _P.kwargs,
@@ -527,11 +531,11 @@ def tap_failure_to_awaitable_result_iterable(
     [trcks.Success][] values are passed on without side effects.
 
     Args:
-        f: Asynchronous side effect to apply to the [trcks.Failure][] value.
+        callable_: Asynchronous side effect to apply to the [trcks.Failure][] value.
         *args:
-            Positional arguments to be passed to `f`.
+            Positional arguments to be passed to `callable_`.
         **kwargs:
-            Keyword arguments to be passed to `f`.
+            Keyword arguments to be passed to `callable_`.
 
     Returns:
         Applies the given side effect to [trcks.Failure][] values.
@@ -565,13 +569,13 @@ def tap_failure_to_awaitable_result_iterable(
     """
     return compose(
         art.construct_from_awaitable_result,
-        art.tap_failure_to_awaitable_result_iterable(f, *args, **kwargs),
+        art.tap_failure_to_awaitable_result_iterable(callable_, *args, **kwargs),
     )
 
 
 @deprecated("Use tap_failure_to_awaitable_result_iterable instead")
 def tap_failure_to_awaitable_result_tuple(
-    f: Callable[Concatenate[_F1, _P], AwaitableResultTuple[object, _S2]],
+    callable_: Callable[Concatenate[_F1, _P], AwaitableResultTuple[object, _S2]],
     /,
     *args: _P.args,
     **kwargs: _P.kwargs,
@@ -580,12 +584,12 @@ def tap_failure_to_awaitable_result_tuple(
     [trcks.fp.monads.awaitable_result.tap_failure_to_awaitable_result_iterable][].
     """
     return tap_failure_to_awaitable_result_iterable(
-        f, *args, **kwargs
+        callable_, *args, **kwargs
     )  # pragma: no cover
 
 
 def tap_failure_to_iterable(
-    f: Callable[Concatenate[_F1, _P], Iterable[object]],
+    callable_: Callable[Concatenate[_F1, _P], Iterable[object]],
     /,
     *args: _P.args,
     **kwargs: _P.kwargs,
@@ -599,12 +603,12 @@ def tap_failure_to_iterable(
     [trcks.Success][] values are passed on without side effects.
 
     Args:
-        f: Side effect to apply to the [trcks.Failure][] value,
+        callable_: Side effect to apply to the [trcks.Failure][] value,
             returning an [collections.abc.Iterable][].
         *args:
-            Positional arguments to be passed to `f`.
+            Positional arguments to be passed to `callable_`.
         **kwargs:
-            Keyword arguments to be passed to `f`.
+            Keyword arguments to be passed to `callable_`.
 
     Returns:
         Applies the given side effect to [trcks.Failure][] values and converts them
@@ -642,13 +646,13 @@ def tap_failure_to_iterable(
         ],
     ] = (
         art.construct_from_awaitable_result,
-        art.tap_failure_to_iterable(f, *args, **kwargs),
+        art.tap_failure_to_iterable(callable_, *args, **kwargs),
     )
     return compose(*c)
 
 
 def tap_failure_to_result_iterable(
-    f: Callable[Concatenate[_F1, _P], ResultIterable[object, _S2]],
+    callable_: Callable[Concatenate[_F1, _P], ResultIterable[object, _S2]],
     /,
     *args: _P.args,
     **kwargs: _P.kwargs,
@@ -659,11 +663,11 @@ def tap_failure_to_result_iterable(
     [trcks.Success][] values are passed on without side effects.
 
     Args:
-        f: Side effect to apply to the [trcks.Failure][] value.
+        callable_: Side effect to apply to the [trcks.Failure][] value.
         *args:
-            Positional arguments to be passed to `f`.
+            Positional arguments to be passed to `callable_`.
         **kwargs:
-            Keyword arguments to be passed to `f`.
+            Keyword arguments to be passed to `callable_`.
 
     Returns:
         Applies the given side effect to [trcks.Failure][] values.
@@ -694,13 +698,13 @@ def tap_failure_to_result_iterable(
     """
     return compose(
         art.construct_from_awaitable_result,
-        art.tap_failure_to_result_iterable(f, *args, **kwargs),
+        art.tap_failure_to_result_iterable(callable_, *args, **kwargs),
     )
 
 
 @deprecated("Use tap_failure_to_result_iterable instead")
 def tap_failure_to_result_tuple(
-    f: Callable[Concatenate[_F1, _P], ResultTuple[object, _S2]],
+    callable_: Callable[Concatenate[_F1, _P], ResultTuple[object, _S2]],
     /,
     *args: _P.args,
     **kwargs: _P.kwargs,
@@ -708,12 +712,14 @@ def tap_failure_to_result_tuple(
     """Deprecated alias for
     [trcks.fp.monads.awaitable_result.tap_failure_to_result_iterable][].
     """
-    return tap_failure_to_result_iterable(f, *args, **kwargs)  # pragma: no cover
+    return tap_failure_to_result_iterable(
+        callable_, *args, **kwargs
+    )  # pragma: no cover
 
 
 @deprecated("Use tap_failure_to_iterable instead")
 def tap_failure_to_tuple(
-    f: Callable[Concatenate[_F1, _P], tuple[object, ...]],
+    callable_: Callable[Concatenate[_F1, _P], tuple[object, ...]],
     /,
     *args: _P.args,
     **kwargs: _P.kwargs,
@@ -724,11 +730,11 @@ def tap_failure_to_tuple(
     """Deprecated alias for
     [trcks.fp.monads.awaitable_result.tap_failure_to_iterable][].
     """
-    return tap_failure_to_iterable(f, *args, **kwargs)  # pragma: no cover
+    return tap_failure_to_iterable(callable_, *args, **kwargs)  # pragma: no cover
 
 
 def tap_success_to_awaitable_result_iterable(
-    f: Callable[Concatenate[_S1, _P], AwaitableResultIterable[_F2, object]],
+    callable_: Callable[Concatenate[_S1, _P], AwaitableResultIterable[_F2, object]],
     /,
     *args: _P.args,
     **kwargs: _P.kwargs,
@@ -739,11 +745,11 @@ def tap_success_to_awaitable_result_iterable(
     [trcks.Failure][] values are passed on without side effects.
 
     Args:
-        f: Asynchronous side effect to apply to the [trcks.Success][] value.
+        callable_: Asynchronous side effect to apply to the [trcks.Success][] value.
         *args:
-            Positional arguments to be passed to `f`.
+            Positional arguments to be passed to `callable_`.
         **kwargs:
-            Keyword arguments to be passed to `f`.
+            Keyword arguments to be passed to `callable_`.
 
     Returns:
         Passes on [trcks.Failure][] values (wrapped as a tuple)
@@ -779,13 +785,13 @@ def tap_success_to_awaitable_result_iterable(
     """
     return compose(
         art.construct_from_awaitable_result,
-        art.tap_successes_to_awaitable_result_iterable(f, *args, **kwargs),
+        art.tap_successes_to_awaitable_result_iterable(callable_, *args, **kwargs),
     )
 
 
 @deprecated("Use tap_success_to_awaitable_result_iterable instead")
 def tap_success_to_awaitable_result_tuple(
-    f: Callable[Concatenate[_S1, _P], AwaitableResultTuple[_F2, object]],
+    callable_: Callable[Concatenate[_S1, _P], AwaitableResultTuple[_F2, object]],
     /,
     *args: _P.args,
     **kwargs: _P.kwargs,
@@ -794,12 +800,12 @@ def tap_success_to_awaitable_result_tuple(
     [trcks.fp.monads.awaitable_result.tap_success_to_awaitable_result_iterable][].
     """
     return tap_success_to_awaitable_result_iterable(
-        f, *args, **kwargs
+        callable_, *args, **kwargs
     )  # pragma: no cover
 
 
 def tap_success_to_iterable(
-    f: Callable[Concatenate[_S1, _P], Iterable[object]],
+    callable_: Callable[Concatenate[_S1, _P], Iterable[object]],
     /,
     *args: _P.args,
     **kwargs: _P.kwargs,
@@ -810,12 +816,12 @@ def tap_success_to_iterable(
     [trcks.Failure][] values are passed on without side effects.
 
     Args:
-        f: Side effect to apply to the [trcks.Success][] value,
+        callable_: Side effect to apply to the [trcks.Success][] value,
             returning an [collections.abc.Iterable][].
         *args:
-            Positional arguments to be passed to `f`.
+            Positional arguments to be passed to `callable_`.
         **kwargs:
-            Keyword arguments to be passed to `f`.
+            Keyword arguments to be passed to `callable_`.
 
     Returns:
         Passes on [trcks.Failure][] values (wrapped as a tuple)
@@ -846,12 +852,12 @@ def tap_success_to_iterable(
     """
     return compose(
         art.construct_from_awaitable_result,
-        art.tap_successes_to_iterable(f, *args, **kwargs),
+        art.tap_successes_to_iterable(callable_, *args, **kwargs),
     )
 
 
 def tap_success_to_result_iterable(
-    f: Callable[Concatenate[_S1, _P], ResultIterable[_F2, object]],
+    callable_: Callable[Concatenate[_S1, _P], ResultIterable[_F2, object]],
     /,
     *args: _P.args,
     **kwargs: _P.kwargs,
@@ -862,11 +868,11 @@ def tap_success_to_result_iterable(
     [trcks.Failure][] values are passed on without side effects.
 
     Args:
-        f: Side effect to apply to the [trcks.Success][] value.
+        callable_: Side effect to apply to the [trcks.Success][] value.
         *args:
-            Positional arguments to be passed to `f`.
+            Positional arguments to be passed to `callable_`.
         **kwargs:
-            Keyword arguments to be passed to `f`.
+            Keyword arguments to be passed to `callable_`.
 
     Returns:
         Passes on [trcks.Failure][] values (wrapped as a tuple)
@@ -898,13 +904,13 @@ def tap_success_to_result_iterable(
     """
     return compose(
         art.construct_from_awaitable_result,
-        art.tap_successes_to_result_iterable(f, *args, **kwargs),
+        art.tap_successes_to_result_iterable(callable_, *args, **kwargs),
     )
 
 
 @deprecated("Use tap_success_to_result_iterable instead")
 def tap_success_to_result_tuple(
-    f: Callable[Concatenate[_S1, _P], ResultTuple[_F2, object]],
+    callable_: Callable[Concatenate[_S1, _P], ResultTuple[_F2, object]],
     /,
     *args: _P.args,
     **kwargs: _P.kwargs,
@@ -912,12 +918,14 @@ def tap_success_to_result_tuple(
     """Deprecated alias for
     [trcks.fp.monads.awaitable_result.tap_success_to_result_iterable][].
     """
-    return tap_success_to_result_iterable(f, *args, **kwargs)  # pragma: no cover
+    return tap_success_to_result_iterable(
+        callable_, *args, **kwargs
+    )  # pragma: no cover
 
 
 @deprecated("Use tap_success_to_iterable instead")
 def tap_success_to_tuple(
-    f: Callable[Concatenate[_S1, _P], tuple[object, ...]],
+    callable_: Callable[Concatenate[_S1, _P], tuple[object, ...]],
     /,
     *args: _P.args,
     **kwargs: _P.kwargs,
@@ -925,4 +933,4 @@ def tap_success_to_tuple(
     """Deprecated alias for
     [trcks.fp.monads.awaitable_result.tap_success_to_iterable][].
     """
-    return tap_success_to_iterable(f, *args, **kwargs)  # pragma: no cover
+    return tap_success_to_iterable(callable_, *args, **kwargs)  # pragma: no cover

@@ -35,17 +35,20 @@ def construct(value: _T, /) -> tuple[_T,]:
 
 
 def map_(
-    f: Callable[Concatenate[_T1, _P], _T2], /, *args: _P.args, **kwargs: _P.kwargs
+    callable_: Callable[Concatenate[_T1, _P], _T2],
+    /,
+    *args: _P.args,
+    **kwargs: _P.kwargs,
 ) -> Callable[[tuple[_T1, ...]], tuple[_T2, ...]]:
     """Create function that maps homogeneous [tuple][]s to
     homogeneous [tuple][]s of the same length.
 
     Args:
-        f: Function to apply to each element.
+        callable_: Function to apply to each element.
         *args:
-            Positional arguments to be passed to `f`.
+            Positional arguments to be passed to `callable_`.
         **kwargs:
-            Keyword arguments to be passed to `f`.
+            Keyword arguments to be passed to `callable_`.
 
     Returns:
         Maps homogeneous [tuple][]s to homogeneous [tuple][]s of the same length
@@ -67,11 +70,11 @@ def map_(
         >>> double_integers((1, 2, 3))
         (2, 4, 6)
     """
-    return map_to_iterable(compose(f, construct), *args, **kwargs)
+    return map_to_iterable(compose(callable_, construct), *args, **kwargs)
 
 
 def map_to_iterable(
-    f: Callable[Concatenate[_T1, _P], Iterable[_T2]],
+    callable_: Callable[Concatenate[_T1, _P], Iterable[_T2]],
     /,
     *args: _P.args,
     **kwargs: _P.kwargs,
@@ -80,11 +83,11 @@ def map_to_iterable(
     homogeneous [tuple][]s of varying length.
 
     Args:
-        f: Function to apply to each element.
+        callable_: Function to apply to each element.
         *args:
-            Positional arguments to be passed to `f`.
+            Positional arguments to be passed to `callable_`.
         **kwargs:
-            Keyword arguments to be passed to `f`.
+            Keyword arguments to be passed to `callable_`.
 
     Returns:
         Maps homogeneous [tuple][]s to homogeneous [tuple][]s of varying length
@@ -103,24 +106,27 @@ def map_to_iterable(
         (1, 1, 2, 2, 3, 3)
     """
 
-    def mapped_f(t1s: tuple[_T1, ...]) -> tuple[_T2, ...]:
-        return tuple(t2 for t1 in t1s for t2 in f(t1, *args, **kwargs))
+    def mapped_callable(t1s: tuple[_T1, ...]) -> tuple[_T2, ...]:
+        return tuple(t2 for t1 in t1s for t2 in callable_(t1, *args, **kwargs))
 
-    return mapped_f
+    return mapped_callable
 
 
 def tap(
-    f: Callable[Concatenate[_T1, _P], object], /, *args: _P.args, **kwargs: _P.kwargs
+    callable_: Callable[Concatenate[_T1, _P], object],
+    /,
+    *args: _P.args,
+    **kwargs: _P.kwargs,
 ) -> Callable[[tuple[_T1, ...]], tuple[_T1, ...]]:
     """Create function that applies a side effect to each element of a homogeneous
     [tuple][].
 
     Args:
-        f: Side effect to apply to each element.
+        callable_: Side effect to apply to each element.
         *args:
-            Positional arguments to be passed to `f`.
+            Positional arguments to be passed to `callable_`.
         **kwargs:
-            Keyword arguments to be passed to `f`.
+            Keyword arguments to be passed to `callable_`.
 
     Returns:
         Applies the given side effect to each element of a homogeneous [tuple][] and
@@ -142,11 +148,11 @@ def tap(
         >>> tpl
         (1, 2, 3)
     """
-    return map_(i.tap(f, *args, **kwargs))
+    return map_(i.tap(callable_, *args, **kwargs))
 
 
 def tap_to_iterable(
-    f: Callable[Concatenate[_T1, _P], Iterable[object]],
+    callable_: Callable[Concatenate[_T1, _P], Iterable[object]],
     /,
     *args: _P.args,
     **kwargs: _P.kwargs,
@@ -156,11 +162,11 @@ def tap_to_iterable(
     to each element of a homogeneous [tuple][].
 
     Args:
-        f: Side effect to apply to each element.
+        callable_: Side effect to apply to each element.
         *args:
-            Positional arguments to be passed to `f`.
+            Positional arguments to be passed to `callable_`.
         **kwargs:
-            Keyword arguments to be passed to `f`.
+            Keyword arguments to be passed to `callable_`.
 
     Returns:
         Applies the given side effect to each element of a homogeneous [tuple][].
@@ -180,7 +186,7 @@ def tap_to_iterable(
         (1, 2, 2, 3, 3, 4, 4, 4)
     """
 
-    def bypassed_f(t1: _T1) -> tuple[_T1, ...]:
-        return tuple(t1 for _t2 in f(t1, *args, **kwargs))
+    def bypassed_callable(t1: _T1) -> tuple[_T1, ...]:
+        return tuple(t1 for _t2 in callable_(t1, *args, **kwargs))
 
-    return map_to_iterable(bypassed_f)
+    return map_to_iterable(bypassed_callable)
