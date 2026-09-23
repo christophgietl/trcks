@@ -16,7 +16,7 @@ from trcks.fp._monads import result as r
 from trcks.fp._monads import result_tuple as rt
 from trcks.fp._monads import tuple_ as t
 from trcks.fp._monads.identity import tap
-from trcks.fp.composition import compose
+from trcks.fp.composition import Composable2, compose
 
 if TYPE_CHECKING:
     from collections.abc import Awaitable, Callable, Iterable
@@ -181,9 +181,10 @@ def map_to_awaitable_result(
         >>> asyncio.run(ar.to_coroutine_result(a_rslt))
         ('success', 42.0)
     """
-    c: tuple[
-        Callable[[_T1], AwaitableResult[Never, _T1]],
-        Callable[[AwaitableResult[Never, _T1]], AwaitableResult[_F, _S]],
+    c: Composable2[
+        [_T1],
+        AwaitableResult[Never, _T1],
+        AwaitableResult[_F, _S],
     ] = (
         ar.construct_success,
         ar.map_success_to_awaitable_result(callable_, *args, **kwargs),
@@ -231,9 +232,10 @@ def map_to_awaitable_result_iterable(
         >>> asyncio.run(art.to_coroutine_result_tuple(a_r_tpl))
         ('success', (5.0, 10.0))
     """
-    c: tuple[
-        Callable[[_T1], AwaitableResultTuple[Never, _T1]],
-        Callable[[AwaitableResultTuple[Never, _T1]], AwaitableResultTuple[_F, _S]],
+    c: Composable2[
+        [_T1],
+        AwaitableResultTuple[Never, _T1],
+        AwaitableResultTuple[_F, _S],
     ] = (
         art.construct_successes,
         art.map_successes_to_awaitable_result_iterable(callable_, *args, **kwargs),
@@ -329,9 +331,10 @@ def map_to_result(
         >>> assert_non_negative(-1)
         ('failure', 'negative value')
     """
-    c: tuple[
-        Callable[[_T1], Result[Never, _T1]],
-        Callable[[Result[Never, _T1]], Result[_F, _S]],
+    c: Composable2[
+        [_T1],
+        Result[Never, _T1],
+        Result[_F, _S],
     ] = (r.construct_success, r.map_success_to_result(callable_, *args, **kwargs))
     return compose(*c)
 
@@ -370,9 +373,10 @@ def map_to_result_iterable(
         >>> duplicate_value(-1)
         ('failure', 'negative value')
     """
-    c: tuple[
-        Callable[[_T1], ResultTuple[Never, _T1]],
-        Callable[[ResultTuple[Never, _T1]], ResultTuple[_F, _S]],
+    c: Composable2[
+        [_T1],
+        ResultTuple[Never, _T1],
+        ResultTuple[_F, _S],
     ] = (
         rt.construct_successes,
         rt.map_successes_to_result_iterable(callable_, *args, **kwargs),
@@ -533,9 +537,10 @@ def tap_to_awaitable_result(
         Wrote 'Hello, world!' to file output.txt.
         ('success', 'Hello, world!')
     """
-    c: tuple[
-        Callable[[_T1], AwaitableResult[Never, _T1]],
-        Callable[[AwaitableResult[Never, _T1]], AwaitableResult[_F, _T1]],
+    c: Composable2[
+        [_T1],
+        AwaitableResult[Never, _T1],
+        AwaitableResult[_F, _T1],
     ] = (
         ar.construct_success,
         ar.tap_success_to_awaitable_result(callable_, *args, **kwargs),
@@ -586,9 +591,10 @@ def tap_to_awaitable_result_iterable(
         Wrote 'Hello, world!' twice.
         ('success', ('Hello, world!', 'Hello, world!'))
     """
-    c: tuple[
-        Callable[[_T1], AwaitableResultTuple[Never, _T1]],
-        Callable[[AwaitableResultTuple[Never, _T1]], AwaitableResultTuple[_F, _T1]],
+    c: Composable2[
+        [_T1],
+        AwaitableResultTuple[Never, _T1],
+        AwaitableResultTuple[_F, _T1],
     ] = (
         art.construct_successes,
         art.tap_successes_to_awaitable_result_iterable(callable_, *args, **kwargs),
@@ -699,9 +705,10 @@ def tap_to_result(
         Positive float: 3.5
         ('success', 3.5)
     """
-    c: tuple[
-        Callable[[_T1], Result[Never, _T1]],
-        Callable[[Result[Never, _T1]], Result[_F, _T1]],
+    c: Composable2[
+        [_T1],
+        Result[Never, _T1],
+        Result[_F, _T1],
     ] = (r.construct_success, r.tap_success_to_result(callable_, *args, **kwargs))
     return compose(*c)
 
@@ -754,9 +761,10 @@ def tap_to_result_iterable(
         Positive float: 3.5
         ('success', (3.5, 3.5))
     """
-    c: tuple[
-        Callable[[_T1], ResultTuple[Never, _T1]],
-        Callable[[ResultTuple[Never, _T1]], ResultTuple[_F, _T1]],
+    c: Composable2[
+        [_T1],
+        ResultTuple[Never, _T1],
+        ResultTuple[_F, _T1],
     ] = (
         rt.construct_successes,
         rt.tap_successes_to_result_iterable(callable_, *args, **kwargs),
