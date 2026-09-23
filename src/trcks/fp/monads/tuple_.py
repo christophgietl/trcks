@@ -54,6 +54,7 @@ from trcks.fp._monads import awaitable_tuple as at
 from trcks.fp._monads import result_tuple as rt
 from trcks.fp._monads.tuple_ import (
     construct,
+    construct_from_iterable,
     map_,
     map_to_iterable,
     tap,
@@ -77,6 +78,7 @@ if TYPE_CHECKING:
 
 __all__ = [
     "construct",
+    "construct_from_iterable",
     "map_",
     "map_to_awaitable",
     "map_to_awaitable_iterable",

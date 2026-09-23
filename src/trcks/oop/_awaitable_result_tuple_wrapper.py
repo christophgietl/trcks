@@ -292,7 +292,9 @@ class AwaitableResultTupleWrapper(
         r_tpl: ResultTuple[_F_default, _S_default],
         /,
     ) -> AwaitableResultTupleWrapper[_F_default, _S_default]:
-        """Deprecated alias for construct_from_result_iterable."""
+        """Deprecated alias for
+        [trcks.oop.AwaitableResultTupleWrapper.construct_from_result_iterable][].
+        """
         return cls.construct_from_result_iterable(r_tpl)  # pragma: no cover
 
     @staticmethod
@@ -435,7 +437,9 @@ class AwaitableResultTupleWrapper(
         tpl: tuple[_S, ...],
         /,
     ) -> AwaitableResultTupleWrapper[Never, _S]:
-        """Deprecated alias for construct_successes_from_iterable."""
+        """Deprecated alias for
+        [trcks.oop.AwaitableResultTupleWrapper.construct_successes_from_iterable][].
+        """
         return cls.construct_successes_from_iterable(tpl)  # pragma: no cover
 
     def map_failure(

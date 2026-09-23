@@ -34,6 +34,23 @@ def construct(value: _T, /) -> tuple[_T,]:
     return (value,)
 
 
+def construct_from_iterable(it: Iterable[_T], /) -> tuple[_T, ...]:
+    """Create a homogeneous [tuple][] from an iterable.
+
+    Args:
+        it: The iterable to create the [tuple][] from.
+
+    Returns:
+        The [tuple][] created from the iterable.
+
+    Examples:
+        >>> from trcks.fp.monads import tuple_ as t
+        >>> t.construct_from_iterable([1, 2, 3])
+        (1, 2, 3)
+    """
+    return tuple(it)
+
+
 def map_(
     callable_: Callable[Concatenate[_T1, _P], _T2],
     /,

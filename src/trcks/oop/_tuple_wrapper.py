@@ -120,12 +120,12 @@ class TupleWrapper(BaseWrapper[tuple[_T_co, ...]]):
             >>> tuple_wrapper
             TupleWrapper(core=(1, 2, 3))
         """
-        return TupleWrapper(tuple(it))
+        return TupleWrapper(t.construct_from_iterable(it))
 
     @classmethod
     @deprecated("Use construct_from_iterable or the default constructor instead")
     def construct_from_tuple(cls, tpl: tuple[_T, ...], /) -> TupleWrapper[_T]:
-        """Deprecated alias for construct_from_iterable."""
+        """Deprecated alias for [trcks.oop.TupleWrapper.construct_from_iterable][]."""
         return cls.construct_from_iterable(tpl)  # pragma: no cover
 
     def map(
@@ -712,9 +712,10 @@ class TupleWrapper(BaseWrapper[tuple[_T_co, ...]]):
             An [trcks.oop.AwaitableResultTupleWrapper][] instance with
 
                 - *the returned* [trcks.Failure][]
-                    if the applied side effect returns a [trcks.Failure][] or
-                - *the original* homogeneous [tuple][] with each element
-                    repeated for the first [trcks.Success][] if all succeed.
+                    if the applied side effect returns a [trcks.Failure][]
+                    for an element, or
+                - *the original* homogeneous [tuple][] if the applied side effect
+                    returns [trcks.Success][] for all elements.
 
         Examples:
             >>> import asyncio

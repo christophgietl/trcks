@@ -196,7 +196,9 @@ class AwaitableTupleWrapper(BaseAwaitableWrapper[tuple[_T_co, ...]]):
         tpl: tuple[_T, ...],
         /,
     ) -> AwaitableTupleWrapper[_T]:
-        """Deprecated alias for construct_from_iterable."""
+        """Deprecated alias for
+        [trcks.oop.AwaitableTupleWrapper.construct_from_iterable][].
+        """
         return cls.construct_from_iterable(tpl)  # pragma: no cover
 
     def map(
