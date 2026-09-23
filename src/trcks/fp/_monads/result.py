@@ -58,18 +58,21 @@ def construct_success(value: _S, /) -> Success[_S]:
 
 
 def map_failure(
-    f: Callable[Concatenate[_F1, _P], _F2], /, *args: _P.args, **kwargs: _P.kwargs
+    callable_: Callable[Concatenate[_F1, _P], _F2],
+    /,
+    *args: _P.args,
+    **kwargs: _P.kwargs,
 ) -> Callable[[Result[_F1, _S1]], Result[_F2, _S1]]:
     """Create function that maps [trcks.Failure][] values to [trcks.Failure][] values.
 
     [trcks.Success][] values are left unchanged.
 
     Args:
-        f: Function to apply to the [trcks.Failure][] values.
+        callable_: Function to apply to the [trcks.Failure][] values.
         *args:
-            Positional arguments to be passed to `f`.
+            Positional arguments to be passed to `callable_`.
         **kwargs:
-            Keyword arguments to be passed to `f`.
+            Keyword arguments to be passed to `callable_`.
 
     Returns:
         Maps [trcks.Failure][] values to new [trcks.Failure][] values
@@ -84,11 +87,11 @@ def map_failure(
         >>> add_prefix_to_failure(("success", 25.0))
         ('success', 25.0)
     """
-    return map_failure_to_result(compose(f, construct_failure), *args, **kwargs)
+    return map_failure_to_result(compose(callable_, construct_failure), *args, **kwargs)
 
 
 def map_failure_to_result(
-    f: Callable[Concatenate[_F1, _P], Result[_F2, _S2]],
+    callable_: Callable[Concatenate[_F1, _P], Result[_F2, _S2]],
     /,
     *args: _P.args,
     **kwargs: _P.kwargs,
@@ -99,11 +102,11 @@ def map_failure_to_result(
     [trcks.Success][] values are left unchanged.
 
     Args:
-        f: Function to apply to the [trcks.Failure][] values.
+        callable_: Function to apply to the [trcks.Failure][] values.
         *args:
-            Positional arguments to be passed to `f`.
+            Positional arguments to be passed to `callable_`.
         **kwargs:
-            Keyword arguments to be passed to `f`.
+            Keyword arguments to be passed to `callable_`.
 
     Returns:
         Maps [trcks.Failure][] values to [trcks.Failure][] and [trcks.Success][] values
@@ -126,7 +129,7 @@ def map_failure_to_result(
     def mapped_f(rslt: Result[_F1, _S1]) -> Result[_F2, _S1 | _S2]:
         match rslt:
             case ("failure", value):
-                return f(value, *args, **kwargs)
+                return callable_(value, *args, **kwargs)
             case ("success", _):
                 return rslt
             case _:  # pragma: no cover
@@ -138,18 +141,21 @@ def map_failure_to_result(
 
 
 def map_success(
-    f: Callable[Concatenate[_S1, _P], _S2], /, *args: _P.args, **kwargs: _P.kwargs
+    callable_: Callable[Concatenate[_S1, _P], _S2],
+    /,
+    *args: _P.args,
+    **kwargs: _P.kwargs,
 ) -> Callable[[Result[_F1, _S1]], Result[_F1, _S2]]:
     """Create function that maps [trcks.Success][] values to [trcks.Success][] values.
 
     [trcks.Failure][] values are left unchanged.
 
     Args:
-        f: Function to apply to the [trcks.Success][] value.
+        callable_: Function to apply to the [trcks.Success][] value.
         *args:
-            Positional arguments to be passed to `f`.
+            Positional arguments to be passed to `callable_`.
         **kwargs:
-            Keyword arguments to be passed to `f`.
+            Keyword arguments to be passed to `callable_`.
 
     Returns:
         Leaves [trcks.Failure][] values unchanged and
@@ -167,11 +173,11 @@ def map_success(
         >>> increase_success(("success", 42))
         ('success', 43)
     """
-    return map_success_to_result(compose(f, construct_success), *args, **kwargs)
+    return map_success_to_result(compose(callable_, construct_success), *args, **kwargs)
 
 
 def map_success_to_result(
-    f: Callable[Concatenate[_S1, _P], Result[_F2, _S2]],
+    callable_: Callable[Concatenate[_S1, _P], Result[_F2, _S2]],
     /,
     *args: _P.args,
     **kwargs: _P.kwargs,
@@ -182,11 +188,11 @@ def map_success_to_result(
     [trcks.Failure][] values are left unchanged.
 
     Args:
-        f: Function to apply to the [trcks.Success][] value.
+        callable_: Function to apply to the [trcks.Success][] value.
         *args:
-            Positional arguments to be passed to `f`.
+            Positional arguments to be passed to `callable_`.
         **kwargs:
-            Keyword arguments to be passed to `f`.
+            Keyword arguments to be passed to `callable_`.
 
     Returns:
         Leaves [trcks.Failure][] values unchanged and
@@ -216,7 +222,7 @@ def map_success_to_result(
             case ("failure", _):
                 return rslt
             case ("success", value):
-                return f(value, *args, **kwargs)
+                return callable_(value, *args, **kwargs)
             case _:  # pragma: no cover
                 assert_type(rslt, Never)  # type: ignore[unreachable]  # pyright: ignore[reportUnreachable]
                 msg = f"{type(rslt).__name__!r} is not a valid Result"
@@ -226,29 +232,32 @@ def map_success_to_result(
 
 
 def tap_failure(
-    f: Callable[Concatenate[_F1, _P], object], /, *args: _P.args, **kwargs: _P.kwargs
+    callable_: Callable[Concatenate[_F1, _P], object],
+    /,
+    *args: _P.args,
+    **kwargs: _P.kwargs,
 ) -> Callable[[Result[_F1, _S1]], Result[_F1, _S1]]:
     """Create function that applies a side effect to [trcks.Failure][] values.
 
     [trcks.Success][] values are passed on without side effects.
 
     Args:
-        f: Side effect to apply to the [trcks.Failure][] value.
+        callable_: Side effect to apply to the [trcks.Failure][] value.
         *args:
-            Positional arguments to be passed to `f`.
+            Positional arguments to be passed to `callable_`.
         **kwargs:
-            Keyword arguments to be passed to `f`.
+            Keyword arguments to be passed to `callable_`.
 
     Returns:
         Applies the given side effect to [trcks.Failure][] values and
             returns the original [trcks.Failure][] value.
             Passes on [trcks.Success][] values without side effects.
     """
-    return map_failure(i.tap(f, *args, **kwargs))
+    return map_failure(i.tap(callable_, *args, **kwargs))
 
 
 def tap_failure_to_result(
-    f: Callable[Concatenate[_F1, _P], Result[object, _S2]],
+    callable_: Callable[Concatenate[_F1, _P], Result[object, _S2]],
     /,
     *args: _P.args,
     **kwargs: _P.kwargs,
@@ -259,11 +268,11 @@ def tap_failure_to_result(
     [trcks.Success][] values are passed on without side effects.
 
     Args:
-        f: Side effect to apply to the [trcks.Failure][] value.
+        callable_: Side effect to apply to the [trcks.Failure][] value.
         *args:
-            Positional arguments to be passed to `f`.
+            Positional arguments to be passed to `callable_`.
         **kwargs:
-            Keyword arguments to be passed to `f`.
+            Keyword arguments to be passed to `callable_`.
 
     Returns:
         Applies the given side effect to [trcks.Failure][] values.
@@ -274,8 +283,8 @@ def tap_failure_to_result(
             Passes on [trcks.Success][] values without side effects.
     """
 
-    def bypassed_f(value: _F1) -> Result[_F1, _S2]:
-        match f(value, *args, **kwargs):
+    def bypassed_callable(value: _F1) -> Result[_F1, _S2]:
+        match callable_(value, *args, **kwargs):
             case ("failure", _):
                 return construct_failure(value)
             case ("success", _) as rslt:
@@ -285,33 +294,36 @@ def tap_failure_to_result(
                 msg = f"{type(rslt).__name__!r} is not a valid Result"
                 raise TypeError(msg)
 
-    return map_failure_to_result(bypassed_f)
+    return map_failure_to_result(bypassed_callable)
 
 
 def tap_success(
-    f: Callable[Concatenate[_S1, _P], object], /, *args: _P.args, **kwargs: _P.kwargs
+    callable_: Callable[Concatenate[_S1, _P], object],
+    /,
+    *args: _P.args,
+    **kwargs: _P.kwargs,
 ) -> Callable[[Result[_F1, _S1]], Result[_F1, _S1]]:
     """Create function that applies a side effect to [trcks.Success][] values.
 
     [trcks.Failure][] values are passed on without side effects.
 
     Args:
-        f: Side effect to apply to the [trcks.Success][] value.
+        callable_: Side effect to apply to the [trcks.Success][] value.
         *args:
-            Positional arguments to be passed to `f`.
+            Positional arguments to be passed to `callable_`.
         **kwargs:
-            Keyword arguments to be passed to `f`.
+            Keyword arguments to be passed to `callable_`.
 
     Returns:
         Passes on [trcks.Failure][] values without side effects.
             Applies the given side effect to [trcks.Success][] values and
             returns the original [trcks.Success][] value.
     """
-    return map_success(i.tap(f, *args, **kwargs))
+    return map_success(i.tap(callable_, *args, **kwargs))
 
 
 def tap_success_to_result(
-    f: Callable[Concatenate[_S1, _P], Result[_F2, object]],
+    callable_: Callable[Concatenate[_S1, _P], Result[_F2, object]],
     /,
     *args: _P.args,
     **kwargs: _P.kwargs,
@@ -322,11 +334,11 @@ def tap_success_to_result(
     [trcks.Failure][] values are passed on without side effects.
 
     Args:
-        f: Side effect to apply to the [trcks.Success][] value.
+        callable_: Side effect to apply to the [trcks.Success][] value.
         *args:
-            Positional arguments to be passed to `f`.
+            Positional arguments to be passed to `callable_`.
         **kwargs:
-            Keyword arguments to be passed to `f`.
+            Keyword arguments to be passed to `callable_`.
 
     Returns:
         Passes on [trcks.Failure][] values without side effects.
@@ -337,8 +349,8 @@ def tap_success_to_result(
             *the original* [trcks.Success][] value is returned.
     """
 
-    def bypassed_f(value: _S1) -> Result[_F2, _S1]:
-        match f(value, *args, **kwargs):
+    def bypassed_callable(value: _S1) -> Result[_F2, _S1]:
+        match callable_(value, *args, **kwargs):
             case ("failure", _) as rslt:
                 return rslt
             case ("success", _):
@@ -348,4 +360,4 @@ def tap_success_to_result(
                 msg = f"{type(rslt).__name__!r} is not a valid Result"
                 raise TypeError(msg)
 
-    return map_success_to_result(bypassed_f)
+    return map_success_to_result(bypassed_callable)

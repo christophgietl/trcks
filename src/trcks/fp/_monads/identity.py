@@ -8,18 +8,21 @@ _T = TypeVar("_T")
 
 
 def tap(
-    f: Callable[Concatenate[_T, _P], object], /, *args: _P.args, **kwargs: _P.kwargs
+    callable_: Callable[Concatenate[_T, _P], object],
+    /,
+    *args: _P.args,
+    **kwargs: _P.kwargs,
 ) -> Callable[[_T], _T]:
     """Turn synchronous function into a function that returns its input.
 
     Args:
-        f:
+        callable_:
             The synchronous function to be transformed into
             a function that returns its input.
         *args:
-            Positional arguments to be passed to `f`.
+            Positional arguments to be passed to `callable_`.
         **kwargs:
-            Keyword arguments to be passed to `f`.
+            Keyword arguments to be passed to `callable_`.
 
     Returns:
         The given function transformed into a function that returns its input.
@@ -36,8 +39,8 @@ def tap(
         42
     """
 
-    def bypassed_f(value: _T) -> _T:
-        _ = f(value, *args, **kwargs)
+    def bypassed_callable(value: _T) -> _T:
+        _ = callable_(value, *args, **kwargs)
         return value
 
-    return bypassed_f
+    return bypassed_callable

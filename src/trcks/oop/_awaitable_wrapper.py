@@ -130,7 +130,7 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
 
     def map(
         self,
-        f: Callable[Concatenate[_T_co, _P], _T],
+        callable_: Callable[Concatenate[_T_co, _P], _T],
         /,
         *args: _P.args,
         **kwargs: _P.kwargs,
@@ -139,11 +139,11 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
         to the wrapped [collections.abc.Awaitable][] object.
 
         Args:
-            f: The synchronous function to be applied.
+            callable_: The synchronous function to be applied.
             *args:
-                Positional arguments to be passed to `f`.
+                Positional arguments to be passed to `callable_`.
             **kwargs:
-                Keyword arguments to be passed to `f`.
+                Keyword arguments to be passed to `callable_`.
 
         Returns:
             A new [trcks.oop.AwaitableWrapper][] instance with
@@ -165,11 +165,11 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
             >>> asyncio.run(awaitable_wrapper.core_as_coroutine)
             'Length: 13'
         """
-        return AwaitableWrapper(a.map_(f, *args, **kwargs)(self.core))
+        return AwaitableWrapper(a.map_(callable_, *args, **kwargs)(self.core))
 
     def map_to_awaitable(
         self,
-        f: Callable[Concatenate[_T_co, _P], Awaitable[_T]],
+        callable_: Callable[Concatenate[_T_co, _P], Awaitable[_T]],
         /,
         *args: _P.args,
         **kwargs: _P.kwargs,
@@ -178,11 +178,11 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
         to the wrapped [collections.abc.Awaitable][] object.
 
         Args:
-            f: The asynchronous function to be applied.
+            callable_: The asynchronous function to be applied.
             *args:
-                Positional arguments to be passed to `f`.
+                Positional arguments to be passed to `callable_`.
             **kwargs:
-                Keyword arguments to be passed to `f`.
+                Keyword arguments to be passed to `callable_`.
 
         Returns:
             A new [trcks.oop.AwaitableWrapper][] instance with
@@ -205,11 +205,13 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
             >>> asyncio.run(awaitable_wrapper.core_as_coroutine)
             Wrote 'Hello, world!' to disk.
         """
-        return AwaitableWrapper(a.map_to_awaitable(f, *args, **kwargs)(self.core))
+        return AwaitableWrapper(
+            a.map_to_awaitable(callable_, *args, **kwargs)(self.core)
+        )
 
     def map_to_awaitable_iterable(
         self,
-        f: Callable[Concatenate[_T_co, _P], AwaitableIterable[_T]],
+        callable_: Callable[Concatenate[_T_co, _P], AwaitableIterable[_T]],
         /,
         *args: _P.args,
         **kwargs: _P.kwargs,
@@ -218,12 +220,12 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
         to the wrapped [collections.abc.Awaitable][] object.
 
         Args:
-            f: The asynchronous function to be applied, returning an awaitable
+            callable_: The asynchronous function to be applied, returning an awaitable
                 [collections.abc.Iterable][].
             *args:
-                Positional arguments to be passed to `f`.
+                Positional arguments to be passed to `callable_`.
             **kwargs:
-                Keyword arguments to be passed to `f`.
+                Keyword arguments to be passed to `callable_`.
 
         Returns:
             A new [trcks.oop.AwaitableTupleWrapper][] instance with
@@ -247,12 +249,12 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
             (21, 21)
         """
         return AwaitableTupleWrapper(
-            a.map_to_awaitable_iterable(f, *args, **kwargs)(self.core)
+            a.map_to_awaitable_iterable(callable_, *args, **kwargs)(self.core)
         )
 
     def map_to_awaitable_result(
         self,
-        f: Callable[Concatenate[_T_co, _P], AwaitableResult[_F, _S]],
+        callable_: Callable[Concatenate[_T_co, _P], AwaitableResult[_F, _S]],
         /,
         *args: _P.args,
         **kwargs: _P.kwargs,
@@ -261,11 +263,11 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
         to the wrapped [collections.abc.Awaitable][] object.
 
         Args:
-            f: The asynchronous function to be applied.
+            callable_: The asynchronous function to be applied.
             *args:
-                Positional arguments to be passed to `f`.
+                Positional arguments to be passed to `callable_`.
             **kwargs:
-                Keyword arguments to be passed to `f`.
+                Keyword arguments to be passed to `callable_`.
 
         Returns:
             A [trcks.oop.AwaitableResultWrapper][] instance with
@@ -294,12 +296,12 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
             ('success', 42.0)
         """
         return AwaitableResultWrapper(
-            a.map_to_awaitable_result(f, *args, **kwargs)(self.core)
+            a.map_to_awaitable_result(callable_, *args, **kwargs)(self.core)
         )
 
     def map_to_awaitable_result_iterable(
         self,
-        f: Callable[Concatenate[_T_co, _P], AwaitableResultIterable[_F, _S]],
+        callable_: Callable[Concatenate[_T_co, _P], AwaitableResultIterable[_F, _S]],
         /,
         *args: _P.args,
         **kwargs: _P.kwargs,
@@ -309,11 +311,11 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
         [collections.abc.Awaitable][] object.
 
         Args:
-            f: The asynchronous function to be applied.
+            callable_: The asynchronous function to be applied.
             *args:
-                Positional arguments to be passed to `f`.
+                Positional arguments to be passed to `callable_`.
             **kwargs:
-                Keyword arguments to be passed to `f`.
+                Keyword arguments to be passed to `callable_`.
 
         Returns:
             A [trcks.oop.AwaitableResultTupleWrapper][] instance with
@@ -342,13 +344,13 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
             ('success', (5.0, 10.0))
         """
         return AwaitableResultTupleWrapper(
-            a.map_to_awaitable_result_iterable(f, *args, **kwargs)(self.core)
+            a.map_to_awaitable_result_iterable(callable_, *args, **kwargs)(self.core)
         )
 
     @deprecated("Use map_to_awaitable_result_iterable instead")
     def map_to_awaitable_result_tuple(
         self,
-        f: Callable[Concatenate[_T_co, _P], AwaitableResultTuple[_F, _S]],
+        callable_: Callable[Concatenate[_T_co, _P], AwaitableResultTuple[_F, _S]],
         /,
         *args: _P.args,
         **kwargs: _P.kwargs,
@@ -357,13 +359,13 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
         [trcks.oop.AwaitableWrapper.map_to_awaitable_result_iterable][].
         """
         return self.map_to_awaitable_result_iterable(
-            f, *args, **kwargs
+            callable_, *args, **kwargs
         )  # pragma: no cover
 
     @deprecated("Use map_to_awaitable_iterable instead")
     def map_to_awaitable_tuple(
         self,
-        f: Callable[Concatenate[_T_co, _P], AwaitableTuple[_T]],
+        callable_: Callable[Concatenate[_T_co, _P], AwaitableTuple[_T]],
         /,
         *args: _P.args,
         **kwargs: _P.kwargs,
@@ -371,11 +373,13 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
         """Deprecated alias for
         [trcks.oop.AwaitableWrapper.map_to_awaitable_iterable][].
         """
-        return self.map_to_awaitable_iterable(f, *args, **kwargs)  # pragma: no cover
+        return self.map_to_awaitable_iterable(
+            callable_, *args, **kwargs
+        )  # pragma: no cover
 
     def map_to_iterable(
         self,
-        f: Callable[Concatenate[_T_co, _P], Iterable[_T]],
+        callable_: Callable[Concatenate[_T_co, _P], Iterable[_T]],
         /,
         *args: _P.args,
         **kwargs: _P.kwargs,
@@ -384,11 +388,11 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
         to the wrapped [collections.abc.Awaitable][] object.
 
         Args:
-            f: The synchronous function to be applied.
+            callable_: The synchronous function to be applied.
             *args:
-                Positional arguments to be passed to `f`.
+                Positional arguments to be passed to `callable_`.
             **kwargs:
-                Keyword arguments to be passed to `f`.
+                Keyword arguments to be passed to `callable_`.
 
         Returns:
             A new [trcks.oop.AwaitableTupleWrapper][] instance with
@@ -407,11 +411,13 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
             >>> asyncio.run(awaitable_tuple_wrapper.core_as_coroutine)
             (3, -3)
         """
-        return AwaitableTupleWrapper(a.map_to_iterable(f, *args, **kwargs)(self.core))
+        return AwaitableTupleWrapper(
+            a.map_to_iterable(callable_, *args, **kwargs)(self.core)
+        )
 
     def map_to_result(
         self,
-        f: Callable[Concatenate[_T_co, _P], Result[_F, _S]],
+        callable_: Callable[Concatenate[_T_co, _P], Result[_F, _S]],
         /,
         *args: _P.args,
         **kwargs: _P.kwargs,
@@ -420,11 +426,11 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
         to the wrapped [collections.abc.Awaitable][] object.
 
         Args:
-            f: The synchronous function to be applied.
+            callable_: The synchronous function to be applied.
             *args:
-                Positional arguments to be passed to `f`.
+                Positional arguments to be passed to `callable_`.
             **kwargs:
-                Keyword arguments to be passed to `f`.
+                Keyword arguments to be passed to `callable_`.
 
         Returns:
             A [trcks.oop.AwaitableResultWrapper][] instance with
@@ -447,11 +453,13 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
             >>> asyncio.run(awaitable_result_wrapper.core_as_coroutine)
             ('failure', 'negative value')
         """
-        return AwaitableResultWrapper(a.map_to_result(f, *args, **kwargs)(self.core))
+        return AwaitableResultWrapper(
+            a.map_to_result(callable_, *args, **kwargs)(self.core)
+        )
 
     def map_to_result_iterable(
         self,
-        f: Callable[Concatenate[_T_co, _P], ResultIterable[_F, _S]],
+        callable_: Callable[Concatenate[_T_co, _P], ResultIterable[_F, _S]],
         /,
         *args: _P.args,
         **kwargs: _P.kwargs,
@@ -460,11 +468,11 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
         to the wrapped [collections.abc.Awaitable][] object.
 
         Args:
-            f: The synchronous function to be applied.
+            callable_: The synchronous function to be applied.
             *args:
-                Positional arguments to be passed to `f`.
+                Positional arguments to be passed to `callable_`.
             **kwargs:
-                Keyword arguments to be passed to `f`.
+                Keyword arguments to be passed to `callable_`.
 
         Returns:
             A [trcks.oop.AwaitableResultTupleWrapper][] instance with
@@ -488,13 +496,13 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
             ('success', (5.0, 10.0))
         """
         return AwaitableResultTupleWrapper(
-            a.map_to_result_iterable(f, *args, **kwargs)(self.core)
+            a.map_to_result_iterable(callable_, *args, **kwargs)(self.core)
         )
 
     @deprecated("Use map_to_result_iterable instead")
     def map_to_result_tuple(
         self,
-        f: Callable[Concatenate[_T_co, _P], ResultTuple[_F, _S]],
+        callable_: Callable[Concatenate[_T_co, _P], ResultTuple[_F, _S]],
         /,
         *args: _P.args,
         **kwargs: _P.kwargs,
@@ -502,12 +510,14 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
         """Deprecated alias for
         [trcks.oop.AwaitableWrapper.map_to_result_iterable][].
         """
-        return self.map_to_result_iterable(f, *args, **kwargs)  # pragma: no cover
+        return self.map_to_result_iterable(
+            callable_, *args, **kwargs
+        )  # pragma: no cover
 
     @deprecated("Use map_to_iterable instead")
     def map_to_tuple(
         self,
-        f: Callable[Concatenate[_T_co, _P], tuple[_T, ...]],
+        callable_: Callable[Concatenate[_T_co, _P], tuple[_T, ...]],
         /,
         *args: _P.args,
         **kwargs: _P.kwargs,
@@ -515,11 +525,11 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
         """Deprecated alias for
         [trcks.oop.AwaitableWrapper.map_to_iterable][].
         """
-        return self.map_to_iterable(f, *args, **kwargs)  # pragma: no cover
+        return self.map_to_iterable(callable_, *args, **kwargs)  # pragma: no cover
 
     def tap(
         self,
-        f: Callable[Concatenate[_T_co, _P], object],
+        callable_: Callable[Concatenate[_T_co, _P], object],
         /,
         *args: _P.args,
         **kwargs: _P.kwargs,
@@ -528,11 +538,11 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
         to the wrapped [collections.abc.Awaitable][] object.
 
         Args:
-            f: The synchronous side effect to be applied.
+            callable_: The synchronous side effect to be applied.
             *args:
-                Positional arguments to be passed to `f`.
+                Positional arguments to be passed to `callable_`.
             **kwargs:
-                Keyword arguments to be passed to `f`.
+                Keyword arguments to be passed to `callable_`.
 
         Returns:
             A new [trcks.oop.AwaitableWrapper][] instance with
@@ -549,11 +559,11 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
             >>> value
             'Hello, world!'
         """
-        return AwaitableWrapper(a.tap(f, *args, **kwargs)(self.core))
+        return AwaitableWrapper(a.tap(callable_, *args, **kwargs)(self.core))
 
     def tap_to_awaitable(
         self,
-        f: Callable[Concatenate[_T_co, _P], Awaitable[object]],
+        callable_: Callable[Concatenate[_T_co, _P], Awaitable[object]],
         /,
         *args: _P.args,
         **kwargs: _P.kwargs,
@@ -562,11 +572,11 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
         to the wrapped [collections.abc.Awaitable][] object.
 
         Args:
-            f: The asynchronous side effect to be applied.
+            callable_: The asynchronous side effect to be applied.
             *args:
-                Positional arguments to be passed to `f`.
+                Positional arguments to be passed to `callable_`.
             **kwargs:
-                Keyword arguments to be passed to `f`.
+                Keyword arguments to be passed to `callable_`.
 
         Returns:
             A [trcks.oop.AwaitableWrapper][] instance with the original wrapped object.
@@ -586,11 +596,13 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
             >>> value
             'Hello, world!'
         """
-        return AwaitableWrapper(a.tap_to_awaitable(f, *args, **kwargs)(self.core))
+        return AwaitableWrapper(
+            a.tap_to_awaitable(callable_, *args, **kwargs)(self.core)
+        )
 
     def tap_to_awaitable_iterable(
         self,
-        f: Callable[Concatenate[_T_co, _P], AwaitableIterable[object]],
+        callable_: Callable[Concatenate[_T_co, _P], AwaitableIterable[object]],
         /,
         *args: _P.args,
         **kwargs: _P.kwargs,
@@ -599,12 +611,12 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
         to the wrapped [collections.abc.Awaitable][] object.
 
         Args:
-            f: The asynchronous side effect to be applied,
+            callable_: The asynchronous side effect to be applied,
                 returning a [trcks.AwaitableIterable][].
             *args:
-                Positional arguments to be passed to `f`.
+                Positional arguments to be passed to `callable_`.
             **kwargs:
-                Keyword arguments to be passed to `f`.
+                Keyword arguments to be passed to `callable_`.
 
         Returns:
             A new [trcks.oop.AwaitableTupleWrapper][] instance with
@@ -631,12 +643,12 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
             (21, 21)
         """
         return AwaitableTupleWrapper(
-            a.tap_to_awaitable_iterable(f, *args, **kwargs)(self.core)
+            a.tap_to_awaitable_iterable(callable_, *args, **kwargs)(self.core)
         )
 
     def tap_to_awaitable_result(
         self,
-        f: Callable[Concatenate[_T_co, _P], AwaitableResult[_F, object]],
+        callable_: Callable[Concatenate[_T_co, _P], AwaitableResult[_F, object]],
         /,
         *args: _P.args,
         **kwargs: _P.kwargs,
@@ -645,11 +657,11 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
         to the wrapped object.
 
         Args:
-            f: The asynchronous side effect to be applied.
+            callable_: The asynchronous side effect to be applied.
             *args:
-                Positional arguments to be passed to `f`.
+                Positional arguments to be passed to `callable_`.
             **kwargs:
-                Keyword arguments to be passed to `f`.
+                Keyword arguments to be passed to `callable_`.
 
         Returns:
             A [trcks.oop.AwaitableResultWrapper][] instance with
@@ -689,12 +701,14 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
             ('success', 'Hello, world!')
         """
         return AwaitableResultWrapper(
-            a.tap_to_awaitable_result(f, *args, **kwargs)(self.core)
+            a.tap_to_awaitable_result(callable_, *args, **kwargs)(self.core)
         )
 
     def tap_to_awaitable_result_iterable(
         self,
-        f: Callable[Concatenate[_T_co, _P], AwaitableResultIterable[_F, object]],
+        callable_: Callable[
+            Concatenate[_T_co, _P], AwaitableResultIterable[_F, object]
+        ],
         /,
         *args: _P.args,
         **kwargs: _P.kwargs,
@@ -704,11 +718,11 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
         [collections.abc.Awaitable][] object.
 
         Args:
-            f: The asynchronous side effect to be applied.
+            callable_: The asynchronous side effect to be applied.
             *args:
-                Positional arguments to be passed to `f`.
+                Positional arguments to be passed to `callable_`.
             **kwargs:
-                Keyword arguments to be passed to `f`.
+                Keyword arguments to be passed to `callable_`.
 
         Returns:
             A [trcks.oop.AwaitableResultTupleWrapper][] instance with
@@ -741,13 +755,13 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
             ('success', ('Hello, world!', 'Hello, world!'))
         """
         return AwaitableResultTupleWrapper(
-            a.tap_to_awaitable_result_iterable(f, *args, **kwargs)(self.core)
+            a.tap_to_awaitable_result_iterable(callable_, *args, **kwargs)(self.core)
         )
 
     @deprecated("Use tap_to_awaitable_result_iterable instead")
     def tap_to_awaitable_result_tuple(
         self,
-        f: Callable[Concatenate[_T_co, _P], AwaitableResultTuple[_F, object]],
+        callable_: Callable[Concatenate[_T_co, _P], AwaitableResultTuple[_F, object]],
         /,
         *args: _P.args,
         **kwargs: _P.kwargs,
@@ -756,13 +770,13 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
         [trcks.oop.AwaitableWrapper.tap_to_awaitable_result_iterable][].
         """
         return self.tap_to_awaitable_result_iterable(
-            f, *args, **kwargs
+            callable_, *args, **kwargs
         )  # pragma: no cover
 
     @deprecated("Use tap_to_awaitable_iterable instead")
     def tap_to_awaitable_tuple(
         self,
-        f: Callable[Concatenate[_T_co, _P], AwaitableTuple[object]],
+        callable_: Callable[Concatenate[_T_co, _P], AwaitableTuple[object]],
         /,
         *args: _P.args,
         **kwargs: _P.kwargs,
@@ -770,11 +784,13 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
         """Deprecated alias for
         [trcks.oop.AwaitableWrapper.tap_to_awaitable_iterable][].
         """
-        return self.tap_to_awaitable_iterable(f, *args, **kwargs)  # pragma: no cover
+        return self.tap_to_awaitable_iterable(
+            callable_, *args, **kwargs
+        )  # pragma: no cover
 
     def tap_to_iterable(
         self,
-        f: Callable[Concatenate[_T_co, _P], Iterable[object]],
+        callable_: Callable[Concatenate[_T_co, _P], Iterable[object]],
         /,
         *args: _P.args,
         **kwargs: _P.kwargs,
@@ -783,12 +799,12 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
         to the wrapped [collections.abc.Awaitable][] object.
 
         Args:
-            f: The synchronous side effect to be applied,
+            callable_: The synchronous side effect to be applied,
                 returning an [collections.abc.Iterable][].
             *args:
-                Positional arguments to be passed to `f`.
+                Positional arguments to be passed to `callable_`.
             **kwargs:
-                Keyword arguments to be passed to `f`.
+                Keyword arguments to be passed to `callable_`.
 
         Returns:
             A new [trcks.oop.AwaitableTupleWrapper][] instance with
@@ -813,11 +829,13 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
             Processing: 42
             (42, 42)
         """
-        return AwaitableTupleWrapper(a.tap_to_iterable(f, *args, **kwargs)(self.core))
+        return AwaitableTupleWrapper(
+            a.tap_to_iterable(callable_, *args, **kwargs)(self.core)
+        )
 
     def tap_to_result(
         self,
-        f: Callable[Concatenate[_T_co, _P], Result[_F, object]],
+        callable_: Callable[Concatenate[_T_co, _P], Result[_F, object]],
         /,
         *args: _P.args,
         **kwargs: _P.kwargs,
@@ -826,11 +844,11 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
         to the wrapped object.
 
         Args:
-            f: The synchronous side effect to be applied.
+            callable_: The synchronous side effect to be applied.
             *args:
-                Positional arguments to be passed to `f`.
+                Positional arguments to be passed to `callable_`.
             **kwargs:
-                Keyword arguments to be passed to `f`.
+                Keyword arguments to be passed to `callable_`.
 
         Returns:
             A [trcks.oop.AwaitableResultWrapper][] instance with
@@ -864,11 +882,13 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
             >>> result_2
             ('success', 3.5)
         """
-        return AwaitableResultWrapper(a.tap_to_result(f, *args, **kwargs)(self.core))
+        return AwaitableResultWrapper(
+            a.tap_to_result(callable_, *args, **kwargs)(self.core)
+        )
 
     def tap_to_result_iterable(
         self,
-        f: Callable[Concatenate[_T_co, _P], ResultIterable[_F, object]],
+        callable_: Callable[Concatenate[_T_co, _P], ResultIterable[_F, object]],
         /,
         *args: _P.args,
         **kwargs: _P.kwargs,
@@ -877,11 +897,11 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
         to the wrapped [collections.abc.Awaitable][] object.
 
         Args:
-            f: The synchronous side effect to be applied.
+            callable_: The synchronous side effect to be applied.
             *args:
-                Positional arguments to be passed to `f`.
+                Positional arguments to be passed to `callable_`.
             **kwargs:
-                Keyword arguments to be passed to `f`.
+                Keyword arguments to be passed to `callable_`.
 
         Returns:
             A [trcks.oop.AwaitableResultTupleWrapper][] instance with
@@ -911,13 +931,13 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
             ('success', ('Hello, world!', 'Hello, world!'))
         """
         return AwaitableResultTupleWrapper(
-            a.tap_to_result_iterable(f, *args, **kwargs)(self.core)
+            a.tap_to_result_iterable(callable_, *args, **kwargs)(self.core)
         )
 
     @deprecated("Use tap_to_result_iterable instead")
     def tap_to_result_tuple(
         self,
-        f: Callable[Concatenate[_T_co, _P], ResultTuple[_F, object]],
+        callable_: Callable[Concatenate[_T_co, _P], ResultTuple[_F, object]],
         /,
         *args: _P.args,
         **kwargs: _P.kwargs,
@@ -925,12 +945,14 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
         """Deprecated alias for
         [trcks.oop.AwaitableWrapper.tap_to_result_iterable][].
         """
-        return self.tap_to_result_iterable(f, *args, **kwargs)  # pragma: no cover
+        return self.tap_to_result_iterable(
+            callable_, *args, **kwargs
+        )  # pragma: no cover
 
     @deprecated("Use tap_to_iterable instead")
     def tap_to_tuple(
         self,
-        f: Callable[Concatenate[_T_co, _P], tuple[object, ...]],
+        callable_: Callable[Concatenate[_T_co, _P], tuple[object, ...]],
         /,
         *args: _P.args,
         **kwargs: _P.kwargs,
@@ -938,4 +960,4 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
         """Deprecated alias for
         [trcks.oop.AwaitableWrapper.tap_to_iterable][].
         """
-        return self.tap_to_iterable(f, *args, **kwargs)  # pragma: no cover
+        return self.tap_to_iterable(callable_, *args, **kwargs)  # pragma: no cover

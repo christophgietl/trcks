@@ -153,7 +153,10 @@ def construct_success_from_awaitable(awtbl: Awaitable[_S], /) -> AwaitableSucces
 
 
 def map_failure(
-    f: Callable[Concatenate[_F1, _P], _F2], /, *args: _P.args, **kwargs: _P.kwargs
+    callable_: Callable[Concatenate[_F1, _P], _F2],
+    /,
+    *args: _P.args,
+    **kwargs: _P.kwargs,
 ) -> Callable[[AwaitableResult[_F1, _S1]], AwaitableResult[_F2, _S1]]:
     """Create function that maps [trcks.AwaitableFailure][]
     to [trcks.AwaitableFailure][] values.
@@ -161,11 +164,12 @@ def map_failure(
     [trcks.AwaitableSuccess][] values are left unchanged.
 
     Args:
-        f: Synchronous function to apply to the [trcks.AwaitableFailure][] values.
+        callable_: Synchronous function to apply to the
+            [trcks.AwaitableFailure][] values.
         *args:
-            Positional arguments to be passed to `f`.
+            Positional arguments to be passed to `callable_`.
         **kwargs:
-            Keyword arguments to be passed to `f`.
+            Keyword arguments to be passed to `callable_`.
 
     Returns:
         Maps [trcks.AwaitableFailure][] values to [trcks.AwaitableFailure][] values
@@ -188,11 +192,11 @@ def map_failure(
         >>> asyncio.run(ar.to_coroutine_result(a_rslt_2))
         ('success', 25.0)
     """
-    return a.map_(r.map_failure(f, *args, **kwargs))
+    return a.map_(r.map_failure(callable_, *args, **kwargs))
 
 
 def map_failure_to_awaitable(
-    f: Callable[Concatenate[_F1, _P], Awaitable[_F2]],
+    callable_: Callable[Concatenate[_F1, _P], Awaitable[_F2]],
     /,
     *args: _P.args,
     **kwargs: _P.kwargs,
@@ -203,11 +207,12 @@ def map_failure_to_awaitable(
     [trcks.AwaitableSuccess][] values are left unchanged.
 
     Args:
-        f: Asynchronous function to apply to the [trcks.AwaitableFailure][] values.
+        callable_: Asynchronous function to apply to the
+            [trcks.AwaitableFailure][] values.
         *args:
-            Positional arguments to be passed to `f`.
+            Positional arguments to be passed to `callable_`.
         **kwargs:
-            Keyword arguments to be passed to `f`.
+            Keyword arguments to be passed to `callable_`.
 
     Returns:
         Maps [trcks.AwaitableFailure][] values to [trcks.AwaitableFailure][] values
@@ -237,12 +242,12 @@ def map_failure_to_awaitable(
         ('success', 25.0)
     """
     return map_failure_to_awaitable_result(
-        compose(f, construct_failure_from_awaitable), *args, **kwargs
+        compose(callable_, construct_failure_from_awaitable), *args, **kwargs
     )
 
 
 def map_failure_to_awaitable_result(
-    f: Callable[Concatenate[_F1, _P], AwaitableResult[_F2, _S2]],
+    callable_: Callable[Concatenate[_F1, _P], AwaitableResult[_F2, _S2]],
     /,
     *args: _P.args,
     **kwargs: _P.kwargs,
@@ -253,11 +258,12 @@ def map_failure_to_awaitable_result(
     [trcks.AwaitableSuccess][] values are left unchanged.
 
     Args:
-        f: Asynchronous function to apply to the [trcks.AwaitableFailure][] values.
+        callable_: Asynchronous function to apply to the
+            [trcks.AwaitableFailure][] values.
         *args:
-            Positional arguments to be passed to `f`.
+            Positional arguments to be passed to `callable_`.
         **kwargs:
-            Keyword arguments to be passed to `f`.
+            Keyword arguments to be passed to `callable_`.
 
     Returns:
         Maps [trcks.AwaitableFailure][] values
@@ -293,7 +299,7 @@ def map_failure_to_awaitable_result(
     async def partially_mapped_f(rslt: Result[_F1, _S1]) -> Result[_F2, _S1 | _S2]:
         match rslt:
             case ("failure", value):
-                return await f(value, *args, **kwargs)
+                return await callable_(value, *args, **kwargs)
             case ("success", _):
                 return rslt
             case _:  # pragma: no cover
@@ -305,7 +311,7 @@ def map_failure_to_awaitable_result(
 
 
 def map_failure_to_result(
-    f: Callable[Concatenate[_F1, _P], Result[_F2, _S2]],
+    callable_: Callable[Concatenate[_F1, _P], Result[_F2, _S2]],
     /,
     *args: _P.args,
     **kwargs: _P.kwargs,
@@ -316,11 +322,12 @@ def map_failure_to_result(
     [trcks.AwaitableSuccess][] values are left unchanged.
 
     Args:
-        f: Synchronous function to apply to the [trcks.AwaitableFailure][] values.
+        callable_: Synchronous function to apply to the
+            [trcks.AwaitableFailure][] values.
         *args:
-            Positional arguments to be passed to `f`.
+            Positional arguments to be passed to `callable_`.
         **kwargs:
-            Keyword arguments to be passed to `f`.
+            Keyword arguments to be passed to `callable_`.
 
     Returns:
         Maps [trcks.AwaitableFailure][] values to [trcks.AwaitableResult][] values
@@ -350,11 +357,14 @@ def map_failure_to_result(
         >>> asyncio.run(ar.to_coroutine_result(a_rslt_3))
         ('success', 25.0)
     """
-    return a.map_(r.map_failure_to_result(f, *args, **kwargs))
+    return a.map_(r.map_failure_to_result(callable_, *args, **kwargs))
 
 
 def map_success(
-    f: Callable[Concatenate[_S1, _P], _S2], /, *args: _P.args, **kwargs: _P.kwargs
+    callable_: Callable[Concatenate[_S1, _P], _S2],
+    /,
+    *args: _P.args,
+    **kwargs: _P.kwargs,
 ) -> Callable[[AwaitableResult[_F1, _S1]], AwaitableResult[_F1, _S2]]:
     """Create function that maps [trcks.AwaitableSuccess][]
     to [trcks.AwaitableSuccess][] values.
@@ -362,11 +372,12 @@ def map_success(
     [trcks.AwaitableFailure][] values are left unchanged.
 
     Args:
-        f: Synchronous function to apply to the [trcks.AwaitableSuccess][] values.
+        callable_: Synchronous function to apply to the
+            [trcks.AwaitableSuccess][] values.
         *args:
-            Positional arguments to be passed to `f`.
+            Positional arguments to be passed to `callable_`.
         **kwargs:
-            Keyword arguments to be passed to `f`.
+            Keyword arguments to be passed to `callable_`.
 
     Returns:
         Leaves [trcks.AwaitableFailure][] values unchanged and
@@ -393,11 +404,11 @@ def map_success(
         >>> asyncio.run(ar.to_coroutine_result(a_rslt_2))
         ('success', 43)
     """
-    return a.map_(r.map_success(f, *args, **kwargs))
+    return a.map_(r.map_success(callable_, *args, **kwargs))
 
 
 def map_success_to_awaitable(
-    f: Callable[Concatenate[_S1, _P], Awaitable[_S2]],
+    callable_: Callable[Concatenate[_S1, _P], Awaitable[_S2]],
     /,
     *args: _P.args,
     **kwargs: _P.kwargs,
@@ -408,11 +419,12 @@ def map_success_to_awaitable(
     [trcks.AwaitableFailure][] values are left unchanged.
 
     Args:
-        f: Asynchronous function to apply to the [trcks.AwaitableSuccess][] values.
+        callable_: Asynchronous function to apply to the
+            [trcks.AwaitableSuccess][] values.
         *args:
-            Positional arguments to be passed to `f`.
+            Positional arguments to be passed to `callable_`.
         **kwargs:
-            Keyword arguments to be passed to `f`.
+            Keyword arguments to be passed to `callable_`.
 
     Returns:
         Leaves [trcks.AwaitableFailure][] values unchanged and
@@ -445,12 +457,12 @@ def map_success_to_awaitable(
         ('success', 43)
     """
     return map_success_to_awaitable_result(
-        compose(f, construct_success_from_awaitable), *args, **kwargs
+        compose(callable_, construct_success_from_awaitable), *args, **kwargs
     )
 
 
 def map_success_to_awaitable_result(
-    f: Callable[Concatenate[_S1, _P], AwaitableResult[_F2, _S2]],
+    callable_: Callable[Concatenate[_S1, _P], AwaitableResult[_F2, _S2]],
     /,
     *args: _P.args,
     **kwargs: _P.kwargs,
@@ -461,11 +473,12 @@ def map_success_to_awaitable_result(
     [trcks.AwaitableFailure][] values are left unchanged.
 
     Args:
-        f: Asynchronous function to apply to the [trcks.AwaitableSuccess][] values.
+        callable_: Asynchronous function to apply to the
+            [trcks.AwaitableSuccess][] values.
         *args:
-            Positional arguments to be passed to `f`.
+            Positional arguments to be passed to `callable_`.
         **kwargs:
-            Keyword arguments to be passed to `f`.
+            Keyword arguments to be passed to `callable_`.
 
     Returns:
         Leaves [trcks.AwaitableFailure][] values unchanged and
@@ -504,7 +517,7 @@ def map_success_to_awaitable_result(
             case ("failure", _):
                 return rslt
             case ("success", value):
-                return await f(value, *args, **kwargs)
+                return await callable_(value, *args, **kwargs)
             case _:  # pragma: no cover
                 assert_type(rslt, Never)  # type: ignore[unreachable]  # pyright: ignore[reportUnreachable]
                 msg = f"{type(rslt).__name__!r} is not a valid Result"
@@ -514,7 +527,7 @@ def map_success_to_awaitable_result(
 
 
 def map_success_to_result(
-    f: Callable[Concatenate[_S1, _P], Result[_F2, _S2]],
+    callable_: Callable[Concatenate[_S1, _P], Result[_F2, _S2]],
     /,
     *args: _P.args,
     **kwargs: _P.kwargs,
@@ -525,11 +538,12 @@ def map_success_to_result(
     [trcks.AwaitableFailure][] values are left unchanged.
 
     Args:
-        f: Synchronous function to apply to the [trcks.AwaitableSuccess][] values.
+        callable_: Synchronous function to apply to the
+            [trcks.AwaitableSuccess][] values.
         *args:
-            Positional arguments to be passed to `f`.
+            Positional arguments to be passed to `callable_`.
         **kwargs:
-            Keyword arguments to be passed to `f`.
+            Keyword arguments to be passed to `callable_`.
 
     Returns:
         Leaves [trcks.AwaitableFailure][] values unchanged and
@@ -561,11 +575,14 @@ def map_success_to_result(
         >>> asyncio.run(ar.to_coroutine_result(a_rslt_2))
         ('success', 5.0)
     """
-    return a.map_(r.map_success_to_result(f, *args, **kwargs))
+    return a.map_(r.map_success_to_result(callable_, *args, **kwargs))
 
 
 def tap_failure(
-    f: Callable[Concatenate[_F1, _P], object], /, *args: _P.args, **kwargs: _P.kwargs
+    callable_: Callable[Concatenate[_F1, _P], object],
+    /,
+    *args: _P.args,
+    **kwargs: _P.kwargs,
 ) -> Callable[[AwaitableResult[_F1, _S1]], AwaitableResult[_F1, _S1]]:
     """Create function that applies a synchronous side effect
     to [trcks.AwaitableFailure][] values.
@@ -573,22 +590,23 @@ def tap_failure(
     [trcks.AwaitableSuccess][] values are passed on without side effects.
 
     Args:
-        f: Synchronous side effect to apply to the [trcks.AwaitableFailure][] value.
+        callable_: Synchronous side effect to apply to the
+            [trcks.AwaitableFailure][] value.
         *args:
-            Positional arguments to be passed to `f`.
+            Positional arguments to be passed to `callable_`.
         **kwargs:
-            Keyword arguments to be passed to `f`.
+            Keyword arguments to be passed to `callable_`.
 
     Returns:
         Applies the given side effect to [trcks.AwaitableFailure][] values and
             returns the original [trcks.AwaitableFailure][] value.
             Passes on [trcks.AwaitableSuccess][] values without side effects.
     """
-    return a.map_(r.tap_failure(f, *args, **kwargs))
+    return a.map_(r.tap_failure(callable_, *args, **kwargs))
 
 
 def tap_failure_to_awaitable(
-    f: Callable[Concatenate[_F1, _P], Awaitable[object]],
+    callable_: Callable[Concatenate[_F1, _P], Awaitable[object]],
     /,
     *args: _P.args,
     **kwargs: _P.kwargs,
@@ -599,11 +617,12 @@ def tap_failure_to_awaitable(
     [trcks.AwaitableSuccess][] values are passed on without side effects.
 
     Args:
-        f: Asynchronous side effect to apply to the [trcks.AwaitableFailure][] value.
+        callable_: Asynchronous side effect to apply to the
+            [trcks.AwaitableFailure][] value.
         *args:
-            Positional arguments to be passed to `f`.
+            Positional arguments to be passed to `callable_`.
         **kwargs:
-            Keyword arguments to be passed to `f`.
+            Keyword arguments to be passed to `callable_`.
 
     Returns:
         Applies the given side effect to [trcks.AwaitableFailure][] values and
@@ -611,15 +630,15 @@ def tap_failure_to_awaitable(
             Passes on [trcks.AwaitableSuccess][] values without side effects.
     """
 
-    async def bypassed_f(value: _F1) -> _F1:
-        _ = await f(value, *args, **kwargs)
+    async def bypassed_callable(value: _F1) -> _F1:
+        _ = await callable_(value, *args, **kwargs)
         return value
 
-    return map_failure_to_awaitable(bypassed_f)
+    return map_failure_to_awaitable(bypassed_callable)
 
 
 def tap_failure_to_awaitable_result(
-    f: Callable[Concatenate[_F1, _P], AwaitableResult[object, _S2]],
+    callable_: Callable[Concatenate[_F1, _P], AwaitableResult[object, _S2]],
     /,
     *args: _P.args,
     **kwargs: _P.kwargs,
@@ -630,11 +649,12 @@ def tap_failure_to_awaitable_result(
     [trcks.AwaitableSuccess][] values are passed on without side effects.
 
     Args:
-        f: Asynchronous side effect to apply to the [trcks.AwaitableFailure][] value.
+        callable_: Asynchronous side effect to apply to the
+            [trcks.AwaitableFailure][] value.
         *args:
-            Positional arguments to be passed to `f`.
+            Positional arguments to be passed to `callable_`.
         **kwargs:
-            Keyword arguments to be passed to `f`.
+            Keyword arguments to be passed to `callable_`.
 
     Returns:
         Applies the given side effect to [trcks.AwaitableFailure][] values.
@@ -645,8 +665,8 @@ def tap_failure_to_awaitable_result(
             Passes on [trcks.AwaitableSuccess][] values without side effects.
     """
 
-    async def bypassed_f(value: _F1) -> Result[_F1, _S2]:
-        match await f(value, *args, **kwargs):
+    async def bypassed_callable(value: _F1) -> Result[_F1, _S2]:
+        match await callable_(value, *args, **kwargs):
             case ("failure", _):
                 return r.construct_failure(value)
             case ("success", _) as rslt:
@@ -656,11 +676,11 @@ def tap_failure_to_awaitable_result(
                 msg = f"{type(rslt).__name__!r} is not a valid Result"
                 raise TypeError(msg)
 
-    return map_failure_to_awaitable_result(bypassed_f)
+    return map_failure_to_awaitable_result(bypassed_callable)
 
 
 def tap_failure_to_result(
-    f: Callable[Concatenate[_F1, _P], Result[object, _S2]],
+    callable_: Callable[Concatenate[_F1, _P], Result[object, _S2]],
     /,
     *args: _P.args,
     **kwargs: _P.kwargs,
@@ -671,11 +691,12 @@ def tap_failure_to_result(
     [trcks.AwaitableSuccess][] values are passed on without side effects.
 
     Args:
-        f: Synchronous side effect to apply to the [trcks.AwaitableFailure][] value.
+        callable_: Synchronous side effect to apply to the
+            [trcks.AwaitableFailure][] value.
         *args:
-            Positional arguments to be passed to `f`.
+            Positional arguments to be passed to `callable_`.
         **kwargs:
-            Keyword arguments to be passed to `f`.
+            Keyword arguments to be passed to `callable_`.
 
     Returns:
         Applies the given side effect to [trcks.AwaitableFailure][] values.
@@ -685,11 +706,14 @@ def tap_failure_to_result(
             *this* [trcks.Success][] is returned.
             Passes on [trcks.AwaitableSuccess][] values without side effects.
     """
-    return a.map_(r.tap_failure_to_result(f, *args, **kwargs))
+    return a.map_(r.tap_failure_to_result(callable_, *args, **kwargs))
 
 
 def tap_success(
-    f: Callable[Concatenate[_S1, _P], object], /, *args: _P.args, **kwargs: _P.kwargs
+    callable_: Callable[Concatenate[_S1, _P], object],
+    /,
+    *args: _P.args,
+    **kwargs: _P.kwargs,
 ) -> Callable[[AwaitableResult[_F1, _S1]], AwaitableResult[_F1, _S1]]:
     """Create function that applies a synchronous side effect
     to [trcks.AwaitableSuccess][] values.
@@ -697,22 +721,23 @@ def tap_success(
     [trcks.AwaitableFailure][] values are passed on without side effects.
 
     Args:
-        f: Synchronous side effect to apply to the [trcks.AwaitableSuccess][] value.
+        callable_: Synchronous side effect to apply to the
+            [trcks.AwaitableSuccess][] value.
         *args:
-            Positional arguments to be passed to `f`.
+            Positional arguments to be passed to `callable_`.
         **kwargs:
-            Keyword arguments to be passed to `f`.
+            Keyword arguments to be passed to `callable_`.
 
     Returns:
         Passes on [trcks.AwaitableFailure][] values without side effects.
             Applies the given side effect to [trcks.AwaitableSuccess][] values and
             returns the original [trcks.AwaitableSuccess][] value.
     """
-    return a.map_(r.tap_success(f, *args, **kwargs))
+    return a.map_(r.tap_success(callable_, *args, **kwargs))
 
 
 def tap_success_to_awaitable(
-    f: Callable[Concatenate[_S1, _P], Awaitable[object]],
+    callable_: Callable[Concatenate[_S1, _P], Awaitable[object]],
     /,
     *args: _P.args,
     **kwargs: _P.kwargs,
@@ -723,11 +748,12 @@ def tap_success_to_awaitable(
     [trcks.AwaitableFailure][] values are passed on without side effects.
 
     Args:
-        f: Asynchronous side effect to apply to the [trcks.AwaitableSuccess][] value.
+        callable_: Asynchronous side effect to apply to the
+            [trcks.AwaitableSuccess][] value.
         *args:
-            Positional arguments to be passed to `f`.
+            Positional arguments to be passed to `callable_`.
         **kwargs:
-            Keyword arguments to be passed to `f`.
+            Keyword arguments to be passed to `callable_`.
 
     Returns:
         Passes on [trcks.AwaitableFailure][] values without side effects.
@@ -735,15 +761,15 @@ def tap_success_to_awaitable(
             returns the original [trcks.AwaitableSuccess][] value.
     """
 
-    async def bypassed_f(value: _S1) -> _S1:
-        _ = await f(value, *args, **kwargs)
+    async def bypassed_callable(value: _S1) -> _S1:
+        _ = await callable_(value, *args, **kwargs)
         return value
 
-    return map_success_to_awaitable(bypassed_f)
+    return map_success_to_awaitable(bypassed_callable)
 
 
 def tap_success_to_awaitable_result(
-    f: Callable[Concatenate[_S1, _P], AwaitableResult[_F2, object]],
+    callable_: Callable[Concatenate[_S1, _P], AwaitableResult[_F2, object]],
     /,
     *args: _P.args,
     **kwargs: _P.kwargs,
@@ -754,11 +780,12 @@ def tap_success_to_awaitable_result(
     [trcks.AwaitableFailure][] values are passed on without side effects.
 
     Args:
-        f: Asynchronous side effect to apply to the [trcks.AwaitableSuccess][] value.
+        callable_: Asynchronous side effect to apply to the
+            [trcks.AwaitableSuccess][] value.
         *args:
-            Positional arguments to be passed to `f`.
+            Positional arguments to be passed to `callable_`.
         **kwargs:
-            Keyword arguments to be passed to `f`.
+            Keyword arguments to be passed to `callable_`.
 
     Returns:
         Passes on [trcks.AwaitableFailure][] values without side effects.
@@ -769,8 +796,8 @@ def tap_success_to_awaitable_result(
             *the original* [trcks.AwaitableSuccess][] value is returned.
     """
 
-    async def bypassed_f(value: _S1) -> Result[_F2, _S1]:
-        match await f(value, *args, **kwargs):
+    async def bypassed_callable(value: _S1) -> Result[_F2, _S1]:
+        match await callable_(value, *args, **kwargs):
             case ("failure", _) as rslt:
                 return rslt
             case ("success", _):
@@ -780,11 +807,11 @@ def tap_success_to_awaitable_result(
                 msg = f"{type(rslt).__name__!r} is not a valid Result"
                 raise TypeError(msg)
 
-    return map_success_to_awaitable_result(bypassed_f)
+    return map_success_to_awaitable_result(bypassed_callable)
 
 
 def tap_success_to_result(
-    f: Callable[Concatenate[_S1, _P], Result[_F2, object]],
+    callable_: Callable[Concatenate[_S1, _P], Result[_F2, object]],
     /,
     *args: _P.args,
     **kwargs: _P.kwargs,
@@ -795,11 +822,12 @@ def tap_success_to_result(
     [trcks.AwaitableFailure][] values are passed on without side effects.
 
     Args:
-        f: Synchronous side effect to apply to the [trcks.AwaitableSuccess][] value.
+        callable_: Synchronous side effect to apply to the
+            [trcks.AwaitableSuccess][] value.
         *args:
-            Positional arguments to be passed to `f`.
+            Positional arguments to be passed to `callable_`.
         **kwargs:
-            Keyword arguments to be passed to `f`.
+            Keyword arguments to be passed to `callable_`.
 
     Returns:
         Passes on [trcks.AwaitableFailure][] values without side effects.
@@ -809,7 +837,7 @@ def tap_success_to_result(
             If the given side effect returns a [trcks.Success][],
             *the original* [trcks.AwaitableSuccess][] value is returned.
     """
-    return a.map_(r.tap_success_to_result(f, *args, **kwargs))
+    return a.map_(r.tap_success_to_result(callable_, *args, **kwargs))
 
 
 async def to_coroutine_result(a_rslt: AwaitableResult[_F, _S], /) -> Result[_F, _S]:

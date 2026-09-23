@@ -111,21 +111,24 @@ def construct_from_iterable(it: Iterable[_T], /) -> AwaitableTuple[_T]:
 
 
 def map_(
-    f: Callable[Concatenate[_T1, _P], _T2], /, *args: _P.args, **kwargs: _P.kwargs
+    callable_: Callable[Concatenate[_T1, _P], _T2],
+    /,
+    *args: _P.args,
+    **kwargs: _P.kwargs,
 ) -> Callable[[AwaitableTuple[_T1]], AwaitableTuple[_T2]]:
     """Turn synchronous function into a function
     expecting and returning [trcks.AwaitableTuple][]s
     of the same length.
 
     Args:
-        f:
+        callable_:
             The synchronous function to be transformed into
             a function expecting and returning
             [trcks.AwaitableTuple][]s of the same length.
         *args:
-            Positional arguments to be passed to `f`.
+            Positional arguments to be passed to `callable_`.
         **kwargs:
-            Keyword arguments to be passed to `f`.
+            Keyword arguments to be passed to `callable_`.
 
     Returns:
         The given function transformed into
@@ -150,11 +153,11 @@ def map_(
         >>> asyncio.run(at.to_coroutine_tuple(a_tpl))
         (2, 4, 6)
     """
-    return a.map_(t.map_(f, *args, **kwargs))
+    return a.map_(t.map_(callable_, *args, **kwargs))
 
 
 def map_to_awaitable(
-    f: Callable[Concatenate[_T1, _P], Awaitable[_T2]],
+    callable_: Callable[Concatenate[_T1, _P], Awaitable[_T2]],
     /,
     *args: _P.args,
     **kwargs: _P.kwargs,
@@ -164,14 +167,14 @@ def map_to_awaitable(
     of the same length.
 
     Args:
-        f:
+        callable_:
             The [collections.abc.Awaitable][]-returning function to be transformed
             into a function expecting and returning
             [trcks.AwaitableTuple][]s of the same length.
         *args:
-            Positional arguments to be passed to `f`.
+            Positional arguments to be passed to `callable_`.
         **kwargs:
-            Keyword arguments to be passed to `f`.
+            Keyword arguments to be passed to `callable_`.
 
     Returns:
         The given function transformed into
@@ -194,12 +197,12 @@ def map_to_awaitable(
         (2, 3)
     """
     return map_to_awaitable_iterable(
-        compose(f, construct_from_awaitable), *args, **kwargs
+        compose(callable_, construct_from_awaitable), *args, **kwargs
     )
 
 
 def map_to_awaitable_iterable(
-    f: Callable[Concatenate[_T1, _P], AwaitableIterable[_T2]],
+    callable_: Callable[Concatenate[_T1, _P], AwaitableIterable[_T2]],
     /,
     *args: _P.args,
     **kwargs: _P.kwargs,
@@ -209,14 +212,14 @@ def map_to_awaitable_iterable(
     of varying length.
 
     Args:
-        f:
+        callable_:
             The [trcks.AwaitableIterable][]-returning function to be transformed
             into a function expecting and returning
             [trcks.AwaitableTuple][]s of varying length.
         *args:
-            Positional arguments to be passed to `f`.
+            Positional arguments to be passed to `callable_`.
         **kwargs:
-            Keyword arguments to be passed to `f`.
+            Keyword arguments to be passed to `callable_`.
 
     Returns:
         The given function transformed into
@@ -242,14 +245,14 @@ def map_to_awaitable_iterable(
     async def mapped_f(a_t1s: AwaitableTuple[_T1]) -> tuple[_T2, ...]:
         # `tuple` does not support asynchronous generators.
         # Therefore, we need to use a list comprehension and then convert it to a tuple:
-        t2s = [t2 for t1 in await a_t1s for t2 in await f(t1, *args, **kwargs)]
+        t2s = [t2 for t1 in await a_t1s for t2 in await callable_(t1, *args, **kwargs)]
         return tuple(t2s)
 
     return mapped_f
 
 
 def map_to_iterable(
-    f: Callable[Concatenate[_T1, _P], Iterable[_T2]],
+    callable_: Callable[Concatenate[_T1, _P], Iterable[_T2]],
     /,
     *args: _P.args,
     **kwargs: _P.kwargs,
@@ -259,14 +262,14 @@ def map_to_iterable(
     of varying length.
 
     Args:
-        f:
+        callable_:
             The [collections.abc.Iterable][]-returning function to be transformed
             into a function expecting and returning
             [trcks.AwaitableTuple][]s of varying length.
         *args:
-            Positional arguments to be passed to `f`.
+            Positional arguments to be passed to `callable_`.
         **kwargs:
-            Keyword arguments to be passed to `f`.
+            Keyword arguments to be passed to `callable_`.
 
     Returns:
         The given function transformed into
@@ -287,25 +290,28 @@ def map_to_iterable(
         >>> asyncio.run(at.to_coroutine_tuple(a_tpl))
         (1, -1, 2, -2)
     """
-    return a.map_(t.map_to_iterable(f, *args, **kwargs))
+    return a.map_(t.map_to_iterable(callable_, *args, **kwargs))
 
 
 def tap(
-    f: Callable[Concatenate[_T1, _P], object], /, *args: _P.args, **kwargs: _P.kwargs
+    callable_: Callable[Concatenate[_T1, _P], object],
+    /,
+    *args: _P.args,
+    **kwargs: _P.kwargs,
 ) -> Callable[[AwaitableTuple[_T1]], AwaitableTuple[_T1]]:
     """Turn synchronous function into a function
     expecting a [trcks.AwaitableTuple][] and
     returning the same [trcks.AwaitableTuple][].
 
     Args:
-        f:
+        callable_:
             The synchronous function to be transformed into a function
             expecting a [trcks.AwaitableTuple][] and
             returning the same [trcks.AwaitableTuple][].
         *args:
-            Positional arguments to be passed to `f`.
+            Positional arguments to be passed to `callable_`.
         **kwargs:
-            Keyword arguments to be passed to `f`.
+            Keyword arguments to be passed to `callable_`.
 
     Returns:
         The given function transformed into a function
@@ -330,11 +336,11 @@ def tap(
         >>> tpl
         (1, 2)
     """
-    return a.map_(t.tap(f, *args, **kwargs))
+    return a.map_(t.tap(callable_, *args, **kwargs))
 
 
 def tap_to_awaitable(
-    f: Callable[Concatenate[_T1, _P], Awaitable[object]],
+    callable_: Callable[Concatenate[_T1, _P], Awaitable[object]],
     /,
     *args: _P.args,
     **kwargs: _P.kwargs,
@@ -344,14 +350,14 @@ def tap_to_awaitable(
     returning the same [trcks.AwaitableTuple][].
 
     Args:
-        f:
+        callable_:
             The [collections.abc.Awaitable][]-returning function to be transformed
             into a function expecting a [trcks.AwaitableTuple][] and
             returning the same [trcks.AwaitableTuple][].
         *args:
-            Positional arguments to be passed to `f`.
+            Positional arguments to be passed to `callable_`.
         **kwargs:
-            Keyword arguments to be passed to `f`.
+            Keyword arguments to be passed to `callable_`.
 
     Returns:
         The given function transformed into a function
@@ -377,15 +383,15 @@ def tap_to_awaitable(
         (1, 2)
     """
 
-    async def bypassed_f(t1: _T1) -> _T1:
-        _ = await f(t1, *args, **kwargs)
+    async def bypassed_callable(t1: _T1) -> _T1:
+        _ = await callable_(t1, *args, **kwargs)
         return t1
 
-    return map_to_awaitable(bypassed_f)
+    return map_to_awaitable(bypassed_callable)
 
 
 def tap_to_awaitable_iterable(
-    f: Callable[Concatenate[_T1, _P], AwaitableIterable[object]],
+    callable_: Callable[Concatenate[_T1, _P], AwaitableIterable[object]],
     /,
     *args: _P.args,
     **kwargs: _P.kwargs,
@@ -396,15 +402,15 @@ def tap_to_awaitable_iterable(
     the side effect.
 
     Args:
-        f:
+        callable_:
             The [trcks.AwaitableIterable][]-returning function to be transformed
             into a function expecting a [trcks.AwaitableTuple][] and
             returning a [trcks.AwaitableTuple][] where each original element is
             repeated once per element returned by the side effect.
         *args:
-            Positional arguments to be passed to `f`.
+            Positional arguments to be passed to `callable_`.
         **kwargs:
-            Keyword arguments to be passed to `f`.
+            Keyword arguments to be passed to `callable_`.
 
     Returns:
         The given function transformed into a function
@@ -429,15 +435,15 @@ def tap_to_awaitable_iterable(
         (1, 2, 2, 3, 3, 4, 4, 4)
     """
 
-    async def bypassed_f(t1: _T1) -> tuple[_T1, ...]:
-        objs = await f(t1, *args, **kwargs)
+    async def bypassed_callable(t1: _T1) -> tuple[_T1, ...]:
+        objs = await callable_(t1, *args, **kwargs)
         return tuple(t1 for _ in objs)
 
-    return map_to_awaitable_iterable(bypassed_f)
+    return map_to_awaitable_iterable(bypassed_callable)
 
 
 def tap_to_iterable(
-    f: Callable[Concatenate[_T1, _P], Iterable[object]],
+    callable_: Callable[Concatenate[_T1, _P], Iterable[object]],
     /,
     *args: _P.args,
     **kwargs: _P.kwargs,
@@ -448,15 +454,15 @@ def tap_to_iterable(
     the side effect.
 
     Args:
-        f:
+        callable_:
             The [collections.abc.Iterable][]-returning function to be transformed
             into a function expecting a [trcks.AwaitableTuple][] and
             returning a [trcks.AwaitableTuple][] where each original element is
             repeated once per element returned by the side effect.
         *args:
-            Positional arguments to be passed to `f`.
+            Positional arguments to be passed to `callable_`.
         **kwargs:
-            Keyword arguments to be passed to `f`.
+            Keyword arguments to be passed to `callable_`.
 
     Returns:
         The given function transformed into a function
@@ -479,7 +485,7 @@ def tap_to_iterable(
         >>> asyncio.run(at.to_coroutine_tuple(a_tpl))
         (1, 2, 2, 3, 3, 4, 4, 4)
     """
-    return a.map_(t.tap_to_iterable(f, *args, **kwargs))
+    return a.map_(t.tap_to_iterable(callable_, *args, **kwargs))
 
 
 async def to_coroutine_tuple(a_tpl: AwaitableTuple[_T], /) -> tuple[_T, ...]:
