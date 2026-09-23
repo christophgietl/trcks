@@ -197,7 +197,9 @@ class ResultTupleWrapper(BaseWrapper[ResultTuple[_F_default_co, _S_default_co]])
         tpl: tuple[_S, ...],
         /,
     ) -> ResultTupleWrapper[Never, _S]:
-        """Deprecated alias for construct_successes_from_iterable."""
+        """Deprecated alias for
+        [trcks.oop.ResultTupleWrapper.construct_successes_from_iterable][].
+        """
         return cls.construct_successes_from_iterable(tpl)  # pragma: no cover
 
     def map_failure(
