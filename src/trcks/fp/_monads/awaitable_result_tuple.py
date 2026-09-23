@@ -317,8 +317,7 @@ def map_failure(
     [trcks.AwaitableSuccessTuple][] values are left unchanged.
 
     Args:
-        callable_: Synchronous function to apply to the
-            [trcks.AwaitableFailure][] values.
+        callable_: Synchronous function to apply to [trcks.AwaitableFailure][] values.
         *args:
             Positional arguments to be passed to `callable_`.
         **kwargs:
@@ -358,8 +357,7 @@ def map_failure_to_awaitable(
     [trcks.AwaitableSuccessTuple][] values are left unchanged.
 
     Args:
-        callable_: Asynchronous function to apply to the
-            [trcks.AwaitableFailure][] values.
+        callable_: Asynchronous function to apply to [trcks.AwaitableFailure][] values.
         *args:
             Positional arguments to be passed to `callable_`.
         **kwargs:
@@ -407,8 +405,7 @@ def map_failure_to_awaitable_iterable(
     [trcks.AwaitableSuccessTuple][] values are left unchanged.
 
     Args:
-        callable_: Asynchronous function to apply to the
-            [trcks.AwaitableFailure][] values.
+        callable_: Asynchronous function to apply to [trcks.AwaitableFailure][] values.
         *args:
             Positional arguments to be passed to `callable_`.
         **kwargs:
@@ -480,8 +477,7 @@ def map_failure_to_awaitable_result(
     [trcks.AwaitableSuccessTuple][] values are left unchanged.
 
     Args:
-        callable_: Asynchronous function to apply to the
-            [trcks.AwaitableFailure][] values.
+        callable_: Asynchronous function to apply to [trcks.AwaitableFailure][] values.
         *args:
             Positional arguments to be passed to `callable_`.
         **kwargs:
@@ -540,8 +536,7 @@ def map_failure_to_awaitable_result_iterable(
     [trcks.AwaitableSuccessTuple][] values are left unchanged.
 
     Args:
-        callable_: Asynchronous function to apply to the
-            [trcks.AwaitableFailure][] values.
+        callable_: Asynchronous function to apply to [trcks.AwaitableFailure][] values.
         *args:
             Positional arguments to be passed to `callable_`.
         **kwargs:
@@ -616,8 +611,7 @@ def map_failure_to_iterable(
     [trcks.AwaitableSuccessTuple][] values are left unchanged.
 
     Args:
-        callable_: Synchronous function to apply to the
-            [trcks.AwaitableFailure][] values.
+        callable_: Synchronous function to apply to [trcks.AwaitableFailure][] values.
         *args:
             Positional arguments to be passed to `callable_`.
         **kwargs:
@@ -669,8 +663,7 @@ def map_failure_to_result(
     [trcks.AwaitableSuccessTuple][] values are left unchanged.
 
     Args:
-        callable_: Synchronous function to apply to the
-            [trcks.AwaitableFailure][] values.
+        callable_: Synchronous function to apply to [trcks.AwaitableFailure][] values.
         *args:
             Positional arguments to be passed to `callable_`.
         **kwargs:
@@ -721,8 +714,7 @@ def map_failure_to_result_iterable(
     [trcks.AwaitableSuccessTuple][] values are left unchanged.
 
     Args:
-        callable_: Synchronous function to apply to the
-            [trcks.AwaitableFailure][] values.
+        callable_: Synchronous function to apply to [trcks.AwaitableFailure][] values.
         *args:
             Positional arguments to be passed to `callable_`.
         **kwargs:
@@ -1196,8 +1188,8 @@ def tap_failure(
     [trcks.AwaitableSuccessTuple][] values are passed on without side effects.
 
     Args:
-        callable_: Synchronous side effect to apply to the
-            [trcks.AwaitableFailure][] value.
+        callable_: Synchronous side effect to apply
+            to the [trcks.AwaitableFailure][] value.
         *args:
             Positional arguments to be passed to `callable_`.
         **kwargs:
@@ -1239,8 +1231,8 @@ def tap_failure_to_awaitable(
     [trcks.AwaitableSuccessTuple][] values are passed on without side effects.
 
     Args:
-        callable_: Asynchronous side effect to apply to the
-            [trcks.AwaitableFailure][] value.
+        callable_: Asynchronous side effect to apply
+            to the [trcks.AwaitableFailure][] value.
         *args:
             Positional arguments to be passed to `callable_`.
         **kwargs:
@@ -1296,8 +1288,8 @@ def tap_failure_to_awaitable_iterable(
     [trcks.AwaitableSuccessTuple][] values are passed on without side effects.
 
     Args:
-        callable_: Asynchronous side effect to apply to the
-            [trcks.AwaitableFailure][] value.
+        callable_: Asynchronous side effect to apply
+            to the [trcks.AwaitableFailure][] value.
         *args:
             Positional arguments to be passed to `callable_`.
         **kwargs:
@@ -1358,8 +1350,8 @@ def tap_failure_to_awaitable_result(
     [trcks.AwaitableSuccessTuple][] values are passed on without side effects.
 
     Args:
-        callable_: Asynchronous side effect to apply to the
-            [trcks.AwaitableFailure][] value.
+        callable_: Asynchronous side effect to apply
+            to the [trcks.AwaitableFailure][] value.
         *args:
             Positional arguments to be passed to `callable_`.
         **kwargs:
@@ -1425,8 +1417,8 @@ def tap_failure_to_awaitable_result_iterable(
     [trcks.AwaitableSuccessTuple][] values are passed on without side effects.
 
     Args:
-        callable_: Asynchronous side effect to apply to the
-            [trcks.AwaitableFailure][] value.
+        callable_: Asynchronous side effect to apply
+            to the [trcks.AwaitableFailure][] value.
         *args:
             Positional arguments to be passed to `callable_`.
         **kwargs:
@@ -1499,8 +1491,8 @@ def tap_failure_to_iterable(
     [trcks.AwaitableSuccessTuple][] values are passed on without side effects.
 
     Args:
-        callable_: Synchronous side effect to apply to the
-            [trcks.AwaitableFailure][] value.
+        callable_: Synchronous side effect to apply
+            to the [trcks.AwaitableFailure][] value.
         *args:
             Positional arguments to be passed to `callable_`.
         **kwargs:
@@ -1552,8 +1544,8 @@ def tap_failure_to_result(
     [trcks.AwaitableSuccessTuple][] values are passed on without side effects.
 
     Args:
-        callable_: Synchronous side effect to apply to the
-            [trcks.AwaitableFailure][] value.
+        callable_: Synchronous side effect to apply
+            to the [trcks.AwaitableFailure][] value.
         *args:
             Positional arguments to be passed to `callable_`.
         **kwargs:
@@ -1606,8 +1598,8 @@ def tap_failure_to_result_iterable(
     [trcks.AwaitableSuccessTuple][] values are passed on without side effects.
 
     Args:
-        callable_: Synchronous side effect to apply to the
-            [trcks.AwaitableFailure][] value.
+        callable_: Synchronous side effect to apply
+            to the [trcks.AwaitableFailure][] value.
         *args:
             Positional arguments to be passed to `callable_`.
         **kwargs:
