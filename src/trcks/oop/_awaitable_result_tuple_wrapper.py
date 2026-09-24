@@ -39,13 +39,14 @@ _S_default_co = TypeVar("_S_default_co", covariant=True, default=Never)
 class AwaitableResultTupleWrapper(
     BaseAwaitableWrapper[ResultTuple[_F_default_co, _S_default_co]]
 ):
-    """Type-safe and immutable wrapper for [trcks.AwaitableResultTuple][] objects.
+    """Type-safe and immutable wrapper for
+    [`AwaitableResultTuple`][trcks.AwaitableResultTuple] objects.
 
     The wrapped object can be accessed
     via the attribute `trcks.oop.AwaitableResultTupleWrapper.core`.
     The `trcks.oop.AwaitableResultTupleWrapper.map*` methods allow method chaining.
     The `trcks.oop.AwaitableResultTupleWrapper.tap*` methods allow for side effects
-    without changing the wrapped [trcks.ResultTuple][].
+    without changing the wrapped [`ResultTuple`][trcks.ResultTuple].
 
     Examples:
         >>> from trcks.oop import AwaitableResultTupleWrapper
@@ -72,14 +73,16 @@ class AwaitableResultTupleWrapper(
 
     @staticmethod
     def construct_failure(value: _F, /) -> AwaitableResultTupleWrapper[_F, Never]:
-        """Construct and wrap an awaitable [trcks.Failure][] object from a value.
+        """Construct and wrap an awaitable [`Failure`][trcks.Failure] object from a
+        value.
 
         Args:
             value: The value to be wrapped.
 
         Returns:
-            A new [trcks.oop.AwaitableResultTupleWrapper][] instance with
-                the wrapped [trcks.AwaitableResultTuple][] object.
+            A new [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
+                instance with
+                the wrapped [`AwaitableResultTuple`][trcks.AwaitableResultTuple] object.
 
         Examples:
             >>> import asyncio
@@ -97,14 +100,16 @@ class AwaitableResultTupleWrapper(
         awtbl: Awaitable[_F],
         /,
     ) -> AwaitableResultTupleWrapper[_F, Never]:
-        """Construct and wrap an awaitable [trcks.Failure][] from an awaitable value.
+        """Construct and wrap an awaitable [`Failure`][trcks.Failure] from an awaitable
+        value.
 
         Args:
             awtbl: The awaitable value to be wrapped.
 
         Returns:
-            A new [trcks.oop.AwaitableResultTupleWrapper][] instance with
-                the wrapped [trcks.AwaitableResultTuple][] object.
+            A new [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
+                instance with
+                the wrapped [`AwaitableResultTuple`][trcks.AwaitableResultTuple] object.
 
         Examples:
             >>> import asyncio
@@ -129,16 +134,18 @@ class AwaitableResultTupleWrapper(
         a_rslt: AwaitableResult[_F, _S],
         /,
     ) -> AwaitableResultTupleWrapper[_F, _S]:
-        """Construct and wrap an [trcks.AwaitableResultTuple][] from an
-        [trcks.AwaitableResult][].
+        """Construct and wrap an [`AwaitableResultTuple`][trcks.AwaitableResultTuple]
+        from an [`AwaitableResult`][trcks.AwaitableResult].
 
         The success payload is wrapped in a single-element tuple.
 
         Args:
-            a_rslt: The [trcks.AwaitableResult][] object to be converted.
+            a_rslt: The [`AwaitableResult`][trcks.AwaitableResult] object to be
+                converted.
 
         Returns:
-            A new [trcks.oop.AwaitableResultTupleWrapper][] instance where
+            A new [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
+                instance where
                 the success payload is wrapped in a single-element tuple,
                 or the original failure is preserved.
 
@@ -171,14 +178,16 @@ class AwaitableResultTupleWrapper(
         a_r_it: AwaitableResultIterable[_F, _S],
         /,
     ) -> AwaitableResultTupleWrapper[_F, _S]:
-        """Construct and wrap an [trcks.AwaitableResultTuple][] from an
-        [trcks.AwaitableResultIterable][].
+        """Construct and wrap an [`AwaitableResultTuple`][trcks.AwaitableResultTuple]
+        from an [`AwaitableResultIterable`][trcks.AwaitableResultIterable].
 
         Args:
-            a_r_it: The [trcks.AwaitableResultIterable][] object to be converted.
+            a_r_it: The [`AwaitableResultIterable`][trcks.AwaitableResultIterable]
+                object to be converted.
 
         Returns:
-            A new [trcks.oop.AwaitableResultTupleWrapper][] instance where
+            A new [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
+                instance where
                 the success payload is converted to a tuple,
                 or the original failure is preserved.
 
@@ -211,7 +220,7 @@ class AwaitableResultTupleWrapper(
         /,
     ) -> AwaitableResultTupleWrapper[_F, _S]:
         """Deprecated alias for
-        [trcks.oop.AwaitableResultTupleWrapper.construct_from_awaitable_result_iterable][].
+        [`construct_from_awaitable_result_iterable`][trcks.oop.AwaitableResultTupleWrapper.construct_from_awaitable_result_iterable].
         """
         return cls.construct_from_awaitable_result_iterable(a_r_tpl)  # pragma: no cover
 
@@ -220,16 +229,17 @@ class AwaitableResultTupleWrapper(
         rslt: Result[_F_default, _S_default],
         /,
     ) -> AwaitableResultTupleWrapper[_F_default, _S_default]:
-        """Construct and wrap an [trcks.AwaitableResultTuple][] from a
-        [trcks.Result][].
+        """Construct and wrap an [`AwaitableResultTuple`][trcks.AwaitableResultTuple]
+        from a [`Result`][trcks.Result].
 
         The success payload is wrapped in a single-element tuple.
 
         Args:
-            rslt: The [trcks.Result][] object to be converted.
+            rslt: The [`Result`][trcks.Result] object to be converted.
 
         Returns:
-            A new [trcks.oop.AwaitableResultTupleWrapper][] instance where
+            A new [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
+                instance where
                 the success payload is wrapped in a single-element tuple,
                 or the original failure is preserved.
 
@@ -261,15 +271,17 @@ class AwaitableResultTupleWrapper(
         it: ResultIterable[_F_default, _S_default],
         /,
     ) -> AwaitableResultTupleWrapper[_F_default, _S_default]:
-        """Wrap a [trcks.ResultIterable][] object and convert it into an
-        [trcks.AwaitableResultTuple][].
+        """Wrap a [`ResultIterable`][trcks.ResultIterable] object and convert it into an
+        [`AwaitableResultTuple`][trcks.AwaitableResultTuple].
 
         Args:
-            it: The [trcks.ResultIterable][] object to be wrapped and converted.
+            it: The [`ResultIterable`][trcks.ResultIterable] object to be wrapped and
+                converted.
 
         Returns:
-            A new [trcks.oop.AwaitableResultTupleWrapper][] instance with
-                the wrapped [trcks.AwaitableResultTuple][] object.
+            A new [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
+                instance with
+                the wrapped [`AwaitableResultTuple`][trcks.AwaitableResultTuple] object.
 
         Examples:
             >>> import asyncio
@@ -293,20 +305,22 @@ class AwaitableResultTupleWrapper(
         /,
     ) -> AwaitableResultTupleWrapper[_F_default, _S_default]:
         """Deprecated alias for
-        [trcks.oop.AwaitableResultTupleWrapper.construct_from_result_iterable][].
+        [`construct_from_result_iterable`][trcks.oop.AwaitableResultTupleWrapper.construct_from_result_iterable].
         """
         return cls.construct_from_result_iterable(r_tpl)  # pragma: no cover
 
     @staticmethod
     def construct_successes(value: _S, /) -> AwaitableResultTupleWrapper[Never, _S]:
-        """Construct and wrap an awaitable [trcks.SuccessTuple][] from a value.
+        """Construct and wrap an awaitable [`SuccessTuple`][trcks.SuccessTuple] from a
+        value.
 
         Args:
             value: The value to be wrapped in a single-element tuple.
 
         Returns:
-            A new [trcks.oop.AwaitableResultTupleWrapper][] instance with
-                the wrapped [trcks.AwaitableResultTuple][] object.
+            A new [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
+                instance with
+                the wrapped [`AwaitableResultTuple`][trcks.AwaitableResultTuple] object.
 
         Examples:
             >>> import asyncio
@@ -324,15 +338,16 @@ class AwaitableResultTupleWrapper(
         awtbl: Awaitable[_S],
         /,
     ) -> AwaitableResultTupleWrapper[Never, _S]:
-        """Construct and wrap an awaitable [trcks.SuccessTuple][] from an
+        """Construct and wrap an awaitable [`SuccessTuple`][trcks.SuccessTuple] from an
         awaitable value.
 
         Args:
             awtbl: The awaitable value to be wrapped in a single-element tuple.
 
         Returns:
-            A new [trcks.oop.AwaitableResultTupleWrapper][] instance with
-                the wrapped [trcks.AwaitableResultTuple][] object.
+            A new [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
+                instance with
+                the wrapped [`AwaitableResultTuple`][trcks.AwaitableResultTuple] object.
 
         Examples:
             >>> import asyncio
@@ -359,15 +374,17 @@ class AwaitableResultTupleWrapper(
         a_it: AwaitableIterable[_S],
         /,
     ) -> AwaitableResultTupleWrapper[Never, _S]:
-        """Construct and wrap an awaitable [trcks.SuccessTuple][] from an
-        [trcks.AwaitableIterable][].
+        """Construct and wrap an awaitable [`SuccessTuple`][trcks.SuccessTuple] from an
+        [`AwaitableIterable`][trcks.AwaitableIterable].
 
         Args:
-            a_it: The [trcks.AwaitableIterable][] object to be wrapped and converted.
+            a_it: The [`AwaitableIterable`][trcks.AwaitableIterable] object to be
+                wrapped and converted.
 
         Returns:
-            A new [trcks.oop.AwaitableResultTupleWrapper][] instance with
-                the wrapped [trcks.AwaitableResultTuple][] object.
+            A new [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
+                instance with
+                the wrapped [`AwaitableResultTuple`][trcks.AwaitableResultTuple] object.
 
         Examples:
             >>> import asyncio
@@ -396,7 +413,7 @@ class AwaitableResultTupleWrapper(
         /,
     ) -> AwaitableResultTupleWrapper[Never, _S]:
         """Deprecated alias for
-        [trcks.oop.AwaitableResultTupleWrapper.construct_successes_from_awaitable_iterable][].
+        [`construct_successes_from_awaitable_iterable`][trcks.oop.AwaitableResultTupleWrapper.construct_successes_from_awaitable_iterable].
         """
         return cls.construct_successes_from_awaitable_iterable(
             a_tpl
@@ -407,14 +424,16 @@ class AwaitableResultTupleWrapper(
         it: Iterable[_S],
         /,
     ) -> AwaitableResultTupleWrapper[Never, _S]:
-        """Construct and wrap an awaitable [trcks.SuccessTuple][] from an iterable.
+        """Construct and wrap an awaitable [`SuccessTuple`][trcks.SuccessTuple] from an
+        iterable.
 
         Args:
-            it: The [collections.abc.Iterable][] to be wrapped and converted.
+            it: The [`Iterable`][collections.abc.Iterable] to be wrapped and converted.
 
         Returns:
-            A new [trcks.oop.AwaitableResultTupleWrapper][] instance with
-                the wrapped [trcks.AwaitableResultTuple][] object.
+            A new [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
+                instance with
+                the wrapped [`AwaitableResultTuple`][trcks.AwaitableResultTuple] object.
 
         Examples:
             >>> import asyncio
@@ -438,7 +457,7 @@ class AwaitableResultTupleWrapper(
         /,
     ) -> AwaitableResultTupleWrapper[Never, _S]:
         """Deprecated alias for
-        [trcks.oop.AwaitableResultTupleWrapper.construct_successes_from_iterable][].
+        [`construct_successes_from_iterable`][trcks.oop.AwaitableResultTupleWrapper.construct_successes_from_iterable].
         """
         return cls.construct_successes_from_iterable(tpl)  # pragma: no cover
 
@@ -449,9 +468,10 @@ class AwaitableResultTupleWrapper(
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[_F, _S_default_co]:
-        """Apply a synchronous function to the wrapped [trcks.Failure][] object.
+        """Apply a synchronous function to the wrapped [`Failure`][trcks.Failure]
+        object.
 
-        Wrapped [trcks.SuccessTuple][] objects are passed on unchanged.
+        Wrapped [`SuccessTuple`][trcks.SuccessTuple] objects are passed on unchanged.
 
         Args:
             callable_: The synchronous function to be applied.
@@ -461,11 +481,14 @@ class AwaitableResultTupleWrapper(
                 Keyword arguments to be passed to `callable_`.
 
         Returns:
-            A new [trcks.oop.AwaitableResultTupleWrapper][] instance with
+            A new [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
+                instance with
 
                 - the result of the function application if
-                    the original [trcks.AwaitableResultTuple][] is a failure, or
-                - the original [trcks.AwaitableResultTuple][] if it is a success.
+                    the original [`AwaitableResultTuple`][trcks.AwaitableResultTuple] is
+                    a failure, or
+                - the original [`AwaitableResultTuple`][trcks.AwaitableResultTuple] if
+                  it is a success.
 
         Examples:
             >>> import asyncio
@@ -501,9 +524,10 @@ class AwaitableResultTupleWrapper(
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[_F, _S_default_co]:
-        """Apply an asynchronous function to the wrapped [trcks.Failure][] object.
+        """Apply an asynchronous function to the wrapped [`Failure`][trcks.Failure]
+        object.
 
-        Wrapped [trcks.SuccessTuple][] objects are passed on unchanged.
+        Wrapped [`SuccessTuple`][trcks.SuccessTuple] objects are passed on unchanged.
 
         Args:
             callable_: The asynchronous function to be applied.
@@ -513,11 +537,14 @@ class AwaitableResultTupleWrapper(
                 Keyword arguments to be passed to `callable_`.
 
         Returns:
-            A new [trcks.oop.AwaitableResultTupleWrapper][] instance with
+            A new [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
+                instance with
 
                 - the result of the function application if
-                    the original [trcks.AwaitableResultTuple][] is a failure, or
-                - the original [trcks.AwaitableResultTuple][] if it is a success.
+                    the original [`AwaitableResultTuple`][trcks.AwaitableResultTuple] is
+                    a failure, or
+                - the original [`AwaitableResultTuple`][trcks.AwaitableResultTuple] if
+                  it is a success.
 
         Examples:
             >>> import asyncio
@@ -557,26 +584,29 @@ class AwaitableResultTupleWrapper(
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[Never, _S_default_co | _S]:
-        """Apply an asynchronous function returning an [collections.abc.Iterable][]
-        to the wrapped [trcks.Failure][] object.
+        """Apply an asynchronous function returning an
+        [`Iterable`][collections.abc.Iterable] to the wrapped [`Failure`][trcks.Failure]
+        object.
 
-        Wrapped [trcks.SuccessTuple][] objects are passed on unchanged.
+        Wrapped [`SuccessTuple`][trcks.SuccessTuple] objects are passed on unchanged.
 
         Args:
             callable_: The asynchronous function returning an
-                [collections.abc.Iterable][] to be applied.
+                [`Iterable`][collections.abc.Iterable] to be applied.
             *args:
                 Positional arguments to be passed to `callable_`.
             **kwargs:
                 Keyword arguments to be passed to `callable_`.
 
         Returns:
-            A new [trcks.oop.AwaitableResultTupleWrapper][] instance with
+            A new [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
+                instance with
 
-                - an [trcks.AwaitableSuccessTuple][] containing the result of
-                    the function application if
-                    the original [trcks.AwaitableResultTuple][] is a failure, or
-                - the original [trcks.AwaitableResultTuple][] if it is a success.
+                - an [`AwaitableSuccessTuple`][trcks.AwaitableSuccessTuple] containing
+                  the result of the function application if the original
+                  [`AwaitableResultTuple`][trcks.AwaitableResultTuple] is a failure, or
+                - the original [`AwaitableResultTuple`][trcks.AwaitableResultTuple] if
+                  it is a success.
 
         Examples:
             >>> import asyncio
@@ -632,10 +662,11 @@ class AwaitableResultTupleWrapper(
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[_F, _S_default_co | _S]:
-        """Apply an asynchronous function with return type [trcks.AwaitableResult][]
-        to the wrapped [trcks.Failure][] object.
+        """Apply an asynchronous function with return type
+        [`AwaitableResult`][trcks.AwaitableResult] to the wrapped
+        [`Failure`][trcks.Failure] object.
 
-        Wrapped [trcks.SuccessTuple][] objects are passed on unchanged.
+        Wrapped [`SuccessTuple`][trcks.SuccessTuple] objects are passed on unchanged.
 
         Args:
             callable_: The asynchronous function to be applied.
@@ -645,11 +676,14 @@ class AwaitableResultTupleWrapper(
                 Keyword arguments to be passed to `callable_`.
 
         Returns:
-            A new [trcks.oop.AwaitableResultTupleWrapper][] instance with
+            A new [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
+                instance with
 
                 - the result of the function application if
-                    the original [trcks.AwaitableResultTuple][] is a failure, or
-                - the original [trcks.AwaitableResultTuple][] if it is a success.
+                    the original [`AwaitableResultTuple`][trcks.AwaitableResultTuple] is
+                    a failure, or
+                - the original [`AwaitableResultTuple`][trcks.AwaitableResultTuple] if
+                  it is a success.
 
         Examples:
             >>> import asyncio
@@ -705,9 +739,10 @@ class AwaitableResultTupleWrapper(
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[_F, _S_default_co | _S]:
         """Apply an asynchronous function with return type
-        [trcks.AwaitableResultIterable][] to the wrapped [trcks.Failure][] object.
+        [`AwaitableResultIterable`][trcks.AwaitableResultIterable] to the wrapped
+        [`Failure`][trcks.Failure] object.
 
-        Wrapped [trcks.SuccessTuple][] objects are passed on unchanged.
+        Wrapped [`SuccessTuple`][trcks.SuccessTuple] objects are passed on unchanged.
 
         Args:
             callable_: The asynchronous function to be applied.
@@ -717,11 +752,14 @@ class AwaitableResultTupleWrapper(
                 Keyword arguments to be passed to `callable_`.
 
         Returns:
-            A new [trcks.oop.AwaitableResultTupleWrapper][] instance with
+            A new [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
+                instance with
 
                 - the result of the function application if
-                    the original [trcks.AwaitableResultTuple][] is a failure, or
-                - the original [trcks.AwaitableResultTuple][] if it is a success.
+                    the original [`AwaitableResultTuple`][trcks.AwaitableResultTuple] is
+                    a failure, or
+                - the original [`AwaitableResultTuple`][trcks.AwaitableResultTuple] if
+                  it is a success.
 
         Examples:
             >>> import asyncio
@@ -788,7 +826,7 @@ class AwaitableResultTupleWrapper(
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[_F, _S_default_co | _S]:
         """Deprecated alias for
-        [trcks.oop.AwaitableResultTupleWrapper.map_failure_to_awaitable_result_iterable][].
+        [`map_failure_to_awaitable_result_iterable`][trcks.oop.AwaitableResultTupleWrapper.map_failure_to_awaitable_result_iterable].
         """
         return self.map_failure_to_awaitable_result_iterable(
             callable_, *args, **kwargs
@@ -803,7 +841,7 @@ class AwaitableResultTupleWrapper(
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[Never, _S_default_co | _S]:
         """Deprecated alias for
-        [trcks.oop.AwaitableResultTupleWrapper.map_failure_to_awaitable_iterable][].
+        [`map_failure_to_awaitable_iterable`][trcks.oop.AwaitableResultTupleWrapper.map_failure_to_awaitable_iterable].
         """
         return self.map_failure_to_awaitable_iterable(
             callable_, *args, **kwargs
@@ -816,26 +854,29 @@ class AwaitableResultTupleWrapper(
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[Never, _S_default_co | _S]:
-        """Apply a synchronous function returning an [collections.abc.Iterable][]
-        to the wrapped [trcks.Failure][] object.
+        """Apply a synchronous function returning an
+        [`Iterable`][collections.abc.Iterable] to the wrapped [`Failure`][trcks.Failure]
+        object.
 
-        Wrapped [trcks.SuccessTuple][] objects are passed on unchanged.
+        Wrapped [`SuccessTuple`][trcks.SuccessTuple] objects are passed on unchanged.
 
         Args:
             callable_: The synchronous function returning an
-                [collections.abc.Iterable][] to be applied.
+                [`Iterable`][collections.abc.Iterable] to be applied.
             *args:
                 Positional arguments to be passed to `callable_`.
             **kwargs:
                 Keyword arguments to be passed to `callable_`.
 
         Returns:
-            A new [trcks.oop.AwaitableResultTupleWrapper][] instance with
+            A new [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
+                instance with
 
-                - an [trcks.AwaitableSuccessTuple][] containing the result of
-                    the function application if
-                    the original [trcks.AwaitableResultTuple][] is a failure, or
-                - the original [trcks.AwaitableResultTuple][] if it is a success.
+                - an [`AwaitableSuccessTuple`][trcks.AwaitableSuccessTuple] containing
+                  the result of the function application if the original
+                  [`AwaitableResultTuple`][trcks.AwaitableResultTuple] is a failure, or
+                - the original [`AwaitableResultTuple`][trcks.AwaitableResultTuple] if
+                  it is a success.
 
         Examples:
             >>> import asyncio
@@ -888,10 +929,10 @@ class AwaitableResultTupleWrapper(
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[_F, _S_default_co | _S]:
-        """Apply a synchronous function with return type [trcks.Result][]
-        to the wrapped [trcks.Failure][] object.
+        """Apply a synchronous function with return type [`Result`][trcks.Result]
+        to the wrapped [`Failure`][trcks.Failure] object.
 
-        Wrapped [trcks.SuccessTuple][] objects are passed on unchanged.
+        Wrapped [`SuccessTuple`][trcks.SuccessTuple] objects are passed on unchanged.
 
         Args:
             callable_: The synchronous function to be applied.
@@ -901,11 +942,14 @@ class AwaitableResultTupleWrapper(
                 Keyword arguments to be passed to `callable_`.
 
         Returns:
-            A new [trcks.oop.AwaitableResultTupleWrapper][] instance with
+            A new [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
+                instance with
 
                 - the result of the function application if
-                    the original [trcks.AwaitableResultTuple][] is a failure, or
-                - the original [trcks.AwaitableResultTuple][] if it is a success.
+                    the original [`AwaitableResultTuple`][trcks.AwaitableResultTuple] is
+                    a failure, or
+                - the original [`AwaitableResultTuple`][trcks.AwaitableResultTuple] if
+                  it is a success.
 
         Examples:
             >>> import asyncio
@@ -957,10 +1001,11 @@ class AwaitableResultTupleWrapper(
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[_F, _S_default_co | _S]:
-        """Apply a synchronous function with return type [trcks.ResultIterable][]
-        to the wrapped [trcks.Failure][] object.
+        """Apply a synchronous function with return type
+        [`ResultIterable`][trcks.ResultIterable] to the wrapped
+        [`Failure`][trcks.Failure] object.
 
-        Wrapped [trcks.SuccessTuple][] objects are passed on unchanged.
+        Wrapped [`SuccessTuple`][trcks.SuccessTuple] objects are passed on unchanged.
 
         Args:
             callable_: The synchronous function to be applied.
@@ -970,11 +1015,14 @@ class AwaitableResultTupleWrapper(
                 Keyword arguments to be passed to `callable_`.
 
         Returns:
-            A new [trcks.oop.AwaitableResultTupleWrapper][] instance with
+            A new [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
+                instance with
 
                 - the result of the function application if
-                    the original [trcks.AwaitableResultTuple][] is a failure, or
-                - the original [trcks.AwaitableResultTuple][] if it is a success.
+                    the original [`AwaitableResultTuple`][trcks.AwaitableResultTuple] is
+                    a failure, or
+                - the original [`AwaitableResultTuple`][trcks.AwaitableResultTuple] if
+                  it is a success.
 
         Examples:
             >>> import asyncio
@@ -1028,7 +1076,7 @@ class AwaitableResultTupleWrapper(
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[_F, _S_default_co | _S]:
         """Deprecated alias for
-        [trcks.oop.AwaitableResultTupleWrapper.map_failure_to_result_iterable][].
+        [`map_failure_to_result_iterable`][trcks.oop.AwaitableResultTupleWrapper.map_failure_to_result_iterable].
         """
         return self.map_failure_to_result_iterable(
             callable_, *args, **kwargs
@@ -1043,7 +1091,7 @@ class AwaitableResultTupleWrapper(
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[Never, _S_default_co | _S]:
         """Deprecated alias for
-        [trcks.oop.AwaitableResultTupleWrapper.map_failure_to_iterable][].
+        [`map_failure_to_iterable`][trcks.oop.AwaitableResultTupleWrapper.map_failure_to_iterable].
         """
         return self.map_failure_to_iterable(
             callable_, *args, **kwargs
@@ -1057,9 +1105,9 @@ class AwaitableResultTupleWrapper(
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[_F_default_co, _S]:
         """Apply a synchronous function to each element in the wrapped
-        [trcks.AwaitableSuccessTuple][].
+        [`AwaitableSuccessTuple`][trcks.AwaitableSuccessTuple].
 
-        Wrapped [trcks.Failure][] objects are passed on unchanged.
+        Wrapped [`Failure`][trcks.Failure] objects are passed on unchanged.
 
         Args:
             callable_: The synchronous function to be applied to each success element.
@@ -1069,12 +1117,14 @@ class AwaitableResultTupleWrapper(
                 Keyword arguments to be passed to `callable_`.
 
         Returns:
-            A new [trcks.oop.AwaitableResultTupleWrapper][] instance with
+            A new [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
+                instance with
 
-                - the original [trcks.AwaitableResultTuple][] if it is a failure,
-                    or
-                - an [trcks.AwaitableSuccessTuple][] with transformed elements if
-                    the original [trcks.AwaitableResultTuple][] is a success.
+                - the original [`AwaitableResultTuple`][trcks.AwaitableResultTuple] if
+                  it is a failure, or
+                - an [`AwaitableSuccessTuple`][trcks.AwaitableSuccessTuple] with
+                  transformed elements if the original
+                  [`AwaitableResultTuple`][trcks.AwaitableResultTuple] is a success.
 
         Examples:
             >>> import asyncio
@@ -1111,9 +1161,9 @@ class AwaitableResultTupleWrapper(
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[_F_default_co, _S]:
         """Apply an asynchronous function to each element in the wrapped
-        [trcks.AwaitableSuccessTuple][].
+        [`AwaitableSuccessTuple`][trcks.AwaitableSuccessTuple].
 
-        Wrapped [trcks.Failure][] objects are passed on unchanged.
+        Wrapped [`Failure`][trcks.Failure] objects are passed on unchanged.
 
         Args:
             callable_: The asynchronous function to be applied to each success element.
@@ -1123,12 +1173,14 @@ class AwaitableResultTupleWrapper(
                 Keyword arguments to be passed to `callable_`.
 
         Returns:
-            A new [trcks.oop.AwaitableResultTupleWrapper][] instance with
+            A new [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
+                instance with
 
-                - the original [trcks.AwaitableResultTuple][] if it is a failure,
-                    or
-                - an [trcks.AwaitableSuccessTuple][] with transformed elements if
-                    the original [trcks.AwaitableResultTuple][] is a success.
+                - the original [`AwaitableResultTuple`][trcks.AwaitableResultTuple] if
+                  it is a failure, or
+                - an [`AwaitableSuccessTuple`][trcks.AwaitableSuccessTuple] with
+                  transformed elements if the original
+                  [`AwaitableResultTuple`][trcks.AwaitableResultTuple] is a success.
 
         Examples:
             >>> import asyncio
@@ -1168,26 +1220,30 @@ class AwaitableResultTupleWrapper(
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[_F_default_co, _S]:
-        """Apply an asynchronous function returning an [collections.abc.Iterable][]
-        to each element in the wrapped [trcks.AwaitableSuccessTuple][] and flatten.
+        """Apply an asynchronous function returning an
+        [`Iterable`][collections.abc.Iterable] to each element in the wrapped
+        [`AwaitableSuccessTuple`][trcks.AwaitableSuccessTuple] and flatten.
 
-        Wrapped [trcks.Failure][] objects are passed on unchanged.
+        Wrapped [`Failure`][trcks.Failure] objects are passed on unchanged.
 
         Args:
             callable_: The asynchronous function returning an
-                [collections.abc.Iterable][] to be applied to each success element.
+                [`Iterable`][collections.abc.Iterable] to be applied to each success
+                element.
             *args:
                 Positional arguments to be passed to `callable_`.
             **kwargs:
                 Keyword arguments to be passed to `callable_`.
 
         Returns:
-            A new [trcks.oop.AwaitableResultTupleWrapper][] instance with
+            A new [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
+                instance with
 
-                - the original [trcks.AwaitableResultTuple][] if it is a failure,
-                    or
-                - a flattened [trcks.AwaitableSuccessTuple][] if
-                    the original [trcks.AwaitableResultTuple][] is a success.
+                - the original [`AwaitableResultTuple`][trcks.AwaitableResultTuple] if
+                  it is a failure, or
+                - a flattened [`AwaitableSuccessTuple`][trcks.AwaitableSuccessTuple] if
+                    the original [`AwaitableResultTuple`][trcks.AwaitableResultTuple] is
+                    a success.
 
         Examples:
             >>> import asyncio
@@ -1229,10 +1285,11 @@ class AwaitableResultTupleWrapper(
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[_F_default_co | _F, _S]:
-        """Apply an asynchronous function with return type [trcks.AwaitableResult][]
-        to each element in the wrapped [trcks.AwaitableSuccessTuple][].
+        """Apply an asynchronous function with return type
+        [`AwaitableResult`][trcks.AwaitableResult] to each element in the wrapped
+        [`AwaitableSuccessTuple`][trcks.AwaitableSuccessTuple].
 
-        Wrapped [trcks.Failure][] objects are passed on unchanged.
+        Wrapped [`Failure`][trcks.Failure] objects are passed on unchanged.
         Short-circuits on the first failure returned by the function.
 
         Args:
@@ -1243,12 +1300,14 @@ class AwaitableResultTupleWrapper(
                 Keyword arguments to be passed to `callable_`.
 
         Returns:
-            A new [trcks.oop.AwaitableResultTupleWrapper][] instance with
+            A new [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
+                instance with
 
-                - the original [trcks.AwaitableResultTuple][] if it is a failure,
-                - the first [trcks.Failure][] returned by the function, or
-                - an [trcks.AwaitableSuccessTuple][] with all transformed
-                    elements if the function returns success for all elements.
+                - the original [`AwaitableResultTuple`][trcks.AwaitableResultTuple] if
+                  it is a failure,
+                - the first [`Failure`][trcks.Failure] returned by the function, or
+                - an [`AwaitableSuccessTuple`][trcks.AwaitableSuccessTuple] with all
+                  transformed elements if the function returns success for all elements.
 
         Examples:
             >>> import asyncio
@@ -1312,10 +1371,10 @@ class AwaitableResultTupleWrapper(
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[_F_default_co | _F, _S]:
         """Apply an asynchronous function with return type
-        [trcks.AwaitableResultIterable][] to each element in the wrapped
-        [trcks.AwaitableSuccessTuple][] and flatten.
+        [`AwaitableResultIterable`][trcks.AwaitableResultIterable] to each element in
+        the wrapped [`AwaitableSuccessTuple`][trcks.AwaitableSuccessTuple] and flatten.
 
-        Wrapped [trcks.Failure][] objects are passed on unchanged.
+        Wrapped [`Failure`][trcks.Failure] objects are passed on unchanged.
         Short-circuits on the first failure returned by the function.
 
         Args:
@@ -1326,12 +1385,14 @@ class AwaitableResultTupleWrapper(
                 Keyword arguments to be passed to `callable_`.
 
         Returns:
-            A new [trcks.oop.AwaitableResultTupleWrapper][] instance with
+            A new [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
+                instance with
 
-                - the original [trcks.AwaitableResultTuple][] if it is a failure,
-                - the first [trcks.Failure][] returned by the function, or
-                - a flattened [trcks.AwaitableSuccessTuple][] if the function
-                    returns success for all elements.
+                - the original [`AwaitableResultTuple`][trcks.AwaitableResultTuple] if
+                  it is a failure,
+                - the first [`Failure`][trcks.Failure] returned by the function, or
+                - a flattened [`AwaitableSuccessTuple`][trcks.AwaitableSuccessTuple] if
+                  the function returns success for all elements.
 
         Examples:
             >>> import asyncio
@@ -1398,7 +1459,7 @@ class AwaitableResultTupleWrapper(
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[_F_default_co | _F, _S]:
         """Deprecated alias for
-        [trcks.oop.AwaitableResultTupleWrapper.map_successes_to_awaitable_result_iterable][].
+        [`map_successes_to_awaitable_result_iterable`][trcks.oop.AwaitableResultTupleWrapper.map_successes_to_awaitable_result_iterable].
         """
         return self.map_successes_to_awaitable_result_iterable(
             callable_, *args, **kwargs
@@ -1413,7 +1474,7 @@ class AwaitableResultTupleWrapper(
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[_F_default_co, _S]:
         """Deprecated alias for
-        [trcks.oop.AwaitableResultTupleWrapper.map_successes_to_awaitable_iterable][].
+        [`map_successes_to_awaitable_iterable`][trcks.oop.AwaitableResultTupleWrapper.map_successes_to_awaitable_iterable].
         """
         return self.map_successes_to_awaitable_iterable(
             callable_, *args, **kwargs
@@ -1426,14 +1487,15 @@ class AwaitableResultTupleWrapper(
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[_F_default_co, _S]:
-        """Apply a synchronous function returning an [collections.abc.Iterable][]
-        to each element in the wrapped [trcks.AwaitableSuccessTuple][] and flatten.
+        """Apply a synchronous function returning an
+        [`Iterable`][collections.abc.Iterable] to each element in the wrapped
+        [`AwaitableSuccessTuple`][trcks.AwaitableSuccessTuple] and flatten.
 
-        Wrapped [trcks.Failure][] objects are passed on unchanged.
+        Wrapped [`Failure`][trcks.Failure] objects are passed on unchanged.
 
         Args:
             callable_: The synchronous function returning an
-                [collections.abc.Iterable][] to be applied to each success
+                [`Iterable`][collections.abc.Iterable] to be applied to each success
                 element.
             *args:
                 Positional arguments to be passed to `callable_`.
@@ -1441,12 +1503,14 @@ class AwaitableResultTupleWrapper(
                 Keyword arguments to be passed to `callable_`.
 
         Returns:
-            A new [trcks.oop.AwaitableResultTupleWrapper][] instance with
+            A new [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
+                instance with
 
-                - the original [trcks.AwaitableResultTuple][] if it is a failure,
-                    or
-                - a flattened [trcks.AwaitableSuccessTuple][] if
-                    the original [trcks.AwaitableResultTuple][] is a success.
+                - the original [`AwaitableResultTuple`][trcks.AwaitableResultTuple] if
+                  it is a failure, or
+                - a flattened [`AwaitableSuccessTuple`][trcks.AwaitableSuccessTuple] if
+                    the original [`AwaitableResultTuple`][trcks.AwaitableResultTuple] is
+                    a success.
 
         Examples:
             >>> import asyncio
@@ -1475,10 +1539,11 @@ class AwaitableResultTupleWrapper(
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[_F_default_co | _F, _S]:
-        """Apply a synchronous function with return type [trcks.Result][]
-        to each element in the wrapped [trcks.AwaitableSuccessTuple][].
+        """Apply a synchronous function with return type [`Result`][trcks.Result] to
+        each element in the wrapped
+        [`AwaitableSuccessTuple`][trcks.AwaitableSuccessTuple].
 
-        Wrapped [trcks.Failure][] objects are passed on unchanged.
+        Wrapped [`Failure`][trcks.Failure] objects are passed on unchanged.
         Short-circuits on the first failure returned by the function.
 
         Args:
@@ -1489,12 +1554,14 @@ class AwaitableResultTupleWrapper(
                 Keyword arguments to be passed to `callable_`.
 
         Returns:
-            A new [trcks.oop.AwaitableResultTupleWrapper][] instance with
+            A new [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
+                instance with
 
-                - the original [trcks.AwaitableResultTuple][] if it is a failure,
-                - the first [trcks.Failure][] returned by the function, or
-                - an [trcks.AwaitableSuccessTuple][] with all transformed
-                    elements if the function returns success for all elements.
+                - the original [`AwaitableResultTuple`][trcks.AwaitableResultTuple] if
+                  it is a failure,
+                - the first [`Failure`][trcks.Failure] returned by the function, or
+                - an [`AwaitableSuccessTuple`][trcks.AwaitableSuccessTuple] with all
+                  transformed elements if the function returns success for all elements.
 
         Examples:
             >>> import asyncio
@@ -1546,10 +1613,11 @@ class AwaitableResultTupleWrapper(
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[_F_default_co | _F, _S]:
-        """Apply a synchronous function with return type [trcks.ResultIterable][]
-        to each element in the wrapped [trcks.AwaitableSuccessTuple][] and flatten.
+        """Apply a synchronous function with return type
+        [`ResultIterable`][trcks.ResultIterable] to each element in the wrapped
+        [`AwaitableSuccessTuple`][trcks.AwaitableSuccessTuple] and flatten.
 
-        Wrapped [trcks.Failure][] objects are passed on unchanged.
+        Wrapped [`Failure`][trcks.Failure] objects are passed on unchanged.
         Short-circuits on the first failure returned by the function.
 
         Args:
@@ -1560,12 +1628,14 @@ class AwaitableResultTupleWrapper(
                 Keyword arguments to be passed to `callable_`.
 
         Returns:
-            A new [trcks.oop.AwaitableResultTupleWrapper][] instance with
+            A new [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
+                instance with
 
-                - the original [trcks.AwaitableResultTuple][] if it is a failure,
-                - the first [trcks.Failure][] returned by the function, or
-                - a flattened [trcks.AwaitableSuccessTuple][] if the function
-                    returns success for all elements.
+                - the original [`AwaitableResultTuple`][trcks.AwaitableResultTuple] if
+                  it is a failure,
+                - the first [`Failure`][trcks.Failure] returned by the function, or
+                - a flattened [`AwaitableSuccessTuple`][trcks.AwaitableSuccessTuple] if
+                  the function returns success for all elements.
 
         Examples:
             >>> import asyncio
@@ -1609,7 +1679,7 @@ class AwaitableResultTupleWrapper(
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[_F_default_co | _F, _S]:
         """Deprecated alias for
-        [trcks.oop.AwaitableResultTupleWrapper.map_successes_to_result_iterable][].
+        [`map_successes_to_result_iterable`][trcks.oop.AwaitableResultTupleWrapper.map_successes_to_result_iterable].
         """
         return self.map_successes_to_result_iterable(
             callable_, *args, **kwargs
@@ -1624,7 +1694,7 @@ class AwaitableResultTupleWrapper(
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[_F_default_co, _S]:
         """Deprecated alias for
-        [trcks.oop.AwaitableResultTupleWrapper.map_successes_to_iterable][].
+        [`map_successes_to_iterable`][trcks.oop.AwaitableResultTupleWrapper.map_successes_to_iterable].
         """
         return self.map_successes_to_iterable(
             callable_, *args, **kwargs
@@ -1637,9 +1707,11 @@ class AwaitableResultTupleWrapper(
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[_F_default_co, _S_default_co]:
-        """Apply a synchronous side effect to the wrapped [trcks.Failure][] object.
+        """Apply a synchronous side effect to the wrapped [`Failure`][trcks.Failure]
+        object.
 
-        Wrapped [trcks.SuccessTuple][] objects are passed on without side effects.
+        Wrapped [`SuccessTuple`][trcks.SuccessTuple] objects are passed on without side
+        effects.
 
         Args:
             callable_: The synchronous side effect to be applied.
@@ -1649,9 +1721,10 @@ class AwaitableResultTupleWrapper(
                 Keyword arguments to be passed to `callable_`.
 
         Returns:
-            A new [trcks.oop.AwaitableResultTupleWrapper][] instance
-                with the original [trcks.AwaitableResultTuple][] object,
-                allowing for further method chaining.
+            A new [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
+                instance
+                with the original [`AwaitableResultTuple`][trcks.AwaitableResultTuple]
+                object, allowing for further method chaining.
 
         Examples:
             >>> import asyncio
@@ -1689,9 +1762,11 @@ class AwaitableResultTupleWrapper(
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[_F_default_co, _S_default_co]:
-        """Apply an asynchronous side effect to the wrapped [trcks.Failure][] object.
+        """Apply an asynchronous side effect to the wrapped [`Failure`][trcks.Failure]
+        object.
 
-        Wrapped [trcks.SuccessTuple][] objects are passed on without side effects.
+        Wrapped [`SuccessTuple`][trcks.SuccessTuple] objects are passed on without side
+        effects.
 
         Args:
             callable_: The asynchronous side effect to be applied.
@@ -1701,9 +1776,10 @@ class AwaitableResultTupleWrapper(
                 Keyword arguments to be passed to `callable_`.
 
         Returns:
-            A new [trcks.oop.AwaitableResultTupleWrapper][] instance
-                with the original [trcks.AwaitableResultTuple][] object,
-                allowing for further method chaining.
+            A new [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
+                instance
+                with the original [`AwaitableResultTuple`][trcks.AwaitableResultTuple]
+                object, allowing for further method chaining.
 
         Examples:
             >>> import asyncio
@@ -1743,30 +1819,34 @@ class AwaitableResultTupleWrapper(
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[Never, _F_default_co | _S_default_co]:
         """Apply an asynchronous side effect returning an
-        [collections.abc.Iterable][] to the wrapped [trcks.Failure][] object.
+        [`Iterable`][collections.abc.Iterable] to the wrapped [`Failure`][trcks.Failure]
+        object.
 
-        The failure is converted to an [trcks.AwaitableSuccessTuple][] where
-        the original failure value is repeated once per element in
-        the [collections.abc.Iterable][] returned by the side effect.
+        The failure is converted to an
+        [`AwaitableSuccessTuple`][trcks.AwaitableSuccessTuple] where the original
+        failure value is repeated once per element in the
+        [`Iterable`][collections.abc.Iterable] returned by the side effect.
 
-        Wrapped [trcks.SuccessTuple][] objects are passed on without side effects.
+        Wrapped [`SuccessTuple`][trcks.SuccessTuple] objects are passed on without side
+        effects.
 
         Args:
             callable_: The asynchronous side effect returning an
-                [collections.abc.Iterable][] to be applied.
+                [`Iterable`][collections.abc.Iterable] to be applied.
             *args:
                 Positional arguments to be passed to `callable_`.
             **kwargs:
                 Keyword arguments to be passed to `callable_`.
 
         Returns:
-            A new [trcks.oop.AwaitableResultTupleWrapper][] instance with
+            A new [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
+                instance with
 
-                - an [trcks.AwaitableSuccessTuple][] containing the original
-                    failure repeated once per element in the tuple returned by
-                    the side effect if the original
-                    [trcks.AwaitableResultTuple][] is a failure, or
-                - the original [trcks.AwaitableSuccessTuple][]
+                - an [`AwaitableSuccessTuple`][trcks.AwaitableSuccessTuple] containing
+                  the original failure repeated once per element in the tuple returned
+                  by the side effect if the original
+                  [`AwaitableResultTuple`][trcks.AwaitableResultTuple] is a failure, or
+                - the original [`AwaitableSuccessTuple`][trcks.AwaitableSuccessTuple]
                     if no side effect was applied.
 
         Examples:
@@ -1819,10 +1899,12 @@ class AwaitableResultTupleWrapper(
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[_F_default_co, _S_default_co | _S]:
-        """Apply an asynchronous side effect with return type [trcks.AwaitableResult][]
-        to the wrapped [trcks.Failure][] object.
+        """Apply an asynchronous side effect with return type
+        [`AwaitableResult`][trcks.AwaitableResult] to the wrapped
+        [`Failure`][trcks.Failure] object.
 
-        Wrapped [trcks.SuccessTuple][] objects are passed on without side effects.
+        Wrapped [`SuccessTuple`][trcks.SuccessTuple] objects are passed on without side
+        effects.
 
         Args:
             callable_: The asynchronous side effect to be applied.
@@ -1832,13 +1914,14 @@ class AwaitableResultTupleWrapper(
                 Keyword arguments to be passed to `callable_`.
 
         Returns:
-            A new [trcks.oop.AwaitableResultTupleWrapper][] instance with
+            A new [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
+                instance with
 
-                - *the original* [trcks.Failure][]
-                    if the applied side effect returns a [trcks.Failure][],
-                - *the returned* [trcks.Success][] (wrapped as a tuple)
-                    if the applied side effect returns a [trcks.Success][] and
-                - *the original* [trcks.SuccessTuple][]
+                - *the original* [`Failure`][trcks.Failure]
+                    if the applied side effect returns a [`Failure`][trcks.Failure],
+                - *the returned* [`Success`][trcks.Success] (wrapped as a tuple)
+                    if the applied side effect returns a [`Success`][trcks.Success] and
+                - *the original* [`SuccessTuple`][trcks.SuccessTuple]
                     if no side effect was applied.
 
         Examples:
@@ -1885,9 +1968,11 @@ class AwaitableResultTupleWrapper(
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[_F_default_co, _S_default_co | _S]:
         """Apply an asynchronous side effect with return type
-        [trcks.AwaitableResultIterable][] to the wrapped [trcks.Failure][] object.
+        [`AwaitableResultIterable`][trcks.AwaitableResultIterable] to the wrapped
+        [`Failure`][trcks.Failure] object.
 
-        Wrapped [trcks.SuccessTuple][] objects are passed on without side effects.
+        Wrapped [`SuccessTuple`][trcks.SuccessTuple] objects are passed on without side
+        effects.
 
         Args:
             callable_: The asynchronous side effect to be applied.
@@ -1897,13 +1982,15 @@ class AwaitableResultTupleWrapper(
                 Keyword arguments to be passed to `callable_`.
 
         Returns:
-            A new [trcks.oop.AwaitableResultTupleWrapper][] instance with
+            A new [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
+                instance with
 
-                - *the original* [trcks.Failure][]
-                    if the applied side effect returns a [trcks.Failure][],
-                - *the returned* [trcks.SuccessTuple][]
-                    if the applied side effect returns a [trcks.SuccessTuple][] and
-                - *the original* [trcks.SuccessTuple][]
+                - *the original* [`Failure`][trcks.Failure]
+                    if the applied side effect returns a [`Failure`][trcks.Failure],
+                - *the returned* [`SuccessTuple`][trcks.SuccessTuple]
+                    if the applied side effect returns a
+                    [`SuccessTuple`][trcks.SuccessTuple] and
+                - *the original* [`SuccessTuple`][trcks.SuccessTuple]
                     if no side effect was applied.
 
         Examples:
@@ -1959,7 +2046,7 @@ class AwaitableResultTupleWrapper(
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[_F_default_co, _S_default_co | _S]:
         """Deprecated alias for
-        [trcks.oop.AwaitableResultTupleWrapper.tap_failure_to_awaitable_result_iterable][].
+        [`tap_failure_to_awaitable_result_iterable`][trcks.oop.AwaitableResultTupleWrapper.tap_failure_to_awaitable_result_iterable].
         """
         return self.tap_failure_to_awaitable_result_iterable(
             callable_, *args, **kwargs
@@ -1974,7 +2061,7 @@ class AwaitableResultTupleWrapper(
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[Never, _F_default_co | _S_default_co]:
         """Deprecated alias for
-        [trcks.oop.AwaitableResultTupleWrapper.tap_failure_to_awaitable_iterable][].
+        [`tap_failure_to_awaitable_iterable`][trcks.oop.AwaitableResultTupleWrapper.tap_failure_to_awaitable_iterable].
         """
         return self.tap_failure_to_awaitable_iterable(
             callable_, *args, **kwargs
@@ -1987,31 +2074,35 @@ class AwaitableResultTupleWrapper(
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[Never, _F_default_co | _S_default_co]:
-        """Apply a synchronous side effect returning an [collections.abc.Iterable][]
-        to the wrapped [trcks.Failure][] object.
+        """Apply a synchronous side effect returning an
+        [`Iterable`][collections.abc.Iterable] to the wrapped [`Failure`][trcks.Failure]
+        object.
 
-        The failure is converted to an [trcks.AwaitableSuccessTuple][] where
-        the original failure value is repeated once per element in
-        the [collections.abc.Iterable][] returned by the side effect.
+        The failure is converted to an
+        [`AwaitableSuccessTuple`][trcks.AwaitableSuccessTuple] where the original
+        failure value is repeated once per element in the
+        [`Iterable`][collections.abc.Iterable] returned by the side effect.
 
-        Wrapped [trcks.SuccessTuple][] objects are passed on without side effects.
+        Wrapped [`SuccessTuple`][trcks.SuccessTuple] objects are passed on without side
+        effects.
 
         Args:
             callable_: The synchronous side effect returning an
-                [collections.abc.Iterable][] to be applied.
+                [`Iterable`][collections.abc.Iterable] to be applied.
             *args:
                 Positional arguments to be passed to `callable_`.
             **kwargs:
                 Keyword arguments to be passed to `callable_`.
 
         Returns:
-            A new [trcks.oop.AwaitableResultTupleWrapper][] instance with
+            A new [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
+                instance with
 
-                - an [trcks.AwaitableSuccessTuple][] containing the original
-                    failure repeated once per element in the tuple returned by
-                    the side effect if the original
-                    [trcks.AwaitableResultTuple][] is a failure, or
-                - the original [trcks.AwaitableSuccessTuple][]
+                - an [`AwaitableSuccessTuple`][trcks.AwaitableSuccessTuple] containing
+                  the original failure repeated once per element in the tuple returned
+                  by the side effect if the original
+                  [`AwaitableResultTuple`][trcks.AwaitableResultTuple] is a failure, or
+                - the original [`AwaitableSuccessTuple`][trcks.AwaitableSuccessTuple]
                     if no side effect was applied.
 
         Examples:
@@ -2059,10 +2150,11 @@ class AwaitableResultTupleWrapper(
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[_F_default_co, _S_default_co | _S]:
-        """Apply a synchronous side effect with return type [trcks.Result][]
-        to the wrapped [trcks.Failure][] object.
+        """Apply a synchronous side effect with return type [`Result`][trcks.Result]
+        to the wrapped [`Failure`][trcks.Failure] object.
 
-        Wrapped [trcks.SuccessTuple][] objects are passed on without side effects.
+        Wrapped [`SuccessTuple`][trcks.SuccessTuple] objects are passed on without side
+        effects.
 
         Args:
             callable_: The synchronous side effect to be applied.
@@ -2072,13 +2164,14 @@ class AwaitableResultTupleWrapper(
                 Keyword arguments to be passed to `callable_`.
 
         Returns:
-            A new [trcks.oop.AwaitableResultTupleWrapper][] instance with
+            A new [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
+                instance with
 
-                - *the original* [trcks.Failure][]
-                    if the applied side effect returns a [trcks.Failure][],
-                - *the returned* [trcks.Success][] (wrapped as a tuple)
-                    if the applied side effect returns a [trcks.Success][] and
-                - *the original* [trcks.SuccessTuple][]
+                - *the original* [`Failure`][trcks.Failure]
+                    if the applied side effect returns a [`Failure`][trcks.Failure],
+                - *the returned* [`Success`][trcks.Success] (wrapped as a tuple)
+                    if the applied side effect returns a [`Success`][trcks.Success] and
+                - *the original* [`SuccessTuple`][trcks.SuccessTuple]
                     if no side effect was applied.
 
         Examples:
@@ -2131,10 +2224,12 @@ class AwaitableResultTupleWrapper(
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[_F_default_co, _S_default_co | _S]:
-        """Apply a synchronous side effect with return type [trcks.ResultIterable][]
-        to the wrapped [trcks.Failure][] object.
+        """Apply a synchronous side effect with return type
+        [`ResultIterable`][trcks.ResultIterable] to the wrapped
+        [`Failure`][trcks.Failure] object.
 
-        Wrapped [trcks.SuccessTuple][] objects are passed on without side effects.
+        Wrapped [`SuccessTuple`][trcks.SuccessTuple] objects are passed on without side
+        effects.
 
         Args:
             callable_: The synchronous side effect to be applied.
@@ -2144,13 +2239,15 @@ class AwaitableResultTupleWrapper(
                 Keyword arguments to be passed to `callable_`.
 
         Returns:
-            A new [trcks.oop.AwaitableResultTupleWrapper][] instance with
+            A new [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
+                instance with
 
-                - *the original* [trcks.Failure][]
-                    if the applied side effect returns a [trcks.Failure][],
-                - *the returned* [trcks.SuccessIterable][]
-                    if the applied side effect returns a [trcks.SuccessIterable][] and
-                - *the original* [trcks.SuccessTuple][]
+                - *the original* [`Failure`][trcks.Failure]
+                    if the applied side effect returns a [`Failure`][trcks.Failure],
+                - *the returned* [`SuccessIterable`][trcks.SuccessIterable]
+                    if the applied side effect returns a
+                    [`SuccessIterable`][trcks.SuccessIterable] and
+                - *the original* [`SuccessTuple`][trcks.SuccessTuple]
                     if no side effect was applied.
 
         Examples:
@@ -2205,7 +2302,7 @@ class AwaitableResultTupleWrapper(
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[_F_default_co, _S_default_co | _S]:
         """Deprecated alias for
-        [trcks.oop.AwaitableResultTupleWrapper.tap_failure_to_result_iterable][].
+        [`tap_failure_to_result_iterable`][trcks.oop.AwaitableResultTupleWrapper.tap_failure_to_result_iterable].
         """
         return self.tap_failure_to_result_iterable(
             callable_, *args, **kwargs
@@ -2220,7 +2317,7 @@ class AwaitableResultTupleWrapper(
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[Never, _F_default_co | _S_default_co]:
         """Deprecated alias for
-        [trcks.oop.AwaitableResultTupleWrapper.tap_failure_to_iterable][].
+        [`tap_failure_to_iterable`][trcks.oop.AwaitableResultTupleWrapper.tap_failure_to_iterable].
         """
         return self.tap_failure_to_iterable(
             callable_, *args, **kwargs
@@ -2234,9 +2331,9 @@ class AwaitableResultTupleWrapper(
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[_F_default_co, _S_default_co]:
         """Apply a synchronous side effect to each element in the wrapped
-        [trcks.AwaitableSuccessTuple][].
+        [`AwaitableSuccessTuple`][trcks.AwaitableSuccessTuple].
 
-        Wrapped [trcks.Failure][] objects are passed on without side effects.
+        Wrapped [`Failure`][trcks.Failure] objects are passed on without side effects.
 
         Args:
             callable_: The synchronous side effect to be
@@ -2247,9 +2344,10 @@ class AwaitableResultTupleWrapper(
                 Keyword arguments to be passed to `callable_`.
 
         Returns:
-            A new [trcks.oop.AwaitableResultTupleWrapper][] instance
-                with the original [trcks.AwaitableResultTuple][] object,
-                allowing for further method chaining.
+            A new [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
+                instance
+                with the original [`AwaitableResultTuple`][trcks.AwaitableResultTuple]
+                object, allowing for further method chaining.
 
         Examples:
             >>> import asyncio
@@ -2290,9 +2388,9 @@ class AwaitableResultTupleWrapper(
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[_F_default_co, _S_default_co]:
         """Apply an asynchronous side effect to each element in the wrapped
-        [trcks.AwaitableSuccessTuple][].
+        [`AwaitableSuccessTuple`][trcks.AwaitableSuccessTuple].
 
-        Wrapped [trcks.Failure][] objects are passed on without side effects.
+        Wrapped [`Failure`][trcks.Failure] objects are passed on without side effects.
 
         Args:
             callable_: The asynchronous side effect to be
@@ -2303,9 +2401,10 @@ class AwaitableResultTupleWrapper(
                 Keyword arguments to be passed to `callable_`.
 
         Returns:
-            A new [trcks.oop.AwaitableResultTupleWrapper][] instance
-                with the original [trcks.AwaitableResultTuple][] object,
-                allowing for further method chaining.
+            A new [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
+                instance
+                with the original [`AwaitableResultTuple`][trcks.AwaitableResultTuple]
+                object, allowing for further method chaining.
 
         Examples:
             >>> import asyncio
@@ -2347,30 +2446,32 @@ class AwaitableResultTupleWrapper(
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[_F_default_co, _S_default_co]:
         """Apply an asynchronous side effect returning an
-        [collections.abc.Iterable][] to each element in the wrapped
-        [trcks.AwaitableSuccessTuple][].
+        [`Iterable`][collections.abc.Iterable] to each element in the wrapped
+        [`AwaitableSuccessTuple`][trcks.AwaitableSuccessTuple].
 
         The number of side effect outputs determines how many times each
         original element is repeated in the resulting tuple.
 
-        Wrapped [trcks.Failure][] objects are passed on without side effects.
+        Wrapped [`Failure`][trcks.Failure] objects are passed on without side effects.
 
         Args:
             callable_: The asynchronous side effect returning an
-                [collections.abc.Iterable][] to be applied to each success element.
+                [`Iterable`][collections.abc.Iterable] to be applied to each success
+                element.
             *args:
                 Positional arguments to be passed to `callable_`.
             **kwargs:
                 Keyword arguments to be passed to `callable_`.
 
         Returns:
-            A new [trcks.oop.AwaitableResultTupleWrapper][] instance with
+            A new [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
+                instance with
 
-                - the original [trcks.AwaitableResultTuple][] if it is a failure,
-                    or
-                - an [trcks.AwaitableSuccessTuple][] where each original success
-                    element is repeated once per element returned by
-                    the side effect.
+                - the original [`AwaitableResultTuple`][trcks.AwaitableResultTuple] if
+                  it is a failure, or
+                - an [`AwaitableSuccessTuple`][trcks.AwaitableSuccessTuple] where each
+                  original success element is repeated once per element returned by the
+                  side effect.
 
         Examples:
             >>> import asyncio
@@ -2407,10 +2508,11 @@ class AwaitableResultTupleWrapper(
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[_F_default_co | _F, _S_default_co]:
-        """Apply an asynchronous side effect with return type [trcks.AwaitableResult][]
-        to each element in the wrapped [trcks.AwaitableSuccessTuple][].
+        """Apply an asynchronous side effect with return type
+        [`AwaitableResult`][trcks.AwaitableResult] to each element in the wrapped
+        [`AwaitableSuccessTuple`][trcks.AwaitableSuccessTuple].
 
-        Wrapped [trcks.Failure][] objects are passed on without side effects.
+        Wrapped [`Failure`][trcks.Failure] objects are passed on without side effects.
 
         Args:
             callable_: The asynchronous side effect to be
@@ -2421,12 +2523,14 @@ class AwaitableResultTupleWrapper(
                 Keyword arguments to be passed to `callable_`.
 
         Returns:
-            A new [trcks.oop.AwaitableResultTupleWrapper][] instance with
+            A new [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
+                instance with
 
-                - *the original* [trcks.Failure][] if no side effect was applied,
-                - *the returned* [trcks.Failure][]
-                    if the applied side effect returns a [trcks.Failure][] and
-                - *the original* [trcks.AwaitableSuccessTuple][]
+                - *the original* [`Failure`][trcks.Failure] if no side effect was
+                  applied,
+                - *the returned* [`Failure`][trcks.Failure]
+                    if the applied side effect returns a [`Failure`][trcks.Failure] and
+                - *the original* [`AwaitableSuccessTuple`][trcks.AwaitableSuccessTuple]
                     if the applied side effect returns success for all elements.
 
         Examples:
@@ -2483,10 +2587,10 @@ class AwaitableResultTupleWrapper(
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[_F_default_co | _F, _S_default_co]:
         """Apply an asynchronous side effect with return type
-        [trcks.AwaitableResultIterable][] to each element in the wrapped
-        [trcks.AwaitableSuccessTuple][].
+        [`AwaitableResultIterable`][trcks.AwaitableResultIterable] to each element in
+        the wrapped [`AwaitableSuccessTuple`][trcks.AwaitableSuccessTuple].
 
-        Wrapped [trcks.Failure][] objects are passed on without side effects.
+        Wrapped [`Failure`][trcks.Failure] objects are passed on without side effects.
 
         Args:
             callable_: The asynchronous side effect to be
@@ -2497,11 +2601,13 @@ class AwaitableResultTupleWrapper(
                 Keyword arguments to be passed to `callable_`.
 
         Returns:
-            A new [trcks.oop.AwaitableResultTupleWrapper][] instance with
+            A new [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
+                instance with
 
-                - *the original* [trcks.Failure][] if no side effect was applied,
-                - *the returned* [trcks.Failure][]
-                    if the applied side effect returns a [trcks.Failure][] and
+                - *the original* [`Failure`][trcks.Failure] if no side effect was
+                  applied,
+                - *the returned* [`Failure`][trcks.Failure]
+                    if the applied side effect returns a [`Failure`][trcks.Failure] and
                 - *the original* success element repeated once per element
                     in the side effect output if the applied side effect returns
                     success for all elements.
@@ -2563,7 +2669,7 @@ class AwaitableResultTupleWrapper(
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[_F_default_co | _F, _S_default_co]:
         """Deprecated alias for
-        [trcks.oop.AwaitableResultTupleWrapper.tap_successes_to_awaitable_result_iterable][].
+        [`tap_successes_to_awaitable_result_iterable`][trcks.oop.AwaitableResultTupleWrapper.tap_successes_to_awaitable_result_iterable].
         """
         return self.tap_successes_to_awaitable_result_iterable(
             callable_, *args, **kwargs
@@ -2578,7 +2684,7 @@ class AwaitableResultTupleWrapper(
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[_F_default_co, _S_default_co]:
         """Deprecated alias for
-        [trcks.oop.AwaitableResultTupleWrapper.tap_successes_to_awaitable_iterable][].
+        [`tap_successes_to_awaitable_iterable`][trcks.oop.AwaitableResultTupleWrapper.tap_successes_to_awaitable_iterable].
         """
         return self.tap_successes_to_awaitable_iterable(
             callable_, *args, **kwargs
@@ -2591,17 +2697,18 @@ class AwaitableResultTupleWrapper(
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[_F_default_co, _S_default_co]:
-        """Apply a synchronous side effect returning an [collections.abc.Iterable][]
-        to each element in the wrapped [trcks.AwaitableSuccessTuple][].
+        """Apply a synchronous side effect returning an
+        [`Iterable`][collections.abc.Iterable] to each element in the wrapped
+        [`AwaitableSuccessTuple`][trcks.AwaitableSuccessTuple].
 
         The original success elements are repeated once per element in the
-        [collections.abc.Iterable][] returned by the side effect.
+        [`Iterable`][collections.abc.Iterable] returned by the side effect.
 
-        Wrapped [trcks.Failure][] objects are passed on without side effects.
+        Wrapped [`Failure`][trcks.Failure] objects are passed on without side effects.
 
         Args:
             callable_: The synchronous side effect returning an
-                [collections.abc.Iterable][] to be applied
+                [`Iterable`][collections.abc.Iterable] to be applied
                 to each success element.
             *args:
                 Positional arguments to be passed to `callable_`.
@@ -2609,12 +2716,14 @@ class AwaitableResultTupleWrapper(
                 Keyword arguments to be passed to `callable_`.
 
         Returns:
-            A new [trcks.oop.AwaitableResultTupleWrapper][] instance with
+            A new [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
+                instance with
 
-                - the original [trcks.Failure][] if no side effect was applied, or
-                - an [trcks.AwaitableSuccessTuple][] where each original element
-                    is repeated once per element in the tuple returned by the
-                    side effect.
+                - the original [`Failure`][trcks.Failure] if no side effect was applied,
+                  or
+                - an [`AwaitableSuccessTuple`][trcks.AwaitableSuccessTuple] where each
+                  original element is repeated once per element in the tuple returned by
+                  the side effect.
 
         Examples:
             >>> import asyncio
@@ -2646,10 +2755,11 @@ class AwaitableResultTupleWrapper(
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[_F_default_co | _F, _S_default_co]:
-        """Apply a synchronous side effect with return type [trcks.Result][]
-        to each element in the wrapped [trcks.AwaitableSuccessTuple][].
+        """Apply a synchronous side effect with return type [`Result`][trcks.Result] to
+        each element in the wrapped
+        [`AwaitableSuccessTuple`][trcks.AwaitableSuccessTuple].
 
-        Wrapped [trcks.Failure][] objects are passed on without side effects.
+        Wrapped [`Failure`][trcks.Failure] objects are passed on without side effects.
 
         Args:
             callable_: The synchronous side effect to be
@@ -2660,12 +2770,14 @@ class AwaitableResultTupleWrapper(
                 Keyword arguments to be passed to `callable_`.
 
         Returns:
-            A new [trcks.oop.AwaitableResultTupleWrapper][] instance with
+            A new [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
+                instance with
 
-                - *the original* [trcks.Failure][] if no side effect was applied,
-                - *the returned* [trcks.Failure][]
-                    if the applied side effect returns a [trcks.Failure][] and
-                - *the original* [trcks.AwaitableSuccessTuple][]
+                - *the original* [`Failure`][trcks.Failure] if no side effect was
+                  applied,
+                - *the returned* [`Failure`][trcks.Failure]
+                    if the applied side effect returns a [`Failure`][trcks.Failure] and
+                - *the original* [`AwaitableSuccessTuple`][trcks.AwaitableSuccessTuple]
                     if the applied side effect returns success for all elements.
 
         Examples:
@@ -2718,10 +2830,11 @@ class AwaitableResultTupleWrapper(
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[_F_default_co | _F, _S_default_co]:
-        """Apply a synchronous side effect with return type [trcks.ResultIterable][]
-        to each element in the wrapped [trcks.AwaitableSuccessTuple][].
+        """Apply a synchronous side effect with return type
+        [`ResultIterable`][trcks.ResultIterable] to each element in the wrapped
+        [`AwaitableSuccessTuple`][trcks.AwaitableSuccessTuple].
 
-        Wrapped [trcks.Failure][] objects are passed on without side effects.
+        Wrapped [`Failure`][trcks.Failure] objects are passed on without side effects.
 
         Args:
             callable_: The synchronous side effect to be
@@ -2732,11 +2845,13 @@ class AwaitableResultTupleWrapper(
                 Keyword arguments to be passed to `callable_`.
 
         Returns:
-            A new [trcks.oop.AwaitableResultTupleWrapper][] instance with
+            A new [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
+                instance with
 
-                - *the original* [trcks.Failure][] if no side effect was applied,
-                - *the returned* [trcks.Failure][]
-                    if the applied side effect returns a [trcks.Failure][] and
+                - *the original* [`Failure`][trcks.Failure] if no side effect was
+                  applied,
+                - *the returned* [`Failure`][trcks.Failure]
+                    if the applied side effect returns a [`Failure`][trcks.Failure] and
                 - *the original* success element repeated once per element
                     in the side effect output if the applied side effect returns
                     success for all elements.
@@ -2793,7 +2908,7 @@ class AwaitableResultTupleWrapper(
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[_F_default_co | _F, _S_default_co]:
         """Deprecated alias for
-        [trcks.oop.AwaitableResultTupleWrapper.tap_successes_to_result_iterable][].
+        [`tap_successes_to_result_iterable`][trcks.oop.AwaitableResultTupleWrapper.tap_successes_to_result_iterable].
         """
         return self.tap_successes_to_result_iterable(
             callable_, *args, **kwargs
@@ -2808,7 +2923,7 @@ class AwaitableResultTupleWrapper(
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[_F_default_co, _S_default_co]:
         """Deprecated alias for
-        [trcks.oop.AwaitableResultTupleWrapper.tap_successes_to_iterable][].
+        [`tap_successes_to_iterable`][trcks.oop.AwaitableResultTupleWrapper.tap_successes_to_iterable].
         """
         return self.tap_successes_to_iterable(
             callable_, *args, **kwargs

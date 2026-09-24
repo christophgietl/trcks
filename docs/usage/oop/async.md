@@ -1,12 +1,12 @@
-# Asynchronous code with [trcks.oop][]
+# Asynchronous code with `trcks.oop`
 
 ???+ tip "See also"
     The [functional async page](../fp/async.md)
     covers the same operations using function composition.
 
-## Single-track code with [trcks.oop.AwaitableWrapper][]
+## Single-track code with `trcks.oop.AwaitableWrapper`
 
-While the class [trcks.oop.Wrapper][] and its method `map` allow
+While the class [`Wrapper`][trcks.oop.Wrapper] and its method `map` allow
 the chaining of synchronous functions,
 they cannot chain asynchronous functions.
 To understand why,
@@ -45,11 +45,12 @@ we first need to understand the return type of asynchronous functions:
     ```
 
 So, whenever we define a function using the `async def ... -> T` syntax,
-we actually get a function with the return type [collections.abc.Awaitable][]`[T]`.
-The method [trcks.oop.Wrapper.map_to_awaitable][] and the class [trcks.oop.AwaitableWrapper][]
-allow us to combine [collections.abc.Awaitable][]-returning functions
-with other [collections.abc.Awaitable][]-returning functions or
-with "regular" functions:
+we actually get a function with the return type [`Awaitable`][collections.abc.Awaitable]`[T]`.
+The method [`map_to_awaitable`][trcks.oop.Wrapper.map_to_awaitable] and the
+class [`AwaitableWrapper`][trcks.oop.AwaitableWrapper] allow us to combine
+[`Awaitable`][collections.abc.Awaitable]-returning functions with other
+[`Awaitable`][collections.abc.Awaitable]-returning functions or with "regular"
+functions:
 
 ???+ example
 
@@ -120,16 +121,16 @@ let us have a look at the individual steps of the chain:
     ```
 
 ???+ note
-    The property `core` of the class [trcks.oop.AwaitableWrapper][]
-    has type [collections.abc.Awaitable][].
-    On Python versions older than 3.14, [asyncio.run][] expects a
-    [collections.abc.Coroutine][] object.
+    The property `core` of the class [`AwaitableWrapper`][trcks.oop.AwaitableWrapper]
+    has type [`Awaitable`][collections.abc.Awaitable].
+    On Python versions older than 3.14, [`run`][asyncio.run] expects a
+    [`Coroutine`][collections.abc.Coroutine] object.
     Therefore,
     we need to use the property `core_as_coroutine` instead.
 
-The method [trcks.oop.AwaitableWrapper.tap][]
+The method [`tap`][trcks.oop.AwaitableWrapper.tap]
 allows us to execute synchronous side effects.
-Similarly, the method [trcks.oop.AwaitableWrapper.tap_to_awaitable][]
+Similarly, the method [`tap_to_awaitable`][trcks.oop.AwaitableWrapper.tap_to_awaitable]
 allows us to execute asynchronous side effects.
 
 ???+ example
@@ -161,17 +162,17 @@ allows us to execute asynchronous side effects.
 
     ```
 
-## Double-track code with [trcks.oop.AwaitableResultWrapper][]
+## Double-track code with `trcks.oop.AwaitableResultWrapper`
 
 Whenever we define a function using the `async def ... -> Result[F, S]` syntax,
 we actually get a function with
-the return type [collections.abc.Awaitable][]`[trcks.Result[F, S]]`.
-The package [trcks][] provides the type alias [trcks.AwaitableResult][]`[F, S]`
-for this type.
-Moreover, the method [trcks.oop.Wrapper.map_to_awaitable_result][] and
-the class [trcks.oop.AwaitableResultWrapper][]
-allow us to combine [trcks.AwaitableResult][]-returning functions
-with other [trcks.AwaitableResult][]-returning functions or
+the return type [`Awaitable`][collections.abc.Awaitable]`[trcks.Result[F, S]]`.
+The package [`trcks`][trcks] provides the type alias
+[`AwaitableResult`][trcks.AwaitableResult]`[F, S]` for this type. Moreover, the
+method [`map_to_awaitable_result`][trcks.oop.Wrapper.map_to_awaitable_result]
+and the class [`AwaitableResultWrapper`][trcks.oop.AwaitableResultWrapper] allow
+us to combine [`AwaitableResult`][trcks.AwaitableResult]-returning functions
+with other [`AwaitableResult`][trcks.AwaitableResult]-returning functions or
 with "regular" functions:
 
 ???+ example
@@ -260,8 +261,8 @@ let us have a look at the individual steps of the chain:
 
     ```
 
-The methods [trcks.oop.AwaitableResultWrapper.tap_failure][] and
-[trcks.oop.AwaitableResultWrapper.tap_success][]
+The methods [`tap_failure`][trcks.oop.AwaitableResultWrapper.tap_failure] and
+[`tap_success`][trcks.oop.AwaitableResultWrapper.tap_success]
 allow us to execute synchronous side effects
 in the failure case or in the success case, respectively:
 
@@ -308,12 +309,13 @@ in the failure case or in the success case, respectively:
     ```
 
 Sometimes, side effects themselves can fail and
-need to return an [trcks.AwaitableResult][] type.
-The method [trcks.oop.AwaitableResultWrapper.tap_success_to_awaitable_result][]
+need to return an [`AwaitableResult`][trcks.AwaitableResult] type.
+The method [`tap_success_to_awaitable_result`][trcks.oop.AwaitableResultWrapper.tap_success_to_awaitable_result]
 allows us to execute such asynchronous side effects in the success case.
-If the side effect returns a [trcks.AwaitableFailure][], that failure is propagated.
-If the side effect returns a [trcks.AwaitableSuccess][],
-the original success value is preserved:
+If the side effect returns an [`AwaitableFailure`][trcks.AwaitableFailure], that
+failure is propagated. If the side effect returns an
+[`AwaitableSuccess`][trcks.AwaitableSuccess], the original success value is
+preserved:
 
 ???+ example
 

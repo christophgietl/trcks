@@ -1,19 +1,19 @@
-# Asynchronous code with [trcks.fp][]
+# Asynchronous code with `trcks.fp`
 
 ???+ tip "See also"
     The [object-oriented async page](../oop/async.md)
     covers the same operations using method chaining.
 
-## Single-track code with [trcks.fp.monads.awaitable][]
+## Single-track code with `trcks.fp.monads.awaitable`
 
-If one of the functions in a [trcks.fp.composition][]
+If one of the functions in a [`composition`][trcks.fp.composition]
 pipeline returns
 a `collections.abc.Awaitable[T]` type,
 the following function must accept this `collections.abc.Awaitable[T]` type
 as its input.
 However, functions with input type `collections.abc.Awaitable[T]`
 tend to contain unnecessary `await` statements.
-Therefore, the module [trcks.fp.monads.awaitable][] provides
+Therefore, the module [`awaitable`][trcks.fp.monads.awaitable] provides
 some higher-order functions named `map*`
 that turn functions with input type `T`
 into functions with input type `collections.abc.Awaitable[T]`.
@@ -105,16 +105,17 @@ let us have a look at the individual steps of the chain:
     ```
 
 ???+ note
-    The values `pipe(*p1)`, `pipe(*p2)`, and `pipe(*p3)` are all of the type [collections.abc.Awaitable][].
-    On Python versions older than 3.14, [asyncio.run][] expects the input type
-    [collections.abc.Coroutine][].
+    The values `pipe(*p1)`, `pipe(*p2)`, and `pipe(*p3)` are all of the type [`Awaitable`][collections.abc.Awaitable].
+    On Python versions older than 3.14, [`run`][asyncio.run] expects the input type
+    [`Coroutine`][collections.abc.Coroutine].
     Therefore,
-    we use the function [trcks.fp.monads.awaitable.to_coroutine][] to convert
-    the [collections.abc.Awaitable][]s to [collections.abc.Coroutine][]s.
+    we use the function [`to_coroutine`][trcks.fp.monads.awaitable.to_coroutine]
+    to convert the [`Awaitable`][collections.abc.Awaitable]s to
+    [`Coroutine`][collections.abc.Coroutine]s.
 
-The higher-order function [trcks.fp.monads.awaitable.tap][]
+The higher-order function [`tap`][trcks.fp.monads.awaitable.tap]
 allows us to execute synchronous side effects.
-Similarly, the higher-order function [trcks.fp.monads.awaitable.tap_to_awaitable][]
+Similarly, the higher-order function [`tap_to_awaitable`][trcks.fp.monads.awaitable.tap_to_awaitable]
 allows us to execute asynchronous side effects.
 
 ???+ example
@@ -152,9 +153,9 @@ allows us to execute asynchronous side effects.
 
     ```
 
-## Double-track code with [trcks.fp.monads.awaitable_result][]
+## Double-track code with `trcks.fp.monads.awaitable_result`
 
-If one of the functions in a [trcks.fp.composition][]
+If one of the functions in a [`composition`][trcks.fp.composition]
 pipeline returns
 a `trcks.AwaitableResult[F, S]` type,
 the following function must accept this `trcks.AwaitableResult[F, S]` type
@@ -162,7 +163,7 @@ as its input.
 However, functions with input type `trcks.AwaitableResult[F, S]` tend to
 contain unnecessary `await` statements and
 violate the "do one thing and do it well" principle.
-Therefore, the module [trcks.fp.monads.awaitable_result][] provides
+Therefore, the module [`awaitable_result`][trcks.fp.monads.awaitable_result] provides
 some higher-order functions named `map*`
 that turn functions with input type `F` and functions with input type `S`
 into functions with input type `trcks.AwaitableResult[F, S]`.
@@ -266,15 +267,15 @@ let us have a look at the individual steps of the chain:
 
 ???+ note
     The values `pipe(*p1)`, `pipe(*p2)`, and `pipe(*p3)` are all
-    of type [trcks.AwaitableResult][].
-    On Python versions older than 3.14, [asyncio.run][] expects the input type
-    [collections.abc.Coroutine][].
+    of type [`AwaitableResult`][trcks.AwaitableResult].
+    On Python versions older than 3.14, [`run`][asyncio.run] expects the input type
+    [`Coroutine`][collections.abc.Coroutine].
     Therefore,
-    we use the function [trcks.fp.monads.awaitable_result.to_coroutine_result][]
-    to convert the [trcks.AwaitableResult][]s to [collections.abc.Coroutine][]s.
+    we use the function [`to_coroutine_result`][trcks.fp.monads.awaitable_result.to_coroutine_result]
+    to convert the [`AwaitableResult`][trcks.AwaitableResult]s to [`Coroutine`][collections.abc.Coroutine]s.
 
-The higher-order functions [trcks.fp.monads.awaitable_result.tap_failure][]
-and [trcks.fp.monads.awaitable_result.tap_success][]
+The higher-order functions [`tap_failure`][trcks.fp.monads.awaitable_result.tap_failure]
+and [`tap_success`][trcks.fp.monads.awaitable_result.tap_success]
 allow us to execute synchronous side effects
 in the failure case or in the success case, respectively:
 
@@ -329,12 +330,13 @@ in the failure case or in the success case, respectively:
     ```
 
 Sometimes, side effects themselves can fail and
-need to return an [trcks.AwaitableResult][] type.
-The higher-order function [trcks.fp.monads.awaitable_result.tap_success_to_awaitable_result][]
+need to return an [`AwaitableResult`][trcks.AwaitableResult] type.
+The higher-order function [`tap_success_to_awaitable_result`][trcks.fp.monads.awaitable_result.tap_success_to_awaitable_result]
 allows us to execute such asynchronous side effects in the success case.
-If the side effect returns an [trcks.AwaitableFailure][], that failure is propagated.
-If the side effect returns an [trcks.AwaitableSuccess][],
-the original success value is preserved:
+If the side effect returns an [`AwaitableFailure`][trcks.AwaitableFailure], that
+failure is propagated. If the side effect returns an
+[`AwaitableSuccess`][trcks.AwaitableSuccess], the original success value is
+preserved:
 
 ???+ example
 

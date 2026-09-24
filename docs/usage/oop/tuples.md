@@ -1,13 +1,13 @@
-# Tuple code with [trcks.oop][]
+# Tuple code with `trcks.oop`
 
 ???+ tip "See also"
     The [functional tuple page](../fp/tuples.md)
     covers the same operations using function composition.
 
-## Synchronous single-track code with [trcks.oop.TupleWrapper][]
+## Synchronous single-track code with `trcks.oop.TupleWrapper`
 
-While the class [trcks.oop.Wrapper][] wraps and operates on a single value,
-the class [trcks.oop.TupleWrapper][] wraps a homogeneous [tuple][]
+While the class [`Wrapper`][trcks.oop.Wrapper] wraps and operates on a single value,
+the class [`TupleWrapper`][trcks.oop.TupleWrapper] wraps a homogeneous [`tuple`][tuple]
 and applies operations to each element individually.
 This is useful when we need to process multiple values
 through the same chain of transformations:
@@ -57,12 +57,12 @@ let us have a look at the individual steps of the chain:
     ```
 
 ???+ note
-    [trcks.oop.TupleWrapper.construct][] wraps a single value
+    [`construct`][trcks.oop.TupleWrapper.construct] wraps a single value
     in a one-element tuple:
     `TupleWrapper.construct(42)` produces `TupleWrapper(core=(42,))`.
 
-    The method [trcks.oop.TupleWrapper.map_to_iterable][]
-    applies a function that returns a homogeneous [tuple][]
+    The method [`map_to_iterable`][trcks.oop.TupleWrapper.map_to_iterable]
+    applies a function that returns a homogeneous [`tuple`][tuple]
     to each element and flattens the results (like a "flat map"):
 
     ```pycon
@@ -90,13 +90,13 @@ while preserving the original tuple:
 
     ```
 
-## Synchronous double-track code with [trcks.oop.ResultTupleWrapper][]
+## Synchronous double-track code with `trcks.oop.ResultTupleWrapper`
 
 When applying a failable function to each element in a tuple,
-we need the [trcks.oop.ResultTupleWrapper][] class.
+we need the [`ResultTupleWrapper`][trcks.oop.ResultTupleWrapper] class.
 The success track methods are named `map_successes` and `tap_successes` (plural)
-because they operate on each element in the [trcks.SuccessTuple][] individually.
-Processing short-circuits on the first [trcks.Failure][].
+because they operate on each element in the [`SuccessTuple`][trcks.SuccessTuple]
+individually. Processing short-circuits on the first [`Failure`][trcks.Failure].
 
 ???+ example
 
@@ -184,11 +184,11 @@ let us have a look at the individual steps of the chain:
     ```
 
 ???+ note
-    The method [trcks.oop.TupleWrapper.map_to_result][]
-    returns a [trcks.oop.ResultTupleWrapper][] object.
-    The corresponding class [trcks.oop.ResultTupleWrapper][]
+    The method [`map_to_result`][trcks.oop.TupleWrapper.map_to_result]
+    returns a [`ResultTupleWrapper`][trcks.oop.ResultTupleWrapper] object.
+    The corresponding class [`ResultTupleWrapper`][trcks.oop.ResultTupleWrapper]
     has a `map_failure*` and a `map_successes*` method
-    for each `map*` method of the class [trcks.oop.TupleWrapper][].
+    for each `map*` method of the class [`TupleWrapper`][trcks.oop.TupleWrapper].
     Note the plural `map_successes` (instead of `map_success`)
     since the method operates on each element in the tuple.
 
@@ -232,12 +232,12 @@ in the success case (for each element) or in the failure case, respectively:
     ```
 
 Sometimes, side effects themselves can fail and
-need to return a [trcks.Result][] type.
+need to return a [`Result`][trcks.Result] type.
 The `tap_successes_to_result` method allows us to execute such side effects
 for each element in the success case.
-If the side effect returns a [trcks.Failure][] for any element,
+If the side effect returns a [`Failure`][trcks.Failure] for any element,
 that failure is propagated.
-If the side effect returns a [trcks.Success][] for all elements,
+If the side effect returns a [`Success`][trcks.Success] for all elements,
 the original success values are preserved.
 
 ???+ example
@@ -276,7 +276,7 @@ the original success values are preserved.
     ```
 
 To demonstrate that processing truly short-circuits on the first
-[trcks.Failure][], we can add logging to `get_user_id`.
+[`Failure`][trcks.Failure], we can add logging to `get_user_id`.
 When the second element fails, the third element is never evaluated:
 
 ???+ example
@@ -304,18 +304,18 @@ When the second element fails, the third element is never evaluated:
     ```
 
 `"john_doe@provider.com"` is never looked up:
-as soon as `"jane_doe@provider.com"` returns a [trcks.Failure][],
+as soon as `"jane_doe@provider.com"` returns a [`Failure`][trcks.Failure],
 the remaining elements are skipped.
 
-## Asynchronous single-track code with [trcks.oop.AwaitableTupleWrapper][]
+## Asynchronous single-track code with `trcks.oop.AwaitableTupleWrapper`
 
-While the class [trcks.oop.TupleWrapper][] and its method `map`
+While the class [`TupleWrapper`][trcks.oop.TupleWrapper] and its method `map`
 allow the chaining of synchronous functions for each element,
 they cannot chain asynchronous functions.
-The method [trcks.oop.TupleWrapper.map_to_awaitable][]
-and the class [trcks.oop.AwaitableTupleWrapper][]
-allow us to combine [collections.abc.Awaitable][]-returning functions
-with other [collections.abc.Awaitable][]-returning functions or
+The method [`map_to_awaitable`][trcks.oop.TupleWrapper.map_to_awaitable]
+and the class [`AwaitableTupleWrapper`][trcks.oop.AwaitableTupleWrapper]
+allow us to combine [`Awaitable`][collections.abc.Awaitable]-returning functions
+with other [`Awaitable`][collections.abc.Awaitable]-returning functions or
 with "regular" functions,
 applied to each element in the tuple:
 
@@ -373,14 +373,15 @@ let us have a look at the individual steps of the chain:
     ```
 
 ???+ note
-    The property `core` of the class [trcks.oop.AwaitableTupleWrapper][]
-    has type [trcks.AwaitableTuple][].
-    Since [asyncio.run][] expects a [collections.abc.Coroutine][] object,
-    we need to use the property `core_as_coroutine` instead.
+    The property `core` of the class [`AwaitableTupleWrapper`][trcks.oop.AwaitableTupleWrapper]
+    has type [`AwaitableTuple`][trcks.AwaitableTuple].
+    Since [`run`][asyncio.run] expects a
+    [`Coroutine`][collections.abc.Coroutine] object, we need to use the property
+    `core_as_coroutine` instead.
 
-The method [trcks.oop.AwaitableTupleWrapper.tap][]
+The method [`tap`][trcks.oop.AwaitableTupleWrapper.tap]
 allows us to execute synchronous side effects for each element.
-Similarly, the method [trcks.oop.AwaitableTupleWrapper.tap_to_awaitable][]
+Similarly, the method [`tap_to_awaitable`][trcks.oop.AwaitableTupleWrapper.tap_to_awaitable]
 allows us to execute asynchronous side effects for each element.
 
 ???+ example
@@ -414,19 +415,20 @@ allows us to execute asynchronous side effects for each element.
     ```
 
 The widening methods
-[trcks.oop.AwaitableTupleWrapper.map_to_result][],
-[trcks.oop.AwaitableTupleWrapper.map_to_result_iterable][],
-[trcks.oop.AwaitableTupleWrapper.map_to_awaitable_result][], and
-[trcks.oop.AwaitableTupleWrapper.map_to_awaitable_result_iterable][]
-of the class [trcks.oop.AwaitableTupleWrapper][]
-apply failable functions to each element individually
-and widen the wrapped [trcks.AwaitableTuple][] into
-a [trcks.AwaitableResultTuple][]
-(see the [glossary](../../glossary.md#widening)).
-Similarly, the methods `tap_to_result`, `tap_to_result_iterable`,
-`tap_to_awaitable_result`, and `tap_to_awaitable_result_iterable`
-widen the wrapper based on the outcome of failable side effects.
-Processing short-circuits on the first [trcks.Failure][]:
+[`map_to_result`][trcks.oop.AwaitableTupleWrapper.map_to_result],
+[`map_to_result_iterable`][trcks.oop.AwaitableTupleWrapper.map_to_result_iterable],
+[`map_to_awaitable_result`][trcks.oop.AwaitableTupleWrapper.map_to_awaitable_result],
+and
+[`map_to_awaitable_result_iterable`][trcks.oop.AwaitableTupleWrapper.map_to_awaitable_result_iterable]
+of the class [`AwaitableTupleWrapper`][trcks.oop.AwaitableTupleWrapper] apply
+failable functions to each element individually and widen the wrapped
+[`AwaitableTuple`][trcks.AwaitableTuple] into an
+[`AwaitableResultTuple`][trcks.AwaitableResultTuple] (see the
+[glossary](../../glossary.md#widening)). Similarly, the methods `tap_to_result`,
+`tap_to_result_iterable`, `tap_to_awaitable_result`, and
+`tap_to_awaitable_result_iterable` widen the wrapper based on the outcome of
+failable side effects. Processing short-circuits on the first
+[`Failure`][trcks.Failure]:
 
 ???+ example
 
@@ -451,19 +453,19 @@ Processing short-circuits on the first [trcks.Failure][]:
 
     ```
 
-## Asynchronous double-track code with [trcks.oop.AwaitableResultTupleWrapper][]
+## Asynchronous double-track code with `trcks.oop.AwaitableResultTupleWrapper`
 
 Whenever we define a function using
 the `async def ... -> Result[F, S]` syntax
 and want to apply it to each element in a tuple,
-we need the [trcks.oop.AwaitableResultTupleWrapper][] class.
-The package [trcks][] provides the type alias
-[trcks.AwaitableResultTuple][]`[F, S]`
-for `Awaitable[ResultTuple[F, S]]`.
-The success track methods are named `map_successes` and `tap_successes` (plural)
-because they operate on each element individually.
-Processing short-circuits on the first [trcks.Failure][],
-just as in the synchronous case above.
+we need the
+[`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper] class.
+The package [`trcks`][trcks] provides the type alias
+[`AwaitableResultTuple`][trcks.AwaitableResultTuple]`[F, S]` for
+`Awaitable[ResultTuple[F, S]]`. The success track methods are named
+`map_successes` and `tap_successes` (plural) because they operate on each
+element individually. Processing short-circuits on the first
+[`Failure`][trcks.Failure], just as in the synchronous case above.
 
 ???+ example
 
@@ -546,8 +548,8 @@ let us have a look at the individual steps of the chain:
 
     ```
 
-The methods [trcks.oop.AwaitableResultTupleWrapper.tap_failure][] and
-[trcks.oop.AwaitableResultTupleWrapper.tap_successes][]
+The methods [`tap_failure`][trcks.oop.AwaitableResultTupleWrapper.tap_failure] and
+[`tap_successes`][trcks.oop.AwaitableResultTupleWrapper.tap_successes]
 allow us to execute synchronous side effects
 in the failure case or in the success case (for each element), respectively:
 
@@ -597,14 +599,14 @@ in the failure case or in the success case (for each element), respectively:
     ```
 
 Sometimes, side effects themselves can fail and
-need to return a [trcks.AwaitableResult][] type.
+need to return an [`AwaitableResult`][trcks.AwaitableResult] type.
 The method
-[trcks.oop.AwaitableResultTupleWrapper.tap_successes_to_awaitable_result][]
+[`tap_successes_to_awaitable_result`][trcks.oop.AwaitableResultTupleWrapper.tap_successes_to_awaitable_result]
 allows us to execute such asynchronous side effects
 for each element in the success case.
-If the side effect returns a [trcks.Failure][] for any element,
+If the side effect returns a [`Failure`][trcks.Failure] for any element,
 that failure is propagated.
-If the side effect returns a [trcks.Success][] for all elements,
+If the side effect returns a [`Success`][trcks.Success] for all elements,
 the original success values are preserved:
 
 ???+ example

@@ -1,14 +1,14 @@
-# Tuple code with [trcks.fp][]
+# Tuple code with `trcks.fp`
 
 ???+ tip "See also"
     The [object-oriented tuple page](../oop/tuples.md)
     covers the same operations using method chaining.
 
-## Synchronous single-track code with [trcks.fp.monads.tuple_][]
+## Synchronous single-track code with `trcks.fp.monads.tuple_`
 
 If we want to apply a pipeline of functions to each element
-in a [tuple][],
-the module [trcks.fp.monads.tuple_][] provides
+in a [`tuple`][tuple],
+the module [`tuple_`][trcks.fp.monads.tuple_] provides
 some higher-order functions named `map*` and `tap*`
 that turn element-wise functions into functions
 operating on entire tuples.
@@ -87,8 +87,8 @@ let us have a look at the individual steps of the chain:
     ```
 
 ???+ note
-    The higher-order function [trcks.fp.monads.tuple_.map_to_iterable][]
-    applies a function that returns a [collections.abc.Iterable][]
+    The higher-order function [`map_to_iterable`][trcks.fp.monads.tuple_.map_to_iterable]
+    applies a function that returns an [`Iterable`][collections.abc.Iterable]
     to each element and flattens the results (like a "flat map"):
 
     ```pycon
@@ -100,7 +100,7 @@ let us have a look at the individual steps of the chain:
 
     ```
 
-The higher-order function [trcks.fp.monads.tuple_.tap][]
+The higher-order function [`tap`][trcks.fp.monads.tuple_.tap]
 allows us to execute side effects for each element:
 
 ???+ example
@@ -128,17 +128,17 @@ allows us to execute side effects for each element:
 
     ```
 
-## Synchronous double-track code with [trcks.fp.monads.result_tuple][]
+## Synchronous double-track code with `trcks.fp.monads.result_tuple`
 
-If one of the functions in a [trcks.fp.composition][]
-pipeline returns a [trcks.ResultTuple][]`[F, S]` type,
-the module [trcks.fp.monads.result_tuple][] provides
+If one of the functions in a [`composition`][trcks.fp.composition]
+pipeline returns a [`ResultTuple`][trcks.ResultTuple]`[F, S]` type,
+the module [`result_tuple`][trcks.fp.monads.result_tuple] provides
 some higher-order functions named `map_successes*` and `tap_successes*`
 that turn element-wise functions into functions
-operating on [trcks.ResultTuple][] values.
+operating on [`ResultTuple`][trcks.ResultTuple] values.
 The success track functions use the plural `map_successes` (instead of `map_success`)
-because they operate on each element in the [trcks.SuccessTuple][] individually.
-Processing short-circuits on the first [trcks.Failure][].
+because they operate on each element in the [`SuccessTuple`][trcks.SuccessTuple]
+individually. Processing short-circuits on the first [`Failure`][trcks.Failure].
 
 ???+ example
 
@@ -260,20 +260,20 @@ let us have a look at the individual steps of the chain:
     ```
 
 ???+ note
-    The function [trcks.fp.monads.result_tuple.construct_successes_from_iterable][]
-    converts a [collections.abc.Iterable][] into a [tuple][] and wraps it into
-    a [trcks.SuccessTuple][],
-    which can then be used with the higher-order functions
-    from [trcks.fp.monads.result_tuple][].
+    The function [`construct_successes_from_iterable`][trcks.fp.monads.result_tuple.construct_successes_from_iterable]
+    converts an [`Iterable`][collections.abc.Iterable] into a [`tuple`][tuple]
+    and wraps it into a [`SuccessTuple`][trcks.SuccessTuple], which can then be
+    used with the higher-order functions from
+    [`result_tuple`][trcks.fp.monads.result_tuple].
 
-    While [trcks.fp.monads.result.map_failure][]
-    and [trcks.fp.monads.result.map_success][]
-    operate on single-value [trcks.Result][] types,
-    [trcks.fp.monads.result_tuple.map_successes][] (plural)
+    While [`map_failure`][trcks.fp.monads.result.map_failure]
+    and [`map_success`][trcks.fp.monads.result.map_success]
+    operate on single-value [`Result`][trcks.Result] types,
+    [`map_successes`][trcks.fp.monads.result_tuple.map_successes] (plural)
     operates on each element in the tuple.
 
-The higher-order functions [trcks.fp.monads.result_tuple.tap_successes][]
-and [trcks.fp.monads.result_tuple.tap_failure][]
+The higher-order functions [`tap_successes`][trcks.fp.monads.result_tuple.tap_successes]
+and [`tap_failure`][trcks.fp.monads.result_tuple.tap_failure]
 allow us to execute side effects
 in the success case (for each element) or in the failure case, respectively.
 
@@ -325,12 +325,12 @@ in the success case (for each element) or in the failure case, respectively.
     ```
 
 Sometimes, side effects themselves can fail and
-need to return a [trcks.Result][] type.
-The higher-order function [trcks.fp.monads.result_tuple.tap_successes_to_result][]
+need to return a [`Result`][trcks.Result] type.
+The higher-order function [`tap_successes_to_result`][trcks.fp.monads.result_tuple.tap_successes_to_result]
 allows us to execute such side effects for each element in the success case.
-If the side effect returns a [trcks.Failure][] for any element,
+If the side effect returns a [`Failure`][trcks.Failure] for any element,
 that failure is propagated.
-If the side effect returns a [trcks.Success][] for all elements,
+If the side effect returns a [`Success`][trcks.Success] for all elements,
 the original success values are preserved.
 
 ???+ example
@@ -375,7 +375,7 @@ the original success values are preserved.
     ```
 
 To demonstrate that processing truly short-circuits on the first
-[trcks.Failure][], we can add logging to `get_user_id`.
+[`Failure`][trcks.Failure], we can add logging to `get_user_id`.
 When the second element fails, the third element is never evaluated:
 
 ???+ example
@@ -401,20 +401,19 @@ When the second element fails, the third element is never evaluated:
     ```
 
 `"john_doe@provider.com"` is never looked up:
-as soon as `"jane_doe@provider.com"` returns a [trcks.Failure][],
+as soon as `"jane_doe@provider.com"` returns a [`Failure`][trcks.Failure],
 the remaining elements are skipped.
 
-## Asynchronous single-track code with [trcks.fp.monads.awaitable_tuple][]
+## Asynchronous single-track code with `trcks.fp.monads.awaitable_tuple`
 
-If one of the functions in a [trcks.fp.composition][]
+If one of the functions in a [`composition`][trcks.fp.composition]
 pipeline returns
-a [trcks.AwaitableTuple][]`[T]` type,
-the following function must accept this [trcks.AwaitableTuple][]`[T]` type
-as its input.
-The module [trcks.fp.monads.awaitable_tuple][] provides
-some higher-order functions named `map*`
-that turn element-wise functions
-into functions operating on [trcks.AwaitableTuple][] values.
+an [`AwaitableTuple`][trcks.AwaitableTuple]`[T]` type,
+the following function must accept this
+[`AwaitableTuple`][trcks.AwaitableTuple]`[T]` type as its input. The module
+[`awaitable_tuple`][trcks.fp.monads.awaitable_tuple] provides some higher-order
+functions named `map*` that turn element-wise functions into functions operating
+on [`AwaitableTuple`][trcks.AwaitableTuple] values.
 
 ???+ example
 
@@ -495,24 +494,24 @@ let us have a look at the individual steps of the chain:
     ```
 
 ???+ note
-    The function [trcks.fp.monads.awaitable_tuple.construct_from_iterable][]
-    converts a [collections.abc.Iterable][] into a [tuple][] and wraps it into
-    a [trcks.AwaitableTuple][],
-    which can then be used with the higher-order functions
-    from [trcks.fp.monads.awaitable_tuple][].
+    The function [`construct_from_iterable`][trcks.fp.monads.awaitable_tuple.construct_from_iterable]
+    converts an [`Iterable`][collections.abc.Iterable] into a [`tuple`][tuple]
+    and wraps it into an [`AwaitableTuple`][trcks.AwaitableTuple], which can then
+    be used with the higher-order functions from
+    [`awaitable_tuple`][trcks.fp.monads.awaitable_tuple].
 
     The values `pipe(*p1)`, `pipe(*p2)`, and `pipe(*p3)` are all
-    of type [trcks.AwaitableTuple][].
-    Since [asyncio.run][] expects the input type [collections.abc.Coroutine][],
+    of type [`AwaitableTuple`][trcks.AwaitableTuple].
+    Since [`run`][asyncio.run] expects the input type [`Coroutine`][collections.abc.Coroutine],
     we use the function
-    [trcks.fp.monads.awaitable_tuple.to_coroutine_tuple][]
-    to convert the [trcks.AwaitableTuple][]s
-    to [collections.abc.Coroutine][]s.
+    [`to_coroutine_tuple`][trcks.fp.monads.awaitable_tuple.to_coroutine_tuple]
+    to convert the [`AwaitableTuple`][trcks.AwaitableTuple]s
+    to [`Coroutine`][collections.abc.Coroutine]s.
 
-The higher-order function [trcks.fp.monads.awaitable_tuple.tap][]
+The higher-order function [`tap`][trcks.fp.monads.awaitable_tuple.tap]
 allows us to execute synchronous side effects for each element.
 Similarly, the higher-order function
-[trcks.fp.monads.awaitable_tuple.tap_to_awaitable][]
+[`tap_to_awaitable`][trcks.fp.monads.awaitable_tuple.tap_to_awaitable]
 allows us to execute asynchronous side effects for each element.
 
 ???+ example
@@ -554,19 +553,20 @@ allows us to execute asynchronous side effects for each element.
     ```
 
 The widening functions
-[trcks.fp.monads.awaitable_tuple.map_to_result][],
-[trcks.fp.monads.awaitable_tuple.map_to_result_iterable][],
-[trcks.fp.monads.awaitable_tuple.map_to_awaitable_result][], and
-[trcks.fp.monads.awaitable_tuple.map_to_awaitable_result_iterable][]
-of the module [trcks.fp.monads.awaitable_tuple][]
-apply failable functions to each element individually
-and turn the [trcks.AwaitableTuple][] into
-a [trcks.AwaitableResultTuple][]
-(see the [glossary](../../glossary.md#widening)).
-Similarly, the functions `tap_to_result`, `tap_to_result_iterable`,
-`tap_to_awaitable_result`, and `tap_to_awaitable_result_iterable`
-widen the pipeline based on the outcome of failable side effects.
-Processing short-circuits on the first [trcks.Failure][]:
+[`map_to_result`][trcks.fp.monads.awaitable_tuple.map_to_result],
+[`map_to_result_iterable`][trcks.fp.monads.awaitable_tuple.map_to_result_iterable],
+[`map_to_awaitable_result`][trcks.fp.monads.awaitable_tuple.map_to_awaitable_result],
+and
+[`map_to_awaitable_result_iterable`][trcks.fp.monads.awaitable_tuple.map_to_awaitable_result_iterable]
+of the module [`awaitable_tuple`][trcks.fp.monads.awaitable_tuple] apply
+failable functions to each element individually and turn the
+[`AwaitableTuple`][trcks.AwaitableTuple] into an
+[`AwaitableResultTuple`][trcks.AwaitableResultTuple] (see the
+[glossary](../../glossary.md#widening)). Similarly, the functions
+`tap_to_result`, `tap_to_result_iterable`, `tap_to_awaitable_result`, and
+`tap_to_awaitable_result_iterable` widen the pipeline based on the outcome of
+failable side effects. Processing short-circuits on the first
+[`Failure`][trcks.Failure]:
 
 ???+ example
 
@@ -602,18 +602,18 @@ Processing short-circuits on the first [trcks.Failure][]:
 
     ```
 
-## Asynchronous double-track code with [trcks.fp.monads.awaitable_result_tuple][]
+## Asynchronous double-track code with `trcks.fp.monads.awaitable_result_tuple`
 
-If one of the functions in a [trcks.fp.composition][]
+If one of the functions in a [`composition`][trcks.fp.composition]
 pipeline returns
-a [trcks.AwaitableResultTuple][]`[F, S]` type,
-the module [trcks.fp.monads.awaitable_result_tuple][] provides
+an [`AwaitableResultTuple`][trcks.AwaitableResultTuple]`[F, S]` type,
+the module [`awaitable_result_tuple`][trcks.fp.monads.awaitable_result_tuple] provides
 some higher-order functions named `map_successes*` and `tap_successes*`
 that turn element-wise functions into functions
-operating on [trcks.AwaitableResultTuple][] values.
+operating on [`AwaitableResultTuple`][trcks.AwaitableResultTuple] values.
 The success track functions use the plural `map_successes` (instead of `map_success`)
 because they operate on each element individually.
-Processing short-circuits on the first [trcks.Failure][],
+Processing short-circuits on the first [`Failure`][trcks.Failure],
 just as in the synchronous case above.
 
 ???+ example
@@ -730,23 +730,23 @@ let us have a look at the individual steps of the chain:
 
 ???+ note
     The function
-    [trcks.fp.monads.awaitable_result_tuple.construct_successes_from_iterable][]
-    converts a [collections.abc.Iterable][] into a [tuple][] and wraps it into
-    a [trcks.AwaitableSuccessTuple][],
-    which can then be used with the higher-order functions
-    from [trcks.fp.monads.awaitable_result_tuple][].
+    [`construct_successes_from_iterable`][trcks.fp.monads.awaitable_result_tuple.construct_successes_from_iterable]
+    converts an [`Iterable`][collections.abc.Iterable] into a [`tuple`][tuple]
+    and wraps it into an [`AwaitableSuccessTuple`][trcks.AwaitableSuccessTuple],
+    which can then be used with the higher-order functions from
+    [`awaitable_result_tuple`][trcks.fp.monads.awaitable_result_tuple].
 
     The values `pipe(*p1)`, `pipe(*p2)`, `pipe(*p3)`, and `pipe(*p4)` are all
-    of type [trcks.AwaitableResultTuple][].
-    Since [asyncio.run][] expects the input type [collections.abc.Coroutine][],
+    of type [`AwaitableResultTuple`][trcks.AwaitableResultTuple].
+    Since [`run`][asyncio.run] expects the input type [`Coroutine`][collections.abc.Coroutine],
     we use the function
-    [trcks.fp.monads.awaitable_result_tuple.to_coroutine_result_tuple][]
-    to convert the [trcks.AwaitableResultTuple][]s
-    to [collections.abc.Coroutine][]s.
+    [`to_coroutine_result_tuple`][trcks.fp.monads.awaitable_result_tuple.to_coroutine_result_tuple]
+    to convert the [`AwaitableResultTuple`][trcks.AwaitableResultTuple]s
+    to [`Coroutine`][collections.abc.Coroutine]s.
 
 The higher-order functions
-[trcks.fp.monads.awaitable_result_tuple.tap_failure][]
-and [trcks.fp.monads.awaitable_result_tuple.tap_successes][]
+[`tap_failure`][trcks.fp.monads.awaitable_result_tuple.tap_failure]
+and [`tap_successes`][trcks.fp.monads.awaitable_result_tuple.tap_successes]
 allow us to execute synchronous side effects
 in the failure case or in the success case (for each element), respectively:
 
@@ -807,14 +807,14 @@ in the failure case or in the success case (for each element), respectively:
     ```
 
 Sometimes, side effects themselves can fail and
-need to return a [trcks.AwaitableResult][] type.
+need to return an [`AwaitableResult`][trcks.AwaitableResult] type.
 The higher-order function
-[trcks.fp.monads.awaitable_result_tuple.tap_successes_to_awaitable_result][]
+[`tap_successes_to_awaitable_result`][trcks.fp.monads.awaitable_result_tuple.tap_successes_to_awaitable_result]
 allows us to execute such asynchronous side effects
 for each element in the success case.
-If the side effect returns a [trcks.Failure][] for any element,
+If the side effect returns a [`Failure`][trcks.Failure] for any element,
 that failure is propagated.
-If the side effect returns a [trcks.Success][] for all elements,
+If the side effect returns a [`Success`][trcks.Success] for all elements,
 the original success values are preserved:
 
 ???+ example

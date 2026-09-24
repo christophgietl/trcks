@@ -11,27 +11,27 @@ _T_co = TypeVar("_T_co", covariant=True)
 
 @dataclass(frozen=True, slots=True)
 class BaseAwaitableWrapper(BaseWrapper[Awaitable[_T_co]]):
-    """Base class for all asynchronous wrappers in the [trcks.oop][] package.
+    """Base class for all asynchronous wrappers in the [`trcks.oop`][trcks.oop] package.
 
     Note:
         This class is not particularly useful by itself.
         If you want to wrap and process a value,
         please consider using one of its subclasses,
-        such as [trcks.oop.AwaitableWrapper][].
+        such as [`AwaitableWrapper`][trcks.oop.AwaitableWrapper].
     """
 
     @property
     async def core_as_coroutine(self) -> _T_co:
-        """The wrapped [collections.abc.Awaitable][] object
+        """The wrapped [`Awaitable`][collections.abc.Awaitable] object
         transformed into a coroutine.
 
         This is useful for functions that expect a coroutine
-        (e.g. [asyncio.run][] in Python 3.13 and older).
+        (e.g. [`run`][asyncio.run] in Python 3.13 and older).
 
         Note:
             The attribute `trcks.oop.BaseAwaitableWrapper.core`
-            has type [collections.abc.Awaitable][],
-            a superclass of [collections.abc.Coroutine][].
+            has type [`Awaitable`][collections.abc.Awaitable],
+            a superclass of [`Coroutine`][collections.abc.Coroutine].
 
         Examples:
             >>> import asyncio

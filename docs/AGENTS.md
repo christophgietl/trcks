@@ -28,6 +28,13 @@ Write instead:
     comes with lots of examples.
 ```
 
+## Keep cross-references out of headings
+
+Write headings with plain code spans (e.g. `## Single-track code with \`trcks.oop.Wrapper\``).
+Do not use cross-references (e.g. `` [`Wrapper`][trcks.oop.Wrapper] ``) inside headings.
+rumdl and mkdocs compute different slug anchors for headings that contain
+cross-references, so such headings cannot satisfy both tools at once.
+
 ## Further instructions
 
 - Use expanded admonitions (`???+ example`) for primary examples.
@@ -35,3 +42,4 @@ Write instead:
   step-by-step breakdowns and other optional deep-dives.
 - Keep doctest examples self-contained per file.
   Each file must define all imports and helper functions that it uses.
+- Keep prose lines at most 80 characters long (rule MD013).

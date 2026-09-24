@@ -1,12 +1,12 @@
-# Synchronous code with [trcks.oop][]
+# Synchronous code with `trcks.oop`
 
 ???+ tip "See also"
     The [functional sync page](../fp/sync.md)
     covers the same operations using function composition.
 
-## Single-track code with [trcks.oop.Wrapper][]
+## Single-track code with `trcks.oop.Wrapper`
 
-The generic class [trcks.oop.Wrapper][]`[T]` allows us to chain functions:
+The generic class [`Wrapper`][trcks.oop.Wrapper]`[T]` allows us to chain functions:
 
 ???+ example
 
@@ -55,9 +55,9 @@ we can write code that resembles a single-track railway
 (or maybe a single-pipe pipeline).
 
 Side effects like logging or writing to a file tend to
-"consume" their input and return [None][] instead.
+"consume" their input and return [`None`][None] instead.
 To avoid this, we can use the `tap` method available in
-the [trcks.oop.Wrapper][] class.
+the [`Wrapper`][trcks.oop.Wrapper] class.
 This method allows executing side effects while preserving the original value:
 
 ???+ example
@@ -81,16 +81,16 @@ This method allows executing side effects while preserving the original value:
 
     ```
 
-## Double-track code with [trcks.oop.ResultWrapper][]
+## Double-track code with `trcks.oop.ResultWrapper`
 
-Whenever a function in a chain returns a [trcks.Result][]`[F, S]` type,
-the next operation must handle the [trcks.Result][]`[F, S]` value.
-However, methods that directly handle [trcks.Result][]`[F, S]` values tend to violate
-the "do one thing and do it well" principle.
-Therefore, the class [trcks.oop.ResultWrapper][]`[F, S]` provides
-some methods named `map_failure*` and `map_success*`
-that call functions with input type `F` and functions with input type `S`
-on a wrapped [trcks.Result][]`[F, S]` value.
+Whenever a function in a chain returns a [`Result`][trcks.Result]`[F, S]` type,
+the next operation must handle the [`Result`][trcks.Result]`[F, S]` value.
+However, methods that directly handle [`Result`][trcks.Result]`[F, S]` values
+tend to violate the "do one thing and do it well" principle. Therefore, the
+class [`ResultWrapper`][trcks.oop.ResultWrapper]`[F, S]` provides some methods
+named `map_failure*` and `map_success*` that call functions with input type `F`
+and functions with input type `S` on a wrapped [`Result`][trcks.Result]`[F, S]`
+value.
 
 ???+ example
 
@@ -172,11 +172,11 @@ let us have a look at the individual steps of the chain:
     ```
 
 ???+ note
-    The method [trcks.oop.Wrapper.map_to_result][] returns
-    a [trcks.oop.ResultWrapper][] object.
-    The corresponding class [trcks.oop.ResultWrapper][]
+    The method [`map_to_result`][trcks.oop.Wrapper.map_to_result] returns
+    a [`ResultWrapper`][trcks.oop.ResultWrapper] object.
+    The corresponding class [`ResultWrapper`][trcks.oop.ResultWrapper]
     has a `map_failure*` and a `map_success*` method
-    for each `map*` method of the class [trcks.oop.Wrapper][].
+    for each `map*` method of the class [`Wrapper`][trcks.oop.Wrapper].
 
 The `tap_success` and `tap_failure` methods allow us to execute side effects
 in the success case or in the failure case, respectively:
@@ -216,11 +216,12 @@ in the success case or in the failure case, respectively:
     ```
 
 Sometimes, side effects themselves can fail and
-need to return a [trcks.Result][] type.
+need to return a [`Result`][trcks.Result] type.
 The `tap_success_to_result` method allows us to execute such side effects
 in the success case.
-If the side effect returns a [trcks.Failure][], that failure is propagated.
-If the side effect returns a [trcks.Success][], the original success value is preserved.
+If the side effect returns a [`Failure`][trcks.Failure], that failure is propagated.
+If the side effect returns a [`Success`][trcks.Success], the original success
+value is preserved.
 
 ???+ example
 

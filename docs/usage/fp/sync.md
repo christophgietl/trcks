@@ -1,12 +1,12 @@
-# Synchronous code with [trcks.fp][]
+# Synchronous code with `trcks.fp`
 
 ???+ tip "See also"
     The [object-oriented sync page](../oop/sync.md)
     covers the same operations using method chaining.
 
-## Single-track code with [trcks.fp.composition][]
+## Single-track code with `trcks.fp.composition`
 
-The function [trcks.fp.composition.pipe][] allows us to chain functions:
+The function [`pipe`][trcks.fp.composition.pipe] allows us to chain functions:
 
 ???+ example
 
@@ -37,12 +37,12 @@ let us have a look at the individual steps of the chain:
     ```
 
 ???+ note
-    The function [trcks.fp.composition.pipe][] takes a start value followed by
-    up to seven compatible functions as separate arguments.
+    The function [`pipe`][trcks.fp.composition.pipe] takes a start value
+    followed by up to seven compatible functions as separate arguments.
 
 Side effects like logging or writing to a file tend to
-"consume" their input and return [None][] instead.
-To avoid this, we can use the higher-order function [trcks.fp.monads.identity.tap][].
+"consume" their input and return [`None`][None] instead.
+To avoid this, we can use the higher-order function [`tap`][trcks.fp.monads.identity.tap].
 This higher-order function turns each function into a function
 that behaves like the original function but returns the input value.
 
@@ -68,14 +68,14 @@ that behaves like the original function but returns the input value.
 
     ```
 
-## Double-track code with [trcks.fp.monads.result][]
+## Double-track code with `trcks.fp.monads.result`
 
-If one of the functions in a [trcks.fp.composition][]
+If one of the functions in a [`composition`][trcks.fp.composition]
 pipeline returns a `trcks.Result[F, S]` type,
 the following function must accept this `trcks.Result[F, S]` type as its input.
 However, functions with input type `trcks.Result[F, S]` tend to violate
 the "do one thing and do it well" principle.
-Therefore, the module [trcks.fp.monads.result][] provides
+Therefore, the module [`result`][trcks.fp.monads.result] provides
 some higher-order functions named `map*`
 that turn functions with input type `F` and functions with input type `S`
 into functions with input type `trcks.Result[F, S]`.
@@ -176,10 +176,11 @@ let us have a look at the individual steps of the chain:
 
     ```
 
-While [trcks.fp.monads.result.map_failure][] and [trcks.fp.monads.result.map_success][]
+While [`map_failure`][trcks.fp.monads.result.map_failure] and [`map_success`][trcks.fp.monads.result.map_success]
 allow us to apply functions in the failure case or in the success case, respectively,
-the higher-order functions [trcks.fp.monads.result.tap_failure][] and [trcks.fp.monads.result.tap_success][]
-allow us to execute side effects in the failure case or in the success case, respectively.
+the higher-order functions [`tap_failure`][trcks.fp.monads.result.tap_failure]
+and [`tap_success`][trcks.fp.monads.result.tap_success] allow us to execute side
+effects in the failure case or in the success case, respectively.
 
 ???+ example
 
@@ -226,11 +227,12 @@ allow us to execute side effects in the failure case or in the success case, res
     ```
 
 Sometimes, side effects themselves can fail and
-need to return a [trcks.Result][] type.
-The higher-order function [trcks.fp.monads.result.tap_success_to_result][]
+need to return a [`Result`][trcks.Result] type.
+The higher-order function [`tap_success_to_result`][trcks.fp.monads.result.tap_success_to_result]
 allows us to execute such side effects in the success case.
-If the side effect returns a [trcks.Failure][], that failure is propagated.
-If the side effect returns a [trcks.Success][], the original success value is preserved.
+If the side effect returns a [`Failure`][trcks.Failure], that failure is propagated.
+If the side effect returns a [`Success`][trcks.Success], the original success
+value is preserved.
 
 ???+ example
 
