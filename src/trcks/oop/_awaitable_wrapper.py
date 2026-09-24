@@ -232,7 +232,7 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
 
         Returns:
             A new [`AwaitableTupleWrapper`][trcks.oop.AwaitableTupleWrapper] instance
-            with
+                with
                 the result of the function application.
 
         Examples:
@@ -275,7 +275,7 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
 
         Returns:
             An [`AwaitableResultWrapper`][trcks.oop.AwaitableResultWrapper]
-            instance with
+                instance with
                 the result of the function application.
 
         Examples:
@@ -324,7 +324,7 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
 
         Returns:
             An [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
-            instance with
+                instance with
                 the result of the function application.
 
         Examples:
@@ -403,7 +403,7 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
 
         Returns:
             A new [`AwaitableTupleWrapper`][trcks.oop.AwaitableTupleWrapper] instance
-            with
+                with
                 the result of the function application.
 
         Examples:
@@ -442,7 +442,7 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
 
         Returns:
             An [`AwaitableResultWrapper`][trcks.oop.AwaitableResultWrapper]
-            instance with
+                instance with
                 the result of the function application.
 
         Examples:
@@ -486,7 +486,7 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
 
         Returns:
             An [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
-            instance with
+                instance with
                 the result of the function application.
 
         Examples:
@@ -633,7 +633,7 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
 
         Returns:
             A new [`AwaitableTupleWrapper`][trcks.oop.AwaitableTupleWrapper] instance
-            with
+                with
                 the original awaitable wrapped object repeated
                 according to the number of items returned by the side effect.
 
@@ -679,7 +679,7 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
 
         Returns:
             An [`AwaitableResultWrapper`][trcks.oop.AwaitableResultWrapper]
-            instance with
+                instance with
 
                 - *the returned* [`Failure`][trcks.Failure]
                     if the given side effect returns a [`Failure`][trcks.Failure] or
@@ -742,7 +742,7 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
 
         Returns:
             An [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
-            instance with
+                instance with
 
                 - *the returned* [`Failure`][trcks.Failure]
                     if the given side effect returns a [`Failure`][trcks.Failure] or
@@ -826,7 +826,7 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
 
         Returns:
             A new [`AwaitableTupleWrapper`][trcks.oop.AwaitableTupleWrapper] instance
-            with
+                with
                 the original awaitable wrapped object repeated
                 according to the number of items returned by the side effect.
 
@@ -871,7 +871,7 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
 
         Returns:
             An [`AwaitableResultWrapper`][trcks.oop.AwaitableResultWrapper]
-            instance with
+                instance with
 
                 - *the returned* [`Failure`][trcks.Failure]
                     if the given side effect returns a [`Failure`][trcks.Failure] or
@@ -927,7 +927,7 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
 
         Returns:
             An [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
-            instance with
+                instance with
 
                 - *the returned* [`Failure`][trcks.Failure]
                     if the given side effect returns a [`Failure`][trcks.Failure] or

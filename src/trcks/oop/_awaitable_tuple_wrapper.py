@@ -73,7 +73,7 @@ class AwaitableTupleWrapper(BaseAwaitableWrapper[tuple[_T_co, ...]]):
 
         Returns:
             A new [`AwaitableTupleWrapper`][trcks.oop.AwaitableTupleWrapper] instance
-            with
+                with
                 the wrapped [`AwaitableTuple`][trcks.AwaitableTuple] object.
 
         Examples:
@@ -100,7 +100,7 @@ class AwaitableTupleWrapper(BaseAwaitableWrapper[tuple[_T_co, ...]]):
 
         Returns:
             A new [`AwaitableTupleWrapper`][trcks.oop.AwaitableTupleWrapper] instance
-            with
+                with
                 the wrapped [`AwaitableTuple`][trcks.AwaitableTuple] object.
 
         Examples:
@@ -135,7 +135,7 @@ class AwaitableTupleWrapper(BaseAwaitableWrapper[tuple[_T_co, ...]]):
 
         Returns:
             A new [`AwaitableTupleWrapper`][trcks.oop.AwaitableTupleWrapper] instance
-            with
+                with
                 the wrapped [`AwaitableTuple`][trcks.AwaitableTuple] object.
 
         Examples:
@@ -181,7 +181,7 @@ class AwaitableTupleWrapper(BaseAwaitableWrapper[tuple[_T_co, ...]]):
 
         Returns:
             A new [`AwaitableTupleWrapper`][trcks.oop.AwaitableTupleWrapper] instance
-            with
+                with
                 the wrapped [`AwaitableTuple`][trcks.AwaitableTuple] object.
 
         Examples:
@@ -229,7 +229,7 @@ class AwaitableTupleWrapper(BaseAwaitableWrapper[tuple[_T_co, ...]]):
 
         Returns:
             A new [`AwaitableTupleWrapper`][trcks.oop.AwaitableTupleWrapper] instance
-            with
+                with
                 the wrapped [`AwaitableTuple`][trcks.AwaitableTuple] object containing
                 the results of applying the function to each element.
 
@@ -270,7 +270,7 @@ class AwaitableTupleWrapper(BaseAwaitableWrapper[tuple[_T_co, ...]]):
 
         Returns:
             A new [`AwaitableTupleWrapper`][trcks.oop.AwaitableTupleWrapper] instance
-            with
+                with
                 the wrapped [`AwaitableTuple`][trcks.AwaitableTuple] object containing
                 the results of applying the function to each element.
 
@@ -316,7 +316,7 @@ class AwaitableTupleWrapper(BaseAwaitableWrapper[tuple[_T_co, ...]]):
 
         Returns:
             A new [`AwaitableTupleWrapper`][trcks.oop.AwaitableTupleWrapper] instance
-            with
+                with
                 the flattened [`AwaitableTuple`][trcks.AwaitableTuple] object.
 
         Examples:
@@ -362,7 +362,7 @@ class AwaitableTupleWrapper(BaseAwaitableWrapper[tuple[_T_co, ...]]):
 
         Returns:
             An [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
-            instance with
+                instance with
 
                 - the first [`Failure`][trcks.Failure] returned by the function, or
                 - a [`SuccessTuple`][trcks.SuccessTuple] if the function returns
@@ -429,7 +429,7 @@ class AwaitableTupleWrapper(BaseAwaitableWrapper[tuple[_T_co, ...]]):
 
         Returns:
             An [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
-            instance with
+                instance with
 
                 - the first [`Failure`][trcks.Failure] returned by the function, or
                 - a flattened [`SuccessTuple`][trcks.SuccessTuple] if the function
@@ -524,7 +524,7 @@ class AwaitableTupleWrapper(BaseAwaitableWrapper[tuple[_T_co, ...]]):
 
         Returns:
             A new [`AwaitableTupleWrapper`][trcks.oop.AwaitableTupleWrapper] instance
-            with
+                with
                 the flattened [`AwaitableTuple`][trcks.AwaitableTuple] object.
 
         Examples:
@@ -569,7 +569,7 @@ class AwaitableTupleWrapper(BaseAwaitableWrapper[tuple[_T_co, ...]]):
 
         Returns:
             An [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
-            instance with
+                instance with
 
                 - the first [`Failure`][trcks.Failure] returned by the function, or
                 - a [`SuccessTuple`][trcks.SuccessTuple] with all transformed elements
@@ -635,7 +635,7 @@ class AwaitableTupleWrapper(BaseAwaitableWrapper[tuple[_T_co, ...]]):
 
         Returns:
             An [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
-            instance with
+                instance with
 
                 - the first [`Failure`][trcks.Failure] returned by the function, or
                 - a flattened [`SuccessTuple`][trcks.SuccessTuple] if the function
@@ -725,7 +725,7 @@ class AwaitableTupleWrapper(BaseAwaitableWrapper[tuple[_T_co, ...]]):
 
         Returns:
             A new [`AwaitableTupleWrapper`][trcks.oop.AwaitableTupleWrapper] instance
-            with
+                with
                 the original [`AwaitableTuple`][trcks.AwaitableTuple] object.
 
         Examples:
@@ -767,7 +767,7 @@ class AwaitableTupleWrapper(BaseAwaitableWrapper[tuple[_T_co, ...]]):
 
         Returns:
             A new [`AwaitableTupleWrapper`][trcks.oop.AwaitableTupleWrapper] instance
-            with
+                with
                 the original [`AwaitableTuple`][trcks.AwaitableTuple] object.
 
         Examples:
@@ -814,7 +814,7 @@ class AwaitableTupleWrapper(BaseAwaitableWrapper[tuple[_T_co, ...]]):
 
         Returns:
             A new [`AwaitableTupleWrapper`][trcks.oop.AwaitableTupleWrapper] instance
-            with
+                with
                 the original [`AwaitableTuple`][trcks.AwaitableTuple] object.
 
         Examples:
@@ -861,7 +861,7 @@ class AwaitableTupleWrapper(BaseAwaitableWrapper[tuple[_T_co, ...]]):
 
         Returns:
             An [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
-            instance with
+                instance with
 
                 - *the returned* [`Failure`][trcks.Failure] if the applied side effect
                     returns a [`Failure`][trcks.Failure] for an element, or
@@ -931,7 +931,7 @@ class AwaitableTupleWrapper(BaseAwaitableWrapper[tuple[_T_co, ...]]):
 
         Returns:
             An [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
-            instance with
+                instance with
 
                 - *the returned* [`Failure`][trcks.Failure] if the applied side effect
                     returns a [`Failure`][trcks.Failure] for an element, or
@@ -1030,7 +1030,7 @@ class AwaitableTupleWrapper(BaseAwaitableWrapper[tuple[_T_co, ...]]):
 
         Returns:
             A new [`AwaitableTupleWrapper`][trcks.oop.AwaitableTupleWrapper] instance
-            with
+                with
                 the original [`AwaitableTuple`][trcks.AwaitableTuple] object.
 
         Examples:
@@ -1076,7 +1076,7 @@ class AwaitableTupleWrapper(BaseAwaitableWrapper[tuple[_T_co, ...]]):
 
         Returns:
             An [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
-            instance with
+                instance with
 
                 - *the returned* [`Failure`][trcks.Failure] if the applied side effect
                     returns a [`Failure`][trcks.Failure] for an element, or
@@ -1143,7 +1143,7 @@ class AwaitableTupleWrapper(BaseAwaitableWrapper[tuple[_T_co, ...]]):
 
         Returns:
             An [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
-            instance with
+                instance with
 
                 - *the returned* [`Failure`][trcks.Failure] if the applied side effect
                     returns a [`Failure`][trcks.Failure] for an element, or

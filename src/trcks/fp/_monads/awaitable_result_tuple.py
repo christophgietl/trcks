@@ -336,7 +336,7 @@ def map_failure(
 
     Returns:
         Maps [`AwaitableFailure`][trcks.AwaitableFailure] values to
-        [`AwaitableFailure`][trcks.AwaitableFailure] values
+            [`AwaitableFailure`][trcks.AwaitableFailure] values
             according to the given function and leaves
             [`AwaitableSuccessTuple`][trcks.AwaitableSuccessTuple] values unchanged.
 
@@ -378,7 +378,7 @@ def map_failure_to_awaitable(
 
     Returns:
         Maps [`AwaitableFailure`][trcks.AwaitableFailure] values to
-        [`AwaitableFailure`][trcks.AwaitableFailure] values
+            [`AwaitableFailure`][trcks.AwaitableFailure] values
             according to the given asynchronous function and leaves
             [`AwaitableSuccessTuple`][trcks.AwaitableSuccessTuple] values unchanged.
 
@@ -428,7 +428,7 @@ def map_failure_to_awaitable_iterable(
 
     Returns:
         Maps [`AwaitableFailure`][trcks.AwaitableFailure] values to
-        [`Iterable`][collections.abc.Iterable]s
+            [`Iterable`][collections.abc.Iterable]s
             wrapped in [`AwaitableSuccessTuple`][trcks.AwaitableSuccessTuple] values
             according to the given asynchronous function and leaves
             [`AwaitableSuccessTuple`][trcks.AwaitableSuccessTuple] values unchanged.
@@ -638,7 +638,7 @@ def map_failure_to_iterable(
 
     Returns:
         Maps [`AwaitableFailure`][trcks.AwaitableFailure] values to
-        [`Iterable`][collections.abc.Iterable]s
+            [`Iterable`][collections.abc.Iterable]s
             wrapped in [`AwaitableSuccessTuple`][trcks.AwaitableSuccessTuple] values and
             leaves [`AwaitableSuccessTuple`][trcks.AwaitableSuccessTuple] values
             unchanged.
@@ -796,7 +796,7 @@ def map_successes(
 
     Returns:
         Function that transforms [`AwaitableSuccessTuple`][trcks.AwaitableSuccessTuple]
-        values
+            values
             element-wise.
 
     Examples:
@@ -838,7 +838,7 @@ def map_successes_to_awaitable(
 
     Returns:
         Function that transforms [`AwaitableSuccessTuple`][trcks.AwaitableSuccessTuple]
-        values
+            values
             element-wise using the given asynchronous function.
 
     Examples:
@@ -885,7 +885,7 @@ def map_successes_to_awaitable_iterable(
 
     Returns:
         Function that flat-maps [`AwaitableSuccessTuple`][trcks.AwaitableSuccessTuple]
-        values
+            values
             element-wise using the given asynchronous function.
 
     Examples:
@@ -936,7 +936,7 @@ def map_successes_to_awaitable_result(
 
     Returns:
         Function that maps over [`AwaitableSuccessTuple`][trcks.AwaitableSuccessTuple]
-        values and
+            values and
             returns the first [`AwaitableFailure`][trcks.AwaitableFailure] encountered,
             if any.
 
@@ -999,7 +999,7 @@ def map_successes_to_awaitable_result_iterable(
 
     Returns:
         Function that flat-maps [`AwaitableSuccessTuple`][trcks.AwaitableSuccessTuple]
-        values and
+            values and
             short-circuits on the first [`AwaitableFailure`][trcks.AwaitableFailure]
             returned by `callable_`.
 
@@ -1127,7 +1127,7 @@ def map_successes_to_result(
 
     Returns:
         Function that maps over [`AwaitableSuccessTuple`][trcks.AwaitableSuccessTuple]
-        values and
+            values and
             returns the first [`AwaitableFailure`][trcks.AwaitableFailure] encountered,
             if any.
 
@@ -1183,7 +1183,7 @@ def map_successes_to_result_iterable(
 
     Returns:
         Function that flat-maps [`AwaitableSuccessTuple`][trcks.AwaitableSuccessTuple]
-        values and
+            values and
             short-circuits on the first [`AwaitableFailure`][trcks.AwaitableFailure]
             returned by `callable_`.
 
@@ -1233,7 +1233,7 @@ def tap_failure(
 
     Returns:
         Applies the given side effect to [`AwaitableFailure`][trcks.AwaitableFailure]
-        values and
+            values and
             returns the original [`AwaitableFailure`][trcks.AwaitableFailure] value.
             Passes on [`AwaitableSuccessTuple`][trcks.AwaitableSuccessTuple] values
             without side effects.
@@ -1280,7 +1280,7 @@ def tap_failure_to_awaitable(
 
     Returns:
         Applies the given side effect to [`AwaitableFailure`][trcks.AwaitableFailure]
-        values and
+            values and
             returns the original [`AwaitableFailure`][trcks.AwaitableFailure] value.
             Passes on [`AwaitableSuccessTuple`][trcks.AwaitableSuccessTuple] values
             without side effects.
@@ -1340,7 +1340,7 @@ def tap_failure_to_awaitable_iterable(
 
     Returns:
         Applies the given side effect to [`AwaitableFailure`][trcks.AwaitableFailure]
-        values and
+            values and
             converts them to [`AwaitableSuccessTuple`][trcks.AwaitableSuccessTuple]
             values containing the original failure repeated once per element in the
             [`Iterable`][collections.abc.Iterable] returned by the side effect. Passes
@@ -1405,7 +1405,7 @@ def tap_failure_to_awaitable_result(
 
     Returns:
         Applies the given side effect to [`AwaitableFailure`][trcks.AwaitableFailure]
-        values.
+            values.
             If the given side effect returns an
             [`AwaitableFailure`][trcks.AwaitableFailure], *the original*
             [`AwaitableFailure`][trcks.AwaitableFailure] value is returned. If the given
@@ -1477,7 +1477,7 @@ def tap_failure_to_awaitable_result_iterable(
 
     Returns:
         Applies the given side effect to [`AwaitableFailure`][trcks.AwaitableFailure]
-        values.
+            values.
             If the given side effect returns an
             [`AwaitableFailure`][trcks.AwaitableFailure], *the original*
             [`AwaitableFailure`][trcks.AwaitableFailure] value is returned. If the given
@@ -1556,7 +1556,7 @@ def tap_failure_to_iterable(
 
     Returns:
         Applies the given side effect to [`AwaitableFailure`][trcks.AwaitableFailure]
-        values and
+            values and
             converts them to [`AwaitableSuccessTuple`][trcks.AwaitableSuccessTuple]
             values containing the original failure repeated once per element in the
             [`Iterable`][collections.abc.Iterable] returned by the side effect. Passes
@@ -1612,7 +1612,7 @@ def tap_failure_to_result(
 
     Returns:
         Applies the given side effect to [`AwaitableFailure`][trcks.AwaitableFailure]
-        values.
+            values.
             If the given side effect returns a [`Failure`][trcks.Failure], *the
             original* [`AwaitableFailure`][trcks.AwaitableFailure] value is returned. If
             the given side effect returns a [`Success`][trcks.Success], *this*
@@ -1670,7 +1670,7 @@ def tap_failure_to_result_iterable(
 
     Returns:
         Applies the given side effect to [`AwaitableFailure`][trcks.AwaitableFailure]
-        values.
+            values.
             If the given side effect returns a [`Failure`][trcks.Failure], *the
             original* [`AwaitableFailure`][trcks.AwaitableFailure] value is returned. If
             the given side effect returns a [`SuccessIterable`][trcks.SuccessIterable],

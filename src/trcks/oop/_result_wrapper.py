@@ -181,7 +181,7 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
 
         Returns:
             An [`AwaitableResultWrapper`][trcks.oop.AwaitableResultWrapper]
-            instance with
+                instance with
 
                 - the result of the function application if
                     the original [`Result`][trcks.Result] is a failure, or
@@ -239,7 +239,7 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
 
         Returns:
             An [`AwaitableResultWrapper`][trcks.oop.AwaitableResultWrapper]
-            instance with
+                instance with
 
                 - the result of the function application if
                     the original [`Result`][trcks.Result] is a failure, or
@@ -313,7 +313,7 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
 
         Returns:
             An [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
-            instance with
+                instance with
 
                 - the result of the function application if
                     the original [`Result`][trcks.Result] is a failure, or
@@ -632,7 +632,7 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
 
         Returns:
             An [`AwaitableResultWrapper`][trcks.oop.AwaitableResultWrapper]
-            instance with
+                instance with
 
                 - the original [`Result`][trcks.Result] object if it is a failure, or
                 - the result of the function application if
@@ -690,7 +690,7 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
 
         Returns:
             An [`AwaitableResultWrapper`][trcks.oop.AwaitableResultWrapper]
-            instance with
+                instance with
 
                 - the original [`Result`][trcks.Result] object if it is a failure, or
                 - the result of the function application if
@@ -765,7 +765,7 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
 
         Returns:
             An [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
-            instance with
+                instance with
 
                 - the original [`Result`][trcks.Result] object if it is a failure, or
                 - the result of the function application if
@@ -1127,7 +1127,7 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
 
         Returns:
             An [`AwaitableResultWrapper`][trcks.oop.AwaitableResultWrapper]
-            instance with
+                instance with
 
                 - *the original* [`Failure`][trcks.Failure]
                     if the applied side effect returns a [`Failure`][trcks.Failure],
@@ -1201,7 +1201,7 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
 
         Returns:
             An [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
-            instance with
+                instance with
 
                 - *the original* [`Failure`][trcks.Failure]
                     if the applied side effect returns a [`Failure`][trcks.Failure],
@@ -1585,7 +1585,7 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
 
         Returns:
             An [`AwaitableResultWrapper`][trcks.oop.AwaitableResultWrapper]
-            instance with
+                instance with
 
                 - *the original* [`Failure`][trcks.Failure] if no side effect was
                   applied,
@@ -1675,7 +1675,7 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
 
         Returns:
             An [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
-            instance with
+                instance with
 
                 - *the original* [`Failure`][trcks.Failure] if no side effect was
                   applied,

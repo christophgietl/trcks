@@ -156,7 +156,7 @@ def map_failure_to_awaitable_result_iterable(
 
     Returns:
         Maps [`Failure`][trcks.Failure] values to new
-        [`AwaitableResultTuple`][trcks.AwaitableResultTuple] values
+            [`AwaitableResultTuple`][trcks.AwaitableResultTuple] values
             according to the given asynchronous function and
             leaves [`Success`][trcks.Success] values unchanged.
 
@@ -281,7 +281,7 @@ def map_failure_to_result_iterable(
 
     Returns:
         Maps [`Failure`][trcks.Failure] values to new [`ResultTuple`][trcks.ResultTuple]
-        values
+            values
             according to the given function and
             leaves [`Success`][trcks.Success] values unchanged (wrapped as a tuple).
 
@@ -622,7 +622,7 @@ def tap_failure_to_iterable(
 
     Returns:
         Applies the given side effect to [`Failure`][trcks.Failure] values and converts
-        them
+            them
             to [`AwaitableSuccessTuple`][trcks.AwaitableSuccessTuple] values containing
             the original failure repeated once per element
             in the [`Iterable`][collections.abc.Iterable] returned by the side effect.

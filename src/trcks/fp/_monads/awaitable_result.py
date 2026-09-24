@@ -178,7 +178,7 @@ def map_failure(
 
     Returns:
         Maps [`AwaitableFailure`][trcks.AwaitableFailure] values to
-        [`AwaitableFailure`][trcks.AwaitableFailure] values
+            [`AwaitableFailure`][trcks.AwaitableFailure] values
             according to the given function and
             leaves [`AwaitableSuccess`][trcks.AwaitableSuccess] values unchanged.
 
@@ -222,7 +222,7 @@ def map_failure_to_awaitable(
 
     Returns:
         Maps [`AwaitableFailure`][trcks.AwaitableFailure] values to
-        [`AwaitableFailure`][trcks.AwaitableFailure] values
+            [`AwaitableFailure`][trcks.AwaitableFailure] values
             according to the given asynchronous function and
             leaves [`AwaitableSuccess`][trcks.AwaitableSuccess] values unchanged.
 
@@ -341,7 +341,7 @@ def map_failure_to_result(
 
     Returns:
         Maps [`AwaitableFailure`][trcks.AwaitableFailure] values to
-        [`AwaitableResult`][trcks.AwaitableResult] values
+            [`AwaitableResult`][trcks.AwaitableResult] values
             according to the given function and
             leaves [`AwaitableSuccess`][trcks.AwaitableSuccess] values unchanged.
 
@@ -615,7 +615,7 @@ def tap_failure(
 
     Returns:
         Applies the given side effect to [`AwaitableFailure`][trcks.AwaitableFailure]
-        values and
+            values and
             returns the original [`AwaitableFailure`][trcks.AwaitableFailure] value.
             Passes on [`AwaitableSuccess`][trcks.AwaitableSuccess] values without side
             effects.
@@ -645,7 +645,7 @@ def tap_failure_to_awaitable(
 
     Returns:
         Applies the given side effect to [`AwaitableFailure`][trcks.AwaitableFailure]
-        values and
+            values and
             returns the original [`AwaitableFailure`][trcks.AwaitableFailure] value.
             Passes on [`AwaitableSuccess`][trcks.AwaitableSuccess] values without side
             effects.
@@ -681,7 +681,7 @@ def tap_failure_to_awaitable_result(
 
     Returns:
         Applies the given side effect to [`AwaitableFailure`][trcks.AwaitableFailure]
-        values.
+            values.
             If the given side effect returns an
             [`AwaitableFailure`][trcks.AwaitableFailure], *the original*
             [`AwaitableFailure`][trcks.AwaitableFailure] value is returned. If the given
@@ -726,7 +726,7 @@ def tap_failure_to_result(
 
     Returns:
         Applies the given side effect to [`AwaitableFailure`][trcks.AwaitableFailure]
-        values.
+            values.
             If the given side effect returns a [`Failure`][trcks.Failure], *the
             original* [`AwaitableFailure`][trcks.AwaitableFailure] value is returned. If
             the given side effect returns a [`Success`][trcks.Success], *this*
@@ -758,7 +758,7 @@ def tap_success(
 
     Returns:
         Passes on [`AwaitableFailure`][trcks.AwaitableFailure] values without side
-        effects.
+            effects.
             Applies the given side effect to
             [`AwaitableSuccess`][trcks.AwaitableSuccess] values and returns the original
             [`AwaitableSuccess`][trcks.AwaitableSuccess] value.
@@ -788,7 +788,7 @@ def tap_success_to_awaitable(
 
     Returns:
         Passes on [`AwaitableFailure`][trcks.AwaitableFailure] values without side
-        effects.
+            effects.
             Applies the given side effect to
             [`AwaitableSuccess`][trcks.AwaitableSuccess] values and returns the original
             [`AwaitableSuccess`][trcks.AwaitableSuccess] value.
@@ -824,7 +824,7 @@ def tap_success_to_awaitable_result(
 
     Returns:
         Passes on [`AwaitableFailure`][trcks.AwaitableFailure] values without side
-        effects.
+            effects.
             Applies the given side effect to
             [`AwaitableSuccess`][trcks.AwaitableSuccess] values. If the given side
             effect returns an [`AwaitableFailure`][trcks.AwaitableFailure], *this*
@@ -869,7 +869,7 @@ def tap_success_to_result(
 
     Returns:
         Passes on [`AwaitableFailure`][trcks.AwaitableFailure] values without side
-        effects.
+            effects.
             Applies the given side effect to
             [`AwaitableSuccess`][trcks.AwaitableSuccess] values. If the given side
             effect returns a [`Failure`][trcks.Failure], *this*
