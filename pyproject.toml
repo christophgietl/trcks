@@ -148,6 +148,22 @@ layers = [
 ]
 
 [[tool.importlinter.contracts]]
+name = "Layers within trcks.oop.*"
+type = "layers"
+containers = [
+    "trcks.oop",
+]
+exhaustive = true
+layers = [
+    "_wrapper",
+    "_awaitable_wrapper | _result_wrapper | _tuple_wrapper",
+    "_awaitable_result_wrapper | _awaitable_tuple_wrapper | _result_tuple_wrapper",
+    "_awaitable_result_tuple_wrapper",
+    "_base_awaitable_wrapper",
+    "_base_wrapper",
+]
+
+[[tool.importlinter.contracts]]
 name = "Import trcks.fp._monads via trcks.fp only"
 type = "protected"
 allowed_importers = [

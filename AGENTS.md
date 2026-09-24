@@ -30,6 +30,13 @@
 - `trcks.fp._monads` has one sublayer:
   - `awaitable`, `awaitable_result`, `awaitable_result_tuple`, `awaitable_tuple`,
     `identity`, `result`, `result_tuple`, and `tuple_`
+- `trcks.oop` has six sublayers:
+  - `_wrapper`
+  - `_awaitable_wrapper`, `_result_wrapper`, and `_tuple_wrapper`
+  - `_awaitable_result_wrapper`, `_awaitable_tuple_wrapper`, and `_result_tuple_wrapper`
+  - `_awaitable_result_tuple_wrapper`
+  - `_base_awaitable_wrapper`
+  - `_base_wrapper`
 
 ### Import contracts
 
