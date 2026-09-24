@@ -287,8 +287,8 @@ def compose(  # type: ignore[explicit-any]
 
     def composed(*args: _P0.args, **kwargs: _P0.kwargs) -> Any:  # type: ignore[explicit-any]  # pyrefly: ignore[explicit-any]  # noqa: ANN401
         output = callable1(*args, **kwargs)
-        for c in callables:
-            output = c(output)
+        for callable_ in callables:
+            output = callable_(output)
         return output
 
     return composed
