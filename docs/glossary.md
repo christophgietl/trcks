@@ -55,7 +55,7 @@ needed just to bind an extra argument.
 
 ## Pipeline and `pipe`
 
-A pipeline is a start value followed by a sequence of compatible functions.
+A pipeline is a start value followed by zero or more compatible functions.
 The `Pipeline*` type aliases in [trcks.fp.composition][] model pipelines
 as tuples, and help static type checkers validate the compatibility of
 the start value and the functions.
