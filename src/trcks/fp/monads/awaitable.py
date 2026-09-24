@@ -122,7 +122,7 @@ def map_to_awaitable_iterable(
 
     Returns:
         Maps [`Awaitable`][collections.abc.Awaitable]s to
-        [`AwaitableTuple`][trcks.AwaitableTuple]s
+            [`AwaitableTuple`][trcks.AwaitableTuple]s
             of varying length according to the given asynchronous function.
 
     Examples:
@@ -164,7 +164,7 @@ def map_to_awaitable_result(
 
     Returns:
         Maps [`Awaitable`][collections.abc.Awaitable]s to
-        [`AwaitableResult`][trcks.AwaitableResult]s
+            [`AwaitableResult`][trcks.AwaitableResult]s
             according to the given asynchronous function.
 
     Examples:
@@ -299,7 +299,7 @@ def map_to_iterable(
 
     Returns:
         Maps [`Awaitable`][collections.abc.Awaitable]s to
-        [`AwaitableTuple`][trcks.AwaitableTuple]s
+            [`AwaitableTuple`][trcks.AwaitableTuple]s
             of varying length according to the given function.
 
     Examples:
@@ -335,7 +335,7 @@ def map_to_result(
 
     Returns:
         Maps [`Awaitable`][collections.abc.Awaitable]s to
-        [`AwaitableResult`][trcks.AwaitableResult]s
+            [`AwaitableResult`][trcks.AwaitableResult]s
             according to the given function.
 
     Examples:
@@ -460,7 +460,7 @@ def tap_to_awaitable_iterable(
 
     Returns:
         Maps [`Awaitable`][collections.abc.Awaitable]s to
-        [`AwaitableTuple`][trcks.AwaitableTuple]s with
+            [`AwaitableTuple`][trcks.AwaitableTuple]s with
             the original awaited value repeated once per element
             in the side effect output.
 
@@ -661,7 +661,7 @@ def tap_to_iterable(
 
     Returns:
         Maps [`Awaitable`][collections.abc.Awaitable]s to
-        [`AwaitableTuple`][trcks.AwaitableTuple]s with
+            [`AwaitableTuple`][trcks.AwaitableTuple]s with
             the original awaited value repeated once per element
             in the side effect output.
 
