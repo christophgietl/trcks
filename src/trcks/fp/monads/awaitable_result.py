@@ -1,7 +1,7 @@
-"""Monadic functions for [trcks.AwaitableResult][].
+"""Monadic functions for [`AwaitableResult`][trcks.AwaitableResult].
 
 Provides utilities for functional composition of
-asynchronous [trcks.Result][]-returning functions.
+asynchronous [`Result`][trcks.Result]-returning functions.
 
 Examples:
     >>> import asyncio
@@ -141,22 +141,24 @@ def map_failure_to_awaitable_result_iterable(
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[AwaitableResult[_F1, _S1]], AwaitableResultTuple[_F2, _S1 | _S2]]:
-    """Create function that maps [trcks.Failure][] values
-    to [trcks.AwaitableResultTuple][] values.
+    """Create function that maps [`Failure`][trcks.Failure] values
+    to [`AwaitableResultTuple`][trcks.AwaitableResultTuple] values.
 
-    [trcks.Success][] values are left unchanged.
+    [`Success`][trcks.Success] values are left unchanged.
 
     Args:
-        callable_: Asynchronous function to apply to the [trcks.Failure][] values.
+        callable_: Asynchronous function to apply to the [`Failure`][trcks.Failure]
+            values.
         *args:
             Positional arguments to be passed to `callable_`.
         **kwargs:
             Keyword arguments to be passed to `callable_`.
 
     Returns:
-        Maps [trcks.Failure][] values to new [trcks.AwaitableResultTuple][] values
+        Maps [`Failure`][trcks.Failure] values to new
+        [`AwaitableResultTuple`][trcks.AwaitableResultTuple] values
             according to the given asynchronous function and
-            leaves [trcks.Success][] values unchanged.
+            leaves [`Success`][trcks.Success] values unchanged.
 
     Examples:
         >>> import asyncio
@@ -193,7 +195,7 @@ def map_failure_to_awaitable_result_tuple(
     **kwargs: _P.kwargs,
 ) -> Callable[[AwaitableResult[_F1, _S1]], AwaitableResultTuple[_F2, _S1 | _S2]]:
     """Deprecated alias for
-    [trcks.fp.monads.awaitable_result.map_failure_to_awaitable_result_iterable][].
+    [`map_failure_to_awaitable_result_iterable`][trcks.fp.monads.awaitable_result.map_failure_to_awaitable_result_iterable].
     """
     return map_failure_to_awaitable_result_iterable(
         callable_, *args, **kwargs
@@ -209,23 +211,24 @@ def map_failure_to_iterable(
     [AwaitableResult[_F1, _S1]],
     Awaitable[SuccessTuple[_S1] | SuccessTuple[_S2]],
 ]:
-    """Create function that maps [trcks.Failure][] values to homogeneous [tuple][]s.
+    """Create function that maps [`Failure`][trcks.Failure] values to homogeneous
+    [`tuple`][tuple]s.
 
-    [trcks.Success][] values are left unchanged.
+    [`Success`][trcks.Success] values are left unchanged.
 
     Args:
-        callable_: Synchronous function to apply to the [trcks.Failure][] values,
-            returning an [collections.abc.Iterable][].
+        callable_: Synchronous function to apply to the [`Failure`][trcks.Failure]
+            values, returning an [`Iterable`][collections.abc.Iterable].
         *args:
             Positional arguments to be passed to `callable_`.
         **kwargs:
             Keyword arguments to be passed to `callable_`.
 
     Returns:
-        Maps [trcks.Failure][] values to homogeneous [tuple][]s wrapped
-            in [trcks.AwaitableSuccessTuple][] values
+        Maps [`Failure`][trcks.Failure] values to homogeneous [`tuple`][tuple]s wrapped
+            in [`AwaitableSuccessTuple`][trcks.AwaitableSuccessTuple] values
             according to the given function and
-            leaves [trcks.Success][] values unchanged (wrapped as a tuple).
+            leaves [`Success`][trcks.Success] values unchanged (wrapped as a tuple).
 
     Examples:
         >>> import asyncio
@@ -263,22 +266,24 @@ def map_failure_to_result_iterable(
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[AwaitableResult[_F1, _S1]], AwaitableResultTuple[_F2, _S1 | _S2]]:
-    """Create function that maps [trcks.Failure][] values
-    to new [trcks.ResultTuple][] values.
+    """Create function that maps [`Failure`][trcks.Failure] values
+    to new [`ResultTuple`][trcks.ResultTuple] values.
 
-    [trcks.Success][] values are left unchanged.
+    [`Success`][trcks.Success] values are left unchanged.
 
     Args:
-        callable_: Synchronous function to apply to the [trcks.Failure][] values.
+        callable_: Synchronous function to apply to the [`Failure`][trcks.Failure]
+            values.
         *args:
             Positional arguments to be passed to `callable_`.
         **kwargs:
             Keyword arguments to be passed to `callable_`.
 
     Returns:
-        Maps [trcks.Failure][] values to new [trcks.ResultTuple][] values
+        Maps [`Failure`][trcks.Failure] values to new [`ResultTuple`][trcks.ResultTuple]
+        values
             according to the given function and
-            leaves [trcks.Success][] values unchanged (wrapped as a tuple).
+            leaves [`Success`][trcks.Success] values unchanged (wrapped as a tuple).
 
     Examples:
         >>> import asyncio
@@ -312,7 +317,7 @@ def map_failure_to_result_tuple(
     **kwargs: _P.kwargs,
 ) -> Callable[[AwaitableResult[_F1, _S1]], AwaitableResultTuple[_F2, _S1 | _S2]]:
     """Deprecated alias for
-    [trcks.fp.monads.awaitable_result.map_failure_to_result_iterable][].
+    [`map_failure_to_result_iterable`][trcks.fp.monads.awaitable_result.map_failure_to_result_iterable].
     """
     return map_failure_to_result_iterable(
         callable_, *args, **kwargs
@@ -330,7 +335,7 @@ def map_failure_to_tuple(
     Awaitable[SuccessTuple[_S1] | SuccessTuple[_S2]],
 ]:
     """Deprecated alias for
-    [trcks.fp.monads.awaitable_result.map_failure_to_iterable][].
+    [`map_failure_to_iterable`][trcks.fp.monads.awaitable_result.map_failure_to_iterable].
     """
     return map_failure_to_iterable(callable_, *args, **kwargs)  # pragma: no cover
 
@@ -341,22 +346,24 @@ def map_success_to_awaitable_result_iterable(
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[AwaitableResult[_F1, _S1]], AwaitableResultTuple[_F1 | _F2, _S2]]:
-    """Create function that maps [trcks.Success][] values
-    to [trcks.AwaitableResultTuple][] values.
+    """Create function that maps [`Success`][trcks.Success] values
+    to [`AwaitableResultTuple`][trcks.AwaitableResultTuple] values.
 
-    [trcks.Failure][] values are left unchanged.
+    [`Failure`][trcks.Failure] values are left unchanged.
 
     Args:
-        callable_: Asynchronous function to apply to the [trcks.Success][] values.
+        callable_: Asynchronous function to apply to the [`Success`][trcks.Success]
+            values.
         *args:
             Positional arguments to be passed to `callable_`.
         **kwargs:
             Keyword arguments to be passed to `callable_`.
 
     Returns:
-        Leaves [trcks.Failure][] values unchanged and
-            maps [trcks.Success][] values to new [trcks.AwaitableResultTuple][]
-            values according to the given asynchronous function.
+        Leaves [`Failure`][trcks.Failure] values unchanged and
+            maps [`Success`][trcks.Success] values to new
+            [`AwaitableResultTuple`][trcks.AwaitableResultTuple] values according to the
+            given asynchronous function.
 
     Examples:
         >>> import asyncio
@@ -393,7 +400,7 @@ def map_success_to_awaitable_result_tuple(
     **kwargs: _P.kwargs,
 ) -> Callable[[AwaitableResult[_F1, _S1]], AwaitableResultTuple[_F1 | _F2, _S2]]:
     """Deprecated alias for
-    [trcks.fp.monads.awaitable_result.map_success_to_awaitable_result_iterable][].
+    [`map_success_to_awaitable_result_iterable`][trcks.fp.monads.awaitable_result.map_success_to_awaitable_result_iterable].
     """
     return map_success_to_awaitable_result_iterable(
         callable_, *args, **kwargs
@@ -406,21 +413,22 @@ def map_success_to_iterable(
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[AwaitableResult[_F1, _S1]], AwaitableResultTuple[_F1, _S2]]:
-    """Create function that maps [trcks.Success][] values to homogeneous [tuple][]s.
+    """Create function that maps [`Success`][trcks.Success] values to homogeneous
+    [`tuple`][tuple]s.
 
-    [trcks.Failure][] values are left unchanged.
+    [`Failure`][trcks.Failure] values are left unchanged.
 
     Args:
-        callable_: Synchronous function to apply to the [trcks.Success][] values,
-            returning an [collections.abc.Iterable][].
+        callable_: Synchronous function to apply to the [`Success`][trcks.Success]
+            values, returning an [`Iterable`][collections.abc.Iterable].
         *args:
             Positional arguments to be passed to `callable_`.
         **kwargs:
             Keyword arguments to be passed to `callable_`.
 
     Returns:
-        Leaves [trcks.Failure][] values unchanged and
-            maps [trcks.Success][] values to homogeneous [tuple][]s
+        Leaves [`Failure`][trcks.Failure] values unchanged and
+            maps [`Success`][trcks.Success] values to homogeneous [`tuple`][tuple]s
             according to the given function.
 
     Examples:
@@ -450,22 +458,23 @@ def map_success_to_result_iterable(
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[AwaitableResult[_F1, _S1]], AwaitableResultTuple[_F1 | _F2, _S2]]:
-    """Create function that maps [trcks.Success][] values
-    to new [trcks.ResultTuple][] values.
+    """Create function that maps [`Success`][trcks.Success] values
+    to new [`ResultTuple`][trcks.ResultTuple] values.
 
-    [trcks.Failure][] values are left unchanged.
+    [`Failure`][trcks.Failure] values are left unchanged.
 
     Args:
-        callable_: Synchronous function to apply to the [trcks.Success][] values.
+        callable_: Synchronous function to apply to the [`Success`][trcks.Success]
+            values.
         *args:
             Positional arguments to be passed to `callable_`.
         **kwargs:
             Keyword arguments to be passed to `callable_`.
 
     Returns:
-        Leaves [trcks.Failure][] values unchanged and
-            maps [trcks.Success][] values to new [trcks.ResultTuple][] values
-            according to the given function.
+        Leaves [`Failure`][trcks.Failure] values unchanged and
+            maps [`Success`][trcks.Success] values to new
+            [`ResultTuple`][trcks.ResultTuple] values according to the given function.
 
     Examples:
         >>> import asyncio
@@ -499,7 +508,7 @@ def map_success_to_result_tuple(
     **kwargs: _P.kwargs,
 ) -> Callable[[AwaitableResult[_F1, _S1]], AwaitableResultTuple[_F1 | _F2, _S2]]:
     """Deprecated alias for
-    [trcks.fp.monads.awaitable_result.map_success_to_result_iterable][].
+    [`map_success_to_result_iterable`][trcks.fp.monads.awaitable_result.map_success_to_result_iterable].
     """
     return map_success_to_result_iterable(
         callable_, *args, **kwargs
@@ -514,7 +523,7 @@ def map_success_to_tuple(
     **kwargs: _P.kwargs,
 ) -> Callable[[AwaitableResult[_F1, _S1]], AwaitableResultTuple[_F1, _S2]]:
     """Deprecated alias for
-    [trcks.fp.monads.awaitable_result.map_success_to_iterable][].
+    [`map_success_to_iterable`][trcks.fp.monads.awaitable_result.map_success_to_iterable].
     """
     return map_success_to_iterable(callable_, *args, **kwargs)  # pragma: no cover
 
@@ -525,26 +534,27 @@ def tap_failure_to_awaitable_result_iterable(
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[AwaitableResult[_F1, _S1]], AwaitableResultTuple[_F1, _S1 | _S2]]:
-    """Create function that applies an asynchronous side effect
-    with return type [trcks.AwaitableResultIterable][] to [trcks.Failure][] values.
+    """Create function that applies an asynchronous side effect with return type
+    [`AwaitableResultIterable`][trcks.AwaitableResultIterable] to
+    [`Failure`][trcks.Failure] values.
 
-    [trcks.Success][] values are passed on without side effects.
+    [`Success`][trcks.Success] values are passed on without side effects.
 
     Args:
-        callable_: Asynchronous side effect to apply to the [trcks.Failure][] value.
+        callable_: Asynchronous side effect to apply to the [`Failure`][trcks.Failure]
+            value.
         *args:
             Positional arguments to be passed to `callable_`.
         **kwargs:
             Keyword arguments to be passed to `callable_`.
 
     Returns:
-        Applies the given side effect to [trcks.Failure][] values.
-            If the given side effect returns a [trcks.Failure][],
-            *the original* [trcks.Failure][] is returned.
-            If the given side effect returns a [trcks.SuccessIterable][],
-            *this* [trcks.SuccessIterable][] is returned.
-            Passes on [trcks.Success][] values (wrapped as a tuple)
-            without side effects.
+        Applies the given side effect to [`Failure`][trcks.Failure] values.
+            If the given side effect returns a [`Failure`][trcks.Failure], *the
+            original* [`Failure`][trcks.Failure] is returned. If the given side effect
+            returns a [`SuccessIterable`][trcks.SuccessIterable], *this*
+            [`SuccessIterable`][trcks.SuccessIterable] is returned. Passes on
+            [`Success`][trcks.Success] values (wrapped as a tuple) without side effects.
 
     Examples:
         >>> import asyncio
@@ -581,7 +591,7 @@ def tap_failure_to_awaitable_result_tuple(
     **kwargs: _P.kwargs,
 ) -> Callable[[AwaitableResult[_F1, _S1]], AwaitableResultTuple[_F1, _S1 | _S2]]:
     """Deprecated alias for
-    [trcks.fp.monads.awaitable_result.tap_failure_to_awaitable_result_iterable][].
+    [`tap_failure_to_awaitable_result_iterable`][trcks.fp.monads.awaitable_result.tap_failure_to_awaitable_result_iterable].
     """
     return tap_failure_to_awaitable_result_iterable(
         callable_, *args, **kwargs
@@ -597,25 +607,26 @@ def tap_failure_to_iterable(
     [AwaitableResult[_F1, _S1]],
     Awaitable[SuccessTuple[_F1] | SuccessTuple[_S1]],
 ]:
-    """Create function that applies a [collections.abc.Iterable][]-returning
-    side effect to [trcks.Failure][] values.
+    """Create function that applies a [`Iterable`][collections.abc.Iterable]-returning
+    side effect to [`Failure`][trcks.Failure] values.
 
-    [trcks.Success][] values are passed on without side effects.
+    [`Success`][trcks.Success] values are passed on without side effects.
 
     Args:
-        callable_: Side effect to apply to the [trcks.Failure][] value,
-            returning an [collections.abc.Iterable][].
+        callable_: Side effect to apply to the [`Failure`][trcks.Failure] value,
+            returning an [`Iterable`][collections.abc.Iterable].
         *args:
             Positional arguments to be passed to `callable_`.
         **kwargs:
             Keyword arguments to be passed to `callable_`.
 
     Returns:
-        Applies the given side effect to [trcks.Failure][] values and converts them
-            to [trcks.AwaitableSuccessTuple][] values containing
+        Applies the given side effect to [`Failure`][trcks.Failure] values and converts
+        them
+            to [`AwaitableSuccessTuple`][trcks.AwaitableSuccessTuple] values containing
             the original failure repeated once per element
-            in the [collections.abc.Iterable][] returned by the side effect.
-            Passes on [trcks.Success][] values (wrapped as a tuple)
+            in the [`Iterable`][collections.abc.Iterable] returned by the side effect.
+            Passes on [`Success`][trcks.Success] values (wrapped as a tuple)
             without side effects.
 
     Examples:
@@ -658,25 +669,24 @@ def tap_failure_to_result_iterable(
     **kwargs: _P.kwargs,
 ) -> Callable[[AwaitableResult[_F1, _S1]], AwaitableResultTuple[_F1, _S1 | _S2]]:
     """Create function that applies a side effect with return type
-    [trcks.ResultIterable][] to [trcks.Failure][] values.
+    [`ResultIterable`][trcks.ResultIterable] to [`Failure`][trcks.Failure] values.
 
-    [trcks.Success][] values are passed on without side effects.
+    [`Success`][trcks.Success] values are passed on without side effects.
 
     Args:
-        callable_: Side effect to apply to the [trcks.Failure][] value.
+        callable_: Side effect to apply to the [`Failure`][trcks.Failure] value.
         *args:
             Positional arguments to be passed to `callable_`.
         **kwargs:
             Keyword arguments to be passed to `callable_`.
 
     Returns:
-        Applies the given side effect to [trcks.Failure][] values.
-            If the given side effect returns a [trcks.Failure][],
-            *the original* [trcks.Failure][] is returned.
-            If the given side effect returns a [trcks.SuccessIterable][],
-            *this* [trcks.SuccessIterable][] is returned.
-            Passes on [trcks.Success][] values (wrapped as a tuple)
-            without side effects.
+        Applies the given side effect to [`Failure`][trcks.Failure] values.
+            If the given side effect returns a [`Failure`][trcks.Failure], *the
+            original* [`Failure`][trcks.Failure] is returned. If the given side effect
+            returns a [`SuccessIterable`][trcks.SuccessIterable], *this*
+            [`SuccessIterable`][trcks.SuccessIterable] is returned. Passes on
+            [`Success`][trcks.Success] values (wrapped as a tuple) without side effects.
 
     Examples:
         >>> import asyncio
@@ -710,7 +720,7 @@ def tap_failure_to_result_tuple(
     **kwargs: _P.kwargs,
 ) -> Callable[[AwaitableResult[_F1, _S1]], AwaitableResultTuple[_F1, _S1 | _S2]]:
     """Deprecated alias for
-    [trcks.fp.monads.awaitable_result.tap_failure_to_result_iterable][].
+    [`tap_failure_to_result_iterable`][trcks.fp.monads.awaitable_result.tap_failure_to_result_iterable].
     """
     return tap_failure_to_result_iterable(
         callable_, *args, **kwargs
@@ -728,7 +738,7 @@ def tap_failure_to_tuple(
     Awaitable[SuccessTuple[_F1] | SuccessTuple[_S1]],
 ]:
     """Deprecated alias for
-    [trcks.fp.monads.awaitable_result.tap_failure_to_iterable][].
+    [`tap_failure_to_iterable`][trcks.fp.monads.awaitable_result.tap_failure_to_iterable].
     """
     return tap_failure_to_iterable(callable_, *args, **kwargs)  # pragma: no cover
 
@@ -739,27 +749,29 @@ def tap_success_to_awaitable_result_iterable(
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[AwaitableResult[_F1, _S1]], AwaitableResultTuple[_F1 | _F2, _S1]]:
-    """Create function that applies an asynchronous side effect
-    with return type [trcks.AwaitableResultIterable][] to [trcks.Success][] values.
+    """Create function that applies an asynchronous side effect with return type
+    [`AwaitableResultIterable`][trcks.AwaitableResultIterable] to
+    [`Success`][trcks.Success] values.
 
-    [trcks.Failure][] values are passed on without side effects.
+    [`Failure`][trcks.Failure] values are passed on without side effects.
 
     Args:
-        callable_: Asynchronous side effect to apply to the [trcks.Success][] value.
+        callable_: Asynchronous side effect to apply to the [`Success`][trcks.Success]
+            value.
         *args:
             Positional arguments to be passed to `callable_`.
         **kwargs:
             Keyword arguments to be passed to `callable_`.
 
     Returns:
-        Passes on [trcks.Failure][] values (wrapped as a tuple)
-            without side effects.
-            Applies the given side effect to [trcks.Success][] values.
-            If the given side effect returns a [trcks.Failure][],
-            *this* [trcks.Failure][] is returned.
-            If the given side effect returns a [trcks.SuccessIterable][],
-            *the original* [trcks.Success][] value is repeated once per element
-            in the returned [trcks.SuccessIterable][].
+        Passes on [`Failure`][trcks.Failure] values (wrapped as a tuple)
+            without side effects. Applies the given side effect to
+            [`Success`][trcks.Success] values. If the given side effect returns a
+            [`Failure`][trcks.Failure], *this* [`Failure`][trcks.Failure] is returned.
+            If the given side effect returns a
+            [`SuccessIterable`][trcks.SuccessIterable], *the original*
+            [`Success`][trcks.Success] value is repeated once per element in the
+            returned [`SuccessIterable`][trcks.SuccessIterable].
 
     Examples:
         >>> import asyncio
@@ -797,7 +809,7 @@ def tap_success_to_awaitable_result_tuple(
     **kwargs: _P.kwargs,
 ) -> Callable[[AwaitableResult[_F1, _S1]], AwaitableResultTuple[_F1 | _F2, _S1]]:
     """Deprecated alias for
-    [trcks.fp.monads.awaitable_result.tap_success_to_awaitable_result_iterable][].
+    [`tap_success_to_awaitable_result_iterable`][trcks.fp.monads.awaitable_result.tap_success_to_awaitable_result_iterable].
     """
     return tap_success_to_awaitable_result_iterable(
         callable_, *args, **kwargs
@@ -810,25 +822,25 @@ def tap_success_to_iterable(
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[AwaitableResult[_F1, _S1]], AwaitableResultTuple[_F1, _S1]]:
-    """Create function that applies a [collections.abc.Iterable][]-returning
-    side effect to [trcks.Success][] values.
+    """Create function that applies a [`Iterable`][collections.abc.Iterable]-returning
+    side effect to [`Success`][trcks.Success] values.
 
-    [trcks.Failure][] values are passed on without side effects.
+    [`Failure`][trcks.Failure] values are passed on without side effects.
 
     Args:
-        callable_: Side effect to apply to the [trcks.Success][] value,
-            returning an [collections.abc.Iterable][].
+        callable_: Side effect to apply to the [`Success`][trcks.Success] value,
+            returning an [`Iterable`][collections.abc.Iterable].
         *args:
             Positional arguments to be passed to `callable_`.
         **kwargs:
             Keyword arguments to be passed to `callable_`.
 
     Returns:
-        Passes on [trcks.Failure][] values (wrapped as a tuple)
+        Passes on [`Failure`][trcks.Failure] values (wrapped as a tuple)
             without side effects.
-            Applies the given side effect to [trcks.Success][] values and
+            Applies the given side effect to [`Success`][trcks.Success] values and
             repeats the original element once per element
-            in the [collections.abc.Iterable][] returned by the side effect.
+            in the [`Iterable`][collections.abc.Iterable] returned by the side effect.
 
     Examples:
         >>> import asyncio
@@ -863,26 +875,26 @@ def tap_success_to_result_iterable(
     **kwargs: _P.kwargs,
 ) -> Callable[[AwaitableResult[_F1, _S1]], AwaitableResultTuple[_F1 | _F2, _S1]]:
     """Create function that applies a side effect with return type
-    [trcks.ResultIterable][] to [trcks.Success][] values.
+    [`ResultIterable`][trcks.ResultIterable] to [`Success`][trcks.Success] values.
 
-    [trcks.Failure][] values are passed on without side effects.
+    [`Failure`][trcks.Failure] values are passed on without side effects.
 
     Args:
-        callable_: Side effect to apply to the [trcks.Success][] value.
+        callable_: Side effect to apply to the [`Success`][trcks.Success] value.
         *args:
             Positional arguments to be passed to `callable_`.
         **kwargs:
             Keyword arguments to be passed to `callable_`.
 
     Returns:
-        Passes on [trcks.Failure][] values (wrapped as a tuple)
-            without side effects.
-            Applies the given side effect to [trcks.Success][] values.
-            If the given side effect returns a [trcks.Failure][],
-            *this* [trcks.Failure][] is returned.
-            If the given side effect returns a [trcks.SuccessIterable][],
-            *the original* [trcks.Success][] value is repeated once per element
-            in the returned [trcks.SuccessIterable][].
+        Passes on [`Failure`][trcks.Failure] values (wrapped as a tuple)
+            without side effects. Applies the given side effect to
+            [`Success`][trcks.Success] values. If the given side effect returns a
+            [`Failure`][trcks.Failure], *this* [`Failure`][trcks.Failure] is returned.
+            If the given side effect returns a
+            [`SuccessIterable`][trcks.SuccessIterable], *the original*
+            [`Success`][trcks.Success] value is repeated once per element in the
+            returned [`SuccessIterable`][trcks.SuccessIterable].
 
     Examples:
         >>> import asyncio
@@ -916,7 +928,7 @@ def tap_success_to_result_tuple(
     **kwargs: _P.kwargs,
 ) -> Callable[[AwaitableResult[_F1, _S1]], AwaitableResultTuple[_F1 | _F2, _S1]]:
     """Deprecated alias for
-    [trcks.fp.monads.awaitable_result.tap_success_to_result_iterable][].
+    [`tap_success_to_result_iterable`][trcks.fp.monads.awaitable_result.tap_success_to_result_iterable].
     """
     return tap_success_to_result_iterable(
         callable_, *args, **kwargs
@@ -931,6 +943,6 @@ def tap_success_to_tuple(
     **kwargs: _P.kwargs,
 ) -> Callable[[AwaitableResult[_F1, _S1]], AwaitableResultTuple[_F1, _S1]]:
     """Deprecated alias for
-    [trcks.fp.monads.awaitable_result.tap_success_to_iterable][].
+    [`tap_success_to_iterable`][trcks.fp.monads.awaitable_result.tap_success_to_iterable].
     """
     return tap_success_to_iterable(callable_, *args, **kwargs)  # pragma: no cover

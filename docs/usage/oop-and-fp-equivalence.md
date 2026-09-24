@@ -1,8 +1,8 @@
 # `trcks.oop` and `trcks.fp` equivalence
 
 `trcks` supports two equivalent programming styles:
-[trcks.oop][] (method chaining)
-and [trcks.fp][] (function composition).
+[`oop`][trcks.oop] (method chaining)
+and [`fp`][trcks.fp] (function composition).
 This page maps common operations from one style to the other.
 
 | Operation | `trcks.oop` | `trcks.fp` |

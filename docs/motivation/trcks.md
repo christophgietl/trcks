@@ -1,6 +1,6 @@
 # `trcks`
 
-The following questions motivate the package [trcks][] in particular.
+The following questions motivate the package [`trcks`][trcks] in particular.
 
 ## What do I need for railway-oriented programming?
 
@@ -63,8 +63,8 @@ Therefore, we need a library that helps us combine functions.
 
 ## How does the package `trcks.oop` help with function combination?
 
-The package [trcks.oop][] supports combining functions in an object-oriented style
-using method chaining:
+The package [`oop`][trcks.oop] supports combining functions in an
+object-oriented style using method chaining:
 
 ???+ example
 
@@ -91,7 +91,7 @@ using method chaining:
 
 ## How does the package `trcks.fp` help with function combination?
 
-The package [trcks.fp][] supports combining functions in a functional style
+The package [`fp`][trcks.fp] supports combining functions in a functional style
 using function composition:
 
 ???+ example

@@ -1,23 +1,24 @@
-"""Functional interface for [trcks][].
+"""Functional interface for [`trcks`][trcks].
 
 This package provides functions for processing values of the following generic types
 in a functional style:
 
-- [collections.abc.Awaitable][]
-- [trcks.AwaitableResult][]
-- [trcks.AwaitableResultTuple][]
-- [trcks.AwaitableTuple][]
-- [trcks.Result][]
-- [trcks.ResultTuple][]
-- [tuple][] (homogeneous)
+- [`Awaitable`][collections.abc.Awaitable]
+- [`AwaitableResult`][trcks.AwaitableResult]
+- [`AwaitableResultTuple`][trcks.AwaitableResultTuple]
+- [`AwaitableTuple`][trcks.AwaitableTuple]
+- [`Result`][trcks.Result]
+- [`ResultTuple`][trcks.ResultTuple]
+- [`tuple`][tuple] (homogeneous)
 
 Modules:
     composition: Types and higher-order functions for function composition.
     monads: Monadic functions for generic types.
 
 Examples:
-    Use the modules [trcks.fp.composition][] and [trcks.fp.monads.result][]
-    to create and further process a value of type [trcks.Result][]:
+    Use the modules [`composition`][trcks.fp.composition]
+    and [`result`][trcks.fp.monads.result]
+    to create and further process a value of type [`Result`][trcks.Result]:
 
     >>> import math
     >>> from typing import Literal
@@ -41,7 +42,7 @@ Examples:
     ('failure', 'negative value')
 
     If your static type checker cannot infer the type of
-    the arguments passed to [trcks.fp.composition.pipe][],
+    the arguments passed to [`pipe`][trcks.fp.composition.pipe],
     you can explicitly assign a type:
 
     >>> import math
