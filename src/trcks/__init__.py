@@ -9,15 +9,20 @@ Modules:
     oop: Classes for ROP in an object-oriented style.
 
 Attributes:
-    AwaitableFailure: Awaitable that yields a [trcks.Failure][].
-    AwaitableIterable: Awaitable that yields a [collections.abc.Iterable][].
-    AwaitableResult: Awaitable that yields a [trcks.Result][].
-    AwaitableResultIterable: Awaitable that yields a [trcks.ResultIterable][].
-    AwaitableResultTuple: Awaitable that yields a [trcks.ResultTuple][].
-    AwaitableSuccess: Awaitable that yields a [trcks.Success][].
-    AwaitableSuccessIterable: Awaitable that yields a [trcks.SuccessIterable][].
-    AwaitableSuccessTuple: Awaitable that yields a [trcks.SuccessTuple][].
-    AwaitableTuple: Awaitable that yields a homogeneous [tuple][].
+    AwaitableFailure: [collections.abc.Awaitable][] yielding a [trcks.Failure][].
+    AwaitableIterable: [collections.abc.Awaitable][]
+    yielding a [collections.abc.Iterable][].
+    AwaitableResult: [collections.abc.Awaitable][] yielding a [trcks.Result][].
+    AwaitableResultIterable: [collections.abc.Awaitable][] yielding a
+    [trcks.ResultIterable][].
+    AwaitableResultTuple: [collections.abc.Awaitable][]
+    yielding a [trcks.ResultTuple][].
+    AwaitableSuccess: [collections.abc.Awaitable][] yielding a [trcks.Success][].
+    AwaitableSuccessIterable: [collections.abc.Awaitable][]
+    yielding a [trcks.SuccessIterable][].
+    AwaitableSuccessTuple: [collections.abc.Awaitable][]
+    yielding a [trcks.SuccessTuple][].
+    AwaitableTuple: [collections.abc.Awaitable][] yielding a homogeneous [tuple][].
     Failure: [tuple][] containing ``"failure"`` and a value of type `_F_co`.
     Result: Union of [trcks.Failure][] and [trcks.Success][].
     ResultIterable: [trcks.Result][] with a [collections.abc.Iterable][] success.
