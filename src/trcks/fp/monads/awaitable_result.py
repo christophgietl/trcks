@@ -607,7 +607,7 @@ def tap_failure_to_iterable(
     [AwaitableResult[_F1, _S1]],
     Awaitable[SuccessTuple[_F1] | SuccessTuple[_S1]],
 ]:
-    """Create function that applies a [`Iterable`][collections.abc.Iterable]-returning
+    """Create function that applies an [`Iterable`][collections.abc.Iterable]-returning
     side effect to [`Failure`][trcks.Failure] values.
 
     [`Success`][trcks.Success] values are passed on without side effects.
@@ -822,7 +822,7 @@ def tap_success_to_iterable(
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[AwaitableResult[_F1, _S1]], AwaitableResultTuple[_F1, _S1]]:
-    """Create function that applies a [`Iterable`][collections.abc.Iterable]-returning
+    """Create function that applies an [`Iterable`][collections.abc.Iterable]-returning
     side effect to [`Success`][trcks.Success] values.
 
     [`Failure`][trcks.Failure] values are passed on without side effects.

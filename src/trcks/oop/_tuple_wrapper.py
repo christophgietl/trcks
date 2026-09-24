@@ -103,7 +103,7 @@ class TupleWrapper(BaseWrapper[tuple[_T_co, ...]]):
 
     @staticmethod
     def construct_from_iterable(it: Iterable[_T], /) -> TupleWrapper[_T]:
-        """Wrap a [`Iterable`][collections.abc.Iterable] object and convert it into a
+        """Wrap an [`Iterable`][collections.abc.Iterable] object and convert it into a
         [`tuple`][tuple].
 
         Args:
@@ -225,7 +225,7 @@ class TupleWrapper(BaseWrapper[tuple[_T_co, ...]]):
 
         Args:
             callable_: The asynchronous function to be applied to each element,
-                returning a [`AwaitableIterable`][trcks.AwaitableIterable].
+                returning an [`AwaitableIterable`][trcks.AwaitableIterable].
             *args:
                 Positional arguments to be passed to `callable_`.
             **kwargs:
@@ -674,7 +674,7 @@ class TupleWrapper(BaseWrapper[tuple[_T_co, ...]]):
 
         Args:
             callable_: The asynchronous side effect to be applied to each element,
-                returning a [`AwaitableIterable`][trcks.AwaitableIterable].
+                returning an [`AwaitableIterable`][trcks.AwaitableIterable].
             *args:
                 Positional arguments to be passed to `callable_`.
             **kwargs:

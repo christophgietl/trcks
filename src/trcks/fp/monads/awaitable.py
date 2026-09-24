@@ -114,7 +114,7 @@ def map_to_awaitable_iterable(
 
     Args:
         callable_: Asynchronous function to apply to the awaited value,
-            returning a [`AwaitableIterable`][trcks.AwaitableIterable].
+            returning an [`AwaitableIterable`][trcks.AwaitableIterable].
         *args:
             Positional arguments to be passed to `callable_`.
         **kwargs:
@@ -156,7 +156,7 @@ def map_to_awaitable_result(
 
     Args:
         callable_: Asynchronous function to apply to the awaited value,
-            returning a [`AwaitableResult`][trcks.AwaitableResult].
+            returning an [`AwaitableResult`][trcks.AwaitableResult].
         *args:
             Positional arguments to be passed to `callable_`.
         **kwargs:
@@ -210,7 +210,7 @@ def map_to_awaitable_result_iterable(
 
     Args:
         callable_: Asynchronous function to apply to the awaited value,
-            returning a [`AwaitableResultIterable`][trcks.AwaitableResultIterable].
+            returning an [`AwaitableResultIterable`][trcks.AwaitableResultIterable].
         *args:
             Positional arguments to be passed to `callable_`.
         **kwargs:
@@ -286,12 +286,12 @@ def map_to_iterable(
     **kwargs: _P.kwargs,
 ) -> Callable[[Awaitable[_T1]], AwaitableTuple[_T2]]:
     """Create function that maps the value of an
-    [`Awaitable`][collections.abc.Awaitable] to a [`Iterable`][collections.abc.Iterable]
-    and flattens the result.
+    [`Awaitable`][collections.abc.Awaitable] to an
+    [`Iterable`][collections.abc.Iterable] and flattens the result.
 
     Args:
         callable_: Synchronous function to apply to the awaited value,
-            returning a [`Iterable`][collections.abc.Iterable].
+            returning an [`Iterable`][collections.abc.Iterable].
         *args:
             Positional arguments to be passed to `callable_`.
         **kwargs:
@@ -452,7 +452,7 @@ def tap_to_awaitable_iterable(
 
     Args:
         callable_: Asynchronous side effect to apply to the awaited value,
-            returning a [`AwaitableIterable`][trcks.AwaitableIterable].
+            returning an [`AwaitableIterable`][trcks.AwaitableIterable].
         *args:
             Positional arguments to be passed to `callable_`.
         **kwargs:
@@ -499,7 +499,7 @@ def tap_to_awaitable_result(
 
     Args:
         callable_: Asynchronous side effect to apply to the awaited value,
-            returning a [`AwaitableResult`][trcks.AwaitableResult].
+            returning an [`AwaitableResult`][trcks.AwaitableResult].
         *args:
             Positional arguments to be passed to `callable_`.
         **kwargs:
@@ -570,7 +570,7 @@ def tap_to_awaitable_result_iterable(
 
     Args:
         callable_: Asynchronous side effect to apply to the awaited value,
-            returning a [`AwaitableResultIterable`][trcks.AwaitableResultIterable].
+            returning an [`AwaitableResultIterable`][trcks.AwaitableResultIterable].
         *args:
             Positional arguments to be passed to `callable_`.
         **kwargs:
@@ -653,7 +653,7 @@ def tap_to_iterable(
 
     Args:
         callable_: Synchronous side effect to apply to the awaited value,
-            returning a [`Iterable`][collections.abc.Iterable].
+            returning an [`Iterable`][collections.abc.Iterable].
         *args:
             Positional arguments to be passed to `callable_`.
         **kwargs:

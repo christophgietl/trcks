@@ -274,7 +274,8 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
                 Keyword arguments to be passed to `callable_`.
 
         Returns:
-            A [`AwaitableResultWrapper`][trcks.oop.AwaitableResultWrapper] instance with
+            An [`AwaitableResultWrapper`][trcks.oop.AwaitableResultWrapper]
+            instance with
                 the result of the function application.
 
         Examples:
@@ -322,7 +323,7 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
                 Keyword arguments to be passed to `callable_`.
 
         Returns:
-            A [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
+            An [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
             instance with
                 the result of the function application.
 
@@ -440,7 +441,8 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
                 Keyword arguments to be passed to `callable_`.
 
         Returns:
-            A [`AwaitableResultWrapper`][trcks.oop.AwaitableResultWrapper] instance with
+            An [`AwaitableResultWrapper`][trcks.oop.AwaitableResultWrapper]
+            instance with
                 the result of the function application.
 
         Examples:
@@ -483,7 +485,7 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
                 Keyword arguments to be passed to `callable_`.
 
         Returns:
-            A [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
+            An [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
             instance with
                 the result of the function application.
 
@@ -588,7 +590,7 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
                 Keyword arguments to be passed to `callable_`.
 
         Returns:
-            A [`AwaitableWrapper`][trcks.oop.AwaitableWrapper] instance with the
+            An [`AwaitableWrapper`][trcks.oop.AwaitableWrapper] instance with the
             original wrapped object.
 
         Examples:
@@ -623,7 +625,7 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
 
         Args:
             callable_: The asynchronous side effect to be applied,
-                returning a [`AwaitableIterable`][trcks.AwaitableIterable].
+                returning an [`AwaitableIterable`][trcks.AwaitableIterable].
             *args:
                 Positional arguments to be passed to `callable_`.
             **kwargs:
@@ -676,7 +678,8 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
                 Keyword arguments to be passed to `callable_`.
 
         Returns:
-            A [`AwaitableResultWrapper`][trcks.oop.AwaitableResultWrapper] instance with
+            An [`AwaitableResultWrapper`][trcks.oop.AwaitableResultWrapper]
+            instance with
 
                 - *the returned* [`Failure`][trcks.Failure]
                     if the given side effect returns a [`Failure`][trcks.Failure] or
@@ -738,7 +741,7 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
                 Keyword arguments to be passed to `callable_`.
 
         Returns:
-            A [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
+            An [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
             instance with
 
                 - *the returned* [`Failure`][trcks.Failure]
@@ -867,7 +870,8 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
                 Keyword arguments to be passed to `callable_`.
 
         Returns:
-            A [`AwaitableResultWrapper`][trcks.oop.AwaitableResultWrapper] instance with
+            An [`AwaitableResultWrapper`][trcks.oop.AwaitableResultWrapper]
+            instance with
 
                 - *the returned* [`Failure`][trcks.Failure]
                     if the given side effect returns a [`Failure`][trcks.Failure] or
@@ -922,7 +926,7 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
                 Keyword arguments to be passed to `callable_`.
 
         Returns:
-            A [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
+            An [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
             instance with
 
                 - *the returned* [`Failure`][trcks.Failure]

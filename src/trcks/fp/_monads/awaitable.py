@@ -22,7 +22,7 @@ async def _construct(value: _T, /) -> _T:
 
 
 def construct(value: _T, /) -> Awaitable[_T]:
-    """Create a [`Awaitable`][collections.abc.Awaitable] from a value.
+    """Create an [`Awaitable`][collections.abc.Awaitable] from a value.
 
     Args:
         value: The value to create the [`Awaitable`][collections.abc.Awaitable] from.
@@ -55,7 +55,7 @@ def map_(
     Args:
         callable_:
             The synchronous function to be transformed into a function expecting and
-            returning a [`Awaitable`][collections.abc.Awaitable].
+            returning an [`Awaitable`][collections.abc.Awaitable].
         *args:
             Positional arguments to be passed to `callable_`.
         **kwargs:
@@ -144,13 +144,13 @@ def tap(
     **kwargs: _P.kwargs,
 ) -> Callable[[Awaitable[_T1]], Awaitable[_T1]]:
     """Turn synchronous function into a function
-    expecting a [`Awaitable`][collections.abc.Awaitable] and
+    expecting an [`Awaitable`][collections.abc.Awaitable] and
     returning the same [`Awaitable`][collections.abc.Awaitable].
 
     Args:
         callable_:
             The synchronous function to be transformed into a function
-            expecting a [`Awaitable`][collections.abc.Awaitable] and
+            expecting an [`Awaitable`][collections.abc.Awaitable] and
             returning the same [`Awaitable`][collections.abc.Awaitable].
         *args:
             Positional arguments to be passed to `callable_`.
@@ -159,7 +159,7 @@ def tap(
 
     Returns:
         The given function transformed into a function
-            expecting a [`Awaitable`][collections.abc.Awaitable] and
+            expecting an [`Awaitable`][collections.abc.Awaitable] and
             returning the same [`Awaitable`][collections.abc.Awaitable].
 
     Examples:
@@ -189,13 +189,13 @@ def tap_to_awaitable(
     **kwargs: _P.kwargs,
 ) -> Callable[[Awaitable[_T1]], Awaitable[_T1]]:
     """Turn [`Awaitable`][collections.abc.Awaitable]-returning function into a function
-    expecting a [`Awaitable`][collections.abc.Awaitable] and
+    expecting an [`Awaitable`][collections.abc.Awaitable] and
     returning the same [`Awaitable`][collections.abc.Awaitable].
 
     Args:
         callable_:
             The asynchronous function to be transformed into a function
-            expecting a [`Awaitable`][collections.abc.Awaitable] and
+            expecting an [`Awaitable`][collections.abc.Awaitable] and
             returning the same [`Awaitable`][collections.abc.Awaitable].
         *args:
             Positional arguments to be passed to `callable_`.
@@ -204,7 +204,7 @@ def tap_to_awaitable(
 
     Returns:
         The given function transformed into a function
-            expecting a [`Awaitable`][collections.abc.Awaitable] and
+            expecting an [`Awaitable`][collections.abc.Awaitable] and
             returning the same [`Awaitable`][collections.abc.Awaitable].
 
     Examples:
@@ -234,7 +234,7 @@ def tap_to_awaitable(
 
 
 async def to_coroutine(awtbl: Awaitable[_T], /) -> _T:
-    """Turn a [`Awaitable`][collections.abc.Awaitable] into a
+    """Turn an [`Awaitable`][collections.abc.Awaitable] into a
     [`Coroutine`][collections.abc.Coroutine].
 
     This is useful for functions that expect a coroutine
@@ -253,7 +253,7 @@ async def to_coroutine(awtbl: Awaitable[_T], /) -> _T:
         a supertype of [`Coroutine`][collections.abc.Coroutine].
 
     Examples:
-        Transform an [`Future`][asyncio.Future] into a
+        Transform a [`Future`][asyncio.Future] into a
         [`Coroutine`][collections.abc.Coroutine] and run it:
 
         >>> import asyncio

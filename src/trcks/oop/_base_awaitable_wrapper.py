@@ -11,7 +11,7 @@ _T_co = TypeVar("_T_co", covariant=True)
 
 @dataclass(frozen=True, slots=True)
 class BaseAwaitableWrapper(BaseWrapper[Awaitable[_T_co]]):
-    """Base class for all asynchronous wrappers in the [`oop`][trcks.oop] package.
+    """Base class for all asynchronous wrappers in the [`trcks.oop`][trcks.oop] package.
 
     Note:
         This class is not particularly useful by itself.

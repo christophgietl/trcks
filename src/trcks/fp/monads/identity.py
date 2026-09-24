@@ -109,11 +109,11 @@ def map_to_awaitable_iterable(
     **kwargs: _P.kwargs,
 ) -> Callable[[_T1], AwaitableTuple[_T2]]:
     """Create function that maps a plain value
-    to a [`AwaitableIterable`][trcks.AwaitableIterable] and flattens the result.
+    to an [`AwaitableIterable`][trcks.AwaitableIterable] and flattens the result.
 
     Args:
         callable_: Asynchronous function to apply to the given value,
-            returning a [`AwaitableIterable`][trcks.AwaitableIterable].
+            returning an [`AwaitableIterable`][trcks.AwaitableIterable].
         *args:
             Positional arguments to be passed to `callable_`.
         **kwargs:
@@ -152,7 +152,7 @@ def map_to_awaitable_result(
 
     Args:
         callable_: Asynchronous function to apply to the given value,
-            returning a [`AwaitableResult`][trcks.AwaitableResult].
+            returning an [`AwaitableResult`][trcks.AwaitableResult].
         *args:
             Positional arguments to be passed to `callable_`.
         **kwargs:
@@ -204,7 +204,7 @@ def map_to_awaitable_result_iterable(
 
     Args:
         callable_: Asynchronous function to apply to the given value,
-            returning a [`AwaitableResultIterable`][trcks.AwaitableResultIterable].
+            returning an [`AwaitableResultIterable`][trcks.AwaitableResultIterable].
         *args:
             Positional arguments to be passed to `callable_`.
         **kwargs:
@@ -279,11 +279,11 @@ def map_to_iterable(
     **kwargs: _P.kwargs,
 ) -> Callable[[_T1], tuple[_T2, ...]]:
     """Create function that maps a plain value
-    to a [`Iterable`][collections.abc.Iterable] and flattens the result.
+    to an [`Iterable`][collections.abc.Iterable] and flattens the result.
 
     Args:
         callable_: Function to apply to the given value,
-            returning a [`Iterable`][collections.abc.Iterable].
+            returning an [`Iterable`][collections.abc.Iterable].
         *args:
             Positional arguments to be passed to `callable_`.
         **kwargs:
@@ -462,7 +462,7 @@ def tap_to_awaitable_iterable(
 
     Args:
         callable_: Asynchronous side effect to apply to the given value,
-            returning a [`AwaitableIterable`][trcks.AwaitableIterable].
+            returning an [`AwaitableIterable`][trcks.AwaitableIterable].
         *args:
             Positional arguments to be passed to `callable_`.
         **kwargs:
@@ -470,7 +470,7 @@ def tap_to_awaitable_iterable(
 
     Returns:
         Applies the given side effect to the given value and
-            returns a [`AwaitableTuple`][trcks.AwaitableTuple] of the original value,
+            returns an [`AwaitableTuple`][trcks.AwaitableTuple] of the original value,
             repeated once per element in the side effect output.
 
     Examples:
@@ -512,7 +512,7 @@ def tap_to_awaitable_result(
 
     Returns:
         Applies the given side effect to the given value and
-            returns a [`AwaitableResult`][trcks.AwaitableResult] with
+            returns an [`AwaitableResult`][trcks.AwaitableResult] with
 
                 - *the returned* [`Failure`][trcks.Failure]
                     if the applied side effect returns a [`Failure`][trcks.Failure] or
@@ -567,7 +567,7 @@ def tap_to_awaitable_result_iterable(
 
     Args:
         callable_: Asynchronous side effect to apply to the given value,
-            returning a [`AwaitableResultIterable`][trcks.AwaitableResultIterable].
+            returning an [`AwaitableResultIterable`][trcks.AwaitableResultIterable].
         *args:
             Positional arguments to be passed to `callable_`.
         **kwargs:
@@ -575,7 +575,7 @@ def tap_to_awaitable_result_iterable(
 
     Returns:
         Applies the given side effect to the given value and
-            returns a [`AwaitableResultTuple`][trcks.AwaitableResultTuple] with
+            returns an [`AwaitableResultTuple`][trcks.AwaitableResultTuple] with
 
                 - *the returned* [`Failure`][trcks.Failure]
                     if the applied side effect returns a [`Failure`][trcks.Failure] or
@@ -645,11 +645,11 @@ def tap_to_iterable(
     **kwargs: _P.kwargs,
 ) -> Callable[[_T1], tuple[_T1, ...]]:
     """Create function that applies a side effect
-    returning a [`Iterable`][collections.abc.Iterable] to a plain value.
+    returning an [`Iterable`][collections.abc.Iterable] to a plain value.
 
     Args:
         callable_: Side effect to apply to the given value,
-            returning a [`Iterable`][collections.abc.Iterable].
+            returning an [`Iterable`][collections.abc.Iterable].
         *args:
             Positional arguments to be passed to `callable_`.
         **kwargs:

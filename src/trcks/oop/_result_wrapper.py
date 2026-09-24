@@ -180,7 +180,8 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
                 Keyword arguments to be passed to `callable_`.
 
         Returns:
-            A [`AwaitableResultWrapper`][trcks.oop.AwaitableResultWrapper] instance with
+            An [`AwaitableResultWrapper`][trcks.oop.AwaitableResultWrapper]
+            instance with
 
                 - the result of the function application if
                     the original [`Result`][trcks.Result] is a failure, or
@@ -237,7 +238,8 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
                 Keyword arguments to be passed to `callable_`.
 
         Returns:
-            A [`AwaitableResultWrapper`][trcks.oop.AwaitableResultWrapper] instance with
+            An [`AwaitableResultWrapper`][trcks.oop.AwaitableResultWrapper]
+            instance with
 
                 - the result of the function application if
                     the original [`Result`][trcks.Result] is a failure, or
@@ -310,7 +312,7 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
                 Keyword arguments to be passed to `callable_`.
 
         Returns:
-            A [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
+            An [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
             instance with
 
                 - the result of the function application if
@@ -629,7 +631,8 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
                 Keyword arguments to be passed to `callable_`.
 
         Returns:
-            A [`AwaitableResultWrapper`][trcks.oop.AwaitableResultWrapper] instance with
+            An [`AwaitableResultWrapper`][trcks.oop.AwaitableResultWrapper]
+            instance with
 
                 - the original [`Result`][trcks.Result] object if it is a failure, or
                 - the result of the function application if
@@ -686,7 +689,8 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
                 Keyword arguments to be passed to `callable_`.
 
         Returns:
-            A [`AwaitableResultWrapper`][trcks.oop.AwaitableResultWrapper] instance with
+            An [`AwaitableResultWrapper`][trcks.oop.AwaitableResultWrapper]
+            instance with
 
                 - the original [`Result`][trcks.Result] object if it is a failure, or
                 - the result of the function application if
@@ -760,7 +764,7 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
                 Keyword arguments to be passed to `callable_`.
 
         Returns:
-            A [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
+            An [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
             instance with
 
                 - the original [`Result`][trcks.Result] object if it is a failure, or
@@ -1067,7 +1071,7 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
                 Keyword arguments to be passed to `callable_`.
 
         Returns:
-            A [`AwaitableResultWrapper`][trcks.oop.AwaitableResultWrapper] instance
+            An [`AwaitableResultWrapper`][trcks.oop.AwaitableResultWrapper] instance
                 with the original [`Result`][trcks.Result] object,
                 allowing for further method chaining.
 
@@ -1122,7 +1126,8 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
                 Keyword arguments to be passed to `callable_`.
 
         Returns:
-            A [`AwaitableResultWrapper`][trcks.oop.AwaitableResultWrapper] instance with
+            An [`AwaitableResultWrapper`][trcks.oop.AwaitableResultWrapper]
+            instance with
 
                 - *the original* [`Failure`][trcks.Failure]
                     if the applied side effect returns a [`Failure`][trcks.Failure],
@@ -1195,7 +1200,7 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
                 Keyword arguments to be passed to `callable_`.
 
         Returns:
-            A [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
+            An [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
             instance with
 
                 - *the original* [`Failure`][trcks.Failure]
@@ -1524,7 +1529,7 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
                 Keyword arguments to be passed to `callable_`.
 
         Returns:
-            A [`AwaitableResultWrapper`][trcks.oop.AwaitableResultWrapper] instance
+            An [`AwaitableResultWrapper`][trcks.oop.AwaitableResultWrapper] instance
                 with the original [`Result`][trcks.Result] object,
                 allowing for further method chaining.
 
@@ -1579,7 +1584,8 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
                 Keyword arguments to be passed to `callable_`.
 
         Returns:
-            A [`AwaitableResultWrapper`][trcks.oop.AwaitableResultWrapper] instance with
+            An [`AwaitableResultWrapper`][trcks.oop.AwaitableResultWrapper]
+            instance with
 
                 - *the original* [`Failure`][trcks.Failure] if no side effect was
                   applied,
@@ -1668,7 +1674,7 @@ class ResultWrapper(BaseWrapper[Result[_F_default_co, _S_default_co]]):
                 Keyword arguments to be passed to `callable_`.
 
         Returns:
-            A [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
+            An [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
             instance with
 
                 - *the original* [`Failure`][trcks.Failure] if no side effect was

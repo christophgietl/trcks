@@ -65,7 +65,7 @@ class AwaitableTupleWrapper(BaseAwaitableWrapper[tuple[_T_co, ...]]):
 
     @staticmethod
     def construct(value: _T, /) -> AwaitableTupleWrapper[_T]:
-        """Construct and wrap a [`AwaitableTuple`][trcks.AwaitableTuple] object from a
+        """Construct and wrap an [`AwaitableTuple`][trcks.AwaitableTuple] object from a
         value.
 
         Args:
@@ -92,7 +92,7 @@ class AwaitableTupleWrapper(BaseAwaitableWrapper[tuple[_T_co, ...]]):
         awtbl: Awaitable[_T],
         /,
     ) -> AwaitableTupleWrapper[_T]:
-        """Construct and wrap a [`AwaitableTuple`][trcks.AwaitableTuple] from an
+        """Construct and wrap an [`AwaitableTuple`][trcks.AwaitableTuple] from an
         awaitable value.
 
         Args:
@@ -126,7 +126,7 @@ class AwaitableTupleWrapper(BaseAwaitableWrapper[tuple[_T_co, ...]]):
         a_it: AwaitableIterable[_T],
         /,
     ) -> AwaitableTupleWrapper[_T]:
-        """Construct and wrap a [`AwaitableTuple`][trcks.AwaitableTuple] from an
+        """Construct and wrap an [`AwaitableTuple`][trcks.AwaitableTuple] from an
         [`AwaitableIterable`][trcks.AwaitableIterable].
 
         Args:
@@ -173,7 +173,7 @@ class AwaitableTupleWrapper(BaseAwaitableWrapper[tuple[_T_co, ...]]):
 
     @staticmethod
     def construct_from_iterable(it: Iterable[_T], /) -> AwaitableTupleWrapper[_T]:
-        """Construct and wrap a [`AwaitableTuple`][trcks.AwaitableTuple] from an
+        """Construct and wrap an [`AwaitableTuple`][trcks.AwaitableTuple] from an
         iterable.
 
         Args:
@@ -308,7 +308,7 @@ class AwaitableTupleWrapper(BaseAwaitableWrapper[tuple[_T_co, ...]]):
 
         Args:
             callable_: The asynchronous function to be applied to each element,
-                returning a [`AwaitableIterable`][trcks.AwaitableIterable].
+                returning an [`AwaitableIterable`][trcks.AwaitableIterable].
             *args:
                 Positional arguments to be passed to `callable_`.
             **kwargs:
@@ -354,7 +354,7 @@ class AwaitableTupleWrapper(BaseAwaitableWrapper[tuple[_T_co, ...]]):
 
         Args:
             callable_: The asynchronous function to be applied to each element,
-                returning a [`AwaitableResult`][trcks.AwaitableResult].
+                returning an [`AwaitableResult`][trcks.AwaitableResult].
             *args:
                 Positional arguments to be passed to `callable_`.
             **kwargs:
@@ -421,7 +421,7 @@ class AwaitableTupleWrapper(BaseAwaitableWrapper[tuple[_T_co, ...]]):
 
         Args:
             callable_: The asynchronous function to be applied to each element,
-                returning a [`AwaitableResultIterable`][trcks.AwaitableResultIterable].
+                returning an [`AwaitableResultIterable`][trcks.AwaitableResultIterable].
             *args:
                 Positional arguments to be passed to `callable_`.
             **kwargs:
@@ -806,7 +806,7 @@ class AwaitableTupleWrapper(BaseAwaitableWrapper[tuple[_T_co, ...]]):
 
         Args:
             callable_: The asynchronous side effect to be applied to each element,
-                returning a [`AwaitableIterable`][trcks.AwaitableIterable].
+                returning an [`AwaitableIterable`][trcks.AwaitableIterable].
             *args:
                 Positional arguments to be passed to `callable_`.
             **kwargs:
@@ -853,7 +853,7 @@ class AwaitableTupleWrapper(BaseAwaitableWrapper[tuple[_T_co, ...]]):
 
         Args:
             callable_: The asynchronous side effect to be applied to each element,
-                returning a [`AwaitableResult`][trcks.AwaitableResult].
+                returning an [`AwaitableResult`][trcks.AwaitableResult].
             *args:
                 Positional arguments to be passed to `callable_`.
             **kwargs:
@@ -923,7 +923,7 @@ class AwaitableTupleWrapper(BaseAwaitableWrapper[tuple[_T_co, ...]]):
 
         Args:
             callable_: The asynchronous side effect to be applied to each element,
-                returning a [`AwaitableResultIterable`][trcks.AwaitableResultIterable].
+                returning an [`AwaitableResultIterable`][trcks.AwaitableResultIterable].
             *args:
                 Positional arguments to be passed to `callable_`.
             **kwargs:
