@@ -191,7 +191,7 @@ def construct_from_result_iterable(
 
     Args:
         r_it: [`ResultIterable`][trcks.ResultIterable] object to be converted to a
-            [`ResultTuple`][trcks.ResultTuple] and wrapped in a
+            [`ResultTuple`][trcks.ResultTuple] and wrapped in an
             [`AwaitableResultTuple`][trcks.AwaitableResultTuple] object.
 
     Returns:
@@ -984,7 +984,7 @@ def map_successes_to_awaitable_result_iterable(
     AwaitableResultTuple[_F1 | _F2, _S2],
 ]:
     """Map an [`AwaitableResultIterable`][trcks.AwaitableResultIterable]-returning
-    function over each element in a
+    function over each element in an
     [`AwaitableResultTuple`][trcks.AwaitableResultTuple].
 
     [`AwaitableFailure`][trcks.AwaitableFailure] values are left unchanged.
@@ -1324,7 +1324,7 @@ def tap_failure_to_awaitable_iterable(
     effect to [`AwaitableFailure`][trcks.AwaitableFailure] values.
 
     The number of side effect outputs determines how many times the original
-    failure value is repeated. The failure is converted to a
+    failure value is repeated. The failure is converted to an
     [`AwaitableSuccessTuple`][trcks.AwaitableSuccessTuple].
 
     [`AwaitableSuccessTuple`][trcks.AwaitableSuccessTuple] values are passed on without
@@ -1406,7 +1406,7 @@ def tap_failure_to_awaitable_result(
     Returns:
         Applies the given side effect to [`AwaitableFailure`][trcks.AwaitableFailure]
         values.
-            If the given side effect returns a
+            If the given side effect returns an
             [`AwaitableFailure`][trcks.AwaitableFailure], *the original*
             [`AwaitableFailure`][trcks.AwaitableFailure] value is returned. If the given
             side effect returns an [`AwaitableSuccess`][trcks.AwaitableSuccess], *this*
@@ -1478,10 +1478,10 @@ def tap_failure_to_awaitable_result_iterable(
     Returns:
         Applies the given side effect to [`AwaitableFailure`][trcks.AwaitableFailure]
         values.
-            If the given side effect returns a
+            If the given side effect returns an
             [`AwaitableFailure`][trcks.AwaitableFailure], *the original*
             [`AwaitableFailure`][trcks.AwaitableFailure] value is returned. If the given
-            side effect returns a
+            side effect returns an
             [`AwaitableSuccessIterable`][trcks.AwaitableSuccessIterable], *this*
             [`AwaitableSuccessIterable`][trcks.AwaitableSuccessIterable] is returned as
             an [`AwaitableSuccessTuple`][trcks.AwaitableSuccessTuple]. Passes on
@@ -1540,7 +1540,7 @@ def tap_failure_to_iterable(
     to [`AwaitableFailure`][trcks.AwaitableFailure] values.
 
     The number of side effect outputs determines how many times the original
-    failure value is repeated. The failure is converted to a
+    failure value is repeated. The failure is converted to an
     [`AwaitableSuccessTuple`][trcks.AwaitableSuccessTuple].
 
     [`AwaitableSuccessTuple`][trcks.AwaitableSuccessTuple] values are passed on without
@@ -1823,7 +1823,7 @@ def tap_successes_to_awaitable_iterable(
             Keyword arguments to be passed to `callable_`.
 
     Returns:
-        Applies the given side effect and returns a
+        Applies the given side effect and returns an
             [`AwaitableResultTuple`][trcks.AwaitableResultTuple] where each original
             success element is repeated once per element returned by the side effect.
 
@@ -1875,7 +1875,7 @@ def tap_successes_to_awaitable_result(
 
     Returns:
         Applies the given side effect to each success element.
-            If the given side effect returns a
+            If the given side effect returns an
             [`AwaitableFailure`][trcks.AwaitableFailure], *this*
             [`AwaitableFailure`][trcks.AwaitableFailure] is returned. If the given side
             effect returns an [`AwaitableSuccess`][trcks.AwaitableSuccess], *the
@@ -1936,10 +1936,10 @@ def tap_successes_to_awaitable_result_iterable(
 
     Returns:
         Applies the given side effect to each success element.
-            If the given side effect returns a
+            If the given side effect returns an
             [`AwaitableFailure`][trcks.AwaitableFailure], *this*
             [`AwaitableFailure`][trcks.AwaitableFailure] is returned. If the given side
-            effect returns a
+            effect returns an
             [`AwaitableSuccessIterable`][trcks.AwaitableSuccessIterable], *the original*
             success element is repeated once per element in the success iterable.
 
@@ -2006,7 +2006,7 @@ def tap_successes_to_iterable(
             Keyword arguments to be passed to `callable_`.
 
     Returns:
-        Applies the given side effect and returns a
+        Applies the given side effect and returns an
             [`AwaitableResultTuple`][trcks.AwaitableResultTuple] where each original
             success element is repeated once per element returned by the side effect.
 
@@ -2090,7 +2090,7 @@ def tap_successes_to_result_iterable(
     AwaitableResultTuple[_F1 | _F2, _S1],
 ]:
     """Apply a synchronous side effect with return type
-    [`ResultIterable`][trcks.ResultIterable] to each element in a
+    [`ResultIterable`][trcks.ResultIterable] to each element in an
     [`AwaitableResultTuple`][trcks.AwaitableResultTuple].
 
     [`AwaitableFailure`][trcks.AwaitableFailure] values are passed on without side

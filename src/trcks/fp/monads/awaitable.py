@@ -109,7 +109,7 @@ def map_to_awaitable_iterable(
     **kwargs: _P.kwargs,
 ) -> Callable[[Awaitable[_T1]], AwaitableTuple[_T2]]:
     """Create function that maps the value of an
-    [`Awaitable`][collections.abc.Awaitable] to a
+    [`Awaitable`][collections.abc.Awaitable] to an
     [`AwaitableIterable`][trcks.AwaitableIterable] and flattens the result.
 
     Args:
@@ -151,7 +151,7 @@ def map_to_awaitable_result(
     **kwargs: _P.kwargs,
 ) -> Callable[[Awaitable[_T1]], AwaitableResult[_F, _S]]:
     """Create function that maps the value of an
-    [`Awaitable`][collections.abc.Awaitable] to a
+    [`Awaitable`][collections.abc.Awaitable] to an
     [`AwaitableResult`][trcks.AwaitableResult] value.
 
     Args:
@@ -205,7 +205,7 @@ def map_to_awaitable_result_iterable(
     **kwargs: _P.kwargs,
 ) -> Callable[[Awaitable[_T1]], AwaitableResultTuple[_F, _S]]:
     """Create function that maps the value of an
-    [`Awaitable`][collections.abc.Awaitable] to a
+    [`Awaitable`][collections.abc.Awaitable] to an
     [`AwaitableResultIterable`][trcks.AwaitableResultIterable] and flattens the result.
 
     Args:

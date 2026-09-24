@@ -682,7 +682,7 @@ def tap_failure_to_awaitable_result(
     Returns:
         Applies the given side effect to [`AwaitableFailure`][trcks.AwaitableFailure]
         values.
-            If the given side effect returns a
+            If the given side effect returns an
             [`AwaitableFailure`][trcks.AwaitableFailure], *the original*
             [`AwaitableFailure`][trcks.AwaitableFailure] value is returned. If the given
             side effect returns an [`AwaitableSuccess`][trcks.AwaitableSuccess], *this*

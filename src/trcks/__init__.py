@@ -12,7 +12,7 @@ Attributes:
     AwaitableFailure:
         [`Awaitable`][collections.abc.Awaitable] yielding a [`Failure`][trcks.Failure].
     AwaitableIterable:
-        [`Awaitable`][collections.abc.Awaitable] yielding a
+        [`Awaitable`][collections.abc.Awaitable] yielding an
         [`Iterable`][collections.abc.Iterable].
     AwaitableResult:
         [`Awaitable`][collections.abc.Awaitable] yielding a [`Result`][trcks.Result].
