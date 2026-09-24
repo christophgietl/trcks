@@ -102,15 +102,15 @@ value unchanged, keeping the pipeline intact.
 A transition from a simpler monad to a richer one.
 For example, `trcks` can widen:
 
-| From                          | To                                                                                     |
-|-------------------------------|----------------------------------------------------------------------------------------|
-| a plain value                 | [`Result`][trcks.Result], a homogeneous [`tuple`][tuple], or [`Awaitable`][collections.abc.Awaitable]            |
-| [`Result`][trcks.Result]              | [`AwaitableResult`][trcks.AwaitableResult], [`ResultTuple`][trcks.ResultTuple], or [`AwaitableResultTuple`][trcks.AwaitableResultTuple]    |
-| a homogeneous [`tuple`][tuple]       | [`AwaitableTuple`][trcks.AwaitableTuple] or [`ResultTuple`][trcks.ResultTuple]                                      |
-| [`Awaitable`][collections.abc.Awaitable] | [`AwaitableTuple`][trcks.AwaitableTuple], [`AwaitableResult`][trcks.AwaitableResult], or [`AwaitableResultTuple`][trcks.AwaitableResultTuple] |
-| [`AwaitableResult`][trcks.AwaitableResult]     | [`AwaitableResultTuple`][trcks.AwaitableResultTuple]                                                         |
-| [`ResultTuple`][trcks.ResultTuple]         | [`AwaitableResultTuple`][trcks.AwaitableResultTuple]                                                         |
-| [`AwaitableTuple`][trcks.AwaitableTuple]      | [`AwaitableResultTuple`][trcks.AwaitableResultTuple]                                                         |
+| From                                       | To                                                                                                                                            |
+| ------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| a plain value                              | [`Result`][trcks.Result], a homogeneous [`tuple`][tuple], or [`Awaitable`][collections.abc.Awaitable]                                         |
+| [`Result`][trcks.Result]                   | [`AwaitableResult`][trcks.AwaitableResult], [`ResultTuple`][trcks.ResultTuple], or [`AwaitableResultTuple`][trcks.AwaitableResultTuple]       |
+| a homogeneous [`tuple`][tuple]             | [`AwaitableTuple`][trcks.AwaitableTuple] or [`ResultTuple`][trcks.ResultTuple]                                                                |
+| [`Awaitable`][collections.abc.Awaitable]   | [`AwaitableTuple`][trcks.AwaitableTuple], [`AwaitableResult`][trcks.AwaitableResult], or [`AwaitableResultTuple`][trcks.AwaitableResultTuple] |
+| [`AwaitableResult`][trcks.AwaitableResult] | [`AwaitableResultTuple`][trcks.AwaitableResultTuple]                                                                                          |
+| [`ResultTuple`][trcks.ResultTuple]         | [`AwaitableResultTuple`][trcks.AwaitableResultTuple]                                                                                          |
+| [`AwaitableTuple`][trcks.AwaitableTuple]   | [`AwaitableResultTuple`][trcks.AwaitableResultTuple]                                                                                          |
 
 Like mapping helpers, widening helpers are named `map*` or `tap*`.
 Unlike helpers that stay within the same monad
