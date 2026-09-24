@@ -111,7 +111,7 @@ def map_failure_to_result(
 
     Returns:
         Maps [`Failure`][trcks.Failure] values to [`Failure`][trcks.Failure] and
-        [`Success`][trcks.Success] values
+            [`Success`][trcks.Success] values
             according to the given function and
             leaves [`Success`][trcks.Success] values unchanged.
 

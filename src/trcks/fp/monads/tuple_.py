@@ -131,7 +131,7 @@ def map_to_awaitable(
 
     Returns:
         Maps homogeneous [`tuple`][tuple]s to [`AwaitableTuple`][trcks.AwaitableTuple]s
-        of the same length
+            of the same length
             according to the given asynchronous function.
 
     Examples:
@@ -171,7 +171,7 @@ def map_to_awaitable_iterable(
 
     Returns:
         Maps homogeneous [`tuple`][tuple]s to [`AwaitableTuple`][trcks.AwaitableTuple]s
-        of varying length
+            of varying length
             according to the given asynchronous function.
 
     Examples:

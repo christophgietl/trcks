@@ -209,7 +209,7 @@ class Wrapper(BaseWrapper[_T_co]):
 
         Returns:
             An [`AwaitableResultWrapper`][trcks.oop.AwaitableResultWrapper]
-            instance with
+                instance with
                 the result of the function application.
 
         Examples:
@@ -258,7 +258,7 @@ class Wrapper(BaseWrapper[_T_co]):
 
         Returns:
             An [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
-            instance with
+                instance with
                 the result of the function application.
 
         Examples:
@@ -458,7 +458,7 @@ class Wrapper(BaseWrapper[_T_co]):
 
         Returns:
             A new [`Wrapper`][trcks.oop.Wrapper] instance with the original wrapped
-            object,
+                object,
                 allowing for further method chaining.
 
         Examples:
@@ -571,7 +571,7 @@ class Wrapper(BaseWrapper[_T_co]):
 
         Returns:
             An [`AwaitableResultWrapper`][trcks.oop.AwaitableResultWrapper]
-            instance with
+                instance with
 
                 - *the returned* [`Failure`][trcks.Failure]
                     if the given side effect returns a [`Failure`][trcks.Failure] or
@@ -638,7 +638,7 @@ class Wrapper(BaseWrapper[_T_co]):
 
         Returns:
             An [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
-            instance with
+                instance with
 
                 - *the returned* [`Failure`][trcks.Failure]
                     if the given side effect returns a [`Failure`][trcks.Failure] or
@@ -721,7 +721,7 @@ class Wrapper(BaseWrapper[_T_co]):
 
         Returns:
             A [`TupleWrapper`][trcks.oop.TupleWrapper] instance with the original
-            wrapped
+                wrapped
                 object repeated once per item returned by the side effect.
 
         Examples:

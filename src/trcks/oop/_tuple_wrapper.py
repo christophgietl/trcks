@@ -151,7 +151,7 @@ class TupleWrapper(BaseWrapper[tuple[_T_co, ...]]):
 
         Returns:
             A new [`TupleWrapper`][trcks.oop.TupleWrapper] instance with a homogeneous
-            [`tuple`][tuple]
+                [`tuple`][tuple]
                 containing the results of applying the function to each element.
 
         Examples:
@@ -277,7 +277,7 @@ class TupleWrapper(BaseWrapper[tuple[_T_co, ...]]):
 
         Returns:
             An [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
-            instance with
+                instance with
 
                 - the first [`Failure`][trcks.Failure] returned by the function, or
                 - a [`SuccessTuple`][trcks.SuccessTuple] if the function returns
@@ -343,7 +343,7 @@ class TupleWrapper(BaseWrapper[tuple[_T_co, ...]]):
 
         Returns:
             An [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
-            instance with
+                instance with
 
                 - the first [`Failure`][trcks.Failure] returned by the function, or
                 - a flattened awaitable [`SuccessTuple`][trcks.SuccessTuple] if the
@@ -728,7 +728,7 @@ class TupleWrapper(BaseWrapper[tuple[_T_co, ...]]):
 
         Returns:
             An [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
-            instance with
+                instance with
 
                 - *the returned* [`Failure`][trcks.Failure]
                     if the applied side effect returns a [`Failure`][trcks.Failure]
@@ -796,7 +796,7 @@ class TupleWrapper(BaseWrapper[tuple[_T_co, ...]]):
 
         Returns:
             An [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
-            instance with
+                instance with
 
                 - *the returned* [`Failure`][trcks.Failure]
                     if the applied side effect returns a [`Failure`][trcks.Failure] or

@@ -182,7 +182,7 @@ def map_failure_to_awaitable(
 
     Returns:
         Maps [`Failure`][trcks.Failure] values to
-        [`AwaitableFailure`][trcks.AwaitableFailure] values
+            [`AwaitableFailure`][trcks.AwaitableFailure] values
             according to the given asynchronous function and
             leaves [`Success`][trcks.Success] values unchanged.
 
@@ -232,7 +232,7 @@ def map_failure_to_awaitable_iterable(
 
     Returns:
         Maps [`Failure`][trcks.Failure] values to new
-        [`AwaitableSuccessTuple`][trcks.AwaitableSuccessTuple]
+            [`AwaitableSuccessTuple`][trcks.AwaitableSuccessTuple]
             values according to the given asynchronous function and
             leaves [`Success`][trcks.Success] values unchanged.
 
@@ -364,7 +364,7 @@ def map_failure_to_awaitable_result_iterable(
 
     Returns:
         Maps [`Failure`][trcks.Failure] values to new
-        [`AwaitableResultTuple`][trcks.AwaitableResultTuple] values
+            [`AwaitableResultTuple`][trcks.AwaitableResultTuple] values
             according to the given asynchronous function and
             leaves [`Success`][trcks.Success] values unchanged.
 

@@ -81,7 +81,7 @@ class AwaitableResultTupleWrapper(
 
         Returns:
             A new [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
-            instance with
+                instance with
                 the wrapped [`AwaitableResultTuple`][trcks.AwaitableResultTuple] object.
 
         Examples:
@@ -108,7 +108,7 @@ class AwaitableResultTupleWrapper(
 
         Returns:
             A new [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
-            instance with
+                instance with
                 the wrapped [`AwaitableResultTuple`][trcks.AwaitableResultTuple] object.
 
         Examples:
@@ -145,7 +145,7 @@ class AwaitableResultTupleWrapper(
 
         Returns:
             A new [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
-            instance where
+                instance where
                 the success payload is wrapped in a single-element tuple,
                 or the original failure is preserved.
 
@@ -187,7 +187,7 @@ class AwaitableResultTupleWrapper(
 
         Returns:
             A new [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
-            instance where
+                instance where
                 the success payload is converted to a tuple,
                 or the original failure is preserved.
 
@@ -239,7 +239,7 @@ class AwaitableResultTupleWrapper(
 
         Returns:
             A new [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
-            instance where
+                instance where
                 the success payload is wrapped in a single-element tuple,
                 or the original failure is preserved.
 
@@ -280,7 +280,7 @@ class AwaitableResultTupleWrapper(
 
         Returns:
             A new [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
-            instance with
+                instance with
                 the wrapped [`AwaitableResultTuple`][trcks.AwaitableResultTuple] object.
 
         Examples:
@@ -319,7 +319,7 @@ class AwaitableResultTupleWrapper(
 
         Returns:
             A new [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
-            instance with
+                instance with
                 the wrapped [`AwaitableResultTuple`][trcks.AwaitableResultTuple] object.
 
         Examples:
@@ -346,7 +346,7 @@ class AwaitableResultTupleWrapper(
 
         Returns:
             A new [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
-            instance with
+                instance with
                 the wrapped [`AwaitableResultTuple`][trcks.AwaitableResultTuple] object.
 
         Examples:
@@ -383,7 +383,7 @@ class AwaitableResultTupleWrapper(
 
         Returns:
             A new [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
-            instance with
+                instance with
                 the wrapped [`AwaitableResultTuple`][trcks.AwaitableResultTuple] object.
 
         Examples:
@@ -432,7 +432,7 @@ class AwaitableResultTupleWrapper(
 
         Returns:
             A new [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
-            instance with
+                instance with
                 the wrapped [`AwaitableResultTuple`][trcks.AwaitableResultTuple] object.
 
         Examples:
@@ -482,7 +482,7 @@ class AwaitableResultTupleWrapper(
 
         Returns:
             A new [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
-            instance with
+                instance with
 
                 - the result of the function application if
                     the original [`AwaitableResultTuple`][trcks.AwaitableResultTuple] is
@@ -538,7 +538,7 @@ class AwaitableResultTupleWrapper(
 
         Returns:
             A new [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
-            instance with
+                instance with
 
                 - the result of the function application if
                     the original [`AwaitableResultTuple`][trcks.AwaitableResultTuple] is
@@ -600,7 +600,7 @@ class AwaitableResultTupleWrapper(
 
         Returns:
             A new [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
-            instance with
+                instance with
 
                 - an [`AwaitableSuccessTuple`][trcks.AwaitableSuccessTuple] containing
                   the result of the function application if the original
@@ -677,7 +677,7 @@ class AwaitableResultTupleWrapper(
 
         Returns:
             A new [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
-            instance with
+                instance with
 
                 - the result of the function application if
                     the original [`AwaitableResultTuple`][trcks.AwaitableResultTuple] is
@@ -753,7 +753,7 @@ class AwaitableResultTupleWrapper(
 
         Returns:
             A new [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
-            instance with
+                instance with
 
                 - the result of the function application if
                     the original [`AwaitableResultTuple`][trcks.AwaitableResultTuple] is
@@ -870,7 +870,7 @@ class AwaitableResultTupleWrapper(
 
         Returns:
             A new [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
-            instance with
+                instance with
 
                 - an [`AwaitableSuccessTuple`][trcks.AwaitableSuccessTuple] containing
                   the result of the function application if the original
@@ -943,7 +943,7 @@ class AwaitableResultTupleWrapper(
 
         Returns:
             A new [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
-            instance with
+                instance with
 
                 - the result of the function application if
                     the original [`AwaitableResultTuple`][trcks.AwaitableResultTuple] is
@@ -1016,7 +1016,7 @@ class AwaitableResultTupleWrapper(
 
         Returns:
             A new [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
-            instance with
+                instance with
 
                 - the result of the function application if
                     the original [`AwaitableResultTuple`][trcks.AwaitableResultTuple] is
@@ -1118,7 +1118,7 @@ class AwaitableResultTupleWrapper(
 
         Returns:
             A new [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
-            instance with
+                instance with
 
                 - the original [`AwaitableResultTuple`][trcks.AwaitableResultTuple] if
                   it is a failure, or
@@ -1174,7 +1174,7 @@ class AwaitableResultTupleWrapper(
 
         Returns:
             A new [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
-            instance with
+                instance with
 
                 - the original [`AwaitableResultTuple`][trcks.AwaitableResultTuple] if
                   it is a failure, or
@@ -1237,7 +1237,7 @@ class AwaitableResultTupleWrapper(
 
         Returns:
             A new [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
-            instance with
+                instance with
 
                 - the original [`AwaitableResultTuple`][trcks.AwaitableResultTuple] if
                   it is a failure, or
@@ -1301,7 +1301,7 @@ class AwaitableResultTupleWrapper(
 
         Returns:
             A new [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
-            instance with
+                instance with
 
                 - the original [`AwaitableResultTuple`][trcks.AwaitableResultTuple] if
                   it is a failure,
@@ -1386,7 +1386,7 @@ class AwaitableResultTupleWrapper(
 
         Returns:
             A new [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
-            instance with
+                instance with
 
                 - the original [`AwaitableResultTuple`][trcks.AwaitableResultTuple] if
                   it is a failure,
@@ -1504,7 +1504,7 @@ class AwaitableResultTupleWrapper(
 
         Returns:
             A new [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
-            instance with
+                instance with
 
                 - the original [`AwaitableResultTuple`][trcks.AwaitableResultTuple] if
                   it is a failure, or
@@ -1555,7 +1555,7 @@ class AwaitableResultTupleWrapper(
 
         Returns:
             A new [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
-            instance with
+                instance with
 
                 - the original [`AwaitableResultTuple`][trcks.AwaitableResultTuple] if
                   it is a failure,
@@ -1629,7 +1629,7 @@ class AwaitableResultTupleWrapper(
 
         Returns:
             A new [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
-            instance with
+                instance with
 
                 - the original [`AwaitableResultTuple`][trcks.AwaitableResultTuple] if
                   it is a failure,
@@ -1722,7 +1722,7 @@ class AwaitableResultTupleWrapper(
 
         Returns:
             A new [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
-            instance
+                instance
                 with the original [`AwaitableResultTuple`][trcks.AwaitableResultTuple]
                 object, allowing for further method chaining.
 
@@ -1777,7 +1777,7 @@ class AwaitableResultTupleWrapper(
 
         Returns:
             A new [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
-            instance
+                instance
                 with the original [`AwaitableResultTuple`][trcks.AwaitableResultTuple]
                 object, allowing for further method chaining.
 
@@ -1840,7 +1840,7 @@ class AwaitableResultTupleWrapper(
 
         Returns:
             A new [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
-            instance with
+                instance with
 
                 - an [`AwaitableSuccessTuple`][trcks.AwaitableSuccessTuple] containing
                   the original failure repeated once per element in the tuple returned
@@ -1915,7 +1915,7 @@ class AwaitableResultTupleWrapper(
 
         Returns:
             A new [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
-            instance with
+                instance with
 
                 - *the original* [`Failure`][trcks.Failure]
                     if the applied side effect returns a [`Failure`][trcks.Failure],
@@ -1983,7 +1983,7 @@ class AwaitableResultTupleWrapper(
 
         Returns:
             A new [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
-            instance with
+                instance with
 
                 - *the original* [`Failure`][trcks.Failure]
                     if the applied side effect returns a [`Failure`][trcks.Failure],
@@ -2096,7 +2096,7 @@ class AwaitableResultTupleWrapper(
 
         Returns:
             A new [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
-            instance with
+                instance with
 
                 - an [`AwaitableSuccessTuple`][trcks.AwaitableSuccessTuple] containing
                   the original failure repeated once per element in the tuple returned
@@ -2165,7 +2165,7 @@ class AwaitableResultTupleWrapper(
 
         Returns:
             A new [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
-            instance with
+                instance with
 
                 - *the original* [`Failure`][trcks.Failure]
                     if the applied side effect returns a [`Failure`][trcks.Failure],
@@ -2240,7 +2240,7 @@ class AwaitableResultTupleWrapper(
 
         Returns:
             A new [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
-            instance with
+                instance with
 
                 - *the original* [`Failure`][trcks.Failure]
                     if the applied side effect returns a [`Failure`][trcks.Failure],
@@ -2345,7 +2345,7 @@ class AwaitableResultTupleWrapper(
 
         Returns:
             A new [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
-            instance
+                instance
                 with the original [`AwaitableResultTuple`][trcks.AwaitableResultTuple]
                 object, allowing for further method chaining.
 
@@ -2402,7 +2402,7 @@ class AwaitableResultTupleWrapper(
 
         Returns:
             A new [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
-            instance
+                instance
                 with the original [`AwaitableResultTuple`][trcks.AwaitableResultTuple]
                 object, allowing for further method chaining.
 
@@ -2465,7 +2465,7 @@ class AwaitableResultTupleWrapper(
 
         Returns:
             A new [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
-            instance with
+                instance with
 
                 - the original [`AwaitableResultTuple`][trcks.AwaitableResultTuple] if
                   it is a failure, or
@@ -2524,7 +2524,7 @@ class AwaitableResultTupleWrapper(
 
         Returns:
             A new [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
-            instance with
+                instance with
 
                 - *the original* [`Failure`][trcks.Failure] if no side effect was
                   applied,
@@ -2602,7 +2602,7 @@ class AwaitableResultTupleWrapper(
 
         Returns:
             A new [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
-            instance with
+                instance with
 
                 - *the original* [`Failure`][trcks.Failure] if no side effect was
                   applied,
@@ -2717,7 +2717,7 @@ class AwaitableResultTupleWrapper(
 
         Returns:
             A new [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
-            instance with
+                instance with
 
                 - the original [`Failure`][trcks.Failure] if no side effect was applied,
                   or
@@ -2771,7 +2771,7 @@ class AwaitableResultTupleWrapper(
 
         Returns:
             A new [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
-            instance with
+                instance with
 
                 - *the original* [`Failure`][trcks.Failure] if no side effect was
                   applied,
@@ -2846,7 +2846,7 @@ class AwaitableResultTupleWrapper(
 
         Returns:
             A new [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
-            instance with
+                instance with
 
                 - *the original* [`Failure`][trcks.Failure] if no side effect was
                   applied,
