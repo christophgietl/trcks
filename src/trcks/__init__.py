@@ -1,12 +1,12 @@
 """Type-safe railway-oriented programming (ROP).
 
 This package provides generic type aliases needed for ROP (see "Attributes" section).
-It also provides modules for doing ROP in a functional style or
+It also provides modules for ROP in a functional style and
 in an object-oriented style (see "Modules" section).
 
 Modules:
-    fp: Functions for doing ROP in a functional style.
-    oop: Classes for doing ROP in an object-oriented style.
+    fp: Functions for ROP in a functional style.
+    oop: Classes for ROP in an object-oriented style.
 
 Attributes:
     AwaitableFailure: Awaitable that yields a [trcks.Failure][].
