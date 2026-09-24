@@ -422,7 +422,7 @@ and
 [`map_to_awaitable_result_iterable`][trcks.oop.AwaitableTupleWrapper.map_to_awaitable_result_iterable]
 of the class [`AwaitableTupleWrapper`][trcks.oop.AwaitableTupleWrapper] apply
 failable functions to each element individually and widen the wrapped
-[`AwaitableTuple`][trcks.AwaitableTuple] into a
+[`AwaitableTuple`][trcks.AwaitableTuple] into an
 [`AwaitableResultTuple`][trcks.AwaitableResultTuple] (see the
 [glossary](../../glossary.md#widening)). Similarly, the methods `tap_to_result`,
 `tap_to_result_iterable`, `tap_to_awaitable_result`, and

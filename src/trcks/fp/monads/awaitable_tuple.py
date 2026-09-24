@@ -152,8 +152,8 @@ def map_to_awaitable_result(
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[AwaitableTuple[_T1]], AwaitableResultTuple[_F, _S]]:
-    """Create function that maps each element of a
-    [`AwaitableTuple`][trcks.AwaitableTuple] to a
+    """Create function that maps each element of an
+    [`AwaitableTuple`][trcks.AwaitableTuple] to an
     [`AwaitableResult`][trcks.AwaitableResult] value.
 
     Args:
@@ -210,8 +210,8 @@ def map_to_awaitable_result_iterable(
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[AwaitableTuple[_T1]], AwaitableResultTuple[_F, _S]]:
-    """Create function that maps each element of a
-    [`AwaitableTuple`][trcks.AwaitableTuple] to a
+    """Create function that maps each element of an
+    [`AwaitableTuple`][trcks.AwaitableTuple] to an
     [`AwaitableResultIterable`][trcks.AwaitableResultIterable] and flattens the result.
 
     Args:
@@ -296,7 +296,7 @@ def map_to_result(
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[AwaitableTuple[_T1]], AwaitableResultTuple[_F, _S]]:
-    """Create function that maps each element of a
+    """Create function that maps each element of an
     [`AwaitableTuple`][trcks.AwaitableTuple] to a [`Result`][trcks.Result] value.
 
     Args:
@@ -350,7 +350,7 @@ def map_to_result_iterable(
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[AwaitableTuple[_T1]], AwaitableResultTuple[_F, _S]]:
-    """Create function that maps each element of a
+    """Create function that maps each element of an
     [`AwaitableTuple`][trcks.AwaitableTuple] to a
     [`ResultIterable`][trcks.ResultIterable] and flattens the result.
 

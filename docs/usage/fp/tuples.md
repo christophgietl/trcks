@@ -560,7 +560,7 @@ and
 [`map_to_awaitable_result_iterable`][trcks.fp.monads.awaitable_tuple.map_to_awaitable_result_iterable]
 of the module [`awaitable_tuple`][trcks.fp.monads.awaitable_tuple] apply
 failable functions to each element individually and turn the
-[`AwaitableTuple`][trcks.AwaitableTuple] into a
+[`AwaitableTuple`][trcks.AwaitableTuple] into an
 [`AwaitableResultTuple`][trcks.AwaitableResultTuple] (see the
 [glossary](../../glossary.md#widening)). Similarly, the functions
 `tap_to_result`, `tap_to_result_iterable`, `tap_to_awaitable_result`, and

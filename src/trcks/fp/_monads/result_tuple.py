@@ -386,7 +386,7 @@ def map_successes_to_iterable(
 
     Returns:
         Leaves [`Failure`][trcks.Failure] values unchanged and
-            flat-maps each element of a [`SuccessTuple`][trcks.SuccessTuple] to a
+            flat-maps each element of a [`SuccessTuple`][trcks.SuccessTuple] to an
             [`Iterable`][collections.abc.Iterable] according to the given function.
 
     Examples:
