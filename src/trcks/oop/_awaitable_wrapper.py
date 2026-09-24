@@ -619,7 +619,7 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableTupleWrapper[_T_co]:
-        """Apply an asynchronous side effect returning a
+        """Apply an asynchronous side effect returning an
         [`AwaitableIterable`][trcks.AwaitableIterable] to the wrapped
         [`Awaitable`][collections.abc.Awaitable] object.
 

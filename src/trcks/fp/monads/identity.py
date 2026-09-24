@@ -147,7 +147,7 @@ def map_to_awaitable_result(
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[_T1], AwaitableResult[_F, _S]]:
-    """Create function that maps a plain value to a
+    """Create function that maps a plain value to an
     [`AwaitableResult`][trcks.AwaitableResult] value.
 
     Args:
@@ -199,7 +199,7 @@ def map_to_awaitable_result_iterable(
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[_T1], AwaitableResultTuple[_F, _S]]:
-    """Create function that maps a plain value to a
+    """Create function that maps a plain value to an
     [`AwaitableResultIterable`][trcks.AwaitableResultIterable] and flattens the result.
 
     Args:

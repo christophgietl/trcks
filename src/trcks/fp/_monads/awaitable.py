@@ -63,7 +63,7 @@ def map_(
 
     Returns:
         The given function transformed into
-            a function expecting and returning a
+            a function expecting and returning an
             [`Awaitable`][collections.abc.Awaitable].
 
     Note:
@@ -101,7 +101,7 @@ def map_to_awaitable(
     Args:
         callable_:
             The [`Awaitable`][collections.abc.Awaitable]-returning function to be
-            transformed into a function expecting and returning a
+            transformed into a function expecting and returning an
             [`Awaitable`][collections.abc.Awaitable].
         *args:
             Positional arguments to be passed to `callable_`.
@@ -110,7 +110,7 @@ def map_to_awaitable(
 
     Returns:
         The given function transformed into
-            a function expecting and returning a
+            a function expecting and returning an
             [`Awaitable`][collections.abc.Awaitable].
 
 

@@ -254,7 +254,7 @@ def map_to_awaitable_result_iterable(
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[tuple[_T1, ...]], AwaitableResultTuple[_F, _S]]:
-    """Create function that maps each element of a homogeneous [`tuple`][tuple] to a
+    """Create function that maps each element of a homogeneous [`tuple`][tuple] to an
     [`AwaitableResultIterable`][trcks.AwaitableResultIterable] and flattens the result.
 
     Args:

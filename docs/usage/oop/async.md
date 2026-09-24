@@ -313,7 +313,7 @@ need to return an [`AwaitableResult`][trcks.AwaitableResult] type.
 The method [`tap_success_to_awaitable_result`][trcks.oop.AwaitableResultWrapper.tap_success_to_awaitable_result]
 allows us to execute such asynchronous side effects in the success case.
 If the side effect returns an [`AwaitableFailure`][trcks.AwaitableFailure], that
-failure is propagated. If the side effect returns a
+failure is propagated. If the side effect returns an
 [`AwaitableSuccess`][trcks.AwaitableSuccess], the original success value is
 preserved:
 
