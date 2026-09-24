@@ -24,17 +24,17 @@ _S2 = TypeVar("_S2")
 
 
 def construct_failure(value: _F, /) -> Failure[_F]:
-    """Create a [trcks.Failure][] object from a value.
+    """Create a [`Failure`][trcks.Failure] object from a value.
 
     Args:
-        value: Value to be wrapped in a [trcks.Failure][].
+        value: Value to be wrapped in a [`Failure`][trcks.Failure].
 
     Returns:
-        [trcks.Failure][] object containing the given value.
+        [`Failure`][trcks.Failure] object containing the given value.
 
     Note:
         This function is an alias for
-        [trcks.fp.monads.result.construct_failure][].
+        [`construct_failure`][trcks.fp.monads.result.construct_failure].
 
     Examples:
         >>> from trcks.fp.monads import result_tuple as rt
@@ -45,13 +45,14 @@ def construct_failure(value: _F, /) -> Failure[_F]:
 
 
 def construct_from_result(rslt: Result[_F, _S], /) -> ResultTuple[_F, _S]:
-    """Create a [trcks.ResultTuple][] object from a [trcks.Result][].
+    """Create a [`ResultTuple`][trcks.ResultTuple] object from a
+    [`Result`][trcks.Result].
 
     Args:
-        rslt: The [trcks.Result][] object to be wrapped.
+        rslt: The [`Result`][trcks.Result] object to be wrapped.
 
     Returns:
-        A new [trcks.ResultTuple][] instance with the success payload
+        A new [`ResultTuple`][trcks.ResultTuple] instance with the success payload
             wrapped in a homogeneous tuple.
 
     Examples:
@@ -67,13 +68,14 @@ def construct_from_result(rslt: Result[_F, _S], /) -> ResultTuple[_F, _S]:
 def construct_from_result_iterable(
     r_it: ResultIterable[_F, _S], /
 ) -> ResultTuple[_F, _S]:
-    """Create a [trcks.ResultTuple][] object from a [trcks.ResultIterable][].
+    """Create a [`ResultTuple`][trcks.ResultTuple] object from a
+    [`ResultIterable`][trcks.ResultIterable].
 
     Args:
-        r_it: The [trcks.ResultIterable][] object to be converted.
+        r_it: The [`ResultIterable`][trcks.ResultIterable] object to be converted.
 
     Returns:
-        A new [trcks.ResultTuple][] instance
+        A new [`ResultTuple`][trcks.ResultTuple] instance
             with the success payload converted to a tuple,
             or the original failure.
 
@@ -91,13 +93,13 @@ def construct_from_result_iterable(
 
 
 def construct_successes(value: _S, /) -> SuccessTuple[_S]:
-    """Create a [trcks.SuccessTuple][] object from a single value.
+    """Create a [`SuccessTuple`][trcks.SuccessTuple] object from a single value.
 
     Args:
         value: A single value.
 
     Returns:
-        A new [trcks.SuccessTuple][] instance containing the single value.
+        A new [`SuccessTuple`][trcks.SuccessTuple] instance containing the single value.
 
     Examples:
         >>> from trcks.fp.monads import result_tuple as rt
@@ -108,14 +110,14 @@ def construct_successes(value: _S, /) -> SuccessTuple[_S]:
 
 
 def construct_successes_from_iterable(it: Iterable[_S], /) -> SuccessTuple[_S]:
-    """Create a [trcks.SuccessTuple][] object from an iterable.
+    """Create a [`SuccessTuple`][trcks.SuccessTuple] object from an iterable.
 
     Args:
         it: The iterable to create
-            the [trcks.SuccessTuple][] from.
+            the [`SuccessTuple`][trcks.SuccessTuple] from.
 
     Returns:
-        The [trcks.SuccessTuple][] created from the iterable.
+        The [`SuccessTuple`][trcks.SuccessTuple] created from the iterable.
 
     Examples:
         >>> from trcks.fp.monads import result_tuple as rt
@@ -131,21 +133,22 @@ def map_failure(
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[ResultTuple[_F1, _S1]], ResultTuple[_F2, _S1]]:
-    """Create function that maps [trcks.Failure][] values to [trcks.Failure][] values.
+    """Create function that maps [`Failure`][trcks.Failure] values to
+    [`Failure`][trcks.Failure] values.
 
-    [trcks.SuccessTuple][] values are left unchanged.
+    [`SuccessTuple`][trcks.SuccessTuple] values are left unchanged.
 
     Args:
-        callable_: Function to apply to the [trcks.Failure][] values.
+        callable_: Function to apply to the [`Failure`][trcks.Failure] values.
         *args:
             Positional arguments to be passed to `callable_`.
         **kwargs:
             Keyword arguments to be passed to `callable_`.
 
     Returns:
-        Maps [trcks.Failure][] values to new [trcks.Failure][] values
+        Maps [`Failure`][trcks.Failure] values to new [`Failure`][trcks.Failure] values
             according to the given function and
-            leaves [trcks.SuccessTuple][] values unchanged.
+            leaves [`SuccessTuple`][trcks.SuccessTuple] values unchanged.
 
     Examples:
         >>> from collections.abc import Callable
@@ -171,22 +174,22 @@ def map_failure_to_iterable(
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[ResultTuple[_F1, _S1]], SuccessTuple[_S1] | SuccessTuple[_S2]]:
-    """Create function that maps [trcks.Failure][] values
-    to homogeneous [tuple][]s.
+    """Create function that maps [`Failure`][trcks.Failure] values
+    to homogeneous [`tuple`][tuple]s.
 
-    [trcks.SuccessTuple][] values are left unchanged.
+    [`SuccessTuple`][trcks.SuccessTuple] values are left unchanged.
 
     Args:
-        callable_: Function to apply to the [trcks.Failure][] values.
+        callable_: Function to apply to the [`Failure`][trcks.Failure] values.
         *args:
             Positional arguments to be passed to `callable_`.
         **kwargs:
             Keyword arguments to be passed to `callable_`.
 
     Returns:
-        Maps [trcks.Failure][] values to homogeneous [tuple][]s wrapped
-            in a [trcks.Success][] according to the given function and
-            leaves [trcks.SuccessTuple][] values unchanged.
+        Maps [`Failure`][trcks.Failure] values to homogeneous [`tuple`][tuple]s wrapped
+            in a [`Success`][trcks.Success] according to the given function and
+            leaves [`SuccessTuple`][trcks.SuccessTuple] values unchanged.
 
     Examples:
         >>> from collections.abc import Callable
@@ -230,22 +233,23 @@ def map_failure_to_result(
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[ResultTuple[_F1, _S1]], Result[_F2, tuple[_S1, ...] | tuple[_S2, ...]]]:
-    """Create function that maps [trcks.Failure][] values
-    to [trcks.Failure][] and [trcks.Success][] values.
+    """Create function that maps [`Failure`][trcks.Failure] values
+    to [`Failure`][trcks.Failure] and [`Success`][trcks.Success] values.
 
-    [trcks.SuccessTuple][] values are left unchanged.
+    [`SuccessTuple`][trcks.SuccessTuple] values are left unchanged.
 
     Args:
-        callable_: Function to apply to the [trcks.Failure][] values.
+        callable_: Function to apply to the [`Failure`][trcks.Failure] values.
         *args:
             Positional arguments to be passed to `callable_`.
         **kwargs:
             Keyword arguments to be passed to `callable_`.
 
     Returns:
-        Maps [trcks.Failure][] values to new [trcks.Failure][] and [trcks.Success][]
+        Maps [`Failure`][trcks.Failure] values to new [`Failure`][trcks.Failure] and
+        [`Success`][trcks.Success]
             values according to the given function and
-            leaves [trcks.SuccessTuple][] values unchanged.
+            leaves [`SuccessTuple`][trcks.SuccessTuple] values unchanged.
 
     Examples:
         >>> from collections.abc import Callable
@@ -277,22 +281,23 @@ def map_failure_to_result_iterable(
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[ResultTuple[_F1, _S1]], Result[_F2, tuple[_S1, ...] | tuple[_S2, ...]]]:
-    """Create function that maps [trcks.Failure][] values
-    to new [trcks.ResultTuple][] values.
+    """Create function that maps [`Failure`][trcks.Failure] values
+    to new [`ResultTuple`][trcks.ResultTuple] values.
 
-    [trcks.SuccessTuple][] values are left unchanged.
+    [`SuccessTuple`][trcks.SuccessTuple] values are left unchanged.
 
     Args:
-        callable_: Function to apply to the [trcks.Failure][] values.
+        callable_: Function to apply to the [`Failure`][trcks.Failure] values.
         *args:
             Positional arguments to be passed to `callable_`.
         **kwargs:
             Keyword arguments to be passed to `callable_`.
 
     Returns:
-        Maps [trcks.Failure][] values to new [trcks.ResultTuple][] values
+        Maps [`Failure`][trcks.Failure] values to new [`ResultTuple`][trcks.ResultTuple]
+        values
             according to the given function and
-            leaves [trcks.SuccessTuple][] values unchanged.
+            leaves [`SuccessTuple`][trcks.SuccessTuple] values unchanged.
 
     Examples:
         >>> from collections.abc import Callable
@@ -324,21 +329,22 @@ def map_successes(
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[ResultTuple[_F1, _S1]], ResultTuple[_F1, _S2]]:
-    """Create function that maps each element of a [trcks.SuccessTuple][]
+    """Create function that maps each element of a [`SuccessTuple`][trcks.SuccessTuple]
     to a new element.
 
-    [trcks.Failure][] values are left unchanged.
+    [`Failure`][trcks.Failure] values are left unchanged.
 
     Args:
-        callable_: Function to apply to each element of the [trcks.SuccessTuple][].
+        callable_: Function to apply to each element of the
+            [`SuccessTuple`][trcks.SuccessTuple].
         *args:
             Positional arguments to be passed to `callable_`.
         **kwargs:
             Keyword arguments to be passed to `callable_`.
 
     Returns:
-        Leaves [trcks.Failure][] values unchanged and
-            maps each element of a [trcks.SuccessTuple][] to a new element
+        Leaves [`Failure`][trcks.Failure] values unchanged and
+            maps each element of a [`SuccessTuple`][trcks.SuccessTuple] to a new element
             according to the given function.
 
     Examples:
@@ -365,22 +371,23 @@ def map_successes_to_iterable(
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[ResultTuple[_F1, _S1]], ResultTuple[_F1, _S2]]:
-    """Create function that maps each element of a [trcks.SuccessTuple][]
-    to a [collections.abc.Iterable][].
+    """Create function that maps each element of a [`SuccessTuple`][trcks.SuccessTuple]
+    to a [`Iterable`][collections.abc.Iterable].
 
-    [trcks.Failure][] values are left unchanged.
+    [`Failure`][trcks.Failure] values are left unchanged.
 
     Args:
-        callable_: Function to apply to each element of the [trcks.SuccessTuple][].
+        callable_: Function to apply to each element of the
+            [`SuccessTuple`][trcks.SuccessTuple].
         *args:
             Positional arguments to be passed to `callable_`.
         **kwargs:
             Keyword arguments to be passed to `callable_`.
 
     Returns:
-        Leaves [trcks.Failure][] values unchanged and
-            flat-maps each element of a [trcks.SuccessTuple][] to a
-            [collections.abc.Iterable][] according to the given function.
+        Leaves [`Failure`][trcks.Failure] values unchanged and
+            flat-maps each element of a [`SuccessTuple`][trcks.SuccessTuple] to a
+            [`Iterable`][collections.abc.Iterable] according to the given function.
 
     Examples:
         >>> from collections.abc import Callable
@@ -406,23 +413,25 @@ def map_successes_to_result(
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[ResultTuple[_F1, _S1]], ResultTuple[_F1 | _F2, _S2]]:
-    """Create function that maps each element of a [trcks.SuccessTuple][]
-    to [trcks.Failure][] and [trcks.Success][] values.
+    """Create function that maps each element of a [`SuccessTuple`][trcks.SuccessTuple]
+    to [`Failure`][trcks.Failure] and [`Success`][trcks.Success] values.
 
-    [trcks.Failure][] values are left unchanged.
+    [`Failure`][trcks.Failure] values are left unchanged.
 
     Args:
-        callable_: Function to apply to each element of the [trcks.SuccessTuple][].
+        callable_: Function to apply to each element of the
+            [`SuccessTuple`][trcks.SuccessTuple].
         *args:
             Positional arguments to be passed to `callable_`.
         **kwargs:
             Keyword arguments to be passed to `callable_`.
 
     Returns:
-        Leaves [trcks.Failure][] values unchanged and
-            maps each element of a [trcks.SuccessTuple][] to
-            [trcks.Failure][] and [trcks.Success][] values according to the given
-            function, returning the first [trcks.Failure][] encountered, if any.
+        Leaves [`Failure`][trcks.Failure] values unchanged and
+            maps each element of a [`SuccessTuple`][trcks.SuccessTuple] to
+            [`Failure`][trcks.Failure] and [`Success`][trcks.Success] values according
+            to the given function, returning the first [`Failure`][trcks.Failure]
+            encountered, if any.
 
     Examples:
         >>> from collections.abc import Callable
@@ -454,23 +463,25 @@ def map_successes_to_result_iterable(
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[ResultTuple[_F1, _S1]], ResultTuple[_F1 | _F2, _S2]]:
-    """Create function that maps each element of a [trcks.SuccessTuple][]
-    to new [trcks.ResultTuple][] values.
+    """Create function that maps each element of a [`SuccessTuple`][trcks.SuccessTuple]
+    to new [`ResultTuple`][trcks.ResultTuple] values.
 
-    [trcks.Failure][] values are left unchanged.
+    [`Failure`][trcks.Failure] values are left unchanged.
 
     Args:
-        callable_: Function to apply to each element of the [trcks.SuccessTuple][].
+        callable_: Function to apply to each element of the
+            [`SuccessTuple`][trcks.SuccessTuple].
         *args:
             Positional arguments to be passed to `callable_`.
         **kwargs:
             Keyword arguments to be passed to `callable_`.
 
     Returns:
-        Leaves [trcks.Failure][] values unchanged and
-            maps each element of a [trcks.SuccessTuple][] to new
-            [trcks.ResultTuple][] values according to the given function,
-            returning the first [trcks.Failure][] returned by `callable_`, if any.
+        Leaves [`Failure`][trcks.Failure] values unchanged and
+            maps each element of a [`SuccessTuple`][trcks.SuccessTuple] to new
+            [`ResultTuple`][trcks.ResultTuple] values according to the given function,
+            returning the first [`Failure`][trcks.Failure] returned by `callable_`, if
+            any.
 
     Examples:
         >>> from collections.abc import Callable
@@ -526,21 +537,21 @@ def tap_failure(
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[ResultTuple[_F1, _S1]], ResultTuple[_F1, _S1]]:
-    """Create function that applies a side effect to [trcks.Failure][] values.
+    """Create function that applies a side effect to [`Failure`][trcks.Failure] values.
 
-    [trcks.SuccessTuple][] values are passed on without side effects.
+    [`SuccessTuple`][trcks.SuccessTuple] values are passed on without side effects.
 
     Args:
-        callable_: Side effect to apply to the [trcks.Failure][] value.
+        callable_: Side effect to apply to the [`Failure`][trcks.Failure] value.
         *args:
             Positional arguments to be passed to `callable_`.
         **kwargs:
             Keyword arguments to be passed to `callable_`.
 
     Returns:
-        Applies the given side effect to [trcks.Failure][] values and
-            returns the original [trcks.Failure][] value.
-            Passes on [trcks.SuccessTuple][] values without side effects.
+        Applies the given side effect to [`Failure`][trcks.Failure] values and
+            returns the original [`Failure`][trcks.Failure] value.
+            Passes on [`SuccessTuple`][trcks.SuccessTuple] values without side effects.
 
     Examples:
         >>> from collections.abc import Callable
@@ -567,24 +578,25 @@ def tap_failure_to_iterable(
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[ResultTuple[_F1, _S1]], SuccessTuple[_F1] | SuccessTuple[_S1]]:
-    """Create function that applies a [collections.abc.Iterable][]-returning
-    side effect to [trcks.Failure][] values.
+    """Create function that applies a [`Iterable`][collections.abc.Iterable]-returning
+    side effect to [`Failure`][trcks.Failure] values.
 
-    [trcks.SuccessTuple][] values are passed on without side effects.
+    [`SuccessTuple`][trcks.SuccessTuple] values are passed on without side effects.
 
     Args:
-        callable_: Side effect to apply to the [trcks.Failure][] value.
+        callable_: Side effect to apply to the [`Failure`][trcks.Failure] value.
         *args:
             Positional arguments to be passed to `callable_`.
         **kwargs:
             Keyword arguments to be passed to `callable_`.
 
     Returns:
-        Applies the given side effect to [trcks.Failure][] values and converts them
-            to [trcks.SuccessTuple][] values containing the original failure
-            repeated once per element in the [collections.abc.Iterable][] returned
-            by the side effect.
-            Passes on [trcks.SuccessTuple][] values without side effects.
+        Applies the given side effect to [`Failure`][trcks.Failure] values and converts
+        them
+            to [`SuccessTuple`][trcks.SuccessTuple] values containing the original
+            failure repeated once per element in the
+            [`Iterable`][collections.abc.Iterable] returned by the side effect. Passes
+            on [`SuccessTuple`][trcks.SuccessTuple] values without side effects.
 
     Examples:
         >>> from collections.abc import Callable
@@ -620,25 +632,25 @@ def tap_failure_to_result(
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[ResultTuple[_F1, _S1]], Result[_F1, tuple[_S1, ...] | tuple[_S2, ...]]]:
-    """Create function that applies a side effect with return type [trcks.Result][]
-    to [trcks.Failure][] values.
+    """Create function that applies a side effect with return type
+    [`Result`][trcks.Result] to [`Failure`][trcks.Failure] values.
 
-    [trcks.SuccessTuple][] values are passed on without side effects.
+    [`SuccessTuple`][trcks.SuccessTuple] values are passed on without side effects.
 
     Args:
-        callable_: Side effect to apply to the [trcks.Failure][] value.
+        callable_: Side effect to apply to the [`Failure`][trcks.Failure] value.
         *args:
             Positional arguments to be passed to `callable_`.
         **kwargs:
             Keyword arguments to be passed to `callable_`.
 
     Returns:
-        Applies the given side effect to [trcks.Failure][] values.
-            If the given side effect returns a [trcks.Failure][],
-            *the original* [trcks.Failure][] is returned.
-            If the given side effect returns a [trcks.Success][],
-            *this* [trcks.Success][] is returned (wrapped as a homogeneous tuple).
-            Passes on [trcks.SuccessTuple][] values without side effects.
+        Applies the given side effect to [`Failure`][trcks.Failure] values.
+            If the given side effect returns a [`Failure`][trcks.Failure], *the
+            original* [`Failure`][trcks.Failure] is returned. If the given side effect
+            returns a [`Success`][trcks.Success], *this* [`Success`][trcks.Success] is
+            returned (wrapped as a homogeneous tuple). Passes on
+            [`SuccessTuple`][trcks.SuccessTuple] values without side effects.
 
     Examples:
         >>> from collections.abc import Callable
@@ -671,24 +683,24 @@ def tap_failure_to_result_iterable(
     **kwargs: _P.kwargs,
 ) -> Callable[[ResultTuple[_F1, _S1]], Result[_F1, tuple[_S1, ...] | tuple[_S2, ...]]]:
     """Create function that applies a side effect with return type
-    [trcks.ResultIterable][] to [trcks.Failure][] values.
+    [`ResultIterable`][trcks.ResultIterable] to [`Failure`][trcks.Failure] values.
 
-    [trcks.SuccessTuple][] values are passed on without side effects.
+    [`SuccessTuple`][trcks.SuccessTuple] values are passed on without side effects.
 
     Args:
-        callable_: Side effect to apply to the [trcks.Failure][] value.
+        callable_: Side effect to apply to the [`Failure`][trcks.Failure] value.
         *args:
             Positional arguments to be passed to `callable_`.
         **kwargs:
             Keyword arguments to be passed to `callable_`.
 
     Returns:
-        Applies the given side effect to [trcks.Failure][] values.
-            If the given side effect returns a [trcks.Failure][],
-            *the original* [trcks.Failure][] is returned.
-            If the given side effect returns a [trcks.SuccessIterable][]
-            *this* [trcks.SuccessIterable][] is returned.
-            Passes on [trcks.SuccessTuple][] values without side effects.
+        Applies the given side effect to [`Failure`][trcks.Failure] values.
+            If the given side effect returns a [`Failure`][trcks.Failure], *the
+            original* [`Failure`][trcks.Failure] is returned. If the given side effect
+            returns a [`SuccessIterable`][trcks.SuccessIterable] *this*
+            [`SuccessIterable`][trcks.SuccessIterable] is returned. Passes on
+            [`SuccessTuple`][trcks.SuccessTuple] values without side effects.
 
     Examples:
         >>> from collections.abc import Callable
@@ -720,22 +732,23 @@ def tap_successes(
     **kwargs: _P.kwargs,
 ) -> Callable[[ResultTuple[_F1, _S1]], ResultTuple[_F1, _S1]]:
     """Create function that applies a side effect to each element
-    of a [trcks.SuccessTuple][].
+    of a [`SuccessTuple`][trcks.SuccessTuple].
 
-    [trcks.Failure][] values are passed on without side effects.
+    [`Failure`][trcks.Failure] values are passed on without side effects.
 
     Args:
-        callable_: Side effect to apply to each element of the [trcks.SuccessTuple][].
+        callable_: Side effect to apply to each element of the
+            [`SuccessTuple`][trcks.SuccessTuple].
         *args:
             Positional arguments to be passed to `callable_`.
         **kwargs:
             Keyword arguments to be passed to `callable_`.
 
     Returns:
-        Passes on [trcks.Failure][] values without side effects.
+        Passes on [`Failure`][trcks.Failure] values without side effects.
             Applies the given side effect to each element of the
-            [trcks.SuccessTuple][] and returns the original
-            [trcks.SuccessTuple][].
+            [`SuccessTuple`][trcks.SuccessTuple] and returns the original
+            [`SuccessTuple`][trcks.SuccessTuple].
 
     Examples:
         >>> from collections.abc import Callable
@@ -765,24 +778,25 @@ def tap_successes_to_iterable(
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[ResultTuple[_F1, _S1]], ResultTuple[_F1, _S1]]:
-    """Create function that applies a [collections.abc.Iterable][]-returning
-    side effect to each element of a [trcks.SuccessTuple][].
+    """Create function that applies a [`Iterable`][collections.abc.Iterable]-returning
+    side effect to each element of a [`SuccessTuple`][trcks.SuccessTuple].
 
-    [trcks.Failure][] values are passed on without side effects.
+    [`Failure`][trcks.Failure] values are passed on without side effects.
 
     Args:
-        callable_: Side effect to apply to each element of the [trcks.SuccessTuple][].
+        callable_: Side effect to apply to each element of the
+            [`SuccessTuple`][trcks.SuccessTuple].
         *args:
             Positional arguments to be passed to `callable_`.
         **kwargs:
             Keyword arguments to be passed to `callable_`.
 
     Returns:
-        Passes on [trcks.Failure][] values without side effects.
+        Passes on [`Failure`][trcks.Failure] values without side effects.
             Applies the given side effect to each element of the
-            [trcks.SuccessTuple][]
+            [`SuccessTuple`][trcks.SuccessTuple]
             and repeats each original element once per element in the
-            [collections.abc.Iterable][] returned by the side effect.
+            [`Iterable`][collections.abc.Iterable] returned by the side effect.
 
     Examples:
         >>> from collections.abc import Callable
@@ -808,26 +822,27 @@ def tap_successes_to_result(
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[ResultTuple[_F1, _S1]], ResultTuple[_F1 | _F2, _S1]]:
-    """Create function that applies a side effect with return type [trcks.Result][]
-    to each element of a [trcks.SuccessTuple][].
+    """Create function that applies a side effect with return type
+    [`Result`][trcks.Result] to each element of a [`SuccessTuple`][trcks.SuccessTuple].
 
-    [trcks.Failure][] values are passed on without side effects.
+    [`Failure`][trcks.Failure] values are passed on without side effects.
 
     Args:
-        callable_: Side effect to apply to each element of the [trcks.SuccessTuple][].
+        callable_: Side effect to apply to each element of the
+            [`SuccessTuple`][trcks.SuccessTuple].
         *args:
             Positional arguments to be passed to `callable_`.
         **kwargs:
             Keyword arguments to be passed to `callable_`.
 
     Returns:
-        Passes on [trcks.Failure][] values without side effects.
+        Passes on [`Failure`][trcks.Failure] values without side effects.
             Applies the given side effect to each element of the
-            [trcks.SuccessTuple][].
-            If the given side effect returns a [trcks.Failure][],
-            *this* [trcks.Failure][] is returned.
-            If the given side effect returns a [trcks.Success][],
-            *the original* [trcks.SuccessTuple][] element is returned.
+            [`SuccessTuple`][trcks.SuccessTuple].
+            If the given side effect returns a [`Failure`][trcks.Failure],
+            *this* [`Failure`][trcks.Failure] is returned.
+            If the given side effect returns a [`Success`][trcks.Success],
+            *the original* [`SuccessTuple`][trcks.SuccessTuple] element is returned.
 
     Examples:
         >>> from collections.abc import Callable
@@ -861,26 +876,28 @@ def tap_successes_to_result_iterable(
     **kwargs: _P.kwargs,
 ) -> Callable[[ResultTuple[_F1, _S1]], ResultTuple[_F1 | _F2, _S1]]:
     """Create function that applies a side effect with return type
-    [trcks.ResultTuple][] to each element of a [trcks.SuccessTuple][].
+    [`ResultTuple`][trcks.ResultTuple] to each element of a
+    [`SuccessTuple`][trcks.SuccessTuple].
 
-    [trcks.Failure][] values are passed on without side effects.
+    [`Failure`][trcks.Failure] values are passed on without side effects.
 
     Args:
-        callable_: Side effect to apply to each element of the [trcks.SuccessTuple][].
+        callable_: Side effect to apply to each element of the
+            [`SuccessTuple`][trcks.SuccessTuple].
         *args:
             Positional arguments to be passed to `callable_`.
         **kwargs:
             Keyword arguments to be passed to `callable_`.
 
     Returns:
-        Passes on [trcks.Failure][] values without side effects.
+        Passes on [`Failure`][trcks.Failure] values without side effects.
             Applies the given side effect to each element of the
-            [trcks.SuccessTuple][].
-            If the given side effect returns a [trcks.Failure][],
-            *this* [trcks.Failure][] is returned.
-            If the given side effect returns a [trcks.SuccessIterable][],
-            *the original* [trcks.SuccessTuple][] element is repeated once
-            per element in the side effect output.
+            [`SuccessTuple`][trcks.SuccessTuple]. If the given side effect returns a
+            [`Failure`][trcks.Failure], *this* [`Failure`][trcks.Failure] is returned.
+            If the given side effect returns a
+            [`SuccessIterable`][trcks.SuccessIterable], *the original*
+            [`SuccessTuple`][trcks.SuccessTuple] element is repeated once per element in
+            the side effect output.
 
     Examples:
         >>> from collections.abc import Callable

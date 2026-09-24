@@ -1,19 +1,20 @@
-"""Object-oriented interface for [trcks][].
+"""Object-oriented interface for [`trcks`][trcks].
 
 This package provides wrapper classes for processing values of the following types
 in a method-chaining style:
 
-- [collections.abc.Awaitable][]
-- [trcks.AwaitableResult][]
-- [trcks.AwaitableResultTuple][]
-- [trcks.AwaitableTuple][]
-- [trcks.Result][]
-- [trcks.ResultTuple][]
-- [tuple][] (homogeneous)
+- [`Awaitable`][collections.abc.Awaitable]
+- [`AwaitableResult`][trcks.AwaitableResult]
+- [`AwaitableResultTuple`][trcks.AwaitableResultTuple]
+- [`AwaitableTuple`][trcks.AwaitableTuple]
+- [`Result`][trcks.Result]
+- [`ResultTuple`][trcks.ResultTuple]
+- [`tuple`][tuple] (homogeneous)
 
 Examples:
-    Use the classes [trcks.oop.Wrapper][] and [trcks.oop.ResultWrapper][]
-    to create and further process a value of type [trcks.Result][]:
+    Use the classes [`Wrapper`][trcks.oop.Wrapper] and
+    [`ResultWrapper`][trcks.oop.ResultWrapper] to create and further process a value of
+    type [`Result`][trcks.Result]:
 
     >>> import enum
     >>> import math
