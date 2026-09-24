@@ -9,27 +9,38 @@ Modules:
     oop: Classes for ROP in an object-oriented style.
 
 Attributes:
-    AwaitableFailure: [collections.abc.Awaitable][] yielding a [trcks.Failure][].
-    AwaitableIterable: [collections.abc.Awaitable][]
-    yielding a [collections.abc.Iterable][].
-    AwaitableResult: [collections.abc.Awaitable][] yielding a [trcks.Result][].
-    AwaitableResultIterable: [collections.abc.Awaitable][] yielding a
-    [trcks.ResultIterable][].
-    AwaitableResultTuple: [collections.abc.Awaitable][]
-    yielding a [trcks.ResultTuple][].
-    AwaitableSuccess: [collections.abc.Awaitable][] yielding a [trcks.Success][].
-    AwaitableSuccessIterable: [collections.abc.Awaitable][]
-    yielding a [trcks.SuccessIterable][].
-    AwaitableSuccessTuple: [collections.abc.Awaitable][]
-    yielding a [trcks.SuccessTuple][].
-    AwaitableTuple: [collections.abc.Awaitable][] yielding a homogeneous [tuple][].
-    Failure: [tuple][] containing ``"failure"`` and a value of type `_F_co`.
-    Result: Union of [trcks.Failure][] and [trcks.Success][].
-    ResultIterable: [trcks.Result][] with a [collections.abc.Iterable][] success.
-    ResultTuple: [trcks.Result][] with a homogeneous [tuple][] success.
-    Success: [tuple][] containing ``"success"`` and a value of type `_S_co`.
-    SuccessIterable: [trcks.Success][] containing a [collections.abc.Iterable][].
-    SuccessTuple: [trcks.Success][] containing a homogeneous [tuple][].
+    AwaitableFailure:
+        [collections.abc.Awaitable][] yielding a [trcks.Failure][].
+    AwaitableIterable:
+        [collections.abc.Awaitable][] yielding a [collections.abc.Iterable][].
+    AwaitableResult:
+        [collections.abc.Awaitable][] yielding a [trcks.Result][].
+    AwaitableResultIterable:
+        [collections.abc.Awaitable][] yielding a [trcks.ResultIterable][].
+    AwaitableResultTuple:
+        [collections.abc.Awaitable][] yielding a [trcks.ResultTuple][].
+    AwaitableSuccess:
+        [collections.abc.Awaitable][] yielding a [trcks.Success][].
+    AwaitableSuccessIterable:
+        [collections.abc.Awaitable][] yielding a [trcks.SuccessIterable][].
+    AwaitableSuccessTuple:
+        [collections.abc.Awaitable][] yielding a [trcks.SuccessTuple][].
+    AwaitableTuple:
+        [collections.abc.Awaitable][] yielding a homogeneous [tuple][].
+    Failure:
+        [tuple][] containing ``"failure"`` and a value of type `_F_co`.
+    Result:
+        Union of [trcks.Failure][] and [trcks.Success][].
+    ResultIterable:
+        [trcks.Result][] with a [collections.abc.Iterable][] success.
+    ResultTuple:
+        [trcks.Result][] with a homogeneous [tuple][] success.
+    Success:
+        [tuple][] containing ``"success"`` and a value of type `_S_co`.
+    SuccessIterable:
+        [trcks.Success][] containing a [collections.abc.Iterable][].
+    SuccessTuple:
+        [trcks.Success][] containing a homogeneous [tuple][].
 
 Examples:
     Construct a `Failure`:
