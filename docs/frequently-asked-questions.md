@@ -9,7 +9,7 @@ Scott Wlaschin's blog post
 comes with lots of examples and illustrations as well as
 videos and slides from his talks.
 
-## Should I replace all raised exceptions with [trcks.Result][]?
+## Should I replace all raised exceptions with `trcks.Result`?
 
 No, you should not.
 Scott Wlaschin's blog post
@@ -23,8 +23,8 @@ returning an optional value are often better choices.
 
 `trcks` provides generic types based on the sequence
 `Awaitable` > `Result` > `tuple` and its subsequences
-(e.g. [trcks.AwaitableResultTuple][], [trcks.AwaitableResult][],
-[trcks.ResultTuple][], and [trcks.Result][]).
+(e.g. [`AwaitableResultTuple`][trcks.AwaitableResultTuple], [`AwaitableResult`][trcks.AwaitableResult],
+[`ResultTuple`][trcks.ResultTuple], and [`Result`][trcks.Result]).
 It also provides matching monads and matching wrapper classes.
 It does not provide types, monads, or wrapper classes based on permutations
 such as `Result` > `Awaitable` > `tuple`.
@@ -94,15 +94,16 @@ Other type checkers may also work.
 [returns](https://pypi.org/project/returns/) supports
 object-oriented style and functional style (like `trcks`).
 It provides
-the [returns.result.Result][] container (and multiple other containers)
+the [`Result`][returns.result.Result] container (and multiple other containers)
 for synchronous code and
-the [returns.future.Future][] and [returns.future.FutureResult][] containers
-for asynchronous code.
-Whereas the [returns.result.Result][] container closely resembles
-[trcks.Result][], the [returns.future.Future][] container and the
-[returns.future.FutureResult][] container
-deviate from [collections.abc.Awaitable][] and [trcks.AwaitableResult][].
-Further differences between `returns` and `trcks`:
+the [`Future`][returns.future.Future] and
+[`FutureResult`][returns.future.FutureResult] containers for asynchronous code.
+Whereas the [`Result`][returns.result.Result] container closely resembles
+[`Result`][trcks.Result], the [`Future`][returns.future.Future] container and
+the [`FutureResult`][returns.future.FutureResult] container deviate from
+[`Awaitable`][collections.abc.Awaitable] and
+[`AwaitableResult`][trcks.AwaitableResult]. Further differences between
+`returns` and `trcks`:
 
 - `returns` offers
   [do notation](https://returns.readthedocs.io/en/0.28.0/pages/do-notation.html)
@@ -120,12 +121,12 @@ Further differences between `returns` and `trcks`:
 [Expression](https://pypi.org/project/Expression/) supports
 object-oriented style ("fluent syntax") and
 functional style (like `trcks`).
-It provides the [expression.core.result.Result][] class
+It provides the [`Result`][expression.core.result.Result] class
 (and multiple other container classes)
 for synchronous code.
-The [expression.core.result.Result][] class is a close counterpart to
-[trcks.Result][] and [trcks.oop.ResultWrapper][].
-An `AsyncResult` type based on [collections.abc.AsyncGenerator][]
+The [`Result`][expression.core.result.Result] class is a close counterpart to
+[`Result`][trcks.Result] and [`ResultWrapper`][trcks.oop.ResultWrapper].
+An `AsyncResult` type based on [`AsyncGenerator`][collections.abc.AsyncGenerator]
 [has been merged](https://github.com/dbrattli/Expression/pull/247)
 but not yet released (as of July 2026).
 `Expression` works with standard type checkers such as `pyright`

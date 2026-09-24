@@ -1,10 +1,10 @@
-# Railway-oriented programming with [trcks.fp][]
+# Railway-oriented programming with `trcks.fp`
 
 Railway-oriented programming (ROP) is a pattern for composing functions
 that may fail, keeping error handling clean and explicit.
 This page covers the **functional style**: you build a pipeline
 from a start value and a sequence of functions, then run it with
-[trcks.fp.composition.pipe][] — a "build a pipeline, then run it"
+[`pipe`][trcks.fp.composition.pipe] — a "build a pipeline, then run it"
 mental model.
 Single-track and double-track code are both discussed.
 Synchronous and asynchronous code are also discussed.
@@ -13,7 +13,7 @@ Synchronous and asynchronous code are also discussed.
     - Read
       [Tuple types provided by trcks](../tuple-types-provided-by-trcks.md)
       first; this page assumes familiarity with
-      [trcks.Failure][], [trcks.Success][], and [trcks.Result][].
+      [`Failure`][trcks.Failure], [`Success`][trcks.Success], and [`Result`][trcks.Result].
     - The
       [motivation page for ROP](../../motivation/railway-oriented-programming.md)
       explains the design rationale.

@@ -21,13 +21,13 @@ _T2 = TypeVar("_T2")
 
 
 def construct(value: _T, /) -> AwaitableTuple[_T]:
-    """Create a [trcks.AwaitableTuple][] from a value.
+    """Create a [`AwaitableTuple`][trcks.AwaitableTuple] from a value.
 
     Args:
-        value: The value to create the [trcks.AwaitableTuple][] from.
+        value: The value to create the [`AwaitableTuple`][trcks.AwaitableTuple] from.
 
     Returns:
-        The [trcks.AwaitableTuple][] created from the value.
+        The [`AwaitableTuple`][trcks.AwaitableTuple] created from the value.
 
     Examples:
         >>> import asyncio
@@ -41,13 +41,14 @@ def construct(value: _T, /) -> AwaitableTuple[_T]:
 
 
 def construct_from_awaitable(awtbl: Awaitable[_T], /) -> AwaitableTuple[_T]:
-    """Create a [trcks.AwaitableTuple][] from an awaitable value.
+    """Create a [`AwaitableTuple`][trcks.AwaitableTuple] from an awaitable value.
 
     Args:
-        awtbl: The awaitable value to create the [trcks.AwaitableTuple][] from.
+        awtbl: The awaitable value to create the
+            [`AwaitableTuple`][trcks.AwaitableTuple] from.
 
     Returns:
-        The [trcks.AwaitableTuple][] created from the awaitable value.
+        The [`AwaitableTuple`][trcks.AwaitableTuple] created from the awaitable value.
 
     Examples:
         >>> import asyncio
@@ -67,14 +68,16 @@ def construct_from_awaitable_iterable(
     a_it: AwaitableIterable[_T],
     /,
 ) -> AwaitableTuple[_T]:
-    """Create a [trcks.AwaitableTuple][] from a [trcks.AwaitableIterable][].
+    """Create a [`AwaitableTuple`][trcks.AwaitableTuple] from a
+    [`AwaitableIterable`][trcks.AwaitableIterable].
 
     Args:
-        a_it: The [trcks.AwaitableIterable][] to create
-            the [trcks.AwaitableTuple][] from.
+        a_it: The [`AwaitableIterable`][trcks.AwaitableIterable] to create
+            the [`AwaitableTuple`][trcks.AwaitableTuple] from.
 
     Returns:
-        The [trcks.AwaitableTuple][] created from the [trcks.AwaitableIterable][].
+        The [`AwaitableTuple`][trcks.AwaitableTuple] created from the
+        [`AwaitableIterable`][trcks.AwaitableIterable].
 
     Examples:
         >>> import asyncio
@@ -90,14 +93,14 @@ def construct_from_awaitable_iterable(
 
 
 def construct_from_iterable(it: Iterable[_T], /) -> AwaitableTuple[_T]:
-    """Create a [trcks.AwaitableTuple][] from an iterable.
+    """Create a [`AwaitableTuple`][trcks.AwaitableTuple] from an iterable.
 
     Args:
         it: The iterable to create
-            the [trcks.AwaitableTuple][] from.
+            the [`AwaitableTuple`][trcks.AwaitableTuple] from.
 
     Returns:
-        The [trcks.AwaitableTuple][] created from the iterable.
+        The [`AwaitableTuple`][trcks.AwaitableTuple] created from the iterable.
 
     Examples:
         >>> import asyncio
@@ -117,14 +120,14 @@ def map_(
     **kwargs: _P.kwargs,
 ) -> Callable[[AwaitableTuple[_T1]], AwaitableTuple[_T2]]:
     """Turn synchronous function into a function
-    expecting and returning [trcks.AwaitableTuple][]s
+    expecting and returning [`AwaitableTuple`][trcks.AwaitableTuple]s
     of the same length.
 
     Args:
         callable_:
             The synchronous function to be transformed into
             a function expecting and returning
-            [trcks.AwaitableTuple][]s of the same length.
+            [`AwaitableTuple`][trcks.AwaitableTuple]s of the same length.
         *args:
             Positional arguments to be passed to `callable_`.
         **kwargs:
@@ -133,11 +136,11 @@ def map_(
     Returns:
         The given function transformed into
             a function expecting and returning
-            [trcks.AwaitableTuple][]s of the same length.
+            [`AwaitableTuple`][trcks.AwaitableTuple]s of the same length.
 
     Note:
         The underscore in the function name helps to avoid collisions
-        with the built-in function [map][].
+        with the built-in function [`map`][map].
 
     Examples:
         >>> import asyncio
@@ -162,15 +165,15 @@ def map_to_awaitable(
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[AwaitableTuple[_T1]], AwaitableTuple[_T2]]:
-    """Turn [collections.abc.Awaitable][]-returning function into a function
-    expecting and returning [trcks.AwaitableTuple][]s
+    """Turn [`Awaitable`][collections.abc.Awaitable]-returning function into a function
+    expecting and returning [`AwaitableTuple`][trcks.AwaitableTuple]s
     of the same length.
 
     Args:
         callable_:
-            The [collections.abc.Awaitable][]-returning function to be transformed
-            into a function expecting and returning
-            [trcks.AwaitableTuple][]s of the same length.
+            The [`Awaitable`][collections.abc.Awaitable]-returning function to be
+            transformed into a function expecting and returning
+            [`AwaitableTuple`][trcks.AwaitableTuple]s of the same length.
         *args:
             Positional arguments to be passed to `callable_`.
         **kwargs:
@@ -179,7 +182,7 @@ def map_to_awaitable(
     Returns:
         The given function transformed into
             a function expecting and returning
-            [trcks.AwaitableTuple][]s of the same length.
+            [`AwaitableTuple`][trcks.AwaitableTuple]s of the same length.
 
     Examples:
         >>> import asyncio
@@ -207,15 +210,15 @@ def map_to_awaitable_iterable(
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[AwaitableTuple[_T1]], AwaitableTuple[_T2]]:
-    """Turn [trcks.AwaitableIterable][]-returning function into a function
-    expecting and returning [trcks.AwaitableTuple][]s
-    of varying length.
+    """Turn [`AwaitableIterable`][trcks.AwaitableIterable]-returning function into a
+    function expecting and returning [`AwaitableTuple`][trcks.AwaitableTuple]s of
+    varying length.
 
     Args:
         callable_:
-            The [trcks.AwaitableIterable][]-returning function to be transformed
-            into a function expecting and returning
-            [trcks.AwaitableTuple][]s of varying length.
+            The [`AwaitableIterable`][trcks.AwaitableIterable]-returning function to be
+            transformed into a function expecting and returning
+            [`AwaitableTuple`][trcks.AwaitableTuple]s of varying length.
         *args:
             Positional arguments to be passed to `callable_`.
         **kwargs:
@@ -224,7 +227,7 @@ def map_to_awaitable_iterable(
     Returns:
         The given function transformed into
             a function expecting and returning
-            [trcks.AwaitableTuple][]s of varying length.
+            [`AwaitableTuple`][trcks.AwaitableTuple]s of varying length.
 
     Examples:
         >>> import asyncio
@@ -257,15 +260,15 @@ def map_to_iterable(
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[AwaitableTuple[_T1]], AwaitableTuple[_T2]]:
-    """Turn [collections.abc.Iterable][]-returning function into a function
-    expecting and returning [trcks.AwaitableTuple][]s
+    """Turn [`Iterable`][collections.abc.Iterable]-returning function into a function
+    expecting and returning [`AwaitableTuple`][trcks.AwaitableTuple]s
     of varying length.
 
     Args:
         callable_:
-            The [collections.abc.Iterable][]-returning function to be transformed
-            into a function expecting and returning
-            [trcks.AwaitableTuple][]s of varying length.
+            The [`Iterable`][collections.abc.Iterable]-returning function to be
+            transformed into a function expecting and returning
+            [`AwaitableTuple`][trcks.AwaitableTuple]s of varying length.
         *args:
             Positional arguments to be passed to `callable_`.
         **kwargs:
@@ -274,7 +277,7 @@ def map_to_iterable(
     Returns:
         The given function transformed into
             a function expecting and returning
-            [trcks.AwaitableTuple][]s of varying length.
+            [`AwaitableTuple`][trcks.AwaitableTuple]s of varying length.
 
     Examples:
         >>> import asyncio
@@ -300,14 +303,14 @@ def tap(
     **kwargs: _P.kwargs,
 ) -> Callable[[AwaitableTuple[_T1]], AwaitableTuple[_T1]]:
     """Turn synchronous function into a function
-    expecting a [trcks.AwaitableTuple][] and
-    returning the same [trcks.AwaitableTuple][].
+    expecting a [`AwaitableTuple`][trcks.AwaitableTuple] and
+    returning the same [`AwaitableTuple`][trcks.AwaitableTuple].
 
     Args:
         callable_:
             The synchronous function to be transformed into a function
-            expecting a [trcks.AwaitableTuple][] and
-            returning the same [trcks.AwaitableTuple][].
+            expecting a [`AwaitableTuple`][trcks.AwaitableTuple] and
+            returning the same [`AwaitableTuple`][trcks.AwaitableTuple].
         *args:
             Positional arguments to be passed to `callable_`.
         **kwargs:
@@ -315,8 +318,8 @@ def tap(
 
     Returns:
         The given function transformed into a function
-            expecting a [trcks.AwaitableTuple][] and
-            returning the same [trcks.AwaitableTuple][].
+            expecting a [`AwaitableTuple`][trcks.AwaitableTuple] and
+            returning the same [`AwaitableTuple`][trcks.AwaitableTuple].
 
     Examples:
         >>> import asyncio
@@ -345,15 +348,16 @@ def tap_to_awaitable(
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[AwaitableTuple[_T1]], AwaitableTuple[_T1]]:
-    """Turn [collections.abc.Awaitable][]-returning function into a function
-    expecting a [trcks.AwaitableTuple][] and
-    returning the same [trcks.AwaitableTuple][].
+    """Turn [`Awaitable`][collections.abc.Awaitable]-returning function into a function
+    expecting a [`AwaitableTuple`][trcks.AwaitableTuple] and
+    returning the same [`AwaitableTuple`][trcks.AwaitableTuple].
 
     Args:
         callable_:
-            The [collections.abc.Awaitable][]-returning function to be transformed
-            into a function expecting a [trcks.AwaitableTuple][] and
-            returning the same [trcks.AwaitableTuple][].
+            The [`Awaitable`][collections.abc.Awaitable]-returning function to be
+            transformed into a function expecting a
+            [`AwaitableTuple`][trcks.AwaitableTuple] and returning the same
+            [`AwaitableTuple`][trcks.AwaitableTuple].
         *args:
             Positional arguments to be passed to `callable_`.
         **kwargs:
@@ -361,8 +365,8 @@ def tap_to_awaitable(
 
     Returns:
         The given function transformed into a function
-            expecting a [trcks.AwaitableTuple][] and
-            returning the same [trcks.AwaitableTuple][].
+            expecting a [`AwaitableTuple`][trcks.AwaitableTuple] and
+            returning the same [`AwaitableTuple`][trcks.AwaitableTuple].
 
     Examples:
         >>> import asyncio
@@ -396,16 +400,17 @@ def tap_to_awaitable_iterable(
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[AwaitableTuple[_T1]], AwaitableTuple[_T1]]:
-    """Turn a [trcks.AwaitableIterable][]-returning side effect into a function
-    expecting a [trcks.AwaitableTuple][] and returning a [trcks.AwaitableTuple][]
-    where each original element is repeated once per element returned by
-    the side effect.
+    """Turn a [`AwaitableIterable`][trcks.AwaitableIterable]-returning side effect into
+    a function expecting a [`AwaitableTuple`][trcks.AwaitableTuple] and returning a
+    [`AwaitableTuple`][trcks.AwaitableTuple] where each original element is repeated
+    once per element returned by the side effect.
 
     Args:
         callable_:
-            The [trcks.AwaitableIterable][]-returning function to be transformed
-            into a function expecting a [trcks.AwaitableTuple][] and
-            returning a [trcks.AwaitableTuple][] where each original element is
+            The [`AwaitableIterable`][trcks.AwaitableIterable]-returning function to be
+            transformed into a function expecting a
+            [`AwaitableTuple`][trcks.AwaitableTuple] and returning a
+            [`AwaitableTuple`][trcks.AwaitableTuple] where each original element is
             repeated once per element returned by the side effect.
         *args:
             Positional arguments to be passed to `callable_`.
@@ -414,8 +419,8 @@ def tap_to_awaitable_iterable(
 
     Returns:
         The given function transformed into a function
-            expecting a [trcks.AwaitableTuple][] and
-            returning a [trcks.AwaitableTuple][] where each original element is
+            expecting a [`AwaitableTuple`][trcks.AwaitableTuple] and returning a
+            [`AwaitableTuple`][trcks.AwaitableTuple] where each original element is
             repeated once per element returned by the side effect.
 
     Examples:
@@ -448,16 +453,17 @@ def tap_to_iterable(
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[AwaitableTuple[_T1]], AwaitableTuple[_T1]]:
-    """Turn a [collections.abc.Iterable][]-returning side effect into a function
-    expecting a [trcks.AwaitableTuple][] and returning a [trcks.AwaitableTuple][]
-    where each original element is repeated once per element returned by
-    the side effect.
+    """Turn a [`Iterable`][collections.abc.Iterable]-returning side effect into a
+    function expecting a [`AwaitableTuple`][trcks.AwaitableTuple] and returning a
+    [`AwaitableTuple`][trcks.AwaitableTuple] where each original element is repeated
+    once per element returned by the side effect.
 
     Args:
         callable_:
-            The [collections.abc.Iterable][]-returning function to be transformed
-            into a function expecting a [trcks.AwaitableTuple][] and
-            returning a [trcks.AwaitableTuple][] where each original element is
+            The [`Iterable`][collections.abc.Iterable]-returning function to be
+            transformed into a function expecting a
+            [`AwaitableTuple`][trcks.AwaitableTuple] and returning a
+            [`AwaitableTuple`][trcks.AwaitableTuple] where each original element is
             repeated once per element returned by the side effect.
         *args:
             Positional arguments to be passed to `callable_`.
@@ -466,8 +472,8 @@ def tap_to_iterable(
 
     Returns:
         The given function transformed into a function
-            expecting a [trcks.AwaitableTuple][] and
-            returning a [trcks.AwaitableTuple][] where each original element is
+            expecting a [`AwaitableTuple`][trcks.AwaitableTuple] and returning a
+            [`AwaitableTuple`][trcks.AwaitableTuple] where each original element is
             repeated once per element returned by the side effect.
 
     Examples:
@@ -489,23 +495,23 @@ def tap_to_iterable(
 
 
 async def to_coroutine_tuple(a_tpl: AwaitableTuple[_T], /) -> tuple[_T, ...]:
-    """Turn a [trcks.AwaitableTuple][] into a coroutine.
+    """Turn a [`AwaitableTuple`][trcks.AwaitableTuple] into a coroutine.
 
     This is useful for functions that expect a coroutine
-    (e.g. [asyncio.run][] in Python 3.13 and older).
+    (e.g. [`run`][asyncio.run] in Python 3.13 and older).
 
     Args:
-        a_tpl: The [trcks.AwaitableTuple][] to be transformed
+        a_tpl: The [`AwaitableTuple`][trcks.AwaitableTuple] to be transformed
             into a coroutine.
 
     Returns:
-        The given [trcks.AwaitableTuple][] transformed
+        The given [`AwaitableTuple`][trcks.AwaitableTuple] transformed
             into a coroutine.
 
     Note:
-        The type [trcks.AwaitableTuple][] is
-        an alias of [collections.abc.Awaitable][] over
-        homogeneous [tuple][] values.
+        The type [`AwaitableTuple`][trcks.AwaitableTuple] is
+        an alias of [`Awaitable`][collections.abc.Awaitable] over
+        homogeneous [`tuple`][tuple] values.
 
     Examples:
         >>> import asyncio

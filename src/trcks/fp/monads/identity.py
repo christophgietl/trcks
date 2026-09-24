@@ -73,7 +73,7 @@ def map_to_awaitable(
     **kwargs: _P.kwargs,
 ) -> Callable[[_T1], Awaitable[_T2]]:
     """Create function that maps a plain value
-    to an [collections.abc.Awaitable][] value.
+    to an [`Awaitable`][collections.abc.Awaitable] value.
 
     Args:
         callable_: Asynchronous function to apply to the given value.
@@ -83,7 +83,7 @@ def map_to_awaitable(
             Keyword arguments to be passed to `callable_`.
 
     Returns:
-        Maps plain values to [collections.abc.Awaitable][] values
+        Maps plain values to [`Awaitable`][collections.abc.Awaitable] values
             according to the given asynchronous function.
 
     Examples:
@@ -109,18 +109,18 @@ def map_to_awaitable_iterable(
     **kwargs: _P.kwargs,
 ) -> Callable[[_T1], AwaitableTuple[_T2]]:
     """Create function that maps a plain value
-    to a [trcks.AwaitableIterable][] and flattens the result.
+    to a [`AwaitableIterable`][trcks.AwaitableIterable] and flattens the result.
 
     Args:
         callable_: Asynchronous function to apply to the given value,
-            returning a [trcks.AwaitableIterable][].
+            returning a [`AwaitableIterable`][trcks.AwaitableIterable].
         *args:
             Positional arguments to be passed to `callable_`.
         **kwargs:
             Keyword arguments to be passed to `callable_`.
 
     Returns:
-        Maps plain values to [trcks.AwaitableTuple][]s of varying length
+        Maps plain values to [`AwaitableTuple`][trcks.AwaitableTuple]s of varying length
             according to the given asynchronous function.
 
     Examples:
@@ -147,18 +147,19 @@ def map_to_awaitable_result(
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[_T1], AwaitableResult[_F, _S]]:
-    """Create function that maps a plain value to a [trcks.AwaitableResult][] value.
+    """Create function that maps a plain value to a
+    [`AwaitableResult`][trcks.AwaitableResult] value.
 
     Args:
         callable_: Asynchronous function to apply to the given value,
-            returning a [trcks.AwaitableResult][].
+            returning a [`AwaitableResult`][trcks.AwaitableResult].
         *args:
             Positional arguments to be passed to `callable_`.
         **kwargs:
             Keyword arguments to be passed to `callable_`.
 
     Returns:
-        Maps plain values to [trcks.AwaitableResult][] values
+        Maps plain values to [`AwaitableResult`][trcks.AwaitableResult] values
             according to the given asynchronous function.
 
     Examples:
@@ -198,23 +199,23 @@ def map_to_awaitable_result_iterable(
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[_T1], AwaitableResultTuple[_F, _S]]:
-    """Create function that maps a plain value
-    to a [trcks.AwaitableResultIterable][] and flattens the result.
+    """Create function that maps a plain value to a
+    [`AwaitableResultIterable`][trcks.AwaitableResultIterable] and flattens the result.
 
     Args:
         callable_: Asynchronous function to apply to the given value,
-            returning a [trcks.AwaitableResultIterable][].
+            returning a [`AwaitableResultIterable`][trcks.AwaitableResultIterable].
         *args:
             Positional arguments to be passed to `callable_`.
         **kwargs:
             Keyword arguments to be passed to `callable_`.
 
     Returns:
-        Maps plain values to [trcks.AwaitableResultTuple][]s with
+        Maps plain values to [`AwaitableResultTuple`][trcks.AwaitableResultTuple]s with
 
-            - the [trcks.Failure][] returned by the function, or
-            - a [trcks.SuccessTuple][] containing the elements of
-                the [trcks.SuccessIterable][] returned by the function.
+            - the [`Failure`][trcks.Failure] returned by the function, or
+            - a [`SuccessTuple`][trcks.SuccessTuple] containing the elements of
+                the [`SuccessIterable`][trcks.SuccessIterable] returned by the function.
 
     Examples:
         >>> import asyncio
@@ -251,7 +252,7 @@ def map_to_awaitable_result_tuple(
     **kwargs: _P.kwargs,
 ) -> Callable[[_T1], AwaitableResultTuple[_F, _S]]:
     """Deprecated alias for
-    [trcks.fp.monads.identity.map_to_awaitable_result_iterable][].
+    [`map_to_awaitable_result_iterable`][trcks.fp.monads.identity.map_to_awaitable_result_iterable].
     """
     return map_to_awaitable_result_iterable(
         callable_, *args, **kwargs
@@ -265,7 +266,9 @@ def map_to_awaitable_tuple(
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[_T1], AwaitableTuple[_T2]]:
-    """Deprecated alias for [trcks.fp.monads.identity.map_to_awaitable_iterable][]."""
+    """Deprecated alias for
+    [`map_to_awaitable_iterable`][trcks.fp.monads.identity.map_to_awaitable_iterable].
+    """
     return map_to_awaitable_iterable(callable_, *args, **kwargs)  # pragma: no cover
 
 
@@ -276,18 +279,18 @@ def map_to_iterable(
     **kwargs: _P.kwargs,
 ) -> Callable[[_T1], tuple[_T2, ...]]:
     """Create function that maps a plain value
-    to a [collections.abc.Iterable][] and flattens the result.
+    to a [`Iterable`][collections.abc.Iterable] and flattens the result.
 
     Args:
         callable_: Function to apply to the given value,
-            returning a [collections.abc.Iterable][].
+            returning a [`Iterable`][collections.abc.Iterable].
         *args:
             Positional arguments to be passed to `callable_`.
         **kwargs:
             Keyword arguments to be passed to `callable_`.
 
     Returns:
-        Maps plain values to homogeneous [tuple][]s of varying length
+        Maps plain values to homogeneous [`tuple`][tuple]s of varying length
             according to the given function.
 
     Examples:
@@ -308,17 +311,18 @@ def map_to_result(
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[_T1], Result[_F, _S]]:
-    """Create function that maps a plain value to a [trcks.Result][] value.
+    """Create function that maps a plain value to a [`Result`][trcks.Result] value.
 
     Args:
-        callable_: Function to apply to the given value, returning a [trcks.Result][].
+        callable_: Function to apply to the given value, returning a
+            [`Result`][trcks.Result].
         *args:
             Positional arguments to be passed to `callable_`.
         **kwargs:
             Keyword arguments to be passed to `callable_`.
 
     Returns:
-        Maps plain values to [trcks.Result][] values
+        Maps plain values to [`Result`][trcks.Result] values
             according to the given function.
 
     Examples:
@@ -346,22 +350,22 @@ def map_to_result_iterable(
     **kwargs: _P.kwargs,
 ) -> Callable[[_T1], ResultTuple[_F, _S]]:
     """Create function that maps a plain value
-    to a [trcks.ResultIterable][] and flattens the result.
+    to a [`ResultIterable`][trcks.ResultIterable] and flattens the result.
 
     Args:
         callable_: Function to apply to the given value,
-            returning a [trcks.ResultIterable][].
+            returning a [`ResultIterable`][trcks.ResultIterable].
         *args:
             Positional arguments to be passed to `callable_`.
         **kwargs:
             Keyword arguments to be passed to `callable_`.
 
     Returns:
-        Maps plain values to [trcks.ResultTuple][]s with
+        Maps plain values to [`ResultTuple`][trcks.ResultTuple]s with
 
-            - the [trcks.Failure][] returned by the function, or
-            - a [trcks.SuccessTuple][] containing the elements of
-                the [trcks.SuccessIterable][] returned by the function.
+            - the [`Failure`][trcks.Failure] returned by the function, or
+            - a [`SuccessTuple`][trcks.SuccessTuple] containing the elements of
+                the [`SuccessIterable`][trcks.SuccessIterable] returned by the function.
 
     Examples:
         >>> from trcks.fp.monads import identity as i
@@ -391,7 +395,9 @@ def map_to_result_tuple(
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[_T1], ResultTuple[_F, _S]]:
-    """Deprecated alias for [trcks.fp.monads.identity.map_to_result_iterable][]."""
+    """Deprecated alias for
+    [`map_to_result_iterable`][trcks.fp.monads.identity.map_to_result_iterable].
+    """
     return map_to_result_iterable(callable_, *args, **kwargs)  # pragma: no cover
 
 
@@ -402,7 +408,9 @@ def map_to_tuple(
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[_T1], tuple[_T2, ...]]:
-    """Deprecated alias for [trcks.fp.monads.identity.map_to_iterable][]."""
+    """Deprecated alias for
+    [`map_to_iterable`][trcks.fp.monads.identity.map_to_iterable].
+    """
     return map_to_iterable(callable_, *args, **kwargs)  # pragma: no cover
 
 
@@ -423,7 +431,7 @@ def tap_to_awaitable(
 
     Returns:
         Applies the given side effect to the given value and
-            returns an [collections.abc.Awaitable][] of the original value.
+            returns an [`Awaitable`][collections.abc.Awaitable] of the original value.
 
     Examples:
         >>> import asyncio
@@ -450,11 +458,11 @@ def tap_to_awaitable_iterable(
     **kwargs: _P.kwargs,
 ) -> Callable[[_T1], AwaitableTuple[_T1]]:
     """Create function that applies an asynchronous side effect
-    with return type [trcks.AwaitableIterable][] to a plain value.
+    with return type [`AwaitableIterable`][trcks.AwaitableIterable] to a plain value.
 
     Args:
         callable_: Asynchronous side effect to apply to the given value,
-            returning a [trcks.AwaitableIterable][].
+            returning a [`AwaitableIterable`][trcks.AwaitableIterable].
         *args:
             Positional arguments to be passed to `callable_`.
         **kwargs:
@@ -462,7 +470,7 @@ def tap_to_awaitable_iterable(
 
     Returns:
         Applies the given side effect to the given value and
-            returns a [trcks.AwaitableTuple][] of the original value,
+            returns a [`AwaitableTuple`][trcks.AwaitableTuple] of the original value,
             repeated once per element in the side effect output.
 
     Examples:
@@ -492,11 +500,11 @@ def tap_to_awaitable_result(
     **kwargs: _P.kwargs,
 ) -> Callable[[_T1], AwaitableResult[_F, _T1]]:
     """Create function that applies an asynchronous side effect
-    with return type [trcks.Result][] to a plain value.
+    with return type [`Result`][trcks.Result] to a plain value.
 
     Args:
         callable_: Asynchronous side effect to apply to the given value,
-            returning a [trcks.Result][].
+            returning a [`Result`][trcks.Result].
         *args:
             Positional arguments to be passed to `callable_`.
         **kwargs:
@@ -504,12 +512,12 @@ def tap_to_awaitable_result(
 
     Returns:
         Applies the given side effect to the given value and
-            returns a [trcks.AwaitableResult][] with
+            returns a [`AwaitableResult`][trcks.AwaitableResult] with
 
-                - *the returned* [trcks.Failure][]
-                    if the applied side effect returns a [trcks.Failure][] or
+                - *the returned* [`Failure`][trcks.Failure]
+                    if the applied side effect returns a [`Failure`][trcks.Failure] or
                 - *the original* value
-                    if the applied side effect returns a [trcks.Success][].
+                    if the applied side effect returns a [`Success`][trcks.Success].
 
     Examples:
         >>> import asyncio
@@ -554,12 +562,12 @@ def tap_to_awaitable_result_iterable(
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[_T1], AwaitableResultTuple[_F, _T1]]:
-    """Create function that applies an asynchronous side effect
-    with return type [trcks.AwaitableResultIterable][] to a plain value.
+    """Create function that applies an asynchronous side effect with return type
+    [`AwaitableResultIterable`][trcks.AwaitableResultIterable] to a plain value.
 
     Args:
         callable_: Asynchronous side effect to apply to the given value,
-            returning a [trcks.AwaitableResultIterable][].
+            returning a [`AwaitableResultIterable`][trcks.AwaitableResultIterable].
         *args:
             Positional arguments to be passed to `callable_`.
         **kwargs:
@@ -567,13 +575,13 @@ def tap_to_awaitable_result_iterable(
 
     Returns:
         Applies the given side effect to the given value and
-            returns a [trcks.AwaitableResultTuple][] with
+            returns a [`AwaitableResultTuple`][trcks.AwaitableResultTuple] with
 
-                - *the returned* [trcks.Failure][]
-                    if the applied side effect returns a [trcks.Failure][] or
+                - *the returned* [`Failure`][trcks.Failure]
+                    if the applied side effect returns a [`Failure`][trcks.Failure] or
                 - *the original* value repeated once per element
-                    in the side effect output
-                    if the applied side effect returns a [trcks.SuccessIterable][].
+                    in the side effect output if the applied side effect returns a
+                    [`SuccessIterable`][trcks.SuccessIterable].
 
     Examples:
         >>> import asyncio
@@ -610,7 +618,7 @@ def tap_to_awaitable_result_tuple(
     **kwargs: _P.kwargs,
 ) -> Callable[[_T1], AwaitableResultTuple[_F, _T1]]:
     """Deprecated alias for
-    [trcks.fp.monads.identity.tap_to_awaitable_result_iterable][].
+    [`tap_to_awaitable_result_iterable`][trcks.fp.monads.identity.tap_to_awaitable_result_iterable].
     """
     return tap_to_awaitable_result_iterable(
         callable_, *args, **kwargs
@@ -624,7 +632,9 @@ def tap_to_awaitable_tuple(
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[_T1], AwaitableTuple[_T1]]:
-    """Deprecated alias for [trcks.fp.monads.identity.tap_to_awaitable_iterable][]."""
+    """Deprecated alias for
+    [`tap_to_awaitable_iterable`][trcks.fp.monads.identity.tap_to_awaitable_iterable].
+    """
     return tap_to_awaitable_iterable(callable_, *args, **kwargs)  # pragma: no cover
 
 
@@ -635,11 +645,11 @@ def tap_to_iterable(
     **kwargs: _P.kwargs,
 ) -> Callable[[_T1], tuple[_T1, ...]]:
     """Create function that applies a side effect
-    returning a [collections.abc.Iterable][] to a plain value.
+    returning a [`Iterable`][collections.abc.Iterable] to a plain value.
 
     Args:
         callable_: Side effect to apply to the given value,
-            returning a [collections.abc.Iterable][].
+            returning a [`Iterable`][collections.abc.Iterable].
         *args:
             Positional arguments to be passed to `callable_`.
         **kwargs:
@@ -647,7 +657,7 @@ def tap_to_iterable(
 
     Returns:
         Applies the given side effect to the given value and
-            returns a homogeneous [tuple][] of the original value,
+            returns a homogeneous [`tuple`][tuple] of the original value,
             repeated once per element in the side effect output.
 
     Examples:
@@ -671,11 +681,11 @@ def tap_to_result(
     **kwargs: _P.kwargs,
 ) -> Callable[[_T1], Result[_F, _T1]]:
     """Create function that applies a side effect
-    with return type [trcks.Result][] to a plain value.
+    with return type [`Result`][trcks.Result] to a plain value.
 
     Args:
         callable_: Side effect to apply to the given value,
-            returning a [trcks.Result][].
+            returning a [`Result`][trcks.Result].
         *args:
             Positional arguments to be passed to `callable_`.
         **kwargs:
@@ -683,12 +693,12 @@ def tap_to_result(
 
     Returns:
         Applies the given side effect to the given value and
-            returns a [trcks.Result][] with
+            returns a [`Result`][trcks.Result] with
 
-                - *the returned* [trcks.Failure][]
-                    if the applied side effect returns a [trcks.Failure][] or
+                - *the returned* [`Failure`][trcks.Failure]
+                    if the applied side effect returns a [`Failure`][trcks.Failure] or
                 - *the original* value
-                    if the applied side effect returns a [trcks.Success][].
+                    if the applied side effect returns a [`Success`][trcks.Success].
 
     Examples:
         >>> from trcks import Result
@@ -720,11 +730,11 @@ def tap_to_result_iterable(
     **kwargs: _P.kwargs,
 ) -> Callable[[_T1], ResultTuple[_F, _T1]]:
     """Create function that applies a side effect
-    with return type [trcks.ResultIterable][] to a plain value.
+    with return type [`ResultIterable`][trcks.ResultIterable] to a plain value.
 
     Args:
         callable_: Side effect to apply to the given value,
-            returning a [trcks.ResultIterable][].
+            returning a [`ResultIterable`][trcks.ResultIterable].
         *args:
             Positional arguments to be passed to `callable_`.
         **kwargs:
@@ -732,13 +742,13 @@ def tap_to_result_iterable(
 
     Returns:
         Applies the given side effect to the given value and
-            returns a [trcks.ResultTuple][] with
+            returns a [`ResultTuple`][trcks.ResultTuple] with
 
-                - *the returned* [trcks.Failure][]
-                    if the applied side effect returns a [trcks.Failure][] or
+                - *the returned* [`Failure`][trcks.Failure]
+                    if the applied side effect returns a [`Failure`][trcks.Failure] or
                 - *the original* value repeated once per element
-                    in the side effect output
-                    if the applied side effect returns a [trcks.SuccessIterable][].
+                    in the side effect output if the applied side effect returns a
+                    [`SuccessIterable`][trcks.SuccessIterable].
 
     Examples:
         >>> from trcks import ResultTuple
@@ -779,7 +789,9 @@ def tap_to_result_tuple(
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[_T1], ResultTuple[_F, _T1]]:
-    """Deprecated alias for [trcks.fp.monads.identity.tap_to_result_iterable][]."""
+    """Deprecated alias for
+    [`tap_to_result_iterable`][trcks.fp.monads.identity.tap_to_result_iterable].
+    """
     return tap_to_result_iterable(callable_, *args, **kwargs)  # pragma: no cover
 
 
@@ -790,5 +802,7 @@ def tap_to_tuple(
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[_T1], tuple[_T1, ...]]:
-    """Deprecated alias for [trcks.fp.monads.identity.tap_to_iterable][]."""
+    """Deprecated alias for
+    [`tap_to_iterable`][trcks.fp.monads.identity.tap_to_iterable].
+    """
     return tap_to_iterable(callable_, *args, **kwargs)  # pragma: no cover

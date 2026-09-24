@@ -1,13 +1,13 @@
-# Tuple types provided by [trcks][]
+# Tuple types provided by `trcks`
 
 This page is the foundation for all usage of `trcks`:
-it defines the [trcks.Failure][], [trcks.Success][], and [trcks.Result][]
-types that [trcks.oop][] and [trcks.fp][] build on.
+it defines the [`Failure`][trcks.Failure], [`Success`][trcks.Success], and [`Result`][trcks.Result]
+types that [`oop`][trcks.oop] and [`fp`][trcks.fp] build on.
 
-The generic type [trcks.Failure][]`[F]` describes all [tuple][]s of length 2
-with the string "failure" as the first element and a second element of type F.
-Usually, the second element is a string, an exception, an enum value, or
-a dataclass:
+The generic type [`Failure`][trcks.Failure]`[F]` describes all [`tuple`][tuple]s
+of length 2 with the string "failure" as the first element and a second element
+of type F. Usually, the second element is a string, an exception, an enum value,
+or a dataclass:
 
 ???+ example
 
@@ -45,9 +45,9 @@ a dataclass:
 
     ```
 
-The generic type [trcks.Success][]`[S]` describes all [tuple][]s of length 2
-with the string "success" as the first element and a second element of type S.
-Here, S can be any type.
+The generic type [`Success`][trcks.Success]`[S]` describes all [`tuple`][tuple]s
+of length 2 with the string "success" as the first element and a second element
+of type S. Here, S can be any type.
 
 ???+ example
 
@@ -64,8 +64,8 @@ Here, S can be any type.
 
     ```
 
-The generic type [trcks.Result][]`[F, S]` is
-the union of [trcks.Failure][]`[F]` and [trcks.Success][]`[S]`.
+The generic type [`Result`][trcks.Result]`[F, S]` is
+the union of [`Failure`][trcks.Failure]`[F]` and [`Success`][trcks.Success]`[S]`.
 It is primarily used as a return type for functions:
 
 ???+ example
