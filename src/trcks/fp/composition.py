@@ -1,4 +1,4 @@
-"""Types and higher order functions for function composition.
+"""Types and higher-order functions for function composition.
 
 Attributes:
     Composable1:
