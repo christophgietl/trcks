@@ -24,10 +24,10 @@ _S2 = TypeVar("_S2")
 
 
 def construct_failure(value: _F, /) -> AwaitableFailure[_F]:
-    """Create a [`AwaitableFailure`][trcks.AwaitableFailure] object from a value.
+    """Create an [`AwaitableFailure`][trcks.AwaitableFailure] object from a value.
 
     Args:
-        value: Value to be wrapped in a [`AwaitableFailure`][trcks.AwaitableFailure]
+        value: Value to be wrapped in an [`AwaitableFailure`][trcks.AwaitableFailure]
             object.
 
     Returns:
@@ -48,12 +48,12 @@ def construct_failure(value: _F, /) -> AwaitableFailure[_F]:
 
 
 def construct_failure_from_awaitable(awtbl: Awaitable[_F], /) -> AwaitableFailure[_F]:
-    """Create a [`AwaitableFailure`][trcks.AwaitableFailure] object
-    from a [`Awaitable`][collections.abc.Awaitable] object.
+    """Create an [`AwaitableFailure`][trcks.AwaitableFailure] object
+    from an [`Awaitable`][collections.abc.Awaitable] object.
 
     Args:
         awtbl: [`Awaitable`][collections.abc.Awaitable] object to be wrapped
-            in a [`AwaitableFailure`][trcks.AwaitableFailure] object.
+            in an [`AwaitableFailure`][trcks.AwaitableFailure] object.
 
     Returns:
         A new [`AwaitableFailure`][trcks.AwaitableFailure] instance containing
@@ -79,12 +79,12 @@ def construct_failure_from_awaitable(awtbl: Awaitable[_F], /) -> AwaitableFailur
 
 
 def construct_from_result(rslt: Result[_F, _S], /) -> AwaitableResult[_F, _S]:
-    """Create a [`AwaitableResult`][trcks.AwaitableResult] object from a
+    """Create an [`AwaitableResult`][trcks.AwaitableResult] object from a
     [`Result`][trcks.Result] object.
 
     Args:
         rslt: [`Result`][trcks.Result] object to be wrapped
-            in a [`AwaitableResult`][trcks.AwaitableResult] object.
+            in an [`AwaitableResult`][trcks.AwaitableResult] object.
 
     Returns:
         A new [`AwaitableResult`][trcks.AwaitableResult] instance containing
@@ -104,10 +104,10 @@ def construct_from_result(rslt: Result[_F, _S], /) -> AwaitableResult[_F, _S]:
 
 
 def construct_success(value: _S, /) -> AwaitableSuccess[_S]:
-    """Create a [`AwaitableSuccess`][trcks.AwaitableSuccess] object from a value.
+    """Create an [`AwaitableSuccess`][trcks.AwaitableSuccess] object from a value.
 
     Args:
-        value: Value to be wrapped in a [`AwaitableSuccess`][trcks.AwaitableSuccess]
+        value: Value to be wrapped in an [`AwaitableSuccess`][trcks.AwaitableSuccess]
             object.
 
     Returns:
@@ -128,12 +128,12 @@ def construct_success(value: _S, /) -> AwaitableSuccess[_S]:
 
 
 def construct_success_from_awaitable(awtbl: Awaitable[_S], /) -> AwaitableSuccess[_S]:
-    """Create a [`AwaitableSuccess`][trcks.AwaitableSuccess] object
-    from a [`Awaitable`][collections.abc.Awaitable] object.
+    """Create an [`AwaitableSuccess`][trcks.AwaitableSuccess] object
+    from an [`Awaitable`][collections.abc.Awaitable] object.
 
     Args:
         awtbl: [`Awaitable`][collections.abc.Awaitable] object to be wrapped
-            in a [`AwaitableSuccess`][trcks.AwaitableSuccess] object.
+            in an [`AwaitableSuccess`][trcks.AwaitableSuccess] object.
 
     Returns:
         A new [`AwaitableSuccess`][trcks.AwaitableSuccess] instance containing
@@ -685,7 +685,7 @@ def tap_failure_to_awaitable_result(
             If the given side effect returns a
             [`AwaitableFailure`][trcks.AwaitableFailure], *the original*
             [`AwaitableFailure`][trcks.AwaitableFailure] value is returned. If the given
-            side effect returns a [`AwaitableSuccess`][trcks.AwaitableSuccess], *this*
+            side effect returns an [`AwaitableSuccess`][trcks.AwaitableSuccess], *this*
             [`AwaitableSuccess`][trcks.AwaitableSuccess] is returned. Passes on
             [`AwaitableSuccess`][trcks.AwaitableSuccess] values without side effects.
     """
@@ -827,9 +827,9 @@ def tap_success_to_awaitable_result(
         effects.
             Applies the given side effect to
             [`AwaitableSuccess`][trcks.AwaitableSuccess] values. If the given side
-            effect returns a [`AwaitableFailure`][trcks.AwaitableFailure], *this*
+            effect returns an [`AwaitableFailure`][trcks.AwaitableFailure], *this*
             [`AwaitableFailure`][trcks.AwaitableFailure] is returned. If the given side
-            effect returns a [`AwaitableSuccess`][trcks.AwaitableSuccess], *the
+            effect returns an [`AwaitableSuccess`][trcks.AwaitableSuccess], *the
             original* [`AwaitableSuccess`][trcks.AwaitableSuccess] value is returned.
     """
 
@@ -881,7 +881,7 @@ def tap_success_to_result(
 
 
 async def to_coroutine_result(a_rslt: AwaitableResult[_F, _S], /) -> Result[_F, _S]:
-    """Turn a [`AwaitableResult`][trcks.AwaitableResult] into a
+    """Turn an [`AwaitableResult`][trcks.AwaitableResult] into a
     [`Coroutine`][collections.abc.Coroutine].
 
     This is useful for functions that expect a coroutine

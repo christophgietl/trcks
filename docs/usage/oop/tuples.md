@@ -599,7 +599,7 @@ in the failure case or in the success case (for each element), respectively:
     ```
 
 Sometimes, side effects themselves can fail and
-need to return a [`AwaitableResult`][trcks.AwaitableResult] type.
+need to return an [`AwaitableResult`][trcks.AwaitableResult] type.
 The method
 [`tap_successes_to_awaitable_result`][trcks.oop.AwaitableResultTupleWrapper.tap_successes_to_awaitable_result]
 allows us to execute such asynchronous side effects

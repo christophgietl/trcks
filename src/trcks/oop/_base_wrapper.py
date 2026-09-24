@@ -10,7 +10,7 @@ _T_co = TypeVar("_T_co", covariant=True)
 
 @dataclass(frozen=True, slots=True)
 class BaseWrapper(Generic[_T_co]):
-    """Base class for all wrappers in the [`oop`][trcks.oop] package.
+    """Base class for all wrappers in the [`trcks.oop`][trcks.oop] package.
 
     Attributes:
         core: The wrapped value.

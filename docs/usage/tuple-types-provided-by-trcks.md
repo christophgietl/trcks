@@ -2,7 +2,7 @@
 
 This page is the foundation for all usage of `trcks`:
 it defines the [`Failure`][trcks.Failure], [`Success`][trcks.Success], and [`Result`][trcks.Result]
-types that [`oop`][trcks.oop] and [`fp`][trcks.fp] build on.
+types that [`trcks.oop`][trcks.oop] and [`trcks.fp`][trcks.fp] build on.
 
 The generic type [`Failure`][trcks.Failure]`[F]` describes all [`tuple`][tuple]s
 of length 2 with the string "failure" as the first element and a second element
