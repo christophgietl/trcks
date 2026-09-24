@@ -158,7 +158,7 @@ def map_to_awaitable_result(
 
     Args:
         callable_: Asynchronous function to apply to each element,
-            returning a [`AwaitableResult`][trcks.AwaitableResult].
+            returning an [`AwaitableResult`][trcks.AwaitableResult].
         *args:
             Positional arguments to be passed to `callable_`.
         **kwargs:
@@ -216,7 +216,7 @@ def map_to_awaitable_result_iterable(
 
     Args:
         callable_: Asynchronous function to apply to each element,
-            returning a [`AwaitableResultIterable`][trcks.AwaitableResultIterable].
+            returning an [`AwaitableResultIterable`][trcks.AwaitableResultIterable].
         *args:
             Positional arguments to be passed to `callable_`.
         **kwargs:
@@ -433,11 +433,11 @@ def tap_to_awaitable_result(
 ) -> Callable[[AwaitableTuple[_T1]], AwaitableResultTuple[_F, _T1]]:
     """Create function that applies an asynchronous side effect
     with return type [`AwaitableResult`][trcks.AwaitableResult]
-    to each element of a [`AwaitableTuple`][trcks.AwaitableTuple].
+    to each element of an [`AwaitableTuple`][trcks.AwaitableTuple].
 
     Args:
         callable_: Asynchronous side effect to apply to each element,
-            returning a [`AwaitableResult`][trcks.AwaitableResult].
+            returning an [`AwaitableResult`][trcks.AwaitableResult].
         *args:
             Positional arguments to be passed to `callable_`.
         **kwargs:
@@ -490,11 +490,11 @@ def tap_to_awaitable_result_iterable(
 ) -> Callable[[AwaitableTuple[_T1]], AwaitableResultTuple[_F, _T1]]:
     """Create function that applies an asynchronous side effect
     with return type [`AwaitableResultIterable`][trcks.AwaitableResultIterable]
-    to each element of a [`AwaitableTuple`][trcks.AwaitableTuple].
+    to each element of an [`AwaitableTuple`][trcks.AwaitableTuple].
 
     Args:
         callable_: Asynchronous side effect to apply to each element,
-            returning a [`AwaitableResultIterable`][trcks.AwaitableResultIterable].
+            returning an [`AwaitableResultIterable`][trcks.AwaitableResultIterable].
         *args:
             Positional arguments to be passed to `callable_`.
         **kwargs:
@@ -576,7 +576,7 @@ def tap_to_result(
 ) -> Callable[[AwaitableTuple[_T1]], AwaitableResultTuple[_F, _T1]]:
     """Create function that applies a synchronous side effect
     with return type [`Result`][trcks.Result]
-    to each element of a [`AwaitableTuple`][trcks.AwaitableTuple].
+    to each element of an [`AwaitableTuple`][trcks.AwaitableTuple].
 
     Args:
         callable_: Synchronous side effect to apply to each element,
@@ -632,7 +632,7 @@ def tap_to_result_iterable(
 ) -> Callable[[AwaitableTuple[_T1]], AwaitableResultTuple[_F, _T1]]:
     """Create function that applies a synchronous side effect
     with return type [`ResultIterable`][trcks.ResultIterable]
-    to each element of a [`AwaitableTuple`][trcks.AwaitableTuple].
+    to each element of an [`AwaitableTuple`][trcks.AwaitableTuple].
 
     Args:
         callable_: Synchronous side effect to apply to each element,

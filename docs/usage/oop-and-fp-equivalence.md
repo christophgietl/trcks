@@ -1,8 +1,8 @@
 # `trcks.oop` and `trcks.fp` equivalence
 
 `trcks` supports two equivalent programming styles:
-[`oop`][trcks.oop] (method chaining)
-and [`fp`][trcks.fp] (function composition).
+[`trcks.oop`][trcks.oop] (method chaining)
+and [`trcks.fp`][trcks.fp] (function composition).
 This page maps common operations from one style to the other.
 
 | Operation | `trcks.oop` | `trcks.fp` |
@@ -41,7 +41,7 @@ Only the `AwaitableResultTuple` monad
 has no widening operations.
 The monad modules implement these functions by lifting the value into
 the richer monad and then applying that monad's own function,
-and [`trcks.fp.composition.pipe`][] offers this lift-then-apply
+and [`pipe`][trcks.fp.composition.pipe] offers this lift-then-apply
 composition as a general pattern.
 
 The full set of element-wise and homogeneous-tuple variants is covered

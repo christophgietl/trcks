@@ -88,7 +88,7 @@ let us have a look at the individual steps of the chain:
 
 ???+ note
     The higher-order function [`map_to_iterable`][trcks.fp.monads.tuple_.map_to_iterable]
-    applies a function that returns a [`Iterable`][collections.abc.Iterable]
+    applies a function that returns an [`Iterable`][collections.abc.Iterable]
     to each element and flattens the results (like a "flat map"):
 
     ```pycon
@@ -261,7 +261,7 @@ let us have a look at the individual steps of the chain:
 
 ???+ note
     The function [`construct_successes_from_iterable`][trcks.fp.monads.result_tuple.construct_successes_from_iterable]
-    converts a [`Iterable`][collections.abc.Iterable] into a [`tuple`][tuple]
+    converts an [`Iterable`][collections.abc.Iterable] into a [`tuple`][tuple]
     and wraps it into a [`SuccessTuple`][trcks.SuccessTuple], which can then be
     used with the higher-order functions from
     [`result_tuple`][trcks.fp.monads.result_tuple].
@@ -408,7 +408,7 @@ the remaining elements are skipped.
 
 If one of the functions in a [`composition`][trcks.fp.composition]
 pipeline returns
-a [`AwaitableTuple`][trcks.AwaitableTuple]`[T]` type,
+an [`AwaitableTuple`][trcks.AwaitableTuple]`[T]` type,
 the following function must accept this
 [`AwaitableTuple`][trcks.AwaitableTuple]`[T]` type as its input. The module
 [`awaitable_tuple`][trcks.fp.monads.awaitable_tuple] provides some higher-order
@@ -495,8 +495,8 @@ let us have a look at the individual steps of the chain:
 
 ???+ note
     The function [`construct_from_iterable`][trcks.fp.monads.awaitable_tuple.construct_from_iterable]
-    converts a [`Iterable`][collections.abc.Iterable] into a [`tuple`][tuple]
-    and wraps it into a [`AwaitableTuple`][trcks.AwaitableTuple], which can then
+    converts an [`Iterable`][collections.abc.Iterable] into a [`tuple`][tuple]
+    and wraps it into an [`AwaitableTuple`][trcks.AwaitableTuple], which can then
     be used with the higher-order functions from
     [`awaitable_tuple`][trcks.fp.monads.awaitable_tuple].
 
@@ -606,7 +606,7 @@ failable side effects. Processing short-circuits on the first
 
 If one of the functions in a [`composition`][trcks.fp.composition]
 pipeline returns
-a [`AwaitableResultTuple`][trcks.AwaitableResultTuple]`[F, S]` type,
+an [`AwaitableResultTuple`][trcks.AwaitableResultTuple]`[F, S]` type,
 the module [`awaitable_result_tuple`][trcks.fp.monads.awaitable_result_tuple] provides
 some higher-order functions named `map_successes*` and `tap_successes*`
 that turn element-wise functions into functions
@@ -731,8 +731,8 @@ let us have a look at the individual steps of the chain:
 ???+ note
     The function
     [`construct_successes_from_iterable`][trcks.fp.monads.awaitable_result_tuple.construct_successes_from_iterable]
-    converts a [`Iterable`][collections.abc.Iterable] into a [`tuple`][tuple]
-    and wraps it into a [`AwaitableSuccessTuple`][trcks.AwaitableSuccessTuple],
+    converts an [`Iterable`][collections.abc.Iterable] into a [`tuple`][tuple]
+    and wraps it into an [`AwaitableSuccessTuple`][trcks.AwaitableSuccessTuple],
     which can then be used with the higher-order functions from
     [`awaitable_result_tuple`][trcks.fp.monads.awaitable_result_tuple].
 
@@ -807,7 +807,7 @@ in the failure case or in the success case (for each element), respectively:
     ```
 
 Sometimes, side effects themselves can fail and
-need to return a [`AwaitableResult`][trcks.AwaitableResult] type.
+need to return an [`AwaitableResult`][trcks.AwaitableResult] type.
 The higher-order function
 [`tap_successes_to_awaitable_result`][trcks.fp.monads.awaitable_result_tuple.tap_successes_to_awaitable_result]
 allows us to execute such asynchronous side effects

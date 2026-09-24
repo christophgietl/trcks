@@ -21,7 +21,7 @@ _T2 = TypeVar("_T2")
 
 
 def construct(value: _T, /) -> AwaitableTuple[_T]:
-    """Create a [`AwaitableTuple`][trcks.AwaitableTuple] from a value.
+    """Create an [`AwaitableTuple`][trcks.AwaitableTuple] from a value.
 
     Args:
         value: The value to create the [`AwaitableTuple`][trcks.AwaitableTuple] from.
@@ -41,7 +41,7 @@ def construct(value: _T, /) -> AwaitableTuple[_T]:
 
 
 def construct_from_awaitable(awtbl: Awaitable[_T], /) -> AwaitableTuple[_T]:
-    """Create a [`AwaitableTuple`][trcks.AwaitableTuple] from an awaitable value.
+    """Create an [`AwaitableTuple`][trcks.AwaitableTuple] from an awaitable value.
 
     Args:
         awtbl: The awaitable value to create the
@@ -68,7 +68,7 @@ def construct_from_awaitable_iterable(
     a_it: AwaitableIterable[_T],
     /,
 ) -> AwaitableTuple[_T]:
-    """Create a [`AwaitableTuple`][trcks.AwaitableTuple] from a
+    """Create an [`AwaitableTuple`][trcks.AwaitableTuple] from a
     [`AwaitableIterable`][trcks.AwaitableIterable].
 
     Args:
@@ -93,7 +93,7 @@ def construct_from_awaitable_iterable(
 
 
 def construct_from_iterable(it: Iterable[_T], /) -> AwaitableTuple[_T]:
-    """Create a [`AwaitableTuple`][trcks.AwaitableTuple] from an iterable.
+    """Create an [`AwaitableTuple`][trcks.AwaitableTuple] from an iterable.
 
     Args:
         it: The iterable to create
@@ -303,13 +303,13 @@ def tap(
     **kwargs: _P.kwargs,
 ) -> Callable[[AwaitableTuple[_T1]], AwaitableTuple[_T1]]:
     """Turn synchronous function into a function
-    expecting a [`AwaitableTuple`][trcks.AwaitableTuple] and
+    expecting an [`AwaitableTuple`][trcks.AwaitableTuple] and
     returning the same [`AwaitableTuple`][trcks.AwaitableTuple].
 
     Args:
         callable_:
             The synchronous function to be transformed into a function
-            expecting a [`AwaitableTuple`][trcks.AwaitableTuple] and
+            expecting an [`AwaitableTuple`][trcks.AwaitableTuple] and
             returning the same [`AwaitableTuple`][trcks.AwaitableTuple].
         *args:
             Positional arguments to be passed to `callable_`.
@@ -318,7 +318,7 @@ def tap(
 
     Returns:
         The given function transformed into a function
-            expecting a [`AwaitableTuple`][trcks.AwaitableTuple] and
+            expecting an [`AwaitableTuple`][trcks.AwaitableTuple] and
             returning the same [`AwaitableTuple`][trcks.AwaitableTuple].
 
     Examples:
@@ -349,7 +349,7 @@ def tap_to_awaitable(
     **kwargs: _P.kwargs,
 ) -> Callable[[AwaitableTuple[_T1]], AwaitableTuple[_T1]]:
     """Turn [`Awaitable`][collections.abc.Awaitable]-returning function into a function
-    expecting a [`AwaitableTuple`][trcks.AwaitableTuple] and
+    expecting an [`AwaitableTuple`][trcks.AwaitableTuple] and
     returning the same [`AwaitableTuple`][trcks.AwaitableTuple].
 
     Args:
@@ -365,7 +365,7 @@ def tap_to_awaitable(
 
     Returns:
         The given function transformed into a function
-            expecting a [`AwaitableTuple`][trcks.AwaitableTuple] and
+            expecting an [`AwaitableTuple`][trcks.AwaitableTuple] and
             returning the same [`AwaitableTuple`][trcks.AwaitableTuple].
 
     Examples:
@@ -400,8 +400,8 @@ def tap_to_awaitable_iterable(
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[AwaitableTuple[_T1]], AwaitableTuple[_T1]]:
-    """Turn a [`AwaitableIterable`][trcks.AwaitableIterable]-returning side effect into
-    a function expecting a [`AwaitableTuple`][trcks.AwaitableTuple] and returning a
+    """Turn an [`AwaitableIterable`][trcks.AwaitableIterable]-returning side effect into
+    a function expecting an [`AwaitableTuple`][trcks.AwaitableTuple] and returning a
     [`AwaitableTuple`][trcks.AwaitableTuple] where each original element is repeated
     once per element returned by the side effect.
 
@@ -419,7 +419,7 @@ def tap_to_awaitable_iterable(
 
     Returns:
         The given function transformed into a function
-            expecting a [`AwaitableTuple`][trcks.AwaitableTuple] and returning a
+            expecting an [`AwaitableTuple`][trcks.AwaitableTuple] and returning a
             [`AwaitableTuple`][trcks.AwaitableTuple] where each original element is
             repeated once per element returned by the side effect.
 
@@ -453,8 +453,8 @@ def tap_to_iterable(
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[AwaitableTuple[_T1]], AwaitableTuple[_T1]]:
-    """Turn a [`Iterable`][collections.abc.Iterable]-returning side effect into a
-    function expecting a [`AwaitableTuple`][trcks.AwaitableTuple] and returning a
+    """Turn an [`Iterable`][collections.abc.Iterable]-returning side effect into a
+    function expecting an [`AwaitableTuple`][trcks.AwaitableTuple] and returning a
     [`AwaitableTuple`][trcks.AwaitableTuple] where each original element is repeated
     once per element returned by the side effect.
 
@@ -472,7 +472,7 @@ def tap_to_iterable(
 
     Returns:
         The given function transformed into a function
-            expecting a [`AwaitableTuple`][trcks.AwaitableTuple] and returning a
+            expecting an [`AwaitableTuple`][trcks.AwaitableTuple] and returning a
             [`AwaitableTuple`][trcks.AwaitableTuple] where each original element is
             repeated once per element returned by the side effect.
 
@@ -495,7 +495,7 @@ def tap_to_iterable(
 
 
 async def to_coroutine_tuple(a_tpl: AwaitableTuple[_T], /) -> tuple[_T, ...]:
-    """Turn a [`AwaitableTuple`][trcks.AwaitableTuple] into a coroutine.
+    """Turn an [`AwaitableTuple`][trcks.AwaitableTuple] into a coroutine.
 
     This is useful for functions that expect a coroutine
     (e.g. [`run`][asyncio.run] in Python 3.13 and older).

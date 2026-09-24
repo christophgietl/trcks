@@ -44,11 +44,14 @@ processed individually by `trcks`.
 ## Mapping helper (or `map*` function)
 
 A helper that lifts a plain function so that it operates on a
-wrapped value ([`oop`][trcks.oop]) or becomes a pipeline step ([`fp`][trcks.fp]).
-For example, [`map_success`][trcks.oop.ResultWrapper.map_success] and
-[`map_success`][trcks.fp.monads.result.map_success] both apply a function to the
-success value of a [`Result`][trcks.Result], leaving failures unchanged. These
-helpers live in `trcks.oop` classes and in the modules under `trcks.fp.monads`.
+wrapped value ([`trcks.oop`][trcks.oop]) or becomes a pipeline step
+([`trcks.fp`][trcks.fp]).
+For example,
+[`ResultWrapper.map_success`][trcks.oop.ResultWrapper.map_success] and
+[`result.map_success`][trcks.fp.monads.result.map_success] both apply a
+function to the success value of a [`Result`][trcks.Result], leaving failures
+unchanged. These helpers live in `trcks.oop` classes and in the modules under
+`trcks.fp.monads`.
 Mapping and `tap` helpers also forward any extra positional and keyword
 arguments to the given function, so a lambda or `functools.partial` is not
 needed just to bind an extra argument.
@@ -56,8 +59,9 @@ needed just to bind an extra argument.
 ## Pipeline and `pipe`
 
 A pipeline is a start value followed by zero or more compatible functions.
-The `Pipeline*` type aliases in [`composition`][trcks.fp.composition] model pipelines
-as tuples, and help static type checkers validate the compatibility of
+The `Pipeline*` type aliases in
+[`trcks.fp.composition`][trcks.fp.composition] model pipelines as tuples,
+and help static type checkers validate the compatibility of
 the start value and the functions.
 [`pipe`][trcks.fp.composition.pipe] runs a pipeline by passing the
 start value through each function in turn.

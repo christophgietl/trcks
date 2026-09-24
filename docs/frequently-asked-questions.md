@@ -98,10 +98,10 @@ the [`Result`][returns.result.Result] container (and multiple other containers)
 for synchronous code and
 the [`Future`][returns.future.Future] and
 [`FutureResult`][returns.future.FutureResult] containers for asynchronous code.
-Whereas the [`Result`][returns.result.Result] container closely resembles
-[`Result`][trcks.Result], the [`Future`][returns.future.Future] container and
-the [`FutureResult`][returns.future.FutureResult] container deviate from
-[`Awaitable`][collections.abc.Awaitable] and
+Whereas the `returns` [`Result`][returns.result.Result] container closely
+resembles [`Result`][trcks.Result], the [`Future`][returns.future.Future] and
+[`FutureResult`][returns.future.FutureResult] containers of `returns` deviate
+from [`Awaitable`][collections.abc.Awaitable] and
 [`AwaitableResult`][trcks.AwaitableResult]. Further differences between
 `returns` and `trcks`:
 
@@ -124,8 +124,9 @@ functional style (like `trcks`).
 It provides the [`Result`][expression.core.result.Result] class
 (and multiple other container classes)
 for synchronous code.
-The [`Result`][expression.core.result.Result] class is a close counterpart to
-[`Result`][trcks.Result] and [`ResultWrapper`][trcks.oop.ResultWrapper].
+The `Expression` [`Result`][expression.core.result.Result] class is a close
+counterpart to [`Result`][trcks.Result] and
+[`ResultWrapper`][trcks.oop.ResultWrapper].
 An `AsyncResult` type based on [`AsyncGenerator`][collections.abc.AsyncGenerator]
 [has been merged](https://github.com/dbrattli/Expression/pull/247)
 but not yet released (as of July 2026).

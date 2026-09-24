@@ -372,7 +372,7 @@ def map_successes_to_iterable(
     **kwargs: _P.kwargs,
 ) -> Callable[[ResultTuple[_F1, _S1]], ResultTuple[_F1, _S2]]:
     """Create function that maps each element of a [`SuccessTuple`][trcks.SuccessTuple]
-    to a [`Iterable`][collections.abc.Iterable].
+    to an [`Iterable`][collections.abc.Iterable].
 
     [`Failure`][trcks.Failure] values are left unchanged.
 
@@ -578,7 +578,7 @@ def tap_failure_to_iterable(
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[ResultTuple[_F1, _S1]], SuccessTuple[_F1] | SuccessTuple[_S1]]:
-    """Create function that applies a [`Iterable`][collections.abc.Iterable]-returning
+    """Create function that applies an [`Iterable`][collections.abc.Iterable]-returning
     side effect to [`Failure`][trcks.Failure] values.
 
     [`SuccessTuple`][trcks.SuccessTuple] values are passed on without side effects.
@@ -778,7 +778,7 @@ def tap_successes_to_iterable(
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[ResultTuple[_F1, _S1]], ResultTuple[_F1, _S1]]:
-    """Create function that applies a [`Iterable`][collections.abc.Iterable]-returning
+    """Create function that applies an [`Iterable`][collections.abc.Iterable]-returning
     side effect to each element of a [`SuccessTuple`][trcks.SuccessTuple].
 
     [`Failure`][trcks.Failure] values are passed on without side effects.

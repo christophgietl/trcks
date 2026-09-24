@@ -562,7 +562,7 @@ class AwaitableResultWrapper(
                 Keyword arguments to be passed to `callable_`.
 
         Returns:
-            A [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
+            An [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
             instance with
 
                 - a [`SuccessTuple`][trcks.SuccessTuple] containing the result of the
@@ -1069,7 +1069,7 @@ class AwaitableResultWrapper(
                 Keyword arguments to be passed to `callable_`.
 
         Returns:
-            A [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
+            An [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
             instance with
 
                 - the original [`AwaitableResult`][trcks.AwaitableResult] if it is a
@@ -2083,7 +2083,7 @@ class AwaitableResultWrapper(
                 Keyword arguments to be passed to `callable_`.
 
         Returns:
-            A [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
+            An [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
             instance with
 
                 - *the original* [`Failure`][trcks.Failure] if no side effect was

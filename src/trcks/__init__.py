@@ -38,13 +38,13 @@ Attributes:
     Result:
         Union of [`Failure`][trcks.Failure] and [`Success`][trcks.Success].
     ResultIterable:
-        [`Result`][trcks.Result] with a [`Iterable`][collections.abc.Iterable] success.
+        [`Result`][trcks.Result] with an [`Iterable`][collections.abc.Iterable] success.
     ResultTuple:
         [`Result`][trcks.Result] with a homogeneous [`tuple`][tuple] success.
     Success:
         [`tuple`][tuple] containing ``"success"`` and a value of type `_S_co`.
     SuccessIterable:
-        [`Success`][trcks.Success] containing a [`Iterable`][collections.abc.Iterable].
+        [`Success`][trcks.Success] containing an [`Iterable`][collections.abc.Iterable].
     SuccessTuple:
         [`Success`][trcks.Success] containing a homogeneous [`tuple`][tuple].
 
