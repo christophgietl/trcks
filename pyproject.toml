@@ -190,6 +190,7 @@ disallow_any_unimported = true
 disallow_untyped_globals = true
 files = "."
 strict = true
+strict_equality_for_none = true
 warn_incomplete_stub = true
 warn_unreachable = true
 
