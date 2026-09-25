@@ -12,38 +12,12 @@
 
 ## Architecture decisions
 
-### Application layers
-
-- `trcks` has three layers:
-  - `oop`
-  - `fp`
-  - `_typing`
-- `trcks.fp` has three sublayers:
-  - `monads`
-  - `_monads`
-  - `composition`
-- `trcks.fp.monads` has four sublayers:
-  - `awaitable_result_tuple`
-  - `awaitable_result`, `awaitable_tuple`, and `result_tuple`
-  - `awaitable`, `result`, and `tuple_`
-  - `identity`
-- `trcks.fp._monads` has one sublayer:
-  - `awaitable`, `awaitable_result`, `awaitable_result_tuple`, `awaitable_tuple`,
-    `identity`, `result`, `result_tuple`, and `tuple_`
-- `trcks.oop` has six sublayers:
-  - `_wrapper`
-  - `_awaitable_wrapper`, `_result_wrapper`, and `_tuple_wrapper`
-  - `_awaitable_result_wrapper`, `_awaitable_tuple_wrapper`, and `_result_tuple_wrapper`
-  - `_awaitable_result_tuple_wrapper`
-  - `_base_awaitable_wrapper`
-  - `_base_wrapper`
-
-### Import contracts
+### Application layers and import contracts
 
 `tool.importlinter.contracts` in [pyproject.toml](pyproject.toml) must contain at least:
 
-- `layers` contracts that restrict each layer to importing only
-  the layers below it.
+- `layers` contracts that define the layers and sublayers of `trcks`,
+  and restrict each layer to importing only the layers below it.
 - `protected` contract that restricts imports of `trcks.fp._monads` to `trcks.fp`.
 - `protected` contract that restricts imports of `typing_extensions` to `trcks._typing`.
 
