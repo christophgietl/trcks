@@ -13,7 +13,7 @@ jobs:
         with:
           fetch-depth: 0  # needed by build-backend to derive package version from Git tags
           persist-credentials: false
-      - uses: christophgietl/uv-actions/set-up-uv@d231379b0f63cd19bc39d7e5b4d5057a2daffc17 # 2026.8.24
+      - uses: christophgietl/uv-actions/set-up-uv@6f912829b4e872ce326aea1cdb09f7894b84a2ca # 2026.9.18
         with:
           install-and-cache-dependencies: true
       - run: uv run --no-sync mkdocs build
@@ -27,7 +27,7 @@ jobs:
         with:
           fetch-depth: 0  # needed by build-backend to derive package version from Git tags
           persist-credentials: false
-      - uses: christophgietl/uv-actions/set-up-uv@d231379b0f63cd19bc39d7e5b4d5057a2daffc17 # 2026.8.24
+      - uses: christophgietl/uv-actions/set-up-uv@6f912829b4e872ce326aea1cdb09f7894b84a2ca # 2026.9.18
       - run: uv build
       - name: Check that library skill is included in sdist and wheel
         shell: python
@@ -87,11 +87,11 @@ jobs:
         with:
           fetch-depth: 0  # needed by build-backend to derive package version from Git tags
           persist-credentials: false
-      - uses: christophgietl/uv-actions/set-up-uv@d231379b0f63cd19bc39d7e5b4d5057a2daffc17 # 2026.8.24
+      - uses: christophgietl/uv-actions/set-up-uv@6f912829b4e872ce326aea1cdb09f7894b84a2ca # 2026.9.18
         with:
           install-and-cache-dependencies: true
           python-version: ${{ matrix.python-version }}
-      - uses: christophgietl/uv-actions/set-up-pre-commit@d231379b0f63cd19bc39d7e5b4d5057a2daffc17 # 2026.8.24
+      - uses: christophgietl/uv-actions/set-up-pre-commit@6f912829b4e872ce326aea1cdb09f7894b84a2ca # 2026.9.18
         with:
           cache-key-suffix: ${{ matrix.os }}-${{ matrix.python-version }}
       - run: uv run --no-sync pre-commit run --all-files --show-diff-on-failure
@@ -137,5 +137,5 @@ jobs:
         with:
           name: package-files
           path: dist
-      - uses: christophgietl/uv-actions/set-up-uv@d231379b0f63cd19bc39d7e5b4d5057a2daffc17 # 2026.8.24
+      - uses: christophgietl/uv-actions/set-up-uv@6f912829b4e872ce326aea1cdb09f7894b84a2ca # 2026.9.18
       - run: uv publish
