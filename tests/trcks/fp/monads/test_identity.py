@@ -1,15 +1,27 @@
-from collections.abc import Callable
-from typing import TypeAlias
-from unittest.mock import Mock
+from __future__ import annotations
+
+from typing import TYPE_CHECKING, TypeAlias
 
 from trcks.fp.monads import identity as i
 
-_MappedFunction: TypeAlias = Callable[[str], str]
+if TYPE_CHECKING:
+    from collections.abc import Callable
+
+_RecordedCalls: TypeAlias = list[tuple[tuple[object, ...], dict[str, object]]]
 
 
 def test_tap_forwards_args_and_kwargs() -> None:
-    probe = Mock(return_value=None)
-    tapped: _MappedFunction = i.tap(probe, "extra", extra_kw="kw")
-    output = tapped("input")
+    recorded_calls: _RecordedCalls = []
+
+    def record_call(*args: object, **kwargs: object) -> None:
+        recorded_calls.append((args, kwargs))
+
+    tapped: Callable[[object], object] = i.tap(
+        record_call,
+        "extra",  # pyrefly: ignore [bad-argument-count]
+        extra_kw="kw",
+    )
+    output: object = tapped("input")
+
     assert output == "input"
-    probe.assert_called_once_with("input", "extra", extra_kw="kw")
+    assert recorded_calls == [(("input", "extra"), {"extra_kw": "kw"})]
