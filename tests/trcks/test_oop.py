@@ -1,12 +1,12 @@
+from __future__ import annotations
+
 import asyncio
 import math
 from collections.abc import Callable, Coroutine
-from typing import Final, Literal
-from unittest.mock import AsyncMock, Mock
+from typing import TYPE_CHECKING, Final, Literal, TypeAlias
 
 import pytest
 
-from trcks import Result
 from trcks.oop import (
     AwaitableResultTupleWrapper,
     AwaitableResultWrapper,
@@ -17,6 +17,18 @@ from trcks.oop import (
     TupleWrapper,
     Wrapper,
 )
+
+if TYPE_CHECKING:
+    import sys
+
+    from trcks import Result, ResultTuple
+
+    if sys.version_info >= (3, 11):
+        from typing import Never
+    else:
+        from typing_extensions import Never
+
+_RecordedCalls: TypeAlias = list[tuple[tuple[object, ...], dict[str, object]]]
 
 _TO_PAIR: Final[Callable[[int], tuple[int, int]]] = lambda n: (n, n)  # noqa: E731
 
@@ -68,24 +80,42 @@ async def _stringify_slowly(o: object) -> str:
 
 class TestAwaitableResultTupleWrapper:
     async def test_map_successes_forwards_args_and_kwargs(self) -> None:
-        probe = Mock(return_value="mapped")
-        output = (
-            await AwaitableResultTupleWrapper.construct_successes("input")
-            .map_successes(probe, "extra", extra_kw="kw")
+        recorded_calls: _RecordedCalls = []
+
+        def record_call(*args: object, **kwargs: object) -> None:
+            recorded_calls.append((args, kwargs))
+
+        output: ResultTuple[Never, None] = await (
+            AwaitableResultTupleWrapper.construct_successes("input")
+            .map_successes(
+                record_call,
+                "extra",  # pyrefly: ignore [bad-argument-count]
+                extra_kw="kw",
+            )
             .core
         )
-        assert output == ("success", ("mapped",))
-        probe.assert_called_once_with("input", "extra", extra_kw="kw")
+
+        assert output == ("success", (None,))
+        assert recorded_calls == [(("input", "extra"), {"extra_kw": "kw"})]
 
     async def test_tap_successes_forwards_args_and_kwargs(self) -> None:
-        probe = Mock(return_value=None)
-        output = (
-            await AwaitableResultTupleWrapper.construct_successes("input")
-            .tap_successes(probe, "extra", extra_kw="kw")
+        recorded_calls: _RecordedCalls = []
+
+        def record_call(*args: object, **kwargs: object) -> None:
+            recorded_calls.append((args, kwargs))
+
+        output: ResultTuple[Never, str] = await (
+            AwaitableResultTupleWrapper.construct_successes("input")
+            .tap_successes(
+                record_call,
+                "extra",  # pyrefly: ignore [bad-argument-count]
+                extra_kw="kw",
+            )
             .core
         )
+
         assert output == ("success", ("input",))
-        probe.assert_called_once_with("input", "extra", extra_kw="kw")
+        assert recorded_calls == [(("input", "extra"), {"extra_kw": "kw"})]
 
 
 class TestAwaitableResultWrapper:
@@ -245,14 +275,23 @@ class TestAwaitableResultWrapper:
         )
 
     async def test_map_success_forwards_args_and_kwargs(self) -> None:
-        probe = Mock(return_value="mapped")
-        output = (
-            await AwaitableResultWrapper.construct_success("input")
-            .map_success(probe, "extra", extra_kw="kw")
+        recorded_calls: _RecordedCalls = []
+
+        def record_call(*args: object, **kwargs: object) -> None:
+            recorded_calls.append((args, kwargs))
+
+        output: Result[Never, None] = await (
+            AwaitableResultWrapper.construct_success("input")
+            .map_success(
+                record_call,
+                "extra",  # pyrefly: ignore [bad-argument-count]
+                extra_kw="kw",
+            )
             .core
         )
-        assert output == ("success", "mapped")
-        probe.assert_called_once_with("input", "extra", extra_kw="kw")
+
+        assert output == ("success", None)
+        assert recorded_calls == [(("input", "extra"), {"extra_kw": "kw"})]
 
     @pytest.mark.parametrize("value", _FLOATS)
     async def test_map_success_maps_success_value(self, value: float) -> None:
@@ -326,36 +365,63 @@ class TestAwaitableResultWrapper:
         ).core == _get_square_root_safely(value)
 
     async def test_tap_success_forwards_args_and_kwargs(self) -> None:
-        probe = Mock(return_value=None)
-        output = (
-            await AwaitableResultWrapper.construct_success("input")
-            .tap_success(probe, "extra", extra_kw="kw")
+        recorded_calls: _RecordedCalls = []
+
+        def record_call(*args: object, **kwargs: object) -> None:
+            recorded_calls.append((args, kwargs))
+
+        output: Result[Never, str] = await (
+            AwaitableResultWrapper.construct_success("input")
+            .tap_success(
+                record_call,
+                "extra",  # pyrefly: ignore [bad-argument-count]
+                extra_kw="kw",
+            )
             .core
         )
+
         assert output == ("success", "input")
-        probe.assert_called_once_with("input", "extra", extra_kw="kw")
+        assert recorded_calls == [(("input", "extra"), {"extra_kw": "kw"})]
 
 
 class TestAwaitableTupleWrapper:
     async def test_map_forwards_args_and_kwargs(self) -> None:
-        probe = Mock(return_value="mapped")
-        output = (
-            await AwaitableTupleWrapper.construct("input")
-            .map(probe, "extra", extra_kw="kw")
+        recorded_calls: _RecordedCalls = []
+
+        def record_call(*args: object, **kwargs: object) -> None:
+            recorded_calls.append((args, kwargs))
+
+        output: tuple[None, ...] = await (
+            AwaitableTupleWrapper.construct("input")
+            .map(
+                record_call,
+                "extra",  # pyrefly: ignore [bad-argument-count]
+                extra_kw="kw",
+            )
             .core
         )
-        assert output == ("mapped",)
-        probe.assert_called_once_with("input", "extra", extra_kw="kw")
+
+        assert output == (None,)
+        assert recorded_calls == [(("input", "extra"), {"extra_kw": "kw"})]
 
     async def test_tap_forwards_args_and_kwargs(self) -> None:
-        probe = Mock(return_value=None)
-        output = (
-            await AwaitableTupleWrapper.construct("input")
-            .tap(probe, "extra", extra_kw="kw")
+        recorded_calls: _RecordedCalls = []
+
+        def record_call(*args: object, **kwargs: object) -> None:
+            recorded_calls.append((args, kwargs))
+
+        output: tuple[str, ...] = await (
+            AwaitableTupleWrapper.construct("input")
+            .tap(
+                record_call,
+                "extra",  # pyrefly: ignore [bad-argument-count]
+                extra_kw="kw",
+            )
             .core
         )
+
         assert output == ("input",)
-        probe.assert_called_once_with("input", "extra", extra_kw="kw")
+        assert recorded_calls == [(("input", "extra"), {"extra_kw": "kw"})]
 
 
 class TestAwaitableWrapper:
@@ -387,14 +453,23 @@ class TestAwaitableWrapper:
         )
 
     async def test_map_to_awaitable_forwards_args_and_kwargs(self) -> None:
-        probe = AsyncMock(return_value="mapped")
-        output = (
-            await AwaitableWrapper.construct("input")
-            .map_to_awaitable(probe, "extra", extra_kw="kw")
+        recorded_calls: _RecordedCalls = []
+
+        async def record_call(*args: object, **kwargs: object) -> None:
+            recorded_calls.append((args, kwargs))
+
+        output: None = await (  # type: ignore[func-returns-value]
+            AwaitableWrapper.construct("input")
+            .map_to_awaitable(
+                record_call,
+                "extra",  # pyrefly: ignore [bad-argument-count]
+                extra_kw="kw",
+            )
             .core
         )
-        assert output == "mapped"
-        probe.assert_called_once_with("input", "extra", extra_kw="kw")
+
+        assert output is None
+        assert recorded_calls == [(("input", "extra"), {"extra_kw": "kw"})]
 
     @pytest.mark.parametrize("value", _FLOATS)
     async def test_map_to_awaitable_maps_value(self, value: float) -> None:
@@ -415,36 +490,63 @@ class TestAwaitableWrapper:
         ).core == _get_square_root_safely(value)
 
     async def test_tap_to_awaitable_forwards_args_and_kwargs(self) -> None:
-        probe = AsyncMock(return_value=None)
-        output = (
-            await AwaitableWrapper.construct("input")
-            .tap_to_awaitable(probe, "extra", extra_kw="kw")
+        recorded_calls: _RecordedCalls = []
+
+        async def record_call(*args: object, **kwargs: object) -> None:
+            recorded_calls.append((args, kwargs))
+
+        output: str = await (
+            AwaitableWrapper.construct("input")
+            .tap_to_awaitable(
+                record_call,
+                "extra",  # pyrefly: ignore [bad-argument-count]
+                extra_kw="kw",
+            )
             .core
         )
+
         assert output == "input"
-        probe.assert_called_once_with("input", "extra", extra_kw="kw")
+        assert recorded_calls == [(("input", "extra"), {"extra_kw": "kw"})]
 
 
 class TestResultTupleWrapper:
     def test_map_successes_forwards_args_and_kwargs(self) -> None:
-        probe = Mock(return_value="mapped")
-        output = (
+        recorded_calls: _RecordedCalls = []
+
+        def record_call(*args: object, **kwargs: object) -> None:
+            recorded_calls.append((args, kwargs))
+
+        output: ResultTuple[Never, None] = (
             ResultTupleWrapper.construct_successes("input")
-            .map_successes(probe, "extra", extra_kw="kw")
+            .map_successes(
+                record_call,
+                "extra",  # pyrefly: ignore [bad-argument-count]
+                extra_kw="kw",
+            )
             .core
         )
-        assert output == ("success", ("mapped",))
-        probe.assert_called_once_with("input", "extra", extra_kw="kw")
+
+        assert output == ("success", (None,))
+        assert recorded_calls == [(("input", "extra"), {"extra_kw": "kw"})]
 
     def test_tap_successes_forwards_args_and_kwargs(self) -> None:
-        probe = Mock(return_value=None)
-        output = (
+        recorded_calls: _RecordedCalls = []
+
+        def record_call(*args: object, **kwargs: object) -> None:
+            recorded_calls.append((args, kwargs))
+
+        output: ResultTuple[Never, str] = (
             ResultTupleWrapper.construct_successes("input")
-            .tap_successes(probe, "extra", extra_kw="kw")
+            .tap_successes(
+                record_call,
+                "extra",  # pyrefly: ignore [bad-argument-count]
+                extra_kw="kw",
+            )
             .core
         )
+
         assert output == ("success", ("input",))
-        probe.assert_called_once_with("input", "extra", extra_kw="kw")
+        assert recorded_calls == [(("input", "extra"), {"extra_kw": "kw"})]
 
 
 class TestResultWrapper:
@@ -541,14 +643,23 @@ class TestResultWrapper:
         assert ResultWrapper(failure).map_success(_double).core is failure
 
     def test_map_success_forwards_args_and_kwargs(self) -> None:
-        probe = Mock(return_value="mapped")
-        output = (
+        recorded_calls: _RecordedCalls = []
+
+        def record_call(*args: object, **kwargs: object) -> None:
+            recorded_calls.append((args, kwargs))
+
+        output: Result[Never, None] = (
             ResultWrapper.construct_success("input")
-            .map_success(probe, "extra", extra_kw="kw")
+            .map_success(
+                record_call,
+                "extra",  # pyrefly: ignore [bad-argument-count]
+                extra_kw="kw",
+            )
             .core
         )
-        assert output == ("success", "mapped")
-        probe.assert_called_once_with("input", "extra", extra_kw="kw")
+
+        assert output == ("success", None)
+        assert recorded_calls == [(("input", "extra"), {"extra_kw": "kw"})]
 
     @pytest.mark.parametrize("value", _FLOATS)
     def test_map_success_maps_success_value(self, value: float) -> None:
@@ -619,28 +730,63 @@ class TestResultWrapper:
         assert ResultWrapper(result).core is result
 
     def test_tap_success_forwards_args_and_kwargs(self) -> None:
-        probe = Mock(return_value=None)
-        output = (
+        recorded_calls: _RecordedCalls = []
+
+        def record_call(*args: object, **kwargs: object) -> None:
+            recorded_calls.append((args, kwargs))
+
+        output: Result[Never, str] = (
             ResultWrapper.construct_success("input")
-            .tap_success(probe, "extra", extra_kw="kw")
+            .tap_success(
+                record_call,
+                "extra",  # pyrefly: ignore [bad-argument-count]
+                extra_kw="kw",
+            )
             .core
         )
+
         assert output == ("success", "input")
-        probe.assert_called_once_with("input", "extra", extra_kw="kw")
+        assert recorded_calls == [(("input", "extra"), {"extra_kw": "kw"})]
 
 
 class TestTupleWrapper:
     def test_map_forwards_args_and_kwargs(self) -> None:
-        probe = Mock(return_value="mapped")
-        output = TupleWrapper.construct("input").map(probe, "extra", extra_kw="kw").core
-        assert output == ("mapped",)
-        probe.assert_called_once_with("input", "extra", extra_kw="kw")
+        recorded_calls: _RecordedCalls = []
+
+        def record_call(*args: object, **kwargs: object) -> None:
+            recorded_calls.append((args, kwargs))
+
+        output: tuple[None, ...] = (
+            TupleWrapper.construct("input")
+            .map(
+                record_call,
+                "extra",  # pyrefly: ignore [bad-argument-count]
+                extra_kw="kw",
+            )
+            .core
+        )
+
+        assert output == (None,)
+        assert recorded_calls == [(("input", "extra"), {"extra_kw": "kw"})]
 
     def test_tap_forwards_args_and_kwargs(self) -> None:
-        probe = Mock(return_value=None)
-        output = TupleWrapper.construct("input").tap(probe, "extra", extra_kw="kw").core
+        recorded_calls: _RecordedCalls = []
+
+        def record_call(*args: object, **kwargs: object) -> None:
+            recorded_calls.append((args, kwargs))
+
+        output: tuple[str, ...] = (
+            TupleWrapper.construct("input")
+            .tap(
+                record_call,
+                "extra",  # pyrefly: ignore [bad-argument-count]
+                extra_kw="kw",
+            )
+            .core
+        )
+
         assert output == ("input",)
-        probe.assert_called_once_with("input", "extra", extra_kw="kw")
+        assert recorded_calls == [(("input", "extra"), {"extra_kw": "kw"})]
 
 
 class TestWrapper:
@@ -649,10 +795,23 @@ class TestWrapper:
         assert Wrapper.construct(value).core is value
 
     def test_map_forwards_args_and_kwargs(self) -> None:
-        probe = Mock(return_value="mapped")
-        output = Wrapper.construct("input").map(probe, "extra", extra_kw="kw").core
-        assert output == "mapped"
-        probe.assert_called_once_with("input", "extra", extra_kw="kw")
+        recorded_calls: _RecordedCalls = []
+
+        def record_call(*args: object, **kwargs: object) -> None:
+            recorded_calls.append((args, kwargs))
+
+        output: None = (
+            Wrapper.construct("input")
+            .map(
+                record_call,
+                "extra",  # pyrefly: ignore [bad-argument-count]
+                extra_kw="kw",
+            )
+            .core
+        )
+
+        assert output is None
+        assert recorded_calls == [(("input", "extra"), {"extra_kw": "kw"})]
 
     @pytest.mark.parametrize("value", _FLOATS)
     def test_map_maps_value(self, value: float) -> None:
@@ -677,10 +836,23 @@ class TestWrapper:
         ).core == _get_square_root_safely(value)
 
     def test_tap_forwards_args_and_kwargs(self) -> None:
-        probe = Mock(return_value=None)
-        output = Wrapper.construct("input").tap(probe, "extra", extra_kw="kw").core
+        recorded_calls: _RecordedCalls = []
+
+        def record_call(*args: object, **kwargs: object) -> None:
+            recorded_calls.append((args, kwargs))
+
+        output: str = (
+            Wrapper.construct("input")
+            .tap(
+                record_call,
+                "extra",  # pyrefly: ignore [bad-argument-count]
+                extra_kw="kw",
+            )
+            .core
+        )
+
         assert output == "input"
-        probe.assert_called_once_with("input", "extra", extra_kw="kw")
+        assert recorded_calls == [(("input", "extra"), {"extra_kw": "kw"})]
 
     @pytest.mark.parametrize("value", _OBJECTS)
     def test_wrapper_wraps_value(self, value: object) -> None:

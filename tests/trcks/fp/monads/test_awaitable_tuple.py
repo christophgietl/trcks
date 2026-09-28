@@ -1,24 +1,46 @@
-from collections.abc import Callable
-from typing import TypeAlias
-from unittest.mock import Mock
+from __future__ import annotations
 
-from trcks import AwaitableTuple
+from typing import TYPE_CHECKING, TypeAlias
+
 from trcks.fp.monads import awaitable_tuple as at
 
-_MappedFunction: TypeAlias = Callable[[AwaitableTuple[str]], AwaitableTuple[str]]
+if TYPE_CHECKING:
+    from collections.abc import Callable
+
+    from trcks import AwaitableTuple
+
+_RecordedCalls: TypeAlias = list[tuple[tuple[object, ...], dict[str, object]]]
 
 
 async def test_map_forwards_args_and_kwargs() -> None:
-    probe = Mock(return_value="mapped")
-    mapped: _MappedFunction = at.map_(probe, "extra", extra_kw="kw")
-    output = await mapped(at.construct("input"))
-    assert output == ("mapped",)
-    probe.assert_called_once_with("input", "extra", extra_kw="kw")
+    recorded_calls: _RecordedCalls = []
+
+    def record_call(*args: object, **kwargs: object) -> None:
+        recorded_calls.append((args, kwargs))
+
+    mapped: Callable[[AwaitableTuple[object]], AwaitableTuple[None]] = at.map_(
+        record_call,
+        "extra",  # pyrefly: ignore [bad-argument-count]
+        extra_kw="kw",
+    )
+    output: tuple[None, ...] = await mapped(at.construct("input"))
+
+    assert output == (None,)
+    assert recorded_calls == [(("input", "extra"), {"extra_kw": "kw"})]
 
 
 async def test_tap_forwards_args_and_kwargs() -> None:
-    probe = Mock(return_value=None)
-    tapped: _MappedFunction = at.tap(probe, "extra", extra_kw="kw")
-    output = await tapped(at.construct("input"))
+    recorded_calls: _RecordedCalls = []
+
+    def record_call(*args: object, **kwargs: object) -> None:
+        recorded_calls.append((args, kwargs))
+
+    tapped: Callable[[AwaitableTuple[object]], AwaitableTuple[object]] = at.tap(
+        record_call,
+        "extra",  # pyrefly: ignore [bad-argument-count]
+        extra_kw="kw",
+    )
+    output: tuple[object, ...] = await tapped(at.construct("input"))
+
     assert output == ("input",)
-    probe.assert_called_once_with("input", "extra", extra_kw="kw")
+    assert recorded_calls == [(("input", "extra"), {"extra_kw": "kw"})]

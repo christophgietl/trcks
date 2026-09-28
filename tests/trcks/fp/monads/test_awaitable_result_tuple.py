@@ -1,26 +1,56 @@
-from collections.abc import Callable
-from typing import TypeAlias
-from unittest.mock import Mock
+from __future__ import annotations
 
-from trcks import AwaitableResultTuple
+from typing import TYPE_CHECKING, TypeAlias
+
 from trcks.fp.monads import awaitable_result_tuple as art
 
-_MappedFunction: TypeAlias = Callable[
-    [AwaitableResultTuple[object, str]], AwaitableResultTuple[object, str]
-]
+if TYPE_CHECKING:
+    import sys
+    from collections.abc import Callable
+
+    from trcks import AwaitableResultTuple, ResultTuple
+
+    if sys.version_info >= (3, 11):
+        from typing import Never
+    else:
+        from typing_extensions import Never
+
+_RecordedCalls: TypeAlias = list[tuple[tuple[object, ...], dict[str, object]]]
 
 
 async def test_map_successes_forwards_args_and_kwargs() -> None:
-    probe = Mock(return_value="mapped")
-    mapped: _MappedFunction = art.map_successes(probe, "extra", extra_kw="kw")
-    output = await mapped(art.construct_successes("input"))
-    assert output == ("success", ("mapped",))
-    probe.assert_called_once_with("input", "extra", extra_kw="kw")
+    recorded_calls: _RecordedCalls = []
+
+    def record_call(*args: object, **kwargs: object) -> None:
+        recorded_calls.append((args, kwargs))
+
+    mapped: Callable[
+        [AwaitableResultTuple[Never, object]], AwaitableResultTuple[Never, None]
+    ] = art.map_successes(
+        record_call,
+        "extra",  # pyrefly: ignore [bad-argument-count]
+        extra_kw="kw",
+    )
+    output: ResultTuple[Never, None] = await mapped(art.construct_successes("input"))
+
+    assert output == ("success", (None,))
+    assert recorded_calls == [(("input", "extra"), {"extra_kw": "kw"})]
 
 
 async def test_tap_successes_forwards_args_and_kwargs() -> None:
-    probe = Mock(return_value=None)
-    tapped: _MappedFunction = art.tap_successes(probe, "extra", extra_kw="kw")
-    output = await tapped(art.construct_successes("input"))
+    recorded_calls: _RecordedCalls = []
+
+    def record_call(*args: object, **kwargs: object) -> None:
+        recorded_calls.append((args, kwargs))
+
+    tapped: Callable[
+        [AwaitableResultTuple[Never, object]], AwaitableResultTuple[Never, object]
+    ] = art.tap_successes(
+        record_call,
+        "extra",  # pyrefly: ignore [bad-argument-count]
+        extra_kw="kw",
+    )
+    output: ResultTuple[Never, object] = await tapped(art.construct_successes("input"))
+
     assert output == ("success", ("input",))
-    probe.assert_called_once_with("input", "extra", extra_kw="kw")
+    assert recorded_calls == [(("input", "extra"), {"extra_kw": "kw"})]
