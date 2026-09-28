@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import asyncio
+import inspect
 import math
 from collections.abc import Callable, Coroutine
 from typing import TYPE_CHECKING, Final, Literal, TypeAlias
@@ -20,6 +21,8 @@ from trcks.oop import (
 
 if TYPE_CHECKING:
     import sys
+    from collections.abc import Mapping
+    from types import FunctionType
 
     from trcks import Result, ResultTuple
 
@@ -47,6 +50,22 @@ _RESULTS: Final[tuple[Result[str, float], ...]] = (
     ("success", math.sqrt(math.pi)),
     ("success", math.sqrt(math.e)),
 )
+
+_MAP_AND_TAP_METHODS: Final[Mapping[str, FunctionType]] = {
+    f"{cls.__qualname__}.{name}": method
+    for cls in (
+        Wrapper,
+        AwaitableWrapper,
+        ResultWrapper,
+        TupleWrapper,
+        AwaitableTupleWrapper,
+        AwaitableResultWrapper,
+        ResultTupleWrapper,
+        AwaitableResultTupleWrapper,
+    )
+    for name, method in inspect.getmembers(cls, inspect.isfunction)
+    if name.startswith(("map", "tap"))
+}
 
 
 def _double(x: float) -> float:
@@ -76,6 +95,25 @@ async def _get_square_root_safely_and_slowly(
 async def _stringify_slowly(o: object) -> str:
     await asyncio.sleep(0.001)
     return str(o)
+
+
+@pytest.mark.parametrize(
+    ("name", "method"),
+    [
+        pytest.param(name, method, id=name)
+        for name, method in _MAP_AND_TAP_METHODS.items()
+    ],
+)
+def test_method_accepts_args_and_kwargs(name: str, method: FunctionType) -> None:
+    kinds = {
+        parameter.kind for parameter in inspect.signature(method).parameters.values()
+    }
+    assert inspect.Parameter.VAR_POSITIONAL in kinds, f"{name} does not accept *args"
+    assert inspect.Parameter.VAR_KEYWORD in kinds, f"{name} does not accept **kwargs"
+
+
+def test_more_than_fifty_methods_were_collected() -> None:
+    assert len(_MAP_AND_TAP_METHODS) > 50  # noqa: PLR2004
 
 
 class TestAwaitableResultTupleWrapper:
