@@ -29,8 +29,6 @@ into functions with input type `collections.abc.Awaitable[T]`.
     ...     Pipeline1,
     ...     Pipeline2,
     ...     Pipeline3,
-    ...     Pipeline5,
-    ...     Pipeline6,
     ...     pipe,
     ... )
     >>> from trcks.fp.monads import awaitable as a
@@ -49,13 +47,12 @@ into functions with input type `collections.abc.Awaitable[T]`.
     ...     print(f"Wrote '{s}' to file {path}.")
     >>>
     >>> async def read_and_transform_and_write(input_path: str, output_path: str) -> None:
-    ...     p: Pipeline3[str, Awaitable[str], Awaitable[str], Awaitable[None]] = (
+    ...     return await pipe(
     ...         input_path,
     ...         read_from_disk,
     ...         a.map_(transform),
     ...         a.map_to_awaitable(write_to_disk, output_path),
     ...     )
-    ...     return await pipe(*p)
     >>>
     >>> asyncio.run(read_and_transform_and_write("input.txt", "output.txt"))
     Read 'Hello, world!' from file input.txt.
@@ -128,14 +125,7 @@ allows us to execute asynchronous side effects.
     ...     await asyncio.sleep(0.001)
     >>>
     >>> async def read_and_transform_and_write(input_path: str, output_path: str) -> str:
-    ...     p: Pipeline5[
-    ...         str,
-    ...         Awaitable[str],
-    ...         Awaitable[str],
-    ...         Awaitable[str],
-    ...         Awaitable[str],
-    ...         Awaitable[str],
-    ...     ] = (
+    ...     return await pipe(
     ...         input_path,
     ...         read_from_disk,
     ...         a.tap(lambda s: print(f"Read '{s}' from disk.")),
@@ -143,7 +133,6 @@ allows us to execute asynchronous side effects.
     ...         a.tap_to_awaitable(write_to_disk, output_path),
     ...         a.tap(lambda s: print(f"Wrote '{s}' to disk.")),
     ...     )
-    ...     return await pipe(*p)
     >>>
     >>> asyncio.run(read_and_transform_and_write("input.txt", "output.txt"))
     Read 'Hello, world!' from disk.
@@ -197,18 +186,12 @@ into functions with input type `trcks.AwaitableResult[F, S]`.
     >>> async def read_and_transform_and_write(
     ...     input_path: str, output_path: str
     ... ) -> Result[ReadErrorLiteral | WriteErrorLiteral, None]:
-    ...     p: Pipeline3[
-    ...         str,
-    ...         AwaitableResult[ReadErrorLiteral, str],
-    ...         AwaitableResult[ReadErrorLiteral, str],
-    ...         AwaitableResult[ReadErrorLiteral | WriteErrorLiteral, None],
-    ...     ] = (
+    ...     return await pipe(
     ...         input_path,
     ...         read_from_disk,
     ...         ar.map_success(transform),
     ...         ar.map_success_to_awaitable_result(write_to_disk, output_path),
     ...     )
-    ...     return await pipe(*p)
     >>>
     >>> asyncio.run(read_and_transform_and_write("input.txt", "output.txt"))
     Read 'Hello, world!' from file input.txt.
@@ -296,15 +279,7 @@ in the failure case or in the success case, respectively:
     >>> async def read_and_transform_and_write(
     ...     input_path: str, output_path: str
     ... ) -> Result[ReadErrorLiteral | WriteErrorLiteral, None]:
-    ...     pipeline: Pipeline6[
-    ...         str,
-    ...         AwaitableResult[ReadErrorLiteral, str],
-    ...         AwaitableResult[ReadErrorLiteral, str],
-    ...         AwaitableResult[ReadErrorLiteral, str],
-    ...         AwaitableResult[ReadErrorLiteral | WriteErrorLiteral, None],
-    ...         AwaitableResult[ReadErrorLiteral | WriteErrorLiteral, None],
-    ...         AwaitableResult[ReadErrorLiteral | WriteErrorLiteral, None],
-    ...     ] = (
+    ...     return await pipe(
     ...         input_path,
     ...         read_from_disk,
     ...         ar.tap_success(lambda s: print(f"LOG: Read '{s}' from disk.")),
@@ -313,7 +288,6 @@ in the failure case or in the success case, respectively:
     ...         ar.tap_success(lambda _: print("LOG: Successfully wrote to disk.")),
     ...         ar.tap_failure(lambda err: print(f"LOG: Failed with error: {err}")),
     ...     )
-    ...     return await pipe(*pipeline)
     >>>
     >>> result_1 = asyncio.run(read_and_transform_and_write("input.txt", "output.txt"))
     LOG: Read 'Hello, world!' from disk.
@@ -348,18 +322,12 @@ the original success value is preserved:
     >>> async def read_and_persist(
     ...     input_path: str,
     ... ) -> Result[ReadErrorLiteral | OutOfDiskSpace, str]:
-    ...     pipeline: Pipeline3[
-    ...         str,
-    ...         AwaitableResult[ReadErrorLiteral, str],
-    ...         AwaitableResult[ReadErrorLiteral, str],
-    ...         AwaitableResult[ReadErrorLiteral | OutOfDiskSpace, str],
-    ...     ] = (
+    ...     return await pipe(
     ...         input_path,
     ...         read_from_disk,
     ...         ar.tap_success(lambda s: print(f"LOG: Persisting '{s}'.")),
     ...         ar.tap_success_to_awaitable_result(write_to_disk),
     ...     )
-    ...     return await pipe(*pipeline)
     >>>
     >>> result = asyncio.run(read_and_persist("input.txt"))
     LOG: Persisting 'Hello, world!'.

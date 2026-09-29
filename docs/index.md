@@ -87,7 +87,7 @@ in the following example.
     ```pycon
     >>> from typing import Literal
     >>> from trcks import Result
-    >>> from trcks.fp.composition import Pipeline3, pipe
+    >>> from trcks.fp.composition import pipe
     >>> from trcks.fp.monads import result as r
     >>>
     >>> UserDoesNotExist = Literal["User does not exist"]
@@ -110,21 +110,12 @@ in the following example.
     ...     return subscription_id * 0.1
     >>>
     >>> def get_subscription_fee_by_email(user_email: str) -> Result[FailureDescription, float]:
-    ...     # Explicitly assigning a type to `pipeline` might
-    ...     # help your static type checker understand that
-    ...     # `pipeline` is a valid variadic argument for `pipe`:
-    ...     pipeline: Pipeline3[
-    ...         str,
-    ...         Result[UserDoesNotExist, int],
-    ...         Result[FailureDescription, int],
-    ...         Result[FailureDescription, float],
-    ...     ] = (
+    ...     return pipe(
     ...         user_email,
     ...         get_user_id,
     ...         r.map_success_to_result(get_subscription_id),
     ...         r.map_success(get_subscription_fee),
     ...     )
-    ...     return pipe(*pipeline)
     >>>
     >>> get_subscription_fee_by_email("erika.mustermann@domain.org")
     ('success', 4.2)
@@ -150,6 +141,12 @@ in the following example.
        [OOP and FP equivalence table](usage/oop-and-fp-equivalence.md)
        for a side-by-side comparison with the object-oriented style,
        and the [glossary](glossary.md) for definitions of key terms.
+    5. <!-- rumdl-disable-line MD032 --> If you type-check your code with
+       `mypy`, `mypy` may fail to infer the type arguments of `pipe` calls
+       that pass results of generic `map*` or `tap*` helper functions.
+       In this case, gather all arguments for `pipe` in a variable annotated
+       with an appropriate `trcks.fp.composition.Pipeline*` type, and pass
+       that variable to `pipe` with unpacking (e.g. `pipe(*pipeline)`).
 
 ## Still not convinced?
 
