@@ -16,7 +16,7 @@ Attributes:
     Composable7:
         Seven compatible functions that can be applied sequentially from first to last.
     Pipeline0:
-        A single value.
+        A pipeline consisting of a single value.
     Pipeline1:
         A single value followed by a single compatible function that can be applied.
     Pipeline2:
@@ -259,7 +259,7 @@ def compose(  # type: ignore[explicit-any]
         callables: Zero to six additional compatible functions.
 
     Returns:
-        Function that applies the given functions from first to last.
+        Function that sequentially applies the given functions from first to last.
 
     Examples:
         Sequentially apply two compatible functions to one input value:
