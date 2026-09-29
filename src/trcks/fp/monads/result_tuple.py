@@ -222,7 +222,7 @@ def map_failure_to_awaitable_iterable(
 
     Args:
         callable_: Asynchronous function to apply to the [trcks.Failure][] values,
-            returning an [trcks.AwaitableIterable][].
+            returning a [trcks.AwaitableIterable][].
         *args:
             Positional arguments to be passed to `callable_`.
         **kwargs:
@@ -487,7 +487,7 @@ def map_successes_to_awaitable_iterable(
 
     Args:
         callable_: Asynchronous function to apply to each success element,
-            returning an [trcks.AwaitableIterable][].
+            returning a [trcks.AwaitableIterable][].
         *args:
             Positional arguments to be passed to `callable_`.
         **kwargs:
@@ -745,7 +745,7 @@ def tap_failure_to_awaitable_iterable(
 
     Args:
         callable_: Asynchronous side effect to apply to the [trcks.Failure][] value,
-            returning an [trcks.AwaitableIterable][].
+            returning a [trcks.AwaitableIterable][].
         *args:
             Positional arguments to be passed to `callable_`.
         **kwargs:
@@ -1019,7 +1019,7 @@ def tap_successes_to_awaitable_iterable(
 
     Args:
         callable_: Asynchronous side effect to apply to each success element,
-            returning an [trcks.AwaitableIterable][].
+            returning a [trcks.AwaitableIterable][].
         *args:
             Positional arguments to be passed to `callable_`.
         **kwargs:

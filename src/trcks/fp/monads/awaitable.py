@@ -108,7 +108,7 @@ def map_to_awaitable_iterable(
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[Awaitable[_T1]], AwaitableTuple[_T2]]:
-    """Create function that maps the value of an [collections.abc.Awaitable][]
+    """Create function that maps the value of a [collections.abc.Awaitable][]
     to a [trcks.AwaitableIterable][] and flattens the result.
 
     Args:
@@ -148,7 +148,7 @@ def map_to_awaitable_result(
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[Awaitable[_T1]], AwaitableResult[_F, _S]]:
-    """Create function that maps the value of an [collections.abc.Awaitable][]
+    """Create function that maps the value of a [collections.abc.Awaitable][]
     to a [trcks.AwaitableResult][] value.
 
     Args:
@@ -200,7 +200,7 @@ def map_to_awaitable_result_iterable(
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[Awaitable[_T1]], AwaitableResultTuple[_F, _S]]:
-    """Create function that maps the value of an [collections.abc.Awaitable][]
+    """Create function that maps the value of a [collections.abc.Awaitable][]
     to a [trcks.AwaitableResultIterable][] and flattens the result.
 
     Args:
@@ -277,7 +277,7 @@ def map_to_iterable(
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[Awaitable[_T1]], AwaitableTuple[_T2]]:
-    """Create function that maps the value of an [collections.abc.Awaitable][]
+    """Create function that maps the value of a [collections.abc.Awaitable][]
     to a [collections.abc.Iterable][] and flattens the result.
 
     Args:
@@ -312,7 +312,7 @@ def map_to_result(
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[Awaitable[_T1]], AwaitableResult[_F, _S]]:
-    """Create function that maps the value of an [collections.abc.Awaitable][]
+    """Create function that maps the value of a [collections.abc.Awaitable][]
     to a [trcks.Result][] value.
 
     Args:
@@ -357,7 +357,7 @@ def map_to_result_iterable(
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[Awaitable[_T1]], AwaitableResultTuple[_F, _S]]:
-    """Create function that maps the value of an [collections.abc.Awaitable][]
+    """Create function that maps the value of a [collections.abc.Awaitable][]
     to a [trcks.ResultIterable][] and flattens the result.
 
     Args:
@@ -431,7 +431,7 @@ def tap_to_awaitable_iterable(
 ) -> Callable[[Awaitable[_T1]], AwaitableTuple[_T1]]:
     """Create function that applies an asynchronous side effect
     with return type [trcks.AwaitableIterable][]
-    to the value of an [collections.abc.Awaitable][].
+    to the value of a [collections.abc.Awaitable][].
 
     Args:
         callable_: Asynchronous side effect to apply to the awaited value,
@@ -477,7 +477,7 @@ def tap_to_awaitable_result(
 ) -> Callable[[Awaitable[_T1]], AwaitableResult[_F, _T1]]:
     """Create function that applies an asynchronous side effect
     with return type [trcks.AwaitableResult][]
-    to the value of an [collections.abc.Awaitable][].
+    to the value of a [collections.abc.Awaitable][].
 
     Args:
         callable_: Asynchronous side effect to apply to the awaited value,
@@ -492,7 +492,7 @@ def tap_to_awaitable_result(
 
             - *the returned* [trcks.Failure][] if the applied side effect returns
                 a [trcks.Failure][], or
-            - *the original* awaited value as [trcks.AwaitableSuccess][]
+            - an [trcks.AwaitableSuccess][] containing *the original* awaited value
                 if the applied side effect returns [trcks.Success][].
 
     Examples:
@@ -546,7 +546,7 @@ def tap_to_awaitable_result_iterable(
 ) -> Callable[[Awaitable[_T1]], AwaitableResultTuple[_F, _T1]]:
     """Create function that applies an asynchronous side effect
     with return type [trcks.AwaitableResultIterable][]
-    to the value of an [collections.abc.Awaitable][].
+    to the value of a [collections.abc.Awaitable][].
 
     Args:
         callable_: Asynchronous side effect to apply to the awaited value,
@@ -626,7 +626,7 @@ def tap_to_iterable(
 ) -> Callable[[Awaitable[_T1]], AwaitableTuple[_T1]]:
     """Create function that applies a synchronous side effect
     with return type [collections.abc.Iterable][]
-    to the value of an [collections.abc.Awaitable][].
+    to the value of a [collections.abc.Awaitable][].
 
     Args:
         callable_: Synchronous side effect to apply to the awaited value,
@@ -668,7 +668,7 @@ def tap_to_result(
 ) -> Callable[[Awaitable[_T1]], AwaitableResult[_F, _T1]]:
     """Create function that applies a synchronous side effect
     with return type [trcks.Result][]
-    to the value of an [collections.abc.Awaitable][].
+    to the value of a [collections.abc.Awaitable][].
 
     Args:
         callable_: Synchronous side effect to apply to the awaited value,
@@ -683,7 +683,7 @@ def tap_to_result(
 
             - *the returned* [trcks.Failure][] if the applied side effect returns
                 a [trcks.Failure][], or
-            - *the original* awaited value as [trcks.AwaitableSuccess][]
+            - an [trcks.AwaitableSuccess][] containing *the original* awaited value
                 if the applied side effect returns [trcks.Success][].
 
     Examples:
@@ -724,7 +724,7 @@ def tap_to_result_iterable(
 ) -> Callable[[Awaitable[_T1]], AwaitableResultTuple[_F, _T1]]:
     """Create function that applies a synchronous side effect
     with return type [trcks.ResultIterable][]
-    to the value of an [collections.abc.Awaitable][].
+    to the value of a [collections.abc.Awaitable][].
 
     Args:
         callable_: Synchronous side effect to apply to the awaited value,
