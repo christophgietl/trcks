@@ -154,7 +154,7 @@ uv build
 ## Testing strategy
 
 - Every public function in [src/trcks/](src/trcks/)
-  (except for property methods and dunder methods)
+  (except for property methods, dunder methods, and deprecated aliases)
   must have a docstring with ≥1 example (which `pytest` runs as doctests);
   reuse example functions from existing doctests.
 - `pytest` also collects "pycon" blocks in `**/*.md` and `tests/trcks/**/test_*.py`
