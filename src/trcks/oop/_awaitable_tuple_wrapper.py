@@ -495,12 +495,12 @@ class AwaitableTupleWrapper(BaseAwaitableWrapper[tuple[_T_co, ...]]):
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableTupleWrapper[_T]:
-        """Apply a synchronous function returning an [collections.abc.Iterable][]
+        """Apply a synchronous function returning a [collections.abc.Iterable][]
         to each element in the wrapped [trcks.AwaitableTuple][] object and flatten.
 
         Args:
             callable_: The synchronous function to be applied to each element,
-                returning an [collections.abc.Iterable][].
+                returning a [collections.abc.Iterable][].
             *args:
                 Positional arguments to be passed to `callable_`.
             **kwargs:
@@ -990,12 +990,12 @@ class AwaitableTupleWrapper(BaseAwaitableWrapper[tuple[_T_co, ...]]):
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableTupleWrapper[_T_co]:
-        """Apply a synchronous side effect returning an [collections.abc.Iterable][]
+        """Apply a synchronous side effect returning a [collections.abc.Iterable][]
         to each element in the wrapped [trcks.AwaitableTuple][] object.
 
         Args:
             callable_: The synchronous side effect to be applied to each element,
-                returning an [collections.abc.Iterable][].
+                returning a [collections.abc.Iterable][].
             *args:
                 Positional arguments to be passed to `callable_`.
             **kwargs:
