@@ -1344,7 +1344,7 @@ def tap_failure_to_awaitable_result(
     [AwaitableResultTuple[_F1, _S1]],
     AwaitableResultTuple[_F1, _S1 | _S2],
 ]:
-    """Apply an asynchronous side effect with return type [trcks.Result][]
+    """Apply an asynchronous side effect with return type [trcks.AwaitableResult][]
     to [trcks.AwaitableFailure][] values.
 
     [trcks.AwaitableSuccessTuple][] values are passed on without side effects.
@@ -1792,7 +1792,7 @@ def tap_successes_to_awaitable_result(
     [AwaitableResultTuple[_F1, _S1]],
     AwaitableResultTuple[_F1 | _F2, _S1],
 ]:
-    """Apply an asynchronous side effect with return type [trcks.Result][]
+    """Apply an asynchronous side effect with return type [trcks.AwaitableResult][]
     to each element in a [trcks.AwaitableResultTuple][].
 
     [trcks.AwaitableFailure][] values are passed on without side effects.
