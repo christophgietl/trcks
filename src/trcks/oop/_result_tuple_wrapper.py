@@ -303,7 +303,7 @@ class ResultTupleWrapper(BaseWrapper[ResultTuple[_F_default_co, _S_default_co]])
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[Never, _S_default_co | _S]:
-        """Apply an asynchronous function returning an [collections.abc.Iterable][]
+        """Apply an asynchronous function returning a [collections.abc.Iterable][]
         to the wrapped [trcks.Failure][] object.
 
         Wrapped [trcks.SuccessTuple][] objects are passed on unchanged.
@@ -521,7 +521,7 @@ class ResultTupleWrapper(BaseWrapper[ResultTuple[_F_default_co, _S_default_co]])
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> ResultTupleWrapper[Never, _S_default_co | _S]:
-        """Apply a synchronous function returning an [collections.abc.Iterable][]
+        """Apply a synchronous function returning a [collections.abc.Iterable][]
         to the wrapped [trcks.Failure][] object.
 
         Wrapped [trcks.SuccessTuple][] objects are passed on unchanged.
@@ -814,7 +814,7 @@ class ResultTupleWrapper(BaseWrapper[ResultTuple[_F_default_co, _S_default_co]])
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[_F_default_co, _S]:
-        """Apply an asynchronous function returning an [collections.abc.Iterable][]
+        """Apply an asynchronous function returning a [collections.abc.Iterable][]
         to each element in the wrapped [trcks.SuccessTuple][] and flatten.
 
         Wrapped [trcks.Failure][] objects are passed on unchanged.
@@ -1023,7 +1023,7 @@ class ResultTupleWrapper(BaseWrapper[ResultTuple[_F_default_co, _S_default_co]])
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> ResultTupleWrapper[_F_default_co, _S]:
-        """Apply a synchronous function returning an [collections.abc.Iterable][]
+        """Apply a synchronous function returning a [collections.abc.Iterable][]
         to each element in the wrapped [trcks.SuccessTuple][] and flatten.
 
         Wrapped [trcks.Failure][] objects are passed on unchanged.
@@ -1538,7 +1538,7 @@ class ResultTupleWrapper(BaseWrapper[ResultTuple[_F_default_co, _S_default_co]])
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> ResultTupleWrapper[Never, _F_default_co | _S_default_co]:
-        """Apply a synchronous side effect returning an [collections.abc.Iterable][]
+        """Apply a synchronous side effect returning a [collections.abc.Iterable][]
         to the wrapped [trcks.Failure][] object.
 
         The failure is converted to a [trcks.SuccessTuple][] where
@@ -2061,7 +2061,7 @@ class ResultTupleWrapper(BaseWrapper[ResultTuple[_F_default_co, _S_default_co]])
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> ResultTupleWrapper[_F_default_co, _S_default_co]:
-        """Apply a synchronous side effect returning an [collections.abc.Iterable][]
+        """Apply a synchronous side effect returning a [collections.abc.Iterable][]
         to each element in the wrapped [trcks.SuccessTuple][].
 
         The original success elements are repeated once per element
