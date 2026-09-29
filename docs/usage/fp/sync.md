@@ -85,7 +85,6 @@ into functions with input type `trcks.Result[F, S]`.
     ```pycon
     >>> from typing import Literal
     >>> from trcks import Result
-    >>> from trcks.fp.composition import Pipeline3
     >>> from trcks.fp.monads import result as r
     >>>
     >>> UserDoesNotExist = Literal["User does not exist"]
@@ -108,21 +107,12 @@ into functions with input type `trcks.Result[F, S]`.
     ...     return subscription_id * 0.1
     >>>
     >>> def get_subscription_fee_by_email(user_email: str) -> Result[FailureDescription, float]:
-    ...     # Explicitly assigning a type to `pipeline` might
-    ...     # help your static type checker understand that
-    ...     # `pipeline` is a valid variadic argument for `pipe`:
-    ...     pipeline: Pipeline3[
-    ...         str,
-    ...         Result[UserDoesNotExist, int],
-    ...         Result[FailureDescription, int],
-    ...         Result[FailureDescription, float],
-    ...     ] = (
+    ...     return pipe(
     ...         user_email,
     ...         get_user_id,
     ...         r.map_success_to_result(get_subscription_id),
     ...         r.map_success(get_subscription_fee),
     ...     )
-    ...     return pipe(*pipeline)
     >>>
     >>> get_subscription_fee_by_email("erika.mustermann@domain.org")
     ('success', 4.2)
@@ -133,13 +123,23 @@ into functions with input type `trcks.Result[F, S]`.
 
     ```
 
+???+ note
+    If you type-check your code with `mypy`, `mypy` may fail to infer the
+    type arguments of [trcks.fp.composition.pipe][] calls that pass results
+    of generic `map*` or `tap*` helper functions.
+    In this case, gather all arguments for [trcks.fp.composition.pipe][]
+    in a variable annotated with
+    an appropriate `trcks.fp.composition.Pipeline*` type, and pass that
+    variable to [trcks.fp.composition.pipe][] with unpacking.
+    The following step-by-step breakdown demonstrates this approach.
+
 To understand what is going on here,
 let us have a look at the individual steps of the chain:
 
 ??? example "Step by step"
 
     ```pycon
-    >>> from trcks.fp.composition import Pipeline0, Pipeline1, Pipeline2
+    >>> from trcks.fp.composition import Pipeline0, Pipeline1, Pipeline2, Pipeline3
     >>>
     >>> p0: Pipeline0[str] = ("erika.mustermann@domain.org",)
     >>> pipe(*p0)
@@ -184,18 +184,8 @@ allow us to execute side effects in the failure case or in the success case, res
 ???+ example
 
     ```pycon
-    >>> from trcks.fp.composition import Pipeline6
-    >>>
     >>> def get_subscription_fee_by_email(user_email: str) -> Result[FailureDescription, float]:
-    ...     pipeline: Pipeline6[
-    ...         str,
-    ...         Result[UserDoesNotExist, int],
-    ...         Result[UserDoesNotExist, int],
-    ...         Result[FailureDescription, int],
-    ...         Result[FailureDescription, float],
-    ...         Result[FailureDescription, float],
-    ...         Result[FailureDescription, float],
-    ...     ] = (
+    ...     return pipe(
     ...         user_email,
     ...         get_user_id,
     ...         r.tap_success(lambda n: print(f"LOG: User ID: {n}.")),
@@ -204,7 +194,6 @@ allow us to execute side effects in the failure case or in the success case, res
     ...         r.tap_success(lambda x: print(f"LOG: Subscription fee: {x}.")),
     ...         r.tap_failure(lambda fd: print(f"LOG: Failure description: {fd}.")),
     ...     )
-    ...     return pipe(*pipeline)
     >>>
     >>> fee_erika = get_subscription_fee_by_email("erika.mustermann@domain.org")
     LOG: User ID: 1.
@@ -245,16 +234,11 @@ If the side effect returns a [trcks.Success][], the original success value is pr
     >>> def get_and_persist_user_id(
     ...     user_email: str,
     ... ) -> Result[UserDoesNotExist | OutOfDiskSpace, int]:
-    ...     pipeline: Pipeline2[
-    ...         str,
-    ...         Result[UserDoesNotExist, int],
-    ...         Result[UserDoesNotExist | OutOfDiskSpace, int],
-    ...     ] = (
+    ...     return pipe(
     ...         user_email,
     ...         get_user_id,
     ...         r.tap_success_to_result(write_to_disk),
     ...     )
-    ...     return pipe(*pipeline)
     >>>
     >>> id_erika = get_and_persist_user_id("erika.mustermann@domain.org")
     LOG: Wrote 1 to disk.

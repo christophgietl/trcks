@@ -109,9 +109,9 @@ with "regular" functions:
 ...     return subscription_id * 0.1
 >>>
 >>> def get_subscription_fee_by_email(user_email: str) -> Result[FailureDescription, float]:
-...     # Explicitly assigning a type to `pipeline` might
-...     # help your static type checker understand that
-...     # `pipeline` is a valid variadic argument for `pipe`:
+...     # Gathering all arguments for `pipe` in a type-annotated variable
+...     # might help your static type checker understand
+...     # that your `pipe` call is valid:
 ...     pipeline: Pipeline3[
 ...         str,
 ...         Result[UserDoesNotExist, int],
