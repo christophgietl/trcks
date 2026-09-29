@@ -1,6 +1,25 @@
 """Functions for the identity monad.
 
 Provides utilities for functional composition of synchronous functions.
+
+Examples:
+    >>> import math
+    >>> from trcks.fp.composition import pipe
+    >>> from trcks.fp.monads import identity as i
+    >>> output = pipe(
+    ...     25.0,
+    ...     i.tap(lambda x: print(f"Processing value {x} ...")),
+    ...     i.map_to_result(
+    ...         lambda x: (
+    ...             ("success", math.sqrt(x))
+    ...             if x >= 0
+    ...             else ("failure", "negative value")
+    ...         )
+    ...     ),
+    ... )
+    Processing value 25.0 ...
+    >>> output
+    ('success', 5.0)
 """
 
 from __future__ import annotations
@@ -73,7 +92,7 @@ def map_to_awaitable(
     **kwargs: _P.kwargs,
 ) -> Callable[[_T1], Awaitable[_T2]]:
     """Create function that maps a plain value
-    to an [collections.abc.Awaitable][] value.
+    to a [collections.abc.Awaitable][] value.
 
     Args:
         callable_: Asynchronous function to apply to the given value.
@@ -423,7 +442,7 @@ def tap_to_awaitable(
 
     Returns:
         Applies the given side effect to the given value and
-            returns an [collections.abc.Awaitable][] of the original value.
+            returns a [collections.abc.Awaitable][] of the original value.
 
     Examples:
         >>> import asyncio

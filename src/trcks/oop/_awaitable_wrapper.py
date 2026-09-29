@@ -80,7 +80,7 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
 
     @staticmethod
     def construct(value: _T, /) -> AwaitableWrapper[_T]:
-        """Construct and wrap an [collections.abc.Awaitable][] object from a value.
+        """Construct and wrap a [collections.abc.Awaitable][] object from a value.
 
         Args:
             value: The value to be wrapped.

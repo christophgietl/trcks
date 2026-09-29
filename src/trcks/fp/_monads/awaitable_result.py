@@ -597,6 +597,23 @@ def tap_failure(
         Applies the given side effect to [trcks.AwaitableFailure][] values and
             returns the original [trcks.AwaitableFailure][] value.
             Passes on [trcks.AwaitableSuccess][] values without side effects.
+
+    Examples:
+        >>> import asyncio
+        >>> from trcks import AwaitableResult
+        >>> from trcks.fp.monads import awaitable_result as ar
+        >>> log_on_failure = ar.tap_failure(lambda e: print(f"Error logged: {e}"))
+        >>> a_rslt_1: AwaitableResult[str, float] = log_on_failure(
+        ...     ar.construct_failure("negative value")
+        ... )
+        >>> asyncio.run(ar.to_coroutine_result(a_rslt_1))
+        Error logged: negative value
+        ('failure', 'negative value')
+        >>> a_rslt_2: AwaitableResult[str, float] = log_on_failure(
+        ...     ar.construct_success(25.0)
+        ... )
+        >>> asyncio.run(ar.to_coroutine_result(a_rslt_2))
+        ('success', 25.0)
     """
     return a.map_(r.tap_failure(callable_, *args, **kwargs))
 
@@ -624,6 +641,27 @@ def tap_failure_to_awaitable(
         Applies the given side effect to [trcks.AwaitableFailure][] values and
             returns the original [trcks.AwaitableFailure][] value.
             Passes on [trcks.AwaitableSuccess][] values without side effects.
+
+    Examples:
+        >>> import asyncio
+        >>> from trcks import AwaitableResult
+        >>> from trcks.fp.monads import awaitable_result as ar
+        >>> async def slowly_log_error(e: str) -> None:
+        ...     await asyncio.sleep(0.001)
+        ...     print(f"Error logged: {e}")
+        ...
+        >>> log_on_failure = ar.tap_failure_to_awaitable(slowly_log_error)
+        >>> a_rslt_1: AwaitableResult[str, float] = log_on_failure(
+        ...     ar.construct_failure("negative value")
+        ... )
+        >>> asyncio.run(ar.to_coroutine_result(a_rslt_1))
+        Error logged: negative value
+        ('failure', 'negative value')
+        >>> a_rslt_2: AwaitableResult[str, float] = log_on_failure(
+        ...     ar.construct_success(25.0)
+        ... )
+        >>> asyncio.run(ar.to_coroutine_result(a_rslt_2))
+        ('success', 25.0)
     """
 
     async def bypassed_callable(value: _F1) -> _F1:
@@ -659,6 +697,31 @@ def tap_failure_to_awaitable_result(
             If the given side effect returns a [trcks.AwaitableSuccess][],
             *this* [trcks.AwaitableSuccess][] is returned.
             Passes on [trcks.AwaitableSuccess][] values without side effects.
+
+    Examples:
+        >>> import asyncio
+        >>> from trcks import Result
+        >>> from trcks.fp.monads import awaitable_result as ar
+        >>> async def _slowly_replace_not_found(s: str) -> Result[str, float]:
+        ...     await asyncio.sleep(0.001)
+        ...     if s == "not found":
+        ...         return "success", 0.0
+        ...     return "failure", s
+        ...
+        >>> slowly_replace_not_found = ar.tap_failure_to_awaitable_result(
+        ...     _slowly_replace_not_found
+        ... )
+        >>> a_rslt_1 = slowly_replace_not_found(ar.construct_failure("not found"))
+        >>> asyncio.run(ar.to_coroutine_result(a_rslt_1))
+        ('success', 0.0)
+        >>> a_rslt_2 = slowly_replace_not_found(
+        ...     ar.construct_failure("other failure")
+        ... )
+        >>> asyncio.run(ar.to_coroutine_result(a_rslt_2))
+        ('failure', 'other failure')
+        >>> a_rslt_3 = slowly_replace_not_found(ar.construct_success(25.0))
+        >>> asyncio.run(ar.to_coroutine_result(a_rslt_3))
+        ('success', 25.0)
     """
 
     async def bypassed_callable(value: _F1) -> Result[_F1, _S2]:
@@ -701,6 +764,28 @@ def tap_failure_to_result(
             If the given side effect returns a [trcks.Success][],
             *this* [trcks.Success][] is returned.
             Passes on [trcks.AwaitableSuccess][] values without side effects.
+
+    Examples:
+        >>> import asyncio
+        >>> from trcks.fp.monads import awaitable_result as ar
+        >>> replace_not_found_failure_by_default_value = ar.tap_failure_to_result(
+        ...     lambda e: ("success", 0.0) if e == "not found" else ("failure", e)
+        ... )
+        >>> a_rslt_1 = replace_not_found_failure_by_default_value(
+        ...     ar.construct_failure("not found")
+        ... )
+        >>> asyncio.run(ar.to_coroutine_result(a_rslt_1))
+        ('success', 0.0)
+        >>> a_rslt_2 = replace_not_found_failure_by_default_value(
+        ...     ar.construct_failure("other failure")
+        ... )
+        >>> asyncio.run(ar.to_coroutine_result(a_rslt_2))
+        ('failure', 'other failure')
+        >>> a_rslt_3 = replace_not_found_failure_by_default_value(
+        ...     ar.construct_success(25.0)
+        ... )
+        >>> asyncio.run(ar.to_coroutine_result(a_rslt_3))
+        ('success', 25.0)
     """
     return a.map_(r.tap_failure_to_result(callable_, *args, **kwargs))
 
@@ -728,6 +813,23 @@ def tap_success(
         Passes on [trcks.AwaitableFailure][] values without side effects.
             Applies the given side effect to [trcks.AwaitableSuccess][] values and
             returns the original [trcks.AwaitableSuccess][] value.
+
+    Examples:
+        >>> import asyncio
+        >>> from trcks import AwaitableResult
+        >>> from trcks.fp.monads import awaitable_result as ar
+        >>> log_on_success = ar.tap_success(lambda x: print(f"Value: {x}"))
+        >>> a_rslt_1: AwaitableResult[str, float] = log_on_success(
+        ...     ar.construct_failure("not found")
+        ... )
+        >>> asyncio.run(ar.to_coroutine_result(a_rslt_1))
+        ('failure', 'not found')
+        >>> a_rslt_2: AwaitableResult[str, float] = log_on_success(
+        ...     ar.construct_success(25.0)
+        ... )
+        >>> asyncio.run(ar.to_coroutine_result(a_rslt_2))
+        Value: 25.0
+        ('success', 25.0)
     """
     return a.map_(r.tap_success(callable_, *args, **kwargs))
 
@@ -755,6 +857,27 @@ def tap_success_to_awaitable(
         Passes on [trcks.AwaitableFailure][] values without side effects.
             Applies the given side effect to [trcks.AwaitableSuccess][] values and
             returns the original [trcks.AwaitableSuccess][] value.
+
+    Examples:
+        >>> import asyncio
+        >>> from trcks import AwaitableResult
+        >>> from trcks.fp.monads import awaitable_result as ar
+        >>> async def write_to_disk(s: str) -> None:
+        ...     await asyncio.sleep(0.001)
+        ...     print(f"Wrote '{s}' to disk.")
+        ...
+        >>> write_on_success = ar.tap_success_to_awaitable(write_to_disk)
+        >>> a_rslt_1: AwaitableResult[str, str] = write_on_success(
+        ...     ar.construct_failure("not found")
+        ... )
+        >>> asyncio.run(ar.to_coroutine_result(a_rslt_1))
+        ('failure', 'not found')
+        >>> a_rslt_2: AwaitableResult[str, str] = write_on_success(
+        ...     ar.construct_success("Hello, world!")
+        ... )
+        >>> asyncio.run(ar.to_coroutine_result(a_rslt_2))
+        Wrote 'Hello, world!' to disk.
+        ('success', 'Hello, world!')
     """
 
     async def bypassed_callable(value: _S1) -> _S1:
@@ -790,6 +913,30 @@ def tap_success_to_awaitable_result(
             *this* [trcks.AwaitableFailure][] is returned.
             If the given side effect returns a [trcks.AwaitableSuccess][],
             *the original* [trcks.AwaitableSuccess][] value is returned.
+
+    Examples:
+        >>> import asyncio
+        >>> import math
+        >>> from trcks import Result
+        >>> from trcks.fp.monads import awaitable_result as ar
+        >>> async def _get_square_root_slowly(x: float) -> Result[str, float]:
+        ...     await asyncio.sleep(0.001)
+        ...     if x < 0:
+        ...         return "failure", "negative value"
+        ...     return "success", math.sqrt(x)
+        ...
+        >>> check_square_root_slowly = ar.tap_success_to_awaitable_result(
+        ...     _get_square_root_slowly
+        ... )
+        >>> a_rslt_1 = check_square_root_slowly(ar.construct_failure("not found"))
+        >>> asyncio.run(ar.to_coroutine_result(a_rslt_1))
+        ('failure', 'not found')
+        >>> a_rslt_2 = check_square_root_slowly(ar.construct_success(-25.0))
+        >>> asyncio.run(ar.to_coroutine_result(a_rslt_2))
+        ('failure', 'negative value')
+        >>> a_rslt_3 = check_square_root_slowly(ar.construct_success(25.0))
+        >>> asyncio.run(ar.to_coroutine_result(a_rslt_3))
+        ('success', 25.0)
     """
 
     async def bypassed_callable(value: _S1) -> Result[_F2, _S1]:
@@ -832,6 +979,27 @@ def tap_success_to_result(
             *this* [trcks.Failure][] is returned.
             If the given side effect returns a [trcks.Success][],
             *the original* [trcks.AwaitableSuccess][] value is returned.
+
+    Examples:
+        >>> import asyncio
+        >>> import math
+        >>> from trcks import Result
+        >>> from trcks.fp.monads import awaitable_result as ar
+        >>> def _get_square_root(x: float) -> Result[str, float]:
+        ...     if x < 0:
+        ...         return "failure", "negative value"
+        ...     return "success", math.sqrt(x)
+        ...
+        >>> check_square_root = ar.tap_success_to_result(_get_square_root)
+        >>> a_rslt_1 = check_square_root(ar.construct_failure("not found"))
+        >>> asyncio.run(ar.to_coroutine_result(a_rslt_1))
+        ('failure', 'not found')
+        >>> a_rslt_2 = check_square_root(ar.construct_success(-25.0))
+        >>> asyncio.run(ar.to_coroutine_result(a_rslt_2))
+        ('failure', 'negative value')
+        >>> a_rslt_3 = check_square_root(ar.construct_success(25.0))
+        >>> asyncio.run(ar.to_coroutine_result(a_rslt_3))
+        ('success', 25.0)
     """
     return a.map_(r.tap_success_to_result(callable_, *args, **kwargs))
 
