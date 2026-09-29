@@ -540,12 +540,12 @@ def tap_to_awaitable_result(
     **kwargs: _P.kwargs,
 ) -> Callable[[tuple[_T1, ...]], AwaitableResultTuple[_F, _T1]]:
     """Create function that applies an asynchronous side effect
-    with return type [trcks.Result][]
+    with return type [trcks.AwaitableResult][]
     to each element of a homogeneous [tuple][].
 
     Args:
         callable_: Asynchronous side effect to apply to each element,
-            returning a [trcks.Result][].
+            returning a [trcks.AwaitableResult][].
         *args:
             Positional arguments to be passed to `callable_`.
         **kwargs:
