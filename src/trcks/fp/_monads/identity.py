@@ -13,7 +13,7 @@ def tap(
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[_T], _T]:
-    """Turn synchronous function into a function that returns its input.
+    """Turn a synchronous function into a function that returns its input.
 
     Args:
         callable_:

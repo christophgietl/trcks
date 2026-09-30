@@ -324,7 +324,7 @@ def map_failure(
             Keyword arguments to be passed to `callable_`.
 
     Returns:
-        Maps [trcks.AwaitableFailure][] values to [trcks.AwaitableFailure][] values
+        Maps [trcks.AwaitableFailure][] values to new [trcks.AwaitableFailure][] values
             according to the given function and
             leaves [trcks.AwaitableSuccessTuple][] values unchanged.
 
@@ -364,7 +364,7 @@ def map_failure_to_awaitable(
             Keyword arguments to be passed to `callable_`.
 
     Returns:
-        Maps [trcks.AwaitableFailure][] values to [trcks.AwaitableFailure][] values
+        Maps [trcks.AwaitableFailure][] values to new [trcks.AwaitableFailure][] values
             according to the given asynchronous function and
             leaves [trcks.AwaitableSuccessTuple][] values unchanged.
 
@@ -759,13 +759,13 @@ def map_successes(
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[AwaitableResultTuple[_F1, _S1]], AwaitableResultTuple[_F1, _S2]]:
-    """Map a synchronous function over each element
-    in a [trcks.AwaitableResultTuple][].
+    """Create function that maps each element of a [trcks.AwaitableSuccessTuple][]
+    to a new element.
 
     [trcks.AwaitableFailure][] values are left unchanged.
 
     Args:
-        callable_: Function to apply to each success element.
+        callable_: Synchronous function to apply to each success element.
         *args:
             Positional arguments to be passed to `callable_`.
         **kwargs:
@@ -800,8 +800,8 @@ def map_successes_to_awaitable(
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[AwaitableResultTuple[_F1, _S1]], AwaitableResultTuple[_F1, _S2]]:
-    """Map an awaitable-returning function over each element
-    in a [trcks.AwaitableResultTuple][].
+    """Create function that maps each element of a [trcks.AwaitableSuccessTuple][]
+    to a [collections.abc.Awaitable][].
 
     [trcks.AwaitableFailure][] values are left unchanged.
 
@@ -846,8 +846,8 @@ def map_successes_to_awaitable_iterable(
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[AwaitableResultTuple[_F1, _S1]], AwaitableResultTuple[_F1, _S2]]:
-    """Map an awaitable-[collections.abc.Iterable][]-returning function
-    over each element in a [trcks.AwaitableResultTuple][].
+    """Create function that maps each element of a [trcks.AwaitableSuccessTuple][]
+    to a [trcks.AwaitableIterable][].
 
     [trcks.AwaitableFailure][] values are left unchanged.
 
@@ -895,8 +895,8 @@ def map_successes_to_awaitable_result(
     [AwaitableResultTuple[_F1, _S1]],
     AwaitableResultTuple[_F1 | _F2, _S2],
 ]:
-    """Map a [trcks.AwaitableResult][]-returning function over each element
-    in a [trcks.AwaitableResultTuple][].
+    """Create function that maps each element of a [trcks.AwaitableSuccessTuple][]
+    to [trcks.AwaitableFailure][] and [trcks.AwaitableSuccess][] values.
 
     [trcks.AwaitableFailure][] values are left unchanged.
     Short-circuits on the first failure returned by `callable_`.
@@ -955,8 +955,8 @@ def map_successes_to_awaitable_result_iterable(
     [AwaitableResultTuple[_F1, _S1]],
     AwaitableResultTuple[_F1 | _F2, _S2],
 ]:
-    """Map a [trcks.AwaitableResultIterable][]-returning function over each element
-    in a [trcks.AwaitableResultTuple][].
+    """Create function that maps each element of a [trcks.AwaitableSuccessTuple][]
+    to new [trcks.AwaitableResultTuple][] values.
 
     [trcks.AwaitableFailure][] values are left unchanged.
     Short-circuits on the first failure returned by `callable_`.
@@ -1043,8 +1043,8 @@ def map_successes_to_iterable(
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[AwaitableResultTuple[_F1, _S1]], AwaitableResultTuple[_F1, _S2]]:
-    """Map a [collections.abc.Iterable][]-returning function over each element
-    in a [trcks.AwaitableResultTuple][].
+    """Create function that maps each element of a [trcks.AwaitableSuccessTuple][]
+    to a [collections.abc.Iterable][].
 
     [trcks.AwaitableFailure][] values are left unchanged.
 
@@ -1081,8 +1081,8 @@ def map_successes_to_result(
     [AwaitableResultTuple[_F1, _S1]],
     AwaitableResultTuple[_F1 | _F2, _S2],
 ]:
-    """Map a result-returning function over each element
-    in a [trcks.AwaitableResultTuple][].
+    """Create function that maps each element of a [trcks.AwaitableSuccessTuple][]
+    to [trcks.AwaitableFailure][] and [trcks.AwaitableSuccess][] values.
 
     [trcks.AwaitableFailure][] values are left unchanged.
     Short-circuits on the first failure returned by `callable_`.
@@ -1135,8 +1135,8 @@ def map_successes_to_result_iterable(
     [AwaitableResultTuple[_F1, _S1]],
     AwaitableResultTuple[_F1 | _F2, _S2],
 ]:
-    """Map a [trcks.ResultIterable][]-returning function over each element
-    in a [trcks.AwaitableResultTuple][].
+    """Create function that maps each element of a [trcks.AwaitableSuccessTuple][]
+    to new [trcks.AwaitableResultTuple][] values.
 
     [trcks.AwaitableFailure][] values are left unchanged.
     Short-circuits on the first failure returned by `callable_`.
@@ -1362,7 +1362,8 @@ def tap_failure_to_awaitable_result(
             If the given side effect returns a [trcks.AwaitableFailure][],
             *the original* [trcks.AwaitableFailure][] value is returned.
             If the given side effect returns a [trcks.AwaitableSuccess][],
-            *this* [trcks.AwaitableSuccess][] is returned (wrapped as a tuple).
+            *this* [trcks.AwaitableSuccess][] is returned
+            as a [trcks.AwaitableSuccessTuple][].
             Passes on [trcks.AwaitableSuccessTuple][] values without side effects.
 
     Examples:
@@ -1412,7 +1413,7 @@ def tap_failure_to_awaitable_result_iterable(
     AwaitableResultTuple[_F1, _S1 | _S2],
 ]:
     """Apply an asynchronous side effect with return type
-    [trcks.ResultIterable][] to [trcks.AwaitableFailure][] values.
+    [trcks.AwaitableResultIterable][] to [trcks.AwaitableFailure][] values.
 
     [trcks.AwaitableSuccessTuple][] values are passed on without side effects.
 
@@ -1556,7 +1557,7 @@ def tap_failure_to_result(
             If the given side effect returns a [trcks.Failure][],
             *the original* [trcks.AwaitableFailure][] value is returned.
             If the given side effect returns a [trcks.Success][],
-            *this* [trcks.Success][] is returned (wrapped as a tuple).
+            *this* [trcks.Success][] is returned as a [trcks.SuccessTuple][].
             Passes on [trcks.AwaitableSuccessTuple][] values without side effects.
 
     Examples:
@@ -1851,7 +1852,7 @@ def tap_successes_to_awaitable_result_iterable(
     AwaitableResultTuple[_F1 | _F2, _S1],
 ]:
     """Apply an asynchronous side effect with return type
-    [trcks.ResultIterable][] to each element
+    [trcks.AwaitableResultIterable][] to each element
     in a [trcks.AwaitableResultTuple][].
 
     [trcks.AwaitableFailure][] values are passed on without side effects.
