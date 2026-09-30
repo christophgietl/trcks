@@ -49,7 +49,7 @@ def map_(
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[Awaitable[_T1]], Awaitable[_T2]]:
-    """Turn synchronous function into a function
+    """Turn a synchronous function into a function
     expecting and returning [collections.abc.Awaitable][].
 
     Args:
@@ -94,7 +94,7 @@ def map_to_awaitable(
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[Awaitable[_T1]], Awaitable[_T2]]:
-    """Turn [collections.abc.Awaitable][]-returning function into
+    """Turn a [collections.abc.Awaitable][]-returning function into
     function expecting and returning [collections.abc.Awaitable][].
 
     Args:
@@ -109,7 +109,6 @@ def map_to_awaitable(
     Returns:
         The given function transformed into
             a function expecting and returning a [collections.abc.Awaitable][].
-
 
     Examples:
         >>> import asyncio
@@ -140,7 +139,7 @@ def tap(
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[Awaitable[_T1]], Awaitable[_T1]]:
-    """Turn synchronous function into a function
+    """Turn a synchronous function into a function
     expecting a [collections.abc.Awaitable][] and
     returning the same [collections.abc.Awaitable][].
 
@@ -185,7 +184,7 @@ def tap_to_awaitable(
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[Awaitable[_T1]], Awaitable[_T1]]:
-    """Turn [collections.abc.Awaitable][]-returning function into a function
+    """Turn a [collections.abc.Awaitable][]-returning function into a function
     expecting a [collections.abc.Awaitable][] and
     returning the same [collections.abc.Awaitable][].
 

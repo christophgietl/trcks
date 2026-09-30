@@ -171,7 +171,7 @@ def map_failure(
             Keyword arguments to be passed to `callable_`.
 
     Returns:
-        Maps [trcks.AwaitableFailure][] values to [trcks.AwaitableFailure][] values
+        Maps [trcks.AwaitableFailure][] values to new [trcks.AwaitableFailure][] values
             according to the given function and
             leaves [trcks.AwaitableSuccess][] values unchanged.
 
@@ -213,7 +213,7 @@ def map_failure_to_awaitable(
             Keyword arguments to be passed to `callable_`.
 
     Returns:
-        Maps [trcks.AwaitableFailure][] values to [trcks.AwaitableFailure][] values
+        Maps [trcks.AwaitableFailure][] values to new [trcks.AwaitableFailure][] values
             according to the given asynchronous function and
             leaves [trcks.AwaitableSuccess][] values unchanged.
 

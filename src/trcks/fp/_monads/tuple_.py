@@ -24,7 +24,7 @@ def construct(value: _T, /) -> tuple[_T,]:
         value: A single value.
 
     Returns:
-        Contains the single value.
+        The [tuple][] created from the value.
 
     Examples:
         >>> from trcks.fp.monads import tuple_ as t

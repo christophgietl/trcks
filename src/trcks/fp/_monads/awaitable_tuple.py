@@ -116,7 +116,7 @@ def map_(
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[AwaitableTuple[_T1]], AwaitableTuple[_T2]]:
-    """Turn synchronous function into a function
+    """Turn a synchronous function into a function
     expecting and returning [trcks.AwaitableTuple][]s
     of the same length.
 
@@ -162,7 +162,7 @@ def map_to_awaitable(
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[AwaitableTuple[_T1]], AwaitableTuple[_T2]]:
-    """Turn [collections.abc.Awaitable][]-returning function into a function
+    """Turn a [collections.abc.Awaitable][]-returning function into a function
     expecting and returning [trcks.AwaitableTuple][]s
     of the same length.
 
@@ -207,7 +207,7 @@ def map_to_awaitable_iterable(
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[AwaitableTuple[_T1]], AwaitableTuple[_T2]]:
-    """Turn [trcks.AwaitableIterable][]-returning function into a function
+    """Turn a [trcks.AwaitableIterable][]-returning function into a function
     expecting and returning [trcks.AwaitableTuple][]s
     of varying length.
 
@@ -257,7 +257,7 @@ def map_to_iterable(
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[AwaitableTuple[_T1]], AwaitableTuple[_T2]]:
-    """Turn [collections.abc.Iterable][]-returning function into a function
+    """Turn a [collections.abc.Iterable][]-returning function into a function
     expecting and returning [trcks.AwaitableTuple][]s
     of varying length.
 
@@ -299,7 +299,7 @@ def tap(
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[AwaitableTuple[_T1]], AwaitableTuple[_T1]]:
-    """Turn synchronous function into a function
+    """Turn a synchronous function into a function
     expecting a [trcks.AwaitableTuple][] and
     returning the same [trcks.AwaitableTuple][].
 
@@ -345,7 +345,7 @@ def tap_to_awaitable(
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[AwaitableTuple[_T1]], AwaitableTuple[_T1]]:
-    """Turn [collections.abc.Awaitable][]-returning function into a function
+    """Turn a [collections.abc.Awaitable][]-returning function into a function
     expecting a [trcks.AwaitableTuple][] and
     returning the same [trcks.AwaitableTuple][].
 
@@ -489,18 +489,18 @@ def tap_to_iterable(
 
 
 async def to_coroutine_tuple(a_tpl: AwaitableTuple[_T], /) -> tuple[_T, ...]:
-    """Turn a [trcks.AwaitableTuple][] into a coroutine.
+    """Turn a [trcks.AwaitableTuple][] into a [collections.abc.Coroutine][].
 
     This is useful for functions that expect a coroutine
     (e.g. [asyncio.run][] in Python 3.13 and older).
 
     Args:
         a_tpl: The [trcks.AwaitableTuple][] to be transformed
-            into a coroutine.
+            into a [collections.abc.Coroutine][].
 
     Returns:
         The given [trcks.AwaitableTuple][] transformed
-            into a coroutine.
+            into a [collections.abc.Coroutine][].
 
     Note:
         The type [trcks.AwaitableTuple][] is
