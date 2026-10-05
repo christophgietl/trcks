@@ -9,8 +9,6 @@ The following section describes how to set up and use a development environment.
 
 - [import-linter](https://import-linter.readthedocs.io)
   for enforcing rules for the imports within and between Python packages
-- [Material for MkDocs](https://squidfunk.github.io/mkdocs-material/)
-  for generating documentation
 - [mypy](https://mypy.readthedocs.io) for static type checking
 - [pre-commit](https://pre-commit.com) for managing pre-commit hooks
   (particularly for code formatting and linting)
@@ -18,6 +16,7 @@ The following section describes how to set up and use a development environment.
 - [pyright](https://microsoft.github.io/pyright/) for static type checking
 - [pytest](https://pytest.org) for unit testing and doctests
 - [uv](https://docs.astral.sh/uv/) for dependency management and packaging
+- [Zensical](https://zensical.org) for generating documentation
 
 Moreover, `trcks` uses [GitHub Actions](https://github.com/features/actions) for:
 

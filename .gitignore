@@ -1,7 +1,7 @@
 # macOS-generated files
 .DS_Store
 
-# mkdocs-generated files
+# zensical-generated files
 /site/
 
 # pdm-generated files
