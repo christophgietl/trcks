@@ -1,8 +1,3 @@
-# yaml-language-server: $schema=https://squidfunk.github.io/mkdocs-material/schema.json
-
-exclude_docs: |
-  AGENTS.md
-
 markdown_extensions:
   - admonition
   - pymdownx.details
@@ -56,6 +51,9 @@ nav:
       - reference/trcks.oop.Wrapper.md
 
 plugins:
+  - exclude:
+      glob:
+        - AGENTS.md
   - mkdocstrings:
       handlers:
         python:
@@ -95,6 +93,7 @@ theme:
   palette:
     accent: teal
     primary: teal
+  variant: classic
 
 validation:
   absolute_links: warn

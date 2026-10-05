@@ -9,7 +9,7 @@
 - Keep the two styles structurally symmetric.
 - Keep the overview matrices in the `index.md` pages up to date.
 
-## Prefer `mkdocs-material` admonitions over regular highlighting
+## Prefer `zensical` admonitions over regular highlighting
 
 Do not write:
 

@@ -146,7 +146,7 @@ uv run pytest
 # Enforce rules for the imports within and between Python packages:
 uv run import-linter lint
 # Generate documentation:
-uv run mkdocs build
+uv run zensical build
 # Build distribution package:
 uv build
 ```
@@ -164,7 +164,7 @@ uv build
 
 ## Documentation requirements
 
-- The documentation website is built with Material for MkDocs,
+- The documentation website is built with Zensical,
   configured in [mkdocs.yml](mkdocs.yml), and written in `docs/**/*.md`.
 - Update [mkdocs.yml](mkdocs.yml) and `docs/**/*.md`
   whenever features, architecture, or UI changes.
