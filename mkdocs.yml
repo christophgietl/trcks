@@ -67,6 +67,8 @@ plugins:
           paths:
             - src
 
+repo_name: christophgietl/trcks
+
 repo_url: https://github.com/christophgietl/trcks
 
 site_description: >
@@ -87,7 +89,24 @@ theme:
     - navigation.tabs
     - navigation.tabs.sticky
   icon:
-    logo: material/directions-fork
+    logo: material/call-split
+    repo: octicons/mark-github-24
   palette:
-    accent: teal
-    primary: teal
+    - media: (prefers-color-scheme)
+      toggle:
+        icon: lucide/sun-moon
+        name: Switch to light mode
+    - media: '(prefers-color-scheme: light)'
+      accent: teal
+      primary: light blue
+      scheme: default
+      toggle:
+        icon: lucide/sun
+        name: Switch to dark mode
+    - media: '(prefers-color-scheme: dark)'
+      accent: teal
+      primary: blue
+      scheme: slate
+      toggle:
+        icon: lucide/moon
+        name: Switch to system preference
