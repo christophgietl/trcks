@@ -1,10 +1,10 @@
-# Tuple code with [trcks.oop][]
+# Tuple code with `trcks.oop`
 
 ???+ tip "See also"
     The [functional tuple page](../fp/tuples.md)
     covers the same operations using function composition.
 
-## Synchronous single-track code with [trcks.oop.TupleWrapper][]
+## Synchronous single-track code with `trcks.oop.TupleWrapper`
 
 While the class [trcks.oop.Wrapper][] wraps and operates on a single value,
 the class [trcks.oop.TupleWrapper][] wraps a homogeneous [tuple][]
@@ -90,7 +90,7 @@ while preserving the original tuple:
 
     ```
 
-## Synchronous double-track code with [trcks.oop.ResultTupleWrapper][]
+## Synchronous double-track code with `trcks.oop.ResultTupleWrapper`
 
 When applying a failable function to each element in a tuple,
 we need the [trcks.oop.ResultTupleWrapper][] class.
@@ -307,7 +307,7 @@ When the second element fails, the third element is never evaluated:
 as soon as `"jane_doe@provider.com"` returns a [trcks.Failure][],
 the remaining elements are skipped.
 
-## Asynchronous single-track code with [trcks.oop.AwaitableTupleWrapper][]
+## Asynchronous single-track code with `trcks.oop.AwaitableTupleWrapper`
 
 While the class [trcks.oop.TupleWrapper][] and its method `map`
 allow the chaining of synchronous functions for each element,
@@ -451,7 +451,7 @@ Processing short-circuits on the first [trcks.Failure][]:
 
     ```
 
-## Asynchronous double-track code with [trcks.oop.AwaitableResultTupleWrapper][]
+## Asynchronous double-track code with `trcks.oop.AwaitableResultTupleWrapper`
 
 Whenever we define a function using
 the `async def ... -> Result[F, S]` syntax

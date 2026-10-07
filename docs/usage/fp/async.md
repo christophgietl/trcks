@@ -1,10 +1,10 @@
-# Asynchronous code with [trcks.fp][]
+# Asynchronous code with `trcks.fp`
 
 ???+ tip "See also"
     The [object-oriented async page](../oop/async.md)
     covers the same operations using method chaining.
 
-## Single-track code with [trcks.fp.monads.awaitable][]
+## Single-track code with `trcks.fp.monads.awaitable`
 
 If one of the functions in a [trcks.fp.composition][]
 pipeline returns
@@ -141,7 +141,7 @@ allows us to execute asynchronous side effects.
 
     ```
 
-## Double-track code with [trcks.fp.monads.awaitable_result][]
+## Double-track code with `trcks.fp.monads.awaitable_result`
 
 If one of the functions in a [trcks.fp.composition][]
 pipeline returns

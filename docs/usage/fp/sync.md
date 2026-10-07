@@ -1,10 +1,10 @@
-# Synchronous code with [trcks.fp][]
+# Synchronous code with `trcks.fp`
 
 ???+ tip "See also"
     The [object-oriented sync page](../oop/sync.md)
     covers the same operations using method chaining.
 
-## Single-track code with [trcks.fp.composition][]
+## Single-track code with `trcks.fp.composition`
 
 The function [trcks.fp.composition.pipe][] allows us to chain functions:
 
@@ -68,7 +68,7 @@ that behaves like the original function but returns the input value.
 
     ```
 
-## Double-track code with [trcks.fp.monads.result][]
+## Double-track code with `trcks.fp.monads.result`
 
 If one of the functions in a [trcks.fp.composition][]
 pipeline returns a `trcks.Result[F, S]` type,

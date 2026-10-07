@@ -1,4 +1,4 @@
-# Tuple types provided by [trcks][]
+# Tuple types provided by `trcks`
 
 This page is the foundation for all usage of `trcks`:
 it defines the [trcks.Failure][], [trcks.Success][], and [trcks.Result][]

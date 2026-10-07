@@ -1,10 +1,10 @@
-# Tuple code with [trcks.fp][]
+# Tuple code with `trcks.fp`
 
 ???+ tip "See also"
     The [object-oriented tuple page](../oop/tuples.md)
     covers the same operations using method chaining.
 
-## Synchronous single-track code with [trcks.fp.monads.tuple_][]
+## Synchronous single-track code with `trcks.fp.monads.tuple_`
 
 If we want to apply a pipeline of functions to each element
 in a [tuple][],
@@ -115,7 +115,7 @@ allows us to execute side effects for each element:
 
     ```
 
-## Synchronous double-track code with [trcks.fp.monads.result_tuple][]
+## Synchronous double-track code with `trcks.fp.monads.result_tuple`
 
 If one of the functions in a [trcks.fp.composition][]
 pipeline returns a [trcks.ResultTuple][]`[F, S]` type,
@@ -376,7 +376,7 @@ When the second element fails, the third element is never evaluated:
 as soon as `"jane_doe@provider.com"` returns a [trcks.Failure][],
 the remaining elements are skipped.
 
-## Asynchronous single-track code with [trcks.fp.monads.awaitable_tuple][]
+## Asynchronous single-track code with `trcks.fp.monads.awaitable_tuple`
 
 If one of the functions in a [trcks.fp.composition][]
 pipeline returns
@@ -551,7 +551,7 @@ Processing short-circuits on the first [trcks.Failure][]:
 
     ```
 
-## Asynchronous double-track code with [trcks.fp.monads.awaitable_result_tuple][]
+## Asynchronous double-track code with `trcks.fp.monads.awaitable_result_tuple`
 
 If one of the functions in a [trcks.fp.composition][]
 pipeline returns

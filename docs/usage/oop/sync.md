@@ -1,10 +1,10 @@
-# Synchronous code with [trcks.oop][]
+# Synchronous code with `trcks.oop`
 
 ???+ tip "See also"
     The [functional sync page](../fp/sync.md)
     covers the same operations using function composition.
 
-## Single-track code with [trcks.oop.Wrapper][]
+## Single-track code with `trcks.oop.Wrapper`
 
 The generic class [trcks.oop.Wrapper][]`[T]` allows us to chain functions:
 
@@ -81,7 +81,7 @@ This method allows executing side effects while preserving the original value:
 
     ```
 
-## Double-track code with [trcks.oop.ResultWrapper][]
+## Double-track code with `trcks.oop.ResultWrapper`
 
 Whenever a function in a chain returns a [trcks.Result][]`[F, S]` type,
 the next operation must handle the [trcks.Result][]`[F, S]` value.
