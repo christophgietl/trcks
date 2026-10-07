@@ -28,7 +28,7 @@ let us have a look at the individual steps of the chain:
 
     ```pycon
     >>> # 1. Wrap the input string:
-    >>> wrapped: Wrapper[str] = Wrapper(core="Hello, world!")
+    >>> wrapped = Wrapper[str](core="Hello, world!")
     >>> wrapped
     Wrapper(core='Hello, world!')
     >>> # 2. Apply the builtin function len:
@@ -145,7 +145,7 @@ let us have a look at the individual steps of the chain:
     >>> from trcks.oop import ResultWrapper
     >>>
     >>> # 1. Wrap the input string:
-    >>> wrapped: Wrapper[str] = Wrapper(core="erika.mustermann@domain.org")
+    >>> wrapped = Wrapper[str](core="erika.mustermann@domain.org")
     >>> wrapped
     Wrapper(core='erika.mustermann@domain.org')
     >>> # 2. Apply the Result function get_user_id:

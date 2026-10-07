@@ -91,7 +91,7 @@ let us have a look at the individual steps of the chain:
     >>> from typing import Any
     >>> from trcks.oop import AwaitableWrapper
     >>> # 1. Wrap the input string:
-    >>> wrapped: Wrapper[str] = Wrapper(core="input.txt")
+    >>> wrapped = Wrapper[str](core="input.txt")
     >>> wrapped
     Wrapper(core='input.txt')
     >>> # 2. Apply the asynchronous function read_from_disk:
@@ -225,7 +225,7 @@ let us have a look at the individual steps of the chain:
     ```pycon
     >>> from trcks.oop import AwaitableResultWrapper
     >>> # 1. Wrap the input string:
-    >>> wrapped: Wrapper[str] = Wrapper(core="input.txt")
+    >>> wrapped = Wrapper[str](core="input.txt")
     >>> wrapped
     Wrapper(core='input.txt')
     >>> # 2. Apply the AwaitableResult function read_from_disk:
