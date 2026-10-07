@@ -1,8 +1,8 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Concatenate, ParamSpec
+from typing import TYPE_CHECKING, Concatenate, Never, ParamSpec, assert_type
 
-from trcks._typing import Never, TypeVar, assert_type
+from trcks._typing import TypeVar
 from trcks.fp._monads import awaitable as a
 from trcks.fp._monads import result as r
 from trcks.fp.composition import compose

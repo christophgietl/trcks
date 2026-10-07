@@ -46,9 +46,9 @@ Examples:
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Concatenate, ParamSpec
+from typing import TYPE_CHECKING, Concatenate, Never, ParamSpec
 
-from trcks._typing import Never, TypeVar, deprecated
+from trcks._typing import TypeVar, deprecated
 from trcks.fp._monads import awaitable_result_tuple as art
 from trcks.fp._monads import awaitable_tuple as at
 from trcks.fp._monads import result_tuple as rt
