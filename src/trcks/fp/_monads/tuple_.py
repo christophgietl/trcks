@@ -18,7 +18,7 @@ _T2 = TypeVar("_T2")
 
 
 def construct(value: _T, /) -> tuple[_T,]:
-    """Create a [tuple][] from a single value.
+    """Create a [`tuple`][tuple] from a single value.
 
     Args:
         value: A single value.
@@ -35,13 +35,13 @@ def construct(value: _T, /) -> tuple[_T,]:
 
 
 def construct_from_iterable(it: Iterable[_T], /) -> tuple[_T, ...]:
-    """Create a homogeneous [tuple][] from an iterable.
+    """Create a homogeneous [`tuple`][tuple] from an iterable.
 
     Args:
-        it: The iterable to create the [tuple][] from.
+        it: The iterable to create the [`tuple`][tuple] from.
 
     Returns:
-        The [tuple][] created from the iterable.
+        The [`tuple`][tuple] created from the iterable.
 
     Examples:
         >>> from trcks.fp.monads import tuple_ as t
@@ -57,8 +57,8 @@ def map_(
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[tuple[_T1, ...]], tuple[_T2, ...]]:
-    """Create function that maps homogeneous [tuple][]s to
-    homogeneous [tuple][]s of the same length.
+    """Create function that maps homogeneous [`tuple`][tuple]s to
+    homogeneous [`tuple`][tuple]s of the same length.
 
     Args:
         callable_: Function to apply to each element.
@@ -68,12 +68,13 @@ def map_(
             Keyword arguments to be passed to `callable_`.
 
     Returns:
-        Maps homogeneous [tuple][]s to homogeneous [tuple][]s of the same length
+        Maps homogeneous [`tuple`][tuple]s to homogeneous [`tuple`][tuple]s of the same
+            length
             according to the given function.
 
     Note:
         The underscore in the function name helps to avoid collisions
-            with the built-in function [map][].
+            with the built-in function [`map`][map].
 
     Examples:
         >>> from collections.abc import Callable
@@ -96,8 +97,8 @@ def map_to_iterable(
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[tuple[_T1, ...]], tuple[_T2, ...]]:
-    """Create function that maps homogeneous [tuple][]s to
-    homogeneous [tuple][]s of varying length.
+    """Create function that maps homogeneous [`tuple`][tuple]s to
+    homogeneous [`tuple`][tuple]s of varying length.
 
     Args:
         callable_: Function to apply to each element.
@@ -107,7 +108,8 @@ def map_to_iterable(
             Keyword arguments to be passed to `callable_`.
 
     Returns:
-        Maps homogeneous [tuple][]s to homogeneous [tuple][]s of varying length
+        Maps homogeneous [`tuple`][tuple]s to homogeneous [`tuple`][tuple]s of varying
+            length
             according to the given function.
 
     Examples:
@@ -136,7 +138,7 @@ def tap(
     **kwargs: _P.kwargs,
 ) -> Callable[[tuple[_T1, ...]], tuple[_T1, ...]]:
     """Create function that applies a side effect to each element of a homogeneous
-    [tuple][].
+    [`tuple`][tuple].
 
     Args:
         callable_: Side effect to apply to each element.
@@ -146,8 +148,9 @@ def tap(
             Keyword arguments to be passed to `callable_`.
 
     Returns:
-        Applies the given side effect to each element of a homogeneous [tuple][] and
-            returns the original homogeneous [tuple][].
+        Applies the given side effect to each element of a homogeneous [`tuple`][tuple]
+            and
+            returns the original homogeneous [`tuple`][tuple].
 
     Examples:
         >>> from collections.abc import Callable
@@ -175,8 +178,8 @@ def tap_to_iterable(
     **kwargs: _P.kwargs,
 ) -> Callable[[tuple[_T1, ...]], tuple[_T1, ...]]:
     """Create function that applies a side effect
-    with return type [collections.abc.Iterable][]
-    to each element of a homogeneous [tuple][].
+    with return type [`Iterable`][collections.abc.Iterable]
+    to each element of a homogeneous [`tuple`][tuple].
 
     Args:
         callable_: Side effect to apply to each element.
@@ -186,7 +189,7 @@ def tap_to_iterable(
             Keyword arguments to be passed to `callable_`.
 
     Returns:
-        Applies the given side effect to each element of a homogeneous [tuple][].
+        Applies the given side effect to each element of a homogeneous [`tuple`][tuple].
             Returns each element as many times as the side effect returns elements.
 
     Examples:

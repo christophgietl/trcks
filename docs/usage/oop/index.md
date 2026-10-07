@@ -1,9 +1,9 @@
-# Railway-oriented programming with [trcks.oop][]
+# Railway-oriented programming with `trcks.oop`
 
 Railway-oriented programming (ROP) is a pattern for composing functions
 that may fail, keeping error handling clean and explicit.
 This page covers the **object-oriented style**: you wrap a value in a
-[trcks.oop.Wrapper][] subclass, chain method calls to transform it, and
+[`Wrapper`][trcks.oop.Wrapper] subclass, chain method calls to transform it, and
 then unwrap the result — a "wrap → map → unwrap" mental model.
 Single-track and double-track code are both discussed.
 Synchronous and asynchronous code are also discussed.
@@ -12,7 +12,7 @@ Synchronous and asynchronous code are also discussed.
     - Read
       [Tuple types provided by trcks](../tuple-types-provided-by-trcks.md)
       first; this page assumes familiarity with
-      [trcks.Failure][], [trcks.Success][], and [trcks.Result][].
+      [`Failure`][trcks.Failure], [`Success`][trcks.Success], and [`Result`][trcks.Result].
     - The
       [motivation page for ROP](../../motivation/railway-oriented-programming.md)
       explains the design rationale.

@@ -10,37 +10,43 @@ Modules:
 
 Attributes:
     AwaitableFailure:
-        [collections.abc.Awaitable][] yielding a [trcks.Failure][].
+        [`Awaitable`][collections.abc.Awaitable] yielding a [`Failure`][trcks.Failure].
     AwaitableIterable:
-        [collections.abc.Awaitable][] yielding a [collections.abc.Iterable][].
+        [`Awaitable`][collections.abc.Awaitable] yielding an
+        [`Iterable`][collections.abc.Iterable].
     AwaitableResult:
-        [collections.abc.Awaitable][] yielding a [trcks.Result][].
+        [`Awaitable`][collections.abc.Awaitable] yielding a [`Result`][trcks.Result].
     AwaitableResultIterable:
-        [collections.abc.Awaitable][] yielding a [trcks.ResultIterable][].
+        [`Awaitable`][collections.abc.Awaitable] yielding a
+        [`ResultIterable`][trcks.ResultIterable].
     AwaitableResultTuple:
-        [collections.abc.Awaitable][] yielding a [trcks.ResultTuple][].
+        [`Awaitable`][collections.abc.Awaitable] yielding a
+        [`ResultTuple`][trcks.ResultTuple].
     AwaitableSuccess:
-        [collections.abc.Awaitable][] yielding a [trcks.Success][].
+        [`Awaitable`][collections.abc.Awaitable] yielding a [`Success`][trcks.Success].
     AwaitableSuccessIterable:
-        [collections.abc.Awaitable][] yielding a [trcks.SuccessIterable][].
+        [`Awaitable`][collections.abc.Awaitable] yielding a
+        [`SuccessIterable`][trcks.SuccessIterable].
     AwaitableSuccessTuple:
-        [collections.abc.Awaitable][] yielding a [trcks.SuccessTuple][].
+        [`Awaitable`][collections.abc.Awaitable] yielding a
+        [`SuccessTuple`][trcks.SuccessTuple].
     AwaitableTuple:
-        [collections.abc.Awaitable][] yielding a homogeneous [tuple][].
+        [`Awaitable`][collections.abc.Awaitable] yielding a homogeneous
+        [`tuple`][tuple].
     Failure:
-        [tuple][] containing ``"failure"`` and a value of type `_F_co`.
+        [`tuple`][tuple] containing ``"failure"`` and a value of type `_F_co`.
     Result:
-        Union of [trcks.Failure][] and [trcks.Success][].
+        Union of [`Failure`][trcks.Failure] and [`Success`][trcks.Success].
     ResultIterable:
-        [trcks.Result][] with a [collections.abc.Iterable][] success.
+        [`Result`][trcks.Result] with an [`Iterable`][collections.abc.Iterable] success.
     ResultTuple:
-        [trcks.Result][] with a homogeneous [tuple][] success.
+        [`Result`][trcks.Result] with a homogeneous [`tuple`][tuple] success.
     Success:
-        [tuple][] containing ``"success"`` and a value of type `_S_co`.
+        [`tuple`][tuple] containing ``"success"`` and a value of type `_S_co`.
     SuccessIterable:
-        [trcks.Success][] containing a [collections.abc.Iterable][].
+        [`Success`][trcks.Success] containing an [`Iterable`][collections.abc.Iterable].
     SuccessTuple:
-        [trcks.Success][] containing a homogeneous [tuple][].
+        [`Success`][trcks.Success] containing a homogeneous [`tuple`][tuple].
 
 Examples:
     Construct a `Failure`:
@@ -85,7 +91,7 @@ Examples:
     ('failure', ZeroDivisionError('...division by zero'))
 
     Use `AwaitableResult` to annotate an `async` function
-    as a [collections.abc.Callable][]:
+    as a [`Callable`][collections.abc.Callable]:
 
     >>> from collections.abc import Callable
     >>>
@@ -94,9 +100,9 @@ Examples:
     ... ] = divide_slowly
 
 Note:
-    [trcks.Failure][], [trcks.Success][], and [trcks.Result][] are called
-    "Left", "Right", and "Either", respectively, in some functional programming
-    languages and packages (e.g. Haskell and fp-ts).
+    [`Failure`][trcks.Failure], [`Success`][trcks.Success], and [`Result`][trcks.Result]
+    are called "Left", "Right", and "Either", respectively, in some functional
+    programming languages and packages (e.g. Haskell and fp-ts).
 
 See:
     [Railway oriented programming | F# for fun and profit](https://fsharpforfunandprofit.com/posts/recipe-part2/)

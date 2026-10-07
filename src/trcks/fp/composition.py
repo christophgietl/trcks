@@ -55,7 +55,7 @@ Examples:
     >>> pipe(input_, len, to_length_string)
     'Length: 13'
 
-    The first function passed to [trcks.fp.composition.compose][]
+    The first function passed to [`compose`][trcks.fp.composition.compose]
     may accept multiple arguments:
 
     >>> from trcks.fp.composition import compose
