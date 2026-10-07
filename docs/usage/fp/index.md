@@ -1,4 +1,4 @@
-# Railway-oriented programming with [trcks.fp][]
+# Railway-oriented programming with `trcks.fp`
 
 Railway-oriented programming (ROP) is a pattern for composing functions
 that may fail, keeping error handling clean and explicit.

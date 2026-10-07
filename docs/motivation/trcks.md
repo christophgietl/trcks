@@ -1,4 +1,4 @@
-# [trcks][]
+# `trcks`
 
 The following questions motivate the package [trcks][] in particular.
 
@@ -61,7 +61,7 @@ Moreover, it can lead to repetitive code patterns:
 
 Therefore, we need a library that helps us combine functions.
 
-## How does the package [trcks.oop][] help with function combination?
+## How does the package `trcks.oop` help with function combination?
 
 The package [trcks.oop][] supports combining functions in an object-oriented style
 using method chaining:
@@ -89,7 +89,7 @@ using method chaining:
 
     ```
 
-## How does the package [trcks.fp][] help with function combination?
+## How does the package `trcks.fp` help with function combination?
 
 The package [trcks.fp][] supports combining functions in a functional style
 using function composition:

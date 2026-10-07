@@ -9,7 +9,7 @@ Scott Wlaschin's blog post
 comes with lots of examples and illustrations as well as
 videos and slides from his talks.
 
-## Should I replace all raised exceptions with [trcks.Result][]?
+## Should I replace all raised exceptions with `trcks.Result`?
 
 No, you should not.
 Scott Wlaschin's blog post

@@ -1,10 +1,10 @@
-# Asynchronous code with [trcks.oop][]
+# Asynchronous code with `trcks.oop`
 
 ???+ tip "See also"
     The [functional async page](../fp/async.md)
     covers the same operations using function composition.
 
-## Single-track code with [trcks.oop.AwaitableWrapper][]
+## Single-track code with `trcks.oop.AwaitableWrapper`
 
 While the class [trcks.oop.Wrapper][] and its method `map` allow
 the chaining of synchronous functions,
@@ -161,7 +161,7 @@ allows us to execute asynchronous side effects.
 
     ```
 
-## Double-track code with [trcks.oop.AwaitableResultWrapper][]
+## Double-track code with `trcks.oop.AwaitableResultWrapper`
 
 Whenever we define a function using the `async def ... -> Result[F, S]` syntax,
 we actually get a function with
