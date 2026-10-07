@@ -1,10 +1,10 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, Concatenate, ParamSpec, final
+from typing import TYPE_CHECKING, Concatenate, Never, ParamSpec, final
 
 from trcks import ResultTuple
-from trcks._typing import Never, TypeVar, deprecated
+from trcks._typing import TypeVar, deprecated
 from trcks.fp.monads import result_tuple as rt
 from trcks.oop._awaitable_result_tuple_wrapper import AwaitableResultTupleWrapper
 from trcks.oop._base_wrapper import BaseWrapper

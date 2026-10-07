@@ -20,16 +20,11 @@ from trcks.oop import (
 )
 
 if TYPE_CHECKING:
-    import sys
     from collections.abc import Mapping
     from types import FunctionType
+    from typing import Never
 
     from trcks import Result, ResultTuple
-
-    if sys.version_info >= (3, 11):
-        from typing import Never
-    else:
-        from typing_extensions import Never
 
 _RecordedCalls: TypeAlias = list[tuple[tuple[object, ...], dict[str, object]]]
 

@@ -212,12 +212,8 @@ you can narrow it to either type using a simple `if` statement:
 Alternatively, you can use pattern matching:
 
 ```pycon
->>> import sys
+>>> from typing import assert_never, reveal_type
 >>> from trcks import Result
->>> if sys.version_info >= (3, 11):
-...     from typing import assert_never, reveal_type
-... else:
-...     from typing_extensions import assert_never, reveal_type
 >>> def handle_result_using_pattern_matching(result: Result[str, int]) -> None:
 ...     match result:
 ...         case ("failure", message):
@@ -289,13 +285,8 @@ translate failures into the expected exceptions, and
 raise them:
 
 ```pycon
->>> import sys
->>> from typing import Literal
+>>> from typing import Literal, assert_never
 >>> from trcks import Result
->>> if sys.version_info >= (3, 11):
-...     from typing import assert_never
-... else:
-...     from typing_extensions import assert_never
 >>> class DivisionByZeroError(Exception):
 ...     """Raised when division by zero is attempted."""
 >>>

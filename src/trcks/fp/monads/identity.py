@@ -5,9 +5,9 @@ Provides utilities for functional composition of synchronous functions.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Concatenate, ParamSpec
+from typing import TYPE_CHECKING, Concatenate, Never, ParamSpec
 
-from trcks._typing import Never, TypeVar, deprecated
+from trcks._typing import TypeVar, deprecated
 from trcks.fp._monads import awaitable as a
 from trcks.fp._monads import awaitable_result as ar
 from trcks.fp._monads import awaitable_result_tuple as art

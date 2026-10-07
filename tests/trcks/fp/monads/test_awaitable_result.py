@@ -8,16 +8,11 @@ import pytest
 from trcks.fp.monads import awaitable_result as ar
 
 if TYPE_CHECKING:
-    import sys
     from collections.abc import Callable, Mapping
     from types import FunctionType
+    from typing import Never
 
     from trcks import AwaitableResult, Result
-
-    if sys.version_info >= (3, 11):
-        from typing import Never
-    else:
-        from typing_extensions import Never
 
 _RecordedCalls: TypeAlias = list[tuple[tuple[object, ...], dict[str, object]]]
 

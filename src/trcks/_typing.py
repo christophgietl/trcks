@@ -12,15 +12,8 @@ if sys.version_info >= (3, 13):  # pragma: no cover
 else:  # pragma: no cover
     from typing_extensions import TypeVar, deprecated
 
-if sys.version_info >= (3, 11):  # pragma: no cover
-    from typing import Never, assert_type
-else:  # pragma: no cover
-    from typing_extensions import Never, assert_type
-
 __all__ = [
-    "Never",
     "TypeVar",
-    "assert_type",
     "deprecated",
 ]
 __docformat__ = "google"

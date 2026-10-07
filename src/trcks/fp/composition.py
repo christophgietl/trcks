@@ -86,98 +86,38 @@ _T5 = TypeVar("_T5")
 _T6 = TypeVar("_T6")
 _T7 = TypeVar("_T7")
 
-# Tuple type unpacking does not work correctly in Python 3.10
-# (see https://github.com/python/typing_extensions/issues/103).
-# Therefore, the following tuple type definitions contain a lot of repetitions:
 Composable1: TypeAlias = tuple[Callable[_P0, _T1],]
-Composable2: TypeAlias = tuple[
-    Callable[_P0, _T1],
-    Callable[[_T1], _T2],
-]
-Composable3: TypeAlias = tuple[
-    Callable[_P0, _T1],
-    Callable[[_T1], _T2],
-    Callable[[_T2], _T3],
-]
+Composable2: TypeAlias = tuple[*Composable1[_P0, _T1], Callable[[_T1], _T2]]
+Composable3: TypeAlias = tuple[*Composable2[_P0, _T1, _T2], Callable[[_T2], _T3]]
 Composable4: TypeAlias = tuple[
-    Callable[_P0, _T1],
-    Callable[[_T1], _T2],
-    Callable[[_T2], _T3],
+    *Composable3[_P0, _T1, _T2, _T3],
     Callable[[_T3], _T4],
 ]
 Composable5: TypeAlias = tuple[
-    Callable[_P0, _T1],
-    Callable[[_T1], _T2],
-    Callable[[_T2], _T3],
-    Callable[[_T3], _T4],
+    *Composable4[_P0, _T1, _T2, _T3, _T4],
     Callable[[_T4], _T5],
 ]
 Composable6: TypeAlias = tuple[
-    Callable[_P0, _T1],
-    Callable[[_T1], _T2],
-    Callable[[_T2], _T3],
-    Callable[[_T3], _T4],
-    Callable[[_T4], _T5],
+    *Composable5[_P0, _T1, _T2, _T3, _T4, _T5],
     Callable[[_T5], _T6],
 ]
 Composable7: TypeAlias = tuple[
-    Callable[_P0, _T1],
-    Callable[[_T1], _T2],
-    Callable[[_T2], _T3],
-    Callable[[_T3], _T4],
-    Callable[[_T4], _T5],
-    Callable[[_T5], _T6],
+    *Composable6[_P0, _T1, _T2, _T3, _T4, _T5, _T6],
     Callable[[_T6], _T7],
 ]
 
 Pipeline0: TypeAlias = tuple[_T0,]
-Pipeline1: TypeAlias = tuple[
-    _T0,
-    Callable[[_T0], _T1],
-]
-Pipeline2: TypeAlias = tuple[
-    _T0,
-    Callable[[_T0], _T1],
-    Callable[[_T1], _T2],
-]
-Pipeline3: TypeAlias = tuple[
-    _T0,
-    Callable[[_T0], _T1],
-    Callable[[_T1], _T2],
-    Callable[[_T2], _T3],
-]
-Pipeline4: TypeAlias = tuple[
-    _T0,
-    Callable[[_T0], _T1],
-    Callable[[_T1], _T2],
-    Callable[[_T2], _T3],
-    Callable[[_T3], _T4],
-]
-Pipeline5: TypeAlias = tuple[
-    _T0,
-    Callable[[_T0], _T1],
-    Callable[[_T1], _T2],
-    Callable[[_T2], _T3],
-    Callable[[_T3], _T4],
-    Callable[[_T4], _T5],
-]
+Pipeline1: TypeAlias = tuple[*Pipeline0[_T0], Callable[[_T0], _T1]]
+Pipeline2: TypeAlias = tuple[*Pipeline1[_T0, _T1], Callable[[_T1], _T2]]
+Pipeline3: TypeAlias = tuple[*Pipeline2[_T0, _T1, _T2], Callable[[_T2], _T3]]
+Pipeline4: TypeAlias = tuple[*Pipeline3[_T0, _T1, _T2, _T3], Callable[[_T3], _T4]]
+Pipeline5: TypeAlias = tuple[*Pipeline4[_T0, _T1, _T2, _T3, _T4], Callable[[_T4], _T5]]
 Pipeline6: TypeAlias = tuple[
-    _T0,
-    Callable[[_T0], _T1],
-    Callable[[_T1], _T2],
-    Callable[[_T2], _T3],
-    Callable[[_T3], _T4],
-    Callable[[_T4], _T5],
+    *Pipeline5[_T0, _T1, _T2, _T3, _T4, _T5],
     Callable[[_T5], _T6],
 ]
 Pipeline7: TypeAlias = tuple[
-    _T0,
-    Callable[[_T0], _T1],
-    Callable[[_T1], _T2],
-    Callable[[_T2], _T3],
-    Callable[[_T3], _T4],
-    Callable[[_T4], _T5],
-    Callable[[_T5], _T6],
+    *Pipeline6[_T0, _T1, _T2, _T3, _T4, _T5, _T6],
     Callable[[_T6], _T7],
 ]
 
