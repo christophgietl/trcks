@@ -493,7 +493,7 @@ def map_successes_to_result_iterable(
     """
 
     def partially_mapped_callable(s1s: tuple[_S1, ...]) -> ResultTuple[_F2, _S2]:
-        s2s: list[_S2] = []
+        s2s = list[_S2]()
         for s1 in s1s:
             match callable_(s1, *args, **kwargs):
                 case ("failure", _) as r_it:
