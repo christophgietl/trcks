@@ -50,7 +50,7 @@ Examples:
     ...     NEGATIVE_INPUT = enum.auto()
     ...
     >>> def get_square_root(x: float) -> Result[GetSquareRootError, float]:
-    ...     wrapper: Wrapper[float] = Wrapper(core=x)
+    ...     wrapper = Wrapper[float](core=x)
     ...     result_wrapper: ResultWrapper[
     ...         GetSquareRootError, float
     ...     ] = wrapper.map_to_result(
