@@ -1014,7 +1014,7 @@ def map_successes_to_awaitable_result_iterable(
             case ("failure", _):
                 return r_tpl
             case ("success", s1s):
-                s2s: list[_S2] = []
+                s2s = list[_S2]()
                 for s1 in s1s:
                     match await callable_(s1, *args, **kwargs):
                         case ("failure", _) as output_r_tpl:
