@@ -145,6 +145,8 @@ uv run --all-extras pyright --verifytypes trcks
 uv run pytest
 # Enforce rules for the imports within and between Python packages:
 uv run import-linter lint
+# Validate the agent skill against the agentskills.io specification:
+uv run skills-ref validate skills/trcks
 # Generate documentation:
 uv run zensical build
 # Build distribution package:
