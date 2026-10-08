@@ -15,6 +15,7 @@ The following section describes how to set up and use a development environment.
 - [Pyrefly](https://pyrefly.org) for static type checking
 - [pyright](https://microsoft.github.io/pyright/) for static type checking
 - [pytest](https://pytest.org) for unit testing and doctests
+- [skills-ref](https://github.com/agentskills/agentskills/tree/main/skills-ref) for validating the agent skill
 - [uv](https://docs.astral.sh/uv/) for dependency management and packaging
 - [Zensical](https://zensical.org) for generating documentation
 
