@@ -1,4 +1,4 @@
-# AI coding agent instructions for `docs/` and its subdirectories
+# Coding agent instructions for `docs/` and its subdirectories
 
 ## Documentation structure
 

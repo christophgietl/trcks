@@ -3,7 +3,7 @@
 This section explains
 how to add `trcks` to your project,
 set up a compatible static type checker, and
-install the `trcks` skill for AI coding agents.
+install the `trcks` skill for coding agents.
 
 ## Adding `trcks` to your project
 
@@ -65,10 +65,10 @@ dependencies = [
 ]
 ```
 
-## Installing the `trcks` skill for AI coding agents
+## Installing the `trcks` skill for coding agents
 
 `trcks` ships an [agent skill](https://agentskills.io/home)
-that teaches AI coding agents how to use `trcks` for railway-oriented programming.
+that teaches coding agents how to use `trcks` for railway-oriented programming.
 The skill is distributed via two channels:
 the `trcks` repository on GitHub and the `trcks` package on PyPI.
 
