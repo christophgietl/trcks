@@ -5,10 +5,10 @@ This page collects the key terms used across the `trcks` documentation.
 ## Agent skill
 
 A bundle of instructions, distributed alongside `trcks`,
-that teaches AI coding agents how to use `trcks` for railway-oriented programming.
+that teaches coding agents how to use `trcks` for railway-oriented programming.
 Every release of `trcks` ships its agent skill,
 so it always matches your installed version of `trcks`.
-See [installation instructions](setup.md#installing-the-trcks-skill-for-ai-coding-agents)
+See [installation instructions](setup.md#installing-the-trcks-skill-for-coding-agents)
 for more details.
 
 ## `Awaitable` and `Coroutine`
