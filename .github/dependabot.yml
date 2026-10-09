@@ -38,6 +38,8 @@ updates:
         update-types:
           - minor
           - patch
+    ignore:
+      - dependency-name: skills-ref
     schedule:
       interval: daily
       time: "00:41"
