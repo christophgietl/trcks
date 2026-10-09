@@ -1,4 +1,4 @@
-# AI coding agent instructions for `trcks`
+# Coding agent instructions for `trcks`
 
 ## Project requirements
 
