@@ -60,8 +60,23 @@ jobs:
               with zipfile.ZipFile(archive) as zf:
                   return set(zf.namelist())
 
-          check_archive_content("dist/*.tar.gz", ("pdm_build.py", "skills/trcks/SKILL.md"))
-          check_archive_content("dist/*.whl", ("trcks/.agents/skills/trcks/SKILL.md",))
+          check_archive_content(
+              "dist/*.tar.gz",
+              (
+                  "pdm_build.py",
+                  "skills/trcks/SKILL.md",
+                  "skills/trcks/references/trcks.fp.md",
+                  "skills/trcks/references/trcks.oop.md",
+              ),
+          )
+          check_archive_content(
+              "dist/*.whl",
+              (
+                  "trcks/.agents/skills/trcks/SKILL.md",
+                  "trcks/.agents/skills/trcks/references/trcks.fp.md",
+                  "trcks/.agents/skills/trcks/references/trcks.oop.md",
+              ),
+          )
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a  # v7.0.1
         with:
           name: package-files
