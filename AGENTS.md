@@ -26,7 +26,7 @@ must contain at least:
 - The type `trcks.Result[FailureType, SuccessType]` is a discriminated union
   of `FailureType` and `SuccessType` based on `tuple`.
   It lets functions return domain errors instead of raising them.
-- The other types defined in `trcks` are combinations of `collections.abc.Awaitable`,
+- The other types in `trcks` are combinations of `collections.abc.Awaitable`,
   `collections.abc.Iterable`, `trcks.Result`, and `tuple`
   (e.g. `trcks.AwaitableResultTuple[FailureType, SuccessType]` and
   `trcks.ResultIterable[FailureType, SuccessType]`).
