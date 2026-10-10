@@ -87,9 +87,9 @@ with other `collections.abc.Awaitable`-returning functions,
 and for combining all of these kinds with "regular" functions:
 
 - For pipelines and monads with `map*` functions from `trcks.fp`,
-  read [trcks.fp.md](references/trcks.fp.md).
+  read [the higher-order functions reference](references/trcks.fp.md).
 - For wrapper classes with `map*` methods from `trcks.oop`,
-  read [trcks.oop.md](references/trcks.oop.md).
+  read [the wrapper classes reference](references/trcks.oop.md).
 
 ## How to: Install `trcks`
 
