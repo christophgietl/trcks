@@ -111,3 +111,61 @@ with "regular" functions:
 ()
 
 ```
+
+## Combining `collections.abc.Awaitable`-returning functions
+
+The subpackage `trcks.fp` also defines higher-order functions
+for combining `collections.abc.Awaitable`-returning functions
+with other `collections.abc.Awaitable`-returning functions and
+with "regular" functions:
+
+```pycon
+>>> import asyncio
+>>> from collections.abc import Awaitable
+>>> from trcks.fp.composition import Pipeline3, pipe
+>>> from trcks.fp.monads import awaitable as a
+>>>
+>>> async def get_user_id(user_email: str) -> int:
+...     await asyncio.sleep(0.001)  # simulating a database query
+...     if user_email == "erika.mustermann@domain.org":
+...         return 1
+...     if user_email == "john_doe@provider.com":
+...         return 2
+...     return 3
+>>>
+>>> async def get_subscription_id(user_id: int) -> int:
+...     await asyncio.sleep(0.001)  # simulating another database query
+...     if user_id == 1:
+...         return 42
+...     if user_id == 2:
+...         return 44
+...     return 45
+>>>
+>>> def get_subscription_fee(subscription_id: int) -> float:
+...     return subscription_id * 0.1
+>>>
+>>> async def get_subscription_fee_by_email(user_email: str) -> float:
+...     # Gathering all arguments for `pipe` in a type-annotated variable
+...     # might help your static type checker understand
+...     # that your `pipe` call is valid:
+...     pipeline: Pipeline3[
+...         str,
+...         Awaitable[int],
+...         Awaitable[int],
+...         Awaitable[float],
+...     ] = (
+...         user_email,
+...         get_user_id,
+...         a.map_to_awaitable(get_subscription_id),
+...         a.map_(get_subscription_fee),
+...     )
+...     return await pipe(*pipeline)
+>>>
+>>> asyncio.run(get_subscription_fee_by_email("erika.mustermann@domain.org"))
+4.2
+>>> asyncio.run(get_subscription_fee_by_email("john_doe@provider.com"))
+4.4
+>>> asyncio.run(get_subscription_fee_by_email("jane_doe@provider.com"))
+4.5
+
+```
