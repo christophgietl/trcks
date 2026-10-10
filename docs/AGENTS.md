@@ -35,5 +35,3 @@ Write instead:
   step-by-step breakdowns and other optional deep-dives.
 - Keep doctest examples self-contained per file.
   Each file must define all imports and helper functions that it uses.
-- Keep headlines free of hyperlinks;
-  write package, module, class, and function names as inline code instead.

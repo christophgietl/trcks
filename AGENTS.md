@@ -55,6 +55,15 @@
 
 ## Code style
 
+### Markdown code style
+
+- Respect the `flavor` settings in `tool.rumdl` and `tool.rumdl.per-file-flavor`
+  in [pyproject.toml](pyproject.toml).
+- Keep headlines free of hyperlinks.
+  Write package, module, class, and function names as inline code instead.
+
+### Python code style
+
 - Give every module a `__docformat__ = "google"` dunder.
 - Place all module dunders after imports, including imports inside
   `if TYPE_CHECKING:` blocks.
