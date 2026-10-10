@@ -79,8 +79,10 @@ collections.abc.Awaitable[tuple[typing.Literal['failure'], +_F_co] | tuple[typin
 ## Reference: Higher-order functions and wrapper classes
 
 For combining `trcks.Result`-returning functions
-with other `trcks.Result`-returning functions and
-with "regular" functions:
+with other `trcks.Result`-returning functions,
+for combining `tuple`-returning functions
+with other `tuple`-returning functions,
+and for combining both kinds with "regular" functions:
 
 - For pipelines and monads with `map*` functions from `trcks.fp`,
   read [trcks.fp.md](references/trcks.fp.md).
