@@ -16,9 +16,9 @@
 
 `tool.importlinter.contracts` in [pyproject.toml](pyproject.toml) must contain at least:
 
-- Exhaustive `layers` contracts that cover `trcks` and its subpackages.
-- A `protected` contract that restricts imports of `trcks.fp._monads` to `trcks.fp`.
-- A `protected` contract that restricts imports of `typing_extensions` to `trcks._typing`.
+- exhaustive `layers` contracts that cover `trcks` and its subpackages
+- a `protected` contract that restricts imports of `trcks.fp._monads` to `trcks.fp`
+- a `protected` contract that restricts imports of `typing_extensions` to `trcks._typing`
 
 ### Return types defined in `trcks`
 
