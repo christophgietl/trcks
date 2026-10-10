@@ -123,6 +123,7 @@ but not in code, paths, URLs, commands, or identifiers:
   (e.g. "success or failure" instead of "success/failure").
 - Prefer "or" over "and/or"
   (e.g. "success or failure" instead of "success and/or failure").
+- Prefer periods over semicolons.
 - Prefer short sentences over long ones.
 
 ## Development tools
