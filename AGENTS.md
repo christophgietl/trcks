@@ -154,18 +154,14 @@ uv build
 
 ## Testing strategy
 
-- Every public function in [src/trcks/](src/trcks/)
-  (except for property methods, dunder methods, and deprecated aliases)
-  must have a docstring with ≥1 example (which `pytest` runs as doctests).
+- The section `tool.pytest.ini_options` in [pyproject.toml](pyproject.toml) must
+  enable doctest collection across all `*.md` and `*.py` files and
+  require 100% coverage of `trcks`.
+- Every public function in [src/trcks/](src/trcks/) must have a docstring with ≥1 example
+  (except for property methods, dunder methods, and deprecated aliases).
   Reuse example functions from existing doctests.
-- `pytest` also collects "pycon" blocks in `**/*.md` files
-  and unit tests in `tests/trcks/**/test_*.py`.
-  Each test module covers one public module of [src/trcks/](src/trcks/),
-  except `tests/trcks/test_oop.py`, which covers the whole `trcks.oop` package.
-- 100% coverage required. Mark unreachable code with `# pragma: no cover`
-  (not needed for `if TYPE_CHECKING` blocks).
-  The bodies of deprecated aliases need `# pragma: no cover`
-  because no example or unit test may call them.
+- Mark unreachable code in [src/trcks/](src/trcks/) with `# pragma: no cover`
+  (needed for deprecated aliases, not needed for `if TYPE_CHECKING` blocks).
 
 ## Documentation requirements
 
