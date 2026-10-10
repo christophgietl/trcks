@@ -1,4 +1,4 @@
-# Coding agent instructions for `trcks`
+# Coding agent instructions for the `trcks` repository
 
 ## Project requirements
 
@@ -16,10 +16,10 @@
 
 `tool.importlinter.contracts` in [pyproject.toml](pyproject.toml) must contain at least:
 
-- `layers` contracts that define the layers and sublayers of `trcks`,
+- Multiple `layers` contracts that define the layers and sublayers of `trcks`,
   and restrict each layer to importing only the layers below it.
-- `protected` contract that restricts imports of `trcks.fp._monads` to `trcks.fp`.
-- `protected` contract that restricts imports of `typing_extensions` to `trcks._typing`.
+- A `protected` contract that restricts imports of `trcks.fp._monads` to `trcks.fp`.
+- A `protected` contract that restricts imports of `typing_extensions` to `trcks._typing`.
 
 ### Return types defined in `trcks`
 
@@ -69,9 +69,6 @@
 - Sort functions alphabetically within each module.
 - Sort classes alphabetically within each module.
 - Sort methods alphabetically within each class.
-- Quote type expressions in `typing.cast` calls (e.g. `cast("int", number)`).
-- Provide keyword arguments `name` and `obj` when creating `AttributeError` instances
-  (e.g. `raise AttributeError(msg, name=name, obj=self)`).
 - Use the following import patterns across code and documentation:
 
   ```pycon
@@ -179,6 +176,6 @@ uv build
 - Keep [README.md](README.md) up to date when features or UI changes.
 - Keep [docs/index.md](docs/index.md) in sync with [README.md](README.md).
   Note: `docs/index.md` must not have a setup section.
-- Keep [the glossary](docs/glossary.md) up to date when you introduce new terms.
+- Keep [the glossary](docs/glossary.md) up to date when introducing new terms.
 - Keep [the agent skill](skills/trcks/) up to date
   when features, architecture, or the public API changes.
