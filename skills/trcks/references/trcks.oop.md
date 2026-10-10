@@ -1,5 +1,7 @@
 # Wrapper classes provided by `trcks.oop`
 
+## Combining `trcks.Result`-returning functions
+
 The module `trcks.oop` defines wrapper classes
 for combining `trcks.Result`-returning functions
 with other `trcks.Result`-returning functions and
@@ -46,6 +48,8 @@ with "regular" functions:
 ('failure', 'User does not exist')
 
 ```
+
+## Combining `tuple`-returning functions
 
 The module `trcks.oop` also defines wrapper classes
 for combining `tuple`-returning functions

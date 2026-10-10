@@ -1,5 +1,7 @@
 # Higher-order functions provided by `trcks.fp`
 
+## Combining `trcks.Result`-returning functions
+
 The subpackage `trcks.fp` defines higher-order functions
 for combining `trcks.Result`-returning functions
 with other `trcks.Result`-returning functions and
@@ -55,6 +57,8 @@ with "regular" functions:
 ('failure', 'User does not exist')
 
 ```
+
+## Combining `tuple`-returning functions
 
 The subpackage `trcks.fp` also defines higher-order functions
 for combining `tuple`-returning functions
