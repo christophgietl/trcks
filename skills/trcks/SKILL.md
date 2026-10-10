@@ -82,7 +82,9 @@ For combining `trcks.Result`-returning functions
 with other `trcks.Result`-returning functions,
 for combining `tuple`-returning functions
 with other `tuple`-returning functions,
-and for combining both kinds with "regular" functions:
+for combining `collections.abc.Awaitable`-returning functions
+with other `collections.abc.Awaitable`-returning functions,
+and for combining all of these kinds with "regular" functions:
 
 - For pipelines and monads with `map*` functions from `trcks.fp`,
   read [trcks.fp.md](references/trcks.fp.md).
