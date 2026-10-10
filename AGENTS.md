@@ -14,19 +14,21 @@
 
 ### Application layers and import contracts
 
-`tool.importlinter.contracts` in [pyproject.toml](pyproject.toml) must contain at least:
+The section `tool.importlinter.contracts` in [pyproject.toml](pyproject.toml)
+must contain at least:
 
 - exhaustive `layers` contracts that cover `trcks` and its subpackages
 - `protected` contracts that restrict imports of private packages
   (e.g. `trcks.fp._monads`) and external packages (e.g. `typing_extensions`)
 
-### Return types defined in `trcks`
+### Generic types defined in `trcks`
 
-- `trcks.Result[FailureType, SuccessType]`:
-  `tuple`-based type with literal discriminants ("success" and "failure");
-  lets functions return domain errors instead of raising them.
-- Combinations with `collections.abc.Awaitable`, `collections.abc.Iterable`,
-  and `tuple` (e.g. `trcks.AwaitableResultTuple[FailureType, SuccessType]` and
+- The type `trcks.Result[FailureType, SuccessType]` is a discriminated union
+  of `FailureType` and `SuccessType` based on `tuple`.
+  It lets functions return domain errors instead of raising them.
+- The other types defined in `trcks` are combinations of `collections.abc.Awaitable`,
+  `collections.abc.Iterable`, `trcks.Result`, and `tuple`
+  (e.g. `trcks.AwaitableResultTuple[FailureType, SuccessType]` and
   `trcks.ResultIterable[FailureType, SuccessType]`).
 
 ### Wrapper classes defined in `trcks.oop`
@@ -39,18 +41,16 @@
 ### Pipelines and monads defined in `trcks.fp`
 
 - The module `trcks.fp.composition` provides
-  higher-order functions for composing functions
-  (e.g. `trcks.fp.composition.pipe` and `trcks.fp.composition.compose`).
+  higher-order functions for composing functions.
 - The package `trcks.fp.monads` provides type-specific mapping functions
-  for `collections.abc.Awaitable`, `trcks.Result`, `tuple`,
-  `trcks.AwaitableResult`, `trcks.AwaitableTuple`, `trcks.ResultTuple`, and
-  `trcks.AwaitableResultTuple` values.
+  for `collections.abc.Awaitable`, `trcks.AwaitableResult`, `trcks.AwaitableResultTuple`,
+  `trcks.AwaitableTuple`, `trcks.Result`, `trcks.ResultTuple`, and `tuple` values.
 
 ### Agent skill
 
-- The agent skill is located in [skills/trcks/](skills/trcks/) for discoverability.
-- The agent skill is included in the source distribution file and in the wheel file,
-  in line with the [Library Skills](https://library-skills.io) standard.
+- located in [skills/trcks/](skills/trcks/) for discoverability
+- included in the source distribution file and in the wheel file
+  (in line with the [Library Skills](https://library-skills.io) standard)
 
 ## Code style
 
