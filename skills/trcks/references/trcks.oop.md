@@ -46,3 +46,46 @@ with "regular" functions:
 ('failure', 'User does not exist')
 
 ```
+
+The module `trcks.oop` also defines wrapper classes
+for combining `tuple`-returning functions
+with other `tuple`-returning functions and
+with "regular" functions:
+
+```pycon
+>>> from trcks.oop import Wrapper
+>>>
+>>> def get_user_ids(domain: str) -> tuple[int, ...]:
+...     if domain == "domain.org":
+...         return (1, 2)
+...     if domain == "provider.com":
+...         return (2,)
+...     return ()
+>>>
+>>> def get_subscription_ids(user_id: int) -> tuple[int, ...]:
+...     if user_id == 1:
+...         return (42, 43)
+...     if user_id == 2:
+...         return (44,)
+...     return ()
+>>>
+>>> def get_subscription_fee(subscription_id: int) -> float:
+...     return subscription_id * 0.1
+>>>
+>>> def get_subscription_fees_by_domain(domain: str) -> tuple[float, ...]:
+...     return (
+...         Wrapper(core=domain)
+...         .map_to_iterable(get_user_ids)
+...         .map_to_iterable(get_subscription_ids)
+...         .map(get_subscription_fee)
+...         .core
+...     )
+>>>
+>>> get_subscription_fees_by_domain("domain.org")
+(4.2, 4.3, 4.4)
+>>> get_subscription_fees_by_domain("provider.com")
+(4.4,)
+>>> get_subscription_fees_by_domain("example.net")
+()
+
+```
