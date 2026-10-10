@@ -165,6 +165,8 @@ uv build
 
 ## Documentation requirements
 
+### Documentation website
+
 - The documentation website is built with Zensical,
   configured in [mkdocs.yml](mkdocs.yml), and written in `docs/**/*.md`.
 - Update [mkdocs.yml](mkdocs.yml) and `docs/**/*.md`
@@ -173,11 +175,14 @@ uv build
   the module and class structure of `trcks`
   (e.g. `trcks.fp.monads.result` → [docs/reference/trcks.fp.monads.result.md](docs/reference/trcks.fp.monads.result.md)).
   Create, delete, or rename these files to match module or class changes.
-- Keep [this file](AGENTS.md) up to date when architecture or tooling changes.
-- Keep [CONTRIBUTING.md](CONTRIBUTING.md) up to date when tooling changes.
-- Keep [README.md](README.md) up to date when features or UI changes.
 - Keep [docs/index.md](docs/index.md) in sync with [README.md](README.md).
   Note: `docs/index.md` must not have a setup section.
 - Keep [the glossary](docs/glossary.md) up to date when introducing new terms.
+
+### Further documentation
+
+- Keep [this file](AGENTS.md) up to date when architecture or tooling changes.
+- Keep [CONTRIBUTING.md](CONTRIBUTING.md) up to date when tooling changes.
+- Keep [README.md](README.md) up to date when features or UI changes.
 - Keep [the agent skill](skills/trcks/) up to date
   when features, architecture, or the public API changes.
