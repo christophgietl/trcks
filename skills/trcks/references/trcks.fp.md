@@ -58,6 +58,16 @@ with "regular" functions:
 
 ```
 
+The `map*` functions in this example return functions
+with the following input and return types:
+
+- `r.map_success_to_result(get_subscription_id)` returns a function with
+  input type `Result[UserDoesNotExist, int]` and
+  return type `Result[FailureDescription, int]`.
+- `r.map_success(get_subscription_fee)` returns a function with
+  input type `Result[FailureDescription, int]` and
+  return type `Result[FailureDescription, float]`.
+
 ## Combining `tuple`-returning functions
 
 The subpackage `trcks.fp` also defines higher-order functions
@@ -111,6 +121,14 @@ with "regular" functions:
 ()
 
 ```
+
+The `map*` functions in this example return functions
+with the following input and return types:
+
+- `t.map_to_iterable(get_subscription_ids)` returns a function with
+  input type `tuple[int, ...]` and return type `tuple[int, ...]`.
+- `t.map_(get_subscription_fee)` returns a function with
+  input type `tuple[int, ...]` and return type `tuple[float, ...]`.
 
 ## Combining `collections.abc.Awaitable`-returning functions
 
@@ -169,3 +187,11 @@ with "regular" functions:
 4.5
 
 ```
+
+The `map*` functions in this example return functions
+with the following input and return types:
+
+- `a.map_to_awaitable(get_subscription_id)` returns a function with
+  input type `Awaitable[int]` and return type `Awaitable[int]`.
+- `a.map_(get_subscription_fee)` returns a function with
+  input type `Awaitable[int]` and return type `Awaitable[float]`.

@@ -49,6 +49,15 @@ with "regular" functions:
 
 ```
 
+Each `map*` method in this example returns a new, immutable wrapper instance:
+
+- `Wrapper.map_to_result(get_user_id)` returns a
+  `ResultWrapper[UserDoesNotExist, int]` instance.
+- `ResultWrapper.map_success_to_result(get_subscription_id)` returns a
+  `ResultWrapper[FailureDescription, int]` instance.
+- `ResultWrapper.map_success(get_subscription_fee)` returns a
+  `ResultWrapper[FailureDescription, float]` instance.
+
 ## Combining `tuple`-returning functions
 
 The module `trcks.oop` also defines wrapper classes
@@ -93,6 +102,15 @@ with "regular" functions:
 ()
 
 ```
+
+Each `map*` method in this example returns a new, immutable wrapper instance:
+
+- `Wrapper.map_to_iterable(get_user_ids)` returns a
+  `TupleWrapper[int]` instance.
+- `TupleWrapper.map_to_iterable(get_subscription_ids)` returns a
+  `TupleWrapper[int]` instance.
+- `TupleWrapper.map(get_subscription_fee)` returns a
+  `TupleWrapper[float]` instance.
 
 ## Combining `collections.abc.Awaitable`-returning functions
 
@@ -141,3 +159,12 @@ with "regular" functions:
 4.5
 
 ```
+
+Each `map*` method in this example returns a new, immutable wrapper instance:
+
+- `Wrapper.map_to_awaitable(get_user_id)` returns an
+  `AwaitableWrapper[int]` instance.
+- `AwaitableWrapper.map_to_awaitable(get_subscription_id)` returns an
+  `AwaitableWrapper[int]` instance.
+- `AwaitableWrapper.map(get_subscription_fee)` returns an
+  `AwaitableWrapper[float]` instance.
