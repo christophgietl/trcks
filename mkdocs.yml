@@ -1,3 +1,6 @@
+exclude_docs: |
+  AGENTS.md
+
 markdown_extensions:
   - admonition
   - pymdownx.details
@@ -51,9 +54,6 @@ nav:
       - reference/trcks.oop.Wrapper.md
 
 plugins:
-  - exclude:
-      glob:
-        - AGENTS.md
   - mkdocstrings:
       handlers:
         python:
