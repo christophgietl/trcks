@@ -1,8 +1,57 @@
 # Higher-order functions provided by `trcks.fp`
 
-## Combining `trcks.Result`-returning functions
+## Combining "regular" functions
 
 The subpackage `trcks.fp` defines higher-order functions
+for combining "regular" functions with other "regular" functions.
+The identity monad does not wrap values.
+Therefore, you can pass "regular" functions directly to `pipe`:
+
+```pycon
+>>> from trcks.fp.composition import pipe
+>>>
+>>> def get_length_string(s: str) -> str:
+...     return pipe(s, len, lambda n: f"Length: {n}")
+>>>
+>>> get_length_string("Hello, world!")
+'Length: 13'
+
+```
+
+Side effects like logging tend to "consume" their input
+and return `None` instead.
+The identity monad provides the higher-order function `tap`.
+It turns such a side effect into a function that returns its input:
+
+```pycon
+>>> from trcks.fp.composition import pipe
+>>> from trcks.fp.monads import identity as i
+>>>
+>>> def get_length_string(s: str) -> str:
+...     return pipe(
+...         s,
+...         i.tap(lambda o: print(f"LOG: Received '{o}'.")),
+...         len,
+...         lambda n: f"Length: {n}",
+...     )
+>>>
+>>> output = get_length_string("Hello, world!")
+LOG: Received 'Hello, world!'.
+>>> output
+'Length: 13'
+
+```
+
+The `tap` function in the second example returns a function
+with the following input and return types:
+
+- `i.tap(...)` returns a function with
+  input type `str` and return type `str`.
+  It applies the given side effect and returns its input unchanged.
+
+## Combining `trcks.Result`-returning functions
+
+The subpackage `trcks.fp` also defines higher-order functions
 for combining `trcks.Result`-returning functions
 with other `trcks.Result`-returning functions and
 with "regular" functions:
