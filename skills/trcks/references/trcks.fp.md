@@ -262,8 +262,8 @@ Each combination type has its own module in `trcks.fp.monads`:
 When a step returns a richer type than the pipeline value,
 use a `map_to_*` function from the module that matches the pipeline value.
 A `map_to_*` function is named after the return type of the given function.
-Modules for tuple-based types use the plural
-`map_successes*` and `tap_successes*` functions.
+Modules for types that combine `trcks.Result` and `tuple` use
+the plural `map_successes*` and `tap_successes*` functions.
 They operate on each success element individually
 and short-circuit on the first `trcks.Failure`.
 The example below starts with a `tuple` of email addresses.
