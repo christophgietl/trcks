@@ -235,8 +235,8 @@ Each combination type has its own wrapper class:
 When the given function returns a richer type than the wrapped value,
 call a `map_to_*` method on the wrapper class that matches the wrapped value.
 A `map_to_*` method is named after the return type of the given function.
-Classes for tuple-based types use the plural
-`map_successes*` and `tap_successes*` methods.
+Classes for types that combine `trcks.Result` and `tuple` use
+the plural `map_successes*` and `tap_successes*` methods.
 They operate on each success element individually
 and short-circuit on the first `trcks.Failure`.
 The example below starts with a `tuple` of email addresses.
