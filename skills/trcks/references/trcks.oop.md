@@ -217,3 +217,88 @@ Each `map*` method in this example returns a new, immutable wrapper instance:
   `AwaitableWrapper[int]` instance.
 - `AwaitableWrapper.map(get_subscription_fee)` returns an
   `AwaitableWrapper[float]` instance.
+
+## Combining functions that return combination types
+
+The module `trcks.oop` also defines wrapper classes
+for combining functions that return combination types.
+Combination types combine two or three of
+`trcks.Result`, `tuple`, and `collections.abc.Awaitable`.
+Each combination type has its own wrapper class:
+
+- `trcks.oop.AwaitableResultTupleWrapper` for
+  `trcks.AwaitableResultTuple` values
+- `trcks.oop.AwaitableResultWrapper` for `trcks.AwaitableResult` values
+- `trcks.oop.AwaitableTupleWrapper` for `trcks.AwaitableTuple` values
+- `trcks.oop.ResultTupleWrapper` for `trcks.ResultTuple` values
+
+When the given function returns a richer type than the wrapped value,
+call a `map_to_*` method on the wrapper class that matches the wrapped value.
+A `map_to_*` method is named after the return type of the given function.
+Classes for tuple-based types use the plural
+`map_successes*` and `tap_successes*` methods.
+They operate on each success element individually
+and short-circuit on the first `trcks.Failure`.
+The example below starts with a `tuple` of email addresses.
+The method `TupleWrapper.map_to_awaitable_result` returns an
+`AwaitableResultTupleWrapper` instance
+because `get_user_id` returns a `trcks.AwaitableResult` value:
+
+```pycon
+>>> import asyncio
+>>> from typing import Literal
+>>> from trcks import Result, ResultTuple
+>>> from trcks.oop import TupleWrapper
+>>>
+>>> UserDoesNotExist = Literal["User does not exist"]
+>>> UserDoesNotHaveASubscription = Literal["User does not have a subscription"]
+>>> FailureDescription = UserDoesNotExist | UserDoesNotHaveASubscription
+>>>
+>>> async def get_user_id(user_email: str) -> Result[UserDoesNotExist, int]:
+...     await asyncio.sleep(0.001)  # simulating a database query
+...     if user_email == "erika.mustermann@domain.org":
+...         return "success", 1
+...     if user_email == "john_doe@provider.com":
+...         return "success", 2
+...     return "failure", "User does not exist"
+>>>
+>>> def get_subscription_id(user_id: int) -> Result[UserDoesNotHaveASubscription, int]:
+...     if user_id == 1:
+...         return "success", 42
+...     return "failure", "User does not have a subscription"
+>>>
+>>> def get_subscription_fee(subscription_id: int) -> float:
+...     return subscription_id * 0.1
+>>>
+>>> async def get_subscription_fees_by_email(
+...     user_emails: tuple[str, ...],
+... ) -> ResultTuple[FailureDescription, float]:
+...     return await (
+...         TupleWrapper.construct_from_iterable(user_emails)
+...         .map_to_awaitable_result(get_user_id)
+...         .map_successes_to_result(get_subscription_id)
+...         .map_successes(get_subscription_fee)
+...         .core
+...     )
+>>>
+>>> asyncio.run(get_subscription_fees_by_email(("erika.mustermann@domain.org",)))
+('success', (4.2,))
+>>> asyncio.run(
+...     get_subscription_fees_by_email(
+...         ("john_doe@provider.com", "erika.mustermann@domain.org")
+...     )
+... )
+('failure', 'User does not have a subscription')
+>>> asyncio.run(get_subscription_fees_by_email(("jane_doe@provider.com",)))
+('failure', 'User does not exist')
+
+```
+
+Each `map*` method in this example returns a new, immutable wrapper instance:
+
+- `TupleWrapper.map_to_awaitable_result(get_user_id)` returns an
+  `AwaitableResultTupleWrapper[UserDoesNotExist, int]` instance.
+- `AwaitableResultTupleWrapper.map_successes_to_result(get_subscription_id)`
+  returns an `AwaitableResultTupleWrapper[FailureDescription, int]` instance.
+- `AwaitableResultTupleWrapper.map_successes(get_subscription_fee)` returns an
+  `AwaitableResultTupleWrapper[FailureDescription, float]` instance.
