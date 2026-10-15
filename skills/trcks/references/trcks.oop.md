@@ -1,8 +1,57 @@
 # Wrapper classes provided by `trcks.oop`
 
+## Combining "regular" functions
+
+The module `trcks.oop` defines the wrapper class `Wrapper`
+for combining "regular" functions with other "regular" functions.
+Wrap a value, chain `map` calls, and unwrap the result
+with the `core` attribute:
+
+```pycon
+>>> from trcks.oop import Wrapper
+>>>
+>>> def get_length_string(s: str) -> str:
+...     return Wrapper(core=s).map(len).map(lambda n: f"Length: {n}").core
+>>>
+>>> get_length_string("Hello, world!")
+'Length: 13'
+
+```
+
+Side effects like logging tend to "consume" their input
+and return `None` instead.
+The `Wrapper` class provides the `tap` method.
+It applies a side effect without changing the wrapped value:
+
+```pycon
+>>> from trcks.oop import Wrapper
+>>>
+>>> def get_length_string(s: str) -> str:
+...     return (
+...         Wrapper(core=s)
+...         .tap(lambda o: print(f"LOG: Received '{o}'."))
+...         .map(len)
+...         .map(lambda n: f"Length: {n}")
+...         .core
+...     )
+>>>
+>>> output = get_length_string("Hello, world!")
+LOG: Received 'Hello, world!'.
+>>> output
+'Length: 13'
+
+```
+
+Each method in the second example returns a new, immutable wrapper instance:
+
+- `Wrapper.tap(...)` returns a `Wrapper[str]` instance
+  that wraps the original string.
+- `Wrapper.map(len)` returns a `Wrapper[int]` instance.
+- `Wrapper.map(...)` returns a `Wrapper[str]` instance.
+
 ## Combining `trcks.Result`-returning functions
 
-The module `trcks.oop` defines wrapper classes
+The module `trcks.oop` also defines wrapper classes
 for combining `trcks.Result`-returning functions
 with other `trcks.Result`-returning functions and
 with "regular" functions:
