@@ -10,7 +10,7 @@ _T_co = TypeVar("_T_co", covariant=True)
 
 @dataclass(frozen=True, slots=True)
 class BaseWrapper(Generic[_T_co]):
-    """Base class for all wrappers in the [trcks.oop][] package.
+    """Base class for all wrappers in the [`trcks.oop`][trcks.oop] package.
 
     Attributes:
         core: The wrapped value.
@@ -19,7 +19,7 @@ class BaseWrapper(Generic[_T_co]):
         This class is not particularly useful by itself.
         If you want to wrap and process a value,
         please consider using one of its subclasses,
-        such as [trcks.oop.Wrapper][].
+        such as [`Wrapper`][trcks.oop.Wrapper].
 
     Examples:
         Wrapping and unwrapping an integer:

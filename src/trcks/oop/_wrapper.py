@@ -73,7 +73,7 @@ class Wrapper(BaseWrapper[_T_co]):
             value: The object to be wrapped.
 
         Returns:
-            A new [trcks.oop.Wrapper][] instance with the wrapped object.
+            A new [`Wrapper`][trcks.oop.Wrapper] instance with the wrapped object.
 
         Examples:
             >>> Wrapper.construct(5)
@@ -98,7 +98,7 @@ class Wrapper(BaseWrapper[_T_co]):
                 Keyword arguments to be passed to `callable_`.
 
         Returns:
-            A new [trcks.oop.Wrapper][] instance
+            A new [`Wrapper`][trcks.oop.Wrapper] instance
                 with the result of the function application.
 
         Examples:
@@ -124,7 +124,7 @@ class Wrapper(BaseWrapper[_T_co]):
                 Keyword arguments to be passed to `callable_`.
 
         Returns:
-            A [trcks.oop.AwaitableWrapper][] instance with
+            An [`AwaitableWrapper`][trcks.oop.AwaitableWrapper] instance with
                 the result of the function application.
 
         Examples:
@@ -153,19 +153,19 @@ class Wrapper(BaseWrapper[_T_co]):
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableTupleWrapper[_T]:
-        """Apply an asynchronous function returning a [collections.abc.Iterable][]
-        to the wrapped object.
+        """Apply an asynchronous function returning an
+        [`Iterable`][collections.abc.Iterable] to the wrapped object.
 
         Args:
-            callable_: The asynchronous function to be applied, returning a
-                [collections.abc.Iterable][].
+            callable_: The asynchronous function to be applied, returning an
+                [`Iterable`][collections.abc.Iterable].
             *args:
                 Positional arguments to be passed to `callable_`.
             **kwargs:
                 Keyword arguments to be passed to `callable_`.
 
         Returns:
-            A [trcks.oop.AwaitableTupleWrapper][] instance with
+            An [`AwaitableTupleWrapper`][trcks.oop.AwaitableTupleWrapper] instance with
                 the result of the function application.
 
         Examples:
@@ -197,7 +197,7 @@ class Wrapper(BaseWrapper[_T_co]):
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableResultWrapper[_F, _S]:
-        """Apply an asynchronous function with return type [trcks.Result][]
+        """Apply an asynchronous function with return type [`Result`][trcks.Result]
         to the wrapped object.
 
         Args:
@@ -208,7 +208,8 @@ class Wrapper(BaseWrapper[_T_co]):
                 Keyword arguments to be passed to `callable_`.
 
         Returns:
-            A [trcks.oop.AwaitableResultWrapper][] instance with
+            An [`AwaitableResultWrapper`][trcks.oop.AwaitableResultWrapper]
+                instance with
                 the result of the function application.
 
         Examples:
@@ -245,7 +246,8 @@ class Wrapper(BaseWrapper[_T_co]):
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[_F, _S]:
         """Apply an asynchronous function with return type
-        [trcks.AwaitableResultIterable][] to the wrapped object.
+        [`AwaitableResultIterable`][trcks.AwaitableResultIterable] to the wrapped
+        object.
 
         Args:
             callable_: The asynchronous function to be applied.
@@ -255,7 +257,8 @@ class Wrapper(BaseWrapper[_T_co]):
                 Keyword arguments to be passed to `callable_`.
 
         Returns:
-            A [trcks.oop.AwaitableResultTupleWrapper][] instance with
+            An [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
+                instance with
                 the result of the function application.
 
         Examples:
@@ -291,7 +294,7 @@ class Wrapper(BaseWrapper[_T_co]):
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[_F, _S]:
         """Deprecated alias for
-        [trcks.oop.Wrapper.map_to_awaitable_result_iterable][].
+        [`map_to_awaitable_result_iterable`][trcks.oop.Wrapper.map_to_awaitable_result_iterable].
         """
         return self.map_to_awaitable_result_iterable(
             callable_, *args, **kwargs
@@ -305,7 +308,9 @@ class Wrapper(BaseWrapper[_T_co]):
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableTupleWrapper[_T]:
-        """Deprecated alias for [trcks.oop.Wrapper.map_to_awaitable_iterable][]."""
+        """Deprecated alias for
+        [`map_to_awaitable_iterable`][trcks.oop.Wrapper.map_to_awaitable_iterable].
+        """
         return self.map_to_awaitable_iterable(
             callable_, *args, **kwargs
         )  # pragma: no cover
@@ -317,19 +322,19 @@ class Wrapper(BaseWrapper[_T_co]):
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> TupleWrapper[_T]:
-        """Apply a function returning an [collections.abc.Iterable][]
+        """Apply a function returning an [`Iterable`][collections.abc.Iterable]
         to the wrapped object.
 
         Args:
             callable_: The function to be applied,
-                returning a [collections.abc.Iterable][].
+                returning an [`Iterable`][collections.abc.Iterable].
             *args:
                 Positional arguments to be passed to `callable_`.
             **kwargs:
                 Keyword arguments to be passed to `callable_`.
 
         Returns:
-            A [trcks.oop.TupleWrapper][] instance with
+            A [`TupleWrapper`][trcks.oop.TupleWrapper] instance with
                 the result of the function application.
 
         Examples:
@@ -349,7 +354,7 @@ class Wrapper(BaseWrapper[_T_co]):
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> ResultWrapper[_F, _S]:
-        """Apply a synchronous function with return type [trcks.Result][]
+        """Apply a synchronous function with return type [`Result`][trcks.Result]
         to the wrapped object.
 
         Args:
@@ -360,7 +365,7 @@ class Wrapper(BaseWrapper[_T_co]):
                 Keyword arguments to be passed to `callable_`.
 
         Returns:
-            A [trcks.oop.ResultWrapper][] instance with
+            A [`ResultWrapper`][trcks.oop.ResultWrapper] instance with
                 the result of the function application.
 
         Examples:
@@ -380,8 +385,8 @@ class Wrapper(BaseWrapper[_T_co]):
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> ResultTupleWrapper[_F, _S]:
-        """Apply a synchronous function with return type [trcks.ResultIterable][]
-        to the wrapped object.
+        """Apply a synchronous function with return type
+        [`ResultIterable`][trcks.ResultIterable] to the wrapped object.
 
         Args:
             callable_: The synchronous function to be applied.
@@ -391,7 +396,7 @@ class Wrapper(BaseWrapper[_T_co]):
                 Keyword arguments to be passed to `callable_`.
 
         Returns:
-            A [trcks.oop.ResultTupleWrapper][] instance with
+            A [`ResultTupleWrapper`][trcks.oop.ResultTupleWrapper] instance with
                 the result of the function application.
 
         Examples:
@@ -415,7 +420,9 @@ class Wrapper(BaseWrapper[_T_co]):
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> ResultTupleWrapper[_F, _S]:
-        """Deprecated alias for [trcks.oop.Wrapper.map_to_result_iterable][]."""
+        """Deprecated alias for
+        [`map_to_result_iterable`][trcks.oop.Wrapper.map_to_result_iterable].
+        """
         return self.map_to_result_iterable(
             callable_, *args, **kwargs
         )  # pragma: no cover
@@ -428,7 +435,9 @@ class Wrapper(BaseWrapper[_T_co]):
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> TupleWrapper[_T]:
-        """Deprecated alias for [trcks.oop.Wrapper.map_to_iterable][]."""
+        """Deprecated alias for
+        [`map_to_iterable`][trcks.oop.Wrapper.map_to_iterable].
+        """
         return self.map_to_iterable(callable_, *args, **kwargs)  # pragma: no cover
 
     def tap(
@@ -448,7 +457,8 @@ class Wrapper(BaseWrapper[_T_co]):
                 Keyword arguments to be passed to `callable_`.
 
         Returns:
-            A new [trcks.oop.Wrapper][] instance with the original wrapped object,
+            A new [`Wrapper`][trcks.oop.Wrapper] instance with the original wrapped
+                object,
                 allowing for further method chaining.
 
         Examples:
@@ -476,7 +486,8 @@ class Wrapper(BaseWrapper[_T_co]):
                 Keyword arguments to be passed to `callable_`.
 
         Returns:
-            A [trcks.oop.AwaitableWrapper][] instance with the original wrapped object.
+            An [`AwaitableWrapper`][trcks.oop.AwaitableWrapper] instance with the
+            original wrapped object.
 
         Examples:
             >>> import asyncio
@@ -506,19 +517,19 @@ class Wrapper(BaseWrapper[_T_co]):
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableTupleWrapper[_T_co]:
-        """Apply an asynchronous side effect returning a [trcks.AwaitableIterable][]
-        to the wrapped object.
+        """Apply an asynchronous side effect returning an
+        [`AwaitableIterable`][trcks.AwaitableIterable] to the wrapped object.
 
         Args:
             callable_: The asynchronous side effect to be applied,
-                returning a [trcks.AwaitableIterable][].
+                returning an [`AwaitableIterable`][trcks.AwaitableIterable].
             *args:
                 Positional arguments to be passed to `callable_`.
             **kwargs:
                 Keyword arguments to be passed to `callable_`.
 
         Returns:
-            A [trcks.oop.AwaitableTupleWrapper][] instance with
+            An [`AwaitableTupleWrapper`][trcks.oop.AwaitableTupleWrapper] instance with
                 the original wrapped object repeated once per item returned by the
                 side effect.
 
@@ -548,7 +559,7 @@ class Wrapper(BaseWrapper[_T_co]):
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableResultWrapper[_F, _T_co]:
-        """Apply an asynchronous side effect with return type [trcks.Result][]
+        """Apply an asynchronous side effect with return type [`Result`][trcks.Result]
         to the wrapped object.
 
         Args:
@@ -559,12 +570,14 @@ class Wrapper(BaseWrapper[_T_co]):
                 Keyword arguments to be passed to `callable_`.
 
         Returns:
-            A [trcks.oop.AwaitableResultWrapper][] instance with
+            An [`AwaitableResultWrapper`][trcks.oop.AwaitableResultWrapper]
+                instance with
 
-                - *the returned* [trcks.Failure][]
-                    if the given side effect returns a [trcks.Failure][] or
-                - a [trcks.Success][] instance containing *the original* wrapped object
-                    if the given side effect returns a [trcks.Success][].
+                - *the returned* [`Failure`][trcks.Failure]
+                    if the given side effect returns a [`Failure`][trcks.Failure] or
+                - a [`Success`][trcks.Success] instance containing *the original*
+                  wrapped object if the given side effect returns a
+                  [`Success`][trcks.Success].
 
         Examples:
             >>> import asyncio
@@ -613,7 +626,8 @@ class Wrapper(BaseWrapper[_T_co]):
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[_F, _T_co]:
         """Apply an asynchronous side effect with return type
-        [trcks.AwaitableResultIterable][] to the wrapped object.
+        [`AwaitableResultIterable`][trcks.AwaitableResultIterable] to the wrapped
+        object.
 
         Args:
             callable_: The asynchronous side effect to be applied.
@@ -623,13 +637,14 @@ class Wrapper(BaseWrapper[_T_co]):
                 Keyword arguments to be passed to `callable_`.
 
         Returns:
-            A [trcks.oop.AwaitableResultTupleWrapper][] instance with
+            An [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
+                instance with
 
-                - *the returned* [trcks.Failure][]
-                    if the given side effect returns a [trcks.Failure][] or
+                - *the returned* [`Failure`][trcks.Failure]
+                    if the given side effect returns a [`Failure`][trcks.Failure] or
                 - *the original* wrapped object repeated once per element
                     in the side effect output if the given side effect
-                    returns [trcks.SuccessIterable][].
+                    returns [`SuccessIterable`][trcks.SuccessIterable].
 
         Examples:
             >>> import asyncio
@@ -665,7 +680,7 @@ class Wrapper(BaseWrapper[_T_co]):
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[_F, _T_co]:
         """Deprecated alias for
-        [trcks.oop.Wrapper.tap_to_awaitable_result_iterable][].
+        [`tap_to_awaitable_result_iterable`][trcks.oop.Wrapper.tap_to_awaitable_result_iterable].
         """
         return self.tap_to_awaitable_result_iterable(
             callable_, *args, **kwargs
@@ -679,7 +694,9 @@ class Wrapper(BaseWrapper[_T_co]):
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableTupleWrapper[_T_co]:
-        """Deprecated alias for [trcks.oop.Wrapper.tap_to_awaitable_iterable][]."""
+        """Deprecated alias for
+        [`tap_to_awaitable_iterable`][trcks.oop.Wrapper.tap_to_awaitable_iterable].
+        """
         return self.tap_to_awaitable_iterable(
             callable_, *args, **kwargs
         )  # pragma: no cover
@@ -691,19 +708,20 @@ class Wrapper(BaseWrapper[_T_co]):
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> TupleWrapper[_T_co]:
-        """Apply a side effect returning an [collections.abc.Iterable][] to the
-        wrapped object.
+        """Apply a side effect returning an [`Iterable`][collections.abc.Iterable] to
+        the wrapped object.
 
         Args:
             callable_: The side effect to be applied, returning an
-                [collections.abc.Iterable][].
+                [`Iterable`][collections.abc.Iterable].
             *args:
                 Positional arguments to be passed to `callable_`.
             **kwargs:
                 Keyword arguments to be passed to `callable_`.
 
         Returns:
-            A [trcks.oop.TupleWrapper][] instance with the original wrapped
+            A [`TupleWrapper`][trcks.oop.TupleWrapper] instance with the original
+                wrapped
                 object repeated once per item returned by the side effect.
 
         Examples:
@@ -725,7 +743,7 @@ class Wrapper(BaseWrapper[_T_co]):
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> ResultWrapper[_F, _T_co]:
-        """Apply a synchronous side effect with return type [trcks.Result][]
+        """Apply a synchronous side effect with return type [`Result`][trcks.Result]
         to the wrapped object.
 
         Args:
@@ -736,12 +754,13 @@ class Wrapper(BaseWrapper[_T_co]):
                 Keyword arguments to be passed to `callable_`.
 
         Returns:
-            A [trcks.oop.ResultWrapper][] instance with
+            A [`ResultWrapper`][trcks.oop.ResultWrapper] instance with
 
-                - *the returned* [trcks.Failure][]
-                    if the given side effect returns a [trcks.Failure][] or
-                - a [trcks.Success][] instance containing *the original* wrapped object
-                    if the given side effect returns a [trcks.Success][].
+                - *the returned* [`Failure`][trcks.Failure]
+                    if the given side effect returns a [`Failure`][trcks.Failure] or
+                - a [`Success`][trcks.Success] instance containing *the original*
+                  wrapped object if the given side effect returns a
+                  [`Success`][trcks.Success].
 
         Examples:
             >>> from trcks import Result
@@ -772,8 +791,8 @@ class Wrapper(BaseWrapper[_T_co]):
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> ResultTupleWrapper[_F, _T_co]:
-        """Apply a synchronous side effect with return type [trcks.ResultIterable][]
-        to the wrapped object.
+        """Apply a synchronous side effect with return type
+        [`ResultIterable`][trcks.ResultIterable] to the wrapped object.
 
         Args:
             callable_: The synchronous side effect to be applied.
@@ -783,13 +802,13 @@ class Wrapper(BaseWrapper[_T_co]):
                 Keyword arguments to be passed to `callable_`.
 
         Returns:
-            A [trcks.oop.ResultTupleWrapper][] instance with
+            A [`ResultTupleWrapper`][trcks.oop.ResultTupleWrapper] instance with
 
-                - *the returned* [trcks.Failure][]
-                    if the given side effect returns a [trcks.Failure][] or
-                - *the original* [trcks.SuccessIterable][] element repeated once
-                    per element in the side effect output if the given side effect
-                    returns [trcks.SuccessIterable][].
+                - *the returned* [`Failure`][trcks.Failure]
+                    if the given side effect returns a [`Failure`][trcks.Failure] or
+                - *the original* [`SuccessIterable`][trcks.SuccessIterable] element
+                  repeated once per element in the side effect output if the given side
+                  effect returns [`SuccessIterable`][trcks.SuccessIterable].
 
         Examples:
             >>> from trcks import ResultTuple
@@ -826,7 +845,9 @@ class Wrapper(BaseWrapper[_T_co]):
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> ResultTupleWrapper[_F, _T_co]:
-        """Deprecated alias for [trcks.oop.Wrapper.tap_to_result_iterable][]."""
+        """Deprecated alias for
+        [`tap_to_result_iterable`][trcks.oop.Wrapper.tap_to_result_iterable].
+        """
         return self.tap_to_result_iterable(
             callable_, *args, **kwargs
         )  # pragma: no cover
@@ -839,5 +860,7 @@ class Wrapper(BaseWrapper[_T_co]):
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> TupleWrapper[_T_co]:
-        """Deprecated alias for [trcks.oop.Wrapper.tap_to_iterable][]."""
+        """Deprecated alias for
+        [`tap_to_iterable`][trcks.oop.Wrapper.tap_to_iterable].
+        """
         return self.tap_to_iterable(callable_, *args, **kwargs)  # pragma: no cover

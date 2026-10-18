@@ -13,20 +13,20 @@ for more details.
 
 ## `Awaitable` and `Coroutine`
 
-[collections.abc.Awaitable][] is the broad type for anything
+[`Awaitable`][collections.abc.Awaitable] is the broad type for anything
 that can be awaited using `await`.
-[collections.abc.Coroutine][] is a specific, narrower subtype
+[`Coroutine`][collections.abc.Coroutine] is a specific, narrower subtype
 produced by `async def` functions.
-In Python 3.13 and older, [asyncio.run][] requires a `Coroutine`, not just any `Awaitable`.
-`trcks` provides helpers such as
-[trcks.oop.BaseAwaitableWrapper.core_as_coroutine][] and
-[trcks.fp.monads.awaitable_result.to_coroutine_result][] to convert an `Awaitable`
-result into a `Coroutine`.
+In Python 3.13 and older, [`run`][asyncio.run] requires a `Coroutine`, not just
+any `Awaitable`. `trcks` provides helpers such as
+[`core_as_coroutine`][trcks.oop.BaseAwaitableWrapper.core_as_coroutine] and
+[`to_coroutine_result`][trcks.fp.monads.awaitable_result.to_coroutine_result] to
+convert an `Awaitable` result into a `Coroutine`.
 
 ## Double-track
 
 A value that is either a success or a failure, represented by
-[trcks.Result][].
+[`Result`][trcks.Result].
 One track carries successful results forward;
 the other carries information about failures.
 
@@ -44,11 +44,14 @@ processed individually by `trcks`.
 ## Mapping helper (or `map*` function)
 
 A helper that lifts a plain function so that it operates on a
-wrapped value ([trcks.oop][]) or becomes a pipeline step ([trcks.fp][]).
-For example, [trcks.oop.ResultWrapper.map_success][] and
-[trcks.fp.monads.result.map_success][] both apply a function to the success
-value of a [trcks.Result][], leaving failures unchanged.
-These helpers live in `trcks.oop` classes and in the modules under `trcks.fp.monads`.
+wrapped value ([`trcks.oop`][trcks.oop]) or becomes a pipeline step
+([`trcks.fp`][trcks.fp]).
+For example,
+[`ResultWrapper.map_success`][trcks.oop.ResultWrapper.map_success] and
+[`result.map_success`][trcks.fp.monads.result.map_success] both apply a
+function to the success value of a [`Result`][trcks.Result], leaving failures
+unchanged. These helpers live in `trcks.oop` classes and in the modules under
+`trcks.fp.monads`.
 Mapping and `tap` helpers also forward any extra positional and keyword
 arguments to the given function, so a lambda or `functools.partial` is not
 needed just to bind an extra argument.
@@ -56,10 +59,11 @@ needed just to bind an extra argument.
 ## Pipeline and `pipe`
 
 A pipeline is a start value followed by zero or more compatible functions.
-The `Pipeline*` type aliases in [trcks.fp.composition][] model pipelines
-as tuples, and help static type checkers validate the compatibility of
+The `Pipeline*` type aliases in
+[`trcks.fp.composition`][trcks.fp.composition] model pipelines as tuples,
+and help static type checkers validate the compatibility of
 the start value and the functions.
-[trcks.fp.composition.pipe][] runs a pipeline by passing the
+[`pipe`][trcks.fp.composition.pipe] runs a pipeline by passing the
 start value through each function in turn.
 
 ## Railway-oriented programming (ROP)
@@ -98,15 +102,15 @@ value unchanged, keeping the pipeline intact.
 A transition from a simpler monad to a richer one.
 For example, `trcks` can widen:
 
-| From                          | To                                                                                     |
-|-------------------------------|----------------------------------------------------------------------------------------|
-| a plain value                 | [trcks.Result][], a homogeneous [tuple][], or [collections.abc.Awaitable][]            |
-| [trcks.Result][]              | [trcks.AwaitableResult][], [trcks.ResultTuple][], or [trcks.AwaitableResultTuple][]    |
-| a homogeneous [tuple][]       | [trcks.AwaitableTuple][] or [trcks.ResultTuple][]                                      |
-| [collections.abc.Awaitable][] | [trcks.AwaitableTuple][], [trcks.AwaitableResult][], or [trcks.AwaitableResultTuple][] |
-| [trcks.AwaitableResult][]     | [trcks.AwaitableResultTuple][]                                                         |
-| [trcks.ResultTuple][]         | [trcks.AwaitableResultTuple][]                                                         |
-| [trcks.AwaitableTuple][]      | [trcks.AwaitableResultTuple][]                                                         |
+| From                                       | To                                                                                                                                            |
+| ------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| a plain value                              | [`Result`][trcks.Result], a homogeneous [`tuple`][tuple], or [`Awaitable`][collections.abc.Awaitable]                                         |
+| [`Result`][trcks.Result]                   | [`AwaitableResult`][trcks.AwaitableResult], [`ResultTuple`][trcks.ResultTuple], or [`AwaitableResultTuple`][trcks.AwaitableResultTuple]       |
+| a homogeneous [`tuple`][tuple]             | [`AwaitableTuple`][trcks.AwaitableTuple] or [`ResultTuple`][trcks.ResultTuple]                                                                |
+| [`Awaitable`][collections.abc.Awaitable]   | [`AwaitableTuple`][trcks.AwaitableTuple], [`AwaitableResult`][trcks.AwaitableResult], or [`AwaitableResultTuple`][trcks.AwaitableResultTuple] |
+| [`AwaitableResult`][trcks.AwaitableResult] | [`AwaitableResultTuple`][trcks.AwaitableResultTuple]                                                                                          |
+| [`ResultTuple`][trcks.ResultTuple]         | [`AwaitableResultTuple`][trcks.AwaitableResultTuple]                                                                                          |
+| [`AwaitableTuple`][trcks.AwaitableTuple]   | [`AwaitableResultTuple`][trcks.AwaitableResultTuple]                                                                                          |
 
 Like mapping helpers, widening helpers are named `map*` or `tap*`.
 Unlike helpers that stay within the same monad
