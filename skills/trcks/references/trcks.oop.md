@@ -165,16 +165,18 @@ with "regular" functions:
 >>>
 >>> def get_user_ids(domain: str) -> tuple[int, ...]:
 ...     if domain == "domain.org":
-...         return (1, 2)
+...         return (1,)
 ...     if domain == "provider.com":
-...         return (2,)
+...         return (2, 3)
 ...     return ()
 >>>
 >>> def get_subscription_ids(user_id: int) -> tuple[int, ...]:
 ...     if user_id == 1:
-...         return (42, 43)
+...         return (42,)
 ...     if user_id == 2:
 ...         return (44,)
+...     if user_id == 3:
+...         return (45,)
 ...     return ()
 >>>
 >>> def get_subscription_fee(subscription_id: int) -> float:
@@ -190,9 +192,9 @@ with "regular" functions:
 ...     )
 >>>
 >>> get_subscription_fees_by_domain("domain.org")
-(4.2, 4.3, 4.4)
+(4.2,)
 >>> get_subscription_fees_by_domain("provider.com")
-(4.4,)
+(4.4, 4.5)
 >>> get_subscription_fees_by_domain("example.net")
 ()
 
