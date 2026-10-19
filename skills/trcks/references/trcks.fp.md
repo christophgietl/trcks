@@ -307,10 +307,11 @@ Modules for types that combine `trcks.Result` and `tuple` use
 the plural `map_successes*` and `tap_successes*` functions.
 They operate on each success element individually
 and short-circuit on the first `trcks.Failure`.
-The example below starts with a `tuple` of email addresses.
-It enters the `trcks.AwaitableTuple` type with `at.construct_from_iterable`
+The example below starts with a domain string.
+The function `get_user_ids` maps it to a `tuple` of user IDs.
+The pipeline enters the `trcks.AwaitableTuple` type with `at.construct_from_iterable`
 and widens to the `trcks.AwaitableResultTuple` type
-because `get_user_id` returns a `trcks.AwaitableResult` value:
+because `get_subscription_id` returns a `trcks.Result` value:
 
 ```pycon
 >>> import asyncio
@@ -320,17 +321,14 @@ because `get_user_id` returns a `trcks.AwaitableResult` value:
 >>> from trcks.fp.monads import awaitable_result_tuple as art
 >>> from trcks.fp.monads import awaitable_tuple as at
 >>>
->>> UserDoesNotExist = Literal["User does not exist"]
 >>> UserDoesNotHaveASubscription = Literal["User does not have a subscription"]
->>> FailureDescription = UserDoesNotExist | UserDoesNotHaveASubscription
 >>>
->>> async def get_user_id(user_email: str) -> Result[UserDoesNotExist, int]:
-...     await asyncio.sleep(0.001)  # simulating a database query
-...     if user_email == "erika.mustermann@domain.org":
-...         return "success", 1
-...     if user_email == "john_doe@provider.com":
-...         return "success", 2
-...     return "failure", "User does not exist"
+>>> def get_user_ids(domain: str) -> tuple[int, ...]:
+...     if domain == "domain.org":
+...         return (1,)
+...     if domain == "provider.com":
+...         return (2, 3)
+...     return ()
 >>>
 >>> def get_subscription_id(user_id: int) -> Result[UserDoesNotHaveASubscription, int]:
 ...     if user_id == 1:
@@ -340,49 +338,42 @@ because `get_user_id` returns a `trcks.AwaitableResult` value:
 >>> def get_subscription_fee(subscription_id: int) -> float:
 ...     return subscription_id * 0.1
 >>>
->>> async def get_subscription_fees_by_email(
-...     user_emails: tuple[str, ...],
-... ) -> ResultTuple[FailureDescription, float]:
+>>> async def get_subscription_fees_by_domain(
+...     domain: str,
+... ) -> ResultTuple[UserDoesNotHaveASubscription, float]:
 ...     # Gathering all arguments for `pipe` in a type-annotated variable
 ...     # might help your static type checker understand
 ...     # that your `pipe` call is valid:
 ...     pipeline: Pipeline4[
-...         tuple[str, ...],
-...         AwaitableTuple[str],
-...         AwaitableResultTuple[UserDoesNotExist, int],
-...         AwaitableResultTuple[FailureDescription, int],
-...         AwaitableResultTuple[FailureDescription, float],
+...         str,
+...         tuple[int, ...],
+...         AwaitableTuple[int],
+...         AwaitableResultTuple[UserDoesNotHaveASubscription, int],
+...         AwaitableResultTuple[UserDoesNotHaveASubscription, float],
 ...     ] = (
-...         user_emails,
+...         domain,
+...         get_user_ids,
 ...         at.construct_from_iterable,
-...         at.map_to_awaitable_result(get_user_id),
-...         art.map_successes_to_result(get_subscription_id),
+...         at.map_to_result(get_subscription_id),
 ...         art.map_successes(get_subscription_fee),
 ...     )
 ...     return await pipe(*pipeline)
 >>>
->>> asyncio.run(get_subscription_fees_by_email(("erika.mustermann@domain.org",)))
+>>> asyncio.run(get_subscription_fees_by_domain("domain.org"))
 ('success', (4.2,))
->>> asyncio.run(
-...     get_subscription_fees_by_email(
-...         ("john_doe@provider.com", "erika.mustermann@domain.org")
-...     )
-... )
+>>> asyncio.run(get_subscription_fees_by_domain("provider.com"))
 ('failure', 'User does not have a subscription')
->>> asyncio.run(get_subscription_fees_by_email(("jane_doe@provider.com",)))
-('failure', 'User does not exist')
+>>> asyncio.run(get_subscription_fees_by_domain("example.net"))
+('success', ())
 
 ```
 
 The `map*` functions in this example return functions
 with the following input and return types:
 
-- `at.map_to_awaitable_result(get_user_id)` returns a function with
-  input type `AwaitableTuple[str]` and
-  return type `AwaitableResultTuple[UserDoesNotExist, int]`.
-- `art.map_successes_to_result(get_subscription_id)` returns a function with
-  input type `AwaitableResultTuple[UserDoesNotExist, int]` and
-  return type `AwaitableResultTuple[FailureDescription, int]`.
+- `at.map_to_result(get_subscription_id)` returns a function with
+  input type `AwaitableTuple[int]` and
+  return type `AwaitableResultTuple[UserDoesNotHaveASubscription, int]`.
 - `art.map_successes(get_subscription_fee)` returns a function with
-  input type `AwaitableResultTuple[FailureDescription, int]` and
-  return type `AwaitableResultTuple[FailureDescription, float]`.
+  input type `AwaitableResultTuple[UserDoesNotHaveASubscription, int]` and
+  return type `AwaitableResultTuple[UserDoesNotHaveASubscription, float]`.
