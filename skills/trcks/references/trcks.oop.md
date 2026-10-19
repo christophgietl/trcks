@@ -10,11 +10,38 @@ with the `core` attribute:
 ```pycon
 >>> from trcks.oop import Wrapper
 >>>
->>> def get_length_string(s: str) -> str:
-...     return Wrapper(core=s).map(len).map(lambda n: f"Length: {n}").core
+>>> def get_user_id(user_email: str) -> int:
+...     if user_email == "erika.mustermann@domain.org":
+...         return 1
+...     if user_email == "john_doe@provider.com":
+...         return 2
+...     return 3
 >>>
->>> get_length_string("Hello, world!")
-'Length: 13'
+>>> def get_subscription_id(user_id: int) -> int:
+...     if user_id == 1:
+...         return 42
+...     if user_id == 2:
+...         return 44
+...     return 45
+>>>
+>>> def get_subscription_fee(subscription_id: int) -> float:
+...     return subscription_id * 0.1
+>>>
+>>> def get_subscription_fee_by_email(user_email: str) -> float:
+...     return (
+...         Wrapper(core=user_email)
+...         .map(get_user_id)
+...         .map(get_subscription_id)
+...         .map(get_subscription_fee)
+...         .core
+...     )
+>>>
+>>> get_subscription_fee_by_email("erika.mustermann@domain.org")
+4.2
+>>> get_subscription_fee_by_email("john_doe@provider.com")
+4.4
+>>> get_subscription_fee_by_email("jane_doe@provider.com")
+4.5
 
 ```
 
@@ -26,19 +53,37 @@ It applies a side effect without changing the wrapped value:
 ```pycon
 >>> from trcks.oop import Wrapper
 >>>
->>> def get_length_string(s: str) -> str:
+>>> def get_user_id(user_email: str) -> int:
+...     if user_email == "erika.mustermann@domain.org":
+...         return 1
+...     if user_email == "john_doe@provider.com":
+...         return 2
+...     return 3
+>>>
+>>> def get_subscription_id(user_id: int) -> int:
+...     if user_id == 1:
+...         return 42
+...     if user_id == 2:
+...         return 44
+...     return 45
+>>>
+>>> def get_subscription_fee(subscription_id: int) -> float:
+...     return subscription_id * 0.1
+>>>
+>>> def get_subscription_fee_by_email(user_email: str) -> float:
 ...     return (
-...         Wrapper(core=s)
+...         Wrapper(core=user_email)
 ...         .tap(lambda o: print(f"LOG: Received '{o}'."))
-...         .map(len)
-...         .map(lambda n: f"Length: {n}")
+...         .map(get_user_id)
+...         .map(get_subscription_id)
+...         .map(get_subscription_fee)
 ...         .core
 ...     )
 >>>
->>> output = get_length_string("Hello, world!")
-LOG: Received 'Hello, world!'.
+>>> output = get_subscription_fee_by_email("erika.mustermann@domain.org")
+LOG: Received 'erika.mustermann@domain.org'.
 >>> output
-'Length: 13'
+4.2
 
 ```
 
@@ -46,8 +91,9 @@ Each method in the second example returns a new, immutable wrapper instance:
 
 - `Wrapper.tap(...)` returns a `Wrapper[str]` instance
   that wraps the original string.
-- `Wrapper.map(len)` returns a `Wrapper[int]` instance.
-- `Wrapper.map(...)` returns a `Wrapper[str]` instance.
+- `Wrapper.map(get_user_id)` returns a `Wrapper[int]` instance.
+- `Wrapper.map(get_subscription_id)` returns a `Wrapper[int]` instance.
+- `Wrapper.map(get_subscription_fee)` returns a `Wrapper[float]` instance.
 
 ## Combining `trcks.Result`-returning functions
 

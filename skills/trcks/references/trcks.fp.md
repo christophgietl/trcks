@@ -10,11 +10,32 @@ Therefore, you can pass "regular" functions directly to `pipe`:
 ```pycon
 >>> from trcks.fp.composition import pipe
 >>>
->>> def get_length_string(s: str) -> str:
-...     return pipe(s, len, lambda n: f"Length: {n}")
+>>> def get_user_id(user_email: str) -> int:
+...     if user_email == "erika.mustermann@domain.org":
+...         return 1
+...     if user_email == "john_doe@provider.com":
+...         return 2
+...     return 3
 >>>
->>> get_length_string("Hello, world!")
-'Length: 13'
+>>> def get_subscription_id(user_id: int) -> int:
+...     if user_id == 1:
+...         return 42
+...     if user_id == 2:
+...         return 44
+...     return 45
+>>>
+>>> def get_subscription_fee(subscription_id: int) -> float:
+...     return subscription_id * 0.1
+>>>
+>>> def get_subscription_fee_by_email(user_email: str) -> float:
+...     return pipe(user_email, get_user_id, get_subscription_id, get_subscription_fee)
+>>>
+>>> get_subscription_fee_by_email("erika.mustermann@domain.org")
+4.2
+>>> get_subscription_fee_by_email("john_doe@provider.com")
+4.4
+>>> get_subscription_fee_by_email("jane_doe@provider.com")
+4.5
 
 ```
 
@@ -27,18 +48,36 @@ It turns such a side effect into a function that returns its input:
 >>> from trcks.fp.composition import pipe
 >>> from trcks.fp.monads import identity as i
 >>>
->>> def get_length_string(s: str) -> str:
+>>> def get_user_id(user_email: str) -> int:
+...     if user_email == "erika.mustermann@domain.org":
+...         return 1
+...     if user_email == "john_doe@provider.com":
+...         return 2
+...     return 3
+>>>
+>>> def get_subscription_id(user_id: int) -> int:
+...     if user_id == 1:
+...         return 42
+...     if user_id == 2:
+...         return 44
+...     return 45
+>>>
+>>> def get_subscription_fee(subscription_id: int) -> float:
+...     return subscription_id * 0.1
+>>>
+>>> def get_subscription_fee_by_email(user_email: str) -> float:
 ...     return pipe(
-...         s,
+...         user_email,
 ...         i.tap(lambda o: print(f"LOG: Received '{o}'.")),
-...         len,
-...         lambda n: f"Length: {n}",
+...         get_user_id,
+...         get_subscription_id,
+...         get_subscription_fee,
 ...     )
 >>>
->>> output = get_length_string("Hello, world!")
-LOG: Received 'Hello, world!'.
+>>> output = get_subscription_fee_by_email("erika.mustermann@domain.org")
+LOG: Received 'erika.mustermann@domain.org'.
 >>> output
-'Length: 13'
+4.2
 
 ```
 
