@@ -287,28 +287,28 @@ Classes for types that combine `trcks.Result` and `tuple` use
 the plural `map_successes*` and `tap_successes*` methods.
 They operate on each success element individually
 and short-circuit on the first `trcks.Failure`.
-The example below starts with a `tuple` of email addresses.
-The method `TupleWrapper.map_to_awaitable_result` returns an
+The example below starts with a domain string.
+The function `get_user_ids` maps it to a `tuple` of user IDs.
+The class method `AwaitableTupleWrapper.construct_from_iterable` wraps
+the user IDs in an `AwaitableTupleWrapper` instance.
+The method `AwaitableTupleWrapper.map_to_result` returns an
 `AwaitableResultTupleWrapper` instance
-because `get_user_id` returns a `trcks.AwaitableResult` value:
+because `get_subscription_id` returns a `trcks.Result` value:
 
 ```pycon
 >>> import asyncio
 >>> from typing import Literal
 >>> from trcks import Result, ResultTuple
->>> from trcks.oop import TupleWrapper
+>>> from trcks.oop import AwaitableTupleWrapper
 >>>
->>> UserDoesNotExist = Literal["User does not exist"]
 >>> UserDoesNotHaveASubscription = Literal["User does not have a subscription"]
->>> FailureDescription = UserDoesNotExist | UserDoesNotHaveASubscription
 >>>
->>> async def get_user_id(user_email: str) -> Result[UserDoesNotExist, int]:
-...     await asyncio.sleep(0.001)  # simulating a database query
-...     if user_email == "erika.mustermann@domain.org":
-...         return "success", 1
-...     if user_email == "john_doe@provider.com":
-...         return "success", 2
-...     return "failure", "User does not exist"
+>>> def get_user_ids(domain: str) -> tuple[int, ...]:
+...     if domain == "domain.org":
+...         return (1,)
+...     if domain == "provider.com":
+...         return (2, 3)
+...     return ()
 >>>
 >>> def get_subscription_id(user_id: int) -> Result[UserDoesNotHaveASubscription, int]:
 ...     if user_id == 1:
@@ -318,35 +318,28 @@ because `get_user_id` returns a `trcks.AwaitableResult` value:
 >>> def get_subscription_fee(subscription_id: int) -> float:
 ...     return subscription_id * 0.1
 >>>
->>> async def get_subscription_fees_by_email(
-...     user_emails: tuple[str, ...],
-... ) -> ResultTuple[FailureDescription, float]:
+>>> async def get_subscription_fees_by_domain(
+...     domain: str,
+... ) -> ResultTuple[UserDoesNotHaveASubscription, float]:
 ...     return await (
-...         TupleWrapper.construct_from_iterable(user_emails)
-...         .map_to_awaitable_result(get_user_id)
-...         .map_successes_to_result(get_subscription_id)
+...         AwaitableTupleWrapper.construct_from_iterable(get_user_ids(domain))
+...         .map_to_result(get_subscription_id)
 ...         .map_successes(get_subscription_fee)
 ...         .core
 ...     )
 >>>
->>> asyncio.run(get_subscription_fees_by_email(("erika.mustermann@domain.org",)))
+>>> asyncio.run(get_subscription_fees_by_domain("domain.org"))
 ('success', (4.2,))
->>> asyncio.run(
-...     get_subscription_fees_by_email(
-...         ("john_doe@provider.com", "erika.mustermann@domain.org")
-...     )
-... )
+>>> asyncio.run(get_subscription_fees_by_domain("provider.com"))
 ('failure', 'User does not have a subscription')
->>> asyncio.run(get_subscription_fees_by_email(("jane_doe@provider.com",)))
-('failure', 'User does not exist')
+>>> asyncio.run(get_subscription_fees_by_domain("example.net"))
+('success', ())
 
 ```
 
 Each `map*` method in this example returns a new, immutable wrapper instance:
 
-- `TupleWrapper.map_to_awaitable_result(get_user_id)` returns an
-  `AwaitableResultTupleWrapper[UserDoesNotExist, int]` instance.
-- `AwaitableResultTupleWrapper.map_successes_to_result(get_subscription_id)`
-  returns an `AwaitableResultTupleWrapper[FailureDescription, int]` instance.
+- `AwaitableTupleWrapper.map_to_result(get_subscription_id)` returns an
+  `AwaitableResultTupleWrapper[UserDoesNotHaveASubscription, int]` instance.
 - `AwaitableResultTupleWrapper.map_successes(get_subscription_fee)` returns an
-  `AwaitableResultTupleWrapper[FailureDescription, float]` instance.
+  `AwaitableResultTupleWrapper[UserDoesNotHaveASubscription, float]` instance.
