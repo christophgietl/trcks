@@ -308,11 +308,13 @@ the plural `map_successes*` and `tap_successes*` functions.
 They operate on each success element individually
 and short-circuit on the first `trcks.Failure`.
 The example below starts with a domain string.
-The asynchronous function `get_user_ids` maps it to a `tuple` of user IDs.
+The asynchronous function `get_user_ids_from_database`
+maps it to a `tuple` of user IDs.
 The pipeline enters the `trcks.AwaitableTuple` type directly
-because `get_user_ids` returns an awaitable `tuple`.
+because `get_user_ids_from_database` returns an awaitable `tuple`.
 It widens to the `trcks.AwaitableResultTuple` type with `at.map_to_awaitable_result`
-because `get_subscription_id` returns an awaitable `trcks.Result` value:
+because `get_subscription_id_from_database` returns an
+awaitable `trcks.Result` value:
 
 ```pycon
 >>> import asyncio
@@ -324,7 +326,7 @@ because `get_subscription_id` returns an awaitable `trcks.Result` value:
 >>>
 >>> UserDoesNotHaveASubscription = Literal["User does not have a subscription"]
 >>>
->>> async def get_user_ids(domain: str) -> tuple[int, ...]:
+>>> async def get_user_ids_from_database(domain: str) -> tuple[int, ...]:
 ...     await asyncio.sleep(0.001)  # simulating a database query
 ...     if domain == "domain.org":
 ...         return (1,)
@@ -332,7 +334,7 @@ because `get_subscription_id` returns an awaitable `trcks.Result` value:
 ...         return (2, 3)
 ...     return ()
 >>>
->>> async def get_subscription_id(
+>>> async def get_subscription_id_from_database(
 ...     user_id: int,
 ... ) -> Result[UserDoesNotHaveASubscription, int]:
 ...     await asyncio.sleep(0.001)  # simulating another database query
@@ -356,8 +358,8 @@ because `get_subscription_id` returns an awaitable `trcks.Result` value:
 ...         AwaitableResultTuple[UserDoesNotHaveASubscription, float],
 ...     ] = (
 ...         domain,
-...         get_user_ids,
-...         at.map_to_awaitable_result(get_subscription_id),
+...         get_user_ids_from_database,
+...         at.map_to_awaitable_result(get_subscription_id_from_database),
 ...         art.map_successes(get_subscription_fee),
 ...     )
 ...     return await pipe(*pipeline)
@@ -374,8 +376,8 @@ because `get_subscription_id` returns an awaitable `trcks.Result` value:
 The `map*` functions in this example return functions
 with the following input and return types:
 
-- `at.map_to_awaitable_result(get_subscription_id)` returns a function with
-  input type `AwaitableTuple[int]` and
+- `at.map_to_awaitable_result(get_subscription_id_from_database)`
+  returns a function with input type `AwaitableTuple[int]` and
   return type `AwaitableResultTuple[UserDoesNotHaveASubscription, int]`.
 - `art.map_successes(get_subscription_fee)` returns a function with
   input type `AwaitableResultTuple[UserDoesNotHaveASubscription, int]` and
