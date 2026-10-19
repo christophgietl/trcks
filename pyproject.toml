@@ -7,7 +7,7 @@ dev = [
     "import-linter==2.15",
     "mkdocstrings[python]==1.0.7",
     "mypy", # Check project.optional-dependencies for lower bound.
-    "pre-commit==4.6.2",
+    "pre-commit==4.7.0",
     "pyrefly", # Check project.optional-dependencies for lower bound.
     "pyright[nodejs]", # Check project.optional-dependencies for lower bound.
     "pytest==9.1.1",
