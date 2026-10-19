@@ -308,29 +308,34 @@ the plural `map_successes*` and `tap_successes*` functions.
 They operate on each success element individually
 and short-circuit on the first `trcks.Failure`.
 The example below starts with a domain string.
-The function `get_user_ids` maps it to a `tuple` of user IDs.
-The pipeline enters the `trcks.AwaitableTuple` type with `at.construct_from_iterable`
-and widens to the `trcks.AwaitableResultTuple` type
-because `get_subscription_id` returns a `trcks.Result` value:
+The asynchronous function `get_user_ids` maps it to a `tuple` of user IDs.
+The pipeline enters the `trcks.AwaitableTuple` type directly
+because `get_user_ids` returns an awaitable `tuple`.
+It widens to the `trcks.AwaitableResultTuple` type with `at.map_to_awaitable_result`
+because `get_subscription_id` returns an awaitable `trcks.Result` value:
 
 ```pycon
 >>> import asyncio
 >>> from typing import Literal
 >>> from trcks import AwaitableResultTuple, AwaitableTuple, Result, ResultTuple
->>> from trcks.fp.composition import Pipeline4, pipe
+>>> from trcks.fp.composition import Pipeline3, pipe
 >>> from trcks.fp.monads import awaitable_result_tuple as art
 >>> from trcks.fp.monads import awaitable_tuple as at
 >>>
 >>> UserDoesNotHaveASubscription = Literal["User does not have a subscription"]
 >>>
->>> def get_user_ids(domain: str) -> tuple[int, ...]:
+>>> async def get_user_ids(domain: str) -> tuple[int, ...]:
+...     await asyncio.sleep(0.001)  # simulating a database query
 ...     if domain == "domain.org":
 ...         return (1,)
 ...     if domain == "provider.com":
 ...         return (2, 3)
 ...     return ()
 >>>
->>> def get_subscription_id(user_id: int) -> Result[UserDoesNotHaveASubscription, int]:
+>>> async def get_subscription_id(
+...     user_id: int,
+... ) -> Result[UserDoesNotHaveASubscription, int]:
+...     await asyncio.sleep(0.001)  # simulating another database query
 ...     if user_id == 1:
 ...         return "success", 42
 ...     return "failure", "User does not have a subscription"
@@ -344,17 +349,15 @@ because `get_subscription_id` returns a `trcks.Result` value:
 ...     # Gathering all arguments for `pipe` in a type-annotated variable
 ...     # might help your static type checker understand
 ...     # that your `pipe` call is valid:
-...     pipeline: Pipeline4[
+...     pipeline: Pipeline3[
 ...         str,
-...         tuple[int, ...],
 ...         AwaitableTuple[int],
 ...         AwaitableResultTuple[UserDoesNotHaveASubscription, int],
 ...         AwaitableResultTuple[UserDoesNotHaveASubscription, float],
 ...     ] = (
 ...         domain,
 ...         get_user_ids,
-...         at.construct_from_iterable,
-...         at.map_to_result(get_subscription_id),
+...         at.map_to_awaitable_result(get_subscription_id),
 ...         art.map_successes(get_subscription_fee),
 ...     )
 ...     return await pipe(*pipeline)
@@ -371,7 +374,7 @@ because `get_subscription_id` returns a `trcks.Result` value:
 The `map*` functions in this example return functions
 with the following input and return types:
 
-- `at.map_to_result(get_subscription_id)` returns a function with
+- `at.map_to_awaitable_result(get_subscription_id)` returns a function with
   input type `AwaitableTuple[int]` and
   return type `AwaitableResultTuple[UserDoesNotHaveASubscription, int]`.
 - `art.map_successes(get_subscription_fee)` returns a function with

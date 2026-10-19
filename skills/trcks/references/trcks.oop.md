@@ -288,29 +288,33 @@ the plural `map_successes*` and `tap_successes*` methods.
 They operate on each success element individually
 and short-circuit on the first `trcks.Failure`.
 The example below starts with a domain string.
-The function `get_user_ids` maps it to a `tuple` of user IDs.
-The class method `AwaitableTupleWrapper.construct_from_iterable` wraps
-the user IDs in an `AwaitableTupleWrapper` instance.
-The method `AwaitableTupleWrapper.map_to_result` returns an
+The asynchronous function `get_user_ids` maps it to a `tuple` of user IDs.
+The method `Wrapper.map_to_awaitable_iterable` applies `get_user_ids`
+and wraps the awaitable user IDs in an `AwaitableTupleWrapper` instance.
+The method `AwaitableTupleWrapper.map_to_awaitable_result` returns an
 `AwaitableResultTupleWrapper` instance
-because `get_subscription_id` returns a `trcks.Result` value:
+because `get_subscription_id` returns an awaitable `trcks.Result` value:
 
 ```pycon
 >>> import asyncio
 >>> from typing import Literal
 >>> from trcks import Result, ResultTuple
->>> from trcks.oop import AwaitableTupleWrapper
+>>> from trcks.oop import Wrapper
 >>>
 >>> UserDoesNotHaveASubscription = Literal["User does not have a subscription"]
 >>>
->>> def get_user_ids(domain: str) -> tuple[int, ...]:
+>>> async def get_user_ids(domain: str) -> tuple[int, ...]:
+...     await asyncio.sleep(0.001)  # simulating a database query
 ...     if domain == "domain.org":
 ...         return (1,)
 ...     if domain == "provider.com":
 ...         return (2, 3)
 ...     return ()
 >>>
->>> def get_subscription_id(user_id: int) -> Result[UserDoesNotHaveASubscription, int]:
+>>> async def get_subscription_id(
+...     user_id: int,
+... ) -> Result[UserDoesNotHaveASubscription, int]:
+...     await asyncio.sleep(0.001)  # simulating another database query
 ...     if user_id == 1:
 ...         return "success", 42
 ...     return "failure", "User does not have a subscription"
@@ -322,8 +326,9 @@ because `get_subscription_id` returns a `trcks.Result` value:
 ...     domain: str,
 ... ) -> ResultTuple[UserDoesNotHaveASubscription, float]:
 ...     return await (
-...         AwaitableTupleWrapper.construct_from_iterable(get_user_ids(domain))
-...         .map_to_result(get_subscription_id)
+...         Wrapper(core=domain)
+...         .map_to_awaitable_iterable(get_user_ids)
+...         .map_to_awaitable_result(get_subscription_id)
 ...         .map_successes(get_subscription_fee)
 ...         .core
 ...     )
@@ -339,7 +344,9 @@ because `get_subscription_id` returns a `trcks.Result` value:
 
 Each `map*` method in this example returns a new, immutable wrapper instance:
 
-- `AwaitableTupleWrapper.map_to_result(get_subscription_id)` returns an
+- `Wrapper.map_to_awaitable_iterable(get_user_ids)` returns an
+  `AwaitableTupleWrapper[int]` instance.
+- `AwaitableTupleWrapper.map_to_awaitable_result(get_subscription_id)` returns an
   `AwaitableResultTupleWrapper[UserDoesNotHaveASubscription, int]` instance.
 - `AwaitableResultTupleWrapper.map_successes(get_subscription_fee)` returns an
   `AwaitableResultTupleWrapper[UserDoesNotHaveASubscription, float]` instance.
