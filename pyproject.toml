@@ -267,4 +267,5 @@ cache-keys = [
     { git = { commit = true, tags = true } }, # needed by build-backend to derive package version from Git tags
 ]
 exclude-newer = "P7D"
+exclude-newer-package = { virtualenv = "P4D" }
 required-version = ">=0.12,<0.14"
