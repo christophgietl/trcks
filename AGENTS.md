@@ -5,9 +5,13 @@
 - `trcks` is a Python library for type-safe railway-oriented programming (ROP).
 - `trcks` encourages returning domain errors instead of raising them.
 - `trcks` provides generic return types for synchronous and asynchronous functions.
+  These types are type aliases based exclusively on out-of-the-box Python types.
 - `trcks` supports two distinct but equivalent programming styles:
   - OOP style for developers who prefer method chaining
   - FP style for developers who prefer function composition
+- `trcks` uses similar terminology for both programming styles
+  to make transitioning between them as easy as possible.
+- `trcks` avoids FP jargon outside `trcks.fp` to make adoption as easy as possible.
 - `trcks` includes a [skill for coding agents](https://agentskills.io/home).
 
 ## Architecture decisions
