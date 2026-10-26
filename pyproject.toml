@@ -267,6 +267,4 @@ cache-keys = [
     { git = { commit = true, tags = true } }, # needed by build-backend to derive package version from Git tags
 ]
 exclude-newer = "P7D"
-# Allow virtualenv 21.14.13 (uploaded 2026-10-22T20:10:15Z, younger than 7 days):
-exclude-newer-package = { virtualenv = "2026-10-22T20:10:17Z" }
 required-version = ">=0.12,<0.14"
