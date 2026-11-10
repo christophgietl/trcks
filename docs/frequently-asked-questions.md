@@ -89,7 +89,43 @@ For setup instructions, see
 
 Other type checkers may also work.
 
+## What makes `trcks` different from other Python libraries for type-safe ROP?
+
+`trcks` differs from other libraries for type-safe ROP in three main ways:
+
+- **Plain values, no imports:**
+  The type [trcks.Result][] is a mere type alias that combines [tuple][]
+  and [typing.Literal][].
+  You can create values as easily as `("failure", whatever_you_like)` or
+  `("success", whatever_you_like)`.
+  No need for any `import`s here.
+  You can even avoid the import of [trcks.Result][] by
+  importing `Literal` from `typing` and
+  replacing `trcks.Result[F, S]` with
+  `tuple[Literal["failure"], F] | tuple[Literal["success"], S]`.
+- **No logic in the type:**
+  As a type alias [trcks.Result][] does not contain any logic.
+  This allows the development of independent APIs for working with
+  the same [trcks.Result][] values.
+  Such APIs already exist: [trcks.fp][] and [trcks.oop][].
+- **Descriptive names, no jargon:**
+  `trcks` avoids functional programming jargon outside the `trcks.fp`
+  subpackage.
+  Class and method names in `trcks.oop` are descriptive and
+  self-explanatory.
+  Take [trcks.oop.TupleWrapper.map_to_awaitable_result][], for example.
+  Even inside `trcks.fp`, terminology coined in `trcks.oop` is preferred
+  over functional programming jargon
+  (e.g. [trcks.fp.monads.tuple_.map_to_awaitable_result][]).
+
+This makes both the adoption of `trcks` and switching between `trcks.oop`
+and `trcks.fp` as easy as possible.
+
 ## Which alternatives to `trcks` are there?
+
+Both of the following libraries represent failures and successes with
+container classes rather than with the plain type alias [trcks.Result][]
+(see the previous section).
 
 [returns](https://pypi.org/project/returns/) supports
 object-oriented style and functional style (like `trcks`).
@@ -98,7 +134,7 @@ the [returns.result.Result][] container (and multiple other containers)
 for synchronous code and
 the [returns.future.Future][] and [returns.future.FutureResult][] containers
 for asynchronous code.
-Whereas the [returns.result.Result][] container closely resembles
+Whereas the [returns.result.Result][] container serves the same purpose as
 [trcks.Result][], the [returns.future.Future][] container and the
 [returns.future.FutureResult][] container
 deviate from [collections.abc.Awaitable][] and [trcks.AwaitableResult][].
@@ -113,8 +149,7 @@ Further differences between `returns` and `trcks`:
   along with
   [their suggested `mypy` configuration](https://returns.readthedocs.io/en/0.28.0/pages/contrib/mypy_plugins.html#configuration)
   and
-  [their custom `mypy` plugin](https://returns.readthedocs.io/en/0.28.0/pages/contrib/mypy_plugins.html#mypy-plugin)
-  (as of `returns` 0.28.0),
+  [their custom `mypy` plugin](https://returns.readthedocs.io/en/0.28.0/pages/contrib/mypy_plugins.html#mypy-plugin),
   whereas `trcks` works with plain `mypy`, `pyrefly`, and `pyright`.
 
 [Expression](https://pypi.org/project/Expression/) supports
@@ -122,12 +157,11 @@ object-oriented style ("fluent syntax") and
 functional style (like `trcks`).
 It provides the [expression.core.result.Result][] class
 (and multiple other container classes)
-for synchronous code.
-The [expression.core.result.Result][] class is a close counterpart to
+for synchronous code and
+the [expression.effect.async_result][] builder
+for asynchronous code.
+The [expression.core.result.Result][] class combines the roles of
 [trcks.Result][] and [trcks.oop.ResultWrapper][].
-An `AsyncResult` type based on [collections.abc.AsyncGenerator][]
-[has been merged](https://github.com/dbrattli/Expression/pull/247)
-but not yet released (as of July 2026).
 `Expression` works with standard type checkers such as `pyright`
 without plugins.
 
