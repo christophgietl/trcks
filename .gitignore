@@ -23,6 +23,7 @@ wheels/
 
 # Tool-generated files
 *_cache/
+.cache/
 
 # virtual environments
 .venv/
