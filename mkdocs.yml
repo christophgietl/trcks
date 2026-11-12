@@ -60,7 +60,7 @@ plugins:
           inventories:
             - https://docs.python.org/3/objects.inv
             - https://returns.readthedocs.io/en/0.28.0/objects.inv
-            - https://expression.readthedocs.io/en/latest/objects.inv
+            - https://expression.readthedocs.io/en/stable/objects.inv
           options:
             docstring_section_style: list
             members_order: alphabetical
