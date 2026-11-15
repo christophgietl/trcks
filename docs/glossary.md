@@ -48,9 +48,10 @@ wrapped value ([trcks.oop][]) or becomes a pipeline step ([trcks.fp][]).
 For example, [trcks.oop.ResultWrapper.map_success][] and
 [trcks.fp.monads.result.map_success][] both apply a function to the success
 value of a [trcks.Result][], leaving failures unchanged.
-These helpers live in `trcks.oop` classes and in the modules under `trcks.fp.monads`.
+These helpers live in [trcks.oop][] classes and
+in the modules under [trcks.fp.monads][].
 Mapping and `tap` helpers also forward any extra positional and keyword
-arguments to the given function, so a lambda or `functools.partial` is not
+arguments to the given function, so a lambda or [functools.partial][] is not
 needed just to bind an extra argument.
 
 ## Pipeline and `pipe`

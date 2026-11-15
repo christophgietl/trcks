@@ -109,24 +109,24 @@ Other type checkers may also work.
   for working with the same [trcks.Result][] values:
   [trcks.fp][] and [trcks.oop][].
 - **Descriptive names, no jargon:**
-  `trcks` avoids functional programming jargon outside the `trcks.fp`
+  `trcks` avoids functional programming jargon outside the [trcks.fp][]
   subpackage.
-  Class and method names in `trcks.oop` are descriptive and
+  Class and method names in [trcks.oop][] are descriptive and
   self-explanatory.
   Take [trcks.oop.TupleWrapper.map_to_awaitable_result][], for example.
-  Even inside `trcks.fp`, `trcks` uses the terminology coined in
-  `trcks.oop` rather than functional programming jargon
+  Even inside [trcks.fp][], `trcks` uses the terminology coined in
+  [trcks.oop][] rather than functional programming jargon
   (e.g. [trcks.fp.monads.tuple_.map_to_awaitable_result][]).
-  This makes adopting `trcks` and switching between `trcks.oop`
-  and `trcks.fp` as easy as possible.
+  This makes adopting `trcks` and switching between [trcks.oop][]
+  and [trcks.fp][] as easy as possible.
 - **Extra arguments, no boilerplate:**
-  The `map*` and `tap*` functions in the modules under `trcks.fp.monads`
-  and the `map*` and `tap*` methods of the wrapper classes in `trcks.oop`
+  The `map*` and `tap*` functions in the modules under [trcks.fp.monads][]
+  and the `map*` and `tap*` methods of the wrapper classes in [trcks.oop][]
   accept extra positional and keyword arguments
   and forward them to the given function.
   Take [trcks.fp.monads.result.map_success][] and
   [trcks.oop.ResultWrapper.map_success][], for example.
-  You do not need a lambda or `functools.partial` merely to bind
+  You do not need a lambda or [functools.partial][] merely to bind
   an extra argument.
 
 ## Which alternatives to `trcks` are there?
