@@ -1,22 +1,22 @@
 # Frequently asked questions (FAQs)
 
-This section answers some questions that might come to your mind.
+This section answers some questions that might come to mind.
 
-## Where can I learn more about railway-oriented programming?
+## Where can I learn more about railway-oriented programming (ROP)?
 
 Scott Wlaschin's blog post
 [Railway oriented programming](https://fsharpforfunandprofit.com/posts/recipe-part2/)
-comes with lots of examples and illustrations as well as
+comes with many examples and illustrations as well as
 videos and slides from his talks.
 
-## Should I replace all raised exceptions with `trcks.Result`?
+## Should I replace all raised exceptions with `trcks.Result` values?
 
 No, you should not.
 Scott Wlaschin's blog post
 [Against Railway-Oriented Programming](https://fsharpforfunandprofit.com/posts/against-railway-oriented-programming/)
 lists eight scenarios
 where a result type is not the right tool.
-Raising an exception, not catching an exception, or
+Raising an exception, catching an exception, or
 returning an optional value are often better choices.
 
 ## Why does `trcks` arrange its types, monads, and wrappers as `Awaitable` > `Result` > `tuple`?
@@ -30,8 +30,8 @@ It does not provide types, monads, or wrapper classes based on permutations
 such as `Result` > `Awaitable` > `tuple`.
 
 The reason is that the sequence `Awaitable` > `Result` > `tuple`
-mirrors the behavior of a tuple-returning and exception-raising
-asynchronous function in conventional Python.
+mirrors the behavior of a conventional asynchronous Python function
+that returns a tuple and raises exceptions.
 Each layer corresponds to one trait of such a function,
 and the outer-to-inner order matches the order
 in which the caller unwraps the value:
@@ -64,7 +64,7 @@ so `trcks` does not provide it.
     >>>
     >>> # The trcks equivalent returns the failure instead of raising it.
     >>> # Calling it returns an AwaitableResultTuple.
-    >>> # And awaiting that returns a ResultTuple:
+    >>> # Awaiting that returns a ResultTuple:
     >>> async def read_scores_rop(user_id: int) -> ResultTuple[str, int]:
     ...     await asyncio.sleep(0.001)
     ...     if user_id != 1:
@@ -98,13 +98,13 @@ Other type checkers may also work.
   and [typing.Literal][].
   You can create values as easily as `("failure", whatever_you_like)` or
   `("success", whatever_you_like)`.
-  No need for any `import`s here.
+  You do not need any imports for this.
   You can even avoid the import of [trcks.Result][] by
   importing `Literal` from `typing` and
   replacing `trcks.Result[F, S]` with
   `tuple[Literal["failure"], F] | tuple[Literal["success"], S]`.
 - **No logic in the type:**
-  As a type alias [trcks.Result][] does not contain any logic.
+  As a type alias, [trcks.Result][] contains no logic.
   This allows `trcks` to offer two distinct but equivalent APIs
   for working with the same [trcks.Result][] values:
   [trcks.fp][] and [trcks.oop][].
@@ -114,10 +114,10 @@ Other type checkers may also work.
   Class and method names in `trcks.oop` are descriptive and
   self-explanatory.
   Take [trcks.oop.TupleWrapper.map_to_awaitable_result][], for example.
-  Even inside `trcks.fp`, terminology coined in `trcks.oop` is preferred
-  over functional programming jargon
+  Even inside `trcks.fp`, `trcks` uses the terminology coined in
+  `trcks.oop` rather than functional programming jargon
   (e.g. [trcks.fp.monads.tuple_.map_to_awaitable_result][]).
-  This makes both the adoption of `trcks` and switching between `trcks.oop`
+  This makes adopting `trcks` and switching between `trcks.oop`
   and `trcks.fp` as easy as possible.
 - **Extra arguments, no boilerplate:**
   The `map*` and `tap*` functions in the modules under `trcks.fp.monads`
@@ -126,7 +126,7 @@ Other type checkers may also work.
   and forward them to the given function.
   Take [trcks.fp.monads.result.map_success][] and
   [trcks.oop.ResultWrapper.map_success][], for example.
-  So a lambda or `functools.partial` is not needed just to bind
+  You do not need a lambda or `functools.partial` merely to bind
   an extra argument.
 
 ## Which alternatives to `trcks` are there?
@@ -142,10 +142,12 @@ the [returns.result.Result][] container (and multiple other containers)
 for synchronous code and
 the [returns.future.Future][] and [returns.future.FutureResult][] containers
 for asynchronous code.
-Whereas the [returns.result.Result][] container serves the same purpose as
-[trcks.Result][], the [returns.future.Future][] container and the
-[returns.future.FutureResult][] container
-deviate from [collections.abc.Awaitable][] and [trcks.AwaitableResult][].
+The [returns.result.Result][] container serves the same purpose as
+[trcks.Result][].
+The [returns.future.Future][] container deviates from
+[collections.abc.Awaitable][], and the
+[returns.future.FutureResult][] container deviates from
+[trcks.AwaitableResult][].
 Further differences between `returns` and `trcks`:
 
 - `returns` offers
@@ -173,13 +175,13 @@ The `Result` type is the union of the `Ok` and `Error` case classes.
 The case classes combine the roles of
 [trcks.Result][] and [trcks.oop.ResultWrapper][].
 `Expression` works with standard type checkers such as `pyright`
-without plugins.
+and needs no plugins.
 
 ## Which libraries have inspired `trcks`?
 
-`trcks` is mostly inspired
-by the Python libraries mentioned in the previous section and
-by the TypeScript library [fp-ts](https://www.npmjs.com/package/fp-ts).
+The Python libraries mentioned in the previous section and
+the TypeScript library [fp-ts](https://www.npmjs.com/package/fp-ts)
+have inspired `trcks` the most.
 
 ## Where can I find examples for using `trcks`?
 
