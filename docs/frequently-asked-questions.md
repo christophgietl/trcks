@@ -151,18 +151,68 @@ Two widely used Python libraries for type-safe ROP are:
   By contrast, `trcks` works with plain `mypy`, `pyrefly`, and `pyright`.
   For asynchronous code, it provides the container classes
   [returns.future.Future][] and [returns.future.FutureResult][].
+  Further differences between `returns` and `trcks`:
+
+  - **Plain values:** Creating a value requires importing the
+    `Success` or `Failure` container class.
+    Checking a value requires importing `is_successful`.
+  - **Logic in the type:** All logic lives in the container classes.
+    The functions in `returns.pointfree` merely flip the calling order of
+    the container methods, and the do notation is a classmethod on the
+    container classes.
+    Both styles therefore remain coupled to the container classes.
+  - **Descriptive names:** `returns` uses functional programming jargon
+    throughout (e.g. `bind`, `alt`, `lash`, and `apply`).
+    The same concept also has different method names per container
+    (e.g. `bind_awaitable`, `bind_async`, and `bind_result`).
+  - **Extra arguments:** The `map`, `bind`, `alt`, and `lash` methods accept
+    exactly one function, and this function must accept exactly one argument.
+    Passing extra arguments to this function therefore requires a lambda
+    or partial application with `returns.curry.partial` or the `@curry`
+    decorator.
+    Both need the custom `mypy` plugin for correct typing.
 - The library [Expression](https://pypi.org/project/Expression/) brings
   F# features to Python, including optional values, immutable collections,
   and tagged unions.
   It models a result as a union of the container classes
   [expression.core.result.Ok][] and [expression.core.result.Error][],
   so creating a result value requires importing one of these classes.
+  Like [trcks.Result][], this union is a type alias.
+  The case classes also carry the literal values `"ok"` and `"error"`,
+  similar to the `"success"` and `"failure"` strings in `trcks` values.
+  In these two respects, `Expression` is closer to `trcks` than `returns` is.
   It offers a fluent and a functional syntax with nearly equivalent operations,
   and its function names follow F# conventions, for example `bind`.
   It works with standard type checkers such as `pyright` and needs no plugins.
   For asynchronous code, the effect builder [expression.effect.async_result][]
-  decorates an `async` generator, and awaiting the decorated function returns
-  a plain `Result` value.
+  builds on decorated async generators with `yield` statements, and awaiting
+  the decorated function returns a plain `Result` value.
+  It therefore deviates from [trcks.AwaitableResult][], which builds on
+  plain `async def` functions.
+  Further differences between `Expression` and `trcks`:
+
+  - **Plain values:** Creating a value requires importing the `Ok` or
+    `Error` case class.
+    Checking a value requires the `is_ok` method or pattern matching, and
+    extracting the payload requires the `merge` method.
+  - **Logic in the type:** All logic lives in the case classes.
+    They also implement the effect protocol:
+    awaiting an `Ok` value returns the unwrapped value, and awaiting or
+    iterating an `Error` value raises an `EffectError`.
+    The module-level functions (e.g. `expression.core.result.map`) merely
+    delegate to the case-class methods.
+  - **Descriptive names:** `Expression` aligns its naming with F# by design.
+    It uses functional programming jargon such as `bind`, `apply`, `map2`,
+    and `curry`.
+    The `Result` type uses `Ok` and `Error`, while the related `Try` type
+    uses `Success` and `Failure`.
+  - **Extra arguments:** The case-class methods accept exactly one
+    function, and this function must accept exactly one argument.
+    The opt-in `pipeable` helper accepts extra positional and keyword
+    arguments like the `map*` and `tap*` functions and methods of `trcks`,
+    but the case-class methods themselves never forward extra arguments.
+    The `curry` and `curry_flip` decorators offer partial application
+    as well.
 
 Both libraries represent failures and successes with container classes
 rather than with the plain type alias [trcks.Result][].
