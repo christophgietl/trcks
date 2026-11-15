@@ -155,12 +155,14 @@ Further differences between `returns` and `trcks`:
 [Expression](https://pypi.org/project/Expression/) supports
 object-oriented style ("fluent syntax") and
 functional style (like `trcks`).
-It provides the [expression.core.result.Result][] class
+It provides the [expression.core.result.Ok][] and
+[expression.core.result.Error][] case classes
 (and multiple other container classes)
 for synchronous code and
 the [expression.effect.async_result][] builder
 for asynchronous code.
-The [expression.core.result.Result][] class combines the roles of
+The `Result` type is the union of the `Ok` and `Error` case classes.
+The case classes combine the roles of
 [trcks.Result][] and [trcks.oop.ResultWrapper][].
 `Expression` works with standard type checkers such as `pyright`
 without plugins.
