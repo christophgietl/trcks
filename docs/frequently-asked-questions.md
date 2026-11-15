@@ -105,9 +105,9 @@ Other type checkers may also work.
   `tuple[Literal["failure"], F] | tuple[Literal["success"], S]`.
 - **No logic in the type:**
   As a type alias [trcks.Result][] does not contain any logic.
-  This allows the development of independent APIs for working with
-  the same [trcks.Result][] values.
-  Such APIs already exist: [trcks.fp][] and [trcks.oop][].
+  This allows `trcks` to offer two distinct but equivalent APIs
+  for working with the same [trcks.Result][] values:
+  [trcks.fp][] and [trcks.oop][].
 - **Descriptive names, no jargon:**
   `trcks` avoids functional programming jargon outside the `trcks.fp`
   subpackage.
