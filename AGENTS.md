@@ -53,7 +53,7 @@ must contain at least:
 ### Agent skill
 
 - located in [skills/trcks/](skills/trcks/) for discoverability
-- split into `skills/trcks/SKILL.md` and
+- split into [main file](skills/trcks/SKILL.md) and
   `skills/trcks/references/*.md` files (progressive disclosure)
 - included in the source distribution file and in the wheel file
   (in line with the [Library Skills](https://library-skills.io) standard)
