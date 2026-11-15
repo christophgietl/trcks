@@ -117,6 +117,8 @@ Other type checkers may also work.
   Even inside `trcks.fp`, terminology coined in `trcks.oop` is preferred
   over functional programming jargon
   (e.g. [trcks.fp.monads.tuple_.map_to_awaitable_result][]).
+  This makes both the adoption of `trcks` and switching between `trcks.oop`
+  and `trcks.fp` as easy as possible.
 - **Extra arguments, no boilerplate:**
   The `map*` and `tap*` functions in the modules under `trcks.fp.monads`
   and the `map*` and `tap*` methods of the wrapper classes in `trcks.oop`
@@ -126,9 +128,6 @@ Other type checkers may also work.
   [trcks.oop.ResultWrapper.map_success][], for example.
   So a lambda or `functools.partial` is not needed just to bind
   an extra argument.
-
-This makes both the adoption of `trcks` and switching between `trcks.oop`
-and `trcks.fp` as easy as possible.
 
 ## Which alternatives to `trcks` are there?
 
