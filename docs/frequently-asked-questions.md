@@ -1,6 +1,6 @@
 # Frequently asked questions (FAQs)
 
-This section answers some questions that might come to mind.
+This page answers some questions that might come to mind.
 
 ## Where can I learn more about railway-oriented programming (ROP)?
 
@@ -103,7 +103,7 @@ Other type checkers may also work.
   importing `Literal` from `typing` and
   replacing `trcks.Result[F, S]` with
   `tuple[Literal["failure"], F] | tuple[Literal["success"], S]`.
-- **No logic in the type, two equivalent APIs over the same values:**
+- **Two equivalent APIs, no logic in the type:**
   As a type alias, [trcks.Result][] contains no logic.
   All logic therefore lives outside the type, which allows `trcks` to offer
   two distinct but equivalent APIs:
