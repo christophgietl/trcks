@@ -103,13 +103,13 @@ Other type checkers may also work.
   importing `Literal` from `typing` and
   replacing `trcks.Result[F, S]` with
   `tuple[Literal["failure"], F] | tuple[Literal["success"], S]`.
-- **No logic in the type:**
+- **No logic in the type, two equivalent APIs:**
   As a type alias, [trcks.Result][] contains no logic.
   This allows `trcks` to offer two distinct but equivalent APIs
   for handling values of types [collections.abc.Awaitable][],
   [trcks.Result][], [tuple][], and combinations thereof:
   [trcks.oop][] offers a method chaining API, and
-  [trcks.fp][] offers higher-order functions.
+  [trcks.fp][] offers a higher-order function API.
 - **Descriptive names, no jargon:**
   `trcks` avoids functional programming jargon outside the [trcks.fp][]
   subpackage.
