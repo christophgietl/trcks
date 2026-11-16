@@ -108,7 +108,7 @@ Other type checkers may also work.
   All logic therefore lives outside the type, which allows `trcks` to offer
   two distinct but equivalent APIs:
   [trcks.oop][] offers a method chaining API, and
-  [trcks.fp][] offers a higher-order function API.
+  [trcks.fp][] offers a function composition API.
   Both APIs handle plain values and values of types
   [collections.abc.Awaitable][], [trcks.Result][],
   homogeneous [tuple][], and
