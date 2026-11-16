@@ -109,7 +109,8 @@ Other type checkers may also work.
   two distinct but equivalent APIs:
   [trcks.oop][] offers a method chaining API, and
   [trcks.fp][] offers a function composition API.
-  Both APIs handle plain values and values of types
+  Both APIs are comprehensive.
+  Each of them handles plain values and values of types
   [collections.abc.Awaitable][], [trcks.Result][],
   homogeneous [tuple][], and
   [combinations thereof](#why-does-trcks-arrange-its-types-monads-and-wrappers-as-awaitable-result-tuple).
