@@ -106,8 +106,10 @@ Other type checkers may also work.
 - **No logic in the type:**
   As a type alias, [trcks.Result][] contains no logic.
   This allows `trcks` to offer two distinct but equivalent APIs
-  for working with the same [trcks.Result][] values:
-  [trcks.fp][] and [trcks.oop][].
+  for handling values of types [collections.abc.Awaitable][],
+  [trcks.Result][], [tuple][], and combinations thereof:
+  [trcks.oop][] offers a method chaining API, and
+  [trcks.fp][] offers higher-order functions.
 - **Descriptive names, no jargon:**
   `trcks` avoids functional programming jargon outside the [trcks.fp][]
   subpackage.
