@@ -103,7 +103,7 @@ Other type checkers may also work.
   importing `Literal` from `typing` and
   replacing `trcks.Result[F, S]` with
   `tuple[Literal["failure"], F] | tuple[Literal["success"], S]`.
-- **No logic in the type, two equivalent APIs:**
+- **No logic in the type, two equivalent APIs over the same values:**
   As a type alias, [trcks.Result][] contains no logic.
   All logic therefore lives outside the type, which allows `trcks` to offer
   two distinct but equivalent APIs:
