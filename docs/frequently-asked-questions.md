@@ -108,7 +108,8 @@ Other type checkers may also work.
   This allows `trcks` to offer two distinct but equivalent APIs
   for handling plain values and values of types
   [collections.abc.Awaitable][], [trcks.Result][],
-  homogeneous [tuple][], and combinations thereof:
+  homogeneous [tuple][], and
+  [combinations thereof](#why-does-trcks-arrange-its-types-monads-and-wrappers-as-awaitable-result-tuple):
   [trcks.oop][] offers a method chaining API, and
   [trcks.fp][] offers a higher-order function API.
 - **Descriptive names, no jargon:**
