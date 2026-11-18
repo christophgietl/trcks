@@ -118,70 +118,58 @@ Other type checkers may also work.
   `trcks` avoids functional programming jargon outside the [trcks.fp][]
   subpackage.
   Class and method names in [trcks.oop][] are descriptive and
-  self-explanatory.
-  Take [trcks.oop.TupleWrapper.map_to_awaitable_result][], for example.
+  self-explanatory (e.g. [trcks.oop.TupleWrapper.map_to_awaitable_result][]).
   Even inside [trcks.fp][], `trcks` uses the terminology coined in
   [trcks.oop][] rather than functional programming jargon
   (e.g. [trcks.fp.monads.tuple_.map_to_awaitable_result][]).
   This makes adopting `trcks` and switching between [trcks.oop][]
   and [trcks.fp][] as easy as possible.
 - **Extra arguments, no boilerplate:**
-  The `map*` and `tap*` functions in the modules under [trcks.fp.monads][]
-  and the `map*` and `tap*` methods of the wrapper classes in [trcks.oop][]
-  accept extra positional and keyword arguments
-  and forward them to the given function.
-  Take [trcks.fp.monads.result.map_success][] and
-  [trcks.oop.ResultWrapper.map_success][], for example.
+  The `map*` and `tap*` functions in the [trcks.fp.monads][] subpackage and
+  the `map*` and `tap*` methods of the wrapper classes in [trcks.oop][]
+  accept extra positional and keyword arguments and forward them to the
+  given function (e.g. [trcks.fp.monads.result.map_success][] and
+  [trcks.oop.ResultWrapper.map_success][]).
   You do not need a lambda or [functools.partial][] merely to bind
   an extra argument.
 
 ## Which alternatives to `trcks` are there?
 
-Both of the following libraries represent failures and successes with
-container classes rather than with the plain type alias [trcks.Result][]
-(see the previous section).
+Two widely used Python libraries for type-safe ROP are:
 
-[returns](https://pypi.org/project/returns/) supports
-object-oriented style and functional style (like `trcks`).
-It provides
-the [returns.result.Result][] container (and multiple other containers)
-for synchronous code and
-the [returns.future.Future][] and [returns.future.FutureResult][] containers
-for asynchronous code.
-The [returns.result.Result][] container serves the same purpose as
-[trcks.Result][].
-The [returns.future.Future][] container deviates from
-[collections.abc.Awaitable][], and the
-[returns.future.FutureResult][] container deviates from
-[trcks.AwaitableResult][].
-Further differences between `returns` and `trcks`:
-
-- `returns` offers
+- The library [returns](https://pypi.org/project/returns/) models a result as
+  an instance of [returns.result.Success][] or [returns.result.Failure][],
+  so creating a result value requires importing a container class.
+  It offers method chaining plus an additional API for function composition
+  that covers fewer operations than the methods.
+  It also offers
   [do notation](https://returns.readthedocs.io/en/0.28.0/pages/do-notation.html)
   and
   [dependency injection](https://returns.readthedocs.io/en/0.28.0/pages/context.html).
-- The authors of `returns`
-  [recommend using `mypy`](https://returns.readthedocs.io/en/0.28.0/pages/quickstart.html#typechecking-and-other-integrations)
-  along with
-  [their suggested `mypy` configuration](https://returns.readthedocs.io/en/0.28.0/pages/contrib/mypy_plugins.html#configuration)
-  and
-  [their custom `mypy` plugin](https://returns.readthedocs.io/en/0.28.0/pages/contrib/mypy_plugins.html#mypy-plugin),
-  whereas `trcks` works with plain `mypy`, `pyrefly`, and `pyright`.
+  Its method names include functional programming jargon, for example `lash`,
+  and parts of its typing work correctly only with its dedicated `mypy` plugin.
+  By contrast, `trcks` works with plain `mypy`, `pyrefly`, and `pyright`.
+  For asynchronous code, it provides the container classes
+  [returns.future.Future][] and [returns.future.FutureResult][].
+- The library [Expression](https://pypi.org/project/Expression/) brings
+  F# features to Python, including optional values, immutable collections,
+  and tagged unions.
+  It models a result as a union of the container classes
+  [expression.core.result.Ok][] and [expression.core.result.Error][],
+  so creating a result value requires importing one of these classes.
+  It offers a fluent and a functional syntax with nearly equivalent operations,
+  and its function names follow F# conventions, for example `bind`.
+  It works with standard type checkers such as `pyright` and needs no plugins.
+  For asynchronous code, the effect builder [expression.effect.async_result][]
+  decorates an `async` generator, and awaiting the decorated function returns
+  a plain `Result` value.
 
-[Expression](https://pypi.org/project/Expression/) supports
-object-oriented style ("fluent syntax") and
-functional style (like `trcks`).
-It provides the [expression.core.result.Ok][] and
-[expression.core.result.Error][] case classes
-(and multiple other container classes)
-for synchronous code and
-the [expression.effect.async_result][] builder
-for asynchronous code.
-The `Result` type is the union of the `Ok` and `Error` case classes.
-The case classes combine the roles of
-[trcks.Result][] and [trcks.oop.ResultWrapper][].
-`Expression` works with standard type checkers such as `pyright`
-and needs no plugins.
+Both libraries represent failures and successes with container classes
+rather than with the plain type alias [trcks.Result][].
+The same contrast applies to asynchronous code:
+`trcks` models it with plain type aliases such as [trcks.AwaitableResult][].
+For the main differences between `trcks` and these two libraries, see
+[the previous section](#what-makes-trcks-different-from-other-python-libraries-for-type-safe-rop).
 
 ## Which libraries have inspired `trcks`?
 
