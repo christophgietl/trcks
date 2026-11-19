@@ -119,9 +119,9 @@ style using function composition:
 
 ???+ note
     If you type-check your code with `mypy`, `mypy` may fail to infer the
-    type arguments of [trcks.fp.composition.pipe][] calls that pass results
-    of generic `map*` or `tap*` helper functions.
-    In this case, gather all arguments for [trcks.fp.composition.pipe][]
+    type arguments of [`pipe`][trcks.fp.composition.pipe] calls that pass
+    results of generic `map*` or `tap*` helper functions.
+    In this case, gather all arguments for [`pipe`][trcks.fp.composition.pipe]
     in a variable annotated with
     an appropriate `trcks.fp.composition.Pipeline*` type, and pass that
-    variable to [trcks.fp.composition.pipe][] with unpacking.
+    variable to [`pipe`][trcks.fp.composition.pipe] with unpacking.
