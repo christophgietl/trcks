@@ -30,7 +30,8 @@ Write instead:
 
 ## Keep cross-references out of headings
 
-Write headings with plain code spans (e.g. `## Single-track code with \`trcks.oop.Wrapper\``).
+Write headings with plain code spans
+(e.g. `` ## Single-track code with `trcks.oop.Wrapper` ``).
 Do not use cross-references (e.g. `` [`Wrapper`][trcks.oop.Wrapper] ``) inside headings.
 rumdl and mkdocs compute different slug anchors for headings that contain
 cross-references, so such headings cannot satisfy both tools at once.
