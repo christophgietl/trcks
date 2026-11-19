@@ -69,8 +69,7 @@ def map_(
 
     Returns:
         Maps homogeneous [`tuple`][tuple]s to homogeneous [`tuple`][tuple]s of the same
-            length
-            according to the given function.
+            length according to the given function.
 
     Note:
         The underscore in the function name helps to avoid collisions
@@ -109,8 +108,7 @@ def map_to_iterable(
 
     Returns:
         Maps homogeneous [`tuple`][tuple]s to homogeneous [`tuple`][tuple]s of varying
-            length
-            according to the given function.
+            length according to the given function.
 
     Examples:
         >>> from collections.abc import Callable
@@ -149,8 +147,7 @@ def tap(
 
     Returns:
         Applies the given side effect to each element of a homogeneous [`tuple`][tuple]
-            and
-            returns the original homogeneous [`tuple`][tuple].
+            and returns the original homogeneous [`tuple`][tuple].
 
     Examples:
         >>> from collections.abc import Callable

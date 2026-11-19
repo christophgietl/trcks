@@ -393,9 +393,8 @@ def map_failure_to_result_iterable(
 
     Returns:
         Maps [`Failure`][trcks.Failure] values to new [`ResultTuple`][trcks.ResultTuple]
-            values
-            according to the given function and
-            leaves [`Success`][trcks.Success] values (wrapped as a tuple) unchanged.
+            values according to the given function and leaves [`Success`][trcks.Success]
+            values (wrapped as a tuple) unchanged.
 
     Examples:
         >>> from trcks import ResultTuple
@@ -935,8 +934,7 @@ def tap_failure_to_iterable(
 
     Returns:
         Applies the given side effect to [`Failure`][trcks.Failure] values and converts
-            them
-            to [`SuccessTuple`][trcks.SuccessTuple] values containing the original
+            them to [`SuccessTuple`][trcks.SuccessTuple] values containing the original
             failure repeated once per element in the
             [`Iterable`][collections.abc.Iterable] returned by the side effect. Passes
             on [`Success`][trcks.Success] values (wrapped as a tuple) without side
@@ -1183,9 +1181,8 @@ def tap_success_to_awaitable_result_iterable(
 
     Returns:
         Passes on [`Failure`][trcks.Failure] values (wrapped as a tuple) without side
-            effects.
-            Applies the given side effect to [`Success`][trcks.Success] values. If the
-            given side effect returns a [`Failure`][trcks.Failure], *this*
+            effects. Applies the given side effect to [`Success`][trcks.Success] values.
+            If the given side effect returns a [`Failure`][trcks.Failure], *this*
             [`Failure`][trcks.Failure] is returned. If the given side effect returns a
             [`SuccessIterable`][trcks.SuccessIterable], *the original*
             [`Success`][trcks.Success] value is repeated once per element in the
@@ -1254,9 +1251,8 @@ def tap_success_to_iterable(
 
     Returns:
         Passes on [`Failure`][trcks.Failure] values (wrapped as a tuple) without side
-            effects.
-            Applies the given side effect to [`Success`][trcks.Success] values and
-            repeats the original element once per element in the
+            effects. Applies the given side effect to [`Success`][trcks.Success] values
+            and repeats the original element once per element in the
             [`Iterable`][collections.abc.Iterable] returned by the side effect.
 
     Examples:
@@ -1304,9 +1300,8 @@ def tap_success_to_result_iterable(
 
     Returns:
         Passes on [`Failure`][trcks.Failure] values (wrapped as a tuple) without side
-            effects.
-            Applies the given side effect to [`Success`][trcks.Success] values. If the
-            given side effect returns a [`Failure`][trcks.Failure], *this*
+            effects. Applies the given side effect to [`Success`][trcks.Success] values.
+            If the given side effect returns a [`Failure`][trcks.Failure], *this*
             [`Failure`][trcks.Failure] is returned. If the given side effect returns a
             [`SuccessIterable`][trcks.SuccessIterable], *the original*
             [`Success`][trcks.Success] value is repeated once per element in the

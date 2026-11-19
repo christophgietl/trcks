@@ -73,8 +73,7 @@ class AwaitableTupleWrapper(BaseAwaitableWrapper[tuple[_T_co, ...]]):
 
         Returns:
             A new [`AwaitableTupleWrapper`][trcks.oop.AwaitableTupleWrapper] instance
-                with
-                the wrapped [`AwaitableTuple`][trcks.AwaitableTuple] object.
+                with the wrapped [`AwaitableTuple`][trcks.AwaitableTuple] object.
 
         Examples:
             >>> import asyncio
@@ -100,8 +99,7 @@ class AwaitableTupleWrapper(BaseAwaitableWrapper[tuple[_T_co, ...]]):
 
         Returns:
             A new [`AwaitableTupleWrapper`][trcks.oop.AwaitableTupleWrapper] instance
-                with
-                the wrapped [`AwaitableTuple`][trcks.AwaitableTuple] object.
+                with the wrapped [`AwaitableTuple`][trcks.AwaitableTuple] object.
 
         Examples:
             >>> import asyncio
@@ -135,8 +133,7 @@ class AwaitableTupleWrapper(BaseAwaitableWrapper[tuple[_T_co, ...]]):
 
         Returns:
             A new [`AwaitableTupleWrapper`][trcks.oop.AwaitableTupleWrapper] instance
-                with
-                the wrapped [`AwaitableTuple`][trcks.AwaitableTuple] object.
+                with the wrapped [`AwaitableTuple`][trcks.AwaitableTuple] object.
 
         Examples:
             >>> import asyncio
@@ -181,8 +178,7 @@ class AwaitableTupleWrapper(BaseAwaitableWrapper[tuple[_T_co, ...]]):
 
         Returns:
             A new [`AwaitableTupleWrapper`][trcks.oop.AwaitableTupleWrapper] instance
-                with
-                the wrapped [`AwaitableTuple`][trcks.AwaitableTuple] object.
+                with the wrapped [`AwaitableTuple`][trcks.AwaitableTuple] object.
 
         Examples:
             >>> import asyncio
@@ -229,9 +225,8 @@ class AwaitableTupleWrapper(BaseAwaitableWrapper[tuple[_T_co, ...]]):
 
         Returns:
             A new [`AwaitableTupleWrapper`][trcks.oop.AwaitableTupleWrapper] instance
-                with
-                the wrapped [`AwaitableTuple`][trcks.AwaitableTuple] object containing
-                the results of applying the function to each element.
+                with the wrapped [`AwaitableTuple`][trcks.AwaitableTuple] object
+                containing the results of applying the function to each element.
 
         Examples:
             >>> import asyncio
@@ -270,9 +265,8 @@ class AwaitableTupleWrapper(BaseAwaitableWrapper[tuple[_T_co, ...]]):
 
         Returns:
             A new [`AwaitableTupleWrapper`][trcks.oop.AwaitableTupleWrapper] instance
-                with
-                the wrapped [`AwaitableTuple`][trcks.AwaitableTuple] object containing
-                the results of applying the function to each element.
+                with the wrapped [`AwaitableTuple`][trcks.AwaitableTuple] object
+                containing the results of applying the function to each element.
 
         Examples:
             >>> import asyncio
@@ -316,8 +310,7 @@ class AwaitableTupleWrapper(BaseAwaitableWrapper[tuple[_T_co, ...]]):
 
         Returns:
             A new [`AwaitableTupleWrapper`][trcks.oop.AwaitableTupleWrapper] instance
-                with
-                the flattened [`AwaitableTuple`][trcks.AwaitableTuple] object.
+                with the flattened [`AwaitableTuple`][trcks.AwaitableTuple] object.
 
         Examples:
             >>> import asyncio
@@ -524,8 +517,7 @@ class AwaitableTupleWrapper(BaseAwaitableWrapper[tuple[_T_co, ...]]):
 
         Returns:
             A new [`AwaitableTupleWrapper`][trcks.oop.AwaitableTupleWrapper] instance
-                with
-                the flattened [`AwaitableTuple`][trcks.AwaitableTuple] object.
+                with the flattened [`AwaitableTuple`][trcks.AwaitableTuple] object.
 
         Examples:
             >>> import asyncio
@@ -725,8 +717,7 @@ class AwaitableTupleWrapper(BaseAwaitableWrapper[tuple[_T_co, ...]]):
 
         Returns:
             A new [`AwaitableTupleWrapper`][trcks.oop.AwaitableTupleWrapper] instance
-                with
-                the original [`AwaitableTuple`][trcks.AwaitableTuple] object.
+                with the original [`AwaitableTuple`][trcks.AwaitableTuple] object.
 
         Examples:
             >>> import asyncio
@@ -767,8 +758,7 @@ class AwaitableTupleWrapper(BaseAwaitableWrapper[tuple[_T_co, ...]]):
 
         Returns:
             A new [`AwaitableTupleWrapper`][trcks.oop.AwaitableTupleWrapper] instance
-                with
-                the original [`AwaitableTuple`][trcks.AwaitableTuple] object.
+                with the original [`AwaitableTuple`][trcks.AwaitableTuple] object.
 
         Examples:
             >>> import asyncio
@@ -814,8 +804,7 @@ class AwaitableTupleWrapper(BaseAwaitableWrapper[tuple[_T_co, ...]]):
 
         Returns:
             A new [`AwaitableTupleWrapper`][trcks.oop.AwaitableTupleWrapper] instance
-                with
-                the original [`AwaitableTuple`][trcks.AwaitableTuple] object.
+                with the original [`AwaitableTuple`][trcks.AwaitableTuple] object.
 
         Examples:
             >>> import asyncio
@@ -1030,8 +1019,7 @@ class AwaitableTupleWrapper(BaseAwaitableWrapper[tuple[_T_co, ...]]):
 
         Returns:
             A new [`AwaitableTupleWrapper`][trcks.oop.AwaitableTupleWrapper] instance
-                with
-                the original [`AwaitableTuple`][trcks.AwaitableTuple] object.
+                with the original [`AwaitableTuple`][trcks.AwaitableTuple] object.
 
         Examples:
             >>> import asyncio

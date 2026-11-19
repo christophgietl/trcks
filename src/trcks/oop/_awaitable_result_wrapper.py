@@ -87,8 +87,7 @@ class AwaitableResultWrapper(
 
         Returns:
             A new [`AwaitableResultWrapper`][trcks.oop.AwaitableResultWrapper] instance
-                with
-                the wrapped [`AwaitableResult`][trcks.AwaitableResult] object.
+                with the wrapped [`AwaitableResult`][trcks.AwaitableResult] object.
 
         Examples:
             >>> import asyncio
@@ -116,8 +115,7 @@ class AwaitableResultWrapper(
 
         Returns:
             A new [`AwaitableResultWrapper`][trcks.oop.AwaitableResultWrapper] instance
-                with
-                the wrapped [`AwaitableResult`][trcks.AwaitableResult] object.
+                with the wrapped [`AwaitableResult`][trcks.AwaitableResult] object.
 
         Examples:
             >>> import asyncio
@@ -151,8 +149,7 @@ class AwaitableResultWrapper(
 
         Returns:
             A new [`AwaitableResultWrapper`][trcks.oop.AwaitableResultWrapper] instance
-                with
-                the wrapped [`AwaitableResult`][trcks.AwaitableResult] object.
+                with the wrapped [`AwaitableResult`][trcks.AwaitableResult] object.
 
         Examples:
             >>> import asyncio
@@ -187,8 +184,7 @@ class AwaitableResultWrapper(
 
         Returns:
             A new [`AwaitableResultWrapper`][trcks.oop.AwaitableResultWrapper] instance
-                with
-                the wrapped [`AwaitableResult`][trcks.AwaitableResult] object.
+                with the wrapped [`AwaitableResult`][trcks.AwaitableResult] object.
 
         Examples:
             >>> import asyncio
@@ -214,8 +210,7 @@ class AwaitableResultWrapper(
 
         Returns:
             A new [`AwaitableResultWrapper`][trcks.oop.AwaitableResultWrapper] instance
-                with
-                the wrapped [`AwaitableResult`][trcks.AwaitableResult] object.
+                with the wrapped [`AwaitableResult`][trcks.AwaitableResult] object.
 
         Examples:
             >>> import asyncio
@@ -241,8 +236,7 @@ class AwaitableResultWrapper(
 
         Returns:
             A new [`AwaitableResultWrapper`][trcks.oop.AwaitableResultWrapper] instance
-                with
-                the wrapped [`AwaitableResult`][trcks.AwaitableResult] object.
+                with the wrapped [`AwaitableResult`][trcks.AwaitableResult] object.
 
         Examples:
             >>> import asyncio

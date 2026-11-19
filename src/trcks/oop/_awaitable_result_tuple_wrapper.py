@@ -1722,9 +1722,9 @@ class AwaitableResultTupleWrapper(
 
         Returns:
             A new [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
-                instance
-                with the original [`AwaitableResultTuple`][trcks.AwaitableResultTuple]
-                object, allowing for further method chaining.
+                instance with the original
+                [`AwaitableResultTuple`][trcks.AwaitableResultTuple] object, allowing
+                for further method chaining.
 
         Examples:
             >>> import asyncio
@@ -1777,9 +1777,9 @@ class AwaitableResultTupleWrapper(
 
         Returns:
             A new [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
-                instance
-                with the original [`AwaitableResultTuple`][trcks.AwaitableResultTuple]
-                object, allowing for further method chaining.
+                instance with the original
+                [`AwaitableResultTuple`][trcks.AwaitableResultTuple] object, allowing
+                for further method chaining.
 
         Examples:
             >>> import asyncio
@@ -2345,9 +2345,9 @@ class AwaitableResultTupleWrapper(
 
         Returns:
             A new [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
-                instance
-                with the original [`AwaitableResultTuple`][trcks.AwaitableResultTuple]
-                object, allowing for further method chaining.
+                instance with the original
+                [`AwaitableResultTuple`][trcks.AwaitableResultTuple] object, allowing
+                for further method chaining.
 
         Examples:
             >>> import asyncio
@@ -2402,9 +2402,9 @@ class AwaitableResultTupleWrapper(
 
         Returns:
             A new [`AwaitableResultTupleWrapper`][trcks.oop.AwaitableResultTupleWrapper]
-                instance
-                with the original [`AwaitableResultTuple`][trcks.AwaitableResultTuple]
-                object, allowing for further method chaining.
+                instance with the original
+                [`AwaitableResultTuple`][trcks.AwaitableResultTuple] object, allowing
+                for further method chaining.
 
         Examples:
             >>> import asyncio

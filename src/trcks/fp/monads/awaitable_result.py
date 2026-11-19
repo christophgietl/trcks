@@ -281,9 +281,8 @@ def map_failure_to_result_iterable(
 
     Returns:
         Maps [`Failure`][trcks.Failure] values to new [`ResultTuple`][trcks.ResultTuple]
-            values
-            according to the given function and
-            leaves [`Success`][trcks.Success] values unchanged (wrapped as a tuple).
+            values according to the given function and leaves [`Success`][trcks.Success]
+            values unchanged (wrapped as a tuple).
 
     Examples:
         >>> import asyncio
@@ -622,12 +621,11 @@ def tap_failure_to_iterable(
 
     Returns:
         Applies the given side effect to [`Failure`][trcks.Failure] values and converts
-            them
-            to [`AwaitableSuccessTuple`][trcks.AwaitableSuccessTuple] values containing
-            the original failure repeated once per element
-            in the [`Iterable`][collections.abc.Iterable] returned by the side effect.
-            Passes on [`Success`][trcks.Success] values (wrapped as a tuple)
-            without side effects.
+            them to [`AwaitableSuccessTuple`][trcks.AwaitableSuccessTuple] values
+            containing the original failure repeated once per element in the
+            [`Iterable`][collections.abc.Iterable] returned by the side effect. Passes
+            on [`Success`][trcks.Success] values (wrapped as a tuple) without side
+            effects.
 
     Examples:
         >>> import asyncio

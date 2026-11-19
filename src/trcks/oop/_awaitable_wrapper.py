@@ -232,8 +232,7 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
 
         Returns:
             A new [`AwaitableTupleWrapper`][trcks.oop.AwaitableTupleWrapper] instance
-                with
-                the result of the function application.
+                with the result of the function application.
 
         Examples:
             >>> import asyncio
@@ -403,8 +402,7 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
 
         Returns:
             A new [`AwaitableTupleWrapper`][trcks.oop.AwaitableTupleWrapper] instance
-                with
-                the result of the function application.
+                with the result of the function application.
 
         Examples:
             >>> import asyncio
@@ -633,9 +631,8 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
 
         Returns:
             A new [`AwaitableTupleWrapper`][trcks.oop.AwaitableTupleWrapper] instance
-                with
-                the original awaitable wrapped object repeated
-                according to the number of items returned by the side effect.
+                with the original awaitable wrapped object repeated according to the
+                number of items returned by the side effect.
 
         Examples:
             >>> import asyncio
@@ -826,9 +823,8 @@ class AwaitableWrapper(BaseAwaitableWrapper[_T_co]):
 
         Returns:
             A new [`AwaitableTupleWrapper`][trcks.oop.AwaitableTupleWrapper] instance
-                with
-                the original awaitable wrapped object repeated
-                according to the number of items returned by the side effect.
+                with the original awaitable wrapped object repeated according to the
+                number of items returned by the side effect.
 
         Examples:
             >>> import asyncio

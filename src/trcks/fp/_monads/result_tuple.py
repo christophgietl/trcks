@@ -295,9 +295,8 @@ def map_failure_to_result_iterable(
 
     Returns:
         Maps [`Failure`][trcks.Failure] values to new [`ResultTuple`][trcks.ResultTuple]
-            values
-            according to the given function and
-            leaves [`SuccessTuple`][trcks.SuccessTuple] values unchanged.
+            values according to the given function and leaves
+            [`SuccessTuple`][trcks.SuccessTuple] values unchanged.
 
     Examples:
         >>> from collections.abc import Callable
@@ -592,8 +591,7 @@ def tap_failure_to_iterable(
 
     Returns:
         Applies the given side effect to [`Failure`][trcks.Failure] values and converts
-            them
-            to [`SuccessTuple`][trcks.SuccessTuple] values containing the original
+            them to [`SuccessTuple`][trcks.SuccessTuple] values containing the original
             failure repeated once per element in the
             [`Iterable`][collections.abc.Iterable] returned by the side effect. Passes
             on [`SuccessTuple`][trcks.SuccessTuple] values without side effects.

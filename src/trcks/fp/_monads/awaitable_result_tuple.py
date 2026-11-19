@@ -796,8 +796,7 @@ def map_successes(
 
     Returns:
         Function that transforms [`AwaitableSuccessTuple`][trcks.AwaitableSuccessTuple]
-            values
-            element-wise.
+            values element-wise.
 
     Examples:
         >>> import asyncio
@@ -838,8 +837,7 @@ def map_successes_to_awaitable(
 
     Returns:
         Function that transforms [`AwaitableSuccessTuple`][trcks.AwaitableSuccessTuple]
-            values
-            element-wise using the given asynchronous function.
+            values element-wise using the given asynchronous function.
 
     Examples:
         >>> import asyncio
@@ -885,8 +883,7 @@ def map_successes_to_awaitable_iterable(
 
     Returns:
         Function that flat-maps [`AwaitableSuccessTuple`][trcks.AwaitableSuccessTuple]
-            values
-            element-wise using the given asynchronous function.
+            values element-wise using the given asynchronous function.
 
     Examples:
         >>> import asyncio
@@ -1405,8 +1402,7 @@ def tap_failure_to_awaitable_result(
 
     Returns:
         Applies the given side effect to [`AwaitableFailure`][trcks.AwaitableFailure]
-            values.
-            If the given side effect returns an
+            values. If the given side effect returns an
             [`AwaitableFailure`][trcks.AwaitableFailure], *the original*
             [`AwaitableFailure`][trcks.AwaitableFailure] value is returned. If the given
             side effect returns an [`AwaitableSuccess`][trcks.AwaitableSuccess], *this*
@@ -1477,8 +1473,7 @@ def tap_failure_to_awaitable_result_iterable(
 
     Returns:
         Applies the given side effect to [`AwaitableFailure`][trcks.AwaitableFailure]
-            values.
-            If the given side effect returns an
+            values. If the given side effect returns an
             [`AwaitableFailure`][trcks.AwaitableFailure], *the original*
             [`AwaitableFailure`][trcks.AwaitableFailure] value is returned. If the given
             side effect returns an
@@ -1612,8 +1607,7 @@ def tap_failure_to_result(
 
     Returns:
         Applies the given side effect to [`AwaitableFailure`][trcks.AwaitableFailure]
-            values.
-            If the given side effect returns a [`Failure`][trcks.Failure], *the
+            values. If the given side effect returns a [`Failure`][trcks.Failure], *the
             original* [`AwaitableFailure`][trcks.AwaitableFailure] value is returned. If
             the given side effect returns a [`Success`][trcks.Success], *this*
             [`Success`][trcks.Success] is returned (wrapped as a tuple). Passes on
@@ -1670,8 +1664,7 @@ def tap_failure_to_result_iterable(
 
     Returns:
         Applies the given side effect to [`AwaitableFailure`][trcks.AwaitableFailure]
-            values.
-            If the given side effect returns a [`Failure`][trcks.Failure], *the
+            values. If the given side effect returns a [`Failure`][trcks.Failure], *the
             original* [`AwaitableFailure`][trcks.AwaitableFailure] value is returned. If
             the given side effect returns a [`SuccessIterable`][trcks.SuccessIterable],
             *this* [`SuccessIterable`][trcks.SuccessIterable] is returned as a

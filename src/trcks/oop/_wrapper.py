@@ -458,8 +458,7 @@ class Wrapper(BaseWrapper[_T_co]):
 
         Returns:
             A new [`Wrapper`][trcks.oop.Wrapper] instance with the original wrapped
-                object,
-                allowing for further method chaining.
+                object, allowing for further method chaining.
 
         Examples:
             >>> wrapper = Wrapper.construct(5).tap(lambda n: print(f"Number: {n}"))
@@ -721,8 +720,7 @@ class Wrapper(BaseWrapper[_T_co]):
 
         Returns:
             A [`TupleWrapper`][trcks.oop.TupleWrapper] instance with the original
-                wrapped
-                object repeated once per item returned by the side effect.
+                wrapped object repeated once per item returned by the side effect.
 
         Examples:
             >>> from trcks.oop import Wrapper
