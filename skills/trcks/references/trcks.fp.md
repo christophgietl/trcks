@@ -8,13 +8,13 @@ based on function composition.
 
 A `Pipeline` is a tuple consisting of a start value followed by up to
 seven compatible functions.
-Use `trcks.fp.composition.pipe` to evaluate a `Pipeline`,
-applying the functions sequentially from first to last:
+Use `trcks.fp.composition.pipe` to apply the functions sequentially
+from first to last to the start value:
 
 ```pycon
 >>> from trcks.fp.composition import pipe
 >>> def to_length_string(s: str) -> str:
-...     return pipe((s, len, lambda n: f"Length: {n}"))
+...     return pipe(s, len, lambda n: f"Length: {n}")
 >>> to_length_string("Hello, world!")
 'Length: 13'
 
@@ -24,22 +24,23 @@ The type aliases `Pipeline0`, `Pipeline1`, ..., `Pipeline7` describe
 `Pipeline` tuples of a fixed length,
 and the type alias `Pipeline` combines all of them.
 If your static type checker cannot infer the type of a `Pipeline`,
-assign one of these type aliases to the tuple explicitly:
+assign one of these type aliases to the tuple explicitly,
+and pass it to `pipe` with the unpacking operator:
 
 ```pycon
 >>> from trcks.fp.composition import Pipeline0, Pipeline1, Pipeline2
 >>> p0: Pipeline0[str] = ("Hello, world!",)
->>> pipe(p0)
+>>> pipe(*p0)
 'Hello, world!'
 >>> p1: Pipeline1[str, int] = ("Hello, world!", len)
->>> pipe(p1)
+>>> pipe(*p1)
 13
 >>> p2: Pipeline2[str, int, str] = (
 ...     "Hello, world!",
 ...     len,
 ...     lambda n: f"Length: {n}",
 ... )
->>> pipe(p2)
+>>> pipe(*p2)
 'Length: 13'
 
 ```
@@ -508,7 +509,7 @@ continue on the async track:
 ...         a.map_(transform),
 ...         a.tap_to_awaitable(write_to_disk),
 ...     )
-...     return await pipe(p)
+...     return await pipe(*p)
 >>> asyncio.run(read_and_transform_and_write("input.txt"))
 Wrote 'Length: 13' to disk.
 'Length: 13'
@@ -530,11 +531,9 @@ continue with asynchronous, `trcks.Result`-returning functions:
 ...     return "success", x**0.5
 >>> async def get_square_root_of_valid_number(n: int) -> Result[str, float]:
 ...     return await pipe(
-...         (
-...             validate(n),
-...             ar.construct_from_result,
-...             ar.map_success_to_awaitable_result(get_square_root),
-...         )
+...         validate(n),
+...         ar.construct_from_result,
+...         ar.map_success_to_awaitable_result(get_square_root),
 ...     )
 >>> asyncio.run(get_square_root_of_valid_number(25))
 ('success', 5.0)

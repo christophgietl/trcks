@@ -147,7 +147,7 @@ from a `collections.abc.Iterable` and wrap it:
 
 ```pycon
 >>> print(inspect.signature(TupleWrapper.construct_from_iterable))
-(it: 'Iterable[_T]') -> 'TupleWrapper[_T]'
+(it: 'Iterable[_T]', /) -> 'TupleWrapper[_T]'
 >>> TupleWrapper.construct_from_iterable([1, 2, 3])
 TupleWrapper(core=(1, 2, 3))
 
@@ -159,15 +159,15 @@ to construct a `trcks.ResultTuple` and wrap it:
 
 ```pycon
 >>> print(inspect.signature(ResultTupleWrapper.construct_from_result))
-(rslt: 'Result[_F_default, _S_default]') -> 'ResultTupleWrapper[_F_default, _S_default]'
+(rslt: 'Result[_F_default, _S_default]', /) -> 'ResultTupleWrapper[_F_default, _S_default]'
 >>> ResultTupleWrapper.construct_from_result(("success", 42))
 ResultTupleWrapper(core=('success', (42,)))
 >>> print(inspect.signature(ResultTupleWrapper.construct_from_result_iterable))
-(r_it: 'ResultIterable[_F_default, _S_default]') -> 'ResultTupleWrapper[_F_default, _S_default]'
+(r_it: 'ResultIterable[_F_default, _S_default]', /) -> 'ResultTupleWrapper[_F_default, _S_default]'
 >>> ResultTupleWrapper.construct_from_result_iterable(("success", [42, 43]))
 ResultTupleWrapper(core=('success', (42, 43)))
 >>> print(inspect.signature(ResultTupleWrapper.construct_successes_from_iterable))
-(it: 'Iterable[_S]') -> 'ResultTupleWrapper[Never, _S]'
+(it: 'Iterable[_S]', /) -> 'ResultTupleWrapper[Never, _S]'
 >>> ResultTupleWrapper.construct_successes_from_iterable([42, 43])
 ResultTupleWrapper(core=('success', (42, 43)))
 
@@ -179,7 +179,7 @@ Use `Wrapper.map` to apply a function to the wrapped value and wrap the output:
 
 ```pycon
 >>> print(inspect.signature(Wrapper.map))
-(self, f: 'Callable[Concatenate[_T_co, _P], _T]', *args: '_P.args', **kwargs: '_P.kwargs') -> 'Wrapper[_T]'
+(self, callable_: 'Callable[Concatenate[_T_co, _P], _T]', /, *args: '_P.args', **kwargs: '_P.kwargs') -> 'Wrapper[_T]'
 >>> Wrapper(core="Hello, world!").map(len)
 Wrapper(core=13)
 >>> # `map` methods pass additional arguments to the applied function:
@@ -193,13 +193,13 @@ to apply functions to the failure or success value of a result and wrap the outp
 
 ```pycon
 >>> print(inspect.signature(ResultWrapper.map_failure))
-(self, f: 'Callable[Concatenate[_F_default_co, _P], _F]', *args: '_P.args', **kwargs: '_P.kwargs') -> 'ResultWrapper[_F, _S_default_co]'
+(self, callable_: 'Callable[Concatenate[_F_default_co, _P], _F]', /, *args: '_P.args', **kwargs: '_P.kwargs') -> 'ResultWrapper[_F, _S_default_co]'
 >>> ResultWrapper.construct_failure("negative value").map_failure(lambda s: f"Prefix: {s}")
 ResultWrapper(core=('failure', 'Prefix: negative value'))
 >>> ResultWrapper.construct_success(42).map_failure(lambda s: f"Prefix: {s}")
 ResultWrapper(core=('success', 42))
 >>> print(inspect.signature(ResultWrapper.map_success))
-(self, f: 'Callable[Concatenate[_S_default_co, _P], _S]', *args: '_P.args', **kwargs: '_P.kwargs') -> 'ResultWrapper[_F_default_co, _S]'
+(self, callable_: 'Callable[Concatenate[_S_default_co, _P], _S]', /, *args: '_P.args', **kwargs: '_P.kwargs') -> 'ResultWrapper[_F_default_co, _S]'
 >>> ResultWrapper.construct_failure("negative value").map_success(lambda n: n + 1)
 ResultWrapper(core=('failure', 'negative value'))
 >>> ResultWrapper.construct_success(42).map_success(lambda n: n + 1)
@@ -212,7 +212,7 @@ tuple and wrap the output:
 
 ```pycon
 >>> print(inspect.signature(TupleWrapper.map))
-(self, f: 'Callable[Concatenate[_T_co, _P], _T]', *args: '_P.args', **kwargs: '_P.kwargs') -> 'TupleWrapper[_T]'
+(self, callable_: 'Callable[Concatenate[_T_co, _P], _T]', /, *args: '_P.args', **kwargs: '_P.kwargs') -> 'TupleWrapper[_T]'
 >>> TupleWrapper.construct_from_iterable(("a", "bb", "ccc")).map(len)
 TupleWrapper(core=(1, 2, 3))
 
@@ -224,11 +224,11 @@ wrap the output:
 
 ```pycon
 >>> print(inspect.signature(ResultTupleWrapper.map_failure))
-(self, f: 'Callable[Concatenate[_F_default_co, _P], _F]', *args: '_P.args', **kwargs: '_P.kwargs') -> 'ResultTupleWrapper[_F, _S_default_co]'
+(self, callable_: 'Callable[Concatenate[_F_default_co, _P], _F]', /, *args: '_P.args', **kwargs: '_P.kwargs') -> 'ResultTupleWrapper[_F, _S_default_co]'
 >>> ResultTupleWrapper.construct_failure("not found").map_failure(lambda s: f"err: {s}")
 ResultTupleWrapper(core=('failure', 'err: not found'))
 >>> print(inspect.signature(ResultTupleWrapper.map_successes))
-(self, f: 'Callable[Concatenate[_S_default_co, _P], _S]', *args: '_P.args', **kwargs: '_P.kwargs') -> 'ResultTupleWrapper[_F_default_co, _S]'
+(self, callable_: 'Callable[Concatenate[_S_default_co, _P], _S]', /, *args: '_P.args', **kwargs: '_P.kwargs') -> 'ResultTupleWrapper[_F_default_co, _S]'
 >>> ResultTupleWrapper.construct_successes_from_iterable((1, 2, 3)).map_successes(
 ...     lambda n: n * 2
 ... )
@@ -243,7 +243,7 @@ to the wrapped value and wrap the output:
 
 ```pycon
 >>> print(inspect.signature(Wrapper.map_to_result))
-(self, f: 'Callable[Concatenate[_T_co, _P], Result[_F, _S]]', *args: '_P.args', **kwargs: '_P.kwargs') -> 'ResultWrapper[_F, _S]'
+(self, callable_: 'Callable[Concatenate[_T_co, _P], Result[_F, _S]]', /, *args: '_P.args', **kwargs: '_P.kwargs') -> 'ResultWrapper[_F, _S]'
 >>> Wrapper.construct(-1).map_to_result(
 ...     lambda n: ("success", n) if n >= 0 else ("failure", "negative value")
 ... )
@@ -256,7 +256,7 @@ a `collections.abc.Iterable` to the wrapped value and wrap the output:
 
 ```pycon
 >>> print(inspect.signature(Wrapper.map_to_iterable))
-(self, f: 'Callable[Concatenate[_T_co, _P], Iterable[_T]]', *args: '_P.args', **kwargs: '_P.kwargs') -> 'TupleWrapper[_T]'
+(self, callable_: 'Callable[Concatenate[_T_co, _P], Iterable[_T]]', /, *args: '_P.args', **kwargs: '_P.kwargs') -> 'TupleWrapper[_T]'
 >>> def duplicate(n: int) -> tuple[int, int]:
 ...     return n, n
 >>> Wrapper.construct(3).map_to_iterable(duplicate)
@@ -277,7 +277,7 @@ value of a result and wrap the output:
 ...         return "success", 0.0
 ...     return "failure", s
 >>> print(inspect.signature(ResultWrapper.map_failure_to_result))
-(self, f: 'Callable[Concatenate[_F_default_co, _P], Result[_F, _S]]', *args: '_P.args', **kwargs: '_P.kwargs') -> 'ResultWrapper[_F, _S_default_co | _S]'
+(self, callable_: 'Callable[Concatenate[_F_default_co, _P], Result[_F, _S]]', /, *args: '_P.args', **kwargs: '_P.kwargs') -> 'ResultWrapper[_F, _S_default_co | _S]'
 >>> ResultWrapper.construct_failure("not found").map_failure_to_result(
 ...     replace_not_found_by_default_value
 ... )
@@ -291,7 +291,7 @@ ResultWrapper(core=('success', 42))
 ...         return "failure", "negative value"
 ...     return "success", math.sqrt(x)
 >>> print(inspect.signature(ResultWrapper.map_success_to_result))
-(self, f: 'Callable[Concatenate[_S_default_co, _P], Result[_F, _S]]', *args: '_P.args', **kwargs: '_P.kwargs') -> 'ResultWrapper[_F_default_co | _F, _S]'
+(self, callable_: 'Callable[Concatenate[_S_default_co, _P], Result[_F, _S]]', /, *args: '_P.args', **kwargs: '_P.kwargs') -> 'ResultWrapper[_F_default_co | _F, _S]'
 >>> ResultWrapper.construct_failure("not found").map_success_to_result(get_square_root)
 ResultWrapper(core=('failure', 'not found'))
 >>> ResultWrapper.construct_success(25.0).map_success_to_result(get_square_root)
@@ -309,7 +309,7 @@ value of a result and wrap the output:
 ...         return (0.0, 1.0)
 ...     return ()
 >>> print(inspect.signature(ResultWrapper.map_failure_to_iterable))
-(self, f: 'Callable[Concatenate[_F_default_co, _P], Iterable[_S]]', *args: '_P.args', **kwargs: '_P.kwargs') -> 'ResultTupleWrapper[Never, _S_default_co | _S]'
+(self, callable_: 'Callable[Concatenate[_F_default_co, _P], Iterable[_S]]', /, *args: '_P.args', **kwargs: '_P.kwargs') -> 'ResultTupleWrapper[Never, _S_default_co | _S]'
 >>> ResultWrapper.construct_failure("not found").map_failure_to_iterable(recover)
 ResultTupleWrapper(core=('success', (0.0, 1.0)))
 >>> ResultWrapper.construct_success(42).map_failure_to_iterable(recover)
@@ -317,7 +317,7 @@ ResultTupleWrapper(core=('success', (42,)))
 >>> def duplicate(n: int) -> tuple[int, int]:
 ...     return n, n
 >>> print(inspect.signature(ResultWrapper.map_success_to_iterable))
-(self, f: 'Callable[Concatenate[_S_default_co, _P], Iterable[_S]]', *args: '_P.args', **kwargs: '_P.kwargs') -> 'ResultTupleWrapper[_F_default_co, _S]'
+(self, callable_: 'Callable[Concatenate[_S_default_co, _P], Iterable[_S]]', /, *args: '_P.args', **kwargs: '_P.kwargs') -> 'ResultTupleWrapper[_F_default_co, _S]'
 >>> ResultWrapper.construct_failure("not found").map_success_to_iterable(duplicate)
 ResultTupleWrapper(core=('failure', 'not found'))
 >>> ResultWrapper.construct_success(5).map_success_to_iterable(duplicate)
@@ -335,7 +335,7 @@ to each element in the wrapped tuple and wrap the output:
 ...         return "success", n * 2
 ...     return "failure", "not positive"
 >>> print(inspect.signature(TupleWrapper.map_to_result))
-(self, f: 'Callable[Concatenate[_T_co, _P], Result[_F, _S]]', *args: '_P.args', **kwargs: '_P.kwargs') -> 'ResultTupleWrapper[_F, _S]'
+(self, callable_: 'Callable[Concatenate[_T_co, _P], Result[_F, _S]]', /, *args: '_P.args', **kwargs: '_P.kwargs') -> 'ResultTupleWrapper[_F, _S]'
 >>> TupleWrapper.construct_from_iterable((1, 2, 3)).map_to_result(double_if_positive)
 ResultTupleWrapper(core=('success', (2, 4, 6)))
 >>> TupleWrapper.construct_from_iterable((1, -1, 2)).map_to_result(double_if_positive)
@@ -351,7 +351,7 @@ and flatten the result:
 >>> def duplicate_integer(n: int) -> tuple[int, int]:
 ...     return n, n
 >>> print(inspect.signature(TupleWrapper.map_to_iterable))
-(self, f: 'Callable[Concatenate[_T_co, _P], Iterable[_T]]', *args: '_P.args', **kwargs: '_P.kwargs') -> 'TupleWrapper[_T]'
+(self, callable_: 'Callable[Concatenate[_T_co, _P], Iterable[_T]]', /, *args: '_P.args', **kwargs: '_P.kwargs') -> 'TupleWrapper[_T]'
 >>> TupleWrapper.construct_from_iterable((1, 2, 3)).map_to_iterable(duplicate_integer)
 TupleWrapper(core=(1, 1, 2, 2, 3, 3))
 
@@ -368,7 +368,7 @@ values of a result tuple and wrap the output:
 ...         return "success", 0
 ...     return "failure", description
 >>> print(inspect.signature(ResultTupleWrapper.map_failure_to_result))
-(self, f: 'Callable[Concatenate[_F_default_co, _P], Result[_F, _S]]', *args: '_P.args', **kwargs: '_P.kwargs') -> 'ResultTupleWrapper[_F, _S_default_co | _S]'
+(self, callable_: 'Callable[Concatenate[_F_default_co, _P], Result[_F, _S]]', /, *args: '_P.args', **kwargs: '_P.kwargs') -> 'ResultTupleWrapper[_F, _S_default_co | _S]'
 >>> ResultTupleWrapper.construct_failure("not found").map_failure_to_result(
 ...     recover_from_not_found
 ... )
@@ -382,7 +382,7 @@ ResultTupleWrapper(core=('success', (1, 2)))
 ...         return "success", n * 2
 ...     return "failure", "not positive"
 >>> print(inspect.signature(ResultTupleWrapper.map_successes_to_result))
-(self, f: 'Callable[Concatenate[_S_default_co, _P], Result[_F, _S]]', *args: '_P.args', **kwargs: '_P.kwargs') -> 'ResultTupleWrapper[_F_default_co | _F, _S]'
+(self, callable_: 'Callable[Concatenate[_S_default_co, _P], Result[_F, _S]]', /, *args: '_P.args', **kwargs: '_P.kwargs') -> 'ResultTupleWrapper[_F_default_co | _F, _S]'
 >>> ResultTupleWrapper.construct_successes_from_iterable((1, 2)).map_successes_to_result(
 ...     double_if_positive
 ... )
@@ -404,7 +404,7 @@ values of a result tuple and flatten the result:
 ...         return (0,)
 ...     return ()
 >>> print(inspect.signature(ResultTupleWrapper.map_failure_to_iterable))
-(self, f: 'Callable[Concatenate[_F_default_co, _P], Iterable[_S]]', *args: '_P.args', **kwargs: '_P.kwargs') -> 'ResultTupleWrapper[Never, _S_default_co | _S]'
+(self, callable_: 'Callable[Concatenate[_F_default_co, _P], Iterable[_S]]', /, *args: '_P.args', **kwargs: '_P.kwargs') -> 'ResultTupleWrapper[Never, _S_default_co | _S]'
 >>> ResultTupleWrapper.construct_failure("not found").map_failure_to_iterable(
 ...     recover_from_not_found_iterable
 ... )
@@ -416,7 +416,7 @@ ResultTupleWrapper(core=('success', (1, 2)))
 >>> def duplicate_integer(n: int) -> tuple[int, int]:
 ...     return n, n
 >>> print(inspect.signature(ResultTupleWrapper.map_successes_to_iterable))
-(self, f: 'Callable[Concatenate[_S_default_co, _P], Iterable[_S]]', *args: '_P.args', **kwargs: '_P.kwargs') -> 'ResultTupleWrapper[_F_default_co, _S]'
+(self, callable_: 'Callable[Concatenate[_S_default_co, _P], Iterable[_S]]', /, *args: '_P.args', **kwargs: '_P.kwargs') -> 'ResultTupleWrapper[_F_default_co, _S]'
 >>> ResultTupleWrapper.construct_successes_from_iterable((1, 2)).map_successes_to_iterable(
 ...     duplicate_integer
 ... )
@@ -440,7 +440,7 @@ Use `Wrapper.tap` to apply a side effect to the wrapped value:
 
 ```pycon
 >>> print(inspect.signature(Wrapper.tap))
-(self, f: 'Callable[Concatenate[_T_co, _P], object]', *args: '_P.args', **kwargs: '_P.kwargs') -> 'Wrapper[_T_co]'
+(self, callable_: 'Callable[Concatenate[_T_co, _P], object]', /, *args: '_P.args', **kwargs: '_P.kwargs') -> 'Wrapper[_T_co]'
 >>> wrapper = Wrapper.construct(5).tap(lambda n: print(f"Number: {n}"))
 Number: 5
 >>> wrapper
@@ -453,7 +453,7 @@ to apply side effects to the failure or success value of a result:
 
 ```pycon
 >>> print(inspect.signature(ResultWrapper.tap_failure))
-(self, f: 'Callable[Concatenate[_F_default_co, _P], object]', *args: '_P.args', **kwargs: '_P.kwargs') -> 'ResultWrapper[_F_default_co, _S_default_co]'
+(self, callable_: 'Callable[Concatenate[_F_default_co, _P], object]', /, *args: '_P.args', **kwargs: '_P.kwargs') -> 'ResultWrapper[_F_default_co, _S_default_co]'
 >>> ResultWrapper.construct_failure("not found").tap_failure(
 ...     lambda f: print(f"Failure: {f}")
 ... )
@@ -462,7 +462,7 @@ ResultWrapper(core=('failure', 'not found'))
 >>> ResultWrapper.construct_success(42).tap_failure(lambda f: print(f"Failure: {f}"))
 ResultWrapper(core=('success', 42))
 >>> print(inspect.signature(ResultWrapper.tap_success))
-(self, f: 'Callable[Concatenate[_S_default_co, _P], object]', *args: '_P.args', **kwargs: '_P.kwargs') -> 'ResultWrapper[_F_default_co, _S_default_co]'
+(self, callable_: 'Callable[Concatenate[_S_default_co, _P], object]', /, *args: '_P.args', **kwargs: '_P.kwargs') -> 'ResultWrapper[_F_default_co, _S_default_co]'
 >>> ResultWrapper.construct_failure("not found").tap_success(
 ...     lambda n: print(f"Number: {n}")
 ... )
@@ -478,7 +478,7 @@ in the wrapped tuple:
 
 ```pycon
 >>> print(inspect.signature(TupleWrapper.tap))
-(self, f: 'Callable[Concatenate[_T_co, _P], object]', *args: '_P.args', **kwargs: '_P.kwargs') -> 'TupleWrapper[_T_co]'
+(self, callable_: 'Callable[Concatenate[_T_co, _P], object]', /, *args: '_P.args', **kwargs: '_P.kwargs') -> 'TupleWrapper[_T_co]'
 >>> def log_integer(n: int) -> None:
 ...     print(f"Received: {n}")
 >>> TupleWrapper.construct_from_iterable((1, 2, 3)).tap(log_integer)
@@ -494,7 +494,7 @@ to apply side effects to the failure or success values of a result tuple:
 
 ```pycon
 >>> print(inspect.signature(ResultTupleWrapper.tap_failure))
-(self, f: 'Callable[Concatenate[_F_default_co, _P], object]', *args: '_P.args', **kwargs: '_P.kwargs') -> 'ResultTupleWrapper[_F_default_co, _S_default_co]'
+(self, callable_: 'Callable[Concatenate[_F_default_co, _P], object]', /, *args: '_P.args', **kwargs: '_P.kwargs') -> 'ResultTupleWrapper[_F_default_co, _S_default_co]'
 >>> def log_error(description: str) -> None:
 ...     print(f"Error: {description}")
 >>> ResultTupleWrapper.construct_failure("oops").tap_failure(log_error)
@@ -503,7 +503,7 @@ ResultTupleWrapper(core=('failure', 'oops'))
 >>> ResultTupleWrapper.construct_successes(1).tap_failure(log_error)
 ResultTupleWrapper(core=('success', (1,)))
 >>> print(inspect.signature(ResultTupleWrapper.tap_successes))
-(self, f: 'Callable[Concatenate[_S_default_co, _P], object]', *args: '_P.args', **kwargs: '_P.kwargs') -> 'ResultTupleWrapper[_F_default_co, _S_default_co]'
+(self, callable_: 'Callable[Concatenate[_S_default_co, _P], object]', /, *args: '_P.args', **kwargs: '_P.kwargs') -> 'ResultTupleWrapper[_F_default_co, _S_default_co]'
 >>> ResultTupleWrapper.construct_successes_from_iterable((1, 2)).tap_successes(log_integer)
 Received: 1
 Received: 2
@@ -534,7 +534,7 @@ to the wrapped value:
 ```pycon
 >>> from trcks import Result
 >>> print(inspect.signature(Wrapper.tap_to_result))
-(self, f: 'Callable[Concatenate[_T_co, _P], Result[_F, object]]', *args: '_P.args', **kwargs: '_P.kwargs') -> 'ResultWrapper[_F, _T_co]'
+(self, callable_: 'Callable[Concatenate[_T_co, _P], Result[_F, object]]', /, *args: '_P.args', **kwargs: '_P.kwargs') -> 'ResultWrapper[_F, _T_co]'
 >>> def print_positive_float(x: float) -> Result[str, None]:
 ...     if x <= 0:
 ...         return "failure", "not positive"
@@ -552,7 +552,7 @@ once per item returned by the side effect:
 
 ```pycon
 >>> print(inspect.signature(Wrapper.tap_to_iterable))
-(self, f: 'Callable[Concatenate[_T_co, _P], Iterable[object]]', *args: '_P.args', **kwargs: '_P.kwargs') -> 'TupleWrapper[_T_co]'
+(self, callable_: 'Callable[Concatenate[_T_co, _P], Iterable[object]]', /, *args: '_P.args', **kwargs: '_P.kwargs') -> 'TupleWrapper[_T_co]'
 >>> def write_to_disk(n: int) -> tuple[str, str]:
 ...     print(f"Wrote {n} to disk.")
 ...     return "left", "right"
@@ -568,7 +568,7 @@ optionally recovering it into a `Success`:
 
 ```pycon
 >>> print(inspect.signature(ResultWrapper.tap_failure_to_result))
-(self, f: 'Callable[Concatenate[_F_default_co, _P], Result[object, _S]]', *args: '_P.args', **kwargs: '_P.kwargs') -> 'ResultWrapper[_F_default_co, _S_default_co | _S]'
+(self, callable_: 'Callable[Concatenate[_F_default_co, _P], Result[object, _S]]', /, *args: '_P.args', **kwargs: '_P.kwargs') -> 'ResultWrapper[_F_default_co, _S_default_co | _S]'
 >>> def replace_not_found_with_default(s: str) -> Result[object, float]:
 ...     if s == "not found":
 ...         return "success", 0.0
@@ -594,7 +594,7 @@ with return type `trcks.Result` to each element in the wrapped
 
 ```pycon
 >>> print(inspect.signature(ResultTupleWrapper.tap_successes_to_result))
-(self, f: 'Callable[Concatenate[_S_default_co, _P], Result[_F, object]]', *args: '_P.args', **kwargs: '_P.kwargs') -> 'ResultTupleWrapper[_F_default_co | _F, _S_default_co]'
+(self, callable_: 'Callable[Concatenate[_S_default_co, _P], Result[_F, object]]', /, *args: '_P.args', **kwargs: '_P.kwargs') -> 'ResultTupleWrapper[_F_default_co | _F, _S_default_co]'
 >>> def validate_positive(n: int) -> Result[str, None]:
 ...     if n > 0:
 ...         return "success", None
@@ -665,7 +665,7 @@ to wrap an existing `collections.abc.Awaitable` object:
 ...     await asyncio.sleep(0.001)
 ...     return "Hello, world!"
 >>> print(inspect.signature(AwaitableWrapper.construct_from_awaitable))
-(awtbl: 'Awaitable[_T]') -> 'AwaitableWrapper[_T]'
+(awtbl: 'Awaitable[_T]', /) -> 'AwaitableWrapper[_T]'
 >>> awaitable_wrapper = AwaitableWrapper.construct_from_awaitable(read_from_disk())
 >>> awaitable_wrapper
 AwaitableWrapper(core=<coroutine object ...>)
@@ -679,7 +679,7 @@ in an already resolved `collections.abc.Awaitable` object:
 
 ```pycon
 >>> print(inspect.signature(AwaitableWrapper.construct))
-(value: '_T') -> 'AwaitableWrapper[_T]'
+(value: '_T', /) -> 'AwaitableWrapper[_T]'
 >>> asyncio.run(AwaitableWrapper.construct(42).core_as_coroutine)
 42
 
@@ -695,7 +695,7 @@ to construct a `trcks.AwaitableResult` object from an awaitable value:
 ```pycon
 >>> from trcks.oop import AwaitableResultWrapper
 >>> print(inspect.signature(AwaitableResultWrapper.construct_success_from_awaitable))
-(awtbl: 'Awaitable[_S]') -> 'AwaitableResultWrapper[Never, _S]'
+(awtbl: 'Awaitable[_S]', /) -> 'AwaitableResultWrapper[Never, _S]'
 >>> awaitable_result_wrapper = AwaitableResultWrapper.construct_success_from_awaitable(
 ...     read_from_disk()
 ... )
@@ -711,7 +711,7 @@ to construct a `trcks.AwaitableTuple` object from a plain `collections.abc.Itera
 
 ```pycon
 >>> print(inspect.signature(AwaitableTupleWrapper.construct_from_iterable))
-(it: 'Iterable[_T]') -> 'AwaitableTupleWrapper[_T]'
+(it: 'Iterable[_T]', /) -> 'AwaitableTupleWrapper[_T]'
 >>> asyncio.run(AwaitableTupleWrapper.construct_from_iterable([1, 2, 3]).core_as_coroutine)
 (1, 2, 3)
 
@@ -722,7 +722,7 @@ to construct a `trcks.AwaitableResultTuple` object from a plain `collections.abc
 
 ```pycon
 >>> print(inspect.signature(AwaitableResultTupleWrapper.construct_successes_from_iterable))
-(it: 'Iterable[_S]') -> 'AwaitableResultTupleWrapper[Never, _S]'
+(it: 'Iterable[_S]', /) -> 'AwaitableResultTupleWrapper[Never, _S]'
 >>> asyncio.run(
 ...     AwaitableResultTupleWrapper.construct_successes_from_iterable(
 ...         [1, 2]
@@ -742,7 +742,7 @@ Use `Wrapper.map_to_awaitable` to switch from `Wrapper` to `AwaitableWrapper`:
 
 ```pycon
 >>> print(inspect.signature(Wrapper.map_to_awaitable))
-(self, f: 'Callable[Concatenate[_T_co, _P], Awaitable[_T]]', *args: '_P.args', **kwargs: '_P.kwargs') -> 'AwaitableWrapper[_T]'
+(self, callable_: 'Callable[Concatenate[_T_co, _P], Awaitable[_T]]', /, *args: '_P.args', **kwargs: '_P.kwargs') -> 'AwaitableWrapper[_T]'
 >>> async def write_to_disk(s: str) -> None:
 ...     await asyncio.sleep(0.001)
 ...     print(f"Wrote '{s}' to disk.")
@@ -761,7 +761,7 @@ to switch from `ResultWrapper` to `AwaitableResultWrapper`:
 >>> from trcks import Result
 >>> from trcks.oop import ResultWrapper
 >>> print(inspect.signature(ResultWrapper.map_success_to_awaitable_result))
-(self, f: 'Callable[Concatenate[_S_default_co, _P], AwaitableResult[_F, _S]]', *args: '_P.args', **kwargs: '_P.kwargs') -> 'AwaitableResultWrapper[_F_default_co | _F, _S]'
+(self, callable_: 'Callable[Concatenate[_S_default_co, _P], AwaitableResult[_F, _S]]', /, *args: '_P.args', **kwargs: '_P.kwargs') -> 'AwaitableResultWrapper[_F_default_co | _F, _S]'
 >>> async def get_square_root(x: float) -> Result[str, float]:
 ...     await asyncio.sleep(0.001)
 ...     if x < 0:
@@ -797,7 +797,7 @@ Use `AwaitableWrapper.map_to_awaitable` to chain another asynchronous function:
 
 ```pycon
 >>> print(inspect.signature(AwaitableWrapper.map_to_awaitable))
-(self, f: 'Callable[Concatenate[_T_co, _P], Awaitable[_T]]', *args: '_P.args', **kwargs: '_P.kwargs') -> 'AwaitableWrapper[_T]'
+(self, callable_: 'Callable[Concatenate[_T_co, _P], Awaitable[_T]]', /, *args: '_P.args', **kwargs: '_P.kwargs') -> 'AwaitableWrapper[_T]'
 >>> async def slowly_add_one(n: int) -> int:
 ...     await asyncio.sleep(0.001)
 ...     return n + 1
@@ -814,7 +814,7 @@ to apply an asynchronous, failable function to the wrapped success value:
 
 ```pycon
 >>> print(inspect.signature(AwaitableResultWrapper.map_success_to_awaitable_result))
-(self, f: 'Callable[Concatenate[_S_default_co, _P], AwaitableResult[_F, _S]]', *args: '_P.args', **kwargs: '_P.kwargs') -> 'AwaitableResultWrapper[_F_default_co | _F, _S]'
+(self, callable_: 'Callable[Concatenate[_S_default_co, _P], AwaitableResult[_F, _S]]', /, *args: '_P.args', **kwargs: '_P.kwargs') -> 'AwaitableResultWrapper[_F_default_co | _F, _S]'
 >>> awaitable_result_wrapper_1 = AwaitableResultWrapper.construct_success(
 ...     25.0
 ... ).map_success_to_awaitable_result(get_square_root)
@@ -838,7 +838,7 @@ to apply an asynchronous function to each element in the wrapped tuple:
 ```pycon
 >>> from trcks.oop import AwaitableTupleWrapper
 >>> print(inspect.signature(AwaitableTupleWrapper.map_to_awaitable))
-(self, f: 'Callable[Concatenate[_T_co, _P], Awaitable[_T]]', *args: '_P.args', **kwargs: '_P.kwargs') -> 'AwaitableTupleWrapper[_T]'
+(self, callable_: 'Callable[Concatenate[_T_co, _P], Awaitable[_T]]', /, *args: '_P.args', **kwargs: '_P.kwargs') -> 'AwaitableTupleWrapper[_T]'
 >>> awaitable_tuple_wrapper = AwaitableTupleWrapper.construct_from_iterable(
 ...     (1, 2, 3)
 ... ).map_to_awaitable(slowly_add_one)
@@ -862,7 +862,7 @@ flattening the result and short-circuiting on the first failure:
 ...         AwaitableResultTupleWrapper.map_successes_to_awaitable_result_iterable
 ...     )
 ... )
-(self, f: 'Callable[Concatenate[_S_default_co, _P], AwaitableResultIterable[_F, _S]]', *args: '_P.args', **kwargs: '_P.kwargs') -> 'AwaitableResultTupleWrapper[_F_default_co | _F, _S]'
+(self, callable_: 'Callable[Concatenate[_S_default_co, _P], AwaitableResultIterable[_F, _S]]', /, *args: '_P.args', **kwargs: '_P.kwargs') -> 'AwaitableResultTupleWrapper[_F_default_co | _F, _S]'
 >>> async def duplicate_if_positive(n: int) -> ResultTuple[str, int]:
 ...     await asyncio.sleep(0.001)
 ...     if n <= 0:
@@ -900,7 +900,7 @@ to execute an asynchronous side effect without changing the wrapped value:
 
 ```pycon
 >>> print(inspect.signature(AwaitableWrapper.tap_to_awaitable))
-(self, f: 'Callable[Concatenate[_T_co, _P], Awaitable[object]]', *args: '_P.args', **kwargs: '_P.kwargs') -> 'AwaitableWrapper[_T_co]'
+(self, callable_: 'Callable[Concatenate[_T_co, _P], Awaitable[object]]', /, *args: '_P.args', **kwargs: '_P.kwargs') -> 'AwaitableWrapper[_T_co]'
 >>> async def slowly_log(n: int) -> None:
 ...     await asyncio.sleep(0.001)
 ...     print(f"Logged: {n}")
@@ -920,7 +920,7 @@ while a returned `trcks.Success` leaves it unaffected:
 
 ```pycon
 >>> print(inspect.signature(AwaitableResultWrapper.tap_success_to_awaitable_result))
-(self, f: 'Callable[Concatenate[_S_default_co, _P], AwaitableResult[_F, object]]', *args: '_P.args', **kwargs: '_P.kwargs') -> 'AwaitableResultWrapper[_F_default_co | _F, _S_default_co]'
+(self, callable_: 'Callable[Concatenate[_S_default_co, _P], AwaitableResult[_F, object]]', /, *args: '_P.args', **kwargs: '_P.kwargs') -> 'AwaitableResultWrapper[_F_default_co | _F, _S_default_co]'
 >>> async def persist(s: str) -> Result[str, None]:
 ...     await asyncio.sleep(0.001)
 ...     if len(s) > 10:
