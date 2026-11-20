@@ -330,7 +330,7 @@ def map_failure_to_iterable(
 
     Args:
         callable_: Function to apply to the [trcks.Failure][] values,
-            returning an [collections.abc.Iterable][].
+            returning a [collections.abc.Iterable][].
         *args:
             Positional arguments to be passed to `callable_`.
         **kwargs:
@@ -614,7 +614,7 @@ def map_success_to_iterable(
 
     Args:
         callable_: Function to apply to the [trcks.Success][] values,
-            returning an [collections.abc.Iterable][].
+            returning a [collections.abc.Iterable][].
         *args:
             Positional arguments to be passed to `callable_`.
         **kwargs:
@@ -905,7 +905,7 @@ def tap_failure_to_iterable(
 
     Args:
         callable_: Side effect to apply to the [trcks.Failure][] value,
-            returning an [collections.abc.Iterable][].
+            returning a [collections.abc.Iterable][].
         *args:
             Positional arguments to be passed to `callable_`.
         **kwargs:
@@ -1217,7 +1217,7 @@ def tap_success_to_iterable(
 
     Args:
         callable_: Side effect to apply to the [trcks.Success][] value,
-            returning an [collections.abc.Iterable][].
+            returning a [collections.abc.Iterable][].
         *args:
             Positional arguments to be passed to `callable_`.
         **kwargs:

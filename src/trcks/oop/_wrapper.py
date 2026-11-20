@@ -317,7 +317,7 @@ class Wrapper(BaseWrapper[_T_co]):
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> TupleWrapper[_T]:
-        """Apply a function returning an [collections.abc.Iterable][]
+        """Apply a function returning a [collections.abc.Iterable][]
         to the wrapped object.
 
         Args:
@@ -691,7 +691,7 @@ class Wrapper(BaseWrapper[_T_co]):
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> TupleWrapper[_T_co]:
-        """Apply a side effect returning an [collections.abc.Iterable][] to the
+        """Apply a side effect returning a [collections.abc.Iterable][] to the
         wrapped object.
 
         Args:

@@ -414,12 +414,12 @@ class TupleWrapper(BaseWrapper[tuple[_T_co, ...]]):
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> TupleWrapper[_T]:
-        """Apply a function returning an [collections.abc.Iterable][] to each element
+        """Apply a function returning a [collections.abc.Iterable][] to each element
         in the wrapped homogeneous [tuple][] and flatten the result.
 
         Args:
             callable_: The function to be applied to each element,
-                returning an [collections.abc.Iterable][].
+                returning a [collections.abc.Iterable][].
             *args:
                 Positional arguments to be passed to `callable_`.
             **kwargs:
@@ -856,7 +856,7 @@ class TupleWrapper(BaseWrapper[tuple[_T_co, ...]]):
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> TupleWrapper[_T_co]:
-        """Apply a side effect returning an [collections.abc.Iterable][] to each element
+        """Apply a side effect returning a [collections.abc.Iterable][] to each element
         in the wrapped homogeneous [tuple][].
 
         Args:
