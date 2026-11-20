@@ -23,8 +23,8 @@ returning an optional value are often better choices.
 
 `trcks` provides generic types based on the sequence
 `Awaitable` > `Result` > `tuple` and its subsequences
-(e.g. [trcks.AwaitableResultTuple][], [trcks.AwaitableResult][],
-[trcks.ResultTuple][], and [trcks.Result][]).
+(e.g. [`AwaitableResultTuple`][trcks.AwaitableResultTuple], [`AwaitableResult`][trcks.AwaitableResult],
+[`ResultTuple`][trcks.ResultTuple], and [`Result`][trcks.Result]).
 It also provides matching monads and matching wrapper classes.
 It does not provide types, monads, or wrapper classes based on permutations
 such as `Result` > `Awaitable` > `tuple`.
@@ -94,51 +94,55 @@ Other type checkers may also work.
 `trcks` differs from other libraries for type-safe ROP in four main ways:
 
 - **Plain values, no imports:**
-  The type [trcks.Result][] is a mere type alias that combines [tuple][]
-  and [typing.Literal][].
+  The type [`Result`][trcks.Result] is a mere type alias that combines [`tuple`][tuple]
+  and [`Literal`][typing.Literal].
   You can create values as easily as `("failure", whatever_you_like)` or
   `("success", whatever_you_like)`.
   You do not need any imports for this.
-  You can even avoid the import of [trcks.Result][] by
+  You can even avoid the import of [`Result`][trcks.Result] by
   importing `Literal` from `typing` and
   replacing `trcks.Result[F, S]` with
   `tuple[Literal["failure"], F] | tuple[Literal["success"], S]`.
 - **Two equivalent APIs, no logic in the type:**
-  As a type alias, [trcks.Result][] contains no logic.
+  As a type alias, [`Result`][trcks.Result] contains no logic.
   All logic therefore lives outside the type, which allows `trcks` to offer
   two distinct but equivalent APIs:
-  [trcks.oop][] offers a method chaining API, and
-  [trcks.fp][] offers a function composition API.
+  [`trcks.oop`][trcks.oop] offers a method chaining API, and
+  [`trcks.fp`][trcks.fp] offers a function composition API.
   Both APIs are comprehensive.
   Each of them handles plain values and values of types
-  [collections.abc.Awaitable][], [trcks.Result][],
-  homogeneous [tuple][], and
+  [`Awaitable`][collections.abc.Awaitable], [`Result`][trcks.Result],
+  homogeneous [`tuple`][tuple], and
   [combinations thereof](#why-does-trcks-arrange-its-types-monads-and-wrappers-as-awaitable-result-tuple).
 - **Descriptive names, no jargon:**
-  `trcks` avoids functional programming jargon outside the [trcks.fp][]
+  `trcks` avoids functional programming jargon outside the [`trcks.fp`][trcks.fp]
   subpackage.
-  Class and method names in [trcks.oop][] are descriptive and
-  self-explanatory (e.g. [trcks.oop.TupleWrapper.map_to_awaitable_result][]).
-  Even inside [trcks.fp][], `trcks` uses the terminology coined in
-  [trcks.oop][] rather than functional programming jargon
-  (e.g. [trcks.fp.monads.tuple_.map_to_awaitable_result][]).
-  This makes adopting `trcks` and switching between [trcks.oop][]
-  and [trcks.fp][] as easy as possible.
+  Class and method names in [`trcks.oop`][trcks.oop] are descriptive and
+  self-explanatory
+  (e.g. [`map_to_awaitable_result`][trcks.oop.TupleWrapper.map_to_awaitable_result]).
+  Even inside [`trcks.fp`][trcks.fp], `trcks` uses the terminology coined in
+  [`trcks.oop`][trcks.oop] rather than functional programming jargon
+  (e.g. [`map_to_awaitable_result`][trcks.fp.monads.tuple_.map_to_awaitable_result]).
+  This makes adopting `trcks` and switching between [`trcks.oop`][trcks.oop]
+  and [`trcks.fp`][trcks.fp] as easy as possible.
 - **Extra arguments, no boilerplate:**
-  The `map*` and `tap*` functions in the [trcks.fp.monads][] subpackage and
-  the `map*` and `tap*` methods of the wrapper classes in [trcks.oop][]
+  The `map*` and `tap*` functions in the [`trcks.fp.monads`][trcks.fp.monads]
+  subpackage and the `map*` and `tap*` methods of the wrapper classes in
+  [`trcks.oop`][trcks.oop]
   accept extra positional and keyword arguments and forward them to the
-  given function (e.g. [trcks.fp.monads.result.map_success][] and
-  [trcks.oop.ResultWrapper.map_success][]).
-  You do not need a lambda or [functools.partial][] merely to bind
-  an extra argument.
+  given function
+  (e.g. [`result.map_success`][trcks.fp.monads.result.map_success] and
+  [`ResultWrapper.map_success`][trcks.oop.ResultWrapper.map_success]).
+  You do not need a lambda or [`functools.partial`][functools.partial]
+  merely to bind an extra argument.
 
 ## Which alternatives to `trcks` are there?
 
 Two widely used Python libraries for type-safe ROP are:
 
 - The library [returns](https://pypi.org/project/returns/) models a result as
-  an instance of [returns.result.Success][] or [returns.result.Failure][],
+  an instance of [`Success`][returns.result.Success] or
+  [`Failure`][returns.result.Failure],
   so creating a result value requires importing a container class.
   It offers method chaining plus an additional API for function composition
   that covers fewer operations than the methods.
@@ -150,24 +154,27 @@ Two widely used Python libraries for type-safe ROP are:
   and parts of its typing work correctly only with its dedicated `mypy` plugin.
   By contrast, `trcks` works with plain `mypy`, `pyrefly`, and `pyright`.
   For asynchronous code, it provides the container classes
-  [returns.future.Future][] and [returns.future.FutureResult][].
+  [`Future`][returns.future.Future] and
+  [`FutureResult`][returns.future.FutureResult].
 - The library [Expression](https://pypi.org/project/Expression/) brings
   F# features to Python, including optional values, immutable collections,
   and tagged unions.
   It models a result as a union of the container classes
-  [expression.core.result.Ok][] and [expression.core.result.Error][],
+  [`Ok`][expression.core.result.Ok] and [`Error`][expression.core.result.Error],
   so creating a result value requires importing one of these classes.
   It offers a fluent and a functional syntax with nearly equivalent operations,
   and its function names follow F# conventions, for example `bind`.
   It works with standard type checkers such as `pyright` and needs no plugins.
-  For asynchronous code, the effect builder [expression.effect.async_result][]
+  For asynchronous code, the effect builder
+  [`async_result`][expression.effect.async_result]
   decorates an `async` generator, and awaiting the decorated function returns
   a plain `Result` value.
 
 Both libraries represent failures and successes with container classes
-rather than with the plain type alias [trcks.Result][].
+rather than with the plain type alias [`Result`][trcks.Result].
 The same contrast applies to asynchronous code:
-`trcks` models it with plain type aliases such as [trcks.AwaitableResult][].
+`trcks` models it with plain type aliases such as
+[`AwaitableResult`][trcks.AwaitableResult].
 For the main differences between `trcks` and these two libraries, see
 [the previous section](#what-makes-trcks-different-from-other-python-libraries-for-type-safe-rop).
 

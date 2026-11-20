@@ -1,14 +1,14 @@
-"""Monadic functions for homogeneous [tuple][]s.
+"""Monadic functions for homogeneous [`tuple`][tuple]s.
 
 Provides utilities for functional composition of functions
-returning homogeneous [tuple][] values.
+returning homogeneous [`tuple`][tuple] values.
 
 Note:
     The underscore in the module name helps to avoid collisions
-    with the built-in class [tuple][].
+    with the built-in class [`tuple`][tuple].
 
 Examples:
-    Create and process a homogeneous [tuple][]:
+    Create and process a homogeneous [`tuple`][tuple]:
 
     >>> from trcks.fp.composition import pipe
     >>> from trcks.fp.monads import tuple_ as t
@@ -119,8 +119,8 @@ def map_to_awaitable(
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[tuple[_T1, ...]], AwaitableTuple[_T2]]:
-    """Create function that maps each element of a homogeneous [tuple][]
-    to a new element of a [trcks.AwaitableTuple][].
+    """Create function that maps each element of a homogeneous [`tuple`][tuple]
+    to a new element of an [`AwaitableTuple`][trcks.AwaitableTuple].
 
     Args:
         callable_: Asynchronous function to apply to each element.
@@ -130,7 +130,8 @@ def map_to_awaitable(
             Keyword arguments to be passed to `callable_`.
 
     Returns:
-        Maps homogeneous [tuple][]s to [trcks.AwaitableTuple][]s of the same length
+        Maps homogeneous [`tuple`][tuple]s to [`AwaitableTuple`][trcks.AwaitableTuple]s
+            of the same length
             according to the given asynchronous function.
 
     Examples:
@@ -157,19 +158,20 @@ def map_to_awaitable_iterable(
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[tuple[_T1, ...]], AwaitableTuple[_T2]]:
-    """Create function that maps each element of a homogeneous [tuple][]
-    to a [trcks.AwaitableIterable][] and flattens the result.
+    """Create function that maps each element of a homogeneous [`tuple`][tuple]
+    to an [`AwaitableIterable`][trcks.AwaitableIterable] and flattens the result.
 
     Args:
         callable_: Asynchronous function to apply to each element,
-            returning a [trcks.AwaitableIterable][].
+            returning an [`AwaitableIterable`][trcks.AwaitableIterable].
         *args:
             Positional arguments to be passed to `callable_`.
         **kwargs:
             Keyword arguments to be passed to `callable_`.
 
     Returns:
-        Maps homogeneous [tuple][]s to [trcks.AwaitableTuple][]s of varying length
+        Maps homogeneous [`tuple`][tuple]s to [`AwaitableTuple`][trcks.AwaitableTuple]s
+            of varying length
             according to the given asynchronous function.
 
     Examples:
@@ -197,23 +199,24 @@ def map_to_awaitable_result(
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[tuple[_T1, ...]], AwaitableResultTuple[_F, _S]]:
-    """Create function that maps each element of a homogeneous [tuple][]
-    to a [trcks.AwaitableResult][] value.
+    """Create function that maps each element of a homogeneous [`tuple`][tuple]
+    to an [`AwaitableResult`][trcks.AwaitableResult] value.
 
     Args:
         callable_: Asynchronous function to apply to each element,
-            returning a [trcks.AwaitableResult][].
+            returning an [`AwaitableResult`][trcks.AwaitableResult].
         *args:
             Positional arguments to be passed to `callable_`.
         **kwargs:
             Keyword arguments to be passed to `callable_`.
 
     Returns:
-        Maps homogeneous [tuple][]s to [trcks.AwaitableResultTuple][]s with
+        Maps homogeneous [`tuple`][tuple]s to
+        [`AwaitableResultTuple`][trcks.AwaitableResultTuple]s with
 
-            - the first [trcks.Failure][] returned by the function, or
-            - a [trcks.SuccessTuple][] if the function returns [trcks.Success][]
-                for all elements.
+            - the first [`Failure`][trcks.Failure] returned by the function, or
+            - a [`SuccessTuple`][trcks.SuccessTuple] if the function returns
+              [`Success`][trcks.Success] for all elements.
 
     Examples:
         >>> import asyncio
@@ -251,23 +254,24 @@ def map_to_awaitable_result_iterable(
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[tuple[_T1, ...]], AwaitableResultTuple[_F, _S]]:
-    """Create function that maps each element of a homogeneous [tuple][]
-    to a [trcks.AwaitableResultIterable][] and flattens the result.
+    """Create function that maps each element of a homogeneous [`tuple`][tuple] to an
+    [`AwaitableResultIterable`][trcks.AwaitableResultIterable] and flattens the result.
 
     Args:
         callable_: Asynchronous function to apply to each element,
-            returning a [trcks.AwaitableResultIterable][].
+            returning an [`AwaitableResultIterable`][trcks.AwaitableResultIterable].
         *args:
             Positional arguments to be passed to `callable_`.
         **kwargs:
             Keyword arguments to be passed to `callable_`.
 
     Returns:
-        Maps homogeneous [tuple][]s to [trcks.AwaitableResultTuple][]s with
+        Maps homogeneous [`tuple`][tuple]s to
+        [`AwaitableResultTuple`][trcks.AwaitableResultTuple]s with
 
-            - the first [trcks.Failure][] returned by the function, or
-            - a flattened [trcks.SuccessTuple][] if the function returns
-                [trcks.SuccessTuple][] for all elements.
+            - the first [`Failure`][trcks.Failure] returned by the function, or
+            - a flattened [`SuccessTuple`][trcks.SuccessTuple] if the function returns
+                [`SuccessTuple`][trcks.SuccessTuple] for all elements.
 
     Examples:
         >>> import asyncio
@@ -309,7 +313,7 @@ def map_to_awaitable_result_tuple(
     **kwargs: _P.kwargs,
 ) -> Callable[[tuple[_T1, ...]], AwaitableResultTuple[_F, _S]]:
     """Deprecated alias for
-    [trcks.fp.monads.tuple_.map_to_awaitable_result_iterable][].
+    [`map_to_awaitable_result_iterable`][trcks.fp.monads.tuple_.map_to_awaitable_result_iterable].
     """
     return map_to_awaitable_result_iterable(
         callable_, *args, **kwargs
@@ -323,7 +327,9 @@ def map_to_awaitable_tuple(
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[tuple[_T1, ...]], AwaitableTuple[_T2]]:
-    """Deprecated alias for [trcks.fp.monads.tuple_.map_to_awaitable_iterable][]."""
+    """Deprecated alias for
+    [`map_to_awaitable_iterable`][trcks.fp.monads.tuple_.map_to_awaitable_iterable].
+    """
     return map_to_awaitable_iterable(callable_, *args, **kwargs)  # pragma: no cover
 
 
@@ -333,8 +339,8 @@ def map_to_result(
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[tuple[_T1, ...]], ResultTuple[_F, _S]]:
-    """Create function that maps each element of a homogeneous [tuple][]
-    to a [trcks.Result][] value.
+    """Create function that maps each element of a homogeneous [`tuple`][tuple]
+    to a [`Result`][trcks.Result] value.
 
     Args:
         callable_: Synchronous function to apply to each element.
@@ -344,11 +350,11 @@ def map_to_result(
             Keyword arguments to be passed to `callable_`.
 
     Returns:
-        Maps homogeneous [tuple][]s to [trcks.ResultTuple][]s with
+        Maps homogeneous [`tuple`][tuple]s to [`ResultTuple`][trcks.ResultTuple]s with
 
-            - the first [trcks.Failure][] returned by the function, or
-            - a [trcks.SuccessTuple][] with all transformed elements if the
-                function returns [trcks.Success][] for all elements.
+            - the first [`Failure`][trcks.Failure] returned by the function, or
+            - a [`SuccessTuple`][trcks.SuccessTuple] with all transformed elements if
+              the function returns [`Success`][trcks.Success] for all elements.
 
     Examples:
         >>> from trcks import Result
@@ -381,23 +387,23 @@ def map_to_result_iterable(
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[tuple[_T1, ...]], ResultTuple[_F, _S]]:
-    """Create function that maps each element of a homogeneous [tuple][]
-    to a [trcks.ResultIterable][] and flattens the result.
+    """Create function that maps each element of a homogeneous [`tuple`][tuple]
+    to a [`ResultIterable`][trcks.ResultIterable] and flattens the result.
 
     Args:
         callable_: Synchronous function to apply to each element,
-            returning a [trcks.ResultIterable][].
+            returning a [`ResultIterable`][trcks.ResultIterable].
         *args:
             Positional arguments to be passed to `callable_`.
         **kwargs:
             Keyword arguments to be passed to `callable_`.
 
     Returns:
-        Maps homogeneous [tuple][]s to [trcks.ResultTuple][]s with
+        Maps homogeneous [`tuple`][tuple]s to [`ResultTuple`][trcks.ResultTuple]s with
 
-            - the first [trcks.Failure][] returned by the function, or
-            - a flattened [trcks.SuccessTuple][] if the function returns
-                [trcks.SuccessTuple][] for all elements.
+            - the first [`Failure`][trcks.Failure] returned by the function, or
+            - a flattened [`SuccessTuple`][trcks.SuccessTuple] if the function returns
+                [`SuccessTuple`][trcks.SuccessTuple] for all elements.
 
     Examples:
         >>> from trcks import ResultTuple
@@ -431,7 +437,9 @@ def map_to_result_tuple(
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[tuple[_T1, ...]], ResultTuple[_F, _S]]:
-    """Deprecated alias for [trcks.fp.monads.tuple_.map_to_result_iterable][]."""
+    """Deprecated alias for
+    [`map_to_result_iterable`][trcks.fp.monads.tuple_.map_to_result_iterable].
+    """
     return map_to_result_iterable(callable_, *args, **kwargs)  # pragma: no cover
 
 
@@ -442,7 +450,9 @@ def map_to_tuple(
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[tuple[_T1, ...]], tuple[_T2, ...]]:
-    """Deprecated alias for [trcks.fp.monads.tuple_.map_to_iterable][]."""
+    """Deprecated alias for
+    [`map_to_iterable`][trcks.fp.monads.tuple_.map_to_iterable].
+    """
     return map_to_iterable(callable_, *args, **kwargs)  # pragma: no cover
 
 
@@ -453,7 +463,7 @@ def tap_to_awaitable(
     **kwargs: _P.kwargs,
 ) -> Callable[[tuple[_T1, ...]], AwaitableTuple[_T1]]:
     """Create function that applies an asynchronous side effect
-    to each element of a homogeneous [tuple][].
+    to each element of a homogeneous [`tuple`][tuple].
 
     Args:
         callable_: Asynchronous side effect to apply to each element.
@@ -463,8 +473,9 @@ def tap_to_awaitable(
             Keyword arguments to be passed to `callable_`.
 
     Returns:
-        Applies the given side effect to each element of a homogeneous [tuple][] and
-            returns a [trcks.AwaitableTuple][] of the original elements.
+        Applies the given side effect to each element of a homogeneous [`tuple`][tuple]
+        and returns an [`AwaitableTuple`][trcks.AwaitableTuple] of the original
+        elements.
 
     Examples:
         >>> import asyncio
@@ -494,21 +505,21 @@ def tap_to_awaitable_iterable(
     **kwargs: _P.kwargs,
 ) -> Callable[[tuple[_T1, ...]], AwaitableTuple[_T1]]:
     """Create function that applies an asynchronous side effect
-    with return type [trcks.AwaitableIterable][]
-    to each element of a homogeneous [tuple][].
+    with return type [`AwaitableIterable`][trcks.AwaitableIterable]
+    to each element of a homogeneous [`tuple`][tuple].
 
     Args:
         callable_: Asynchronous side effect to apply to each element,
-            returning a [trcks.AwaitableIterable][].
+            returning an [`AwaitableIterable`][trcks.AwaitableIterable].
         *args:
             Positional arguments to be passed to `callable_`.
         **kwargs:
             Keyword arguments to be passed to `callable_`.
 
     Returns:
-        Applies the given side effect to each element of a homogeneous [tuple][] and
-            returns a [trcks.AwaitableTuple][] of the original elements,
-            each repeated once per element in the side effect output.
+        Applies the given side effect to each element of a homogeneous [`tuple`][tuple]
+        and returns an [`AwaitableTuple`][trcks.AwaitableTuple] of the original
+        elements, each repeated once per element in the side effect output.
 
     Examples:
         >>> import asyncio
@@ -540,24 +551,25 @@ def tap_to_awaitable_result(
     **kwargs: _P.kwargs,
 ) -> Callable[[tuple[_T1, ...]], AwaitableResultTuple[_F, _T1]]:
     """Create function that applies an asynchronous side effect
-    with return type [trcks.Result][]
-    to each element of a homogeneous [tuple][].
+    with return type [`Result`][trcks.Result]
+    to each element of a homogeneous [`tuple`][tuple].
 
     Args:
         callable_: Asynchronous side effect to apply to each element,
-            returning a [trcks.Result][].
+            returning a [`Result`][trcks.Result].
         *args:
             Positional arguments to be passed to `callable_`.
         **kwargs:
             Keyword arguments to be passed to `callable_`.
 
     Returns:
-        Maps homogeneous [tuple][]s to [trcks.AwaitableResultTuple][]s with
+        Maps homogeneous [`tuple`][tuple]s to
+        [`AwaitableResultTuple`][trcks.AwaitableResultTuple]s with
 
-            - *the returned* [trcks.Failure][] if the applied side effect returns
-                a [trcks.Failure][] for an element, or
-            - *the original* homogeneous [tuple][] if the applied side effect
-                returns [trcks.Success][] for all elements.
+            - *the returned* [`Failure`][trcks.Failure] if the applied side effect
+              returns a [`Failure`][trcks.Failure] for an element, or
+            - *the original* homogeneous [`tuple`][tuple] if the applied side effect
+                returns [`Success`][trcks.Success] for all elements.
 
     Examples:
         >>> import asyncio
@@ -596,25 +608,26 @@ def tap_to_awaitable_result_iterable(
     **kwargs: _P.kwargs,
 ) -> Callable[[tuple[_T1, ...]], AwaitableResultTuple[_F, _T1]]:
     """Create function that applies an asynchronous side effect
-    with return type [trcks.AwaitableResultIterable][]
-    to each element of a homogeneous [tuple][].
+    with return type [`AwaitableResultIterable`][trcks.AwaitableResultIterable]
+    to each element of a homogeneous [`tuple`][tuple].
 
     Args:
         callable_: Asynchronous side effect to apply to each element,
-            returning a [trcks.AwaitableResultIterable][].
+            returning an [`AwaitableResultIterable`][trcks.AwaitableResultIterable].
         *args:
             Positional arguments to be passed to `callable_`.
         **kwargs:
             Keyword arguments to be passed to `callable_`.
 
     Returns:
-        Maps homogeneous [tuple][]s to [trcks.AwaitableResultTuple][]s with
+        Maps homogeneous [`tuple`][tuple]s to
+        [`AwaitableResultTuple`][trcks.AwaitableResultTuple]s with
 
-            - *the returned* [trcks.Failure][] if the applied side effect returns
-                a [trcks.Failure][] for an element, or
-            - *the original* homogeneous [tuple][] with each element repeated once
-                per side effect output element if the applied side effect returns
-                [trcks.SuccessTuple][] for all elements.
+            - *the returned* [`Failure`][trcks.Failure] if the applied side effect
+              returns a [`Failure`][trcks.Failure] for an element, or
+            - *the original* homogeneous [`tuple`][tuple] with each element repeated
+              once per side effect output element if the applied side effect returns
+              [`SuccessTuple`][trcks.SuccessTuple] for all elements.
 
     Examples:
         >>> import asyncio
@@ -654,7 +667,7 @@ def tap_to_awaitable_result_tuple(
     **kwargs: _P.kwargs,
 ) -> Callable[[tuple[_T1, ...]], AwaitableResultTuple[_F, _T1]]:
     """Deprecated alias for
-    [trcks.fp.monads.tuple_.tap_to_awaitable_result_iterable][].
+    [`tap_to_awaitable_result_iterable`][trcks.fp.monads.tuple_.tap_to_awaitable_result_iterable].
     """
     return tap_to_awaitable_result_iterable(
         callable_, *args, **kwargs
@@ -668,7 +681,9 @@ def tap_to_awaitable_tuple(
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[tuple[_T1, ...]], AwaitableTuple[_T1]]:
-    """Deprecated alias for [trcks.fp.monads.tuple_.tap_to_awaitable_iterable][]."""
+    """Deprecated alias for
+    [`tap_to_awaitable_iterable`][trcks.fp.monads.tuple_.tap_to_awaitable_iterable].
+    """
     return tap_to_awaitable_iterable(callable_, *args, **kwargs)  # pragma: no cover
 
 
@@ -679,8 +694,8 @@ def tap_to_result(
     **kwargs: _P.kwargs,
 ) -> Callable[[tuple[_T1, ...]], ResultTuple[_F, _T1]]:
     """Create function that applies a synchronous side effect
-    with return type [trcks.Result][]
-    to each element of a homogeneous [tuple][].
+    with return type [`Result`][trcks.Result]
+    to each element of a homogeneous [`tuple`][tuple].
 
     Args:
         callable_: Synchronous side effect to apply to each element.
@@ -690,12 +705,12 @@ def tap_to_result(
             Keyword arguments to be passed to `callable_`.
 
     Returns:
-        Maps homogeneous [tuple][]s to [trcks.ResultTuple][]s with
+        Maps homogeneous [`tuple`][tuple]s to [`ResultTuple`][trcks.ResultTuple]s with
 
-            - *the returned* [trcks.Failure][] if the applied side effect returns
-                a [trcks.Failure][] for an element, or
-            - *the original* homogeneous [tuple][] if the applied side effect
-                returns [trcks.Success][] for all elements.
+            - *the returned* [`Failure`][trcks.Failure] if the applied side effect
+              returns a [`Failure`][trcks.Failure] for an element, or
+            - *the original* homogeneous [`tuple`][tuple] if the applied side effect
+                returns [`Success`][trcks.Success] for all elements.
 
     Examples:
         >>> from trcks import Result
@@ -729,25 +744,25 @@ def tap_to_result_iterable(
     **kwargs: _P.kwargs,
 ) -> Callable[[tuple[_T1, ...]], ResultTuple[_F, _T1]]:
     """Create function that applies a synchronous side effect
-    with return type [trcks.ResultIterable][]
-    to each element of a homogeneous [tuple][].
+    with return type [`ResultIterable`][trcks.ResultIterable]
+    to each element of a homogeneous [`tuple`][tuple].
 
     Args:
         callable_: Synchronous side effect to apply to each element,
-            returning a [trcks.ResultIterable][].
+            returning a [`ResultIterable`][trcks.ResultIterable].
         *args:
             Positional arguments to be passed to `callable_`.
         **kwargs:
             Keyword arguments to be passed to `callable_`.
 
     Returns:
-        Maps homogeneous [tuple][]s to [trcks.ResultTuple][]s with
+        Maps homogeneous [`tuple`][tuple]s to [`ResultTuple`][trcks.ResultTuple]s with
 
-            - *the returned* [trcks.Failure][] if the applied side effect returns
-                a [trcks.Failure][] for an element, or
-            - *the original* homogeneous [tuple][] with each element repeated once
-                per side effect output element if the applied side effect returns
-                [trcks.SuccessTuple][] for all elements.
+            - *the returned* [`Failure`][trcks.Failure] if the applied side effect
+              returns a [`Failure`][trcks.Failure] for an element, or
+            - *the original* homogeneous [`tuple`][tuple] with each element repeated
+              once per side effect output element if the applied side effect returns
+              [`SuccessTuple`][trcks.SuccessTuple] for all elements.
 
     Examples:
         >>> from trcks import ResultTuple
@@ -781,7 +796,9 @@ def tap_to_result_tuple(
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[tuple[_T1, ...]], ResultTuple[_F, _T1]]:
-    """Deprecated alias for [trcks.fp.monads.tuple_.tap_to_result_iterable][]."""
+    """Deprecated alias for
+    [`tap_to_result_iterable`][trcks.fp.monads.tuple_.tap_to_result_iterable].
+    """
     return tap_to_result_iterable(callable_, *args, **kwargs)  # pragma: no cover
 
 
@@ -792,5 +809,7 @@ def tap_to_tuple(
     *args: _P.args,
     **kwargs: _P.kwargs,
 ) -> Callable[[tuple[_T1, ...]], tuple[_T1, ...]]:
-    """Deprecated alias for [trcks.fp.monads.tuple_.tap_to_iterable][]."""
+    """Deprecated alias for
+    [`tap_to_iterable`][trcks.fp.monads.tuple_.tap_to_iterable].
+    """
     return tap_to_iterable(callable_, *args, **kwargs)  # pragma: no cover
