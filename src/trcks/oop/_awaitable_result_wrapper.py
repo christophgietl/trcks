@@ -520,7 +520,7 @@ class AwaitableResultWrapper(
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[Never, _S_default_co | _S]:
-        """Apply a synchronous function returning an [collections.abc.Iterable][]
+        """Apply a synchronous function returning a [collections.abc.Iterable][]
         to the wrapped [trcks.Failure][] object.
 
         The failure is converted to a [trcks.SuccessTuple][].
@@ -528,7 +528,7 @@ class AwaitableResultWrapper(
 
         Args:
             callable_: The synchronous function to be applied,
-                returning an [collections.abc.Iterable][].
+                returning a [collections.abc.Iterable][].
             *args:
                 Positional arguments to be passed to `callable_`.
             **kwargs:
@@ -1003,14 +1003,14 @@ class AwaitableResultWrapper(
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[_F_default_co, _S]:
-        """Apply a synchronous function returning an [collections.abc.Iterable][]
+        """Apply a synchronous function returning a [collections.abc.Iterable][]
         to the wrapped [trcks.Success][] object.
 
         Wrapped [trcks.Failure][] objects are passed on unchanged.
 
         Args:
             callable_: The synchronous function to be applied,
-                returning an [collections.abc.Iterable][].
+                returning a [collections.abc.Iterable][].
             *args:
                 Positional arguments to be passed to `callable_`.
             **kwargs:
@@ -1477,7 +1477,7 @@ class AwaitableResultWrapper(
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[Never, _F_default_co | _S_default_co]:
-        """Apply a synchronous side effect returning an [collections.abc.Iterable][]
+        """Apply a synchronous side effect returning a [collections.abc.Iterable][]
         to the wrapped [trcks.Failure][] object.
 
         The failure is converted to a [trcks.SuccessTuple][] where
@@ -1981,7 +1981,7 @@ class AwaitableResultWrapper(
         *args: _P.args,
         **kwargs: _P.kwargs,
     ) -> AwaitableResultTupleWrapper[_F_default_co, _S_default_co]:
-        """Apply a synchronous side effect returning an [collections.abc.Iterable][]
+        """Apply a synchronous side effect returning a [collections.abc.Iterable][]
         to the wrapped [trcks.Success][] object.
 
         The original success value is repeated once per element
@@ -1991,7 +1991,7 @@ class AwaitableResultWrapper(
 
         Args:
             callable_: The synchronous side effect to be applied,
-                returning an [collections.abc.Iterable][].
+                returning a [collections.abc.Iterable][].
             *args:
                 Positional arguments to be passed to `callable_`.
             **kwargs:

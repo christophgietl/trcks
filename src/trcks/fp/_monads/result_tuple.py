@@ -637,7 +637,7 @@ def tap_failure_to_result(
             If the given side effect returns a [trcks.Failure][],
             *the original* [trcks.Failure][] is returned.
             If the given side effect returns a [trcks.Success][],
-            *this* [trcks.Success][] is returned (wrapped as a homogeneous tuple).
+            *this* [trcks.Success][] is returned as a [trcks.SuccessTuple][].
             Passes on [trcks.SuccessTuple][] values without side effects.
 
     Examples:
@@ -861,7 +861,7 @@ def tap_successes_to_result_iterable(
     **kwargs: _P.kwargs,
 ) -> Callable[[ResultTuple[_F1, _S1]], ResultTuple[_F1 | _F2, _S1]]:
     """Create function that applies a side effect with return type
-    [trcks.ResultTuple][] to each element of a [trcks.SuccessTuple][].
+    [trcks.ResultIterable][] to each element of a [trcks.SuccessTuple][].
 
     [trcks.Failure][] values are passed on without side effects.
 

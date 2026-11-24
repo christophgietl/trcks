@@ -252,6 +252,15 @@ def tap_failure(
         Applies the given side effect to [trcks.Failure][] values and
             returns the original [trcks.Failure][] value.
             Passes on [trcks.Success][] values without side effects.
+
+    Examples:
+        >>> from trcks.fp.monads import result as r
+        >>> log_on_failure = r.tap_failure(lambda e: print(f"Error logged: {e}"))
+        >>> log_on_failure(r.construct_failure("critical"))
+        Error logged: critical
+        ('failure', 'critical')
+        >>> log_on_failure(r.construct_success(42))
+        ('success', 42)
     """
     return map_failure(i.tap(callable_, *args, **kwargs))
 
@@ -281,6 +290,18 @@ def tap_failure_to_result(
             If the given side effect returns a [trcks.Success][],
             *this* [trcks.Success][] is returned.
             Passes on [trcks.Success][] values without side effects.
+
+    Examples:
+        >>> from trcks.fp.monads import result as r
+        >>> replace_not_found_failure_by_default_value = r.tap_failure_to_result(
+        ...     lambda e: ("success", 0.0) if e == "not found" else ("failure", e)
+        ... )
+        >>> replace_not_found_failure_by_default_value(("failure", "not found"))
+        ('success', 0.0)
+        >>> replace_not_found_failure_by_default_value(("failure", "other failure"))
+        ('failure', 'other failure')
+        >>> replace_not_found_failure_by_default_value(("success", 25.0))
+        ('success', 25.0)
     """
 
     def bypassed_callable(value: _F1) -> Result[_F1, _S2]:
@@ -318,6 +339,15 @@ def tap_success(
         Passes on [trcks.Failure][] values without side effects.
             Applies the given side effect to [trcks.Success][] values and
             returns the original [trcks.Success][] value.
+
+    Examples:
+        >>> from trcks.fp.monads import result as r
+        >>> log_on_success = r.tap_success(lambda x: print(f"Value: {x}"))
+        >>> log_on_success(r.construct_success(1_000_000.0))
+        Value: 1000000.0
+        ('success', 1000000.0)
+        >>> log_on_success(r.construct_failure("not found"))
+        ('failure', 'not found')
     """
     return map_success(i.tap(callable_, *args, **kwargs))
 
@@ -347,6 +377,23 @@ def tap_success_to_result(
             *this* [trcks.Failure][] is returned.
             If the given side effect returns a [trcks.Success][],
             *the original* [trcks.Success][] value is returned.
+
+    Examples:
+        >>> import math
+        >>> from trcks import Result
+        >>> from trcks.fp.monads import result as r
+        >>> def _get_square_root(x: float) -> Result[str, float]:
+        ...     if x < 0:
+        ...         return "failure", "negative value"
+        ...     return "success", math.sqrt(x)
+        ...
+        >>> check_square_root = r.tap_success_to_result(_get_square_root)
+        >>> check_square_root(("failure", "not found"))
+        ('failure', 'not found')
+        >>> check_square_root(("success", -25.0))
+        ('failure', 'negative value')
+        >>> check_square_root(("success", 25.0))
+        ('success', 25.0)
     """
 
     def bypassed_callable(value: _S1) -> Result[_F2, _S1]:
