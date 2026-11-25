@@ -4,7 +4,7 @@ requires = ["pdm-backend~=2.4"]  # pdm-backend 2.4 supports project.license-file
 
 [dependency-groups]
 dev = [
-    "import-linter==2.16",
+    "import-linter==2.17",
     "mkdocstrings[python]==1.0.8",
     "mypy", # Check project.optional-dependencies for lower bound.
     "pre-commit==4.7.0",
