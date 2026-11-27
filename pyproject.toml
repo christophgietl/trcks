@@ -71,9 +71,9 @@ mypy = [
     "mypy>=2.4",
 ]
 pyrefly = [
-    # pyrefly versions older than 1.2 seem to have issues
-    # with reachability analysis in match statements:
-    "pyrefly>=1.2",
+    # pyrefly versions older than 1.5 do not recognize the error kind
+    # `partially-unknown-type` disabled in [tool.pyrefly.errors]:
+    "pyrefly>=1.5",
 ]
 pyright = [
     # pyright versions older than 1.1.392 seem to have issue with ParamSpec:
@@ -208,6 +208,12 @@ source = "scm"
 [tool.pyrefly]
 enabled-ignores = ["pyrefly"]
 preset = "all"
+
+[tool.pyrefly.errors]
+# pyrefly 1.5 reports every reference to an async function as partially unknown
+# (cf. https://github.com/pyrefly-org/pyrefly/issues/5715,
+# fixed by https://github.com/pyrefly-org/pyrefly/pull/5720):
+partially-unknown-type = false
 
 [tool.pyright]
 deprecateTypingAliases = true

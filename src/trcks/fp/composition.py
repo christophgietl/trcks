@@ -226,9 +226,9 @@ def compose(  # type: ignore[explicit-any]
     """
 
     def composed(*args: _P0.args, **kwargs: _P0.kwargs) -> Any:  # type: ignore[explicit-any]  # pyrefly: ignore[explicit-any]  # noqa: ANN401
-        output = callable1(*args, **kwargs)
+        output = callable1(*args, **kwargs)  # pyrefly: ignore[explicit-any-use]
         for callable_ in callables:
-            output = callable_(output)
+            output = callable_(output)  # pyrefly: ignore[explicit-any-use]
         return output
 
     return composed
@@ -330,7 +330,7 @@ def pipe(input_: Any, /, *callables: Callable[[Any], Any]) -> Any:  # type: igno
         >>> pipe("Hello, world!", len, to_length_string)
         'Length: 13'
     """
-    output = input_
+    output = input_  # pyrefly: ignore[explicit-any-use]
     for callable_ in callables:
-        output = callable_(output)
+        output = callable_(output)  # pyrefly: ignore[explicit-any-use]
     return output
