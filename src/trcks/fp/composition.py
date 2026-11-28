@@ -191,7 +191,7 @@ def compose(  # type: ignore[explicit-any]
     callable1: Callable[_P0, Any],  # pyrefly: ignore[explicit-any]
     /,
     *callables: Callable[[Any], Any],  # pyrefly: ignore[explicit-any]
-) -> Callable[_P0, Any]:  # pyrefly: ignore[explicit-any]
+) -> Callable[_P0, object]:
     """Concatenate compatible functions from first to last.
 
     Args:
@@ -308,7 +308,7 @@ def pipe(
 ) -> _T7: ...
 
 
-def pipe(input_: Any, /, *callables: Callable[[Any], Any]) -> Any:  # type: ignore[explicit-any]  # pyrefly: ignore[explicit-any]
+def pipe(input_: Any, /, *callables: Callable[[Any], Any]) -> object:  # type: ignore[explicit-any]  # pyrefly: ignore[explicit-any]
     """Evaluate a pipeline consisting of a starting value and compatible functions.
 
     Args:
