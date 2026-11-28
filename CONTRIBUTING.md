@@ -29,8 +29,11 @@ Moreover, `trcks` uses [GitHub Actions](https://github.com/features/actions) for
 Please follow these steps to set up your development environment:
 
 1. Install `uv` if you have not already done so.
+
 2. Clone the `trcks` repository and `cd` into it.
+
 3. Install `trcks` and its (development) dependencies by running `uv sync`.
+
 4. Set up the hooks by executing `uv run pre-commit install`.
    The output should look something like this:
 

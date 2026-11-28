@@ -68,12 +68,18 @@ must contain at least:
 ### Python code style
 
 - Give every module a `__docformat__ = "google"` dunder.
+
 - Place all module dunders after imports, including imports inside
   `if TYPE_CHECKING:` blocks.
+
 - Sort module dunders alphabetically (e.g. `__all__` before `__docformat__`).
+
 - Sort functions alphabetically within each module.
+
 - Sort classes alphabetically within each module.
+
 - Sort methods alphabetically within each class.
+
 - Use the following import patterns across code and documentation:
 
   ```pycon
